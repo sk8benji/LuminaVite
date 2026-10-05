@@ -1,0 +1,120 @@
+// Prisma Schema para SaaS de Invitaciones Digitales Interactivas
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum TipoEvento {
+  BODA
+  QUINCEANERA
+}
+
+enum EstiloPlantilla {
+  CLASICA_IMPERIAL
+  PRINCESA_ROSA
+  ESMERALDA_ROYAL
+  JARDIN_BOTANICA
+  MINIMALISTA_EDITORIAL
+}
+
+enum RolUsuario {
+  ADMIN
+  SALON
+  CLIENTE
+}
+
+model Usuario {
+  id           String     @id @default(uuid())
+  email        String     @unique
+  nombre       String
+  passwordHash String
+  rol          RolUsuario @default(CLIENTE)
+  salones      Salon[]
+  eventos      Evento[]
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+}
+
+model Salon {
+  id        String   @id @default(uuid())
+  usuarioId String
+  usuario   Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  nombre    String
+  slug      String   @unique
+  telefono  String?
+  direccion String?
+  eventos   Evento[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Evento {
+  id                 String          @id @default(uuid())
+  usuarioId          String
+  usuario            Usuario         @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  salonId            String?
+  salon              Salon?          @relation(fields: [salonId], references: [id], onDelete: SetNull)
+  slug               String          @unique // URL pública: tudominio.com/invitacion/[slug]
+  tipoEvento         TipoEvento      @default(QUINCEANERA)
+  estiloPlantilla    EstiloPlantilla @default(PRINCESA_ROSA)
+
+  // Textos y Nombres
+  titulo             String          // Ej: "Mis XV Años Elsy" o "Sofía & Alejandro"
+  subtitulo          String?         // Ej: "With love, we invite you"
+  frasePersonalizada String?         // Reflexión emocional ("From Girl to Señorita")
+  fechaEvento        DateTime        // Fecha y hora del evento
+
+  // Multimedia (AWS S3)
+  fotoPortadaUrl     String          // Imagen vertical 9:16 principal
+  fotoInfanciaUrl    String?         // Foto de niña
+  fotoActualUrl      String?         // Foto actual
+  musicaUrl          String?         // URL del audio MP3 en S3
+
+  // WhatsApp & RSVP
+  telefonoWhatsappRsvp String        // Formato internacional sin símbolos: ej. "18181234567"
+  fechaLimiteRsvp    DateTime?
+  maxPasesPorInvitado Int            @default(4)
+
+  // Ubicación Ceremonia (Opcional)
+  ceremoniaNombre    String?
+  ceremoniaDireccion String?
+  ceremoniaMapUrl    String?
+
+  // Ubicación Recepción (Salón)
+  recepcionNombre    String
+  recepcionDireccion String
+  recepcionMapUrl    String          // Enlace directo a Google Maps o Waze
+
+  // Código de Vestimenta
+  dressCodeTitulo    String?         // Ej: "Elegante y Formal"
+  dressCodeNota      String?         // Ej: "Nos reservamos el rosa para la quinceañera"
+  coloresReservados  String[]        @default([]) // Hex codes: ["#FFD1DC", "#FFFFFF"]
+
+  // Estructuras dinámicas (JSON)
+  itinerarioJson     Json?           // Array de eventos [{ time: "4:00 PM", title: "Llegada", icon: "car" }]
+  corteHonorJson     Json?           // { chambelan: "Jeremiah", damas: ["Valeria", "Violeta"], padrinos: [...] }
+  mesaRegalosJson    Json?           // { tipo: "sobre", mensaje: "...", zelle: "..." }
+
+  activo             Boolean         @default(true)
+  vistasContador     Int             @default(0)
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
+
+  rsvps              RsvpRegistro[]
+}
+
+model RsvpRegistro {
+  id             String   @id @default(uuid())
+  eventoId       String
+  evento         Evento   @relation(fields: [eventoId], references: [id], onDelete: Cascade)
+  nombreInvitado String
+  asistira       Boolean
+  pases          Int      @default(1)
+  acompanantes   String?
+  createdAt      DateTime @default(now())
+}
