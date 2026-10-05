@@ -338,14 +338,22 @@ export default function BlueButterflyTemplate({
             />
           </div>
 
-          {/* Foto 1 (Con efecto de papel rasgado en la base) */}
+          {/* Foto 1 (Con efecto de papel rasgado orgánico en la base) */}
           <div className="w-full px-4 mt-2">
-            <div className="relative w-full h-[390px] rounded-t-3xl overflow-hidden shadow-xl border-2 border-white/90 bg-slate-200 torn-mask">
+            <div className="relative w-full h-[390px] rounded-t-3xl overflow-hidden shadow-xl border-2 border-white/90 bg-slate-200">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={data.fotoPortadaUrl || "/assets/template-butterfly/foto-gala-original.png"}
+                src={data.fotoPortadaUrl || "/assets/template-butterfly/foto-columpio-portada.png"}
                 alt={data.titulo}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover select-none"
+              />
+
+              {/* Rasgado inferior de papel orgánico */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/assets/template-butterfly/torn-paper-bottom.png"
+                alt="Rasgado inferior"
+                className="absolute -bottom-1 left-0 w-full pointer-events-none z-10 select-none"
               />
 
               {/* Cartela superpuesta con el nombre del anfitrión */}
@@ -474,84 +482,87 @@ export default function BlueButterflyTemplate({
           </div>
         </section>
 
-        {/* ======================================================= */}
-        {/* SECCIÓN 4: Cuenta Regresiva sobre el Pergamino Original */}
-        {/* ======================================================= */}
-        <section className="px-4 py-4 z-20">
-          {/* Capas superpuestas: Pergamino original de fondo + Números absolutos */}
-          <div className="relative w-full aspect-[1536/1024] max-w-[390px] mx-auto flex items-center justify-center">
-            {/* Gráfico pergamino-countdown.png en z-10 */}
+        {/* ======================================================== */}
+        {/* SECCIÓN 4: PLACA DE FECHA Y LUGAR + FOTO CON BORDES RASGADOS */}
+        {/* ======================================================== */}
+        <section className="relative w-full py-8 px-4 flex flex-col items-center overflow-visible select-none z-20">
+          {/* 1. PLACA DE FECHA Y LUGAR (PERGAMINO CON FLORES) */}
+          <div className="relative w-full max-w-[340px] mb-8">
+            {/* Marco de fondo con flores y rosas (Asset PNG transparente) */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/assets/template-butterfly/pergamino-countdown.png"
-              alt="Pergamino de Cuenta Regresiva"
-              className="absolute inset-0 w-full h-full object-contain pointer-events-none z-10 drop-shadow-md"
+            <img 
+              src="/assets/template-butterfly/marco-fecha-pergamino.png" 
+              alt="Marco Fecha" 
+              className="w-full h-auto drop-shadow-sm select-none"
             />
 
-            {/* Contenido dinámico flotante montado en z-20 */}
-            <div className="relative z-20 flex flex-col items-center justify-center text-center px-8 pt-2">
-              <span className="font-serif-roman text-[10px] tracking-[0.25em] uppercase text-[#2F5A84] font-semibold mb-2">
-                Save The Date
-              </span>
+            {/* Contenido tipográfico centrado dentro del marco */}
+            <div className="absolute inset-0 flex flex-col items-center justify-center pt-3 text-center pointer-events-none">
+              <p className="font-serif-roman text-xs tracking-[0.25em] text-[#C5A059] uppercase font-bold">
+                OCTOBER
+              </p>
+              
+              {/* Línea divisoria con día y hora */}
+              <div className="flex items-center gap-3 my-1 border-t border-b border-[#D8B772]/60 py-0.5 px-3">
+                <span className="font-serif-roman text-[10px] tracking-widest text-slate-500 uppercase">SATURDAY</span>
+                <span className="font-serif-roman text-sm font-bold text-[#2F5A84]">24</span>
+                <span className="font-serif-roman text-[10px] tracking-widest text-slate-500 uppercase">AT 3 PM</span>
+              </div>
 
-              {/* Los 4 números del contador */}
-              <div className="grid grid-cols-4 gap-2.5 sm:gap-4 font-serif-roman text-[#2F5A84]">
-                <div className="flex flex-col items-center">
-                  <span className="text-2xl sm:text-3xl font-bold">{timeLeft.days}</span>
-                  <p className="text-[9px] uppercase tracking-wider text-slate-500 mt-0.5">Días</p>
-                </div>
-                <div className="flex flex-col items-center">
-                  <span className="text-2xl sm:text-3xl font-bold">{timeLeft.hours}</span>
-                  <p className="text-[9px] uppercase tracking-wider text-slate-500 mt-0.5">Horas</p>
-                </div>
-                <div className="flex flex-col items-center">
-                  <span className="text-2xl sm:text-3xl font-bold">{timeLeft.minutes}</span>
-                  <p className="text-[9px] uppercase tracking-wider text-slate-500 mt-0.5">Min</p>
-                </div>
-                <div className="flex flex-col items-center">
-                  <span className="text-2xl sm:text-3xl font-bold">{timeLeft.seconds}</span>
-                  <p className="text-[9px] uppercase tracking-wider text-slate-500 mt-0.5">Seg</p>
-                </div>
+              <p className="font-serif-roman text-[10px] tracking-widest text-slate-400">
+                2026
+              </p>
+              
+              <div className="mt-1">
+                <p className="font-serif-roman text-[9px] tracking-[0.15em] uppercase text-slate-600 font-semibold">
+                  {data.recepcionNombre || "QUINCE PALACE"}
+                </p>
+                <p className="text-[8px] text-slate-400">
+                  {data.recepcionDireccion || "123 QUINCE ST, CITY, ST ZIP"}
+                </p>
               </div>
             </div>
-          </div>
-        </section>
 
-        {/* ======================================================= */}
-        {/* SECCIÓN 5: Retrato de Gala de Cuerpo Entero             */}
-        {/* ======================================================= */}
-        <section className="px-6 py-6 text-center z-20">
-          <div className="rounded-3xl overflow-hidden shadow-2xl border-4 border-white bg-slate-100 w-full h-[470px] torn-mask-both">
+            {/* Mariposa azul superpuesta en la esquina inferior izquierda con aleteo 3D */}
+            <div 
+              className="absolute -bottom-4 -left-3 w-16 z-20 pointer-events-none"
+              style={{ perspective: "500px" }}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img 
+                src="/assets/template-butterfly/mariposa-fecha.png" 
+                alt="Mariposa" 
+                className="w-full h-auto drop-shadow-md animate-flutter"
+              />
+            </div>
+          </div>
+
+          {/* 2. FOTO PRINCIPAL CON RASGADO ORGÁNICO REAL */}
+          <div className="relative w-full max-w-[390px] h-[480px] overflow-hidden my-2 shadow-xl bg-slate-200">
+            {/* Foto de la Quinceañera (Llenando el contenedor) */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={
-                data.fotoActualUrl ||
-                "/assets/template-butterfly/foto-gala-original.png"
-              }
-              alt="Vestido de Gala"
-              className="w-full h-full object-cover"
+            <img 
+              src={data.fotoActualUrl || "/assets/template-butterfly/foto-gala-vestido.jpg"} 
+              alt="Quinceañera" 
+              className="w-full h-full object-cover select-none"
+            />
+
+            {/* Capa superior: Rasgado de papel blanco/acuarela (PNG transparente) */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img 
+              src="/assets/template-butterfly/torn-paper-top.png" 
+              alt="Rasgado superior" 
+              className="absolute top-0 left-0 w-full pointer-events-none z-10 select-none"
+            />
+
+            {/* Capa inferior: Rasgado de papel blanco/acuarela (PNG transparente) */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img 
+              src="/assets/template-butterfly/torn-paper-bottom.png" 
+              alt="Rasgado inferior" 
+              className="absolute bottom-0 left-0 w-full pointer-events-none z-10 select-none"
             />
           </div>
-
-          {/* Separador de corona dorada */}
-          <div className="w-full max-w-[240px] mx-auto mt-6 mb-2">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/assets/template-butterfly/separador-corona.png"
-              alt="Separador Corona"
-              className="w-full h-auto object-contain"
-            />
-          </div>
-
-          <p className="font-serif-roman text-xs tracking-[0.2em] text-[#C5A059] uppercase">
-            Sábado
-          </p>
-          <h2 className="font-serif-roman text-2xl font-bold text-[#2F5A84] my-1">
-            {data.fechaTextoPersonalizada || "14 NOVIEMBRE 2026"}
-          </h2>
-          <p className="font-serif-roman text-xs tracking-[0.2em] text-slate-500 uppercase">
-            5:00 PM
-          </p>
         </section>
 
         {/* ======================================================= */}
