@@ -401,6 +401,8 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
 
   const eventUrl = `${baseUrl}/${data.slug}`;
 
+  const ogImageUrl = `${baseUrl}/api/og?slug=${data.slug}`;
+
   return {
     title,
     description,
@@ -417,12 +419,19 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
       type: "website",
       images: [
         {
+          url: ogImageUrl,
+          secureUrl: ogImageUrl,
+          width: 1200,
+          height: 630,
+          alt: `${tituloEvento} - Invitación y Fotografía Principal`,
+          type: "image/png",
+        },
+        {
           url: coverImage,
           secureUrl: coverImage,
           width: 800,
           height: 1200,
-          alt: `${tituloEvento} - Fotografía Principal`,
-          type: coverImage.endsWith(".png") ? "image/png" : "image/jpeg",
+          alt: `${tituloEvento} - Portada Oficial`,
         },
       ],
     },
@@ -430,7 +439,7 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
       card: "summary_large_image",
       title,
       description,
-      images: [coverImage],
+      images: [ogImageUrl],
     },
   };
 }
