@@ -4,9 +4,7 @@ import prisma from "@/lib/db";
 import InvitationMobileView, { InvitationData } from "@/components/invitation/InvitationMobileView";
 
 interface PageProps {
-  params: {
-    slug: string;
-  };
+  params: Promise<{ slug: string }> | { slug: string };
 }
 
 // Datos de demostración enriquecidos basados en la referencia solicitada
@@ -92,8 +90,11 @@ export const DEMO_BODA: InvitationData = {
   ],
 };
 
-async function getEventoData(slug: string): Promise<InvitationData | null> {
-  // Manejar demos inmediatos sin requerir base de datos inicializada
+async function getEventoData(rawSlug: string): Promise<InvitationData | null> {
+  if (!rawSlug) return null;
+  const slug = decodeURIComponent(rawSlug).toLowerCase().trim();
+
+  // Demos instantáneos
   if (slug === "elsy-xv") return DEMO_ELSY;
   if (slug === "sofia-y-alejandro") return DEMO_BODA;
 
@@ -134,18 +135,17 @@ async function getEventoData(slug: string): Promise<InvitationData | null> {
       mesaRegalosJson: evento.mesaRegalosJson,
     };
   } catch (error) {
-    console.warn("Base de datos no conectada aún, usando demo si aplica:", error);
+    console.warn("Base de datos no disponible o error al consultar slug:", slug, error);
     return null;
   }
 }
 
 /**
  * OpenGraph dinámico para WhatsApp y redes sociales.
- * Al enviar el enlace por chat, WhatsApp mostrará la foto vertical,
- * el título del evento y la fecha exacta.
  */
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const data = await getEventoData(params.slug);
+export async function generateMetadata(props: PageProps): Promise<Metadata> {
+  const resolvedParams = await props.params;
+  const data = await getEventoData(resolvedParams?.slug);
 
   if (!data) {
     return {
@@ -188,8 +188,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-export default async function InvitationPage({ params }: PageProps) {
-  const data = await getEventoData(params.slug);
+export default async function InvitationPage(props: PageProps) {
+  const resolvedParams = await props.params;
+  const data = await getEventoData(resolvedParams?.slug);
 
   if (!data) {
     notFound();
