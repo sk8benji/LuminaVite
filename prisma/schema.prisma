@@ -87,6 +87,8 @@ model Evento {
 
   // WhatsApp & RSVP
   telefonoWhatsappRsvp String        // Formato internacional sin símbolos: ej. "18181234567"
+  emailOrganizador   String?         // Email del anfitrión/organizador para notificaciones en vivo
+  aforoTotal         Int?            @default(200) // Balance total de pases estimados
   fechaLimiteRsvp    DateTime?
   maxPasesPorInvitado Int            @default(4)
 

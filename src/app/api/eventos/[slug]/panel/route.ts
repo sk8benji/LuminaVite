@@ -105,6 +105,7 @@ export async function GET(
         totalPasesConfirmados: totalPases,
         totalDeclinados: declinados.length,
         totalRespuestas: rsvps.length,
+        aforoTotal: evento.aforoTotal || 200,
       },
       rsvps,
     });

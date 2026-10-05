@@ -47,6 +47,8 @@ export default function NuevoEventoPage() {
       "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=400&q=80",
     musicaUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
     telefonoWhatsappRsvp: "18181234567",
+    emailOrganizador: "mama.valeria@example.com",
+    aforoTotal: 200,
     fechaLimiteRsvp: "15 de Noviembre",
     maxPasesPorInvitado: 4,
     ceremoniaNombre: "Parroquia Nuestra Señora",
@@ -973,6 +975,47 @@ export default function NuevoEventoPage() {
                         placeholder="Ej. Favor de confirmar antes del 20 de Octubre"
                         className="w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs"
                       />
+                    </div>
+                  </div>
+
+                  {/* Notificaciones Inmediatas por Correo al Anfitrión (AWS SES) */}
+                  <div className="pt-3 border-t border-stone-200/80 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <div className="flex items-center gap-1.5 mb-1">
+                        <label className="block text-[11px] font-semibold text-stone-700">
+                          Email del Anfitrión / Mamá (Alertas en Tiempo Real)
+                        </label>
+                        <span className="text-[9px] bg-blue-50 text-blue-700 px-1.5 py-0.2 rounded font-medium">
+                          AWS SES
+                        </span>
+                      </div>
+                      <input
+                        type="email"
+                        value={formData.emailOrganizador || ""}
+                        onChange={(e) => updateField("emailOrganizador", e.target.value)}
+                        placeholder="mama.valeria@gmail.com"
+                        className="w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs"
+                      />
+                      <p className="text-[10px] text-stone-400 mt-1">
+                        Recibe un correo breve al instante con el balance y el Magic Link por cada confirmación.
+                      </p>
+                    </div>
+
+                    <div>
+                      <label className="block text-[11px] font-semibold text-stone-700 mb-1">
+                        Aforo Total Estimado (Meta de Pases del Salón)
+                      </label>
+                      <input
+                        type="number"
+                        min={10}
+                        max={1000}
+                        value={formData.aforoTotal || 200}
+                        onChange={(e) => updateField("aforoTotal", Number(e.target.value))}
+                        className="w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs"
+                      />
+                      <p className="text-[10px] text-stone-400 mt-1">
+                        Se muestra en la barra de progreso del correo: ej. "Llevas 142 de 200 pases".
+                      </p>
                     </div>
                   </div>
                 </div>

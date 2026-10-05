@@ -57,6 +57,8 @@ export interface InvitationData {
   regalosZelle?: string | null;
   regalosCashApp?: string | null;
   rsvpFechaLimite?: string | null;
+  emailOrganizador?: string | null;
+  aforoTotal?: number;
 
   dressCodeTitulo?: string | null;
   dressCodeNota?: string | null;
