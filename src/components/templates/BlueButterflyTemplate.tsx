@@ -360,9 +360,9 @@ export default function BlueButterflyTemplate({
             />
           </div>
 
-          {/* CONTENEDOR DE LA FOTO DE PORTADA CON CLIP-PATH OFICIAL DE CANVA */}
-          <div className="w-full px-4 mt-2">
-            <div className="relative w-full max-w-[390px] h-[480px] mx-auto overflow-hidden bg-slate-100 shadow-xl">
+          {/* CONTENEDOR DE LA FOTO DE PORTADA CON CLIP-PATH OFICIAL DE CANVA (100% SIN PADDING) */}
+          <div className="w-full mt-2">
+            <div className="relative w-full max-w-[430px] h-[520px] sm:h-[560px] mx-auto overflow-hidden bg-transparent">
               {/* Foto aplicando el clipPath oficial */}
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
@@ -371,10 +371,36 @@ export default function BlueButterflyTemplate({
                 className="w-full h-full object-cover clip-canva-torn select-none"
               />
 
-              {/* Cartela con el nombre en la base */}
-              <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 bg-white/95 border border-[#D8B772]/60 px-6 py-2 rounded-lg shadow-md">
-                <p className="font-serif-roman text-xs tracking-widest text-[#C5A059] uppercase font-bold">
+              {/* TARJETA FORMAL DE PRESENTACIÓN (HERO CARD) */}
+              <div className="absolute top-[48%] left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 w-[84%] max-w-[310px] bg-[#FFFDF9]/95 border border-[#D8B772]/70 rounded-2xl p-5 sm:p-6 shadow-[0_12px_30px_rgba(0,0,0,0.15)] text-center backdrop-blur-md pointer-events-none">
+                {/* Icono decorativo */}
+                <span className="text-sm text-[#2F5A84] block mb-1">🦋</span>
+
+                {/* Subtítulo / Encabezado */}
+                <p className="font-serif-roman text-[10px] tracking-[0.25em] uppercase text-[#C5A059] font-semibold">
+                  {data.subtitulo || "Mis Quince Años"}
+                </p>
+
+                {/* Nombre Principal */}
+                <h2 className="font-script text-4xl text-[#2F5A84] my-1 leading-tight">
                   {data.titulo}
+                </h2>
+
+                {/* Frase emotiva */}
+                <p className="font-cormorant italic text-[13px] text-slate-600 my-2 leading-relaxed">
+                  {data.frasePersonalizada || "“Doy gracias a Dios por este día tan especial y te invito a compartir conmigo esta noche mágica.”"}
+                </p>
+
+                {/* Divisor ornamental sutil */}
+                <div className="flex items-center justify-center gap-2 my-2">
+                  <span className="h-[1px] w-8 bg-[#D8B772]/50"></span>
+                  <span className="text-[#D8B772] text-[10px]">❦</span>
+                  <span className="h-[1px] w-8 bg-[#D8B772]/50"></span>
+                </div>
+
+                {/* Fecha Formal */}
+                <p className="font-serif-roman text-[10px] tracking-[0.2em] text-[#C5A059] uppercase font-medium">
+                  {data.fechaTextoPersonalizada || "14 • Noviembre • 2026"}
                 </p>
               </div>
             </div>
