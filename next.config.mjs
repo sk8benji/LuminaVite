@@ -9,6 +9,14 @@ const nextConfig = {
       },
     ],
   },
+  async rewrites() {
+    return [
+      {
+        source: "/invitacion/:slug",
+        destination: "/:slug",
+      },
+    ];
+  },
 };
 
 export default nextConfig;
