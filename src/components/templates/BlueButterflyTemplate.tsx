@@ -322,29 +322,6 @@ export default function BlueButterflyTemplate({
           </div>
         </div>
 
-        {/* Navbar superior minimalista */}
-        <nav className="sticky top-0 z-40 bg-white/85 backdrop-blur-md border-b border-blue-100/80 px-6 py-3 flex justify-between items-center text-xs tracking-widest uppercase font-serif-roman text-[#2F5A84]">
-          <a href="#welcome" className="hover:text-[#C5A059] transition font-bold">
-            Inicio
-          </a>
-          <div className="flex items-center gap-4">
-            <a href="#rsvp" className="hover:text-[#C5A059] transition font-semibold">
-              RSVP
-            </a>
-            <button
-              type="button"
-              onClick={toggleMusic}
-              className={`w-7 h-7 rounded-full border flex items-center justify-center text-xs transition cursor-pointer ${
-                isPlaying
-                  ? "bg-blue-200 border-blue-400 text-[#2F5A84] animate-pulse"
-                  : "bg-blue-50 border-blue-200 text-[#2F5A84]"
-              }`}
-              title={isPlaying ? "Pausar música" : "Reproducir música"}
-            >
-              🎵
-            </button>
-          </div>
-        </nav>
 
         {/* ======================================================= */}
         {/* SECCIÓN 1: Portada con Hero y Título                    */}
