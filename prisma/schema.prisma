@@ -12,14 +12,19 @@ datasource db {
 enum TipoEvento {
   BODA
   QUINCEANERA
+  CUMPLEANOS
 }
 
 enum EstiloPlantilla {
-  CLASICA_IMPERIAL
-  PRINCESA_ROSA
-  ESMERALDA_ROYAL
-  JARDIN_BOTANICA
-  MINIMALISTA_EDITORIAL
+  PRINCESA_ROSA           // Elsy (Réplica exacta de referencia)
+  ELEGANT_ROSE            // T1: Isabella (Bilingüe, Video embed, Growing Up timeline)
+  FAIRYTALE_CHATEAU       // T2: Emma & Lucas (Fairytale Castle Wedding, Hotel suites, Shuttles)
+  BLUE_BUTTERFLY          // T3: Blue Butterfly Garden (Mariposas celestiales flotantes)
+  CORALINE_MYSTICAL       // T4: Coraline Other World (Místico, Puerta secreta, Llave, Botones)
+  CLASICA_IMPERIAL        // Clásica Imperial (Gala & Oro)
+  ESMERALDA_ROYAL         // Esmeralda Royal
+  JARDIN_BOTANICA         // Jardín Botánica
+  MINIMALISTA_EDITORIAL   // Minimalista Editorial
 }
 
 enum RolUsuario {
@@ -59,21 +64,25 @@ model Evento {
   usuario            Usuario         @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
   salonId            String?
   salon              Salon?          @relation(fields: [salonId], references: [id], onDelete: SetNull)
-  slug               String          @unique // URL pública: tudominio.com/invitacion/[slug]
+  slug               String          @unique // URL pública: tudominio.com/[slug]
   tipoEvento         TipoEvento      @default(QUINCEANERA)
   estiloPlantilla    EstiloPlantilla @default(PRINCESA_ROSA)
 
   // Textos y Nombres
-  titulo             String          // Ej: "Mis XV Años Elsy" o "Sofía & Alejandro"
-  subtitulo          String?         // Ej: "With love, we invite you"
+  titulo             String          // Ej: "Mis XV Años Elsy" o "Emma & Lucas"
+  subtitulo          String?         // Ej: "An Unforgettable Celebration Awaits"
   frasePersonalizada String?         // Reflexión emocional ("From Girl to Señorita")
   fechaEvento        DateTime        // Fecha y hora del evento
+  fechaTextoPersonalizada String?    // Ej: "DECEMBER 05, 2026 AT 2 PM"
 
   // Multimedia (AWS S3)
   fotoPortadaUrl     String          // Imagen vertical 9:16 principal
   fotoInfanciaUrl    String?         // Foto de niña
   fotoActualUrl      String?         // Foto actual
+  fotoCierreUrl      String?         // Foto de despedida / cierre
   musicaUrl          String?         // URL del audio MP3 en S3
+  videoUrl           String?         // Enlace a video YouTube o MP4
+  galeriaFotosUrls   String[]        @default([]) // Galería de fotos o hitos históricos
 
   // WhatsApp & RSVP
   telefonoWhatsappRsvp String        // Formato internacional sin símbolos: ej. "18181234567"
@@ -85,20 +94,28 @@ model Evento {
   ceremoniaDireccion String?
   ceremoniaMapUrl    String?
 
-  // Ubicación Recepción (Salón)
+  // Ubicación Recepción (Salón / Castillo)
   recepcionNombre    String
   recepcionDireccion String
   recepcionMapUrl    String          // Enlace directo a Google Maps o Waze
 
-  // Código de Vestimenta
-  dressCodeTitulo    String?         // Ej: "Elegante y Formal"
-  dressCodeNota      String?         // Ej: "Nos reservamos el rosa para la quinceañera"
+  // Código de Vestimenta & Pautas
+  dressCodeTitulo    String?         // Ej: "BRING YOUR DANCING SHOES - DRESS CODE: Elegant & Formal"
+  dressCodeNota      String?         // Ej: "Guests are encouraged to wear shades of white/formal"
   coloresReservados  String[]        @default([]) // Hex codes: ["#FFD1DC", "#FFFFFF"]
+  celebrationGuideline String?       // Pautas (ej: niños/asientos en vals)
+
+  // Enlaces especiales
+  wishlistUrl        String?         // Enlace externo (Amazon, Target, etc.)
+  idiomaDefault      String          @default("es") // "es" | "en" | "bilingual"
 
   // Estructuras dinámicas (JSON)
   itinerarioJson     Json?           // Array de eventos [{ time: "4:00 PM", title: "Llegada", icon: "car" }]
-  corteHonorJson     Json?           // { chambelan: "Jeremiah", damas: ["Valeria", "Violeta"], padrinos: [...] }
-  mesaRegalosJson    Json?           // { tipo: "sobre", mensaje: "...", zelle: "..." }
+  corteHonorJson     Json?           // { chambelan: "Jeremiah", damas: [...], parents: "...", padrinos: [...] }
+  mesaRegalosJson    Json?           // { titulo: "THE REGISTRY", mensaje: "...", plataformas: [...], datosBancarios: "..." }
+  hospedajeJson      Json?           // { hotelNombre: "Oheka Castle", suitesInfo: "...", tarifas: "$250/night", link: "..." }
+  transporteJson     Json?           // { shuttlesInfo: "Shuttles saldrán a las 4:30 PM..." }
+  historiaHitosJson  Json?           // Array de hitos [{ anio: "2012", titulo: "...", fotoUrl: "...", texto: "..." }]
 
   activo             Boolean         @default(true)
   vistasContador     Int             @default(0)

@@ -19,7 +19,7 @@ import EnvelopeIntro from "./EnvelopeIntro";
 export interface InvitationData {
   id?: string;
   slug: string;
-  tipoEvento: "QUINCEANERA" | "BODA";
+  tipoEvento: "QUINCEANERA" | "BODA" | "CUMPLEANOS";
   estiloPlantilla: TemplateId;
   titulo: string; // ej. "Elsy" o "Sofía & Alejandro"
   subtitulo?: string | null; // ej. "An Unforgettable Celebration Awaits"
@@ -64,6 +64,13 @@ export interface InvitationData {
     plataformas?: string[];
     datosBancarios?: string;
   } | any;
+  videoUrl?: string | null;
+  galeriaFotosUrls?: string[];
+  wishlistUrl?: string | null;
+  hospedajeJson?: any;
+  transporteJson?: any;
+  historiaHitosJson?: any;
+  idiomaDefault?: string;
 }
 
 export default function InvitationMobileView({ data }: { data: InvitationData }) {

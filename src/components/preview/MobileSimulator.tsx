@@ -1,7 +1,7 @@
 "use client";
 
-import React from "react";
-import InvitationMobileView, { InvitationData } from "../invitation/InvitationMobileView";
+import TemplateDispatcher from "../templates/TemplateDispatcher";
+import { InvitationData } from "../invitation/InvitationMobileView";
 
 interface MobileSimulatorProps {
   data: InvitationData;
@@ -19,7 +19,7 @@ export default function MobileSimulator({ data }: MobileSimulatorProps) {
 
         {/* Pantalla del teléfono con scroll independiente */}
         <div className="w-full h-full bg-white rounded-[38px] overflow-y-auto overflow-x-hidden relative scrollbar-thin scrollbar-thumb-stone-300">
-          <InvitationMobileView data={data} />
+          <TemplateDispatcher data={data} />
         </div>
 
         {/* Barra de inicio inferior de iOS */}

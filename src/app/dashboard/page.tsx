@@ -19,7 +19,7 @@ interface EventoItem {
   id: string;
   slug: string;
   titulo: string;
-  tipoEvento: "QUINCEANERA" | "BODA";
+  tipoEvento: "QUINCEANERA" | "BODA" | "CUMPLEANOS";
   fechaEvento: string;
   fotoPortadaUrl: string;
   activo: boolean;
@@ -46,7 +46,7 @@ export default function DashboardPage() {
             {
               id: "demo-1",
               slug: "elsy-xv",
-              titulo: "Mis XV Años - Elsy",
+              titulo: "Mis XV Años - Elsy (Clásica)",
               tipoEvento: "QUINCEANERA",
               fechaEvento: "2026-12-05T17:00:00Z",
               fotoPortadaUrl:
@@ -56,16 +56,52 @@ export default function DashboardPage() {
               _count: { rsvps: 24 },
             },
             {
-              id: "demo-2",
-              slug: "sofia-y-alejandro",
-              titulo: "Sofía & Alejandro - Boda",
+              id: "demo-t1",
+              slug: "isabella-xv",
+              titulo: "Isabella XV (Elegant Rose - Canva T1)",
+              tipoEvento: "QUINCEANERA",
+              fechaEvento: "2026-11-20T17:00:00Z",
+              fotoPortadaUrl:
+                "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=600&q=80",
+              activo: true,
+              telefonoWhatsappRsvp: "18181234567",
+              _count: { rsvps: 38 },
+            },
+            {
+              id: "demo-t2",
+              slug: "emma-and-lucas",
+              titulo: "Emma & Lucas (Fairytale Château - Canva T2)",
               tipoEvento: "BODA",
-              fechaEvento: "2026-10-24T18:00:00Z",
+              fechaEvento: "2026-09-18T16:30:00Z",
               fotoPortadaUrl:
                 "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=600&q=80",
               activo: true,
-              telefonoWhatsappRsvp: "18189876543",
-              _count: { rsvps: 42 },
+              telefonoWhatsappRsvp: "18181234567",
+              _count: { rsvps: 92 },
+            },
+            {
+              id: "demo-t3",
+              slug: "mariposas-xv",
+              titulo: "Jardín de Mariposas (Blue Butterfly - Canva T3)",
+              tipoEvento: "QUINCEANERA",
+              fechaEvento: "2026-10-15T18:00:00Z",
+              fotoPortadaUrl:
+                "https://images.unsplash.com/photo-1566737236500-c8ac43014a67?auto=format&fit=crop&w=600&q=80",
+              activo: true,
+              telefonoWhatsappRsvp: "18181234567",
+              _count: { rsvps: 45 },
+            },
+            {
+              id: "demo-t4",
+              slug: "coraline-party",
+              titulo: "Coraline Other World (Mundo Secreto - Canva T4)",
+              tipoEvento: "QUINCEANERA",
+              fechaEvento: "2026-10-31T19:00:00Z",
+              fotoPortadaUrl:
+                "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=600&q=80",
+              activo: true,
+              telefonoWhatsappRsvp: "18181234567",
+              _count: { rsvps: 18 },
             },
           ]);
         }
@@ -189,7 +225,11 @@ export default function DashboardPage() {
                     />
                     <div className="absolute top-3 left-3 flex gap-2">
                       <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-black/60 text-white backdrop-blur-sm">
-                        {ev.tipoEvento === "QUINCEANERA" ? "XV Años" : "Boda"}
+                        {ev.tipoEvento === "QUINCEANERA"
+                          ? "XV Años"
+                          : ev.tipoEvento === "BODA"
+                          ? "Boda"
+                          : "Cumpleaños"}
                       </span>
                     </div>
 

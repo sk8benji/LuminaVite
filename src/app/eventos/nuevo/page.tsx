@@ -456,6 +456,51 @@ export default function NuevoEventoPage() {
                     </label>
                   </div>
                 </div>
+
+                {/* Video del Evento (YouTube o MP4) */}
+                <div className="p-4 bg-stone-50 border border-stone-200 rounded-2xl space-y-2">
+                  <label className="block text-xs font-bold text-stone-800 mb-1">
+                    Video de Agradecimiento o Sesión Previa (YouTube o MP4)
+                  </label>
+                  <p className="text-[11px] text-stone-500">
+                    Se reproducirá embebido de forma elegante en la sección audiovisual de la plantilla.
+                  </p>
+                  <input
+                    type="text"
+                    value={formData.videoUrl || ""}
+                    onChange={(e) => updateField("videoUrl", e.target.value)}
+                    placeholder="https://www.youtube.com/watch?v=... o https://s3.../video.mp4"
+                    className="w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs focus:outline-none"
+                  />
+                </div>
+
+                {/* Foto de Cierre / Despedida */}
+                <div className="p-4 bg-stone-50 border border-stone-200 rounded-2xl space-y-2">
+                  <label className="block text-xs font-bold text-stone-800 mb-1">
+                    Foto de Cierre / Portada Final (Opcional)
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.fotoCierreUrl || ""}
+                    onChange={(e) => updateField("fotoCierreUrl", e.target.value)}
+                    placeholder="https://... URL de foto de cierre o retrato final"
+                    className="w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs focus:outline-none"
+                  />
+                </div>
+
+                {/* Enlace Wishlist / Mesa de Regalos */}
+                <div className="p-4 bg-stone-50 border border-stone-200 rounded-2xl space-y-2">
+                  <label className="block text-xs font-bold text-stone-800 mb-1">
+                    Mesa de Regalos / Wishlist Externa (Opcional)
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.wishlistUrl || ""}
+                    onChange={(e) => updateField("wishlistUrl", e.target.value)}
+                    placeholder="https://amazon.com/baby-reg/... o tienda departamental"
+                    className="w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs focus:outline-none"
+                  />
+                </div>
               </div>
             )}
 

@@ -1,13 +1,16 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import prisma from "@/lib/db";
-import InvitationMobileView, { InvitationData } from "@/components/invitation/InvitationMobileView";
+import { InvitationData } from "@/components/invitation/InvitationMobileView";
+import TemplateDispatcher from "@/components/templates/TemplateDispatcher";
 
 interface PageProps {
   params: Promise<{ slug: string }> | { slug: string };
 }
 
-// Datos de demostración enriquecidos basados en la referencia solicitada
+// ==========================================
+// 1. DEMO ELSY (Réplica Video de Referencia)
+// ==========================================
 export const DEMO_ELSY: InvitationData = {
   id: "demo-elsy",
   slug: "elsy-xv",
@@ -55,7 +58,7 @@ export const DEMO_ELSY: InvitationData = {
     chambelanes: ["James"],
     parents: "Magdalena & Adrian",
     padrinos: ["Tania & Carl"],
-    mensajeGratitud: "Un agradecimiento de todo corazón a nuestros padres y padrinos por su generosidad y apoyo para hacer realidad este día mágico.",
+    mensajeGratitud: "Un agradecimiento de todo corazón a nuestros padres y padrinos por su generosidad y apoyo.",
   },
   mesaRegalosJson: {
     titulo: "THE REGISTRY",
@@ -66,6 +69,134 @@ export const DEMO_ELSY: InvitationData = {
   },
 };
 
+// ==========================================
+// 2. DEMO ISABELLA (Canva T1: Elegant Rose)
+// ==========================================
+export const DEMO_ISABELLA: InvitationData = {
+  id: "demo-isabella",
+  slug: "isabella-xv",
+  tipoEvento: "QUINCEANERA",
+  estiloPlantilla: "ELEGANT_ROSE",
+  titulo: "Isabella",
+  subtitulo: "BLG 2UPT Elegant Rose Themed Quinceanera",
+  frasePersonalizada: "Celebrating Fifteen Amazing Years—The Best Is Yet to Come.",
+  fechaEvento: new Date("2026-07-18T16:00:00Z"),
+  fechaTextoPersonalizada: "SUNDAY, JULY 18 • 4:00 PM",
+  fotoPortadaUrl:
+    "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80",
+  fotoInfanciaUrl:
+    "https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&w=400&q=80",
+  fotoActualUrl:
+    "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=400&q=80",
+  musicaUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
+  videoUrl: "https://www.youtube.com/embed/0ZVsGVE1qCg",
+  telefonoWhatsappRsvp: "18181234567",
+  fechaLimiteRsvp: "June 20th",
+  maxPasesPorInvitado: 4,
+  recepcionNombre: "St. Mary's Church & Grand Ballroom",
+  recepcionDireccion: "Any City, Any Street, AZ 12345",
+  recepcionMapUrl: "https://maps.google.com",
+  dressCodeTitulo: "Formal & Elegant Attire",
+  dressCodeNota: "We invite our guests to dress in elegant formal attire as we celebrate together.",
+  wishlistUrl: "https://www.amazon.com/baby-reg",
+  idiomaDefault: "en",
+  itinerarioJson: [
+    { hora: "4:00 PM", titulo: "Mass - St. Mary's Church", tipoIcono: "church" },
+    { hora: "5:00 PM", titulo: "Entrance - Grand Ballroom", tipoIcono: "car" },
+    { hora: "6:00 PM", titulo: "Waltz", tipoIcono: "crown" },
+    { hora: "7:00 PM", titulo: "Dinner", tipoIcono: "wine" },
+    { hora: "9:00 PM", titulo: "Party", tipoIcono: "party" },
+  ],
+  corteHonorJson: {
+    chambelan: "Emilio Salazar (Chamberlain of Honor)",
+    damas: ["Isabella", "Valeria", "Sofia", "Emilia", "Camila", "Maria", "Regina", "Natalia"],
+    chambelanes: ["Diego", "Santiago", "Francisco", "Mateo", "Alejandro"],
+    padrinos: ["Miguel & Daniela Herrera"],
+  },
+};
+
+// ==========================================
+// 3. DEMO EMMA & LUCAS (Canva T2: Fairytale Wedding)
+// ==========================================
+export const DEMO_EMMA_LUCAS: InvitationData = {
+  id: "demo-emma-lucas",
+  slug: "emma-and-lucas",
+  tipoEvento: "BODA",
+  estiloPlantilla: "FAIRYTALE_CHATEAU",
+  titulo: "Emma & Lucas",
+  subtitulo: "Fairytale Château Wedding at Oheka Castle",
+  frasePersonalizada: "Together with their families, invite you to their wedding celebration.",
+  fechaEvento: new Date("2030-07-22T15:30:00Z"),
+  fechaTextoPersonalizada: "SATURDAY, JULY 22, 2030 AT 3:30 PM",
+  fotoPortadaUrl:
+    "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80",
+  musicaUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
+  telefonoWhatsappRsvp: "18189876543",
+  fechaLimiteRsvp: "July 15",
+  maxPasesPorInvitado: 2,
+  recepcionNombre: "Oheka Castle Estate",
+  recepcionDireccion: "8221 Sunset Blvd, West Hollywood, CA",
+  recepcionMapUrl: "https://maps.google.com",
+  dressCodeTitulo: "Semi-Formal and Elegant",
+  dressCodeNota: "Feel free to add a touch of pastel to match our theme.",
+  wishlistUrl: "https://www.zola.com/registry",
+};
+
+// ==========================================
+// 4. DEMO MARIPOSAS (Canva T3: Blue Butterfly Garden)
+// ==========================================
+export const DEMO_BUTTERFLY: InvitationData = {
+  id: "demo-butterfly",
+  slug: "mariposas-xv",
+  tipoEvento: "QUINCEANERA",
+  estiloPlantilla: "BLUE_BUTTERFLY",
+  titulo: "Elena",
+  subtitulo: "Blue Butterfly Enchanted Garden",
+  frasePersonalizada: "With grateful hearts, we request the honor of your presence.",
+  fechaEvento: new Date("2026-10-15T17:00:00Z"),
+  fechaTextoPersonalizada: "OCTOBER 15, 2026 AT 5:00 PM",
+  fotoPortadaUrl:
+    "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=800&q=80",
+  musicaUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+  telefonoWhatsappRsvp: "18181234567",
+  fechaLimiteRsvp: "September 30",
+  maxPasesPorInvitado: 4,
+  recepcionNombre: "The Celestial Botanical Pavilion",
+  recepcionDireccion: "450 Gardenia Way, Pasadena, CA",
+  recepcionMapUrl: "https://maps.google.com",
+  dressCodeTitulo: "Formal Attire - Shades of Blue & Lavender",
+  dressCodeNota: "We warmly invite you to wear formal attire to celebrate this enchanted evening.",
+  coloresReservados: ["#7FA2C6", "#2B4C7E", "#BD9FC5", "#FFFFFF"],
+};
+
+// ==========================================
+// 5. DEMO CORALINE (Canva T4: Coraline Other World)
+// ==========================================
+export const DEMO_CORALINE: InvitationData = {
+  id: "demo-coraline",
+  slug: "coraline-party",
+  tipoEvento: "CUMPLEANOS",
+  estiloPlantilla: "CORALINE_MYSTICAL",
+  titulo: "Valeria's 15th Mystery",
+  subtitulo: "Coraline Other World Secret Party",
+  frasePersonalizada: "You have found the secret door... be careful what you wish for!",
+  fechaEvento: new Date("2026-10-31T18:00:00Z"),
+  fechaTextoPersonalizada: "OCTOBER 31, 2026 • 6:00 PM",
+  fotoPortadaUrl:
+    "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=800&q=80",
+  musicaUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
+  telefonoWhatsappRsvp: "18181234567",
+  fechaLimiteRsvp: "October 20",
+  maxPasesPorInvitado: 2,
+  recepcionNombre: "The Pink Palace Apartments & Secret Garden",
+  recepcionDireccion: "123 Oregon Fall Way, Ashland, OR",
+  recepcionMapUrl: "https://maps.google.com",
+  dressCodeTitulo: "Other World Attire: Yellow & Deep Blue",
+  dressCodeNota: "Guests are encouraged to wear shades of yellow, deep blue, or whimsical vintage attire!",
+  coloresReservados: ["#FFD700", "#0A1956", "#3A0443", "#000000"],
+};
+
+// Boda clásica adicional
 export const DEMO_BODA: InvitationData = {
   id: "demo-boda",
   slug: "sofia-y-alejandro",
@@ -73,39 +204,26 @@ export const DEMO_BODA: InvitationData = {
   estiloPlantilla: "CLASICA_IMPERIAL",
   titulo: "Sofía & Alejandro",
   subtitulo: "Nuestra Boda",
-  frasePersonalizada:
-    "El amor no se mira con los ojos, sino con el corazón. Te invitamos a ser testigo del inicio de nuestra mayor aventura.",
   fechaEvento: new Date("2026-10-24T18:00:00Z"),
   fotoPortadaUrl:
     "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80",
   musicaUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
   telefonoWhatsappRsvp: "18189876543",
-  fechaLimiteRsvp: "01 de Octubre, 2026",
-  maxPasesPorInvitado: 2,
-  ceremoniaNombre: "Catedral Nuestra Señora del Pilar",
-  ceremoniaDireccion: "Plaza Central 100",
-  ceremoniaMapUrl: "https://maps.google.com",
   recepcionNombre: "Hacienda Los Laureles",
   recepcionDireccion: "Km 14 Carretera Antigua",
   recepcionMapUrl: "https://maps.google.com",
-  dressCodeTitulo: "Rigurosa Etiqueta",
-  dressCodeNota: "Traje formal oscuro para caballeros y vestido largo para damas. Reservado el color blanco para la novia.",
-  coloresReservados: ["#FFFFFF", "#F5EDDC"],
-  itinerarioJson: [
-    { hora: "5:30 PM", titulo: "Recepción de Invitados", tipoIcono: "car" },
-    { hora: "6:00 PM", titulo: "Ceremonia Nupcial", tipoIcono: "church" },
-    { hora: "7:30 PM", titulo: "Cóctel de Bienvenida", tipoIcono: "wine" },
-    { hora: "9:00 PM", titulo: "Primer Baile y Banquete", tipoIcono: "crown" },
-    { hora: "11:00 PM", titulo: "Apertura de Barra Libre", tipoIcono: "party" },
-  ],
 };
 
 async function getEventoData(rawSlug: string): Promise<InvitationData | null> {
   if (!rawSlug) return null;
   const slug = decodeURIComponent(rawSlug).toLowerCase().trim();
 
-  // Demos instantáneos
+  // Demos instantáneos con las 4 réplicas de Canva + Elsy
   if (slug === "elsy-xv") return DEMO_ELSY;
+  if (slug === "isabella-xv") return DEMO_ISABELLA;
+  if (slug === "emma-and-lucas") return DEMO_EMMA_LUCAS;
+  if (slug === "mariposas-xv") return DEMO_BUTTERFLY;
+  if (slug === "coraline-party") return DEMO_CORALINE;
   if (slug === "sofia-y-alejandro") return DEMO_BODA;
 
   try {
@@ -118,16 +236,20 @@ async function getEventoData(rawSlug: string): Promise<InvitationData | null> {
     return {
       id: evento.id,
       slug: evento.slug,
-      tipoEvento: evento.tipoEvento,
+      tipoEvento: evento.tipoEvento as any,
       estiloPlantilla: evento.estiloPlantilla as any,
       titulo: evento.titulo,
       subtitulo: evento.subtitulo,
       frasePersonalizada: evento.frasePersonalizada,
       fechaEvento: evento.fechaEvento,
+      fechaTextoPersonalizada: evento.fechaTextoPersonalizada,
       fotoPortadaUrl: evento.fotoPortadaUrl,
       fotoInfanciaUrl: evento.fotoInfanciaUrl,
       fotoActualUrl: evento.fotoActualUrl,
+      fotoCierreUrl: evento.fotoCierreUrl,
       musicaUrl: evento.musicaUrl,
+      videoUrl: evento.videoUrl,
+      galeriaFotosUrls: evento.galeriaFotosUrls,
       telefonoWhatsappRsvp: evento.telefonoWhatsappRsvp,
       fechaLimiteRsvp: evento.fechaLimiteRsvp ? evento.fechaLimiteRsvp.toLocaleDateString() : null,
       maxPasesPorInvitado: evento.maxPasesPorInvitado,
@@ -140,9 +262,15 @@ async function getEventoData(rawSlug: string): Promise<InvitationData | null> {
       dressCodeTitulo: evento.dressCodeTitulo,
       dressCodeNota: evento.dressCodeNota,
       coloresReservados: evento.coloresReservados,
+      celebrationGuideline: evento.celebrationGuideline,
+      wishlistUrl: evento.wishlistUrl,
+      idiomaDefault: evento.idiomaDefault,
       itinerarioJson: evento.itinerarioJson,
       corteHonorJson: evento.corteHonorJson,
       mesaRegalosJson: evento.mesaRegalosJson,
+      hospedajeJson: evento.hospedajeJson,
+      transporteJson: evento.transporteJson,
+      historiaHitosJson: evento.historiaHitosJson,
     };
   } catch (error) {
     console.warn("Base de datos no disponible o error al consultar slug:", slug, error);
@@ -206,5 +334,5 @@ export default async function InvitationPage(props: PageProps) {
     notFound();
   }
 
-  return <InvitationMobileView data={data} />;
+  return <TemplateDispatcher data={data} />;
 }

@@ -7,7 +7,7 @@ import { TemplateConfig } from "@/lib/templates";
 
 interface EnvelopeIntroProps {
   titulo: string;
-  tipoEvento: "QUINCEANERA" | "BODA";
+  tipoEvento?: "QUINCEANERA" | "BODA" | "CUMPLEANOS";
   fechaTexto: string;
   template: TemplateConfig;
   onOpen?: () => void;
@@ -16,7 +16,7 @@ interface EnvelopeIntroProps {
 
 export default function EnvelopeIntro({
   titulo,
-  tipoEvento,
+  tipoEvento = "QUINCEANERA",
   fechaTexto,
   template,
   onOpen,
@@ -135,7 +135,11 @@ export default function EnvelopeIntro({
             className="text-[9px] tracking-widest uppercase font-semibold opacity-70 mb-1"
             style={{ fontFamily: template.fontSubheading, color: template.textSecondary }}
           >
-            {tipoEvento === "QUINCEANERA" ? "Mis XV Años" : "Nuestra Boda"}
+            {tipoEvento === "QUINCEANERA"
+              ? "Mis XV Años"
+              : tipoEvento === "BODA"
+              ? "Nuestra Boda"
+              : "Fiesta de Cumpleaños"}
           </p>
 
           <h3
