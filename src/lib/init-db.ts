@@ -89,6 +89,7 @@ export async function ensurePostgresTables(): Promise<boolean> {
           "regalosZelle" TEXT,
           "regalosCashApp" TEXT,
           "rsvpFechaLimite" TEXT,
+          "rsvpDiasAntes" INTEGER DEFAULT 15,
           "autorBendicion" TEXT,
           "textoDisco" TEXT,
           "mensajeDespedida" TEXT,
@@ -109,6 +110,8 @@ export async function ensurePostgresTables(): Promise<boolean> {
           "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
           "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
       );
+
+      ALTER TABLE "Evento" ADD COLUMN IF NOT EXISTS "rsvpDiasAntes" INTEGER DEFAULT 15;
 
       CREATE TABLE IF NOT EXISTS "RsvpRegistro" (
           "id" TEXT NOT NULL PRIMARY KEY,

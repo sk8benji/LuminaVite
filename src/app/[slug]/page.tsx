@@ -185,6 +185,7 @@ export const DEMO_BUTTERFLY: InvitationData = {
   regalosZelle: "valeria.xv@example.com",
   regalosCashApp: "$ValeriaXV",
   rsvpFechaLimite: "Favor de confirmar antes del 20 de Octubre",
+  rsvpDiasAntes: 15,
   mensajeDespedida: "See You Soon! With love and gratitude for being part of this fairytale day.",
   itinerarioJson: [
     { hora: "04:30 PM", titulo: "Llegada & Recepción", tipoIcono: "car" },
@@ -309,6 +310,7 @@ async function getEventoData(rawSlug: string): Promise<InvitationData | null> {
       regalosZelle: (evento as any).regalosZelle,
       regalosCashApp: (evento as any).regalosCashApp,
       rsvpFechaLimite: (evento as any).rsvpFechaLimite,
+      rsvpDiasAntes: (evento as any).rsvpDiasAntes ?? 15,
       autorBendicion: (evento as any).autorBendicion,
       textoDisco: (evento as any).textoDisco,
       mensajeDespedida: (evento as any).mensajeDespedida,

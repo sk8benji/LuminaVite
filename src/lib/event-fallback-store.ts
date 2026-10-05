@@ -41,6 +41,7 @@ export interface FallbackEvento {
   regalosZelle?: string | null;
   regalosCashApp?: string | null;
   rsvpFechaLimite?: string | null;
+  rsvpDiasAntes?: number | null;
   autorBendicion?: string | null;
   textoDisco?: string | null;
   mensajeDespedida?: string | null;
