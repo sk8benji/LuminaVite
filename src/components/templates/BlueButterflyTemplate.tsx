@@ -32,9 +32,14 @@ export default function BlueButterflyTemplate({
 
   // Formulario RSVP
   const [guestName, setGuestName] = useState("");
+  const [guestPhone, setGuestPhone] = useState("");
   const [selectedSeats, setSelectedSeats] = useState("2");
+  const [rsvpFeedback, setRsvpFeedback] = useState<{
+    msg: string;
+    isUpdate: boolean;
+  } | null>(null);
 
-  // Destinatario personalizado desde la URL (Modo VIP: ?para=Familia+Perez o ?code=FAM-RAMIREZ o ?pases=3)
+  // Destinatario personalizado desde la URL (Modo VIP: ?para=Familia+Perez o ?code=FAM-RAMIREZ o ?pases=3 o ?tel=...)
   const [guestRecipient, setGuestRecipient] = useState("Familia & Amigos");
 
   useEffect(() => {
@@ -42,6 +47,8 @@ export default function BlueButterflyTemplate({
       const params = new URLSearchParams(window.location.search);
       const name = params.get("para") || params.get("invitado") || params.get("guest") || params.get("code");
       const seats = params.get("pases") || params.get("seats");
+      const phoneParam = params.get("tel") || params.get("phone") || params.get("telefono");
+      if (phoneParam) setGuestPhone(phoneParam);
       if (name) {
         // Formatear código si viene como FAM-RAMIREZ -> Familia Ramirez
         const formatted = name.startsWith("FAM-")
@@ -135,28 +142,37 @@ export default function BlueButterflyTemplate({
     return () => clearInterval(interval);
   }, [data.fechaEvento]);
 
-  // Envío a WhatsApp y guardado en Base de Datos (para el Magic Link Dashboard)
+  // Envío a WhatsApp y guardado en Base de Datos (con Upsert inteligente por teléfono)
   const handleRsvpSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const phone = data.telefonoWhatsappRsvp.replace(/[^0-9]/g, "");
 
-    // Guardar en la base de datos para el cliente / mamá
+    // Guardar en la base de datos con control de duplicados
     try {
-      fetch("/api/rsvp/save", {
+      const res = await fetch("/api/rsvp/save", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           eventoId: data.id || `slug-${data.slug}`,
           nombreInvitado: guestName,
+          telefono: guestPhone || undefined,
           asistira: true,
           pases: Number(selectedSeats) || 1,
         }),
-      }).catch(() => {});
+      });
+      const resJson = await res.json();
+      if (resJson.message) {
+        setRsvpFeedback({
+          msg: resJson.message,
+          isUpdate: Boolean(resJson.isUpdate),
+        });
+      }
     } catch {}
 
     const text =
       `*Confirmación de Asistencia - Mis XV Años ${data.titulo}*%0A` +
       `*Invitado:* ${encodeURIComponent(guestName)}%0A` +
+      (guestPhone ? `*Teléfono:* ${encodeURIComponent(guestPhone)}%0A` : "") +
       `*Pases confirmados:* ${encodeURIComponent(selectedSeats)}%0A` +
       `¡Será un honor acompañarte en tu gran día! 🦋✨`;
 
@@ -1139,6 +1155,19 @@ export default function BlueButterflyTemplate({
               {data.fechaLimiteRsvp || (isEn ? "October 20th" : "20 de Octubre")}
             </p>
 
+            {/* Alerta de confirmación previa / actualización de pases */}
+            {rsvpFeedback && (
+              <div
+                className={`mb-4 p-3 rounded-xl text-xs font-serif-roman border text-center transition ${
+                  rsvpFeedback.isUpdate
+                    ? "bg-amber-50 text-amber-900 border-amber-200"
+                    : "bg-emerald-50 text-emerald-900 border-emerald-200"
+                }`}
+              >
+                <p className="font-semibold">{rsvpFeedback.msg}</p>
+              </div>
+            )}
+
             <form onSubmit={handleRsvpSubmit} className="space-y-4 text-left">
               <div>
                 <label className="block text-[11px] font-semibold text-slate-600 uppercase tracking-wider mb-1 font-serif-roman">
@@ -1151,6 +1180,19 @@ export default function BlueButterflyTemplate({
                   onChange={(e) => setGuestName(e.target.value)}
                   className="w-full bg-[#F4F9FD] border border-blue-100 rounded-xl px-3.5 py-2.5 text-xs text-slate-800 focus:outline-none focus:border-[#2F5A84]"
                   placeholder={isEn ? "e.g. The Morales Family" : "Ej. Familia Morales"}
+                />
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-semibold text-slate-600 uppercase tracking-wider mb-1 font-serif-roman">
+                  {isEn ? "Phone Number (Optional for SMS / updates)" : "Teléfono Móvil (Opcional para actualizar pases)"}
+                </label>
+                <input
+                  type="tel"
+                  value={guestPhone}
+                  onChange={(e) => setGuestPhone(e.target.value)}
+                  className="w-full bg-[#F4F9FD] border border-blue-100 rounded-xl px-3.5 py-2.5 text-xs text-slate-800 focus:outline-none focus:border-[#2F5A84]"
+                  placeholder={isEn ? "e.g. 555-123-4567" : "Ej. 55 1234 5678"}
                 />
               </div>
 

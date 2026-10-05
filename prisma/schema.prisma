@@ -130,8 +130,12 @@ model RsvpRegistro {
   eventoId       String
   evento         Evento   @relation(fields: [eventoId], references: [id], onDelete: Cascade)
   nombreInvitado String
+  telefono       String?  // Número de teléfono normalizado para control de duplicados
   asistira       Boolean
   pases          Int      @default(1)
   acompanantes   String?
   createdAt      DateTime @default(now())
+  updatedAt      DateTime @default(now()) @updatedAt
+
+  @@unique([eventoId, telefono], name: "eventoId_telefono")
 }

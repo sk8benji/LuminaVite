@@ -35,6 +35,7 @@ interface PanelData {
   rsvps: Array<{
     id: string;
     nombreInvitado: string;
+    telefono?: string | null;
     asistira: boolean;
     pases: number;
     acompanantes?: string | null;
@@ -77,9 +78,10 @@ export default function ClientMagicLinkPanelPage({
   const exportToCSV = () => {
     if (!data || !data.rsvps.length) return;
 
-    const headers = ["Nombre Invitado", "Asistencia", "Pases", "Fecha Confirmacion"];
+    const headers = ["Nombre Invitado", "Telefono", "Asistencia", "Pases", "Fecha Confirmacion"];
     const rows = data.rsvps.map((r) => [
       `"${r.nombreInvitado.replace(/"/g, '""')}"`,
+      `"${r.telefono || ""}"`,
       r.asistira ? "Confirmado" : "Declinado",
       r.pases,
       new Date(r.createdAt).toLocaleString(),
@@ -252,6 +254,7 @@ export default function ClientMagicLinkPanelPage({
                 <thead>
                   <tr className="bg-stone-50/70 text-stone-500 font-semibold text-[11px]">
                     <th className="py-2.5 px-4">Invitado / Familia</th>
+                    <th className="py-2.5 px-4">Teléfono</th>
                     <th className="py-2.5 px-4">Estado</th>
                     <th className="py-2.5 px-4">Pases</th>
                     <th className="py-2.5 px-4 text-right">Fecha de Registro</th>
@@ -262,6 +265,9 @@ export default function ClientMagicLinkPanelPage({
                     <tr key={rsvp.id} className="hover:bg-blue-50/30 transition">
                       <td className="py-3 px-4 font-semibold text-stone-800">
                         {rsvp.nombreInvitado}
+                      </td>
+                      <td className="py-3 px-4 font-mono text-stone-600">
+                        {rsvp.telefono || "—"}
                       </td>
                       <td className="py-3 px-4">
                         {rsvp.asistira ? (
