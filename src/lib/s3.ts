@@ -1,4 +1,4 @@
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { S3Client, PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 const endpoint = process.env.AWS_ENDPOINT || process.env.S3_ENDPOINT;
@@ -60,6 +60,55 @@ export async function getPresignedUploadUrl(
     fileKey,
     fileUrl,
   };
+}
+
+/**
+ * Respalda un evento en S3 como archivo JSON persistente.
+ * Esto asegura que las invitaciones sigan existiendo aún si el contenedor de Railway se reinicia.
+ */
+export async function saveEventToS3(slug: string, eventData: any): Promise<boolean> {
+  if (!process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY) {
+    return false;
+  }
+  try {
+    const cleanSlug = slug.toLowerCase().trim();
+    const fileKey = `events-db/${cleanSlug}.json`;
+    const command = new PutObjectCommand({
+      Bucket: BUCKET_NAME,
+      Key: fileKey,
+      Body: JSON.stringify(eventData),
+      ContentType: "application/json",
+    });
+    await s3Client.send(command);
+    console.log(`✅ [S3] Evento respaldado con éxito en S3: ${fileKey}`);
+    return true;
+  } catch (err: any) {
+    console.warn(`⚠️ [S3] Aviso al respaldar evento en S3:`, err?.message);
+    return false;
+  }
+}
+
+/**
+ * Recupera un evento respaldado en S3.
+ */
+export async function getEventFromS3(slug: string): Promise<any | null> {
+  if (!process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY) {
+    return null;
+  }
+  try {
+    const cleanSlug = slug.toLowerCase().trim();
+    const fileKey = `events-db/${cleanSlug}.json`;
+    const command = new GetObjectCommand({
+      Bucket: BUCKET_NAME,
+      Key: fileKey,
+    });
+    const res = await s3Client.send(command);
+    if (!res.Body) return null;
+    const bodyStr = await res.Body.transformToString();
+    return JSON.parse(bodyStr);
+  } catch (err: any) {
+    return null;
+  }
 }
 
 export default s3Client;

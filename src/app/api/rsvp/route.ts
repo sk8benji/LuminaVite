@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/db";
+import { fallbackEventStore } from "@/lib/event-fallback-store";
 import {
   sendGuestConfirmationSms,
   sendHostNotificationEmail,
@@ -42,8 +43,15 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    // Si es demo o no existe en BD
+    // Si es demo o no existe en BD, guardar en almacenamiento de respaldo
     if (!evento) {
+      fallbackEventStore.addRsvp(cleanIdentifier, {
+        nombreInvitado,
+        telefono: normalizedPhone || undefined,
+        asistira: Boolean(asistira),
+        pases: passesCount,
+      });
+
       return NextResponse.json({
         success: true,
         isDemo: true,

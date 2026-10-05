@@ -85,9 +85,35 @@ function PanelContent({ slug }: { slug: string }) {
       .finally(() => setLoading(false));
   }, [slug, key]);
 
-  // Si no está cargando y fue rechazado por seguridad, renderiza 404
+  // Si no está cargando y fue rechazado por seguridad, renderiza pantalla explicativa en vez de 404
   if (!loading && unauthorized) {
-    notFound();
+    return (
+      <div className="min-h-screen bg-stone-50 flex items-center justify-center p-4">
+        <div className="bg-white max-w-md w-full p-8 rounded-3xl border border-stone-200 text-center shadow-lg space-y-4">
+          <div className="w-14 h-14 mx-auto rounded-full bg-amber-50 text-amber-600 flex items-center justify-center border border-amber-200">
+            <Sparkles className="w-7 h-7" />
+          </div>
+          <h2 className="text-xl font-bold text-stone-900">Acceso al Panel de Control</h2>
+          <p className="text-xs text-stone-500 leading-relaxed">
+            Este panel es privado y requiere el <strong>Magic Link</strong> con la clave secreta proporcionada al publicar el evento (<code className="bg-stone-100 px-1.5 py-0.5 rounded text-stone-700">?key=...</code>).
+          </p>
+          <div className="pt-2 flex flex-col sm:flex-row gap-2">
+            <Link
+              href={`/${slug}`}
+              className="flex-1 py-2.5 px-4 bg-stone-900 hover:bg-black text-white rounded-xl text-xs font-semibold transition"
+            >
+              Ver Invitación
+            </Link>
+            <Link
+              href="/dashboard"
+              className="flex-1 py-2.5 px-4 bg-stone-100 hover:bg-stone-200 text-stone-700 rounded-xl text-xs font-semibold transition"
+            >
+              Ir al Dashboard
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   const copyPublicLink = () => {

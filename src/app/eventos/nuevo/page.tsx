@@ -16,6 +16,8 @@ import {
   Eye,
   Sliders,
   Share2,
+  X,
+  Copy,
 } from "lucide-react";
 import { TEMPLATES, TemplateId } from "@/lib/templates";
 import { InvitationData } from "@/components/invitation/InvitationMobileView";
@@ -468,6 +470,8 @@ export default function NuevoEventoPage() {
     magicLink: string;
     titulo: string;
   } | null>(null);
+  const [copiedPublic, setCopiedPublic] = useState(false);
+  const [copiedMagic, setCopiedMagic] = useState(false);
 
   // Guardar en la base de datos
   const handleSave = async () => {
@@ -1622,10 +1626,26 @@ export default function NuevoEventoPage() {
       </div>
 
       {/* Modal de Éxito con las Dos URLs Generadas Automáticamente */}
+      {/* Modal de Éxito con las Dos URLs Generadas Automáticamente */}
       {createdLinks && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white w-full max-w-lg rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6 animate-in fade-in zoom-in-95 duration-200">
-            <div className="text-center space-y-1.5">
+        <div
+          className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setCreatedLinks(null);
+          }}
+        >
+          <div className="bg-white w-full max-w-lg rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6 relative animate-in fade-in zoom-in-95 duration-200">
+            {/* Botón de cerrar (X) en la esquina superior derecha */}
+            <button
+              type="button"
+              onClick={() => setCreatedLinks(null)}
+              className="absolute top-5 right-5 p-2 rounded-full hover:bg-stone-100 text-stone-400 hover:text-stone-700 transition"
+              aria-label="Cerrar modal"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <div className="text-center space-y-1.5 pr-6">
               <span className="text-3xl block">🎉</span>
               <h3 className="text-lg font-bold text-stone-900">
                 ¡Invitación Publicada Exitosamente!
@@ -1658,10 +1678,16 @@ export default function NuevoEventoPage() {
                     className="flex-1 px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs font-mono text-stone-700 select-all"
                   />
                   <button
-                    onClick={() => navigator.clipboard.writeText(createdLinks.publicUrl)}
-                    className="px-3 py-2 bg-stone-900 hover:bg-black text-white rounded-xl text-xs font-semibold transition cursor-pointer"
+                    type="button"
+                    onClick={() => {
+                      navigator.clipboard.writeText(createdLinks.publicUrl);
+                      setCopiedPublic(true);
+                      setTimeout(() => setCopiedPublic(false), 2000);
+                    }}
+                    className="px-3.5 py-2 bg-stone-900 hover:bg-black text-white rounded-xl text-xs font-semibold transition cursor-pointer flex items-center gap-1.5"
                   >
-                    Copiar
+                    {copiedPublic ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                    {copiedPublic ? "¡Copiado!" : "Copiar"}
                   </button>
                 </div>
               </div>
@@ -1688,30 +1714,45 @@ export default function NuevoEventoPage() {
                     className="flex-1 px-3 py-2 bg-white border border-amber-200 rounded-xl text-xs font-mono text-amber-900 select-all"
                   />
                   <button
-                    onClick={() => navigator.clipboard.writeText(createdLinks.magicLink)}
-                    className="px-3 py-2 bg-amber-700 hover:bg-amber-800 text-white rounded-xl text-xs font-semibold transition cursor-pointer"
+                    type="button"
+                    onClick={() => {
+                      navigator.clipboard.writeText(createdLinks.magicLink);
+                      setCopiedMagic(true);
+                      setTimeout(() => setCopiedMagic(false), 2000);
+                    }}
+                    className="px-3.5 py-2 bg-amber-700 hover:bg-amber-800 text-white rounded-xl text-xs font-semibold transition cursor-pointer flex items-center gap-1.5"
                   >
-                    Copiar
+                    {copiedMagic ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                    {copiedMagic ? "¡Copiado!" : "Copiar"}
                   </button>
                 </div>
               </div>
             </div>
 
-            <div className="flex items-center gap-3 pt-2">
+            <div className="flex flex-col sm:flex-row items-center gap-2.5 pt-2">
               <Link
-                href={`/${formData.slug}`}
+                href={createdLinks.publicUrl}
                 target="_blank"
-                className="flex-1 py-2.5 text-center bg-stone-100 hover:bg-stone-200 text-stone-800 rounded-xl text-xs font-semibold transition"
+                rel="noopener noreferrer"
+                className="w-full sm:flex-1 py-2.5 text-center bg-stone-100 hover:bg-stone-200 text-stone-800 rounded-xl text-xs font-semibold transition"
               >
                 Abrir Invitación
               </Link>
               <Link
-                href={`/${formData.slug}/panel`}
+                href={createdLinks.magicLink}
                 target="_blank"
-                className="flex-1 py-2.5 text-center bg-[#2F5A84] hover:bg-[#203e5c] text-white rounded-xl text-xs font-semibold shadow-sm transition"
+                rel="noopener noreferrer"
+                className="w-full sm:flex-1 py-2.5 text-center bg-[#2F5A84] hover:bg-[#203e5c] text-white rounded-xl text-xs font-semibold shadow-sm transition"
               >
                 Abrir Panel Magic Link
               </Link>
+              <button
+                type="button"
+                onClick={() => setCreatedLinks(null)}
+                className="w-full sm:w-auto px-4 py-2.5 text-center bg-stone-200 hover:bg-stone-300 text-stone-700 rounded-xl text-xs font-semibold transition"
+              >
+                Cerrar
+              </button>
             </div>
           </div>
         </div>

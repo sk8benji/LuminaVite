@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import { saveEventToS3, getEventFromS3 } from "@/lib/s3";
 
 export interface FallbackEvento {
   id: string;
@@ -104,17 +105,37 @@ loadStoreFromFile();
 
 export const fallbackEventStore = {
   saveEvent(evento: FallbackEvento): FallbackEvento {
-    memoryStore.set(evento.slug.toLowerCase(), {
+    const cleanEv = {
       ...evento,
       rsvps: evento.rsvps || [],
       updatedAt: new Date().toISOString(),
-    });
+    };
+    memoryStore.set(evento.slug.toLowerCase().trim(), cleanEv);
     saveStoreToFile();
-    return evento;
+    // Respaldo inmediato en AWS S3 para persistencia permanente
+    saveEventToS3(evento.slug, cleanEv).catch(() => {});
+    return cleanEv;
   },
 
-  getEvent(slug: string): FallbackEvento | undefined {
-    return memoryStore.get(slug.toLowerCase());
+  async getEvent(slug: string): Promise<FallbackEvento | undefined> {
+    const key = slug.toLowerCase().trim();
+    let ev = memoryStore.get(key);
+    if (!ev) {
+      loadStoreFromFile();
+      ev = memoryStore.get(key);
+    }
+    if (!ev) {
+      // Si el contenedor fue reiniciado o reconstruido por Railway, recuperar de AWS S3
+      try {
+        const s3Ev = await getEventFromS3(key);
+        if (s3Ev) {
+          memoryStore.set(key, s3Ev);
+          saveStoreToFile();
+          ev = s3Ev;
+        }
+      } catch {}
+    }
+    return ev;
   },
 
   getAllEvents(): FallbackEvento[] {
@@ -132,7 +153,8 @@ export const fallbackEventStore = {
       pases: number;
     }
   ) {
-    const ev = memoryStore.get(slug.toLowerCase());
+    const key = slug.toLowerCase().trim();
+    const ev = memoryStore.get(key);
     if (!ev) return null;
 
     if (!ev.rsvps) ev.rsvps = [];
@@ -157,6 +179,7 @@ export const fallbackEventStore = {
     }
 
     saveStoreToFile();
+    saveEventToS3(key, ev).catch(() => {});
     return rsvpRecord;
   },
 };

@@ -264,7 +264,7 @@ async function getEventoData(rawSlug: string): Promise<InvitationData | null> {
     });
 
     if (!evento) {
-      const fallback = fallbackEventStore.getEvent(slug);
+      const fallback = await fallbackEventStore.getEvent(slug);
       if (fallback) {
         return {
           ...fallback,
@@ -330,7 +330,7 @@ async function getEventoData(rawSlug: string): Promise<InvitationData | null> {
     };
   } catch (error) {
     console.warn("Base de datos no disponible o error al consultar slug:", slug, error);
-    const fallback = fallbackEventStore.getEvent(slug);
+    const fallback = await fallbackEventStore.getEvent(slug);
     if (fallback) {
       return {
         ...fallback,

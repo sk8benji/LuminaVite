@@ -36,7 +36,7 @@ export async function GET(
     }
 
     if (!evento) {
-      const fallback = fallbackEventStore.getEvent(slug);
+      const fallback = await fallbackEventStore.getEvent(slug);
       if (fallback) {
         if (key !== "demo" && key !== fallback.panelToken) {
           return NextResponse.json(

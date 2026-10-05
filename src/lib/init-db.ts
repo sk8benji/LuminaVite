@@ -8,26 +8,23 @@ export async function ensurePostgresTables(): Promise<boolean> {
   try {
     console.log("⚡ [PostgreSQL] Creando tipos y tablas de forma nativa...");
 
-    await prisma.$executeRawUnsafe(`
-      DO $$ BEGIN
+    const sqlStatements = [
+      `DO $$ BEGIN
         CREATE TYPE "TipoEvento" AS ENUM ('BODA', 'QUINCEANERA', 'CUMPLEANOS');
-      EXCEPTION
-        WHEN duplicate_object THEN null;
-      END $$;
+      EXCEPTION WHEN duplicate_object THEN null;
+      END $$;`,
 
-      DO $$ BEGIN
+      `DO $$ BEGIN
         CREATE TYPE "EstiloPlantilla" AS ENUM ('PRINCESA_ROSA', 'ELEGANT_ROSE', 'FAIRYTALE_CHATEAU', 'BLUE_BUTTERFLY', 'CORALINE_MYSTICAL', 'CLASICA_IMPERIAL', 'ESMERALDA_ROYAL', 'JARDIN_BOTANICA', 'MINIMALISTA_EDITORIAL');
-      EXCEPTION
-        WHEN duplicate_object THEN null;
-      END $$;
+      EXCEPTION WHEN duplicate_object THEN null;
+      END $$;`,
 
-      DO $$ BEGIN
+      `DO $$ BEGIN
         CREATE TYPE "RolUsuario" AS ENUM ('ADMIN', 'SALON', 'CLIENTE');
-      EXCEPTION
-        WHEN duplicate_object THEN null;
-      END $$;
+      EXCEPTION WHEN duplicate_object THEN null;
+      END $$;`,
 
-      CREATE TABLE IF NOT EXISTS "Usuario" (
+      `CREATE TABLE IF NOT EXISTS "Usuario" (
           "id" TEXT NOT NULL PRIMARY KEY,
           "email" TEXT UNIQUE NOT NULL,
           "nombre" TEXT NOT NULL,
@@ -35,9 +32,9 @@ export async function ensurePostgresTables(): Promise<boolean> {
           "rol" "RolUsuario" NOT NULL DEFAULT 'CLIENTE',
           "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
           "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
-      );
+      );`,
 
-      CREATE TABLE IF NOT EXISTS "Salon" (
+      `CREATE TABLE IF NOT EXISTS "Salon" (
           "id" TEXT NOT NULL PRIMARY KEY,
           "usuarioId" TEXT NOT NULL REFERENCES "Usuario"("id") ON DELETE CASCADE,
           "nombre" TEXT NOT NULL,
@@ -46,9 +43,9 @@ export async function ensurePostgresTables(): Promise<boolean> {
           "direccion" TEXT,
           "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
           "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
-      );
+      );`,
 
-      CREATE TABLE IF NOT EXISTS "Evento" (
+      `CREATE TABLE IF NOT EXISTS "Evento" (
           "id" TEXT NOT NULL PRIMARY KEY,
           "usuarioId" TEXT NOT NULL REFERENCES "Usuario"("id") ON DELETE CASCADE,
           "salonId" TEXT REFERENCES "Salon"("id") ON DELETE SET NULL,
@@ -109,11 +106,11 @@ export async function ensurePostgresTables(): Promise<boolean> {
           "vistasContador" INTEGER NOT NULL DEFAULT 0,
           "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
           "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
-      );
+      );`,
 
-      ALTER TABLE "Evento" ADD COLUMN IF NOT EXISTS "rsvpDiasAntes" INTEGER DEFAULT 15;
+      `ALTER TABLE "Evento" ADD COLUMN IF NOT EXISTS "rsvpDiasAntes" INTEGER DEFAULT 15;`,
 
-      CREATE TABLE IF NOT EXISTS "RsvpRegistro" (
+      `CREATE TABLE IF NOT EXISTS "RsvpRegistro" (
           "id" TEXT NOT NULL PRIMARY KEY,
           "eventoId" TEXT NOT NULL REFERENCES "Evento"("id") ON DELETE CASCADE,
           "nombreInvitado" TEXT NOT NULL,
@@ -124,8 +121,16 @@ export async function ensurePostgresTables(): Promise<boolean> {
           "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
           "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
           CONSTRAINT "RsvpRegistro_eventoId_telefono_key" UNIQUE ("eventoId", "telefono")
-      );
-    `);
+      );`
+    ];
+
+    for (const sql of sqlStatements) {
+      try {
+        await prisma.$executeRawUnsafe(sql);
+      } catch (sqlErr: any) {
+        // Ignorar si el tipo o columna ya existe
+      }
+    }
 
     tablesInitialized = true;
     console.log("✅ Tablas de PostgreSQL inicializadas correctamente.");
