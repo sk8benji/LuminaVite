@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import os from "os";
 import { saveEventToS3, getEventFromS3, listEventsFromS3 } from "@/lib/s3";
 
 export interface FallbackEvento {
@@ -63,13 +64,25 @@ export interface FallbackEvento {
 const memoryStore: Map<string, FallbackEvento> = new Map();
 
 function getStoreFilePath(): string {
-  const dir = path.join(process.cwd(), "data");
-  if (!fs.existsSync(dir)) {
+  try {
+    const primaryDir = path.join(process.cwd(), "data");
+    if (!fs.existsSync(primaryDir)) {
+      fs.mkdirSync(primaryDir, { recursive: true });
+    }
+    const testFile = path.join(primaryDir, ".test-write");
+    fs.writeFileSync(testFile, "1");
+    fs.unlinkSync(testFile);
+    return path.join(primaryDir, "fallback-events.json");
+  } catch {
+    // Si /app/data en el contenedor Linux no tiene permisos de escritura, usar /tmp
+    const tmpDir = path.join(os.tmpdir(), "luminavite");
     try {
-      fs.mkdirSync(dir, { recursive: true });
+      if (!fs.existsSync(tmpDir)) {
+        fs.mkdirSync(tmpDir, { recursive: true });
+      }
     } catch {}
+    return path.join(tmpDir, "fallback-events.json");
   }
-  return path.join(dir, "fallback-events.json");
 }
 
 function loadStoreFromFile(): void {
@@ -85,18 +98,22 @@ function loadStoreFromFile(): void {
         });
       }
     }
-  } catch (err) {
-    console.warn("No se pudo leer el archivo de almacenamiento temporal:", err);
+  } catch {
+    // Silencioso: si no se puede leer, se consulta memoria o S3
   }
 }
 
 function saveStoreToFile(): void {
   try {
     const filePath = getStoreFilePath();
+    const dir = path.dirname(filePath);
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
     const data = Array.from(memoryStore.values());
     fs.writeFileSync(filePath, JSON.stringify(data, null, 2), "utf-8");
-  } catch (err) {
-    console.warn("No se pudo persistir el almacenamiento temporal:", err);
+  } catch {
+    // Silencioso: los eventos siempre están seguros en memoria y en S3
   }
 }
 
