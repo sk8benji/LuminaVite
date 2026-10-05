@@ -377,7 +377,7 @@ export default function BlueButterflyTemplate({
           {/* Título Superior Cursivo */}
           <div className="text-center mb-4 sm:mb-6">
             <h2 className="font-script text-5xl sm:text-6xl md:text-7xl text-[#6B9AC4] drop-shadow-sm font-normal">
-              You&apos;ve been invited
+              {isEn ? "You've been invited" : "Has sido invitado"}
             </h2>
             {guestRecipient && guestRecipient !== "Familia & Amigos" && (
               <p className="text-sm mt-1 text-[#7A9BBF] font-serif-roman italic tracking-wider">
@@ -494,25 +494,19 @@ export default function BlueButterflyTemplate({
               </button>
             </div>
           ) : (
-            <div className="mt-6 sm:mt-8 flex items-center justify-center z-30">
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleOpenEnvelope(isEn ? "en" : "es");
-                }}
-                className="relative inline-flex items-center justify-center w-40 sm:w-48 h-14 sm:h-16 group cursor-pointer transition-transform duration-300 hover:scale-105 active:scale-95"
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src="/assets/template-butterfly/boton-idioma-marco.png"
-                  alt={isEn ? "English" : "Español"}
-                  className="absolute inset-0 w-full h-full object-contain pointer-events-none drop-shadow-sm group-hover:drop-shadow-md transition-all"
-                />
-                <span className="relative z-10 font-serif-roman text-xs sm:text-sm tracking-[0.25em] uppercase text-[#7A9BBF] font-semibold pt-0.5">
-                  {isEn ? "ENGLISH" : "ESPAÑOL"}
-                </span>
-              </button>
+            <div
+              onClick={(e) => {
+                e.stopPropagation();
+                handleOpenEnvelope(isEn ? "en" : "es");
+              }}
+              className="mt-6 sm:mt-8 flex flex-col items-center justify-center z-30 cursor-pointer group transition-transform duration-300 hover:scale-105 active:scale-95"
+            >
+              <p className="font-serif-roman text-xs sm:text-sm tracking-[0.25em] uppercase text-[#7A9BBF] font-semibold drop-shadow-sm transition-colors group-hover:text-[#4A7BB0] flex items-center gap-2">
+                <span className="inline-block animate-bounce text-sm">✨</span>
+                {isEn ? "Tap the envelope to open" : "Toca el sobre para abrir"}
+                <span className="inline-block animate-bounce text-sm">✨</span>
+              </p>
+              <div className="w-16 h-0.5 bg-[#D8B772]/60 mt-1.5 transition-all duration-300 group-hover:w-28 group-hover:bg-[#D8B772]" />
             </div>
           )}
         </aside>

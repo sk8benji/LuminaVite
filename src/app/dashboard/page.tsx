@@ -13,6 +13,7 @@ import {
   Copy,
   Check,
   MessageCircle,
+  Edit3,
 } from "lucide-react";
 
 interface EventoItem {
@@ -220,8 +221,12 @@ export default function DashboardPage() {
                   <div className="relative h-48 bg-stone-100 overflow-hidden">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
-                      src={ev.fotoPortadaUrl}
+                      src={ev.fotoPortadaUrl || "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=600&q=80"}
                       alt={ev.titulo}
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src =
+                          "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=600&q=80";
+                      }}
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                     <div className="absolute top-3 left-3 flex gap-2">
@@ -234,7 +239,14 @@ export default function DashboardPage() {
                       </span>
                     </div>
 
-                    <div className="absolute top-3 right-3">
+                    <div className="absolute top-3 right-3 flex items-center gap-1.5">
+                      <Link
+                        href={`/eventos/nuevo?editar=${encodeURIComponent(ev.slug)}`}
+                        className="p-1.5 rounded-full bg-white/90 hover:bg-white text-stone-700 shadow-sm transition hover:scale-105"
+                        title="Editar invitación"
+                      >
+                        <Edit3 className="w-3.5 h-3.5 text-stone-800" />
+                      </Link>
                       <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-emerald-500 text-white shadow">
                         Activa
                       </span>
@@ -266,8 +278,17 @@ export default function DashboardPage() {
                       </div>
                     </div>
 
-                    {/* Acciones de la tarjeta: Link Público + Magic Link Cliente */}
+                    {/* Acciones de la tarjeta: Editar + Link Público + WhatsApp + Magic Link */}
                     <div className="space-y-2 mt-4 pt-4 border-t border-stone-100">
+                      {/* Botón principal: Editar Invitación */}
+                      <Link
+                        href={`/eventos/nuevo?editar=${encodeURIComponent(ev.slug)}`}
+                        className="w-full flex items-center justify-center gap-1.5 py-2 px-3 bg-stone-900 hover:bg-black text-white rounded-xl text-xs font-semibold shadow-xs transition"
+                      >
+                        <Edit3 className="w-3.5 h-3.5" />
+                        Editar Invitación
+                      </Link>
+
                       <div className="grid grid-cols-2 gap-2">
                         <Link
                           href={`/${ev.slug}`}

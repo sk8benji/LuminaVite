@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import { saveEventToS3, getEventFromS3 } from "@/lib/s3";
+import { saveEventToS3, getEventFromS3, listEventsFromS3 } from "@/lib/s3";
 
 export interface FallbackEvento {
   id: string;
@@ -138,7 +138,20 @@ export const fallbackEventStore = {
     return ev;
   },
 
-  getAllEvents(): FallbackEvento[] {
+  async getAllEvents(): Promise<FallbackEvento[]> {
+    loadStoreFromFile();
+    try {
+      const s3Events = await listEventsFromS3();
+      for (const ev of s3Events) {
+        if (ev && ev.slug && !memoryStore.has(ev.slug.toLowerCase())) {
+          memoryStore.set(ev.slug.toLowerCase(), ev);
+        }
+      }
+      if (s3Events.length > 0) {
+        saveStoreToFile();
+      }
+    } catch {}
+
     return Array.from(memoryStore.values()).sort(
       (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
     );

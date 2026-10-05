@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+import React, { useState, useEffect, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import {
   ChevronLeft,
@@ -18,13 +18,18 @@ import {
   Share2,
   X,
   Copy,
+  Edit3,
 } from "lucide-react";
 import { TEMPLATES, TemplateId } from "@/lib/templates";
 import { InvitationData } from "@/components/invitation/InvitationMobileView";
 import MobileSimulator from "@/components/preview/MobileSimulator";
 
-export default function NuevoEventoPage() {
+function NuevoEventoContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const editSlug = searchParams.get("editar") || searchParams.get("slug");
+  const isEditMode = Boolean(editSlug);
+  const [isLoadingEdit, setIsLoadingEdit] = useState(Boolean(editSlug));
   const [step, setStep] = useState(1);
   const [isSaving, setIsSaving] = useState(false);
   const [uploadingS3, setUploadingS3] = useState(false);
@@ -464,7 +469,7 @@ export default function NuevoEventoPage() {
     }
   };
 
-  // Modal de éxito tras publicar
+  // Modal de éxito tras publicar o guardar cambios
   const [createdLinks, setCreatedLinks] = useState<{
     publicUrl: string;
     magicLink: string;
@@ -473,14 +478,40 @@ export default function NuevoEventoPage() {
   const [copiedPublic, setCopiedPublic] = useState(false);
   const [copiedMagic, setCopiedMagic] = useState(false);
 
-  // Guardar en la base de datos
+  // Cargar datos del evento si estamos en modo edición (?editar=slug o ?slug=slug)
+  useEffect(() => {
+    if (!editSlug) return;
+    setIsLoadingEdit(true);
+    fetch(`/api/eventos?slug=${encodeURIComponent(editSlug)}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.evento) {
+          const ev = data.evento;
+          setFormData((prev) => ({
+            ...prev,
+            ...ev,
+            fechaEvento: ev.fechaEvento
+              ? new Date(ev.fechaEvento).toISOString().slice(0, 16)
+              : prev.fechaEvento,
+          }));
+        }
+      })
+      .catch((err) => {
+        console.error("Error al cargar evento para edición:", err);
+        setErrorMsg("No se pudieron cargar los datos del evento para editar.");
+      })
+      .finally(() => setIsLoadingEdit(false));
+  }, [editSlug]);
+
+  // Guardar en la base de datos (POST para crear, PUT para actualizar)
   const handleSave = async () => {
     setIsSaving(true);
     setErrorMsg(null);
 
     try {
+      const method = isEditMode ? "PUT" : "POST";
       const res = await fetch("/api/eventos", {
-        method: "POST",
+        method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
@@ -518,8 +549,21 @@ export default function NuevoEventoPage() {
             <ChevronLeft className="w-5 h-5" />
           </Link>
           <div>
-            <h1 className="text-base font-bold text-stone-900">Crear Invitación Digital</h1>
-            <p className="text-xs text-stone-500">Paso {step} de 4</p>
+            <h1 className="text-base font-bold text-stone-900 flex items-center gap-2">
+              {isEditMode ? (
+                <>
+                  <span className="text-amber-600">✏️</span>
+                  <span>Editar Invitación: {formData.titulo}</span>
+                </>
+              ) : (
+                "Crear Invitación Digital"
+              )}
+            </h1>
+            <p className="text-xs text-stone-500">
+              {isEditMode
+                ? `Modificando /${formData.slug} • Paso ${step} de 4`
+                : `Paso ${step} de 4`}
+            </p>
           </div>
         </div>
 
@@ -546,12 +590,16 @@ export default function NuevoEventoPage() {
           ) : (
             <button
               type="button"
-              disabled={isSaving}
+              disabled={isSaving || isLoadingEdit}
               onClick={handleSave}
               className="flex items-center gap-1 px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-semibold shadow transition disabled:opacity-50"
             >
               <Check className="w-4 h-4" />
-              {isSaving ? "Publicando..." : "Publicar Invitación"}
+              {isSaving
+                ? "Guardando..."
+                : isEditMode
+                ? "Guardar Cambios"
+                : "Publicar Invitación"}
             </button>
           )}
         </div>
@@ -1610,7 +1658,7 @@ export default function NuevoEventoPage() {
                   className="flex items-center gap-1.5 px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-semibold shadow-md transition disabled:opacity-50"
                 >
                   <Check className="w-4 h-4" />
-                  {isSaving ? "Guardando..." : "Publicar Invitación"}
+                  {isSaving ? "Guardando..." : isEditMode ? "Guardar Cambios" : "Publicar Invitación"}
                 </button>
               )}
             </div>
@@ -1625,7 +1673,6 @@ export default function NuevoEventoPage() {
         </div>
       </div>
 
-      {/* Modal de Éxito con las Dos URLs Generadas Automáticamente */}
       {/* Modal de Éxito con las Dos URLs Generadas Automáticamente */}
       {createdLinks && (
         <div
@@ -1648,10 +1695,12 @@ export default function NuevoEventoPage() {
             <div className="text-center space-y-1.5 pr-6">
               <span className="text-3xl block">🎉</span>
               <h3 className="text-lg font-bold text-stone-900">
-                ¡Invitación Publicada Exitosamente!
+                {isEditMode ? "¡Invitación Actualizada Exitosamente!" : "¡Invitación Publicada Exitosamente!"}
               </h3>
               <p className="text-xs text-stone-500">
-                El sistema generó automáticamente las dos URLs únicas para tu evento.
+                {isEditMode
+                  ? "Los cambios ya están reflejados en tu invitación en vivo."
+                  : "El sistema generó automáticamente las dos URLs únicas para tu evento."}
               </p>
             </div>
 
@@ -1758,5 +1807,22 @@ export default function NuevoEventoPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function NuevoEventoPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-stone-50 flex items-center justify-center p-4">
+          <div className="p-6 bg-white rounded-2xl border border-stone-200 text-xs text-stone-500 flex items-center gap-2 shadow-sm">
+            <span className="text-base animate-pulse">✨</span>
+            <span>Cargando editor de invitación...</span>
+          </div>
+        </div>
+      }
+    >
+      <NuevoEventoContent />
+    </Suspense>
   );
 }

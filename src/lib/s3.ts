@@ -1,4 +1,4 @@
-import { S3Client, PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
+import { S3Client, PutObjectCommand, GetObjectCommand, ListObjectsV2Command } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 const endpoint = process.env.AWS_ENDPOINT || process.env.S3_ENDPOINT;
@@ -108,6 +108,48 @@ export async function getEventFromS3(slug: string): Promise<any | null> {
     return JSON.parse(bodyStr);
   } catch (err: any) {
     return null;
+  }
+}
+
+/**
+ * Lista todos los eventos respaldados en la carpeta events-db de S3.
+ */
+export async function listEventsFromS3(): Promise<any[]> {
+  if (!process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY) {
+    return [];
+  }
+  try {
+    const command = new ListObjectsV2Command({
+      Bucket: BUCKET_NAME,
+      Prefix: "events-db/",
+    });
+    const response = await s3Client.send(command);
+    if (!response.Contents || response.Contents.length === 0) {
+      return [];
+    }
+
+    const events: any[] = [];
+    for (const item of response.Contents) {
+      if (item.Key && item.Key.endsWith(".json")) {
+        try {
+          const getCmd = new GetObjectCommand({
+            Bucket: BUCKET_NAME,
+            Key: item.Key,
+          });
+          const res = await s3Client.send(getCmd);
+          if (res.Body) {
+            const bodyStr = await res.Body.transformToString();
+            events.push(JSON.parse(bodyStr));
+          }
+        } catch (e) {
+          // ignorar archivo individual no parseable
+        }
+      }
+    }
+    return events;
+  } catch (err: any) {
+    console.warn("⚠️ [S3] Error al listar eventos de S3:", err?.message);
+    return [];
   }
 }
 

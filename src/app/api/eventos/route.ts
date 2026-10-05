@@ -5,8 +5,35 @@ import { fallbackEventStore } from "@/lib/event-fallback-store";
 import { ensurePostgresTables } from "@/lib/init-db";
 
 export async function GET(req: NextRequest) {
+  const { searchParams } = new URL(req.url);
+  const slug = searchParams.get("slug");
+
+  // Si se solicita un evento específico por slug
+  if (slug) {
+    const cleanSlug = slug.toLowerCase().trim();
+    try {
+      const evento = await prisma.evento.findUnique({
+        where: { slug: cleanSlug },
+      });
+      if (evento) {
+        return NextResponse.json({ evento });
+      }
+    } catch (err) {
+      console.warn("Aviso al consultar evento en DB:", err);
+    }
+
+    const fallback = await fallbackEventStore.getEvent(cleanSlug);
+    if (fallback) {
+      return NextResponse.json({ evento: fallback });
+    }
+
+    return NextResponse.json({ error: "Evento no encontrado." }, { status: 404 });
+  }
+
+  // Listado general de eventos para el dashboard
+  let dbEventos: any[] = [];
   try {
-    const eventos = await prisma.evento.findMany({
+    dbEventos = await prisma.evento.findMany({
       orderBy: { createdAt: "desc" },
       include: {
         _count: {
@@ -14,16 +41,35 @@ export async function GET(req: NextRequest) {
         },
       },
     });
-
-    return NextResponse.json({ eventos });
   } catch (error) {
     console.warn("PostgreSQL no disponible para listar eventos, usando fallback:", error);
-    const fallbackList = fallbackEventStore.getAllEvents().map((e) => ({
-      ...e,
-      _count: { rsvps: (e.rsvps || []).length },
-    }));
-    return NextResponse.json({ eventos: fallbackList });
   }
+
+  const rawFallback = await fallbackEventStore.getAllEvents();
+  const fallbackList = rawFallback.map((e) => ({
+    ...e,
+    _count: { rsvps: (e.rsvps || []).length },
+  }));
+
+  // Combinar sin duplicar por slug (prioriza BD si existe, sino fallback/S3)
+  const slugMap = new Map<string, any>();
+  for (const ev of dbEventos) {
+    if (ev && ev.slug) {
+      slugMap.set(ev.slug.toLowerCase().trim(), ev);
+    }
+  }
+  for (const fb of fallbackList) {
+    const key = fb.slug.toLowerCase().trim();
+    if (!slugMap.has(key)) {
+      slugMap.set(key, fb);
+    }
+  }
+
+  const combined = Array.from(slugMap.values()).sort(
+    (a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  );
+
+  return NextResponse.json({ eventos: combined });
 }
 
 export async function POST(req: NextRequest) {
@@ -274,6 +320,123 @@ export async function POST(req: NextRequest) {
     console.error("Error al procesar petición de creación:", error);
     return NextResponse.json(
       { error: "Ocurrió un error al guardar la invitación." },
+      { status: 500 }
+    );
+  }
+}
+
+export async function PUT(req: NextRequest) {
+  try {
+    const body = await req.json();
+    const { slug } = body;
+
+    if (!slug) {
+      return NextResponse.json(
+        { error: "Se requiere el slug del evento para actualizar." },
+        { status: 400 }
+      );
+    }
+
+    const cleanSlug = slug.toLowerCase().trim();
+
+    const parseSafeDate = (val: any): Date | null => {
+      if (!val) return null;
+      const d = new Date(val);
+      return isNaN(d.getTime()) ? null : d;
+    };
+
+    const parseSafeIsoString = (val: any): string => {
+      if (!val) return new Date().toISOString();
+      const d = new Date(val);
+      return isNaN(d.getTime()) ? new Date().toISOString() : d.toISOString();
+    };
+
+    let updatedEvento: any = null;
+
+    // 1. Intentar actualizar en PostgreSQL
+    try {
+      updatedEvento = await prisma.evento.update({
+        where: { slug: cleanSlug },
+        data: {
+          titulo: body.titulo,
+          tipoEvento: body.tipoEvento,
+          estiloPlantilla: body.estiloPlantilla,
+          subtitulo: body.subtitulo || null,
+          frasePersonalizada: body.frasePersonalizada || null,
+          fechaEvento: body.fechaEvento ? parseSafeIsoString(body.fechaEvento) : undefined,
+          fechaTextoPersonalizada: body.fechaTextoPersonalizada || null,
+          fotoPortadaUrl: body.fotoPortadaUrl,
+          fotoInfanciaUrl: body.fotoInfanciaUrl || null,
+          fotoActualUrl: body.fotoActualUrl || null,
+          fotoCierreUrl: body.fotoCierreUrl || null,
+          musicaUrl: body.musicaUrl || null,
+          videoUrl: body.videoUrl || null,
+          galeriaFotosUrls: Array.isArray(body.galeriaFotosUrls) ? body.galeriaFotosUrls : [],
+          wishlistUrl: body.wishlistUrl || null,
+          idiomaDefault: body.idiomaDefault || "es",
+          celebrationGuideline: body.celebrationGuideline || null,
+          telefonoWhatsappRsvp: body.telefonoWhatsappRsvp ? body.telefonoWhatsappRsvp.replace(/[^0-9]/g, "") : undefined,
+          emailOrganizador: body.emailOrganizador ? String(body.emailOrganizador).trim() : null,
+          aforoTotal: body.aforoTotal ? Number(body.aforoTotal) : undefined,
+          fechaLimiteRsvp: parseSafeDate(body.fechaLimiteRsvp),
+          maxPasesPorInvitado: body.maxPasesPorInvitado ? Number(body.maxPasesPorInvitado) : undefined,
+          ceremoniaNombre: body.ceremoniaNombre || null,
+          ceremoniaDireccion: body.ceremoniaDireccion || null,
+          ceremoniaMapUrl: body.ceremoniaMapUrl || null,
+          recepcionNombre: body.recepcionNombre,
+          recepcionDireccion: body.recepcionDireccion || "",
+          recepcionMapUrl: body.recepcionMapUrl,
+          fechaPlacaMes: body.fechaPlacaMes || null,
+          fechaPlacaHora: body.fechaPlacaHora || null,
+          fechaPlacaLugar: body.fechaPlacaLugar || null,
+          countdownEncabezado: body.countdownEncabezado || null,
+          dressCodeEtiqueta: body.dressCodeEtiqueta || null,
+          dressCodeColoresReservados: body.dressCodeColoresReservados || null,
+          regalosMensaje: body.regalosMensaje || null,
+          regalosZelle: body.regalosZelle || null,
+          regalosCashApp: body.regalosCashApp || null,
+          rsvpFechaLimite: body.rsvpFechaLimite || null,
+          rsvpDiasAntes: body.rsvpDiasAntes ? Number(body.rsvpDiasAntes) : 15,
+          autorBendicion: body.autorBendicion || null,
+          textoDisco: body.textoDisco || null,
+          mensajeDespedida: body.mensajeDespedida || null,
+          dressCodeTitulo: body.dressCodeTitulo || null,
+          dressCodeNota: body.dressCodeNota || null,
+          coloresReservados: body.coloresReservados || [],
+          itinerarioJson: (Array.isArray(body.itinerario) && body.itinerario.length > 0) ? body.itinerario : (body.itinerarioJson || null),
+          corteHonorJson: body.corteHonorJson || null,
+          mesaRegalosJson: body.mesaRegalosJson || null,
+          hospedajeJson: body.hospedajeJson || null,
+          transporteJson: body.transporteJson || null,
+          historiaHitosJson: body.historiaHitosJson || null,
+        },
+      });
+    } catch (err: any) {
+      console.warn("Aviso al actualizar en PostgreSQL:", err?.message);
+    }
+
+    // 2. Actualizar también en el almacenamiento de respaldo y AWS S3
+    const existingFallback: any = (await fallbackEventStore.getEvent(cleanSlug)) || {};
+    const fallbackRecord = {
+      ...existingFallback,
+      ...body,
+      slug: cleanSlug,
+      panelToken: existingFallback.panelToken || body.panelToken,
+      fechaEvento: parseSafeIsoString(body.fechaEvento),
+      fechaLimiteRsvp: parseSafeDate(body.fechaLimiteRsvp)?.toISOString() || null,
+      updatedAt: new Date().toISOString(),
+    };
+    fallbackEventStore.saveEvent(fallbackRecord);
+
+    return NextResponse.json({
+      success: true,
+      evento: updatedEvento || fallbackRecord,
+      message: "Invitación actualizada exitosamente.",
+    });
+  } catch (error: any) {
+    console.error("Error al actualizar evento:", error);
+    return NextResponse.json(
+      { error: "Ocurrió un error al actualizar el evento." },
       { status: 500 }
     );
   }
