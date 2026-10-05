@@ -220,6 +220,11 @@ export default function BlueButterflyTemplate({
     .toLocaleTimeString(eventLocale, { hour: "numeric", minute: "2-digit", hour12: true })
     .toUpperCase();
 
+  // Fecha formal formateada automáticamente según el idioma activo (es o en)
+  const formalDateDisplay = isEn
+    ? `${eventWeekday}, ${eventMonth} ${eventDay}, ${eventYear}`
+    : (data.fechaTextoPersonalizada || `${eventWeekday} ${eventDay} DE ${eventMonth}, ${eventYear}`);
+
   // Itinerario dinámico con soporte de iconos ilustrados oficiales de Canva (93aa7fe30583ab72bdf167a2bce291e3)
   const getItineraryIcon = (item: any, idx: number) => {
     const iconType = (item?.tipoIcono || "").toLowerCase();
@@ -392,8 +397,8 @@ export default function BlueButterflyTemplate({
               <h3 className="font-script text-4xl text-[#2F5A84] my-0.5">
                 {data.titulo}
               </h3>
-              <p className="text-[10px] text-slate-500 font-serif-roman tracking-wider">
-                {data.fechaTextoPersonalizada || "14 • Noviembre • 2026"}
+              <p className="text-[10px] text-slate-500 font-serif-roman tracking-wider uppercase">
+                {formalDateDisplay}
               </p>
             </div>
 
@@ -661,7 +666,7 @@ export default function BlueButterflyTemplate({
 
                 {/* Fecha Formal */}
                 <p className="font-serif-roman text-[10px] tracking-[0.2em] text-[#C5A059] uppercase font-medium">
-                  {data.fechaTextoPersonalizada || (isEn ? "November • 14 • 2026" : "14 • Noviembre • 2026")}
+                  {formalDateDisplay}
                 </p>
               </div>
             </div>
@@ -801,7 +806,7 @@ export default function BlueButterflyTemplate({
             {/* Contenido dinámico centrado */}
             <div className="absolute inset-0 flex flex-col items-center justify-center pt-3 text-center pointer-events-none">
               <p className="font-serif-roman text-xs tracking-[0.25em] text-[#C5A059] uppercase font-bold">
-                {data.fechaPlacaMes || eventMonth}
+                {isEn ? eventMonth : (data.fechaPlacaMes || eventMonth)}
               </p>
               
               <div className="flex items-center gap-3 my-1 border-t border-b border-[#D8B772]/60 py-0.5 px-3">
@@ -812,7 +817,7 @@ export default function BlueButterflyTemplate({
                   {eventDay}
                 </span>
                 <span className="font-serif-roman text-[10px] tracking-widest text-slate-500 uppercase">
-                  {data.fechaPlacaHora || eventTime}
+                  {isEn ? `AT ${eventTime}` : (data.fechaPlacaHora || `A LAS ${eventTime}`)}
                 </span>
               </div>
 

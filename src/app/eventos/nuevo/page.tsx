@@ -215,15 +215,141 @@ export default function NuevoEventoPage() {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  // Al seleccionar plantilla, se actualizan el estilo y los datos de demo/preview
+  // Helper para formatear fechas automáticamente en español o inglés
+  const formatFormalDate = (dateInput: string | Date, lang: string = "es") => {
+    if (!dateInput) return { formalText: "", mes: "", horaPlaca: "", diaSemana: "", diaNumero: "", anio: "" };
+
+    let year = 2026, month = 9, day = 24, hours = 18, minutes = 0, dayOfWeek = 6;
+    if (typeof dateInput === "string" && dateInput.includes("T")) {
+      const [dPart, tPart] = dateInput.split("T");
+      const [y, m, d] = dPart.split("-").map(Number);
+      const [h, min] = (tPart || "00:00").split(":").map(Number);
+      const dateObj = new Date(y, m - 1, d, h || 0, min || 0);
+      year = dateObj.getFullYear();
+      month = dateObj.getMonth();
+      day = dateObj.getDate();
+      dayOfWeek = dateObj.getDay();
+      hours = dateObj.getHours();
+      minutes = dateObj.getMinutes();
+    } else {
+      const dateObj = new Date(dateInput);
+      if (!isNaN(dateObj.getTime())) {
+        year = dateObj.getFullYear();
+        month = dateObj.getMonth();
+        day = dateObj.getDate();
+        dayOfWeek = dateObj.getDay();
+        hours = dateObj.getHours();
+        minutes = dateObj.getMinutes();
+      }
+    }
+
+    const daysEs = ["DOMINGO", "LUNES", "MARTES", "MIÉRCOLES", "JUEVES", "VIERNES", "SÁBADO"];
+    const daysEn = ["SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"];
+
+    const monthsEs = ["ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO", "JULIO", "AGOSTO", "SEPTIEMBRE", "OCTUBRE", "NOVIEMBRE", "DICIEMBRE"];
+    const monthsEn = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"];
+
+    const ampm = hours >= 12 ? "PM" : "AM";
+    const displayHours = hours % 12 || 12;
+    const displayMins = minutes < 10 ? `0${minutes}` : String(minutes);
+    const timeStr = displayMins === "00" ? `${displayHours}:00 ${ampm}` : `${displayHours}:${displayMins} ${ampm}`;
+
+    const isEn = lang === "en";
+
+    return {
+      formalText: isEn
+        ? `${daysEn[dayOfWeek]}, ${monthsEn[month]} ${day}, ${year}`
+        : `${daysEs[dayOfWeek]} ${day} DE ${monthsEs[month]}, ${year}`,
+      mes: isEn ? monthsEn[month] : monthsEs[month],
+      horaPlaca: isEn ? `AT ${timeStr}` : `A LAS ${timeStr}`,
+      diaSemana: isEn ? daysEn[dayOfWeek] : daysEs[dayOfWeek],
+      diaNumero: String(day),
+      anio: String(year),
+    };
+  };
+
+  // Manejar cambio de fecha con actualización automática de textos de presentación
+  const handleDateChange = (newDateStr: string) => {
+    const formatted = formatFormalDate(newDateStr, formData.idiomaDefault || "es");
+    setFormData((prev) => ({
+      ...prev,
+      fechaEvento: newDateStr,
+      fechaTextoPersonalizada: formatted.formalText,
+      fechaPlacaMes: formatted.mes,
+      fechaPlacaHora: formatted.horaPlaca,
+      fechaLimiteRsvp: `${formatted.diaNumero} de ${formatted.mes.toLowerCase()}`,
+      rsvpFechaLimite:
+        formData.idiomaDefault === "en"
+          ? `Please RSVP before ${formatted.mes} ${formatted.diaNumero}`
+          : `Favor de confirmar antes del ${formatted.diaNumero} de ${formatted.mes.toLowerCase()}`,
+    }));
+  };
+
+  // Botón rápido para alternar formato entre Español e Inglés
+  const applyDateFormat = (targetLang: "es" | "en") => {
+    const formatted = formatFormalDate(formData.fechaEvento, targetLang);
+    setFormData((prev) => ({
+      ...prev,
+      fechaTextoPersonalizada: formatted.formalText,
+      fechaPlacaMes: formatted.mes,
+      fechaPlacaHora: formatted.horaPlaca,
+    }));
+  };
+
+  // Manejar cambio de idioma de la invitación
+  const handleLanguageChange = (newLang: "es" | "en" | "bilingual") => {
+    const targetDateLang = newLang === "en" ? "en" : "es";
+    const formatted = formatFormalDate(formData.fechaEvento, targetDateLang);
+    setFormData((prev) => ({
+      ...prev,
+      idiomaDefault: newLang,
+      fechaTextoPersonalizada: formatted.formalText,
+      fechaPlacaMes: formatted.mes,
+      fechaPlacaHora: formatted.horaPlaca,
+      subtitulo: newLang === "en" ? (prev.subtitulo === "Mis Quince Años" ? "My Quinceañera" : prev.subtitulo) : prev.subtitulo,
+      countdownEncabezado: newLang === "en" ? "Counting down..." : "Faltan sólo...",
+      rsvpFechaLimite:
+        newLang === "en"
+          ? `Please RSVP before ${formatted.mes} ${formatted.diaNumero}`
+          : `Favor de confirmar antes del ${formatted.diaNumero} de ${formatted.mes.toLowerCase()}`,
+    }));
+  };
+
+  // Al seleccionar plantilla, se actualizan el estilo y los datos de demo/preview preservando datos del usuario
   const handleSelectTemplate = (tempKey: TemplateId) => {
     const preset = TEMPLATE_PRESETS[tempKey];
     if (preset) {
-      setFormData((prev) => ({
-        ...prev,
-        ...preset,
-        estiloPlantilla: tempKey,
-      }));
+      setFormData((prev) => {
+        const isCustomName =
+          prev.titulo &&
+          prev.titulo !== "Valeria Sofía" &&
+          prev.titulo !== "Isabella Rose" &&
+          prev.titulo !== "Emma & Lucas" &&
+          prev.titulo !== "Coraline Jones" &&
+          prev.titulo !== "Sofía";
+        const formatted = formatFormalDate(
+          prev.fechaEvento,
+          (prev.idiomaDefault || preset.idiomaDefault || "es") as any
+        );
+        return {
+          ...preset,
+          ...prev,
+          estiloPlantilla: tempKey,
+          titulo: isCustomName ? prev.titulo : (preset.titulo || prev.titulo),
+          slug: isCustomName ? prev.slug : (preset.slug || prev.slug),
+          fechaEvento: prev.fechaEvento,
+          fechaTextoPersonalizada: formatted.formalText || prev.fechaTextoPersonalizada,
+          fechaPlacaMes: formatted.mes || prev.fechaPlacaMes,
+          fechaPlacaHora: formatted.horaPlaca || prev.fechaPlacaHora,
+          fotoPortadaUrl: preset.fotoPortadaUrl || prev.fotoPortadaUrl,
+          fotoInfanciaUrl: preset.fotoInfanciaUrl || prev.fotoInfanciaUrl,
+          fotoActualUrl: preset.fotoActualUrl || prev.fotoActualUrl,
+          fotoCierreUrl: preset.fotoCierreUrl || prev.fotoCierreUrl,
+          musicaUrl: preset.musicaUrl || prev.musicaUrl,
+          dressCodeTitulo: preset.dressCodeTitulo || prev.dressCodeTitulo,
+          dressCodeNota: preset.dressCodeNota || prev.dressCodeNota,
+        };
+      });
     } else {
       updateField("estiloPlantilla", tempKey);
     }
@@ -480,29 +606,107 @@ export default function NuevoEventoPage() {
                   />
                 </div>
 
+                {/* Selector Rápido de Idioma Principal */}
+                <div>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <label className="block text-xs font-semibold text-stone-700">
+                      Idioma de la Invitación
+                    </label>
+                    <span className="text-[10px] text-stone-400">
+                      Define el formato automático de la fecha y textos
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-3 gap-2">
+                    <button
+                      type="button"
+                      onClick={() => handleLanguageChange("es")}
+                      className={`px-3 py-2 rounded-xl border text-xs font-medium flex items-center justify-center gap-1.5 transition cursor-pointer ${
+                        (formData.idiomaDefault || "es") === "es"
+                          ? "bg-[#5A3E44] text-white border-[#5A3E44] shadow-sm font-semibold"
+                          : "bg-white text-stone-600 border-stone-200 hover:bg-stone-50"
+                      }`}
+                    >
+                      <span>🇲🇽</span> Español
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleLanguageChange("en")}
+                      className={`px-3 py-2 rounded-xl border text-xs font-medium flex items-center justify-center gap-1.5 transition cursor-pointer ${
+                        formData.idiomaDefault === "en"
+                          ? "bg-[#5A3E44] text-white border-[#5A3E44] shadow-sm font-semibold"
+                          : "bg-white text-stone-600 border-stone-200 hover:bg-stone-50"
+                      }`}
+                    >
+                      <span>🇺🇸</span> English
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleLanguageChange("bilingual")}
+                      className={`px-3 py-2 rounded-xl border text-xs font-medium flex items-center justify-center gap-1.5 transition cursor-pointer ${
+                        formData.idiomaDefault === "bilingual"
+                          ? "bg-[#5A3E44] text-white border-[#5A3E44] shadow-sm font-semibold"
+                          : "bg-white text-stone-600 border-stone-200 hover:bg-stone-50"
+                      }`}
+                    >
+                      <span>🌐</span> Bilingüe
+                    </button>
+                  </div>
+                </div>
+
+                {/* Fecha y Hora con Generación Automática en Español o Inglés */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
                     <label className="block text-xs font-semibold text-stone-700 mb-1">
-                      Fecha y Hora del Evento (Para el cronómetro)
+                      Fecha y Hora del Evento (Selector de Calendario)
                     </label>
                     <input
                       type="datetime-local"
-                      value={formData.fechaEvento.toString().slice(0, 16)}
-                      onChange={(e) => updateField("fechaEvento", e.target.value)}
+                      value={
+                        typeof formData.fechaEvento === "string"
+                          ? formData.fechaEvento.slice(0, 16)
+                          : new Date(formData.fechaEvento).toISOString().slice(0, 16)
+                      }
+                      onChange={(e) => handleDateChange(e.target.value)}
                       className="w-full px-3 py-2.5 bg-stone-50 border border-stone-200 rounded-xl text-xs focus:ring-2 focus:ring-pink-300 focus:outline-none"
                     />
+                    <p className="text-[10px] text-stone-400 mt-1">
+                      ⚡ Al cambiar la fecha se actualiza el texto automáticamente
+                    </p>
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-stone-700 mb-1">
-                      Texto Formal de la Fecha (Tarjeta de Presentación)
-                    </label>
+                    <div className="flex items-center justify-between mb-1">
+                      <label className="block text-xs font-semibold text-stone-700">
+                        Texto Formal de la Fecha (Tarjeta)
+                      </label>
+                      <div className="flex items-center gap-1">
+                        <button
+                          type="button"
+                          onClick={() => applyDateFormat("es")}
+                          className="text-[10px] px-2 py-0.5 rounded bg-stone-100 hover:bg-stone-200 text-stone-700 font-semibold transition cursor-pointer border border-stone-200"
+                          title="Formatear automáticamente en Español"
+                        >
+                          🇪🇸 Español
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => applyDateFormat("en")}
+                          className="text-[10px] px-2 py-0.5 rounded bg-stone-100 hover:bg-stone-200 text-stone-700 font-semibold transition cursor-pointer border border-stone-200"
+                          title="Format automatically in English"
+                        >
+                          🇺🇸 English
+                        </button>
+                      </div>
+                    </div>
                     <input
                       type="text"
                       value={formData.fechaTextoPersonalizada || ""}
                       onChange={(e) => updateField("fechaTextoPersonalizada", e.target.value)}
-                      placeholder="Ej. SÁBADO 14 DE NOVIEMBRE, 2026"
-                      className="w-full px-3 py-2.5 bg-stone-50 border border-stone-200 rounded-xl text-xs focus:ring-2 focus:ring-pink-300 focus:outline-none"
+                      placeholder="Ej. SÁBADO 19 DE DICIEMBRE, 2026"
+                      className="w-full px-3 py-2.5 bg-stone-50 border border-stone-200 rounded-xl text-xs focus:ring-2 focus:ring-pink-300 focus:outline-none font-medium text-stone-800"
                     />
+                    <p className="text-[10px] text-emerald-600 mt-1">
+                      ✓ Generado en tiempo real (puedes editarlo si deseas)
+                    </p>
                   </div>
                 </div>
 
@@ -738,7 +942,7 @@ export default function NuevoEventoPage() {
                   <div className="grid grid-cols-3 gap-2.5 pt-1">
                     <button
                       type="button"
-                      onClick={() => updateField("idiomaDefault", "es")}
+                      onClick={() => handleLanguageChange("es")}
                       className={`p-3 rounded-xl border text-center transition flex flex-col items-center gap-1.5 cursor-pointer ${
                         (formData.idiomaDefault || "es") === "es"
                           ? "bg-white border-[#5A3E44] text-[#5A3E44] shadow-sm ring-2 ring-[#5A3E44]/20 font-bold"
@@ -752,7 +956,7 @@ export default function NuevoEventoPage() {
 
                     <button
                       type="button"
-                      onClick={() => updateField("idiomaDefault", "en")}
+                      onClick={() => handleLanguageChange("en")}
                       className={`p-3 rounded-xl border text-center transition flex flex-col items-center gap-1.5 cursor-pointer ${
                         formData.idiomaDefault === "en"
                           ? "bg-white border-[#5A3E44] text-[#5A3E44] shadow-sm ring-2 ring-[#5A3E44]/20 font-bold"
@@ -766,7 +970,7 @@ export default function NuevoEventoPage() {
 
                     <button
                       type="button"
-                      onClick={() => updateField("idiomaDefault", "bilingual")}
+                      onClick={() => handleLanguageChange("bilingual")}
                       className={`p-3 rounded-xl border text-center transition flex flex-col items-center gap-1.5 cursor-pointer ${
                         formData.idiomaDefault === "bilingual"
                           ? "bg-white border-[#5A3E44] text-[#5A3E44] shadow-sm ring-2 ring-[#5A3E44]/20 font-bold"
