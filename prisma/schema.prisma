@@ -99,6 +99,23 @@ model Evento {
   recepcionDireccion String
   recepcionMapUrl    String          // Enlace directo a Google Maps o Waze
 
+  // Placa de Fecha & Recinto (Paso 3)
+  fechaPlacaMes      String?         // Ej: "OCTUBRE" / "OCTOBER"
+  fechaPlacaHora     String?         // Ej: "A LAS 4:00 PM" / "AT 4 PM"
+  fechaPlacaLugar    String?         // Ej: "GRAN SALÓN REAL"
+
+  // Protocolo, Regalos y RSVP (Paso 4)
+  countdownEncabezado String?        // Fallback: "Faltan sólo..."
+  dressCodeEtiqueta  String?         // Ej: "Formal & Rigurosa Etiqueta"
+  dressCodeColoresReservados String? // Ej: "Tonos azul celeste y blanco reservados exclusivamente para la quinceañera"
+  regalosMensaje     String?         // Mensaje del cofre o lluvia de sobres
+  regalosZelle       String?         // Cuenta o teléfono de Zelle
+  regalosCashApp     String?         // $Cashtag o cuenta opcional
+  rsvpFechaLimite    String?         // Ej: "Favor de confirmar antes del 20 de Octubre"
+  autorBendicion     String?         // Autor o firma de la bendición
+  textoDisco         String?         // Texto sobre el vinilo giratorio
+  mensajeDespedida   String?         // Mensaje final o pie de página
+
   // Código de Vestimenta & Pautas
   dressCodeTitulo    String?         // Ej: "BRING YOUR DANCING SHOES - DRESS CODE: Elegant & Formal"
   dressCodeNota      String?         // Ej: "Guests are encouraged to wear shades of white/formal"

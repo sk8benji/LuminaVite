@@ -291,14 +291,16 @@ export default function BlueButterflyTemplate({
       ];
 
   const rawItinerary =
-    data.itinerarioJson && data.itinerarioJson.length > 0
-      ? data.itinerarioJson
-      : defaultButterflyItinerary;
+    (Array.isArray(data.itinerario) && data.itinerario.length > 0)
+      ? data.itinerario
+      : (Array.isArray(data.itinerarioJson) && data.itinerarioJson.length > 0)
+        ? data.itinerarioJson
+        : defaultButterflyItinerary;
 
   const itineraryList = rawItinerary.map((item: any, idx: number) => ({
-    hora: item.hora,
-    titulo: item.titulo,
-    icon: getItineraryIcon(item, idx),
+    hora: item.hora || item.time || "",
+    titulo: item.titulo || item.title || "",
+    icon: item.icon ? item.icon : getItineraryIcon(item, idx),
   }));
 
   // Corte de honor dinámico
@@ -746,7 +748,7 @@ export default function BlueButterflyTemplate({
             {/* Contenido dinámico centrado */}
             <div className="absolute inset-0 flex flex-col items-center justify-center pt-3 text-center pointer-events-none">
               <p className="font-serif-roman text-xs tracking-[0.25em] text-[#C5A059] uppercase font-bold">
-                {eventMonth}
+                {data.fechaPlacaMes || eventMonth}
               </p>
               
               <div className="flex items-center gap-3 my-1 border-t border-b border-[#D8B772]/60 py-0.5 px-3">
@@ -757,7 +759,7 @@ export default function BlueButterflyTemplate({
                   {eventDay}
                 </span>
                 <span className="font-serif-roman text-[10px] tracking-widest text-slate-500 uppercase">
-                  {eventTime}
+                  {data.fechaPlacaHora || eventTime}
                 </span>
               </div>
 
@@ -767,7 +769,7 @@ export default function BlueButterflyTemplate({
               
               <div className="mt-1">
                 <p className="font-serif-roman text-[9px] tracking-[0.15em] uppercase text-slate-600 font-semibold">
-                  {data.recepcionNombre || "QUINCE PALACE"}
+                  {data.fechaPlacaLugar || data.recepcionNombre || "QUINCE PALACE"}
                 </p>
                 <p className="text-[8px] text-slate-400">
                   {data.recepcionDireccion || "123 Quince St, City, ST 90210"}
@@ -814,7 +816,7 @@ export default function BlueButterflyTemplate({
 
             <div className="relative z-20 flex flex-col items-center justify-center text-center px-8 pt-2">
               <span className="font-serif-roman text-[10px] tracking-[0.25em] uppercase text-[#2F5A84] font-semibold mb-2">
-                Save The Date
+                {data.countdownEncabezado || (isEn ? "Save The Date" : "Faltan sólo...")}
               </span>
 
               <div className="grid grid-cols-4 gap-2.5 sm:gap-4 font-serif-roman text-[#2F5A84]">
@@ -980,13 +982,14 @@ export default function BlueButterflyTemplate({
                 {isEn ? "Dress Code" : "Código de Vestir"}
               </p>
               <p className="font-serif-roman text-xs sm:text-[13px] font-bold text-[#2F5A84] tracking-[0.15em] uppercase mt-1">
-                {data.dressCodeTitulo || (isEn ? "Formal Attire" : "Rigurosa Etiqueta")}
+                {data.dressCodeEtiqueta || data.dressCodeTitulo || (isEn ? "Formal Attire" : "Formal & Rigurosa Etiqueta")}
               </p>
               <p className="font-cormorant italic text-[11px] sm:text-xs text-slate-600 leading-relaxed mt-2 max-w-[175px] mx-auto">
-                {data.dressCodeNota ||
+                {data.dressCodeColoresReservados ||
+                  data.dressCodeNota ||
                   (isEn
-                    ? "Please join us in your finest formal attire as we celebrate this enchanting and memorable occasion."
-                    : "Acompáñanos luciendo tu mejor atuendo formal para celebrar juntos esta velada mágica e inolvidable.")}
+                    ? "Please join us in your finest formal attire. Shades of sky blue and white are exclusively reserved for the quinceañera."
+                    : "Acompáñanos luciendo tu mejor atuendo formal. Tonos azul celeste y blanco reservados exclusivamente para la quinceañera.")}
               </p>
             </div>
 
@@ -1114,10 +1117,26 @@ export default function BlueButterflyTemplate({
             {isEn ? "Gift Table / Wishing Well" : "Lluvia de Sobres"}
           </h3>
           <p className="font-cormorant italic text-sm text-slate-600 max-w-xs mx-auto mt-1">
-            {isEn
-              ? "“Your presence is our greatest gift. Should you wish to honor the quinceañera with a token of affection, a wishing well will be available at the reception.”"
-              : "“Tu presencia es nuestro mayor regalo. Si deseas tener un detalle con la quinceañera, dispondremos de un cofre en la recepción.”"}
+            {data.regalosMensaje ||
+              (isEn
+                ? "“Your presence is our greatest gift. Should you wish to honor the quinceañera with a token of affection, a wishing well will be available at the reception.”"
+                : "“Tu presencia es nuestro mayor regalo. Si deseas tener un detalle con la quinceañera, dispondremos de un cofre en la recepción.”")}
           </p>
+
+          {(data.regalosZelle || data.regalosCashApp) && (
+            <div className="mt-3 flex flex-wrap items-center justify-center gap-2 text-xs font-serif-roman">
+              {data.regalosZelle && (
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-white border border-[#D8B772]/60 text-slate-700 rounded-full text-[11px] shadow-2xs">
+                  <span className="font-bold text-[#7414CA]">Zelle:</span> {data.regalosZelle}
+                </span>
+              )}
+              {data.regalosCashApp && (
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-white border border-[#D8B772]/60 text-slate-700 rounded-full text-[11px] shadow-2xs">
+                  <span className="font-bold text-[#00D632]">Cash App:</span> {data.regalosCashApp}
+                </span>
+              )}
+            </div>
+          )}
         </section>
 
         {/* ======================================================= */}
@@ -1138,8 +1157,14 @@ export default function BlueButterflyTemplate({
               {isEn ? "RSVP" : "Confirmar Asistencia"}
             </h3>
             <p className="text-[11px] text-slate-400 mb-5 uppercase tracking-wider font-serif-roman">
-              {isEn ? "Please confirm by " : "Favor de confirmar antes del "}
-              {data.fechaLimiteRsvp || (isEn ? "October 20th" : "20 de Octubre")}
+              {data.rsvpFechaLimite ? (
+                data.rsvpFechaLimite
+              ) : (
+                <>
+                  {isEn ? "Please confirm by " : "Favor de confirmar antes del "}
+                  {data.fechaLimiteRsvp || (isEn ? "October 20th" : "20 de Octubre")}
+                </>
+              )}
             </p>
 
             {/* Alerta de confirmación previa / actualización de pases */}

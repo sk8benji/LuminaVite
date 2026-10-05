@@ -57,12 +57,22 @@ export default function NuevoEventoPage() {
     recepcionMapUrl: "https://maps.google.com",
     dressCodeTitulo: "Elegante y Formal",
     dressCodeNota: "Por favor reservamos tonos rosa pastel para la quinceañera.",
+    dressCodeEtiqueta: "Formal & Rigurosa Etiqueta",
+    dressCodeColoresReservados: "Tonos rosa pastel reservados para la quinceañera",
+    countdownEncabezado: "Faltan sólo...",
+    fechaPlacaMes: "NOVIEMBRE",
+    fechaPlacaHora: "A LAS 4:00 PM",
+    fechaPlacaLugar: "Gran Salón Diamante",
+    regalosMensaje: "Tu presencia es nuestro mayor regalo. Disponemos de un cofre en la recepción.",
+    regalosZelle: "",
+    regalosCashApp: "",
+    rsvpFechaLimite: "Favor de confirmar antes del 15 de Noviembre",
     coloresReservados: ["#FCECEE", "#FFFFFF"],
     itinerarioJson: [
-      { hora: "4:00 PM", titulo: "Llegada de Invitados", tipoIcono: "car" },
-      { hora: "5:00 PM", titulo: "Ceremonia Religiosa", tipoIcono: "church" },
-      { hora: "7:00 PM", titulo: "Cena & Brindis", tipoIcono: "wine" },
-      { hora: "8:30 PM", titulo: "Vals y Fiesta", tipoIcono: "crown" },
+      { hora: "4:00 PM", titulo: "Llegada de Invitados", tipoIcono: "welcome" },
+      { hora: "5:00 PM", titulo: "Ceremonia Religiosa", tipoIcono: "entrance" },
+      { hora: "7:00 PM", titulo: "Cena & Brindis", tipoIcono: "dinner" },
+      { hora: "8:30 PM", titulo: "Vals y Fiesta", tipoIcono: "waltz" },
     ],
     corteHonorJson: {
       chambelan: "Jeremiah",
@@ -94,6 +104,16 @@ export default function NuevoEventoPage() {
       textoDisco: "Click to Play Music",
       dressCodeTitulo: "Formal Elegante",
       dressCodeNota: "Agradecemos reservar los tonos azul celeste y blanco para la quinceañera.",
+      dressCodeEtiqueta: "Formal & Rigurosa Etiqueta",
+      dressCodeColoresReservados: "Tonos azul celeste y blanco reservados exclusivamente para la quinceañera",
+      countdownEncabezado: "Faltan sólo...",
+      fechaPlacaMes: "OCTUBRE",
+      fechaPlacaHora: "A LAS 3:00 PM",
+      fechaPlacaLugar: "Hacienda Los Jardines Celestiales",
+      regalosMensaje: "Tu presencia es nuestro mayor regalo. Si deseas tener un detalle con la quinceañera, dispondremos de un cofre en la recepción.",
+      regalosZelle: "valeria.xv@example.com",
+      regalosCashApp: "$ValeriaXV",
+      rsvpFechaLimite: "Favor de confirmar antes del 20 de Octubre",
       ceremoniaNombre: "Catedral Nuestra Señora del Carmen",
       ceremoniaDireccion: "Av. Las Rosas #450, Centro",
       ceremoniaMapUrl: "https://maps.google.com/?q=Catedral+Nuestra+Señora+del+Carmen",
@@ -811,6 +831,50 @@ export default function NuevoEventoPage() {
                   </div>
                 </div>
 
+                {/* Placa de Fecha y Recinto (Sección 4 de la Plantilla) */}
+                <div className="p-4 bg-stone-50 border border-stone-200 rounded-2xl space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold text-stone-800 block">
+                      Placa Formal de Fecha y Recinto (Sección 4)
+                    </span>
+                    <span className="text-[10px] text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200 font-medium">
+                      Pergamino con Rosas
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div>
+                      <label className="block text-[11px] text-stone-600 mb-1">Mes en Placa</label>
+                      <input
+                        type="text"
+                        value={formData.fechaPlacaMes || ""}
+                        onChange={(e) => updateField("fechaPlacaMes", e.target.value)}
+                        placeholder="Ej. OCTUBRE / OCTOBER"
+                        className="w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs uppercase"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] text-stone-600 mb-1">Hora en Placa</label>
+                      <input
+                        type="text"
+                        value={formData.fechaPlacaHora || ""}
+                        onChange={(e) => updateField("fechaPlacaHora", e.target.value)}
+                        placeholder="Ej. A LAS 4:00 PM / AT 4 PM"
+                        className="w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] text-stone-600 mb-1">Nombre en Placa</label>
+                      <input
+                        type="text"
+                        value={formData.fechaPlacaLugar || ""}
+                        onChange={(e) => updateField("fechaPlacaLugar", e.target.value)}
+                        placeholder="Ej. GRAN SALÓN REAL"
+                        className="w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs uppercase"
+                      />
+                    </div>
+                  </div>
+                </div>
+
                 {/* Ceremonia Religiosa */}
                 <div className="p-4 bg-stone-50 border border-stone-200 rounded-2xl space-y-3">
                   <span className="text-xs font-bold text-stone-800 block">
@@ -862,16 +926,16 @@ export default function NuevoEventoPage() {
               <div className="space-y-5">
                 <h2 className="text-lg font-bold text-stone-900">4. Configuración de RSVP y Detalles Finales</h2>
 
-                {/* WhatsApp */}
+                {/* WhatsApp & RSVP Límite */}
                 <div className="p-4 bg-stone-50 border border-stone-200 rounded-2xl space-y-3">
                   <div className="flex items-center gap-2">
                     <MessageCircle className="w-4 h-4 text-emerald-600" />
                     <span className="text-xs font-bold text-stone-800">
-                      Recepción de Confirmaciones por WhatsApp
+                      Recepción de Confirmaciones por WhatsApp & Control de Pases
                     </span>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <div>
                       <label className="block text-[11px] text-stone-600 mb-1">
                         Teléfono WhatsApp (Con lada, sin signos +)
@@ -897,30 +961,182 @@ export default function NuevoEventoPage() {
                         className="w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs"
                       />
                     </div>
+                    <div>
+                      <label className="block text-[11px] text-stone-600 mb-1">
+                        Fecha Límite para Confirmar (RSVP)
+                      </label>
+                      <input
+                        type="text"
+                        value={formData.rsvpFechaLimite || ""}
+                        onChange={(e) => updateField("rsvpFechaLimite", e.target.value)}
+                        placeholder="Ej. Favor de confirmar antes del 20 de Octubre"
+                        className="w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Contador Regresivo */}
+                <div className="p-4 bg-stone-50 border border-stone-200 rounded-2xl space-y-2">
+                  <label className="block text-xs font-bold text-stone-800 mb-1">
+                    Encabezado del Cronómetro / Countdown (Sección 5)
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.countdownEncabezado || ""}
+                    onChange={(e) => updateField("countdownEncabezado", e.target.value)}
+                    placeholder="Ej. Faltan sólo... o Save The Date"
+                    className="w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs"
+                  />
+                </div>
+
+                {/* Itinerario Flexible */}
+                <div className="p-4 bg-stone-50 border border-stone-200 rounded-2xl space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <span className="text-xs font-bold text-stone-800 block">
+                        Itinerario Flexible del Evento (Sección 6)
+                      </span>
+                      <p className="text-[11px] text-stone-500">
+                        Añade o edita los hitos de tu evento. Si dejas la lista vacía, se cargarán los predeterminados.
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const current = Array.isArray(formData.itinerarioJson) ? [...formData.itinerarioJson] : [];
+                        current.push({ hora: "6:00 PM", titulo: "Nuevo Hito", tipoIcono: "crown" });
+                        updateField("itinerarioJson", current);
+                      }}
+                      className="px-3 py-1.5 bg-stone-900 hover:bg-black text-white rounded-lg text-xs font-semibold cursor-pointer transition flex items-center gap-1"
+                    >
+                      + Añadir Hito
+                    </button>
+                  </div>
+
+                  <div className="space-y-2.5 pt-1">
+                    {((formData.itinerarioJson as any[]) || []).map((item, idx) => (
+                      <div
+                        key={idx}
+                        className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 p-2.5 bg-white border border-stone-200 rounded-xl text-xs"
+                      >
+                        <input
+                          type="text"
+                          value={item.hora || ""}
+                          onChange={(e) => {
+                            const updated = [...(formData.itinerarioJson as any[])];
+                            updated[idx] = { ...updated[idx], hora: e.target.value };
+                            updateField("itinerarioJson", updated);
+                          }}
+                          placeholder="Hora (ej. 4:30 PM)"
+                          className="w-full sm:w-36 px-2.5 py-1.5 border border-stone-200 rounded-lg text-xs"
+                        />
+                        <input
+                          type="text"
+                          value={item.titulo || ""}
+                          onChange={(e) => {
+                            const updated = [...(formData.itinerarioJson as any[])];
+                            updated[idx] = { ...updated[idx], titulo: e.target.value };
+                            updateField("itinerarioJson", updated);
+                          }}
+                          placeholder="Título del hito (ej. Grand entrance)"
+                          className="flex-1 px-2.5 py-1.5 border border-stone-200 rounded-lg text-xs"
+                        />
+                        <select
+                          value={item.tipoIcono || "welcome"}
+                          onChange={(e) => {
+                            const updated = [...(formData.itinerarioJson as any[])];
+                            updated[idx] = { ...updated[idx], tipoIcono: e.target.value };
+                            updateField("itinerarioJson", updated);
+                          }}
+                          className="px-2.5 py-1.5 border border-stone-200 rounded-lg text-xs bg-stone-50"
+                        >
+                          <option value="welcome">Bienvenida</option>
+                          <option value="entrance">Entrada</option>
+                          <option value="dinner">Cena</option>
+                          <option value="waltz">Vals</option>
+                          <option value="disco">Baile</option>
+                          <option value="cake">Pastel</option>
+                        </select>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const updated = (formData.itinerarioJson as any[]).filter((_, i) => i !== idx);
+                            updateField("itinerarioJson", updated);
+                          }}
+                          className="px-2.5 py-1.5 text-rose-600 hover:bg-rose-50 rounded-lg font-bold transition text-xs text-center"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    ))}
                   </div>
                 </div>
 
                 {/* Dress Code */}
                 <div className="p-4 bg-stone-50 border border-stone-200 rounded-2xl space-y-3">
-                  <span className="text-xs font-bold text-stone-800 block">Código de Vestimenta</span>
+                  <span className="text-xs font-bold text-stone-800 block">Código de Vestimenta (Sección 7)</span>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-[11px] text-stone-600 mb-1">Título</label>
+                      <label className="block text-[11px] text-stone-600 mb-1">Etiqueta Formal</label>
                       <input
                         type="text"
-                        value={formData.dressCodeTitulo || ""}
-                        onChange={(e) => updateField("dressCodeTitulo", e.target.value)}
-                        placeholder="Ej. Rigurosa Etiqueta o Formal"
+                        value={formData.dressCodeEtiqueta || formData.dressCodeTitulo || ""}
+                        onChange={(e) => {
+                          updateField("dressCodeEtiqueta", e.target.value);
+                          updateField("dressCodeTitulo", e.target.value);
+                        }}
+                        placeholder="Ej. Formal & Rigurosa Etiqueta"
                         className="w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs"
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] text-stone-600 mb-1">Nota de Colores Reservados</label>
+                      <label className="block text-[11px] text-stone-600 mb-1">Colores Reservados / Pautas</label>
                       <input
                         type="text"
-                        value={formData.dressCodeNota || ""}
-                        onChange={(e) => updateField("dressCodeNota", e.target.value)}
-                        placeholder="Ej. Reservado el rosa para la quinceañera"
+                        value={formData.dressCodeColoresReservados || formData.dressCodeNota || ""}
+                        onChange={(e) => {
+                          updateField("dressCodeColoresReservados", e.target.value);
+                          updateField("dressCodeNota", e.target.value);
+                        }}
+                        placeholder="Ej. Tonos azul celeste y blanco reservados para la quinceañera"
+                        className="w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Lluvia de Sobres & Cuentas Digitales */}
+                <div className="p-4 bg-stone-50 border border-stone-200 rounded-2xl space-y-3">
+                  <span className="text-xs font-bold text-stone-800 block">Lluvia de Sobres & Cuentas Digitales (Sección 9)</span>
+                  <div>
+                    <label className="block text-[11px] text-stone-600 mb-1">Mensaje del Cofre / Regalos</label>
+                    <textarea
+                      rows={2}
+                      value={formData.regalosMensaje || ""}
+                      onChange={(e) => updateField("regalosMensaje", e.target.value)}
+                      placeholder="Tu presencia es nuestro mayor regalo. Disponemos de un cofre en la recepción..."
+                      className="w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs resize-none"
+                    />
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-[11px] text-stone-600 mb-1">Cuenta o Teléfono Zelle (Opcional)</label>
+                      <input
+                        type="text"
+                        value={formData.regalosZelle || ""}
+                        onChange={(e) => updateField("regalosZelle", e.target.value)}
+                        placeholder="Ej. 18181234567 o valeria.xv@example.com"
+                        className="w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] text-stone-600 mb-1">Cash App / Cashtag (Opcional)</label>
+                      <input
+                        type="text"
+                        value={formData.regalosCashApp || ""}
+                        onChange={(e) => updateField("regalosCashApp", e.target.value)}
+                        placeholder="Ej. $ValeriaXV"
                         className="w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs"
                       />
                     </div>

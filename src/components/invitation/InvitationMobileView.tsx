@@ -44,6 +44,20 @@ export interface InvitationData {
   recepcionDireccion: string;
   recepcionMapUrl: string;
 
+  // Placa de Fecha & Recinto (Paso 3)
+  fechaPlacaMes?: string | null;
+  fechaPlacaHora?: string | null;
+  fechaPlacaLugar?: string | null;
+
+  // Protocolo, Regalos y RSVP (Paso 4)
+  countdownEncabezado?: string | null;
+  dressCodeEtiqueta?: string | null;
+  dressCodeColoresReservados?: string | null;
+  regalosMensaje?: string | null;
+  regalosZelle?: string | null;
+  regalosCashApp?: string | null;
+  rsvpFechaLimite?: string | null;
+
   dressCodeTitulo?: string | null;
   dressCodeNota?: string | null;
   coloresReservados?: string[];
@@ -53,6 +67,7 @@ export interface InvitationData {
   autorBendicion?: string | null;
   textoDisco?: string | null;
 
+  itinerario?: any[];
   itinerarioJson?: TimelineItem[] | any;
   corteHonorJson?: {
     chambelan?: string;
