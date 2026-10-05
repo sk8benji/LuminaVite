@@ -160,12 +160,12 @@ export default function BlueButterflyTemplate({
 
   return (
     <div className="relative min-h-screen font-sans-body text-slate-800 antialiased selection:bg-blue-100 selection:text-blue-900 overflow-x-hidden">
-      {/* 1. Fondo General Acuarela Fijo en el Viewport */}
+      {/* 1. Fondo General Acuarela Contenido en el Viewport/Simulador */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src="/assets/template-butterfly/fondo-cielo-acuarela.jpg"
         alt="Fondo Acuarela"
-        className="fixed inset-0 w-full h-full object-cover -z-10 pointer-events-none"
+        className="absolute inset-0 w-full h-full object-cover -z-10 pointer-events-none"
       />
 
       {/* Audio en bucle */}
