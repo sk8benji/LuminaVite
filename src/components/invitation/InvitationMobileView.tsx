@@ -9,6 +9,7 @@ import {
   Compass,
 } from "lucide-react";
 import { getTemplate, TemplateId } from "@/lib/templates";
+import { getMapEmbedUrl, getMapDirectionsUrl } from "@/lib/maps";
 import AudioPlayer from "./AudioPlayer";
 import CountdownTimer from "./CountdownTimer";
 import RsvpSection from "./RsvpSection";
@@ -388,16 +389,37 @@ export default function InvitationMobileView({
               {data.recepcionDireccion}
             </p>
 
+            {/* MAPA EMBEBIDO INTERACTIVO */}
+            {(() => {
+              const fullAddress = `${data.recepcionNombre || ""} ${data.recepcionDireccion || ""}`.trim();
+              const embedUrl = getMapEmbedUrl(data.recepcionMapUrl, fullAddress);
+              return embedUrl ? (
+                <div className="w-full h-48 rounded-2xl overflow-hidden shadow-sm border border-pink-100 my-4 bg-stone-50 relative">
+                  <iframe
+                    title={`Ubicación - ${data.recepcionNombre}`}
+                    src={embedUrl}
+                    className="w-full h-full border-0"
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                    allowFullScreen
+                  />
+                </div>
+              ) : null;
+            })()}
+
             {/* Botón estilizado Directions */}
             <a
-              href={data.recepcionMapUrl}
+              href={getMapDirectionsUrl(
+                data.recepcionMapUrl,
+                `${data.recepcionNombre || ""} ${data.recepcionDireccion || ""}`.trim()
+              )}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-5 inline-flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl text-xs uppercase tracking-widest font-semibold border border-[#5A3E44] text-[#5A3E44] hover:bg-[#5A3E44] hover:text-white transition shadow-sm"
+              className="mt-2 inline-flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl text-xs uppercase tracking-widest font-semibold border border-[#5A3E44] text-[#5A3E44] hover:bg-[#5A3E44] hover:text-white transition shadow-sm"
               style={{ fontFamily: template.fontSubheading }}
             >
               <Compass className="w-3.5 h-3.5" />
-              Directions
+              Directions / Ver en Mapa
             </a>
           </div>
 
@@ -417,17 +439,36 @@ export default function InvitationMobileView({
                   {data.ceremoniaDireccion}
                 </p>
               )}
-              {data.ceremoniaMapUrl && (
-                <a
-                  href={data.ceremoniaMapUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 mt-2 text-xs uppercase tracking-wider font-semibold text-[#5A3E44] underline underline-offset-4"
-                >
-                  <MapPin className="w-3.5 h-3.5" />
-                  Ver Mapa Iglesia
-                </a>
-              )}
+
+              {(() => {
+                const fullCeremonyAddress = `${data.ceremoniaNombre || ""} ${data.ceremoniaDireccion || ""}`.trim();
+                const ceremonyEmbedUrl = getMapEmbedUrl(data.ceremoniaMapUrl, fullCeremonyAddress);
+                return ceremonyEmbedUrl ? (
+                  <div className="w-full h-44 rounded-xl overflow-hidden shadow-sm border border-pink-100 my-3 bg-stone-50 relative">
+                    <iframe
+                      title={`Ceremonia - ${data.ceremoniaNombre}`}
+                      src={ceremonyEmbedUrl}
+                      className="w-full h-full border-0"
+                      loading="lazy"
+                      referrerPolicy="no-referrer-when-downgrade"
+                      allowFullScreen
+                    />
+                  </div>
+                ) : null;
+              })()}
+
+              <a
+                href={getMapDirectionsUrl(
+                  data.ceremoniaMapUrl,
+                  `${data.ceremoniaNombre || ""} ${data.ceremoniaDireccion || ""}`.trim()
+                )}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 mt-2 text-xs uppercase tracking-wider font-semibold text-[#5A3E44] underline underline-offset-4"
+              >
+                <MapPin className="w-3.5 h-3.5" />
+                Ver Mapa Iglesia
+              </a>
             </div>
           )}
         </section>

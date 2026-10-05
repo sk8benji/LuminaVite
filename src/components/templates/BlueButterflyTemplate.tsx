@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { MapPin } from "lucide-react";
 import { InvitationData } from "../invitation/InvitationMobileView";
+import { getMapEmbedUrl, getMapDirectionsUrl } from "@/lib/maps";
 
 export default function BlueButterflyTemplate({
   data,
@@ -756,9 +757,31 @@ export default function BlueButterflyTemplate({
             Ubicación
           </h3>
           <p className="text-sm font-semibold text-slate-800">{data.recepcionNombre}</p>
-          <p className="text-xs text-slate-500 mb-4">{data.recepcionDireccion}</p>
+          <p className="text-xs text-slate-500 mb-3">{data.recepcionDireccion}</p>
+
+          {/* MAPA EMBEBIDO INTERACTIVO */}
+          {(() => {
+            const fullAddress = `${data.recepcionNombre || ""} ${data.recepcionDireccion || ""}`.trim();
+            const embedUrl = getMapEmbedUrl(data.recepcionMapUrl, fullAddress);
+            return embedUrl ? (
+              <div className="w-full h-52 sm:h-60 rounded-2xl overflow-hidden shadow-md border border-[#D8B772]/50 my-4 bg-slate-100 relative">
+                <iframe
+                  title={`Ubicación - ${data.recepcionNombre}`}
+                  src={embedUrl}
+                  className="w-full h-full border-0"
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  allowFullScreen
+                />
+              </div>
+            ) : null;
+          })()}
+
           <a
-            href={data.recepcionMapUrl || `https://maps.google.com/?q=${encodeURIComponent(data.recepcionNombre + " " + data.recepcionDireccion)}`}
+            href={getMapDirectionsUrl(
+              data.recepcionMapUrl,
+              `${data.recepcionNombre || ""} ${data.recepcionDireccion || ""}`.trim()
+            )}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center justify-center gap-2 w-full bg-[#2F5A84] text-white py-3.5 rounded-xl font-serif-roman text-xs uppercase tracking-widest hover:bg-[#203e5c] transition shadow-md"
@@ -766,6 +789,49 @@ export default function BlueButterflyTemplate({
             <MapPin className="w-3.5 h-3.5" />
             Directions / Ver en Mapa
           </a>
+
+          {/* CEREMONIA RELIGIOSA (SI EXISTE) */}
+          {data.ceremoniaNombre && (
+            <div className="mt-8 pt-6 border-t border-[#D8B772]/30 text-center">
+              <span className="font-serif-roman text-[10px] tracking-[0.2em] text-[#C5A059] uppercase font-bold block mb-1">
+                Ceremonia Religiosa / Iglesia
+              </span>
+              <p className="text-sm font-semibold text-slate-800">{data.ceremoniaNombre}</p>
+              {data.ceremoniaDireccion && (
+                <p className="text-xs text-slate-500 mb-3">{data.ceremoniaDireccion}</p>
+              )}
+
+              {(() => {
+                const fullCeremonyAddress = `${data.ceremoniaNombre || ""} ${data.ceremoniaDireccion || ""}`.trim();
+                const ceremonyEmbedUrl = getMapEmbedUrl(data.ceremoniaMapUrl, fullCeremonyAddress);
+                return ceremonyEmbedUrl ? (
+                  <div className="w-full h-48 rounded-2xl overflow-hidden shadow-md border border-[#D8B772]/40 my-3 bg-slate-100 relative">
+                    <iframe
+                      title={`Ceremonia - ${data.ceremoniaNombre}`}
+                      src={ceremonyEmbedUrl}
+                      className="w-full h-full border-0"
+                      loading="lazy"
+                      referrerPolicy="no-referrer-when-downgrade"
+                      allowFullScreen
+                    />
+                  </div>
+                ) : null;
+              })()}
+
+              <a
+                href={getMapDirectionsUrl(
+                  data.ceremoniaMapUrl,
+                  `${data.ceremoniaNombre || ""} ${data.ceremoniaDireccion || ""}`.trim()
+                )}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 w-full bg-white border border-[#2F5A84] text-[#2F5A84] py-3 rounded-xl font-serif-roman text-xs uppercase tracking-widest hover:bg-slate-50 transition shadow-sm mt-1"
+              >
+                <MapPin className="w-3.5 h-3.5" />
+                Ver Iglesia en Mapa
+              </a>
+            </div>
+          )}
         </section>
 
         {/* ======================================================= */}

@@ -93,8 +93,10 @@ export default function NuevoEventoPage() {
       dressCodeNota: "Agradecemos reservar los tonos azul celeste y blanco para la quinceañera.",
       ceremoniaNombre: "Catedral Nuestra Señora del Carmen",
       ceremoniaDireccion: "Av. Las Rosas #450, Centro",
+      ceremoniaMapUrl: "https://maps.google.com/?q=Catedral+Nuestra+Señora+del+Carmen",
       recepcionNombre: "Hacienda Los Jardines Celestiales",
       recepcionDireccion: "Carr. Nacional Km 14.5, Jardín Real",
+      recepcionMapUrl: "https://maps.google.com/?q=Hacienda+Los+Jardines+Celestiales",
       corteHonorJson: {
         chambelan: "Jeremiah Smith",
         damas: ["Magdalena", "Violeta", "Tania"],
@@ -658,14 +660,24 @@ export default function NuevoEventoPage() {
                     />
                   </div>
                   <div>
-                    <label className="block text-[11px] text-stone-600 mb-1">Enlace de Google Maps / Waze</label>
-                    <input
-                      type="text"
+                    <div className="flex items-center justify-between mb-1">
+                      <label className="block text-[11px] text-stone-700 font-semibold">
+                        Enlace o Código Embebido de Google Maps / Waze
+                      </label>
+                      <span className="text-[10px] text-blue-700 bg-blue-50 px-2 py-0.5 rounded-md border border-blue-200 font-medium">
+                        Soporta enlace o &lt;iframe&gt;
+                      </span>
+                    </div>
+                    <textarea
+                      rows={3}
                       value={formData.recepcionMapUrl}
                       onChange={(e) => updateField("recepcionMapUrl", e.target.value)}
-                      placeholder="https://maps.google.com/..."
-                      className="w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs"
+                      placeholder="https://maps.google.com/... o pega aquí el código <iframe src='...'> de Google Maps"
+                      className="w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs font-mono focus:border-stone-400 focus:outline-none"
                     />
+                    <p className="text-[11px] text-stone-500 mt-1 leading-relaxed">
+                      💡 <strong>Para mostrar el mapa interactivo:</strong> En Google Maps haz clic en <strong>Compartir &gt; Incorporar un mapa</strong> y copia el código HTML para pegarlo aquí. También puedes pegar directamente el enlace web de Google Maps o Waze.
+                    </p>
                   </div>
                 </div>
 
@@ -685,13 +697,30 @@ export default function NuevoEventoPage() {
                     />
                   </div>
                   <div>
-                    <label className="block text-[11px] text-stone-600 mb-1">Enlace de Google Maps Iglesia</label>
+                    <label className="block text-[11px] text-stone-600 mb-1">Dirección de la Iglesia</label>
                     <input
                       type="text"
+                      value={formData.ceremoniaDireccion || ""}
+                      onChange={(e) => updateField("ceremoniaDireccion", e.target.value)}
+                      placeholder="Calle, número, colonia, ciudad"
+                      className="w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs"
+                    />
+                  </div>
+                  <div>
+                    <div className="flex items-center justify-between mb-1">
+                      <label className="block text-[11px] text-stone-700 font-semibold">
+                        Enlace o Código Embebido de Google Maps Iglesia
+                      </label>
+                      <span className="text-[10px] text-blue-700 bg-blue-50 px-2 py-0.5 rounded-md border border-blue-200 font-medium">
+                        Soporta enlace o &lt;iframe&gt;
+                      </span>
+                    </div>
+                    <textarea
+                      rows={2}
                       value={formData.ceremoniaMapUrl || ""}
                       onChange={(e) => updateField("ceremoniaMapUrl", e.target.value)}
-                      placeholder="https://maps.google.com/..."
-                      className="w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs"
+                      placeholder="https://maps.google.com/... o pega aquí el código <iframe src='...'>"
+                      className="w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs font-mono focus:border-stone-400 focus:outline-none"
                     />
                   </div>
                 </div>

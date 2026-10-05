@@ -17,6 +17,7 @@ import {
   Check,
 } from "lucide-react";
 import { getTemplate } from "@/lib/templates";
+import { getMapEmbedUrl, getMapDirectionsUrl } from "@/lib/maps";
 import AudioPlayer from "../invitation/AudioPlayer";
 import CountdownTimer from "../invitation/CountdownTimer";
 import RsvpSection from "../invitation/RsvpSection";
@@ -116,11 +117,32 @@ export default function FairytaleWeddingTemplate({
               Experience a real-life fairytale at this iconic French-style château, nestled on Long Island’s Gold Coast.
             </p>
 
+            {/* MAPA EMBEBIDO INTERACTIVO */}
+            {(() => {
+              const fullAddress = `${data.recepcionNombre || ""} ${data.recepcionDireccion || ""}`.trim();
+              const embedUrl = getMapEmbedUrl(data.recepcionMapUrl, fullAddress);
+              return embedUrl ? (
+                <div className="w-full h-48 rounded-2xl overflow-hidden shadow-sm border border-[#EFD2A6] my-4 bg-stone-50 relative">
+                  <iframe
+                    title="The Venue"
+                    src={embedUrl}
+                    className="w-full h-full border-0"
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                    allowFullScreen
+                  />
+                </div>
+              ) : null;
+            })()}
+
             <a
-              href={data.recepcionMapUrl}
+              href={getMapDirectionsUrl(
+                data.recepcionMapUrl,
+                `${data.recepcionNombre || ""} ${data.recepcionDireccion || ""}`.trim()
+              )}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-5 inline-flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl text-xs uppercase tracking-widest font-semibold bg-[#19223D] text-white hover:bg-[#2b3a67] transition shadow-md font-serif"
+              className="mt-2 inline-flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl text-xs uppercase tracking-widest font-semibold bg-[#19223D] text-white hover:bg-[#2b3a67] transition shadow-md font-serif"
             >
               <MapPin className="w-3.5 h-3.5" />
               View Location on Google Maps
