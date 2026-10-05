@@ -599,8 +599,11 @@ export default function BlueButterflyTemplate({
               {/* Foto aplicando el clipPath oficial */}
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={data.fotoPortadaUrl || "/assets/template-butterfly/foto-columpio-portada.png"}
+                src={data.fotoPortadaUrl || "https://luminavite-storage.s3.us-east-1.amazonaws.com/templates/blue-butterfly/foto-columpio-portada.png"}
                 alt={data.titulo}
+                onError={(e) => {
+                  e.currentTarget.src = "/assets/template-butterfly/foto-columpio-portada.png";
+                }}
                 className="w-full h-full object-cover clip-canva-torn select-none"
               />
 
@@ -682,16 +685,22 @@ export default function BlueButterflyTemplate({
               <div className="w-1/2 h-full overflow-hidden bg-slate-100">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={data.fotoInfanciaUrl || "/assets/template-butterfly/foto-sesion-1.jpg"}
+                  src={data.fotoInfanciaUrl || "https://luminavite-storage.s3.us-east-1.amazonaws.com/templates/blue-butterfly/foto-sesion-1.jpg"}
                   alt="Sesión Foto 1"
+                  onError={(e) => {
+                    e.currentTarget.src = "/assets/template-butterfly/foto-sesion-1.jpg";
+                  }}
                   className="w-full h-full object-cover"
                 />
               </div>
               <div className="w-1/2 h-full overflow-hidden bg-slate-100 border-l border-white/60">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={data.fotoActualUrl || "/assets/template-butterfly/foto-sesion-2.jpg"}
+                  src={data.fotoActualUrl || "https://luminavite-storage.s3.us-east-1.amazonaws.com/templates/blue-butterfly/foto-sesion-2.jpg"}
                   alt="Sesión Foto 2"
+                  onError={(e) => {
+                    e.currentTarget.src = "/assets/template-butterfly/foto-sesion-2.jpg";
+                  }}
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -817,8 +826,11 @@ export default function BlueButterflyTemplate({
           <div className="relative w-full max-w-[390px] h-[480px] sm:h-[520px] mx-auto overflow-hidden bg-slate-100 shadow-xl my-4">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img 
-              src={data.fotoCierreUrl || "/assets/template-butterfly/foto-gala-vestido.jpg"} 
+              src={data.fotoCierreUrl || "https://luminavite-storage.s3.us-east-1.amazonaws.com/templates/blue-butterfly/foto-gala-vestido.jpg"} 
               alt="Quinceañera Gala" 
+              onError={(e) => {
+                e.currentTarget.src = "/assets/template-butterfly/foto-gala-vestido.jpg";
+              }}
               className="w-full h-full object-cover clip-canva-gala select-none"
             />
           </div>
