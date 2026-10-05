@@ -48,6 +48,9 @@ export interface InvitationData {
   coloresReservados?: string[];
 
   celebrationGuideline?: string | null;
+  mensajeDespedida?: string | null;
+  autorBendicion?: string | null;
+  textoDisco?: string | null;
 
   itinerarioJson?: TimelineItem[] | any;
   corteHonorJson?: {

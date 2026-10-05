@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 240" preserveAspectRatio="none" width="100%" height="100%">
+  <defs>
+    <linearGradient id="watercolorWashBottom" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="1" />
+      <stop offset="60%" stop-color="#EBF4FB" stop-opacity="0.95" />
+      <stop offset="85%" stop-color="#D2E7F7" stop-opacity="0.85" />
+      <stop offset="100%" stop-color="#C2DCF2" stop-opacity="0.6" />
+    </linearGradient>
+    <filter id="tornEdgeFuzzBottom" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="4" result="noise" />
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="9" xChannelSelector="R" yChannelSelector="G" />
+    </filter>
+  </defs>
+  
+  <!-- Sombra suave del rasgado -->
+  <path d="M 0,240 L 1000,240 L 1000,75 Q 910,105 820,80 T 650,55 T 480,100 T 310,50 T 150,95 T 0,70 Z" 
+        fill="#000000" opacity="0.12" filter="url(#tornEdgeFuzzBottom)" transform="translate(0, -5)" />
+        
+  <!-- Capa base de rasgado blanco acuarela -->
+  <path d="M 0,240 L 1000,240 L 1000,80 Q 910,110 820,85 T 650,60 T 480,105 T 310,55 T 150,100 T 0,75 Z" 
+        fill="url(#watercolorWashBottom)" filter="url(#tornEdgeFuzzBottom)" />
+</svg>

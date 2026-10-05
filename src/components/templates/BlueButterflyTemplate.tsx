@@ -130,6 +130,34 @@ export default function BlueButterflyTemplate({
     data.musicaUrl ||
     "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3";
 
+  // Desglose de fecha dinámica
+  const eventDate = new Date(data.fechaEvento);
+  const eventMonth = eventDate
+    .toLocaleDateString("en-US", { month: "long" })
+    .toUpperCase();
+  const eventWeekday = eventDate
+    .toLocaleDateString("en-US", { weekday: "long" })
+    .toUpperCase();
+  const eventDay = eventDate.getDate();
+  const eventYear = eventDate.getFullYear();
+  const eventTime = eventDate
+    .toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", hour12: true })
+    .toUpperCase();
+
+  // Itinerario dinámico
+  const itineraryList =
+    data.itinerarioJson && data.itinerarioJson.length > 0
+      ? data.itinerarioJson
+      : [
+          { hora: "04:30 PM", titulo: "Llegada & Recepción" },
+          { hora: "05:30 PM", titulo: "Misa Solemne" },
+          { hora: "07:00 PM", titulo: "Cena & Brindis" },
+          { hora: "08:30 PM", titulo: "Vals de Gala" },
+        ];
+
+  // Corte de honor dinámico
+  const corte = data.corteHonorJson || null;
+
   return (
     <div className="relative min-h-screen font-sans-body text-slate-800 antialiased selection:bg-blue-100 selection:text-blue-900 overflow-x-hidden">
       {/* 1. Fondo General Acuarela Fijo en el Viewport */}
@@ -319,7 +347,7 @@ export default function BlueButterflyTemplate({
         </nav>
 
         {/* ======================================================= */}
-        {/* SECCIÓN 1: Portada con Efecto Papel Rasgado y Título    */}
+        {/* SECCIÓN 1: Portada con Hero y Título                    */}
         {/* ======================================================= */}
         <section id="welcome" className="pt-8 text-center relative flex flex-col items-center z-20">
           <div className="flex items-center gap-2 mb-2">
@@ -329,7 +357,9 @@ export default function BlueButterflyTemplate({
               alt="Mariposa"
               className="w-5 h-auto object-contain animate-flutter"
             />
-            <h1 className="font-script text-5xl text-[#2F5A84]">My Quinceañera</h1>
+            <h1 className="font-script text-5xl text-[#2F5A84]">
+              {data.subtitulo || "My Quinceañera"}
+            </h1>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/assets/template-butterfly/mariposa-azul.png"
@@ -338,9 +368,9 @@ export default function BlueButterflyTemplate({
             />
           </div>
 
-          {/* Foto 1 (Con efecto de papel rasgado orgánico en la base) */}
+          {/* Foto 1 (Con efecto de papel rasgado en la base) */}
           <div className="w-full px-4 mt-2">
-            <div className="relative w-full h-[390px] rounded-t-3xl overflow-hidden shadow-xl border-2 border-white/90 bg-slate-200">
+            <div className="relative w-full h-[400px] rounded-t-3xl overflow-hidden shadow-xl border-2 border-white/90 bg-slate-200">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={data.fotoPortadaUrl || "/assets/template-butterfly/foto-columpio-portada.png"}
@@ -348,17 +378,17 @@ export default function BlueButterflyTemplate({
                 className="w-full h-full object-cover select-none"
               />
 
-              {/* Rasgado inferior de papel orgánico */}
+              {/* Rasgado inferior orgánico en SVG */}
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/assets/template-butterfly/torn-paper-bottom.png"
+                src="/assets/template-butterfly/torn-paper-bottom.svg"
                 alt="Rasgado inferior"
-                className="absolute -bottom-1 left-0 w-full pointer-events-none z-10 select-none"
+                className="absolute -bottom-1 left-0 w-full h-16 pointer-events-none z-10 select-none object-cover"
               />
 
-              {/* Cartela superpuesta con el nombre del anfitrión */}
-              <div className="absolute bottom-10 left-1/2 -translate-x-1/2 bg-white/95 backdrop-blur-sm border border-[#D8B772]/70 px-6 py-3 rounded-xl shadow-lg text-center min-w-[210px] z-20">
-                <p className="font-serif-roman text-[11px] tracking-[0.25em] uppercase text-[#C5A059] font-bold">
+              {/* Cartela superpuesta con el nombre de la quinceañera */}
+              <div className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-white/95 backdrop-blur-sm border border-[#D8B772]/70 px-8 py-2.5 rounded-xl shadow-lg text-center min-w-[200px] z-20">
+                <p className="font-serif-roman text-xs tracking-[0.25em] uppercase text-[#C5A059] font-bold">
                   {data.titulo}
                 </p>
               </div>
@@ -367,22 +397,21 @@ export default function BlueButterflyTemplate({
         </section>
 
         {/* ======================================================== */}
-        {/* SECCIÓN REPRODUCTOR DE MÚSICA / DÍPTICO (CANVA REPLICA) */}
+        {/* SECCIÓN 2: MÓDULO MUSICAL (DÍPTICO & DISCO DE VINILO)    */}
         {/* ======================================================== */}
         <section className="relative w-full py-10 px-4 flex justify-center items-center overflow-visible select-none z-20">
-          {/* Contenedor Maestro con dimensiones fijas para anclar los elementos */}
           <div className="relative w-full max-w-[390px] h-[340px] flex items-center justify-center">
-            {/* 1. TEXTO EN ARCO Y NOTAS MUSICALES (Arriba a la izquierda) */}
+            {/* 1. TEXTO EN ARCO Y NOTAS MUSICALES */}
             <div className="absolute -top-3 left-2 z-20 pointer-events-none">
               <span className="block font-serif-roman text-[10px] tracking-[0.25em] text-slate-500 uppercase -rotate-12 translate-x-3 translate-y-2 font-semibold">
-                Click to Play Music
+                {data.textoDisco || "Click to Play Music"}
               </span>
               <span className="block text-2xl text-slate-700 font-serif translate-x-20 -translate-y-2 rotate-12">
                 𝄞 𝅘𝅥𝅯 𝅘𝅥𝅮
               </span>
             </div>
 
-            {/* 2. DISCO DE VINILO (Asomando detrás a la izquierda) */}
+            {/* 2. DISCO DE VINILO */}
             <div
               id="vinylRecord"
               onClick={toggleMusic}
@@ -392,10 +421,8 @@ export default function BlueButterflyTemplate({
               style={{ animationDuration: "4s" }}
               title={isPlaying ? "Pausar música" : "Reproducir música"}
             >
-              {/* Surcos del vinilo */}
               <div className="w-28 h-28 rounded-full border border-neutral-700/60 flex items-center justify-center">
                 <div className="w-20 h-20 rounded-full border border-neutral-700/50 flex items-center justify-center">
-                  {/* Centro celeste / Botón Play */}
                   <div className="w-12 h-12 rounded-full bg-[#ABC7DE] border-2 border-white shadow-inner flex items-center justify-center text-white text-base pl-0.5">
                     {isPlaying ? "❚❚" : "▶"}
                   </div>
@@ -403,43 +430,33 @@ export default function BlueButterflyTemplate({
               </div>
             </div>
 
-            {/* 3. DÍPTICO FOTOGRÁFICO (Doble foto central estilo libro abierto) */}
+            {/* 3. DÍPTICO FOTOGRÁFICO */}
             <div className="relative z-20 w-[290px] h-[200px] bg-white p-2 rounded-sm shadow-[0_12px_30px_rgba(0,0,0,0.18)] border border-slate-200/80 flex gap-1 transform rotate-[-1deg] translate-x-4 translate-y-3">
-              {/* Foto izquierda (Quinceañera soplando beso) */}
               <div className="w-1/2 h-full overflow-hidden bg-slate-100">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={
-                    data.fotoInfanciaUrl ||
-                    "/assets/template-butterfly/foto-sesion-1.jpg"
-                  }
-                  alt="Sesión Quinceañera 1"
+                  src={data.fotoInfanciaUrl || "/assets/template-butterfly/foto-sesion-1.jpg"}
+                  alt="Sesión Foto 1"
                   className="w-full h-full object-cover"
                 />
               </div>
-              {/* Foto derecha (Quinceañera con caballo) */}
               <div className="w-1/2 h-full overflow-hidden bg-slate-100 border-l border-white/60">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={
-                    data.fotoActualUrl ||
-                    "/assets/template-butterfly/foto-sesion-2.jpg"
-                  }
-                  alt="Sesión Quinceañera 2"
+                  src={data.fotoActualUrl || "/assets/template-butterfly/foto-sesion-2.jpg"}
+                  alt="Sesión Foto 2"
                   className="w-full h-full object-cover"
                 />
               </div>
             </div>
 
-            {/* 4. RAMILLETE FLORAL INFERIOR IZQUIERDO (PNG transparente) */}
+            {/* 4. FLORES ESQUINAS */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/assets/template-butterfly/flores-azules-esquina-izq.png"
               alt="Flores Azules Izquierda"
               className="absolute -bottom-6 -left-3 w-36 h-auto z-30 pointer-events-none drop-shadow-md"
             />
-
-            {/* 5. RAMILLETE FLORAL INFERIOR DERECHO (PNG transparente) */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/assets/template-butterfly/flores-azules-esquina-der.png"
@@ -447,7 +464,7 @@ export default function BlueButterflyTemplate({
               className="absolute -bottom-4 right-1 w-24 h-auto z-30 pointer-events-none drop-shadow-sm"
             />
 
-            {/* 6. MARIPOSA AZUL CON ALETEO 3D (Esquina superior derecha del álbum) */}
+            {/* 5. MARIPOSA PERCHADA 3D */}
             <div
               className="absolute top-4 -right-1 z-30 pointer-events-none"
               style={{ perspective: "500px" }}
@@ -463,13 +480,18 @@ export default function BlueButterflyTemplate({
         </section>
 
         {/* ======================================================= */}
-        {/* SECCIÓN 3: Palabras Emotivas y Separador Floral Dorado  */}
+        {/* SECCIÓN 3: MENSAJE EMOTIVO / BENDICIÓN                  */}
         {/* ======================================================= */}
         <section className="px-8 py-4 text-center z-20">
           <p className="font-cormorant italic text-base leading-relaxed text-slate-700">
             {data.frasePersonalizada ||
               "“Doy gracias a Dios por concederme la dicha de celebrar mis quince primaveras, y a mis padres por guiar cada uno de mis pasos con amor incondicional.”"}
           </p>
+          {data.autorBendicion && (
+            <p className="font-serif-roman text-[10px] tracking-[0.2em] text-[#C5A059] uppercase mt-2 font-semibold">
+              {data.autorBendicion}
+            </p>
+          )}
 
           {/* Separador de flores doradas original */}
           <div className="w-full max-w-[280px] mx-auto my-3">
@@ -483,12 +505,12 @@ export default function BlueButterflyTemplate({
         </section>
 
         {/* ======================================================== */}
-        {/* SECCIÓN 4: PLACA DE FECHA Y LUGAR + FOTO CON BORDES RASGADOS */}
+        {/* SECCIÓN 4: TARJETA DE FECHA Y LUGAR + RETRATO CON RASGADO */}
         {/* ======================================================== */}
-        <section className="relative w-full py-8 px-4 flex flex-col items-center overflow-visible select-none z-20">
-          {/* 1. PLACA DE FECHA Y LUGAR (PERGAMINO CON FLORES) */}
+        <section className="relative w-full py-6 px-4 flex flex-col items-center overflow-visible select-none z-20">
+          {/* 1. PLACA DE FECHA Y LUGAR */}
           <div className="relative w-full max-w-[340px] mb-8">
-            {/* Marco de fondo con flores y rosas (Asset PNG transparente) */}
+            {/* Marco de fondo de pergamino con flores */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img 
               src="/assets/template-butterfly/marco-fecha-pergamino.png" 
@@ -496,21 +518,26 @@ export default function BlueButterflyTemplate({
               className="w-full h-auto drop-shadow-sm select-none"
             />
 
-            {/* Contenido tipográfico centrado dentro del marco */}
+            {/* Contenido dinámico centrado */}
             <div className="absolute inset-0 flex flex-col items-center justify-center pt-3 text-center pointer-events-none">
               <p className="font-serif-roman text-xs tracking-[0.25em] text-[#C5A059] uppercase font-bold">
-                OCTOBER
+                {eventMonth}
               </p>
               
-              {/* Línea divisoria con día y hora */}
               <div className="flex items-center gap-3 my-1 border-t border-b border-[#D8B772]/60 py-0.5 px-3">
-                <span className="font-serif-roman text-[10px] tracking-widest text-slate-500 uppercase">SATURDAY</span>
-                <span className="font-serif-roman text-sm font-bold text-[#2F5A84]">24</span>
-                <span className="font-serif-roman text-[10px] tracking-widest text-slate-500 uppercase">AT 3 PM</span>
+                <span className="font-serif-roman text-[10px] tracking-widest text-slate-500 uppercase">
+                  {eventWeekday}
+                </span>
+                <span className="font-serif-roman text-sm font-bold text-[#2F5A84]">
+                  {eventDay}
+                </span>
+                <span className="font-serif-roman text-[10px] tracking-widest text-slate-500 uppercase">
+                  {eventTime}
+                </span>
               </div>
 
               <p className="font-serif-roman text-[10px] tracking-widest text-slate-400">
-                2026
+                {eventYear}
               </p>
               
               <div className="mt-1">
@@ -518,58 +545,95 @@ export default function BlueButterflyTemplate({
                   {data.recepcionNombre || "QUINCE PALACE"}
                 </p>
                 <p className="text-[8px] text-slate-400">
-                  {data.recepcionDireccion || "123 QUINCE ST, CITY, ST ZIP"}
+                  {data.recepcionDireccion || "123 Quince St, City, ST 90210"}
                 </p>
               </div>
             </div>
 
-            {/* Mariposa azul superpuesta en la esquina inferior izquierda con aleteo 3D */}
+            {/* Mariposa con aleteo en la esquina inferior izquierda */}
             <div 
               className="absolute -bottom-4 -left-3 w-16 z-20 pointer-events-none"
               style={{ perspective: "500px" }}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img 
-                src="/assets/template-butterfly/mariposa-fecha.png" 
+                src="/assets/template-butterfly/mariposa-azul.png" 
                 alt="Mariposa" 
                 className="w-full h-auto drop-shadow-md animate-flutter"
               />
             </div>
           </div>
 
-          {/* 2. FOTO PRINCIPAL CON RASGADO ORGÁNICO REAL */}
-          <div className="relative w-full max-w-[390px] h-[480px] overflow-hidden my-2 shadow-xl bg-slate-200">
-            {/* Foto de la Quinceañera (Llenando el contenedor) */}
+          {/* 2. RETRATO DE GALA CON BORDES RASGADOS ORGÁNICOS */}
+          <div className="relative w-full max-w-[390px] h-[480px] overflow-hidden my-2 shadow-xl bg-slate-200 rounded-sm">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img 
-              src={data.fotoActualUrl || "/assets/template-butterfly/foto-gala-vestido.jpg"} 
-              alt="Quinceañera" 
+              src={data.fotoCierreUrl || "/assets/template-butterfly/foto-gala-vestido.jpg"} 
+              alt="Quinceañera Gala" 
               className="w-full h-full object-cover select-none"
             />
 
-            {/* Capa superior: Rasgado de papel blanco/acuarela (PNG transparente) */}
+            {/* Capa superior: Rasgado de papel SVG */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img 
-              src="/assets/template-butterfly/torn-paper-top.png" 
+              src="/assets/template-butterfly/torn-paper-top.svg" 
               alt="Rasgado superior" 
-              className="absolute top-0 left-0 w-full pointer-events-none z-10 select-none"
+              className="absolute top-0 left-0 w-full h-20 pointer-events-none z-10 select-none object-cover"
             />
 
-            {/* Capa inferior: Rasgado de papel blanco/acuarela (PNG transparente) */}
+            {/* Capa inferior: Rasgado de papel SVG */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img 
-              src="/assets/template-butterfly/torn-paper-bottom.png" 
+              src="/assets/template-butterfly/torn-paper-bottom.svg" 
               alt="Rasgado inferior" 
-              className="absolute bottom-0 left-0 w-full pointer-events-none z-10 select-none"
+              className="absolute bottom-0 left-0 w-full h-20 pointer-events-none z-10 select-none object-cover"
             />
           </div>
         </section>
 
         {/* ======================================================= */}
-        {/* SECCIÓN 6: Itinerario con Guirnalda Vertical Original   */}
+        {/* SECCIÓN 5: CONTADOR REGRESIVO (COUNTDOWN)               */}
+        {/* ======================================================= */}
+        <section className="px-4 py-6 z-20">
+          <div className="relative w-full aspect-[1536/1024] max-w-[390px] mx-auto flex items-center justify-center">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/assets/template-butterfly/pergamino-countdown.png"
+              alt="Pergamino de Cuenta Regresiva"
+              className="absolute inset-0 w-full h-full object-contain pointer-events-none z-10 drop-shadow-md"
+            />
+
+            <div className="relative z-20 flex flex-col items-center justify-center text-center px-8 pt-2">
+              <span className="font-serif-roman text-[10px] tracking-[0.25em] uppercase text-[#2F5A84] font-semibold mb-2">
+                Save The Date
+              </span>
+
+              <div className="grid grid-cols-4 gap-2.5 sm:gap-4 font-serif-roman text-[#2F5A84]">
+                <div className="flex flex-col items-center">
+                  <span className="text-2xl sm:text-3xl font-bold">{timeLeft.days}</span>
+                  <p className="text-[9px] uppercase tracking-wider text-slate-500 mt-0.5">Días</p>
+                </div>
+                <div className="flex flex-col items-center">
+                  <span className="text-2xl sm:text-3xl font-bold">{timeLeft.hours}</span>
+                  <p className="text-[9px] uppercase tracking-wider text-slate-500 mt-0.5">Horas</p>
+                </div>
+                <div className="flex flex-col items-center">
+                  <span className="text-2xl sm:text-3xl font-bold">{timeLeft.minutes}</span>
+                  <p className="text-[9px] uppercase tracking-wider text-slate-500 mt-0.5">Min</p>
+                </div>
+                <div className="flex flex-col items-center">
+                  <span className="text-2xl sm:text-3xl font-bold">{timeLeft.seconds}</span>
+                  <p className="text-[9px] uppercase tracking-wider text-slate-500 mt-0.5">Seg</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ======================================================= */}
+        {/* SECCIÓN 6: ITINERARIO ILUSTRADO (THE PROGRAM)           */}
         {/* ======================================================= */}
         <section className="px-6 py-8 z-20">
-          {/* Título enmarcado con la nube acuarela */}
           <div className="relative w-48 h-12 mx-auto flex items-center justify-center mb-6">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -582,9 +646,8 @@ export default function BlueButterflyTemplate({
             </h3>
           </div>
 
-          {/* Timeline conectada por la guirnalda vertical original */}
           <div className="relative max-w-[340px] mx-auto py-4">
-            {/* Guirnalda floral vertical original centrada */}
+            {/* Guirnalda floral vertical original */}
             <div className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-12 pointer-events-none z-10">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
@@ -594,75 +657,72 @@ export default function BlueButterflyTemplate({
               />
             </div>
 
-            {/* Eventos distribuidos a los lados de la guirnalda */}
+            {/* Lista dinámica de itinerario */}
             <div className="space-y-12 relative z-20">
-              <div className="grid grid-cols-2 gap-8 items-center">
-                <div className="text-right pr-4">
-                  <span className="font-serif-roman text-xs font-bold text-[#2F5A84]">04:30 PM</span>
-                  <p className="text-[11px] text-slate-600 font-medium mt-0.5">Llegada & Recepción 🕊️</p>
-                </div>
-                <div className="pl-4 text-left">
-                  <span className="text-xs text-[#C5A059] font-serif-roman italic">Bienvenida</span>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-8 items-center">
-                <div className="text-right pr-4">
-                  <span className="text-xs text-[#C5A059] font-serif-roman italic">Misa Solemne</span>
-                </div>
-                <div className="pl-4 text-left">
-                  <span className="font-serif-roman text-xs font-bold text-[#2F5A84]">05:30 PM</span>
-                  <p className="text-[11px] text-slate-600 font-medium mt-0.5">Acción de Gracias ⛪</p>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-8 items-center">
-                <div className="text-right pr-4">
-                  <span className="font-serif-roman text-xs font-bold text-[#2F5A84]">07:00 PM</span>
-                  <p className="text-[11px] text-slate-600 font-medium mt-0.5">Cena & Brindis 🥂</p>
-                </div>
-                <div className="pl-4 text-left">
-                  <span className="text-xs text-[#C5A059] font-serif-roman italic">Banquete Real</span>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-8 items-center">
-                <div className="text-right pr-4">
-                  <span className="text-xs text-[#C5A059] font-serif-roman italic">Vals de Gala</span>
-                </div>
-                <div className="pl-4 text-left">
-                  <span className="font-serif-roman text-xs font-bold text-[#2F5A84]">08:30 PM</span>
-                  <p className="text-[11px] text-slate-600 font-medium mt-0.5">Vals & Pista de Baile 👑</p>
-                </div>
-              </div>
+              {itineraryList.map((item: any, idx: number) => {
+                const isEven = idx % 2 === 0;
+                return (
+                  <div key={idx} className="grid grid-cols-2 gap-8 items-center">
+                    {isEven ? (
+                      <>
+                        <div className="text-right pr-4">
+                          <span className="font-serif-roman text-xs font-bold text-[#2F5A84]">
+                            {item.hora}
+                          </span>
+                          <p className="text-[11px] text-slate-600 font-medium mt-0.5">
+                            {item.titulo}
+                          </p>
+                        </div>
+                        <div className="pl-4 text-left">
+                          <span className="text-xs text-[#C5A059] font-serif-roman italic">
+                            Momento Especial
+                          </span>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <div className="text-right pr-4">
+                          <span className="text-xs text-[#C5A059] font-serif-roman italic">
+                            Celebración
+                          </span>
+                        </div>
+                        <div className="pl-4 text-left">
+                          <span className="font-serif-roman text-xs font-bold text-[#2F5A84]">
+                            {item.hora}
+                          </span>
+                          <p className="text-[11px] text-slate-600 font-medium mt-0.5">
+                            {item.titulo}
+                          </p>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </div>
         </section>
 
         {/* ======================================================= */}
-        {/* SECCIÓN 7: Código de Vestimenta con Marco Barroco Oval  */}
+        {/* SECCIÓN 7: CÓDIGO DE VESTIMENTA (DRESS CODE)            */}
         {/* ======================================================= */}
         <section className="px-6 py-6 text-center z-20">
           <h3 className="font-serif-roman text-xs tracking-[0.2em] text-[#2F5A84] uppercase mb-2 font-bold">
             Código de Vestimenta
           </h3>
 
-          {/* Marco barroco ovalado con rosas (marco-dress-code.png) */}
           <div className="relative w-64 h-64 mx-auto my-3 flex items-center justify-center">
-            {/* Foto en z-10 */}
+            {/* Foto en el centro */}
             <div className="w-[176px] h-[176px] rounded-full overflow-hidden z-10 shadow-inner">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={
-                  data.fotoCierreUrl ||
-                  "/assets/template-butterfly/foto-zapatilla-original.png"
-                }
-                alt="Zapatilla de Gala"
+                src={data.fotoActualUrl || "/assets/template-butterfly/foto-sesion-2.jpg"}
+                alt="Dress code demo"
                 className="w-full h-full object-cover"
               />
             </div>
 
-            {/* Marco barroco en capa superior absoluta z-20 */}
+            {/* Marco barroco superior */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/assets/template-butterfly/marco-dress-code.png"
@@ -672,7 +732,6 @@ export default function BlueButterflyTemplate({
           </div>
 
           <div className="flex items-center justify-center gap-6 mt-4">
-            {/* Traje de gala masculino */}
             <div className="w-16 h-auto">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
@@ -684,7 +743,7 @@ export default function BlueButterflyTemplate({
 
             <div className="text-left max-w-[200px]">
               <p className="font-bold text-[#2F5A84] font-serif-roman text-xs">
-                {data.dressCodeTitulo || "Formal & Rigurosa Etiqueta"}
+                {data.dressCodeTitulo || "Formal & Elegant"}
               </p>
               <p className="text-[11px] text-slate-600 mt-1 leading-relaxed">
                 {data.dressCodeNota ||
@@ -695,7 +754,7 @@ export default function BlueButterflyTemplate({
         </section>
 
         {/* ======================================================= */}
-        {/* SECCIÓN 8: Ubicación (The Location)                     */}
+        {/* SECCIÓN 8: MAPA Y NAVEGACIÓN (THE LOCATION)             */}
         {/* ======================================================= */}
         <section className="px-6 py-6 text-center z-20">
           <h3 className="font-serif-roman text-xs tracking-[0.25em] text-[#2F5A84] uppercase mb-2 font-bold">
@@ -704,21 +763,20 @@ export default function BlueButterflyTemplate({
           <p className="text-sm font-semibold text-slate-800">{data.recepcionNombre}</p>
           <p className="text-xs text-slate-500 mb-4">{data.recepcionDireccion}</p>
           <a
-            href={data.recepcionMapUrl}
+            href={data.recepcionMapUrl || `https://maps.google.com/?q=${encodeURIComponent(data.recepcionNombre + " " + data.recepcionDireccion)}`}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center justify-center gap-2 w-full bg-[#2F5A84] text-white py-3.5 rounded-xl font-serif-roman text-xs uppercase tracking-widest hover:bg-[#203e5c] transition shadow-md"
           >
             <MapPin className="w-3.5 h-3.5" />
-            Ver en Google Maps
+            Directions / Ver en Mapa
           </a>
         </section>
 
         {/* ======================================================= */}
-        {/* SECCIÓN 9: Mesa de Regalos / Lluvia de Sobres           */}
+        {/* SECCIÓN 9: MESA DE REGALOS / LLUVIA DE SOBRES           */}
         {/* ======================================================= */}
         <section className="px-6 py-6 text-center z-20">
-          {/* Cofre de regalos original */}
           <div className="w-44 h-44 mx-auto mb-2">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -737,10 +795,9 @@ export default function BlueButterflyTemplate({
         </section>
 
         {/* ======================================================= */}
-        {/* SECCIÓN 10: Formulario RSVP con Gráfico Heráldico       */}
+        {/* SECCIÓN 10: CONFIRMACIÓN DE ASISTENCIA (RSVP)           */}
         {/* ======================================================= */}
         <section id="rsvp" className="px-4 py-6 z-20">
-          {/* Gráfico heráldico sobre-rsvp.png montado en la cabecera */}
           <div className="relative w-full max-w-[390px] mx-auto -mb-6 z-20">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -750,7 +807,6 @@ export default function BlueButterflyTemplate({
             />
           </div>
 
-          {/* Tarjeta de Formulario por debajo del escudo */}
           <div className="bg-white/95 backdrop-blur-sm p-6 pt-10 rounded-3xl border border-[#D8B772]/60 shadow-xl text-center relative z-10">
             <h3 className="font-script text-4xl text-[#2F5A84] my-1">Confirmar Asistencia</h3>
             <p className="text-[11px] text-slate-400 mb-5 uppercase tracking-wider font-serif-roman">
@@ -804,10 +860,62 @@ export default function BlueButterflyTemplate({
         </section>
 
         {/* ======================================================= */}
-        {/* FOOTER: Carta de Agradecimiento y Ramillete de Flores   */}
+        {/* SECCIÓN 11: CORTE DE HONOR, PADRINOS Y CARTA DE CIERRE */}
         {/* ======================================================= */}
-        <footer className="px-6 pt-6 pb-6 text-center z-20">
-          {/* Ramillete de flores original */}
+        <section className="px-6 py-6 text-center z-20">
+          {corte && (
+            <div className="bg-white/80 backdrop-blur-sm p-6 rounded-2xl border border-blue-100 mb-6 shadow-sm">
+              <h4 className="font-serif-roman text-xs uppercase tracking-[0.2em] text-[#C5A059] font-bold mb-4">
+                Corte de Honor
+              </h4>
+              <div className="space-y-3 text-xs text-slate-700">
+                {corte.chambelan && (
+                  <p>
+                    <strong className="text-[#2F5A84]">Chambelán de Honor:</strong> {corte.chambelan}
+                  </p>
+                )}
+                {corte.damas && corte.damas.length > 0 && (
+                  <p>
+                    <strong className="text-[#2F5A84]">Damitas:</strong> {corte.damas.join(", ")}
+                  </p>
+                )}
+                {corte.parents && (
+                  <p>
+                    <strong className="text-[#2F5A84]">Padres:</strong> {corte.parents}
+                  </p>
+                )}
+                {corte.padrinos && corte.padrinos.length > 0 && (
+                  <p>
+                    <strong className="text-[#2F5A84]">Padrinos:</strong> {corte.padrinos.join(", ")}
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Botón Añadir a Calendario */}
+          <div className="my-4">
+            <a
+              href={`https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(
+                "Mis XV Años " + data.titulo
+              )}&dates=${eventDate.toISOString().replace(/-|:|\.\d\d\d/g, "")}/${new Date(
+                eventDate.getTime() + 6 * 3600 * 1000
+              )
+                .toISOString()
+                .replace(/-|:|\.\d\d\d/g, "")}&location=${encodeURIComponent(
+                data.recepcionNombre + ", " + data.recepcionDireccion
+              )}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full border border-[#C5A059]/60 text-[#2F5A84] font-serif-roman text-xs uppercase tracking-widest hover:bg-white/60 transition shadow-sm"
+            >
+              📅 Add to Calendar
+            </a>
+          </div>
+        </section>
+
+        {/* FOOTER */}
+        <footer className="px-6 pt-2 pb-6 text-center z-20">
           <div className="w-36 h-36 mx-auto mb-2">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -818,7 +926,7 @@ export default function BlueButterflyTemplate({
           </div>
 
           <p className="font-cormorant italic text-base text-slate-600">
-            Esperamos contar con tu valiosa presencia.
+            {data.mensajeDespedida || "Esperamos contar con tu valiosa presencia."}
           </p>
           <h3 className="font-script text-5xl text-[#2F5A84] mt-2">{data.titulo}</h3>
         </footer>
