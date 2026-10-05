@@ -358,42 +358,97 @@ export default function BlueButterflyTemplate({
           </div>
         </section>
 
-        {/* ======================================================= */}
-        {/* SECCIÓN 2: Tocadiscos / Disco de Vinilo animado y Foto  */}
-        {/* ======================================================= */}
-        <section className="px-6 py-8 text-center relative z-20">
-          <div className="relative max-w-[340px] mx-auto flex items-center justify-center">
-            {/* Vinilo decorativo original girando detrás */}
+        {/* ======================================================== */}
+        {/* SECCIÓN REPRODUCTOR DE MÚSICA / DÍPTICO (CANVA REPLICA) */}
+        {/* ======================================================== */}
+        <section className="relative w-full py-10 px-4 flex justify-center items-center overflow-visible select-none z-20">
+          {/* Contenedor Maestro con dimensiones fijas para anclar los elementos */}
+          <div className="relative w-full max-w-[390px] h-[340px] flex items-center justify-center">
+            {/* 1. TEXTO EN ARCO Y NOTAS MUSICALES (Arriba a la izquierda) */}
+            <div className="absolute -top-3 left-2 z-20 pointer-events-none">
+              <span className="block font-serif-roman text-[10px] tracking-[0.25em] text-slate-500 uppercase -rotate-12 translate-x-3 translate-y-2 font-semibold">
+                Click to Play Music
+              </span>
+              <span className="block text-2xl text-slate-700 font-serif translate-x-20 -translate-y-2 rotate-12">
+                𝄞 𝅘𝅥𝅯 𝅘𝅥𝅮
+              </span>
+            </div>
+
+            {/* 2. DISCO DE VINILO (Asomando detrás a la izquierda) */}
             <div
-              className="absolute -left-2 w-36 h-36 rounded-full overflow-hidden shadow-2xl animate-spin z-10"
-              style={{ animationDuration: "12s" }}
+              id="vinylRecord"
+              onClick={toggleMusic}
+              className={`absolute -top-1 left-2 w-36 h-36 rounded-full bg-[#111] border-[3px] border-slate-700 shadow-2xl flex items-center justify-center z-10 cursor-pointer transition-transform duration-500 hover:scale-105 ${
+                isPlaying ? "animate-spin" : ""
+              }`}
+              style={{ animationDuration: "4s" }}
+              title={isPlaying ? "Pausar música" : "Reproducir música"}
+            >
+              {/* Surcos del vinilo */}
+              <div className="w-28 h-28 rounded-full border border-neutral-700/60 flex items-center justify-center">
+                <div className="w-20 h-20 rounded-full border border-neutral-700/50 flex items-center justify-center">
+                  {/* Centro celeste / Botón Play */}
+                  <div className="w-12 h-12 rounded-full bg-[#ABC7DE] border-2 border-white shadow-inner flex items-center justify-center text-white text-base pl-0.5">
+                    {isPlaying ? "❚❚" : "▶"}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* 3. DÍPTICO FOTOGRÁFICO (Doble foto central estilo libro abierto) */}
+            <div className="relative z-20 w-[290px] h-[200px] bg-white p-2 rounded-sm shadow-[0_12px_30px_rgba(0,0,0,0.18)] border border-slate-200/80 flex gap-1 transform rotate-[-1deg] translate-x-4 translate-y-3">
+              {/* Foto izquierda (Quinceañera soplando beso) */}
+              <div className="w-1/2 h-full overflow-hidden bg-slate-100">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={
+                    data.fotoInfanciaUrl ||
+                    "/assets/template-butterfly/foto-sesion-1.jpg"
+                  }
+                  alt="Sesión Quinceañera 1"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              {/* Foto derecha (Quinceañera con caballo) */}
+              <div className="w-1/2 h-full overflow-hidden bg-slate-100 border-l border-white/60">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={
+                    data.fotoActualUrl ||
+                    "/assets/template-butterfly/foto-sesion-2.jpg"
+                  }
+                  alt="Sesión Quinceañera 2"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            </div>
+
+            {/* 4. RAMILLETE FLORAL INFERIOR IZQUIERDO (PNG transparente) */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/assets/template-butterfly/flores-azules-esquina-izq.png"
+              alt="Flores Azules Izquierda"
+              className="absolute -bottom-6 -left-3 w-36 h-auto z-30 pointer-events-none drop-shadow-md"
+            />
+
+            {/* 5. RAMILLETE FLORAL INFERIOR DERECHO (PNG transparente) */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/assets/template-butterfly/flores-azules-esquina-der.png"
+              alt="Flores Azules Derecha"
+              className="absolute -bottom-4 right-1 w-24 h-auto z-30 pointer-events-none drop-shadow-sm"
+            />
+
+            {/* 6. MARIPOSA AZUL CON ALETEO 3D (Esquina superior derecha del álbum) */}
+            <div
+              className="absolute top-4 -right-1 z-30 pointer-events-none"
+              style={{ perspective: "500px" }}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/assets/template-butterfly/marco-vinilo.png"
-                alt="Disco de Vinilo"
-                className="w-full h-full object-contain"
-              />
-            </div>
-
-            {/* Pentagrama musical flotando */}
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/assets/template-butterfly/pentagrama-musica.png"
-              alt="Pentagrama"
-              className="absolute -top-3 left-4 w-32 object-contain pointer-events-none z-15 opacity-80"
-            />
-
-            {/* Foto 2 con marco blanco y sombra (Foto de caballo / sesión) */}
-            <div className="relative z-20 w-48 h-48 rounded-2xl overflow-hidden border-4 border-white shadow-2xl ml-16 bg-white">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={
-                  data.fotoInfanciaUrl ||
-                  "/assets/template-butterfly/foto-caballo-original.png"
-                }
-                alt="Sesión Quinceañera"
-                className="w-full h-full object-cover"
+                src="/assets/template-butterfly/mariposa-perchada.png"
+                alt="Blue Butterfly"
+                className="w-20 h-auto animate-flutter drop-shadow-lg"
               />
             </div>
           </div>

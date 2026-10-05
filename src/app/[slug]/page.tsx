@@ -156,12 +156,10 @@ export const DEMO_BUTTERFLY: InvitationData = {
     "“Doy gracias a Dios por concederme la dicha de celebrar mis quince primaveras, y a mis padres por guiar cada uno de mis pasos con amor incondicional.”",
   fechaEvento: new Date("2026-11-14T17:00:00Z"),
   fechaTextoPersonalizada: "14 NOVIEMBRE 2026 • 5:00 PM",
-  fotoPortadaUrl:
-    "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=800&q=80",
-  fotoInfanciaUrl:
-    "https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&w=500&q=80",
-  fotoActualUrl:
-    "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80",
+  fotoPortadaUrl: "/assets/template-butterfly/foto-columpio-portada.png",
+  fotoInfanciaUrl: "/assets/template-butterfly/foto-sesion-1.jpg",
+  fotoActualUrl: "/assets/template-butterfly/foto-sesion-2.jpg",
+  fotoCierreUrl: "/assets/template-butterfly/foto-zapatilla-original.png",
   musicaUrl:
     "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
   telefonoWhatsappRsvp: "18181234567",
