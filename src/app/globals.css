@@ -75,3 +75,9 @@ body {
   display: inline-block;
 }
 
+/* Recorte de papel rasgado oficial de Canva */
+.clip-canva-torn {
+  clip-path: url(#canvaTornClip);
+  -webkit-clip-path: url(#canvaTornClip);
+}
+
