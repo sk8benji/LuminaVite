@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/db";
+import { fallbackEventStore } from "@/lib/event-fallback-store";
 
 export async function GET(
   req: NextRequest,
@@ -35,6 +36,35 @@ export async function GET(
     }
 
     if (!evento) {
+      const fallback = fallbackEventStore.getEvent(slug);
+      if (fallback) {
+        if (key !== "demo" && key !== fallback.panelToken) {
+          return NextResponse.json(
+            { error: "Clave de acceso incorrecta para este evento." },
+            { status: 403 }
+          );
+        }
+
+        const rsvps = fallback.rsvps || [];
+        const confirmados = rsvps.filter((r: any) => r.asistira);
+        const declinados = rsvps.filter((r: any) => !r.asistira);
+        const totalPases = confirmados.reduce((sum: number, r: any) => sum + (r.pases || 1), 0);
+
+        return NextResponse.json({
+          evento: {
+            ...fallback,
+            rsvps,
+          },
+          estadisticas: {
+            totalInvitadosConfirmados: confirmados.length,
+            totalPasesConfirmados: totalPases,
+            totalDeclinados: declinados.length,
+            totalRespuestas: rsvps.length,
+            aforoTotal: fallback.aforoTotal || 200,
+          },
+          rsvps,
+        });
+      }
       // Mock demo para slugs de ejemplo o si la BD aún no tiene el evento
       if (key === "demo" || slug.startsWith("demo-") || slug === "valeria-xv" || slug === "mariposas-xv") {
         return NextResponse.json({

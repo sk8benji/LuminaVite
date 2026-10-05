@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import prisma from "@/lib/db";
+import { fallbackEventStore } from "@/lib/event-fallback-store";
 import { InvitationData } from "@/components/invitation/InvitationMobileView";
 import TemplateDispatcher from "@/components/templates/TemplateDispatcher";
 
@@ -261,7 +262,16 @@ async function getEventoData(rawSlug: string): Promise<InvitationData | null> {
       where: { slug, activo: true },
     });
 
-    if (!evento) return null;
+    if (!evento) {
+      const fallback = fallbackEventStore.getEvent(slug);
+      if (fallback) {
+        return {
+          ...fallback,
+          fechaEvento: new Date(fallback.fechaEvento),
+        } as any;
+      }
+      return null;
+    }
 
     return {
       id: evento.id,
@@ -318,6 +328,13 @@ async function getEventoData(rawSlug: string): Promise<InvitationData | null> {
     };
   } catch (error) {
     console.warn("Base de datos no disponible o error al consultar slug:", slug, error);
+    const fallback = fallbackEventStore.getEvent(slug);
+    if (fallback) {
+      return {
+        ...fallback,
+        fechaEvento: new Date(fallback.fechaEvento),
+      } as any;
+    }
     return null;
   }
 }
