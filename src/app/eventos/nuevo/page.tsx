@@ -97,6 +97,14 @@ export default function NuevoEventoPage() {
       recepcionNombre: "Hacienda Los Jardines Celestiales",
       recepcionDireccion: "Carr. Nacional Km 14.5, Jardín Real",
       recepcionMapUrl: "https://maps.google.com/?q=Hacienda+Los+Jardines+Celestiales",
+      itinerarioJson: [
+        { hora: "3:00 PM", titulo: "Guest arrival", tipoIcono: "welcome" },
+        { hora: "4:30 PM", titulo: "Grand entrance", tipoIcono: "entrance" },
+        { hora: "4:00 - 6:00 PM", titulo: "Dinner", tipoIcono: "dinner" },
+        { hora: "6:00 - 7:00 PM", titulo: "Waltz", tipoIcono: "waltz" },
+        { hora: "7:00 - 12:00 AM", titulo: "Open Dance", tipoIcono: "disco" },
+        { hora: "10:00 PM", titulo: "Cake cutting", tipoIcono: "cake" },
+      ],
       corteHonorJson: {
         chambelan: "Jeremiah Smith",
         damas: ["Magdalena", "Violeta", "Tania"],
