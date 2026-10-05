@@ -61,13 +61,13 @@ export default function TimelineSection({ items, template }: TimelineSectionProp
       <div className="text-center mb-6">
         <span className="text-2xl">⏳</span>
         <h3
-          className="text-xs uppercase tracking-widest font-semibold mt-2"
+          className="text-xs uppercase tracking-widest font-bold mt-2"
           style={{
-            color: template.textPrimary,
+            color: "#9E2A4B",
             fontFamily: template.fontSubheading,
           }}
         >
-          Itinerario del Evento
+          THE PROGRAM
         </h3>
         <p
           className="text-[11px] opacity-75 mt-0.5"

@@ -1,14 +1,12 @@
 import React from "react";
-import Image from "next/image";
 import {
   MapPin,
   Gift,
   Heart,
   Sparkles,
-  Music,
-  CalendarDays,
   ExternalLink,
-  ShieldAlert,
+  Users,
+  Compass,
 } from "lucide-react";
 import { getTemplate, TemplateId } from "@/lib/templates";
 import AudioPlayer from "./AudioPlayer";
@@ -24,12 +22,14 @@ export interface InvitationData {
   tipoEvento: "QUINCEANERA" | "BODA";
   estiloPlantilla: TemplateId;
   titulo: string; // ej. "Elsy" o "Sofía & Alejandro"
-  subtitulo?: string | null; // ej. "With love, we invite you"
+  subtitulo?: string | null; // ej. "An Unforgettable Celebration Awaits"
   frasePersonalizada?: string | null;
   fechaEvento: string | Date;
+  fechaTextoPersonalizada?: string | null; // ej. "DECEMBER 05, 2026 AT 2 PM"
   fotoPortadaUrl: string;
   fotoInfanciaUrl?: string | null;
   fotoActualUrl?: string | null;
+  fotoCierreUrl?: string | null;
   musicaUrl?: string | null;
   telefonoWhatsappRsvp: string;
   fechaLimiteRsvp?: string | null;
@@ -47,15 +47,21 @@ export interface InvitationData {
   dressCodeNota?: string | null;
   coloresReservados?: string[];
 
+  celebrationGuideline?: string | null;
+
   itinerarioJson?: TimelineItem[] | any;
   corteHonorJson?: {
     chambelan?: string;
+    chambelanes?: string[];
     damas?: string[];
+    parents?: string;
     padrinos?: string[];
+    mensajeGratitud?: string;
   } | any;
   mesaRegalosJson?: {
     titulo?: string;
     mensaje?: string;
+    plataformas?: string[];
     datosBancarios?: string;
   } | any;
 }
@@ -64,24 +70,21 @@ export default function InvitationMobileView({ data }: { data: InvitationData })
   const template = getTemplate(data.estiloPlantilla);
   const eventDateObj = new Date(data.fechaEvento);
 
-  // Formato elegante de fecha: "DICIEMBRE 05, 2026"
-  const formattedDate = eventDateObj.toLocaleDateString("es-ES", {
-    month: "long",
-    day: "2-digit",
-    year: "numeric",
-  }).toUpperCase();
-
-  const formattedTime = eventDateObj.toLocaleTimeString("es-ES", {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+  // Fecha por defecto o personalizada
+  const formattedDate =
+    data.fechaTextoPersonalizada ||
+    eventDateObj.toLocaleDateString("en-US", {
+      month: "long",
+      day: "2-digit",
+      year: "numeric",
+    }).toUpperCase() + " AT 2 PM";
 
   return (
     <div
       className="min-h-screen flex justify-center selection:bg-pink-200 antialiased"
       style={{ backgroundColor: template.bgColor }}
     >
-      {/* Intro Animada 3D del Sobre con Sello y Desbloqueo de Audio */}
+      {/* 0. Intro Animada 3D del Sobre con Sello y Desbloqueo de Audio */}
       <EnvelopeIntro
         titulo={data.titulo}
         tipoEvento={data.tipoEvento}
@@ -100,78 +103,84 @@ export default function InvitationMobileView({ data }: { data: InvitationData })
         {/* Audio flotante */}
         <AudioPlayer audioUrl={data.musicaUrl} template={template} />
 
-        {/* 1. Mini-Nav Superior Fija */}
+        {/* 1. Barra Superior Fija (Navbar) */}
         <nav
-          className="sticky top-0 z-40 backdrop-blur-md px-6 py-3 flex justify-between items-center text-xs tracking-widest uppercase border-b transition-colors"
+          className="sticky top-0 z-40 bg-white/90 backdrop-blur-md px-6 py-3 flex justify-between items-center text-xs tracking-widest uppercase border-b border-pink-100/60 transition-colors"
           style={{
-            backgroundColor: `${template.bgColor}EE`,
-            borderColor: template.borderSoft,
             fontFamily: template.fontSubheading,
           }}
         >
           <a
             href="#inicio"
-            className="hover:opacity-75 transition"
-            style={{ color: template.textPrimary }}
+            className="hover:text-pink-700 transition font-serif tracking-widest text-[#5A3E44]"
           >
-            Invitación
+            Invitation
           </a>
           <a
             href="#rsvp"
-            className="font-semibold transition hover:opacity-75 px-3 py-1 rounded-full"
+            className="font-semibold transition hover:opacity-80 px-3.5 py-1 rounded-full text-xs shadow-sm"
             style={{
-              backgroundColor: template.badgeBg,
-              color: template.textPrimary,
+              backgroundColor: "#5A3E44",
+              color: "#FFFFFF",
             }}
           >
             RSVP
           </a>
         </nav>
 
-        {/* 2. Portada (Sobre y Lazo) */}
-        <section id="inicio" className="px-6 pt-10 pb-6 text-center flex flex-col items-center">
+        {/* 2. Portada (Sobre y Lazo con Glitter Oro Rosa) */}
+        <section id="inicio" className="px-6 pt-10 pb-6 text-center flex flex-col items-center relative">
+          {/* Lluvia de brillos / glitter en la parte superior */}
+          <div className="absolute top-2 left-0 right-0 flex justify-around pointer-events-none opacity-60">
+            <Sparkles className="w-4 h-4 text-amber-300 animate-pulse" />
+            <Sparkles className="w-5 h-5 text-rose-300 animate-float" />
+            <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+            <Sparkles className="w-4 h-4 text-rose-300 animate-pulse" />
+          </div>
+
           <div
-            className={`w-56 h-56 rounded-3xl bg-gradient-to-tr ${template.ribbonGradient} flex flex-col items-center justify-center shadow-inner relative p-4 border transition-transform duration-500 hover:scale-105`}
-            style={{ borderColor: template.borderSoft }}
+            className={`w-60 h-60 rounded-3xl bg-gradient-to-tr ${template.ribbonGradient} flex flex-col items-center justify-center shadow-lg relative p-4 border border-pink-200/80 transition-transform duration-500 hover:scale-105`}
           >
-            <span className="text-6xl animate-bounce">🎀</span>
-            <div className="flex gap-1 mt-3">
-              <Sparkles className="w-4 h-4 opacity-70" style={{ color: template.accentColor }} />
-              <Sparkles className="w-5 h-5" style={{ color: template.accentColor }} />
-              <Sparkles className="w-4 h-4 opacity-70" style={{ color: template.accentColor }} />
+            <div className="relative">
+              <span className="text-6xl drop-shadow">🎀</span>
+              <span className="absolute -top-1 -right-1 text-sm">💎</span>
+            </div>
+            <div className="flex gap-1.5 mt-3">
+              <Sparkles className="w-4 h-4 text-[#D4A59A]" />
+              <Sparkles className="w-5 h-5 text-[#C58B95]" />
+              <Sparkles className="w-4 h-4 text-[#D4A59A]" />
             </div>
           </div>
 
           <h1
-            className="text-5xl mt-8 font-normal"
+            className="text-5xl sm:text-6xl mt-8 font-normal"
             style={{
               fontFamily: template.fontHeading,
-              color: template.textPrimary,
+              color: "#5A3E44",
             }}
           >
             You&apos;re Invited!
           </h1>
           <p
-            className="text-[11px] tracking-widest uppercase mt-2 font-medium opacity-75"
+            className="text-[11px] tracking-widest uppercase mt-2 font-medium text-stone-500"
             style={{ fontFamily: template.fontSubheading }}
           >
             {data.subtitulo || "An Unforgettable Celebration Awaits"}
           </p>
         </section>
 
-        {/* 3. Foto Principal y Nombres */}
+        {/* 3. Retrato Principal y Nombre */}
         <section className="px-6 py-6 text-center">
           <p
-            className="text-[11px] tracking-widest uppercase opacity-75 mb-3 font-medium"
+            className="text-[11px] tracking-widest uppercase text-stone-500 mb-3 font-semibold"
             style={{ fontFamily: template.fontSubheading }}
           >
-            With Love We Invite You
+            WITH LOVE WE INVITE YOU
           </p>
 
-          {/* Marco curvo vertical tipo arco */}
+          {/* Fotografía vertical enmarcada en arco superior */}
           <div
-            className="rounded-t-full overflow-hidden border-4 shadow-xl mx-auto w-72 h-96 relative bg-stone-100"
-            style={{ borderColor: template.cardBg }}
+            className="rounded-t-full overflow-hidden border-4 border-white shadow-xl mx-auto w-72 h-96 relative bg-stone-100"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -182,102 +191,96 @@ export default function InvitationMobileView({ data }: { data: InvitationData })
           </div>
 
           <p
-            className="text-[11px] tracking-widest uppercase opacity-60 mt-6"
+            className="text-[11px] tracking-widest uppercase text-stone-400 mt-6 font-semibold"
             style={{ fontFamily: template.fontSubheading }}
           >
             {data.tipoEvento === "QUINCEANERA"
-              ? "Celebrate the Quinceañera of"
-              : "Celebremos el Matrimonio de"}
+              ? "CELEBRATE THE QUINCEAÑERA OF"
+              : "CELEBRATE THE WEDDING OF"}
           </p>
 
-          <h2
-            className="text-6xl -mt-1 font-normal tracking-wide"
-            style={{
-              fontFamily: template.fontHeading,
-              color: template.textPrimary,
-            }}
-          >
-            {data.titulo}
-          </h2>
+          {/* Nombre caligráfico + Corazón musical */}
+          <div className="flex items-center justify-center gap-2 -mt-1">
+            <h2
+              className="text-6xl font-normal tracking-wide text-[#5A3E44]"
+              style={{
+                fontFamily: template.fontHeading,
+              }}
+            >
+              {data.titulo}
+            </h2>
+            <span className="text-xl animate-pulse" title="Musical Heart">💖🎵</span>
+          </div>
 
-          {/* Fecha destacada con separadores */}
+          {/* Bloque de fecha entre separadores lineales delgados */}
           <div className="flex items-center justify-center gap-4 mt-3">
-            <div className="h-[1px] w-12" style={{ backgroundColor: template.accentColor }} />
+            <div className="h-[1px] w-12 bg-pink-200" />
             <p
-              className="text-xs tracking-widest font-semibold"
+              className="text-xs tracking-widest font-semibold text-stone-600"
               style={{
                 fontFamily: template.fontSubheading,
-                color: template.textPrimary,
               }}
             >
               {formattedDate}
             </p>
-            <div className="h-[1px] w-12" style={{ backgroundColor: template.accentColor }} />
+            <div className="h-[1px] w-12 bg-pink-200" />
           </div>
         </section>
 
-        {/* 4. Contador Regresivo en Vivo */}
-        <CountdownTimer targetDate={data.fechaEvento} template={template} />
+        {/* 4. Cuenta Regresiva Digital (Countdown en Magenta/Vino #9E2A4B) */}
+        <CountdownTimer
+          targetDate={data.fechaEvento}
+          template={template}
+          titulo="I CAN'T WAIT TO CELEBRATE WITH YOU!"
+        />
 
-        {/* 5. Bloque Emocional: "From Girl to Señorita" o Historia de Amor */}
+        {/* 5. Módulo Emocional "From Girl to Señorita" */}
         {(data.fotoInfanciaUrl || data.fotoActualUrl || data.frasePersonalizada) && (
           <section className="px-6 py-8 text-center">
             <h3
-              className="text-xs uppercase tracking-widest font-semibold mb-4"
-              style={{
-                color: template.textPrimary,
-                fontFamily: template.fontSubheading,
-              }}
+              className="text-xs uppercase tracking-widest font-bold mb-4 text-[#5A3E44]"
+              style={{ fontFamily: template.fontSubheading }}
             >
               {data.tipoEvento === "QUINCEANERA"
-                ? "From Girl to Señorita"
-                : "Nuestra Historia de Amor"}
+                ? "FROM GIRL TO SEÑORITA"
+                : "OUR LOVE STORY"}
             </h3>
 
-            {/* Dos fotos en comparativa */}
+            {/* Dos fotos comparativas en marcos redondeados / ovalados */}
             {(data.fotoInfanciaUrl || data.fotoActualUrl) && (
               <div className="grid grid-cols-2 gap-3 mb-4">
                 {data.fotoInfanciaUrl && (
-                  <div
-                    className="rounded-2xl overflow-hidden shadow-sm aspect-square relative border-2"
-                    style={{ borderColor: template.cardBg }}
-                  >
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={data.fotoInfanciaUrl}
-                      alt="Infancia"
-                      className="w-full h-full object-cover"
-                    />
+                  <div className="flex flex-col items-center">
+                    <div className="w-full aspect-square rounded-2xl overflow-hidden shadow-sm border-2 border-white bg-stone-100 relative group">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={data.fotoInfanciaUrl}
+                        alt="De niña"
+                        className="w-full h-full object-cover group-hover:scale-105 transition"
+                      />
+                    </div>
                     <span
-                      className="absolute bottom-2 left-2 text-[9px] uppercase tracking-wider px-2 py-0.5 rounded-full font-semibold backdrop-blur-sm shadow"
-                      style={{
-                        backgroundColor: `${template.cardBg}CC`,
-                        color: template.textPrimary,
-                      }}
+                      className="mt-2 text-[10px] font-bold tracking-widest uppercase text-stone-500 font-serif"
                     >
-                      Ayer
+                      FROM GIRL
                     </span>
                   </div>
                 )}
+
                 {data.fotoActualUrl && (
-                  <div
-                    className="rounded-2xl overflow-hidden shadow-sm aspect-square relative border-2"
-                    style={{ borderColor: template.cardBg }}
-                  >
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={data.fotoActualUrl}
-                      alt="Actual"
-                      className="w-full h-full object-cover"
-                    />
+                  <div className="flex flex-col items-center">
+                    <div className="w-full aspect-square rounded-2xl overflow-hidden shadow-sm border-2 border-white bg-stone-100 relative group">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={data.fotoActualUrl}
+                        alt="De señorita"
+                        className="w-full h-full object-cover group-hover:scale-105 transition"
+                      />
+                    </div>
                     <span
-                      className="absolute bottom-2 right-2 text-[9px] uppercase tracking-wider px-2 py-0.5 rounded-full font-semibold backdrop-blur-sm shadow"
-                      style={{
-                        backgroundColor: `${template.cardBg}CC`,
-                        color: template.textPrimary,
-                      }}
+                      className="mt-2 text-[10px] font-bold tracking-widest uppercase text-[#5A3E44] font-serif"
                     >
-                      Hoy
+                      TO SEÑORITA
                     </span>
                   </div>
                 )}
@@ -285,18 +288,15 @@ export default function InvitationMobileView({ data }: { data: InvitationData })
             )}
 
             <p
-              className="text-xs leading-relaxed font-light px-2 opacity-90"
-              style={{ color: template.textSecondary }}
+              className="text-xs leading-relaxed font-light px-2 text-stone-600 mt-2"
             >
               {data.frasePersonalizada ||
-                (data.tipoEvento === "QUINCEANERA"
-                  ? "Desde pequeña soñé con este momento tan mágico. Hoy doy el hermoso paso de niña a señorita, rodeada del amor y bendición de todos los que amo."
-                  : "Dos almas que decidieron caminar juntas de la mano hacia una vida llena de momentos inolvidables.")}
+                "Desde pequeña, Elsy soñó con este instante. Hoy celebramos el hermoso paso de niña a señorita, rodeada del cariño y bendición de quienes han guiado cada uno de sus pasos."}
             </p>
           </section>
         )}
 
-        {/* 6. Formulario RSVP con WhatsApp */}
+        {/* 6. Módulo de Confirmación (RSVP con WhatsApp) */}
         <RsvpSection
           eventoId={data.id}
           eventoTitulo={data.titulo}
@@ -306,41 +306,96 @@ export default function InvitationMobileView({ data }: { data: InvitationData })
           template={template}
         />
 
-        {/* 7. Ubicaciones (Ceremonia y Recepción) */}
+        {/* 7. Mesa de Regalos / Lluvia de Sobres (The Registry) */}
+        <section className="px-6 py-6">
+          <div
+            className="p-6 rounded-3xl border border-pink-100 shadow-sm text-center bg-white"
+          >
+            <span className="text-3xl">🎁</span>
+            <h3
+              className="text-xs uppercase tracking-widest font-bold mt-2 text-[#5A3E44]"
+              style={{ fontFamily: template.fontSubheading }}
+            >
+              {data.mesaRegalosJson?.titulo || "THE REGISTRY"}
+            </h3>
+
+            <p className="text-xs text-stone-600 mt-2 leading-relaxed font-light">
+              {data.mesaRegalosJson?.mensaje ||
+                "Celebrating with you is the greatest gift of all. For guests who wish to bring a contribution, is warmly appreciated."}
+            </p>
+
+            {/* Badges de opciones de aportación (Zelle / CashApp / Urna de sobres) */}
+            <div className="flex flex-wrap items-center justify-center gap-2 mt-4">
+              <span className="px-3 py-1.5 rounded-xl bg-pink-50 border border-pink-100 text-[11px] font-semibold text-[#5A3E44]">
+                ✉️ Urna de Sobres
+              </span>
+              <span className="px-3 py-1.5 rounded-xl bg-purple-50 border border-purple-100 text-[11px] font-semibold text-purple-800">
+                💜 Zelle
+              </span>
+              <span className="px-3 py-1.5 rounded-xl bg-emerald-50 border border-emerald-100 text-[11px] font-semibold text-emerald-800">
+                💵 CashApp / Efectivo
+              </span>
+            </div>
+
+            {data.mesaRegalosJson?.datosBancarios && (
+              <div
+                className="mt-3 p-3 rounded-xl text-xs font-mono select-all bg-[#FFF9FA] border border-pink-100 text-[#5A3E44]"
+              >
+                {data.mesaRegalosJson.datosBancarios}
+              </div>
+            )}
+          </div>
+        </section>
+
+        {/* 8. Ubicación con Mapa (The Location) */}
         <section className="px-6 py-6 space-y-4">
-          <div className="text-center mb-4">
+          <div className="text-center mb-2">
             <span className="text-2xl">📍</span>
             <h3
-              className="text-xs uppercase tracking-widest font-semibold mt-1"
-              style={{
-                color: template.textPrimary,
-                fontFamily: template.fontSubheading,
-              }}
+              className="text-sm uppercase tracking-widest font-bold mt-1 text-[#5A3E44]"
+              style={{ fontFamily: "'Cinzel', serif" }}
             >
-              Ubicación del Evento
+              THE LOCATION
             </h3>
           </div>
 
-          {/* Ceremonia religiosa (si existe) */}
+          {/* Salón de Recepción */}
+          <div
+            className="p-6 rounded-3xl border border-pink-100 shadow-sm text-center bg-white"
+          >
+            <h4 className="text-sm font-bold text-stone-800" style={{ fontFamily: template.fontSubheading }}>
+              {data.recepcionNombre}
+            </h4>
+            <p className="text-xs text-stone-500 mt-1">
+              {data.recepcionDireccion}
+            </p>
+
+            {/* Botón estilizado Directions */}
+            <a
+              href={data.recepcionMapUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-5 inline-flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl text-xs uppercase tracking-widest font-semibold border border-[#5A3E44] text-[#5A3E44] hover:bg-[#5A3E44] hover:text-white transition shadow-sm"
+              style={{ fontFamily: template.fontSubheading }}
+            >
+              <Compass className="w-3.5 h-3.5" />
+              Directions
+            </a>
+          </div>
+
+          {/* Ceremonia religiosa si existe */}
           {data.ceremoniaNombre && (
             <div
-              className="p-5 rounded-2xl border shadow-sm text-center"
-              style={{
-                backgroundColor: template.cardBg,
-                borderColor: template.borderSoft,
-              }}
+              className="p-5 rounded-2xl border border-pink-100 shadow-sm text-center bg-white/70"
             >
-              <p
-                className="text-[10px] uppercase tracking-wider font-semibold opacity-70"
-                style={{ color: template.accentColor }}
-              >
-                Ceremonia Religiosa
+              <p className="text-[10px] uppercase tracking-wider font-semibold text-[#D4A59A]">
+                Ceremonia Religiosa / Iglesia
               </p>
-              <h4 className="text-sm font-semibold mt-1" style={{ color: template.textPrimary }}>
+              <h4 className="text-xs font-bold text-stone-800 mt-1">
                 {data.ceremoniaNombre}
               </h4>
               {data.ceremoniaDireccion && (
-                <p className="text-[11px] opacity-75 mt-0.5" style={{ color: template.textSecondary }}>
+                <p className="text-[11px] text-stone-500 mt-0.5">
                   {data.ceremoniaDireccion}
                 </p>
               )}
@@ -349,97 +404,48 @@ export default function InvitationMobileView({ data }: { data: InvitationData })
                   href={data.ceremoniaMapUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 mt-3 text-xs uppercase tracking-wider font-semibold underline underline-offset-4 hover:opacity-80 transition"
-                  style={{ color: template.accentColor }}
+                  className="inline-flex items-center gap-1.5 mt-2 text-xs uppercase tracking-wider font-semibold text-[#5A3E44] underline underline-offset-4"
                 >
                   <MapPin className="w-3.5 h-3.5" />
-                  Abrir Mapa Ceremonia
+                  Ver Mapa Iglesia
                 </a>
               )}
             </div>
           )}
-
-          {/* Recepción (Salón Principal) */}
-          <div
-            className="p-5 rounded-2xl border shadow-sm text-center"
-            style={{
-              backgroundColor: template.cardBg,
-              borderColor: template.borderSoft,
-            }}
-          >
-            <p
-              className="text-[10px] uppercase tracking-wider font-semibold opacity-70"
-              style={{ color: template.accentColor }}
-            >
-              Recepción & Fiesta
-            </p>
-            <h4 className="text-sm font-semibold mt-1" style={{ color: template.textPrimary }}>
-              {data.recepcionNombre}
-            </h4>
-            <p className="text-[11px] opacity-75 mt-0.5" style={{ color: template.textSecondary }}>
-              {data.recepcionDireccion}
-            </p>
-
-            <a
-              href={data.recepcionMapUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-4 flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-xs uppercase tracking-wider font-semibold border transition hover:opacity-90 active:scale-95 shadow-sm"
-              style={{
-                backgroundColor: template.buttonBg,
-                borderColor: template.buttonBg,
-                color: template.buttonText,
-                fontFamily: template.fontSubheading,
-              }}
-            >
-              <MapPin className="w-3.5 h-3.5" />
-              Ver Dirección en Google Maps
-            </a>
-          </div>
         </section>
 
-        {/* 8. Línea de Tiempo (Itinerario) */}
+        {/* 9. Línea de Tiempo del Evento (The Program) */}
         <TimelineSection items={data.itinerarioJson} template={template} />
 
-        {/* 9. Código de Vestimenta (Dress Code) */}
+        {/* 10. Código de Vestimenta (Dress Code) */}
         <section className="px-6 py-6">
           <div
-            className="p-6 rounded-3xl border shadow-sm text-center"
-            style={{
-              backgroundColor: template.cardBg,
-              borderColor: template.borderSoft,
-            }}
+            className="p-6 rounded-3xl border border-pink-100 shadow-sm text-center bg-white/80"
           >
-            <span className="text-2xl">👗</span>
+            <span className="text-2xl">👠</span>
             <h3
-              className="text-xs uppercase tracking-widest font-semibold mt-2"
-              style={{
-                color: template.textPrimary,
-                fontFamily: template.fontSubheading,
-              }}
+              className="text-xs uppercase tracking-widest font-bold mt-2 text-[#5A3E44]"
+              style={{ fontFamily: template.fontSubheading }}
             >
-              Dress Code
+              BRING YOUR DANCING SHOES
             </h3>
 
             <p
-              className="text-sm font-medium mt-1"
-              style={{
-                color: template.textPrimary,
-                fontFamily: template.fontSubheading,
-              }}
+              className="text-xs font-semibold text-[#5A3E44] mt-1 uppercase tracking-wider"
+              style={{ fontFamily: template.fontSubheading }}
             >
-              {data.dressCodeTitulo || "Elegante y Formal"}
+              {data.dressCodeTitulo || "DRESS CODE: ELEGANT & FORMAL"}
             </p>
 
-            <p className="text-[11px] opacity-75 mt-1 leading-relaxed" style={{ color: template.textSecondary }}>
+            <p className="text-xs text-stone-600 mt-2 leading-relaxed font-light">
               {data.dressCodeNota ||
-                "Agradecemos vestir atuendo formal. Por favor reservar tonos blancos y pastel para los protagonistas."}
+                "Guests are encouraged to wear shades of white/formal to match the celebration."}
             </p>
 
             {/* Muestra de colores reservados */}
             {data.coloresReservados && data.coloresReservados.length > 0 && (
               <div className="flex items-center justify-center gap-2 mt-4">
-                <span className="text-[10px] uppercase tracking-wider opacity-70">Reservados:</span>
+                <span className="text-[10px] uppercase tracking-wider text-stone-400">Reserved tones:</span>
                 {data.coloresReservados.map((hex, i) => (
                   <div
                     key={i}
@@ -453,117 +459,139 @@ export default function InvitationMobileView({ data }: { data: InvitationData })
           </div>
         </section>
 
-        {/* 10. Mesa de Regalos / Lluvia de Sobres */}
+        {/* 11. Guía de la Celebración (Celebration Guideline) */}
         <section className="px-6 py-4">
           <div
-            className="p-6 rounded-3xl border shadow-sm text-center"
-            style={{
-              backgroundColor: template.cardBg,
-              borderColor: template.borderSoft,
-            }}
+            className="p-6 rounded-3xl border border-pink-100 shadow-sm text-center bg-white/70"
           >
-            <Gift className="w-6 h-6 mx-auto opacity-75" style={{ color: template.accentColor }} />
+            <span className="text-2xl">🧸</span>
             <h3
-              className="text-xs uppercase tracking-widest font-semibold mt-2"
-              style={{
-                color: template.textPrimary,
-                fontFamily: template.fontSubheading,
-              }}
+              className="text-xs uppercase tracking-widest font-bold mt-1 text-[#5A3E44]"
+              style={{ fontFamily: template.fontSubheading }}
             >
-              {data.mesaRegalosJson?.titulo || "Lluvia de Sobres"}
+              CELEBRATION GUIDELINE
             </h3>
-            <p className="text-[11px] opacity-80 mt-1 leading-relaxed" style={{ color: template.textSecondary }}>
-              {data.mesaRegalosJson?.mensaje ||
-                "Tu presencia es nuestro mejor regalo. Si deseas tener un detalle con nosotros, dispondremos de un cofre especial para sobres en la recepción."}
+            <p className="text-xs text-stone-600 mt-2 leading-relaxed font-light px-2">
+              {data.celebrationGuideline ||
+                "OUR LITTLE GUESTS: We lovingly welcome children to celebrate with us. During special dances and performances, we kindly ask that children remain seated."}
             </p>
-            {data.mesaRegalosJson?.datosBancarios && (
-              <div
-                className="mt-3 p-3 rounded-xl text-xs font-mono select-all border"
-                style={{
-                  backgroundColor: template.bgColor,
-                  borderColor: template.borderSoft,
-                  color: template.textPrimary,
-                }}
-              >
-                {data.mesaRegalosJson.datosBancarios}
-              </div>
-            )}
           </div>
         </section>
 
-        {/* 11. Corte de Honor / Damitas & Chambelanes */}
-        {data.corteHonorJson && (
-          <section className="px-6 py-6">
-            <div
-              className="p-6 rounded-3xl border shadow-sm text-center"
-              style={{
-                backgroundColor: template.cardBg,
-                borderColor: template.borderSoft,
-              }}
+        {/* 12. Corte de Honor y Agradecimientos (The Court of Honor & Special Thank You) */}
+        <section className="px-6 py-6">
+          <div
+            className="p-6 rounded-3xl border border-pink-100 shadow-sm text-center bg-white"
+          >
+            <h3
+              className="text-xs uppercase tracking-widest font-bold text-[#5A3E44]"
+              style={{ fontFamily: template.fontSubheading }}
             >
-              <h3
-                className="text-xs uppercase tracking-widest font-semibold"
-                style={{
-                  color: template.textPrimary,
-                  fontFamily: template.fontSubheading,
-                }}
-              >
-                Corte de Honor
-              </h3>
+              THE COURT OF HONOR
+            </h3>
 
-              {data.corteHonorJson.chambelan && (
-                <div className="mt-3">
-                  <p className="text-[10px] uppercase tracking-wider opacity-60">Chambelán Principal</p>
-                  <p className="text-xs font-semibold" style={{ color: template.textPrimary }}>
-                    {data.corteHonorJson.chambelan}
-                  </p>
-                </div>
-              )}
-
-              {data.corteHonorJson.damas && data.corteHonorJson.damas.length > 0 && (
-                <div className="mt-3">
-                  <p className="text-[10px] uppercase tracking-wider opacity-60">Damas de Honor</p>
-                  <p className="text-xs" style={{ color: template.textSecondary }}>
-                    {data.corteHonorJson.damas.join(" • ")}
-                  </p>
-                </div>
-              )}
-
-              {data.corteHonorJson.padrinos && data.corteHonorJson.padrinos.length > 0 && (
-                <div className="mt-3">
-                  <p className="text-[10px] uppercase tracking-wider opacity-60">Agradecimiento Especial</p>
-                  <p className="text-xs" style={{ color: template.textSecondary }}>
-                    {data.corteHonorJson.padrinos.join(" • ")}
-                  </p>
-                </div>
-              )}
+            {/* Main Chambelán */}
+            <div className="mt-4">
+              <p className="text-[10px] uppercase tracking-wider text-stone-400 font-semibold">
+                Main Chambelán
+              </p>
+              <p className="text-xs font-bold text-[#5A3E44]">
+                {data.corteHonorJson?.chambelan || "Jeremiah"}
+              </p>
             </div>
-          </section>
-        )}
 
-        {/* 12. Despedida y Agendar en Calendario */}
+            {/* Damitas */}
+            <div className="mt-3">
+              <p className="text-[10px] uppercase tracking-wider text-stone-400 font-semibold">
+                Damitas
+              </p>
+              <p className="text-xs text-stone-700">
+                {data.corteHonorJson?.damas?.join(" • ") || "Magdalena • Violeta • Tania"}
+              </p>
+            </div>
+
+            {/* Chambelanes adicionales si existen */}
+            {data.corteHonorJson?.chambelanes && data.corteHonorJson.chambelanes.length > 0 && (
+              <div className="mt-3">
+                <p className="text-[10px] uppercase tracking-wider text-stone-400 font-semibold">
+                  Chambelanes
+                </p>
+                <p className="text-xs text-stone-700">
+                  {data.corteHonorJson.chambelanes.join(" • ")}
+                </p>
+              </div>
+            )}
+
+            <div className="h-[1px] bg-pink-100 my-4" />
+
+            <h4
+              className="text-[11px] uppercase tracking-widest font-bold text-[#5A3E44]"
+              style={{ fontFamily: template.fontSubheading }}
+            >
+              SPECIAL THANK YOU
+            </h4>
+
+            {/* Parents */}
+            <div className="mt-3">
+              <p className="text-[10px] uppercase tracking-wider text-stone-400 font-semibold">
+                Parents
+              </p>
+              <p className="text-xs font-semibold text-stone-700">
+                {data.corteHonorJson?.parents || "Magdalena & Adrian"}
+              </p>
+            </div>
+
+            {/* Padrinos de Honor */}
+            <div className="mt-3">
+              <p className="text-[10px] uppercase tracking-wider text-stone-400 font-semibold">
+                Padrinos de Honor
+              </p>
+              <p className="text-xs text-stone-600">
+                {data.corteHonorJson?.padrinos?.join(" • ") || "Tania & Carl"}
+              </p>
+            </div>
+
+            <p className="text-[11px] text-stone-500 italic mt-4 font-light">
+              {data.corteHonorJson?.mensajeGratitud ||
+                "Gracias a nuestros seres queridos por su amor, generosidad y apoyo incondicional para hacer posible este sueño."}
+            </p>
+          </div>
+        </section>
+
+        {/* 13. Despedida y Agendar en Calendario (See You Soon!) */}
         <footer className="px-6 pt-6 pb-12 text-center">
-          <Heart className="w-6 h-6 mx-auto mb-2 animate-pulse" style={{ color: template.accentColor }} />
+          {/* Foto final ajustando el vestido si existe */}
+          {data.fotoCierreUrl && (
+            <div className="w-56 h-72 mx-auto rounded-3xl overflow-hidden shadow-md mb-6 border-2 border-white">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={data.fotoCierreUrl}
+                alt="See You Soon"
+                className="w-full h-full object-cover"
+              />
+            </div>
+          )}
+
+          <Heart className="w-6 h-6 mx-auto mb-2 text-[#D4A59A] animate-pulse" />
           <h3
-            className="text-4xl font-normal"
+            className="text-4xl sm:text-5xl font-normal text-[#5A3E44]"
             style={{
               fontFamily: template.fontHeading,
-              color: template.textPrimary,
             }}
           >
             See You Soon!
           </h3>
           <p
-            className="text-[11px] tracking-widest uppercase opacity-70 mt-1 mb-6"
+            className="text-[11px] tracking-widest uppercase text-stone-500 mt-1 mb-6 font-semibold"
             style={{ fontFamily: template.fontSubheading }}
           >
-            With Love and Gratitude, {data.titulo}
+            WITH LOVE AND GRATITUDE, {data.titulo} - SAVE THE DATE
           </p>
 
-          {/* Agendar en Google Calendar o Apple ICS */}
+          {/* Botón de acción: Add to Calendar */}
           <AddToCalendarButton
             titulo={`Celebración: ${data.titulo}`}
-            descripcion={`Acompáñanos en la recepción de ${data.titulo} en ${data.recepcionNombre}.`}
+            descripcion={`Acompáñanos en la celebración de ${data.titulo} en ${data.recepcionNombre}.`}
             ubicacion={`${data.recepcionNombre}, ${data.recepcionDireccion}`}
             fechaEvento={data.fechaEvento}
             template={template}

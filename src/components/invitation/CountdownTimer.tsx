@@ -6,6 +6,7 @@ import { TemplateConfig } from "@/lib/templates";
 interface CountdownTimerProps {
   targetDate: string | Date;
   template: TemplateConfig;
+  titulo?: string;
 }
 
 interface TimeLeft {
@@ -16,7 +17,11 @@ interface TimeLeft {
   isFinished: boolean;
 }
 
-export default function CountdownTimer({ targetDate, template }: CountdownTimerProps) {
+export default function CountdownTimer({
+  targetDate,
+  template,
+  titulo = "I CAN'T WAIT TO CELEBRATE WITH YOU!",
+}: CountdownTimerProps) {
   const [timeLeft, setTimeLeft] = useState<TimeLeft>({
     days: 0,
     hours: 0,
@@ -63,7 +68,7 @@ export default function CountdownTimer({ targetDate, template }: CountdownTimerP
   if (!mounted) {
     return (
       <div className="py-6 px-4 text-center">
-        <div className="h-20 animate-pulse bg-stone-200/50 rounded-2xl" />
+        <div className="h-24 animate-pulse bg-pink-100/40 rounded-3xl" />
       </div>
     );
   }
@@ -81,7 +86,7 @@ export default function CountdownTimer({ targetDate, template }: CountdownTimerP
         <span className="text-3xl">🎉</span>
         <h3
           className="text-base font-semibold uppercase tracking-wider mt-2"
-          style={{ fontFamily: template.fontSubheading }}
+          style={{ fontFamily: template.fontSubheading, color: "#9E2A4B" }}
         >
           ¡El Gran Día Ha Llegado!
         </h3>
@@ -93,29 +98,29 @@ export default function CountdownTimer({ targetDate, template }: CountdownTimerP
   }
 
   const items = [
-    { label: "Días", value: pad(timeLeft.days) },
-    { label: "Horas", value: pad(timeLeft.hours) },
-    { label: "Min", value: pad(timeLeft.minutes) },
-    { label: "Seg", value: pad(timeLeft.seconds) },
+    { label: "Days", value: pad(timeLeft.days) },
+    { label: "Hours", value: pad(timeLeft.hours) },
+    { label: "Minutes", value: pad(timeLeft.minutes) },
+    { label: "Seconds", value: pad(timeLeft.seconds) },
   ];
 
   return (
     <section
       className="mx-4 my-6 p-6 rounded-3xl text-center shadow-sm border backdrop-blur-sm transition-all"
       style={{
-        backgroundColor: `${template.cardBg}F2`,
-        borderColor: template.borderSoft,
+        backgroundColor: `${template.cardBg}F5`,
+        borderColor: "#FADCE0",
       }}
     >
-      <p
-        className="text-xs uppercase tracking-widest font-semibold mb-4"
+      <h3
+        className="text-xs sm:text-sm uppercase tracking-widest font-bold mb-4"
         style={{
-          color: template.textPrimary,
+          color: "#9E2A4B",
           fontFamily: template.fontSubheading,
         }}
       >
-        Faltan muy pocos días
-      </p>
+        {titulo}
+      </h3>
 
       <div className="grid grid-cols-4 gap-2">
         {items.map((item, idx) => (
@@ -123,24 +128,24 @@ export default function CountdownTimer({ targetDate, template }: CountdownTimerP
             key={idx}
             className="flex flex-col items-center justify-center p-3 rounded-2xl border transition-all"
             style={{
-              backgroundColor: template.cardBg,
-              borderColor: template.borderSoft,
-              boxShadow: "0 2px 8px rgba(0,0,0,0.03)",
+              backgroundColor: "#FFF9FA",
+              borderColor: "#FCECEE",
+              boxShadow: "0 2px 8px rgba(158, 42, 75, 0.04)",
             }}
           >
             <span
               className="text-2xl sm:text-3xl font-bold tracking-tight"
               style={{
-                color: template.textPrimary,
+                color: "#9E2A4B",
                 fontFamily: template.fontSubheading,
               }}
             >
               {item.value}
             </span>
             <span
-              className="text-[9px] uppercase tracking-wider font-medium mt-1 opacity-70"
+              className="text-[9px] uppercase tracking-wider font-semibold mt-1 opacity-70"
               style={{
-                color: template.textSecondary,
+                color: "#7A6E70",
                 fontFamily: template.fontBody,
               }}
             >

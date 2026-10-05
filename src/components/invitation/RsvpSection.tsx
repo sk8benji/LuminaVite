@@ -45,9 +45,7 @@ export default function RsvpSection({
           origin: { y: 0.8 },
           colors: [template.accentColor, "#FCECEE", "#FFFFFF", "#E5C158"],
         });
-      } catch (err) {
-        // Ignorar si falla confetti
-      }
+      } catch (err) {}
     }
 
     // Registro opcional en backend
@@ -93,48 +91,53 @@ export default function RsvpSection({
         className="p-6 rounded-3xl border shadow-sm text-center"
         style={{
           backgroundColor: template.cardBg,
-          borderColor: template.borderSoft,
+          borderColor: "#FADCE0",
         }}
       >
         <span className="text-2xl">💌</span>
         <h3
-          className="text-xs uppercase tracking-widest font-semibold mt-2"
+          className="text-xs sm:text-sm uppercase tracking-widest font-bold mt-2"
           style={{
-            color: template.textPrimary,
+            color: "#9E2A4B",
             fontFamily: template.fontSubheading,
           }}
         >
-          Confirmación de Asistencia
+          WILL YOU BE PART OF My Special Day?
         </h3>
+        <p
+          className="text-xs mt-1 mb-5 font-serif italic text-stone-600"
+        >
+          Save Your Seat for the Celebration!
+        </p>
 
         {fechaLimite && (
           <p
-            className="text-[11px] mt-1 mb-6 opacity-75"
+            className="text-[11px] mb-5 opacity-75 font-medium"
             style={{
               color: template.textSecondary,
               fontFamily: template.fontBody,
             }}
           >
-            Por favor confirma tu lugar antes del{" "}
-            <span className="font-semibold text-stone-700">{fechaLimite}</span>
+            Please confirm your seat before{" "}
+            <span className="font-semibold text-[#9E2A4B]">{fechaLimite}</span>
           </p>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4 text-left mt-4">
-          {/* Nombre */}
+        <form onSubmit={handleSubmit} className="space-y-4 text-left mt-2">
+          {/* Full name * */}
           <div>
             <label
               className="block text-[11px] font-semibold uppercase tracking-wider mb-1"
-              style={{ color: template.textSecondary }}
+              style={{ color: "#7A6E70" }}
             >
-              Nombre Completo *
+              Full name *
             </label>
             <input
               type="text"
               required
               value={nombre}
               onChange={(e) => setNombre(e.target.value)}
-              placeholder="Ej. Familia Hernández o Tu Nombre"
+              placeholder="e.g. John Doe / Familia Hernández"
               className="w-full px-3.5 py-2.5 text-xs rounded-xl border focus:outline-none focus:ring-2 transition"
               style={{
                 backgroundColor: template.bgColor,
@@ -148,9 +151,9 @@ export default function RsvpSection({
           <div>
             <label
               className="block text-[11px] font-semibold uppercase tracking-wider mb-1"
-              style={{ color: template.textSecondary }}
+              style={{ color: "#7A6E70" }}
             >
-              ¿Podrás Acompañarnos?
+              Will you attend?
             </label>
             <div className="grid grid-cols-2 gap-2">
               <button
@@ -165,8 +168,8 @@ export default function RsvpSection({
                   color: template.textPrimary,
                 }}
               >
-                <CheckCircle2 className="w-3.5 h-3.5" />
-                Sí, asistiré
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                Yes, with pleasure
               </button>
 
               <button
@@ -181,21 +184,21 @@ export default function RsvpSection({
                   color: template.textPrimary,
                 }}
               >
-                <XCircle className="w-3.5 h-3.5" />
-                No podré ir
+                <XCircle className="w-3.5 h-3.5 text-rose-500" />
+                Regretfully decline
               </button>
             </div>
           </div>
 
-          {/* Pases y Acompañantes si confirma SI */}
+          {/* How many seats/guests will you bring? (1, 2, 3+) */}
           {asistencia === "SI" && (
             <>
               <div>
                 <label
                   className="block text-[11px] font-semibold uppercase tracking-wider mb-1"
-                  style={{ color: template.textSecondary }}
+                  style={{ color: "#7A6E70" }}
                 >
-                  Número de Pases
+                  How many seats/guests will you bring?
                 </label>
                 <select
                   value={pases}
@@ -209,24 +212,25 @@ export default function RsvpSection({
                 >
                   {pasesOptions.map((n) => (
                     <option key={n} value={n}>
-                      {n} {n === 1 ? "Pase" : "Pases"}
+                      {n} {n === 1 ? "Guest / Seat" : "Guests / Seats"}
                     </option>
                   ))}
                 </select>
               </div>
 
+              {/* What are their names? */}
               <div>
                 <label
                   className="block text-[11px] font-semibold uppercase tracking-wider mb-1"
-                  style={{ color: template.textSecondary }}
+                  style={{ color: "#7A6E70" }}
                 >
-                  Nombres de tus acompañantes (opcional)
+                  What are their names? (Companion names)
                 </label>
                 <textarea
                   rows={2}
                   value={acompanantes}
                   onChange={(e) => setAcompanantes(e.target.value)}
-                  placeholder="Ej. Sofía y Mateo"
+                  placeholder="e.g. Maria and Daniel"
                   className="w-full px-3.5 py-2 text-xs rounded-xl border focus:outline-none resize-none"
                   style={{
                     backgroundColor: template.bgColor,
@@ -238,41 +242,19 @@ export default function RsvpSection({
             </>
           )}
 
-          {/* Mensaje opcional */}
-          <div>
-            <label
-              className="block text-[11px] font-semibold uppercase tracking-wider mb-1"
-              style={{ color: template.textSecondary }}
-            >
-              Dedicatoria o Nota Especial (opcional)
-            </label>
-            <textarea
-              rows={2}
-              value={comentarios}
-              onChange={(e) => setComentarios(e.target.value)}
-              placeholder="¡Felicidades, nos vemos pronto!"
-              className="w-full px-3.5 py-2 text-xs rounded-xl border focus:outline-none resize-none"
-              style={{
-                backgroundColor: template.bgColor,
-                borderColor: template.borderSoft,
-                color: template.textPrimary,
-              }}
-            />
-          </div>
-
-          {/* Botón enviar a WhatsApp */}
+          {/* Botón Submit RSVP via WhatsApp */}
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl text-xs uppercase tracking-widest font-semibold shadow-md transition-all duration-200 transform active:scale-95 disabled:opacity-50"
+            className="w-full flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl text-xs uppercase tracking-widest font-semibold shadow-md transition-all duration-200 transform active:scale-95 disabled:opacity-50 mt-2"
             style={{
-              backgroundColor: template.buttonBg,
-              color: template.buttonText,
+              backgroundColor: "#5A3E44",
+              color: "#FFFFFF",
               fontFamily: template.fontSubheading,
             }}
           >
             <Send className="w-3.5 h-3.5" />
-            {isSubmitting ? "Abriendo WhatsApp..." : "Confirmar por WhatsApp"}
+            {isSubmitting ? "Connecting to WhatsApp..." : "Submit RSVP via WhatsApp"}
           </button>
         </form>
       </div>
