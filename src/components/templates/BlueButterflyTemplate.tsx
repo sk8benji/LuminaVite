@@ -348,37 +348,34 @@ export default function BlueButterflyTemplate({
         <aside
           id="envelopeOverlay"
           onClick={() => handleOpenEnvelope()}
-          className={`fixed inset-0 z-50 bg-[#142333]/95 backdrop-blur-sm flex flex-col items-center justify-center p-4 transition-opacity duration-700 select-none ${
+          className={`fixed inset-0 z-50 flex flex-col items-center justify-center p-4 transition-opacity duration-700 select-none bg-[#EBF3FA] bg-[url('/assets/template-butterfly/fondo-cielo-acuarela.png')] bg-cover bg-center ${
             isEnvelopeFading ? "opacity-0 pointer-events-none" : "opacity-100"
           }`}
         >
-          <div className="text-center mb-6 text-blue-100 font-serif-roman">
-            <p className="text-[11px] uppercase tracking-[0.3em] text-[#D8B772]">
-              Tienes una invitación especial
-            </p>
-            <p className="text-base mt-1.5 italic text-blue-200 font-cormorant">
-              {guestRecipient}
-            </p>
-            <p className="text-xs mt-1 text-blue-300/80 font-cormorant">
-              Toca el sello para abrir tu invitación
-            </p>
+          {/* Título Superior Cursivo */}
+          <div className="text-center mb-4 sm:mb-6">
+            <h2 className="font-script text-5xl sm:text-6xl md:text-7xl text-[#6B9AC4] drop-shadow-sm font-normal">
+              You&apos;ve been invited
+            </h2>
+            {guestRecipient && guestRecipient !== "Familia & Amigos" && (
+              <p className="text-sm mt-1 text-[#7A9BBF] font-serif-roman italic tracking-wider">
+                {guestRecipient}
+              </p>
+            )}
           </div>
 
-          {/* Contenedor del Sobre Físico 3D con Assets Originales */}
+          {/* Contenedor del Sobre Físico 3D */}
           <div
             id="envelopeContainer"
-            className="relative w-80 sm:w-96 h-56 sm:h-64 cursor-pointer group"
+            className="relative w-[310px] sm:w-[410px] md:w-[460px] aspect-[5/4] cursor-pointer group"
             style={{ perspective: "1000px" }}
           >
-            {/* Fondo / Solapa trasera interna */}
-            <div className="absolute inset-0 bg-[#E8D9CD] rounded-2xl shadow-2xl" />
-
             {/* Tarjeta interior que sale deslizándose con borde dorado */}
             <div
               id="innerCard"
-              className={`absolute left-5 right-5 top-5 bottom-5 bg-[#FFFEFC] rounded-xl p-5 shadow-lg flex flex-col items-center justify-center text-center transform transition-transform duration-700 ease-out border border-[#D8B772]/60 ${
+              className={`absolute left-4 right-4 top-4 bottom-4 bg-[#FFFEFC] rounded-xl p-5 shadow-lg flex flex-col items-center justify-center text-center transform transition-transform duration-700 ease-out border border-[#D8B772]/60 ${
                 isLetterOut
-                  ? "-translate-y-32 scale-105 z-25 shadow-2xl"
+                  ? "-translate-y-28 sm:-translate-y-36 scale-105 z-25 shadow-2xl"
                   : "z-10 translate-y-0"
               }`}
             >
@@ -400,9 +397,9 @@ export default function BlueButterflyTemplate({
               </p>
             </div>
 
-            {/* Si está cerrado: Sobre beige original con flores en esquinas */}
+            {/* Si está cerrado: Sobre beige con sello celeste y mariposa perchada aleteando */}
             {!isEnvelopeOpen ? (
-              <div className="absolute inset-0 z-20 pointer-events-none rounded-2xl overflow-hidden shadow-2xl">
+              <div className="absolute inset-0 z-20 pointer-events-none drop-shadow-xl">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src="/assets/template-butterfly/sobre-cerrado.png"
@@ -410,13 +407,13 @@ export default function BlueButterflyTemplate({
                   className="w-full h-full object-contain"
                 />
 
-                {/* Mariposa aleteando en 3D sobre el sello */}
-                <div className="absolute top-[48%] left-[50%] -translate-x-1/2 -translate-y-1/2 z-30 pointer-events-none">
+                {/* Mariposa aleteando en 3D perchada en la esquina inferior izquierda (como en la foto de referencia) */}
+                <div className="absolute -bottom-3 -left-4 sm:-bottom-4 sm:-left-6 z-30 pointer-events-none rotate-[22deg] drop-shadow-md">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src="/assets/template-butterfly/mariposa-azul.png"
+                    src="/assets/template-butterfly/mariposa-perchada.png"
                     alt="Mariposa viva"
-                    className="w-12 h-auto object-contain animate-flutter drop-shadow-md"
+                    className="w-16 sm:w-20 md:w-24 h-auto object-contain animate-flutter"
                   />
                 </div>
               </div>
@@ -433,43 +430,68 @@ export default function BlueButterflyTemplate({
             )}
           </div>
 
-          {/* Botones de Apertura según Modo de Idioma */}
+          {/* Botones de Selección de Idioma con Marco Ornamental de la Foto */}
           {isBilingual ? (
-            <div className="mt-8 flex flex-col items-center gap-2.5 z-30">
-              <span className="text-[10px] font-serif-roman tracking-[0.25em] uppercase text-white/70">
-                Selecciona tu idioma / Choose your language
-              </span>
-              <div className="flex items-center gap-3">
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleOpenEnvelope("es");
-                  }}
-                  className="inline-flex items-center gap-2 text-xs font-serif-roman tracking-[0.2em] uppercase text-[#FBF6E9] bg-white/15 hover:bg-white/25 px-5 py-2.5 rounded-full border border-[#D8B772]/70 shadow-lg hover:scale-105 active:scale-95 transition backdrop-blur-sm cursor-pointer"
-                >
-                  <span className="text-base">🇲🇽</span> Español
-                </button>
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleOpenEnvelope("en");
-                  }}
-                  className="inline-flex items-center gap-2 text-xs font-serif-roman tracking-[0.2em] uppercase text-[#FBF6E9] bg-white/15 hover:bg-white/25 px-5 py-2.5 rounded-full border border-[#D8B772]/70 shadow-lg hover:scale-105 active:scale-95 transition backdrop-blur-sm cursor-pointer"
-                >
-                  <span className="text-base">🇺🇸</span> English
-                </button>
-              </div>
+            <div className="mt-6 sm:mt-8 flex items-center justify-center gap-3 sm:gap-5 z-30">
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleOpenEnvelope("en");
+                }}
+                className="relative inline-flex items-center justify-center w-36 sm:w-44 h-14 sm:h-16 group cursor-pointer transition-transform duration-300 hover:scale-105 active:scale-95"
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/assets/template-butterfly/boton-idioma-marco.png"
+                  alt="English"
+                  className="absolute inset-0 w-full h-full object-contain pointer-events-none drop-shadow-sm group-hover:drop-shadow-md transition-all"
+                />
+                <span className="relative z-10 font-serif-roman text-xs sm:text-sm tracking-[0.25em] uppercase text-[#7A9BBF] font-semibold pt-0.5">
+                  ENGLISH
+                </span>
+              </button>
+
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleOpenEnvelope("es");
+                }}
+                className="relative inline-flex items-center justify-center w-36 sm:w-44 h-14 sm:h-16 group cursor-pointer transition-transform duration-300 hover:scale-105 active:scale-95"
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/assets/template-butterfly/boton-idioma-marco.png"
+                  alt="Español"
+                  className="absolute inset-0 w-full h-full object-contain pointer-events-none drop-shadow-sm group-hover:drop-shadow-md transition-all"
+                />
+                <span className="relative z-10 font-serif-roman text-xs sm:text-sm tracking-[0.25em] uppercase text-[#7A9BBF] font-semibold pt-0.5">
+                  ESPAÑOL
+                </span>
+              </button>
             </div>
           ) : (
-            <button
-              type="button"
-              onClick={() => handleOpenEnvelope()}
-              className="mt-8 text-[11px] font-serif-roman tracking-[0.25em] uppercase text-[#E7CD91] bg-white/10 px-6 py-2.5 rounded-full border border-[#C5A059]/40 hover:bg-white/20 transition cursor-pointer"
-            >
-              {isEn ? "Tap envelope to open" : "Toca el sobre para abrir"}
-            </button>
+            <div className="mt-6 sm:mt-8 flex items-center justify-center z-30">
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleOpenEnvelope(isEn ? "en" : "es");
+                }}
+                className="relative inline-flex items-center justify-center w-40 sm:w-48 h-14 sm:h-16 group cursor-pointer transition-transform duration-300 hover:scale-105 active:scale-95"
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/assets/template-butterfly/boton-idioma-marco.png"
+                  alt={isEn ? "English" : "Español"}
+                  className="absolute inset-0 w-full h-full object-contain pointer-events-none drop-shadow-sm group-hover:drop-shadow-md transition-all"
+                />
+                <span className="relative z-10 font-serif-roman text-xs sm:text-sm tracking-[0.25em] uppercase text-[#7A9BBF] font-semibold pt-0.5">
+                  {isEn ? "ENGLISH" : "ESPAÑOL"}
+                </span>
+              </button>
+            </div>
           )}
         </aside>
       )}
