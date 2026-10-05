@@ -847,103 +847,90 @@ export default function BlueButterflyTemplate({
           </div>
         </section>
 
-        {/* ======================================================= */}
-        {/* SECCIÓN 6: ITINERARIO ILUSTRADO (THE PROGRAM)           */}
-        {/* ======================================================= */}
-        <section className="px-4 sm:px-6 py-8 z-20">
-          <div className="relative w-48 h-12 mx-auto flex items-center justify-center mb-6">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/assets/template-butterfly/nube-acuarela.png"
-              alt="Nube Acuarela"
-              className="absolute inset-0 w-full h-full object-contain"
-            />
-            <h3 className="relative z-10 font-serif-roman text-xs tracking-[0.25em] text-[#2F5A84] uppercase font-bold">
+        {/* ======================================================== */}
+        {/* SECCIÓN 6: ITINERARIO (RÉPLICA EXACTA DE CANVA)          */}
+        {/* ======================================================== */}
+        <section className="relative w-full py-10 px-2 select-none z-20">
+          {/* Título con mancha de acuarela */}
+          <div className="text-center mb-8 relative">
+            <span className="inline-block bg-[#D3E3F0]/60 text-[#2F5A84] font-serif-roman text-xs tracking-[0.3em] uppercase py-1.5 px-6 rounded-full border border-blue-100 shadow-xs">
               {isEn ? "The Program" : "Itinerario"}
-            </h3>
+            </span>
           </div>
 
-          <div className="relative max-w-[360px] mx-auto py-4">
-            {/* Guirnalda floral vertical original (Eje Central de Canva) */}
-            <div className="absolute left-1/2 -translate-x-1/2 top-1 bottom-1 w-10 sm:w-12 pointer-events-none z-10 flex justify-center">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/assets/template-butterfly/guirnalda-itinerario.png"
-                alt="Guirnalda"
-                className="w-full h-full object-contain select-none"
-              />
-            </div>
+          {/* Contenedor Maestro: Grid de 3 columnas (Izquierda - Eje Floral - Derecha) */}
+          {(() => {
+            const leftItems = itineraryList.filter((_: any, idx: number) => idx % 2 === 0);
+            const rightItems = itineraryList.filter((_: any, idx: number) => idx % 2 === 1);
+            return (
+              <div className="relative w-full max-w-[390px] mx-auto flex justify-center">
+                {/* COLUMNA 1: Eventos del lado Izquierdo */}
+                <div className="w-[42%] flex flex-col justify-between py-2 pr-1">
+                  {leftItems.map((item: any, idx: number) => (
+                    <div
+                      key={idx}
+                      className={`text-center relative ${idx < leftItems.length - 1 ? "pb-10" : ""}`}
+                    >
+                      <div className="w-16 h-16 mx-auto mb-1 flex items-center justify-center">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={item.icon || "/assets/template-butterfly/itinerario-welcome.png"}
+                          alt={item.titulo}
+                          className="max-h-full object-contain drop-shadow-sm select-none"
+                        />
+                      </div>
+                      <p className="font-serif-roman text-[11px] font-semibold text-[#8C7A5B] tracking-wider">
+                        {item.hora}
+                      </p>
+                      <p className="font-script text-2xl text-[#8C7A5B] leading-none mt-0.5">
+                        {item.titulo}
+                      </p>
+                      {/* Conector horizontal hacia la guirnalda central */}
+                      <span className="absolute -right-3.5 top-8 w-4 h-[1px] bg-[#D8B772]/70" />
+                    </div>
+                  ))}
+                </div>
 
-            {/* Hitos del Itinerario Alternando Izquierda y Derecha */}
-            <div className="space-y-6 sm:space-y-8 relative z-20">
-              {itineraryList.map((item: any, idx: number) => {
-                const isLeft = idx % 2 === 0;
-                return (
-                  <div key={idx} className="relative flex items-center justify-between min-h-[92px]">
-                    {isLeft ? (
-                      <>
-                        {/* Hito a la Izquierda */}
-                        <div className="w-[43%] flex flex-col items-center text-center pr-1">
-                          <div className="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center">
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img
-                              src={item.icon}
-                              alt={item.titulo}
-                              className="max-w-full max-h-full object-contain drop-shadow-sm select-none"
-                            />
-                          </div>
-                          <span className="font-serif-roman text-[11px] sm:text-xs font-bold text-[#8C6D46] tracking-wider mt-1">
-                            {item.hora}
-                          </span>
-                          <p className="font-script text-xl sm:text-2xl text-[#8C6D46] leading-none mt-0.5">
-                            {item.titulo}
-                          </p>
-                        </div>
+                {/* COLUMNA 2: Eje Central Floral (Guirnalda Vertical Completa) */}
+                <div className="w-[16%] flex justify-center relative">
+                  {/* Imagen de la guirnalda continua estirada a todo el alto */}
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src="/assets/template-butterfly/guirnalda-itinerario-eje.png"
+                    alt="Eje Floral"
+                    className="w-full h-full object-fill pointer-events-none select-none drop-shadow-xs"
+                  />
+                </div>
 
-                        {/* Línea conectora dorada izquierda */}
-                        <div className="w-[7%] h-[1px] bg-[#D8B772]/70 self-center" />
-
-                        {/* Espacio para el anillo central de la guirnalda */}
-                        <div className="w-[6%]" />
-
-                        {/* Espacio vacío derecho */}
-                        <div className="w-[43%]" />
-                      </>
-                    ) : (
-                      <>
-                        {/* Espacio vacío izquierdo */}
-                        <div className="w-[43%]" />
-
-                        {/* Espacio para el anillo central de la guirnalda */}
-                        <div className="w-[6%]" />
-
-                        {/* Línea conectora dorada derecha */}
-                        <div className="w-[7%] h-[1px] bg-[#D8B772]/70 self-center" />
-
-                        {/* Hito a la Derecha */}
-                        <div className="w-[43%] flex flex-col items-center text-center pl-1">
-                          <div className="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center">
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img
-                              src={item.icon}
-                              alt={item.titulo}
-                              className="max-w-full max-h-full object-contain drop-shadow-sm select-none"
-                            />
-                          </div>
-                          <span className="font-serif-roman text-[11px] sm:text-xs font-bold text-[#8C6D46] tracking-wider mt-1">
-                            {item.hora}
-                          </span>
-                          <p className="font-script text-xl sm:text-2xl text-[#8C6D46] leading-none mt-0.5">
-                            {item.titulo}
-                          </p>
-                        </div>
-                      </>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
+                {/* COLUMNA 3: Eventos del lado Derecho */}
+                <div className="w-[42%] flex flex-col justify-between py-2 pl-1 pt-16">
+                  {rightItems.map((item: any, idx: number) => (
+                    <div
+                      key={idx}
+                      className={`text-center relative ${idx < rightItems.length - 1 ? "pb-10" : ""}`}
+                    >
+                      {/* Conector horizontal desde la guirnalda */}
+                      <span className="absolute -left-3.5 top-8 w-4 h-[1px] bg-[#D8B772]/70" />
+                      <div className="w-16 h-16 mx-auto mb-1 flex items-center justify-center">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={item.icon || "/assets/template-butterfly/itinerario-entrance.png"}
+                          alt={item.titulo}
+                          className="max-h-full object-contain drop-shadow-sm select-none"
+                        />
+                      </div>
+                      <p className="font-serif-roman text-[11px] font-semibold text-[#8C7A5B] tracking-wider">
+                        {item.hora}
+                      </p>
+                      <p className="font-script text-2xl text-[#8C7A5B] leading-none mt-0.5">
+                        {item.titulo}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            );
+          })()}
         </section>
 
         {/* ======================================================= */}
@@ -976,14 +963,14 @@ export default function BlueButterflyTemplate({
           </div>
 
           {/* Tríptico de Etiqueta Oficial de Canva: Vestido Maniquí - Texto - Traje Maniquí */}
-          <div className="relative w-full max-w-[360px] mx-auto mt-4 flex items-center justify-between px-1">
+          <div className="relative w-full max-w-[370px] mx-auto mt-4 flex items-center justify-between px-2">
             {/* 1. Maniquí Vestido de Gala Femenino (Izquierda) */}
-            <div className="w-[85px] sm:w-[95px] flex-shrink-0 flex justify-center">
+            <div className="h-32 sm:h-36 w-20 sm:w-24 flex-shrink-0 flex items-center justify-center">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/assets/template-butterfly/vestido-maniqui.png"
                 alt="Vestido Formal de Dama"
-                className="w-full h-auto object-contain drop-shadow-md select-none"
+                className="h-full w-auto object-contain drop-shadow-md select-none"
               />
             </div>
 
@@ -1003,13 +990,13 @@ export default function BlueButterflyTemplate({
               </p>
             </div>
 
-            {/* 3. Maniquí Traje Formal Masculino (Derecha) */}
-            <div className="w-[85px] sm:w-[95px] flex-shrink-0 flex justify-center">
+            {/* 3. Maniquí Traje Formal Masculino (Derecha - Proporción equilibrada) */}
+            <div className="h-32 sm:h-36 w-16 sm:w-20 flex-shrink-0 flex items-center justify-center">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/assets/template-butterfly/traje-maniqui.png"
                 alt="Traje Formal de Caballero"
-                className="w-full h-auto object-contain drop-shadow-md select-none"
+                className="h-full w-auto object-contain drop-shadow-md select-none"
               />
             </div>
           </div>
