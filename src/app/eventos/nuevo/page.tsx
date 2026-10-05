@@ -33,6 +33,7 @@ function NuevoEventoContent() {
   const [step, setStep] = useState(1);
   const [isSaving, setIsSaving] = useState(false);
   const [uploadingS3, setUploadingS3] = useState(false);
+  const [uploadingField, setUploadingField] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [showMobilePreview, setShowMobilePreview] = useState(false);
 
@@ -418,13 +419,14 @@ function NuevoEventoContent() {
   // - Clientes invitados: clientes/subidas-invitados/<slug-o-id>/
   const handleFileUpload = async (
     e: React.ChangeEvent<HTMLInputElement>,
-    field: "fotoPortadaUrl" | "fotoInfanciaUrl" | "fotoActualUrl" | "musicaUrl",
+    field: "fotoPortadaUrl" | "fotoInfanciaUrl" | "fotoActualUrl" | "musicaUrl" | "fotoCierreUrl",
     mediaType: "images" | "audio" = "images"
   ) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     setUploadingS3(true);
+    setUploadingField(field);
     setErrorMsg(null);
 
     try {
@@ -466,6 +468,7 @@ function NuevoEventoContent() {
       setErrorMsg(err.message || "Error al subir archivo a S3");
     } finally {
       setUploadingS3(false);
+      setUploadingField(null);
     }
   };
 
@@ -902,24 +905,48 @@ function NuevoEventoContent() {
                   </label>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                      <span className="text-[11px] text-stone-600 block mb-1">Foto de Infancia</span>
-                      <input
-                        type="text"
-                        value={formData.fotoInfanciaUrl || ""}
-                        onChange={(e) => updateField("fotoInfanciaUrl", e.target.value)}
-                        placeholder="URL foto de niña"
-                        className="w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs"
-                      />
+                      <span className="text-[11px] font-semibold text-stone-700 block mb-1">Foto de Infancia (Ayer)</span>
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          value={formData.fotoInfanciaUrl || ""}
+                          onChange={(e) => updateField("fotoInfanciaUrl", e.target.value)}
+                          placeholder="URL foto de niña o sube a S3"
+                          className="flex-1 min-w-0 px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs focus:outline-none"
+                        />
+                        <label className="flex items-center justify-center gap-1.5 px-3.5 py-2 bg-stone-900 hover:bg-black text-white rounded-xl text-xs font-semibold cursor-pointer transition shrink-0">
+                          <Upload className="w-3.5 h-3.5" />
+                          <span>{uploadingField === "fotoInfanciaUrl" ? "Subiendo..." : "Subir a S3"}</span>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            onChange={(e) => handleFileUpload(e, "fotoInfanciaUrl", "images")}
+                          />
+                        </label>
+                      </div>
                     </div>
                     <div>
-                      <span className="text-[11px] text-stone-600 block mb-1">Foto Actual</span>
-                      <input
-                        type="text"
-                        value={formData.fotoActualUrl || ""}
-                        onChange={(e) => updateField("fotoActualUrl", e.target.value)}
-                        placeholder="URL foto actual"
-                        className="w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs"
-                      />
+                      <span className="text-[11px] font-semibold text-stone-700 block mb-1">Foto Actual (Hoy)</span>
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          value={formData.fotoActualUrl || ""}
+                          onChange={(e) => updateField("fotoActualUrl", e.target.value)}
+                          placeholder="URL foto actual o sube a S3"
+                          className="flex-1 min-w-0 px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs focus:outline-none"
+                        />
+                        <label className="flex items-center justify-center gap-1.5 px-3.5 py-2 bg-stone-900 hover:bg-black text-white rounded-xl text-xs font-semibold cursor-pointer transition shrink-0">
+                          <Upload className="w-3.5 h-3.5" />
+                          <span>{uploadingField === "fotoActualUrl" ? "Subiendo..." : "Subir a S3"}</span>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            onChange={(e) => handleFileUpload(e, "fotoActualUrl", "images")}
+                          />
+                        </label>
+                      </div>
                     </div>
                   </div>
 
@@ -1007,13 +1034,25 @@ function NuevoEventoContent() {
                   <label className="block text-xs font-bold text-stone-800 mb-1">
                     Foto de Cierre / Portada Final (Opcional)
                   </label>
-                  <input
-                    type="text"
-                    value={formData.fotoCierreUrl || ""}
-                    onChange={(e) => updateField("fotoCierreUrl", e.target.value)}
-                    placeholder="https://... URL de foto de cierre o retrato final"
-                    className="w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs focus:outline-none"
-                  />
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    <input
+                      type="text"
+                      value={formData.fotoCierreUrl || ""}
+                      onChange={(e) => updateField("fotoCierreUrl", e.target.value)}
+                      placeholder="https://... URL de foto de cierre o sube a S3"
+                      className="flex-1 px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs focus:outline-none"
+                    />
+                    <label className="flex items-center justify-center gap-1.5 px-4 py-2 bg-stone-900 hover:bg-black text-white rounded-xl text-xs font-semibold cursor-pointer transition">
+                      <Upload className="w-3.5 h-3.5" />
+                      <span>{uploadingField === "fotoCierreUrl" ? "Subiendo..." : "Subir a S3"}</span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={(e) => handleFileUpload(e, "fotoCierreUrl", "images")}
+                      />
+                    </label>
+                  </div>
                 </div>
 
                 {/* Enlace Wishlist / Mesa de Regalos */}
@@ -1028,62 +1067,6 @@ function NuevoEventoContent() {
                     placeholder="https://amazon.com/baby-reg/... o tienda departamental"
                     className="w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs focus:outline-none"
                   />
-                </div>
-
-                {/* Modalidad de Idioma (Español, Inglés o Bilingüe) */}
-                <div className="p-4 bg-stone-50 border border-stone-200 rounded-2xl space-y-3">
-                  <div>
-                    <label className="block text-xs font-bold text-stone-800 mb-0.5">
-                      Idioma de la Invitación
-                    </label>
-                    <p className="text-[11px] text-stone-500">
-                      Elige si tu invitación será en un solo idioma o bilingüe. En modo bilingüe, aparecerán dos botones debajo del sobre para que cada invitado elija si abrirla en español o inglés.
-                    </p>
-                  </div>
-
-                  <div className="grid grid-cols-3 gap-2.5 pt-1">
-                    <button
-                      type="button"
-                      onClick={() => handleLanguageChange("es")}
-                      className={`p-3 rounded-xl border text-center transition flex flex-col items-center gap-1.5 cursor-pointer ${
-                        (formData.idiomaDefault || "es") === "es"
-                          ? "bg-white border-[#5A3E44] text-[#5A3E44] shadow-sm ring-2 ring-[#5A3E44]/20 font-bold"
-                          : "bg-white/60 border-stone-200 text-stone-600 hover:bg-white"
-                      }`}
-                    >
-                      <span className="text-xl">🇲🇽</span>
-                      <span className="text-xs font-medium">Solo Español</span>
-                      <span className="text-[9px] text-stone-400">1 botón al abrir</span>
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => handleLanguageChange("en")}
-                      className={`p-3 rounded-xl border text-center transition flex flex-col items-center gap-1.5 cursor-pointer ${
-                        formData.idiomaDefault === "en"
-                          ? "bg-white border-[#5A3E44] text-[#5A3E44] shadow-sm ring-2 ring-[#5A3E44]/20 font-bold"
-                          : "bg-white/60 border-stone-200 text-stone-600 hover:bg-white"
-                      }`}
-                    >
-                      <span className="text-xl">🇺🇸</span>
-                      <span className="text-xs font-medium">Solo Inglés</span>
-                      <span className="text-[9px] text-stone-400">1 botón al abrir</span>
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => handleLanguageChange("bilingual")}
-                      className={`p-3 rounded-xl border text-center transition flex flex-col items-center gap-1.5 cursor-pointer ${
-                        formData.idiomaDefault === "bilingual"
-                          ? "bg-white border-[#5A3E44] text-[#5A3E44] shadow-sm ring-2 ring-[#5A3E44]/20 font-bold"
-                          : "bg-white/60 border-stone-200 text-stone-600 hover:bg-white"
-                      }`}
-                    >
-                      <span className="text-xl">🌐</span>
-                      <span className="text-xs font-medium">Bilingüe</span>
-                      <span className="text-[9px] text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded font-semibold">2 botones (ES / EN)</span>
-                    </button>
-                  </div>
                 </div>
               </div>
             )}
