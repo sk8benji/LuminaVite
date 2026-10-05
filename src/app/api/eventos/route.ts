@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { randomBytes } from "crypto";
 import prisma from "@/lib/db";
 import { fallbackEventStore } from "@/lib/event-fallback-store";
+import { ensurePostgresTables } from "@/lib/init-db";
 
 export async function GET(req: NextRequest) {
   try {
@@ -94,6 +95,18 @@ export async function POST(req: NextRequest) {
     const cleanSlug = slug.toLowerCase().trim().replace(/[^a-z0-9-]/g, "-");
     const secretPanelKey = randomBytes(8).toString("hex");
 
+    const parseSafeDate = (val: any): Date | null => {
+      if (!val) return null;
+      const d = new Date(val);
+      return isNaN(d.getTime()) ? null : d;
+    };
+
+    const parseSafeIsoString = (val: any): string => {
+      if (!val) return new Date().toISOString();
+      const d = new Date(val);
+      return isNaN(d.getTime()) ? new Date().toISOString() : d.toISOString();
+    };
+
     let nuevoEvento: any = null;
     let savedToDb = false;
 
@@ -122,7 +135,7 @@ export async function POST(req: NextRequest) {
             estiloPlantilla,
             subtitulo,
             frasePersonalizada,
-            fechaEvento: new Date(fechaEvento),
+            fechaEvento: parseSafeDate(fechaEvento) || new Date(),
             fechaTextoPersonalizada: fechaTextoPersonalizada || null,
             fotoPortadaUrl,
             fotoInfanciaUrl: fotoInfanciaUrl || null,
@@ -137,7 +150,7 @@ export async function POST(req: NextRequest) {
             telefonoWhatsappRsvp: telefonoWhatsappRsvp.replace(/[^0-9]/g, ""),
             emailOrganizador: emailOrganizador ? String(emailOrganizador).trim() : null,
             aforoTotal: Number(aforoTotal) || 200,
-            fechaLimiteRsvp: fechaLimiteRsvp ? new Date(fechaLimiteRsvp) : null,
+            fechaLimiteRsvp: parseSafeDate(fechaLimiteRsvp),
             maxPasesPorInvitado: Number(maxPasesPorInvitado) || 4,
             ceremoniaNombre: ceremoniaNombre || null,
             ceremoniaDireccion: ceremoniaDireccion || null,
@@ -179,14 +192,11 @@ export async function POST(req: NextRequest) {
           );
         }
         if (err.code === "P2021" && intento === 0) {
-          console.warn("⚠️ [PostgreSQL] Tablas no encontradas (P2021). Ejecutando npx prisma db push...");
-          try {
-            const { execSync } = await import("child_process");
-            execSync("npx prisma db push --accept-data-loss", { stdio: "inherit" });
+          console.warn("⚠️ [PostgreSQL] Tablas no encontradas (P2021). Creando tablas nativamente...");
+          const ok = await ensurePostgresTables();
+          if (ok) {
             console.log("✅ Tablas creadas con éxito. Reintentando guardado de evento...");
             continue;
-          } catch (syncErr: any) {
-            console.warn("No se pudo ejecutar prisma db push directamente:", syncErr?.message);
           }
         }
         console.warn("⚠️ Error al operar con base de datos principal:", err?.message);
@@ -205,7 +215,7 @@ export async function POST(req: NextRequest) {
         estiloPlantilla,
         subtitulo,
         frasePersonalizada,
-        fechaEvento: new Date(fechaEvento).toISOString(),
+        fechaEvento: parseSafeIsoString(fechaEvento),
         fechaTextoPersonalizada: fechaTextoPersonalizada || null,
         fotoPortadaUrl,
         fotoInfanciaUrl: fotoInfanciaUrl || null,
@@ -220,7 +230,7 @@ export async function POST(req: NextRequest) {
         telefonoWhatsappRsvp: telefonoWhatsappRsvp.replace(/[^0-9]/g, ""),
         emailOrganizador: emailOrganizador ? String(emailOrganizador).trim() : null,
         aforoTotal: Number(aforoTotal) || 200,
-        fechaLimiteRsvp: fechaLimiteRsvp ? new Date(fechaLimiteRsvp).toISOString() : null,
+        fechaLimiteRsvp: parseSafeDate(fechaLimiteRsvp)?.toISOString() || null,
         maxPasesPorInvitado: Number(maxPasesPorInvitado) || 4,
         ceremoniaNombre: ceremoniaNombre || null,
         ceremoniaDireccion: ceremoniaDireccion || null,
