@@ -11,10 +11,27 @@ interface AudioPlayerProps {
 
 export default function AudioPlayer({ audioUrl, template }: AudioPlayerProps) {
   const [isPlaying, setIsPlaying] = useState(false);
-  const [hasInteracted, setHasInteracted] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  // Si no hay música configurada, no mostramos el botón
+  // Escuchar evento de apertura del sobre 3D para iniciar música
+  useEffect(() => {
+    const handleStartAudio = () => {
+      if (audioRef.current && !isPlaying) {
+        audioRef.current
+          .play()
+          .then(() => setIsPlaying(true))
+          .catch((err) => {
+            console.warn("Autoplay bloqueado:", err);
+          });
+      }
+    };
+
+    window.addEventListener("luminavite:play-audio", handleStartAudio);
+    return () => {
+      window.removeEventListener("luminavite:play-audio", handleStartAudio);
+    };
+  }, [isPlaying]);
+
   if (!audioUrl) return null;
 
   const togglePlay = () => {
@@ -28,17 +45,16 @@ export default function AudioPlayer({ audioUrl, template }: AudioPlayerProps) {
         .play()
         .then(() => {
           setIsPlaying(true);
-          setHasInteracted(true);
         })
         .catch((err) => {
-          console.warn("Autoplay bloqueado por el navegador:", err);
+          console.warn("Autoplay bloqueado:", err);
           setIsPlaying(false);
         });
     }
   };
 
   return (
-    <div className="fixed top-4 right-4 z-50">
+    <div className="fixed top-4 right-4 z-40">
       <audio ref={audioRef} src={audioUrl} loop preload="auto" />
       <button
         onClick={togglePlay}

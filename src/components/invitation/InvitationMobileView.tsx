@@ -16,6 +16,7 @@ import CountdownTimer from "./CountdownTimer";
 import RsvpSection from "./RsvpSection";
 import TimelineSection, { TimelineItem } from "./TimelineSection";
 import AddToCalendarButton from "./AddToCalendarButton";
+import EnvelopeIntro from "./EnvelopeIntro";
 
 export interface InvitationData {
   id?: string;
@@ -80,6 +81,14 @@ export default function InvitationMobileView({ data }: { data: InvitationData })
       className="min-h-screen flex justify-center selection:bg-pink-200 antialiased"
       style={{ backgroundColor: template.bgColor }}
     >
+      {/* Intro Animada 3D del Sobre con Sello y Desbloqueo de Audio */}
+      <EnvelopeIntro
+        titulo={data.titulo}
+        tipoEvento={data.tipoEvento}
+        fechaTexto={formattedDate}
+        template={template}
+      />
+
       <main
         className="w-full max-w-[440px] min-h-screen shadow-2xl relative overflow-hidden flex flex-col pb-12"
         style={{
