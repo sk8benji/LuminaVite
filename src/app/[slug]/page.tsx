@@ -342,7 +342,7 @@ async function getEventoData(rawSlug: string): Promise<InvitationData | null> {
 }
 
 /**
- * OpenGraph dinámico para WhatsApp y redes sociales.
+ * OpenGraph dinámico para Facebook, WhatsApp y redes sociales.
  */
 export async function generateMetadata(props: PageProps): Promise<Metadata> {
   const resolvedParams = await props.params;
@@ -355,28 +355,74 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
     };
   }
 
-  const eventDate = new Date(data.fechaEvento).toLocaleDateString("es-ES", {
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-  });
+  const isEn = data.idiomaDefault === "en";
 
-  const title = `${data.titulo} | Invitación Digital`;
-  const description = `${data.subtitulo || "Acompáñanos a celebrar"} - ${eventDate}. Confirma tu asistencia por WhatsApp.`;
+  // Formato de tipo de evento
+  let tipoTexto = "Mis Quince Años";
+  if (data.tipoEvento === "BODA") {
+    tipoTexto = isEn ? "Our Wedding" : "Nuestra Boda";
+  } else if (data.tipoEvento === "CUMPLEANOS") {
+    tipoTexto = isEn ? "Birthday Celebration" : "Mi Cumpleaños";
+  } else {
+    tipoTexto = isEn ? "Mis Quince Años" : "Mis Quince Años";
+  }
+
+  // Texto formal de la fecha
+  let fechaTexto = data.fechaTextoPersonalizada;
+  if (!fechaTexto && data.fechaEvento) {
+    const d = new Date(data.fechaEvento);
+    if (!isNaN(d.getTime())) {
+      fechaTexto = d.toLocaleDateString(isEn ? "en-US" : "es-ES", {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      });
+    }
+  }
+
+  const tituloEvento = `${tipoTexto}: ${data.titulo}`;
+  const title = `${tituloEvento} • ¡Tú estás invitado!`;
+
+  const description = fechaTexto
+    ? `${tituloEvento} • 📅 ${fechaTexto} • ✨ ¡Estás cordialmente invitado a celebrar con nosotros!`
+    : `${tituloEvento} • ✨ ¡Estás cordialmente invitado a celebrar con nosotros!`;
+
+  // Asegurar que la imagen sea URL absoluta con https para Facebook y WhatsApp
+  const baseUrl =
+    process.env.NEXT_PUBLIC_APP_URL ||
+    (process.env.RAILWAY_PUBLIC_DOMAIN ? `https://${process.env.RAILWAY_PUBLIC_DOMAIN}` : null) ||
+    "https://luminavite-production.up.railway.app";
+
+  let coverImage = data.fotoPortadaUrl || "/assets/template-butterfly/foto-columpio-portada.png";
+  if (coverImage.startsWith("/")) {
+    coverImage = `${baseUrl}${coverImage}`;
+  }
+
+  const eventUrl = `${baseUrl}/${data.slug}`;
 
   return {
     title,
     description,
+    metadataBase: new URL(baseUrl),
+    alternates: {
+      canonical: eventUrl,
+    },
     openGraph: {
       title,
       description,
+      url: eventUrl,
+      siteName: "LuminaVite Invitaciones",
+      locale: isEn ? "en_US" : "es_LA",
       type: "website",
       images: [
         {
-          url: data.fotoPortadaUrl,
+          url: coverImage,
+          secureUrl: coverImage,
           width: 800,
           height: 1200,
-          alt: data.titulo,
+          alt: `${tituloEvento} - Fotografía Principal`,
+          type: coverImage.endsWith(".png") ? "image/png" : "image/jpeg",
         },
       ],
     },
@@ -384,7 +430,7 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
       card: "summary_large_image",
       title,
       description,
-      images: [data.fotoPortadaUrl],
+      images: [coverImage],
     },
   };
 }
