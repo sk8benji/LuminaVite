@@ -433,14 +433,41 @@ export default function NuevoEventoPage() {
 
                 <div>
                   <label className="block text-xs font-semibold text-stone-700 mb-1">
-                    Fecha y Hora del Evento (Para el cronómetro)
+                    Título de la Portada / Subtítulo Superior (Sección 1)
                   </label>
                   <input
-                    type="datetime-local"
-                    value={formData.fechaEvento.toString().slice(0, 16)}
-                    onChange={(e) => updateField("fechaEvento", e.target.value)}
+                    type="text"
+                    value={formData.subtitulo || ""}
+                    onChange={(e) => updateField("subtitulo", e.target.value)}
+                    placeholder="Ej. My Quinceañera o Mis Quince Años"
                     className="w-full px-3 py-2.5 bg-stone-50 border border-stone-200 rounded-xl text-xs focus:ring-2 focus:ring-pink-300 focus:outline-none"
                   />
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-semibold text-stone-700 mb-1">
+                      Fecha y Hora del Evento (Para el cronómetro)
+                    </label>
+                    <input
+                      type="datetime-local"
+                      value={formData.fechaEvento.toString().slice(0, 16)}
+                      onChange={(e) => updateField("fechaEvento", e.target.value)}
+                      className="w-full px-3 py-2.5 bg-stone-50 border border-stone-200 rounded-xl text-xs focus:ring-2 focus:ring-pink-300 focus:outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-stone-700 mb-1">
+                      Texto Formal de la Fecha (Tarjeta de Presentación)
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.fechaTextoPersonalizada || ""}
+                      onChange={(e) => updateField("fechaTextoPersonalizada", e.target.value)}
+                      placeholder="Ej. SÁBADO 14 DE NOVIEMBRE, 2026"
+                      className="w-full px-3 py-2.5 bg-stone-50 border border-stone-200 rounded-xl text-xs focus:ring-2 focus:ring-pink-300 focus:outline-none"
+                    />
+                  </div>
                 </div>
 
                 {/* Selector de Plantilla Visual */}
@@ -554,22 +581,34 @@ export default function NuevoEventoPage() {
                     </div>
                   </div>
 
-                  <div>
-                    <span className="text-[11px] text-stone-600 block mb-1">Frase Emocional o Reflexión</span>
-                    <textarea
-                      rows={2}
-                      value={formData.frasePersonalizada || ""}
-                      onChange={(e) => updateField("frasePersonalizada", e.target.value)}
-                      placeholder="Mensaje de agradecimiento o reflexión..."
-                      className="w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs resize-none"
-                    />
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <span className="text-[11px] text-stone-600 block mb-1">Frase Emocional / Bendición</span>
+                      <textarea
+                        rows={2}
+                        value={formData.frasePersonalizada || ""}
+                        onChange={(e) => updateField("frasePersonalizada", e.target.value)}
+                        placeholder="Mensaje de agradecimiento o bendición..."
+                        className="w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs resize-none"
+                      />
+                    </div>
+                    <div>
+                      <span className="text-[11px] text-stone-600 block mb-1">Firma / Autor de la Bendición</span>
+                      <input
+                        type="text"
+                        value={formData.autorBendicion || ""}
+                        onChange={(e) => updateField("autorBendicion", e.target.value)}
+                        placeholder="Ej. Con amor, tus padres o Mis Quince Años"
+                        className="w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs"
+                      />
+                    </div>
                   </div>
                 </div>
 
-                {/* Música MP3 */}
-                <div className="p-4 bg-stone-50 border border-stone-200 rounded-2xl">
-                  <label className="block text-xs font-bold text-stone-800 mb-1">
-                    Canción de Fondo (MP3)
+                {/* Música MP3 & Texto del Disco */}
+                <div className="p-4 bg-stone-50 border border-stone-200 rounded-2xl space-y-3">
+                  <label className="block text-xs font-bold text-stone-800">
+                    Módulo Musical & Disco de Vinilo (Sección 2)
                   </label>
                   <div className="flex flex-col sm:flex-row gap-3">
                     <input
@@ -589,6 +628,18 @@ export default function NuevoEventoPage() {
                         onChange={(e) => handleFileUpload(e, "musicaUrl", "audio")}
                       />
                     </label>
+                  </div>
+                  <div>
+                    <label className="block text-[11px] text-stone-600 mb-1">
+                      Texto en Arco sobre el Vinilo
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.textoDisco || ""}
+                      onChange={(e) => updateField("textoDisco", e.target.value)}
+                      placeholder="Ej. Click to Play Music o Toca para Escuchar Música"
+                      className="w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs"
+                    />
                   </div>
                 </div>
 
@@ -865,22 +916,85 @@ export default function NuevoEventoPage() {
 
                 {/* Corte de Honor */}
                 <div className="p-4 bg-stone-50 border border-stone-200 rounded-2xl space-y-3">
-                  <span className="text-xs font-bold text-stone-800 block">Corte de Honor</span>
-                  <div>
-                    <label className="block text-[11px] text-stone-600 mb-1">Chambelán Principal</label>
-                    <input
-                      type="text"
-                      value={formData.corteHonorJson?.chambelan || ""}
-                      onChange={(e) =>
-                        updateField("corteHonorJson", {
-                          ...formData.corteHonorJson,
-                          chambelan: e.target.value,
-                        })
-                      }
-                      placeholder="Nombre del chambelán"
-                      className="w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs"
-                    />
+                  <span className="text-xs font-bold text-stone-800 block">Corte de Honor & Padrinos (Sección 11)</span>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-[11px] text-stone-600 mb-1">Chambelán Principal</label>
+                      <input
+                        type="text"
+                        value={formData.corteHonorJson?.chambelan || ""}
+                        onChange={(e) =>
+                          updateField("corteHonorJson", {
+                            ...formData.corteHonorJson,
+                            chambelan: e.target.value,
+                          })
+                        }
+                        placeholder="Ej. Jeremiah Smith"
+                        className="w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] text-stone-600 mb-1">Padres de la Quinceañera</label>
+                      <input
+                        type="text"
+                        value={formData.corteHonorJson?.parents || ""}
+                        onChange={(e) =>
+                          updateField("corteHonorJson", {
+                            ...formData.corteHonorJson,
+                            parents: e.target.value,
+                          })
+                        }
+                        placeholder="Ej. Carlos Mendoza & Patricia Solís"
+                        className="w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs"
+                      />
+                    </div>
                   </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-[11px] text-stone-600 mb-1">Damas de Honor (separadas por coma)</label>
+                      <input
+                        type="text"
+                        value={(formData.corteHonorJson?.damas || []).join(", ")}
+                        onChange={(e) =>
+                          updateField("corteHonorJson", {
+                            ...formData.corteHonorJson,
+                            damas: e.target.value.split(",").map((d) => d.trim()).filter(Boolean),
+                          })
+                        }
+                        placeholder="Ej. Magdalena, Violeta, Tania"
+                        className="w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] text-stone-600 mb-1">Padrinos (separados por coma)</label>
+                      <input
+                        type="text"
+                        value={(formData.corteHonorJson?.padrinos || []).join(", ")}
+                        onChange={(e) =>
+                          updateField("corteHonorJson", {
+                            ...formData.corteHonorJson,
+                            padrinos: e.target.value.split(",").map((p) => p.trim()).filter(Boolean),
+                          })
+                        }
+                        placeholder="Ej. Roberto & Andrea"
+                        className="w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Mensaje de Despedida / Footer */}
+                <div className="p-4 bg-stone-50 border border-stone-200 rounded-2xl space-y-2">
+                  <label className="block text-xs font-bold text-stone-800 mb-1">
+                    Mensaje de Despedida / Cierre (Footer)
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.mensajeDespedida || ""}
+                    onChange={(e) => updateField("mensajeDespedida", e.target.value)}
+                    placeholder="Ej. Esperamos contar con tu valiosa presencia."
+                    className="w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs"
+                  />
                 </div>
               </div>
             )}
