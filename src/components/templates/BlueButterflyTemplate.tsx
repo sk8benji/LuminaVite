@@ -34,14 +34,25 @@ export default function BlueButterflyTemplate({
   const [guestName, setGuestName] = useState("");
   const [selectedSeats, setSelectedSeats] = useState("2");
 
-  // Destinatario personalizado desde la URL (?para=Familia+Perez)
+  // Destinatario personalizado desde la URL (Modo VIP: ?para=Familia+Perez o ?code=FAM-RAMIREZ o ?pases=3)
   const [guestRecipient, setGuestRecipient] = useState("Familia & Amigos");
 
   useEffect(() => {
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
-      const name = params.get("para") || params.get("invitado") || params.get("guest");
-      if (name) setGuestRecipient(name);
+      const name = params.get("para") || params.get("invitado") || params.get("guest") || params.get("code");
+      const seats = params.get("pases") || params.get("seats");
+      if (name) {
+        // Formatear código si viene como FAM-RAMIREZ -> Familia Ramirez
+        const formatted = name.startsWith("FAM-")
+          ? "Familia " + name.replace("FAM-", "").replace(/[-_]/g, " ")
+          : name;
+        setGuestRecipient(formatted);
+        setGuestName(formatted);
+      }
+      if (seats) {
+        setSelectedSeats(seats);
+      }
     }
   }, []);
 
@@ -124,10 +135,25 @@ export default function BlueButterflyTemplate({
     return () => clearInterval(interval);
   }, [data.fechaEvento]);
 
-  // Envío a WhatsApp
-  const handleRsvpSubmit = (e: React.FormEvent) => {
+  // Envío a WhatsApp y guardado en Base de Datos (para el Magic Link Dashboard)
+  const handleRsvpSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const phone = data.telefonoWhatsappRsvp.replace(/[^0-9]/g, "");
+
+    // Guardar en la base de datos para el cliente / mamá
+    try {
+      fetch("/api/rsvp/save", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          eventoId: data.id || `slug-${data.slug}`,
+          nombreInvitado: guestName,
+          asistira: true,
+          pases: Number(selectedSeats) || 1,
+        }),
+      }).catch(() => {});
+    } catch {}
+
     const text =
       `*Confirmación de Asistencia - Mis XV Años ${data.titulo}*%0A` +
       `*Invitado:* ${encodeURIComponent(guestName)}%0A` +

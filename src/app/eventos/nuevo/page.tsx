@@ -15,6 +15,7 @@ import {
   Music,
   Eye,
   Sliders,
+  Share2,
 } from "lucide-react";
 import { TEMPLATES, TemplateId } from "@/lib/templates";
 import { InvitationData } from "@/components/invitation/InvitationMobileView";
@@ -263,6 +264,13 @@ export default function NuevoEventoPage() {
     }
   };
 
+  // Modal de éxito tras publicar
+  const [createdLinks, setCreatedLinks] = useState<{
+    publicUrl: string;
+    magicLink: string;
+    titulo: string;
+  } | null>(null);
+
   // Guardar en la base de datos
   const handleSave = async () => {
     setIsSaving(true);
@@ -281,8 +289,13 @@ export default function NuevoEventoPage() {
         throw new Error(result.error || "No se pudo guardar la invitación.");
       }
 
-      // Redirigir a la invitación creada
-      router.push(`/${formData.slug}`);
+      const origin = typeof window !== "undefined" ? window.location.origin : "";
+      setCreatedLinks({
+        publicUrl: `${origin}/${formData.slug}`,
+        magicLink: `${origin}/${formData.slug}/panel`,
+        titulo: formData.titulo,
+      });
+      setIsSaving(false);
     } catch (err: any) {
       console.error(err);
       setErrorMsg(err.message || "Error al guardar el evento.");
@@ -1045,6 +1058,102 @@ export default function NuevoEventoPage() {
           </div>
         </div>
       </div>
+
+      {/* Modal de Éxito con las Dos URLs Generadas Automáticamente */}
+      {createdLinks && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white w-full max-w-lg rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6 animate-in fade-in zoom-in-95 duration-200">
+            <div className="text-center space-y-1.5">
+              <span className="text-3xl block">🎉</span>
+              <h3 className="text-lg font-bold text-stone-900">
+                ¡Invitación Publicada Exitosamente!
+              </h3>
+              <p className="text-xs text-stone-500">
+                El sistema generó automáticamente las dos URLs únicas para tu evento.
+              </p>
+            </div>
+
+            <div className="space-y-4">
+              {/* 1. URL PÚBLICA (Para los invitados) */}
+              <div className="p-4 bg-stone-50 rounded-2xl border border-stone-200 space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-stone-800 flex items-center gap-1.5">
+                    <Share2 className="w-3.5 h-3.5 text-[#5A3E44]" />
+                    1. URL Pública (Para Invitados vía WhatsApp)
+                  </span>
+                  <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                    Sin login
+                  </span>
+                </div>
+                <p className="text-[11px] text-stone-500">
+                  Enlace que los invitados abren para ver la invitación con música, mapas y confirmar asistencia.
+                </p>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="text"
+                    readOnly
+                    value={createdLinks.publicUrl}
+                    className="flex-1 px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs font-mono text-stone-700 select-all"
+                  />
+                  <button
+                    onClick={() => navigator.clipboard.writeText(createdLinks.publicUrl)}
+                    className="px-3 py-2 bg-stone-900 hover:bg-black text-white rounded-xl text-xs font-semibold transition cursor-pointer"
+                  >
+                    Copiar
+                  </button>
+                </div>
+              </div>
+
+              {/* 2. MAGIC LINK (Para la mamá / cliente) */}
+              <div className="p-4 bg-amber-50/70 rounded-2xl border border-amber-200 space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-amber-950 flex items-center gap-1.5">
+                    <Sparkles className="w-3.5 h-3.5 text-amber-600" />
+                    2. Magic Link (Panel de la Mamá / Cliente)
+                  </span>
+                  <span className="text-[10px] font-semibold text-amber-800 bg-amber-100 px-2 py-0.5 rounded-full border border-amber-300">
+                    Monitoreo en vivo
+                  </span>
+                </div>
+                <p className="text-[11px] text-amber-900/80">
+                  Entrégale este link a la mamá. Ella podrá ver cuántos invitados han confirmado en tiempo real y descargar la lista en Excel sin crear cuentas ni contraseñas.
+                </p>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="text"
+                    readOnly
+                    value={createdLinks.magicLink}
+                    className="flex-1 px-3 py-2 bg-white border border-amber-200 rounded-xl text-xs font-mono text-amber-900 select-all"
+                  />
+                  <button
+                    onClick={() => navigator.clipboard.writeText(createdLinks.magicLink)}
+                    className="px-3 py-2 bg-amber-700 hover:bg-amber-800 text-white rounded-xl text-xs font-semibold transition cursor-pointer"
+                  >
+                    Copiar
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3 pt-2">
+              <Link
+                href={`/${formData.slug}`}
+                target="_blank"
+                className="flex-1 py-2.5 text-center bg-stone-100 hover:bg-stone-200 text-stone-800 rounded-xl text-xs font-semibold transition"
+              >
+                Abrir Invitación
+              </Link>
+              <Link
+                href={`/${formData.slug}/panel`}
+                target="_blank"
+                className="flex-1 py-2.5 text-center bg-[#2F5A84] hover:bg-[#203e5c] text-white rounded-xl text-xs font-semibold shadow-sm transition"
+              >
+                Abrir Panel Magic Link
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

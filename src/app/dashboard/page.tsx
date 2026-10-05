@@ -265,33 +265,45 @@ export default function DashboardPage() {
                       </div>
                     </div>
 
-                    {/* Acciones de la tarjeta */}
-                    <div className="grid grid-cols-2 gap-2 mt-5 pt-4 border-t border-stone-100">
-                      <Link
-                        href={`/${ev.slug}`}
-                        target="_blank"
-                        className="flex items-center justify-center gap-1.5 py-2 px-3 bg-stone-100 hover:bg-stone-200 text-stone-800 rounded-xl text-xs font-semibold transition"
-                      >
-                        <ExternalLink className="w-3.5 h-3.5" />
-                        Ver Pública
-                      </Link>
+                    {/* Acciones de la tarjeta: Link Público + Magic Link Cliente */}
+                    <div className="space-y-2 mt-4 pt-4 border-t border-stone-100">
+                      <div className="grid grid-cols-2 gap-2">
+                        <Link
+                          href={`/${ev.slug}`}
+                          target="_blank"
+                          className="flex items-center justify-center gap-1.5 py-2 px-3 bg-stone-100 hover:bg-stone-200 text-stone-800 rounded-xl text-xs font-semibold transition"
+                        >
+                          <ExternalLink className="w-3.5 h-3.5" />
+                          Invitados
+                        </Link>
 
-                      <button
-                        onClick={() => handleCopyLink(ev.slug)}
-                        className="flex items-center justify-center gap-1.5 py-2 px-3 bg-[#5A3E44] hover:bg-[#432d32] text-white rounded-xl text-xs font-semibold shadow-sm transition"
+                        <button
+                          onClick={() => handleCopyLink(ev.slug)}
+                          className="flex items-center justify-center gap-1.5 py-2 px-3 bg-[#5A3E44] hover:bg-[#432d32] text-white rounded-xl text-xs font-semibold shadow-sm transition cursor-pointer"
+                        >
+                          {copiedSlug === ev.slug ? (
+                            <>
+                              <Check className="w-3.5 h-3.5" />
+                              ¡Copiado!
+                            </>
+                          ) : (
+                            <>
+                              <Share2 className="w-3.5 h-3.5" />
+                              WhatsApp
+                            </>
+                          )}
+                        </button>
+                      </div>
+
+                      {/* Magic Link para el Cliente (Mamá / Novios) */}
+                      <Link
+                        href={`/${ev.slug}/panel`}
+                        target="_blank"
+                        className="w-full flex items-center justify-center gap-1.5 py-2 px-3 bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-900 rounded-xl text-xs font-semibold transition"
                       >
-                        {copiedSlug === ev.slug ? (
-                          <>
-                            <Check className="w-3.5 h-3.5" />
-                            ¡Copiado!
-                          </>
-                        ) : (
-                          <>
-                            <Share2 className="w-3.5 h-3.5" />
-                            Compartir
-                          </>
-                        )}
-                      </button>
+                        <Sparkles className="w-3.5 h-3.5 text-amber-600" />
+                        Magic Link (Panel de la Mamá)
+                      </Link>
                     </div>
                   </div>
                 </div>
