@@ -1,15 +1,20 @@
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
+const endpoint = process.env.AWS_ENDPOINT || process.env.S3_ENDPOINT;
+
 const s3Client = new S3Client({
   region: process.env.AWS_REGION || "us-east-1",
+  endpoint: endpoint || undefined,
+  forcePathStyle: Boolean(endpoint || process.env.AWS_FORCE_PATH_STYLE === "true"),
   credentials: {
     accessKeyId: process.env.AWS_ACCESS_KEY_ID || "",
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || "",
   },
 });
 
-export const BUCKET_NAME = process.env.AWS_S3_BUCKET_NAME || "luminavite-storage";
+export const BUCKET_NAME =
+  process.env.AWS_S3_BUCKET_NAME || process.env.BUCKET_NAME || "luminavite-storage";
 
 export interface PresignedUrlResponse {
   uploadUrl: string;
@@ -18,8 +23,8 @@ export interface PresignedUrlResponse {
 }
 
 /**
- * Genera una URL prefirmada para subida directa cliente -> S3.
- * Evita la saturación del servidor de Railway.
+ * Genera una URL prefirmada para subida directa cliente -> S3 / Storage.
+ * Soporta AWS S3, Cloudflare R2 y Storage de Railway (MinIO/Tigris).
  */
 export async function getPresignedUploadUrl(
   filename: string,
@@ -39,9 +44,15 @@ export async function getPresignedUploadUrl(
   // Expira en 5 minutos (300 segundos)
   const uploadUrl = await getSignedUrl(s3Client, command, { expiresIn: 300 });
 
-  // Si se usa un dominio personalizado o CDN (CloudFront / S3 URL directa)
-  const cdnBase = process.env.AWS_CLOUDFRONT_URL || `https://${BUCKET_NAME}.s3.${process.env.AWS_REGION || "us-east-1"}.amazonaws.com`;
-  const fileUrl = `${cdnBase}/${fileKey}`;
+  // Si se usa un dominio personalizado o CDN (CloudFront / endpoint personalizado / S3 directo)
+  let fileUrl: string;
+  if (process.env.AWS_CLOUDFRONT_URL) {
+    fileUrl = `${process.env.AWS_CLOUDFRONT_URL}/${fileKey}`;
+  } else if (endpoint) {
+    fileUrl = `${endpoint}/${BUCKET_NAME}/${fileKey}`;
+  } else {
+    fileUrl = `https://${BUCKET_NAME}.s3.${process.env.AWS_REGION || "us-east-1"}.amazonaws.com/${fileKey}`;
+  }
 
   return {
     uploadUrl,
