@@ -430,8 +430,24 @@ function NuevoEventoContent() {
     setErrorMsg(null);
 
     try {
+      // Determinar si es audio y resolver el contentType exacto
+      const isAudio = mediaType === "audio" || field === "musicaUrl";
+      const ext = file.name.split(".").pop()?.toLowerCase() || "";
+      let resolvedType = file.type;
+      if (!resolvedType || resolvedType === "application/octet-stream") {
+        if (["mp3"].includes(ext)) resolvedType = "audio/mpeg";
+        else if (["wav"].includes(ext)) resolvedType = "audio/wav";
+        else if (["m4a"].includes(ext)) resolvedType = "audio/m4a";
+        else if (["ogg"].includes(ext)) resolvedType = "audio/ogg";
+        else if (["jpg", "jpeg"].includes(ext)) resolvedType = "image/jpeg";
+        else if (["png"].includes(ext)) resolvedType = "image/png";
+        else if (["webp"].includes(ext)) resolvedType = "image/webp";
+        else resolvedType = isAudio ? "audio/mpeg" : "image/jpeg";
+      }
+
       // Carpeta estructurada dentro del bucket luminavite-storage
-      const clientFolder = `clientes/invitaciones/${formData.slug || "general"}`;
+      const subFolder = isAudio ? "audio" : "images";
+      const clientFolder = `clientes/invitaciones/${formData.slug || "general"}/${subFolder}`;
 
       // 1. Pedir presigned URL a la API
       const res = await fetch("/api/s3/presigned-url", {
@@ -439,7 +455,7 @@ function NuevoEventoContent() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           filename: file.name,
-          contentType: file.type,
+          contentType: resolvedType,
           folder: clientFolder,
         }),
       });
@@ -450,10 +466,10 @@ function NuevoEventoContent() {
         throw new Error(data.error || "Error al generar URL para S3");
       }
 
-      // 2. Subir binario directo a S3 usando PUT
+      // 2. Subir binario directo a S3 usando PUT con el Content-Type firmado
       const uploadRes = await fetch(data.uploadUrl, {
         method: "PUT",
-        headers: { "Content-Type": file.type },
+        headers: { "Content-Type": resolvedType },
         body: file,
       });
 
@@ -989,10 +1005,10 @@ function NuevoEventoContent() {
                     />
                     <label className="flex items-center justify-center gap-1.5 px-4 py-2 bg-stone-900 hover:bg-black text-white rounded-xl text-xs font-semibold cursor-pointer transition">
                       <Music className="w-3.5 h-3.5" />
-                      {uploadingS3 ? "Subiendo..." : "Subir MP3 a S3"}
+                      {uploadingField === "musicaUrl" ? "Subiendo..." : "Subir MP3 a S3"}
                       <input
                         type="file"
-                        accept="audio/*"
+                        accept="audio/*,.mp3,.wav,.m4a,.aac,.ogg"
                         className="hidden"
                         onChange={(e) => handleFileUpload(e, "musicaUrl", "audio")}
                       />

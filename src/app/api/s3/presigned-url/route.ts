@@ -4,36 +4,87 @@ import { getPresignedUploadUrl } from "@/lib/s3";
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { filename, contentType, folder } = body;
+    let { filename, contentType, folder } = body;
 
-    if (!filename || !contentType) {
+    if (!filename) {
       return NextResponse.json(
-        { error: "filename y contentType son obligatorios." },
+        { error: "El nombre del archivo es obligatorio." },
         { status: 400 }
       );
     }
 
-    // Validar tipo MIME permitido
-    const allowedImages = ["image/jpeg", "image/png", "image/webp", "image/heic", "image/svg+xml"];
-    const allowedAudio = ["audio/mpeg", "audio/mp3", "audio/wav", "audio/m4a", "audio/ogg"];
+    const ext = filename.split(".").pop()?.toLowerCase() || "";
 
-    const isAudioFolder = folder === "audio" || (typeof folder === "string" && folder.includes("audio"));
-    if (isAudioFolder && !allowedAudio.includes(contentType)) {
-      return NextResponse.json(
-        { error: "Formato de audio no permitido. Usa MP3 o WAV." },
-        { status: 400 }
-      );
+    // Inferir contentType si viene vacío o como octet-stream
+    if (!contentType || contentType === "application/octet-stream" || contentType === "binary/octet-stream") {
+      if (["mp3"].includes(ext)) contentType = "audio/mpeg";
+      else if (["wav"].includes(ext)) contentType = "audio/wav";
+      else if (["m4a"].includes(ext)) contentType = "audio/m4a";
+      else if (["aac"].includes(ext)) contentType = "audio/aac";
+      else if (["ogg"].includes(ext)) contentType = "audio/ogg";
+      else if (["jpg", "jpeg"].includes(ext)) contentType = "image/jpeg";
+      else if (["png"].includes(ext)) contentType = "image/png";
+      else if (["webp"].includes(ext)) contentType = "image/webp";
     }
 
-    if (!isAudioFolder && !allowedImages.includes(contentType)) {
-      return NextResponse.json(
-        { error: "Formato de imagen no permitido. Usa JPEG, PNG o WebP." },
-        { status: 400 }
-      );
+    const isAudio =
+      Boolean(contentType && (contentType.startsWith("audio/") || contentType.includes("mpeg") || contentType.includes("mp3"))) ||
+      ["mp3", "wav", "m4a", "aac", "ogg", "flac"].includes(ext) ||
+      (typeof folder === "string" && folder.includes("audio"));
+
+    const allowedImages = [
+      "image/jpeg",
+      "image/png",
+      "image/webp",
+      "image/heic",
+      "image/heif",
+      "image/svg+xml",
+      "image/gif",
+    ];
+
+    const allowedAudio = [
+      "audio/mpeg",
+      "audio/mp3",
+      "audio/wav",
+      "audio/x-wav",
+      "audio/m4a",
+      "audio/x-m4a",
+      "audio/mp4",
+      "audio/aac",
+      "audio/ogg",
+      "audio/webm",
+      "audio/flac",
+    ];
+
+    if (isAudio) {
+      if (!contentType || !allowedAudio.includes(contentType)) {
+        if (ext === "mp3") contentType = "audio/mpeg";
+        else if (ext === "wav") contentType = "audio/wav";
+        else if (ext === "m4a") contentType = "audio/m4a";
+        else if (ext === "ogg") contentType = "audio/ogg";
+        else {
+          return NextResponse.json(
+            { error: "Formato de audio no permitido. Usa MP3, WAV, M4A o OGG." },
+            { status: 400 }
+          );
+        }
+      }
+    } else {
+      if (!allowedImages.includes(contentType)) {
+        return NextResponse.json(
+          { error: "Formato de imagen no permitido. Usa JPEG, PNG, WebP o HEIC." },
+          { status: 400 }
+        );
+      }
     }
 
     // Carpeta destino saneada: templates/*, clientes/* o carpeta por defecto
-    const targetFolder = typeof folder === "string" && folder.trim().length > 0 ? folder.trim() : "images";
+    const targetFolder =
+      typeof folder === "string" && folder.trim().length > 0
+        ? folder.trim()
+        : isAudio
+        ? "audio"
+        : "images";
 
     const presignedData = await getPresignedUploadUrl(
       filename,
