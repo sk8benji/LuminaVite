@@ -24,7 +24,13 @@ import AddToCalendarButton from "../invitation/AddToCalendarButton";
 import EnvelopeIntro from "../invitation/EnvelopeIntro";
 import { InvitationData } from "../invitation/InvitationMobileView";
 
-export default function FairytaleWeddingTemplate({ data }: { data: InvitationData }) {
+export default function FairytaleWeddingTemplate({
+  data,
+  skipIntro = false,
+}: {
+  data: InvitationData;
+  skipIntro?: boolean;
+}) {
   const template = getTemplate("FAIRYTALE_CHATEAU");
 
   const weddingItinerary = [
@@ -38,12 +44,14 @@ export default function FairytaleWeddingTemplate({ data }: { data: InvitationDat
   return (
     <div className="min-h-screen flex justify-center bg-[#FBF5EB] selection:bg-amber-200 antialiased">
       {/* Intro del Sobre 3D */}
-      <EnvelopeIntro
-        titulo={data.titulo}
-        tipoEvento="BODA"
-        fechaTexto={data.fechaTextoPersonalizada || "SATURDAY, JULY 22 • 3:30 PM"}
-        template={template}
-      />
+      {!skipIntro && (
+        <EnvelopeIntro
+          titulo={data.titulo}
+          tipoEvento="BODA"
+          fechaTexto={data.fechaTextoPersonalizada || "SATURDAY, JULY 22 • 3:30 PM"}
+          template={template}
+        />
+      )}
 
       <main className="w-full max-w-[440px] min-h-screen shadow-2xl relative overflow-hidden flex flex-col pb-16 bg-[#FBF5EB] text-[#19223D]">
         {/* Audio flotante */}

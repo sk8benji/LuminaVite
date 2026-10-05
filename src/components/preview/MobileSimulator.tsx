@@ -19,7 +19,7 @@ export default function MobileSimulator({ data }: MobileSimulatorProps) {
 
         {/* Pantalla del teléfono con scroll independiente */}
         <div className="w-full h-full bg-white rounded-[38px] overflow-y-auto overflow-x-hidden relative scrollbar-thin scrollbar-thumb-stone-300">
-          <TemplateDispatcher data={data} />
+          <TemplateDispatcher data={data} skipIntro={true} />
         </div>
 
         {/* Barra de inicio inferior de iOS */}

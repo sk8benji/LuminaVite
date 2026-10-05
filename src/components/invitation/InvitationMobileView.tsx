@@ -73,7 +73,13 @@ export interface InvitationData {
   idiomaDefault?: string;
 }
 
-export default function InvitationMobileView({ data }: { data: InvitationData }) {
+export default function InvitationMobileView({
+  data,
+  skipIntro = false,
+}: {
+  data: InvitationData;
+  skipIntro?: boolean;
+}) {
   const template = getTemplate(data.estiloPlantilla);
   const eventDateObj = new Date(data.fechaEvento);
 
@@ -92,12 +98,14 @@ export default function InvitationMobileView({ data }: { data: InvitationData })
       style={{ backgroundColor: template.bgColor }}
     >
       {/* 0. Intro Animada 3D del Sobre con Sello y Desbloqueo de Audio */}
-      <EnvelopeIntro
-        titulo={data.titulo}
-        tipoEvento={data.tipoEvento}
-        fechaTexto={formattedDate}
-        template={template}
-      />
+      {!skipIntro && (
+        <EnvelopeIntro
+          titulo={data.titulo}
+          tipoEvento={data.tipoEvento}
+          fechaTexto={formattedDate}
+          template={template}
+        />
+      )}
 
       <main
         className="w-full max-w-[440px] min-h-screen shadow-2xl relative overflow-hidden flex flex-col pb-12"

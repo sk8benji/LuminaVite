@@ -4,7 +4,13 @@ import React, { useState, useEffect, useRef } from "react";
 import { MapPin } from "lucide-react";
 import { InvitationData } from "../invitation/InvitationMobileView";
 
-export default function BlueButterflyTemplate({ data }: { data: InvitationData }) {
+export default function BlueButterflyTemplate({
+  data,
+  skipIntro = false,
+}: {
+  data: InvitationData;
+  skipIntro?: boolean;
+}) {
   // Estado para la Intro 3D del Sobre
   const [isEnvelopeOpen, setIsEnvelopeOpen] = useState(false);
   const [isEnvelopeFading, setIsEnvelopeFading] = useState(false);
@@ -140,7 +146,7 @@ export default function BlueButterflyTemplate({ data }: { data: InvitationData }
       {/* ========================================================= */}
       {/* INTRO 3D REAL: SOBRE CON SELLO DE CERA Y MARIPOSA CON ALETEO 3D */}
       {/* ========================================================= */}
-      {!isEnvelopeRemoved && (
+      {!skipIntro && !isEnvelopeRemoved && (
         <aside
           id="envelopeOverlay"
           onClick={handleOpenEnvelope}

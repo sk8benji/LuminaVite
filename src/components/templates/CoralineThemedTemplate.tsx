@@ -21,19 +21,27 @@ import AddToCalendarButton from "../invitation/AddToCalendarButton";
 import EnvelopeIntro from "../invitation/EnvelopeIntro";
 import { InvitationData } from "../invitation/InvitationMobileView";
 
-export default function CoralineThemedTemplate({ data }: { data: InvitationData }) {
+export default function CoralineThemedTemplate({
+  data,
+  skipIntro = false,
+}: {
+  data: InvitationData;
+  skipIntro?: boolean;
+}) {
   const template = getTemplate("CORALINE_MYSTICAL");
   const [unlocked, setUnlocked] = useState(false);
 
   return (
     <div className="min-h-screen flex justify-center bg-[#070E2C] selection:bg-yellow-400 selection:text-black antialiased relative overflow-hidden">
       {/* Intro del Sobre 3D Místico */}
-      <EnvelopeIntro
-        titulo={data.titulo}
-        tipoEvento="CUMPLEANOS"
-        fechaTexto={data.fechaTextoPersonalizada || "OCTOBER 31 • 6:00 PM"}
-        template={template}
-      />
+      {!skipIntro && (
+        <EnvelopeIntro
+          titulo={data.titulo}
+          tipoEvento="CUMPLEANOS"
+          fechaTexto={data.fechaTextoPersonalizada || "OCTOBER 31 • 6:00 PM"}
+          template={template}
+        />
+      )}
 
       <main className="w-full max-w-[440px] min-h-screen shadow-2xl relative overflow-hidden flex flex-col pb-16 bg-[#0A1956] text-[#F5F2EB]">
         {/* Estrellas místicas de fondo */}

@@ -23,7 +23,13 @@ import AddToCalendarButton from "../invitation/AddToCalendarButton";
 import EnvelopeIntro from "../invitation/EnvelopeIntro";
 import { InvitationData } from "../invitation/InvitationMobileView";
 
-export default function ElegantRoseTemplate({ data }: { data: InvitationData }) {
+export default function ElegantRoseTemplate({
+  data,
+  skipIntro = false,
+}: {
+  data: InvitationData;
+  skipIntro?: boolean;
+}) {
   const [lang, setLang] = useState<"en" | "es">(data.idiomaDefault === "en" ? "en" : "es");
   const template = getTemplate("ELEGANT_ROSE");
 
@@ -86,12 +92,14 @@ export default function ElegantRoseTemplate({ data }: { data: InvitationData }) 
   return (
     <div className="min-h-screen flex justify-center bg-[#FFF5F6] selection:bg-rose-200 antialiased">
       {/* Intro del Sobre 3D */}
-      <EnvelopeIntro
-        titulo={data.titulo}
-        tipoEvento={data.tipoEvento}
-        fechaTexto={data.fechaTextoPersonalizada || "JULY 18 • 4:00 PM"}
-        template={template}
-      />
+      {!skipIntro && (
+        <EnvelopeIntro
+          titulo={data.titulo}
+          tipoEvento={data.tipoEvento}
+          fechaTexto={data.fechaTextoPersonalizada || "JULY 18 • 4:00 PM"}
+          template={template}
+        />
+      )}
 
       <main className="w-full max-w-[440px] min-h-screen shadow-2xl relative overflow-hidden flex flex-col pb-16 bg-[#FFF5F6] text-[#5A3E44]">
         {/* Audio flotante */}
