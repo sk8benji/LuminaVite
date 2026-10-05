@@ -38,3 +38,23 @@ body {
 .animate-float {
   animation: float 4s ease-in-out infinite;
 }
+
+/* Tipografías especializadas */
+.font-script { font-family: 'Alex Brush', 'Great Vibes', cursive; }
+.font-serif-roman { font-family: 'Cinzel', serif; }
+.font-cormorant { font-family: 'Cormorant Garamond', serif; }
+.font-sans-body { font-family: 'Montserrat', sans-serif; }
+
+/* Borde rasgado (Torn Paper Mask) */
+.torn-mask {
+  clip-path: polygon(0 0, 100% 0, 100% 92%, 95% 94%, 90% 91%, 85% 95%, 80% 92%, 75% 96%, 70% 93%, 65% 95%, 60% 92%, 55% 96%, 50% 93%, 45% 95%, 40% 91%, 35% 94%, 30% 92%, 25% 95%, 20% 92%, 15% 96%, 10% 93%, 5% 95%, 0 92%);
+}
+
+.torn-mask-both {
+  clip-path: polygon(0 8%, 5% 5%, 10% 7%, 15% 4%, 20% 8%, 25% 5%, 30% 8%, 35% 6%, 40% 9%, 45% 5%, 50% 7%, 55% 4%, 60% 8%, 65% 5%, 70% 7%, 75% 4%, 80% 8%, 85% 5%, 90% 9%, 95% 6%, 100% 8%, 100% 92%, 95% 94%, 90% 91%, 85% 95%, 80% 92%, 75% 96%, 70% 93%, 65% 95%, 60% 92%, 55% 96%, 50% 93%, 45% 95%, 40% 91%, 35% 94%, 30% 92%, 25% 95%, 20% 92%, 15% 96%, 10% 93%, 5% 95%, 0 92%);
+}
+
+/* Fondo degradado jardín acuarela */
+.garden-bg {
+  background: linear-gradient(180deg, #EBF3FA 0%, #FFFFFF 15%, #F4F8FC 50%, #FFFFFF 85%, #EAF2F9 100%);
+}
