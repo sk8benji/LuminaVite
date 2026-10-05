@@ -10,8 +10,9 @@ interface EnvelopeIntroProps {
   tipoEvento?: "QUINCEANERA" | "BODA" | "CUMPLEANOS";
   fechaTexto: string;
   template: TemplateConfig;
-  onOpen?: () => void;
+  onOpen?: (selectedLang?: "es" | "en") => void;
   destinatarioInicial?: string;
+  idiomaDefault?: "es" | "en" | "bilingual" | string;
 }
 
 export default function EnvelopeIntro({
@@ -21,6 +22,7 @@ export default function EnvelopeIntro({
   template,
   onOpen,
   destinatarioInicial = "Familia & Amigos",
+  idiomaDefault = "es",
 }: EnvelopeIntroProps) {
   const [guestName, setGuestName] = useState(destinatarioInicial);
   const [isOpen, setIsOpen] = useState(false);
@@ -40,7 +42,7 @@ export default function EnvelopeIntro({
     }
   }, []);
 
-  const handleOpen = () => {
+  const handleOpen = (chosenLang?: "es" | "en") => {
     if (isOpen) return;
     setIsOpen(true);
 
@@ -49,7 +51,7 @@ export default function EnvelopeIntro({
       window.dispatchEvent(new CustomEvent("luminavite:play-audio"));
     }
     if (onOpen) {
-      onOpen();
+      onOpen(chosenLang);
     }
 
     // 2. Extraer la carta tras 350ms (cuando la solapa haya rotado en 3D)
@@ -105,7 +107,7 @@ export default function EnvelopeIntro({
 
       {/* Contenedor con Perspectiva 3D */}
       <div
-        onClick={handleOpen}
+        onClick={() => handleOpen()}
         className="relative w-72 sm:w-80 h-48 sm:h-52 rounded-b-2xl shadow-2xl cursor-pointer group transform transition-transform hover:scale-102"
         style={{
           perspective: "1200px",
@@ -208,24 +210,58 @@ export default function EnvelopeIntro({
         </div>
       </div>
 
-      {/* Botón e indicación interactiva inferior */}
-      <button
-        type="button"
-        onClick={handleOpen}
-        disabled={isOpen}
-        className={`mt-10 px-6 py-3 rounded-full text-xs font-semibold tracking-widest uppercase transition-all duration-300 border flex items-center gap-2 ${
-          isOpen
-            ? "opacity-0 scale-95"
-            : "text-pink-100 bg-white/10 hover:bg-white/20 border-pink-200/30 shadow-lg animate-pulse"
-        }`}
-        style={{ fontFamily: template.fontSubheading }}
-      >
-        <span>Toca el sobre para abrir</span>
-        <Sparkles className="w-3.5 h-3.5 text-pink-300" />
-      </button>
+      {/* Botones e indicación interactiva inferior */}
+      {idiomaDefault === "bilingual" ? (
+        <div
+          className={`mt-8 flex items-center justify-center gap-3 transition-all duration-300 z-30 ${
+            isOpen ? "opacity-0 scale-95 pointer-events-none" : "opacity-100"
+          }`}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleOpen("es");
+            }}
+            className="px-5 py-2.5 rounded-full text-xs font-semibold tracking-wider uppercase transition-all duration-300 border flex items-center gap-2 text-pink-100 bg-white/10 hover:bg-white/20 border-pink-200/40 shadow-lg hover:scale-105 active:scale-95 cursor-pointer"
+            style={{ fontFamily: template.fontSubheading }}
+          >
+            <span>🇲🇽</span>
+            <span>Español</span>
+          </button>
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleOpen("en");
+            }}
+            className="px-5 py-2.5 rounded-full text-xs font-semibold tracking-wider uppercase transition-all duration-300 border flex items-center gap-2 text-pink-100 bg-white/10 hover:bg-white/20 border-pink-200/40 shadow-lg hover:scale-105 active:scale-95 cursor-pointer"
+            style={{ fontFamily: template.fontSubheading }}
+          >
+            <span>🇺🇸</span>
+            <span>English</span>
+          </button>
+        </div>
+      ) : (
+        <button
+          type="button"
+          onClick={() => handleOpen(idiomaDefault === "en" ? "en" : "es")}
+          disabled={isOpen}
+          className={`mt-10 px-6 py-3 rounded-full text-xs font-semibold tracking-widest uppercase transition-all duration-300 border flex items-center gap-2 ${
+            isOpen
+              ? "opacity-0 scale-95"
+              : "text-pink-100 bg-white/10 hover:bg-white/20 border-pink-200/30 shadow-lg animate-pulse"
+          }`}
+          style={{ fontFamily: template.fontSubheading }}
+        >
+          <span>{idiomaDefault === "en" ? "Tap envelope to open" : "Toca el sobre para abrir"}</span>
+          <Sparkles className="w-3.5 h-3.5 text-pink-300" />
+        </button>
+      )}
 
       <p className="text-[10px] text-pink-200/40 mt-3 tracking-wider">
-        Audio y animación interactiva
+        {idiomaDefault === "en" ? "Audio and interactive animation" : "Audio y animación interactiva"}
       </p>
     </div>
   );

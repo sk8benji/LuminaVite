@@ -71,6 +71,7 @@ export default function NuevoEventoPage() {
       titulo: "Lluvia de Sobres",
       mensaje: "Tu presencia es nuestro mayor regalo. Disponemos de un cofre en la recepción.",
     },
+    idiomaDefault: "es",
   });
 
   // Presets con fotos reales y textos para la previsualización de cada plantilla
@@ -78,6 +79,7 @@ export default function NuevoEventoPage() {
     BLUE_BUTTERFLY: {
       estiloPlantilla: "BLUE_BUTTERFLY",
       tipoEvento: "QUINCEANERA",
+      idiomaDefault: "bilingual",
       titulo: "Valeria Sofía",
       subtitulo: "My Quinceañera",
       frasePersonalizada:
@@ -633,6 +635,62 @@ export default function NuevoEventoPage() {
                     placeholder="https://amazon.com/baby-reg/... o tienda departamental"
                     className="w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs focus:outline-none"
                   />
+                </div>
+
+                {/* Modalidad de Idioma (Español, Inglés o Bilingüe) */}
+                <div className="p-4 bg-stone-50 border border-stone-200 rounded-2xl space-y-3">
+                  <div>
+                    <label className="block text-xs font-bold text-stone-800 mb-0.5">
+                      Idioma de la Invitación
+                    </label>
+                    <p className="text-[11px] text-stone-500">
+                      Elige si tu invitación será en un solo idioma o bilingüe. En modo bilingüe, aparecerán dos botones debajo del sobre para que cada invitado elija si abrirla en español o inglés.
+                    </p>
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-2.5 pt-1">
+                    <button
+                      type="button"
+                      onClick={() => updateField("idiomaDefault", "es")}
+                      className={`p-3 rounded-xl border text-center transition flex flex-col items-center gap-1.5 cursor-pointer ${
+                        (formData.idiomaDefault || "es") === "es"
+                          ? "bg-white border-[#5A3E44] text-[#5A3E44] shadow-sm ring-2 ring-[#5A3E44]/20 font-bold"
+                          : "bg-white/60 border-stone-200 text-stone-600 hover:bg-white"
+                      }`}
+                    >
+                      <span className="text-xl">🇲🇽</span>
+                      <span className="text-xs font-medium">Solo Español</span>
+                      <span className="text-[9px] text-stone-400">1 botón al abrir</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => updateField("idiomaDefault", "en")}
+                      className={`p-3 rounded-xl border text-center transition flex flex-col items-center gap-1.5 cursor-pointer ${
+                        formData.idiomaDefault === "en"
+                          ? "bg-white border-[#5A3E44] text-[#5A3E44] shadow-sm ring-2 ring-[#5A3E44]/20 font-bold"
+                          : "bg-white/60 border-stone-200 text-stone-600 hover:bg-white"
+                      }`}
+                    >
+                      <span className="text-xl">🇺🇸</span>
+                      <span className="text-xs font-medium">Solo Inglés</span>
+                      <span className="text-[9px] text-stone-400">1 botón al abrir</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => updateField("idiomaDefault", "bilingual")}
+                      className={`p-3 rounded-xl border text-center transition flex flex-col items-center gap-1.5 cursor-pointer ${
+                        formData.idiomaDefault === "bilingual"
+                          ? "bg-white border-[#5A3E44] text-[#5A3E44] shadow-sm ring-2 ring-[#5A3E44]/20 font-bold"
+                          : "bg-white/60 border-stone-200 text-stone-600 hover:bg-white"
+                      }`}
+                    >
+                      <span className="text-xl">🌐</span>
+                      <span className="text-xs font-medium">Bilingüe</span>
+                      <span className="text-[9px] text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded font-semibold">2 botones (ES / EN)</span>
+                    </button>
+                  </div>
                 </div>
               </div>
             )}

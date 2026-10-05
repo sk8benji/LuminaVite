@@ -45,8 +45,18 @@ export default function BlueButterflyTemplate({
     }
   }, []);
 
-  // Apertura del sobre 3D
-  const handleOpenEnvelope = () => {
+  // Idioma (es | en | bilingual)
+  const isBilingual = data.idiomaDefault === "bilingual";
+  const [currentLang, setCurrentLang] = useState<"es" | "en">(
+    data.idiomaDefault === "en" ? "en" : "es"
+  );
+  const isEn = currentLang === "en";
+
+  // Apertura del sobre 3D con selección de idioma
+  const handleOpenEnvelope = (chosenLang?: "es" | "en") => {
+    if (chosenLang) {
+      setCurrentLang(chosenLang);
+    }
     if (isEnvelopeOpen) return;
     setIsEnvelopeOpen(true);
 
@@ -131,18 +141,19 @@ export default function BlueButterflyTemplate({
     data.musicaUrl ||
     "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3";
 
-  // Desglose de fecha dinámica
+  // Desglose de fecha dinámica (adaptado al idioma activo)
   const eventDate = new Date(data.fechaEvento);
+  const eventLocale = isEn ? "en-US" : "es-ES";
   const eventMonth = eventDate
-    .toLocaleDateString("en-US", { month: "long" })
+    .toLocaleDateString(eventLocale, { month: "long" })
     .toUpperCase();
   const eventWeekday = eventDate
-    .toLocaleDateString("en-US", { weekday: "long" })
+    .toLocaleDateString(eventLocale, { weekday: "long" })
     .toUpperCase();
   const eventDay = eventDate.getDate();
   const eventYear = eventDate.getFullYear();
   const eventTime = eventDate
-    .toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", hour12: true })
+    .toLocaleTimeString(eventLocale, { hour: "numeric", minute: "2-digit", hour12: true })
     .toUpperCase();
 
   // Itinerario dinámico con soporte de iconos ilustrados oficiales de Canva (93aa7fe30583ab72bdf167a2bce291e3)
@@ -219,14 +230,23 @@ export default function BlueButterflyTemplate({
     return fallbackIcons[idx % fallbackIcons.length];
   };
 
-  const defaultButterflyItinerary = [
-    { hora: "3:00 PM", titulo: "Guest arrival", tipoIcono: "welcome" },
-    { hora: "4:30 PM", titulo: "Grand entrance", tipoIcono: "entrance" },
-    { hora: "4:00 - 6:00 PM", titulo: "Dinner", tipoIcono: "dinner" },
-    { hora: "6:00 - 7:00 PM", titulo: "Waltz", tipoIcono: "waltz" },
-    { hora: "7:00 - 12:00 AM", titulo: "Open Dance", tipoIcono: "disco" },
-    { hora: "10:00 PM", titulo: "Cake cutting", tipoIcono: "cake" },
-  ];
+  const defaultButterflyItinerary = isEn
+    ? [
+        { hora: "3:00 PM", titulo: "Guest arrival", tipoIcono: "welcome" },
+        { hora: "4:30 PM", titulo: "Grand entrance", tipoIcono: "entrance" },
+        { hora: "5:00 - 6:30 PM", titulo: "Dinner", tipoIcono: "dinner" },
+        { hora: "6:30 - 7:30 PM", titulo: "Waltz", tipoIcono: "waltz" },
+        { hora: "7:30 - 12:00 AM", titulo: "Open Dance", tipoIcono: "disco" },
+        { hora: "10:00 PM", titulo: "Cake cutting", tipoIcono: "cake" },
+      ]
+    : [
+        { hora: "3:00 PM", titulo: "Recepción de Invitados", tipoIcono: "welcome" },
+        { hora: "4:30 PM", titulo: "Entrada Triunfal", tipoIcono: "entrance" },
+        { hora: "5:00 - 6:30 PM", titulo: "Cena de Gala", tipoIcono: "dinner" },
+        { hora: "6:30 - 7:30 PM", titulo: "Vals Principal", tipoIcono: "waltz" },
+        { hora: "7:30 - 12:00 AM", titulo: "Fiesta y Baile", tipoIcono: "disco" },
+        { hora: "10:00 PM", titulo: "Corte del Pastel", tipoIcono: "cake" },
+      ];
 
   const rawItinerary =
     data.itinerarioJson && data.itinerarioJson.length > 0
@@ -261,7 +281,7 @@ export default function BlueButterflyTemplate({
       {!skipIntro && !isEnvelopeRemoved && (
         <aside
           id="envelopeOverlay"
-          onClick={handleOpenEnvelope}
+          onClick={() => handleOpenEnvelope()}
           className={`fixed inset-0 z-50 bg-[#142333]/95 backdrop-blur-sm flex flex-col items-center justify-center p-4 transition-opacity duration-700 select-none ${
             isEnvelopeFading ? "opacity-0 pointer-events-none" : "opacity-100"
           }`}
@@ -347,12 +367,75 @@ export default function BlueButterflyTemplate({
             )}
           </div>
 
-          {/* Botón táctil con brillo */}
+          {/* Botones de Apertura según Modo de Idioma */}
+          {isBilingual ? (
+            <div className="mt-8 flex flex-col items-center gap-2.5 z-30">
+              <span className="text-[10px] font-serif-roman tracking-[0.25em] uppercase text-white/70">
+                Selecciona tu idioma / Choose your language
+              </span>
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleOpenEnvelope("es");
+                  }}
+                  className="inline-flex items-center gap-2 text-xs font-serif-roman tracking-[0.2em] uppercase text-[#FBF6E9] bg-white/15 hover:bg-white/25 px-5 py-2.5 rounded-full border border-[#D8B772]/70 shadow-lg hover:scale-105 active:scale-95 transition backdrop-blur-sm cursor-pointer"
+                >
+                  <span className="text-base">🇲🇽</span> Español
+                </button>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleOpenEnvelope("en");
+                  }}
+                  className="inline-flex items-center gap-2 text-xs font-serif-roman tracking-[0.2em] uppercase text-[#FBF6E9] bg-white/15 hover:bg-white/25 px-5 py-2.5 rounded-full border border-[#D8B772]/70 shadow-lg hover:scale-105 active:scale-95 transition backdrop-blur-sm cursor-pointer"
+                >
+                  <span className="text-base">🇺🇸</span> English
+                </button>
+              </div>
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={() => handleOpenEnvelope()}
+              className="mt-8 text-[11px] font-serif-roman tracking-[0.25em] uppercase text-[#E7CD91] bg-white/10 px-6 py-2.5 rounded-full border border-[#C5A059]/40 hover:bg-white/20 transition cursor-pointer"
+            >
+              {isEn ? "Tap envelope to open" : "Toca el sobre para abrir"}
+            </button>
+          )}
+        </aside>
+      )}
+
+      {/* Floating Language Switcher Pill (solo si el evento es bilingüe) */}
+      {isBilingual && (
+        <aside
+          aria-label="Selector de idioma"
+          className="fixed top-4 right-4 z-40 bg-white/90 backdrop-blur-md border border-[#D8B772]/60 rounded-full shadow-lg p-1 flex items-center gap-1 text-[11px] font-serif-roman tracking-wider"
+        >
           <button
             type="button"
-            className="mt-8 text-[11px] font-serif-roman tracking-[0.25em] uppercase text-[#E7CD91] bg-white/10 px-6 py-2.5 rounded-full border border-[#C5A059]/40 hover:bg-white/20 transition cursor-pointer"
+            onClick={() => setCurrentLang("es")}
+            className={`px-2.5 py-1 rounded-full transition-all cursor-pointer font-bold ${
+              currentLang === "es"
+                ? "bg-[#2F5A84] text-white shadow-sm"
+                : "text-slate-600 hover:text-slate-900"
+            }`}
           >
-            Toca el sobre para abrir
+            ES
+          </button>
+          <span className="text-slate-300">|</span>
+          <button
+            type="button"
+            onClick={() => setCurrentLang("en")}
+            className={`px-2.5 py-1 rounded-full transition-all cursor-pointer font-bold ${
+              currentLang === "en"
+                ? "bg-[#2F5A84] text-white shadow-sm"
+                : "text-slate-600 hover:text-slate-900"
+            }`}
+          >
+            EN
           </button>
         </aside>
       )}
@@ -462,7 +545,7 @@ export default function BlueButterflyTemplate({
 
                 {/* Subtítulo / Encabezado */}
                 <p className="font-serif-roman text-[10px] tracking-[0.25em] uppercase text-[#C5A059] font-semibold">
-                  {data.subtitulo || "Mis Quince Años"}
+                  {data.subtitulo || (isEn ? "My Sweet Fifteen" : "Mis Quince Años")}
                 </p>
 
                 {/* Nombre Principal */}
@@ -472,7 +555,10 @@ export default function BlueButterflyTemplate({
 
                 {/* Frase emotiva */}
                 <p className="font-cormorant italic text-[13px] text-slate-600 my-2 leading-relaxed">
-                  {data.frasePersonalizada || "“Doy gracias a Dios por este día tan especial y te invito a compartir conmigo esta noche mágica.”"}
+                  {data.frasePersonalizada ||
+                    (isEn
+                      ? "“I thank God for this special day and invite you to share this magical night with me.”"
+                      : "“Doy gracias a Dios por este día tan especial y te invito a compartir conmigo esta noche mágica.”")}
                 </p>
 
                 {/* Divisor ornamental sutil */}
@@ -484,7 +570,7 @@ export default function BlueButterflyTemplate({
 
                 {/* Fecha Formal */}
                 <p className="font-serif-roman text-[10px] tracking-[0.2em] text-[#C5A059] uppercase font-medium">
-                  {data.fechaTextoPersonalizada || "14 • Noviembre • 2026"}
+                  {data.fechaTextoPersonalizada || (isEn ? "November • 14 • 2026" : "14 • Noviembre • 2026")}
                 </p>
               </div>
             </div>
@@ -499,7 +585,7 @@ export default function BlueButterflyTemplate({
             {/* 1. TEXTO EN ARCO Y NOTAS MUSICALES */}
             <div className="absolute -top-3 left-2 z-20 pointer-events-none">
               <span className="block font-serif-roman text-[10px] tracking-[0.25em] text-slate-500 uppercase -rotate-12 translate-x-3 translate-y-2 font-semibold">
-                {data.textoDisco || "Click to Play Music"}
+                {data.textoDisco || (isEn ? "Click to Play Music" : "Toca para Escuchar Música")}
               </span>
               <span className="block text-2xl text-slate-700 font-serif translate-x-20 -translate-y-2 rotate-12">
                 𝄞 𝅘𝅥𝅯 𝅘𝅥𝅮
@@ -514,7 +600,7 @@ export default function BlueButterflyTemplate({
                 isPlaying ? "animate-spin" : ""
               }`}
               style={{ animationDuration: "4s" }}
-              title={isPlaying ? "Pausar música" : "Reproducir música"}
+              title={isPlaying ? (isEn ? "Pause music" : "Pausar música") : (isEn ? "Play music" : "Reproducir música")}
             >
               <div className="w-28 h-28 rounded-full border border-neutral-700/60 flex items-center justify-center">
                 <div className="w-20 h-20 rounded-full border border-neutral-700/50 flex items-center justify-center">
@@ -580,7 +666,9 @@ export default function BlueButterflyTemplate({
         <section className="px-8 py-4 text-center z-20">
           <p className="font-cormorant italic text-base leading-relaxed text-slate-700">
             {data.frasePersonalizada ||
-              "“Doy gracias a Dios por concederme la dicha de celebrar mis quince primaveras, y a mis padres por guiar cada uno de mis pasos con amor incondicional.”"}
+              (isEn
+                ? "“I thank God for granting me the blessing of celebrating my sweet fifteen, and my parents for guiding every step of my journey with unconditional love.”"
+                : "“Doy gracias a Dios por concederme la dicha de celebrar mis quince primaveras, y a mis padres por guiar cada uno de mis pasos con amor incondicional.”")}
           </p>
           {data.autorBendicion && (
             <p className="font-serif-roman text-[10px] tracking-[0.2em] text-[#C5A059] uppercase mt-2 font-semibold">
@@ -690,19 +778,27 @@ export default function BlueButterflyTemplate({
               <div className="grid grid-cols-4 gap-2.5 sm:gap-4 font-serif-roman text-[#2F5A84]">
                 <div className="flex flex-col items-center">
                   <span className="text-2xl sm:text-3xl font-bold">{timeLeft.days}</span>
-                  <p className="text-[9px] uppercase tracking-wider text-slate-500 mt-0.5">Días</p>
+                  <p className="text-[9px] uppercase tracking-wider text-slate-500 mt-0.5">
+                    {isEn ? "Days" : "Días"}
+                  </p>
                 </div>
                 <div className="flex flex-col items-center">
                   <span className="text-2xl sm:text-3xl font-bold">{timeLeft.hours}</span>
-                  <p className="text-[9px] uppercase tracking-wider text-slate-500 mt-0.5">Horas</p>
+                  <p className="text-[9px] uppercase tracking-wider text-slate-500 mt-0.5">
+                    {isEn ? "Hours" : "Horas"}
+                  </p>
                 </div>
                 <div className="flex flex-col items-center">
                   <span className="text-2xl sm:text-3xl font-bold">{timeLeft.minutes}</span>
-                  <p className="text-[9px] uppercase tracking-wider text-slate-500 mt-0.5">Min</p>
+                  <p className="text-[9px] uppercase tracking-wider text-slate-500 mt-0.5">
+                    {isEn ? "Min" : "Min"}
+                  </p>
                 </div>
                 <div className="flex flex-col items-center">
                   <span className="text-2xl sm:text-3xl font-bold">{timeLeft.seconds}</span>
-                  <p className="text-[9px] uppercase tracking-wider text-slate-500 mt-0.5">Seg</p>
+                  <p className="text-[9px] uppercase tracking-wider text-slate-500 mt-0.5">
+                    {isEn ? "Sec" : "Seg"}
+                  </p>
                 </div>
               </div>
             </div>
@@ -721,7 +817,7 @@ export default function BlueButterflyTemplate({
               className="absolute inset-0 w-full h-full object-contain"
             />
             <h3 className="relative z-10 font-serif-roman text-xs tracking-[0.25em] text-[#2F5A84] uppercase font-bold">
-              Itinerario
+              {isEn ? "The Program" : "Itinerario"}
             </h3>
           </div>
 
@@ -813,7 +909,7 @@ export default function BlueButterflyTemplate({
         {/* ======================================================= */}
         <section className="px-4 sm:px-6 py-6 text-center z-20">
           <h3 className="font-serif-roman text-xs tracking-[0.2em] text-[#2F5A84] uppercase mb-2 font-bold">
-            Código de Vestimenta
+            {isEn ? "Dress Code" : "Código de Vestimenta"}
           </h3>
 
           {/* Marco barroco ovalado con retrato */}
@@ -852,14 +948,16 @@ export default function BlueButterflyTemplate({
             {/* 2. Textos Centrales Protocolarios */}
             <div className="flex-1 text-center px-1">
               <p className="font-script text-3xl sm:text-4xl text-[#AF936A] leading-tight">
-                Dress Code
+                {isEn ? "Dress Code" : "Código de Vestir"}
               </p>
               <p className="font-serif-roman text-xs sm:text-[13px] font-bold text-[#2F5A84] tracking-[0.15em] uppercase mt-1">
-                {data.dressCodeTitulo || "Formal Attire"}
+                {data.dressCodeTitulo || (isEn ? "Formal Attire" : "Rigurosa Etiqueta")}
               </p>
               <p className="font-cormorant italic text-[11px] sm:text-xs text-slate-600 leading-relaxed mt-2 max-w-[175px] mx-auto">
                 {data.dressCodeNota ||
-                  "Please join us in your finest formal attire as we celebrate this enchanting and memorable occasion."}
+                  (isEn
+                    ? "Please join us in your finest formal attire as we celebrate this enchanting and memorable occasion."
+                    : "Acompáñanos luciendo tu mejor atuendo formal para celebrar juntos esta velada mágica e inolvidable.")}
               </p>
             </div>
 
@@ -890,7 +988,7 @@ export default function BlueButterflyTemplate({
         {/* ======================================================= */}
         <section className="px-6 py-6 text-center z-20">
           <h3 className="font-serif-roman text-xs tracking-[0.25em] text-[#2F5A84] uppercase mb-2 font-bold">
-            Ubicación
+            {isEn ? "Reception & Location" : "Recepción & Ubicación"}
           </h3>
           <p className="text-sm font-semibold text-slate-800">{data.recepcionNombre}</p>
           <p className="text-xs text-slate-500 mb-3">{data.recepcionDireccion}</p>
@@ -923,14 +1021,14 @@ export default function BlueButterflyTemplate({
             className="inline-flex items-center justify-center gap-2 w-full bg-[#2F5A84] text-white py-3.5 rounded-xl font-serif-roman text-xs uppercase tracking-widest hover:bg-[#203e5c] transition shadow-md"
           >
             <MapPin className="w-3.5 h-3.5" />
-            Directions / Ver en Mapa
+            {isEn ? "Directions / View Map" : "Cómo Llegar / Ver en Mapa"}
           </a>
 
           {/* CEREMONIA RELIGIOSA (SI EXISTE) */}
           {data.ceremoniaNombre && (
             <div className="mt-8 pt-6 border-t border-[#D8B772]/30 text-center">
               <span className="font-serif-roman text-[10px] tracking-[0.2em] text-[#C5A059] uppercase font-bold block mb-1">
-                Ceremonia Religiosa / Iglesia
+                {isEn ? "Religious Ceremony / Church" : "Ceremonia Religiosa / Iglesia"}
               </span>
               <p className="text-sm font-semibold text-slate-800">{data.ceremoniaNombre}</p>
               {data.ceremoniaDireccion && (
@@ -964,7 +1062,7 @@ export default function BlueButterflyTemplate({
                 className="inline-flex items-center justify-center gap-2 w-full bg-white border border-[#2F5A84] text-[#2F5A84] py-3 rounded-xl font-serif-roman text-xs uppercase tracking-widest hover:bg-slate-50 transition shadow-sm mt-1"
               >
                 <MapPin className="w-3.5 h-3.5" />
-                Ver Iglesia en Mapa
+                {isEn ? "View Church on Map" : "Ver Iglesia en Mapa"}
               </a>
             </div>
           )}
@@ -984,10 +1082,12 @@ export default function BlueButterflyTemplate({
           </div>
 
           <h3 className="font-serif-roman text-xs tracking-[0.2em] text-[#2F5A84] uppercase font-bold">
-            Lluvia de Sobres
+            {isEn ? "Gift Table / Wishing Well" : "Lluvia de Sobres"}
           </h3>
           <p className="font-cormorant italic text-sm text-slate-600 max-w-xs mx-auto mt-1">
-            “Tu presencia es nuestro mayor regalo. Si deseas tener un detalle con la quinceañera, dispondremos de un cofre en la recepción.”
+            {isEn
+              ? "“Your presence is our greatest gift. Should you wish to honor the quinceañera with a token of affection, a wishing well will be available at the reception.”"
+              : "“Tu presencia es nuestro mayor regalo. Si deseas tener un detalle con la quinceañera, dispondremos de un cofre en la recepción.”"}
           </p>
         </section>
 
@@ -1005,15 +1105,18 @@ export default function BlueButterflyTemplate({
           </div>
 
           <div className="bg-white/95 backdrop-blur-sm p-6 pt-10 rounded-3xl border border-[#D8B772]/60 shadow-xl text-center relative z-10">
-            <h3 className="font-script text-4xl text-[#2F5A84] my-1">Confirmar Asistencia</h3>
+            <h3 className="font-script text-4xl text-[#2F5A84] my-1">
+              {isEn ? "RSVP" : "Confirmar Asistencia"}
+            </h3>
             <p className="text-[11px] text-slate-400 mb-5 uppercase tracking-wider font-serif-roman">
-              Favor de confirmar antes del {data.fechaLimiteRsvp || "20 de Octubre"}
+              {isEn ? "Please confirm by " : "Favor de confirmar antes del "}
+              {data.fechaLimiteRsvp || (isEn ? "October 20th" : "20 de Octubre")}
             </p>
 
             <form onSubmit={handleRsvpSubmit} className="space-y-4 text-left">
               <div>
                 <label className="block text-[11px] font-semibold text-slate-600 uppercase tracking-wider mb-1 font-serif-roman">
-                  Nombre Completo *
+                  {isEn ? "Full Name *" : "Nombre Completo *"}
                 </label>
                 <input
                   type="text"
@@ -1021,13 +1124,13 @@ export default function BlueButterflyTemplate({
                   value={guestName}
                   onChange={(e) => setGuestName(e.target.value)}
                   className="w-full bg-[#F4F9FD] border border-blue-100 rounded-xl px-3.5 py-2.5 text-xs text-slate-800 focus:outline-none focus:border-[#2F5A84]"
-                  placeholder="Ej. Familia Morales"
+                  placeholder={isEn ? "e.g. The Morales Family" : "Ej. Familia Morales"}
                 />
               </div>
 
               <div>
                 <label className="block text-[11px] font-semibold text-slate-600 uppercase tracking-wider mb-1 font-serif-roman">
-                  Pases Confirmados
+                  {isEn ? "Confirmed Guests" : "Pases Confirmados"}
                 </label>
                 <div className="flex gap-4 pt-1 text-xs text-slate-600">
                   {["1", "2", "3+"].map((seat) => (
@@ -1050,7 +1153,7 @@ export default function BlueButterflyTemplate({
                 type="submit"
                 className="w-full bg-[#2F5A84] text-white py-3.5 rounded-xl font-serif-roman text-xs uppercase tracking-widest hover:bg-[#203e5c] transition shadow-md cursor-pointer"
               >
-                Enviar por WhatsApp
+                {isEn ? "Confirm via WhatsApp" : "Enviar por WhatsApp"}
               </button>
             </form>
           </div>
@@ -1063,27 +1166,37 @@ export default function BlueButterflyTemplate({
           {corte && (
             <div className="bg-white/80 backdrop-blur-sm p-6 rounded-2xl border border-blue-100 mb-6 shadow-sm">
               <h4 className="font-serif-roman text-xs uppercase tracking-[0.2em] text-[#C5A059] font-bold mb-4">
-                Corte de Honor
+                {isEn ? "Court of Honor" : "Corte de Honor"}
               </h4>
               <div className="space-y-3 text-xs text-slate-700">
                 {corte.chambelan && (
                   <p>
-                    <strong className="text-[#2F5A84]">Chambelán de Honor:</strong> {corte.chambelan}
+                    <strong className="text-[#2F5A84]">
+                      {isEn ? "Chamberlain of Honor:" : "Chambelán de Honor:"}
+                    </strong>{" "}
+                    {corte.chambelan}
                   </p>
                 )}
                 {corte.damas && corte.damas.length > 0 && (
                   <p>
-                    <strong className="text-[#2F5A84]">Damitas:</strong> {corte.damas.join(", ")}
+                    <strong className="text-[#2F5A84]">
+                      {isEn ? "Ladies of Honor / Damas:" : "Damitas:"}
+                    </strong>{" "}
+                    {corte.damas.join(", ")}
                   </p>
                 )}
                 {corte.parents && (
                   <p>
-                    <strong className="text-[#2F5A84]">Padres:</strong> {corte.parents}
+                    <strong className="text-[#2F5A84]">{isEn ? "Parents:" : "Padres:"}</strong>{" "}
+                    {corte.parents}
                   </p>
                 )}
                 {corte.padrinos && corte.padrinos.length > 0 && (
                   <p>
-                    <strong className="text-[#2F5A84]">Padrinos:</strong> {corte.padrinos.join(", ")}
+                    <strong className="text-[#2F5A84]">
+                      {isEn ? "Godparents / Padrinos:" : "Padrinos:"}
+                    </strong>{" "}
+                    {corte.padrinos.join(", ")}
                   </p>
                 )}
               </div>
@@ -1094,7 +1207,7 @@ export default function BlueButterflyTemplate({
           <div className="my-4">
             <a
               href={`https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(
-                "Mis XV Años " + data.titulo
+                (isEn ? "Sweet 15 " : "Mis XV Años ") + data.titulo
               )}&dates=${eventDate.toISOString().replace(/-|:|\.\d\d\d/g, "")}/${new Date(
                 eventDate.getTime() + 6 * 3600 * 1000
               )
@@ -1106,7 +1219,7 @@ export default function BlueButterflyTemplate({
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full border border-[#C5A059]/60 text-[#2F5A84] font-serif-roman text-xs uppercase tracking-widest hover:bg-white/60 transition shadow-sm"
             >
-              📅 Add to Calendar
+              📅 {isEn ? "Add to Calendar" : "Añadir al Calendario"}
             </a>
           </div>
         </section>
@@ -1123,7 +1236,10 @@ export default function BlueButterflyTemplate({
           </div>
 
           <p className="font-cormorant italic text-base text-slate-600">
-            {data.mensajeDespedida || "Esperamos contar con tu valiosa presencia."}
+            {data.mensajeDespedida ||
+              (isEn
+                ? "We look forward to celebrating this unforgettable milestone with you."
+                : "Esperamos contar con tu valiosa presencia.")}
           </p>
           <h3 className="font-script text-5xl text-[#2F5A84] mt-2">{data.titulo}</h3>
         </footer>
