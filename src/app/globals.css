@@ -58,3 +58,20 @@ body {
 .garden-bg {
   background: linear-gradient(180deg, #EBF3FA 0%, #FFFFFF 15%, #F4F8FC 50%, #FFFFFF 85%, #EAF2F9 100%);
 }
+
+/* Aleteo 3D de mariposa */
+@keyframes butterfly-flutter {
+  0%, 100% {
+    transform: perspective(600px) rotateY(0deg) scale(1);
+  }
+  50% {
+    transform: perspective(600px) rotateY(65deg) scale(0.94);
+  }
+}
+
+.animate-flutter {
+  animation: butterfly-flutter 0.4s ease-in-out infinite;
+  transform-style: preserve-3d;
+  display: inline-block;
+}
+
