@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { randomBytes } from "crypto";
 import prisma from "@/lib/db";
 
 export async function GET(req: NextRequest) {
@@ -96,12 +97,15 @@ export async function POST(req: NextRequest) {
       });
     }
 
+    const secretPanelKey = randomBytes(8).toString("hex");
+
     // Crear el evento
     const nuevoEvento = await prisma.evento.create({
       data: {
         usuarioId: adminUser.id,
         titulo,
         slug: slug.toLowerCase().trim().replace(/[^a-z0-9-]/g, "-"),
+        panelToken: secretPanelKey,
         tipoEvento,
         estiloPlantilla,
         subtitulo,

@@ -39,29 +39,8 @@ export default function BlueButterflyTemplate({
     isUpdate: boolean;
   } | null>(null);
 
-  // Destinatario personalizado desde la URL (Modo VIP: ?para=Familia+Perez o ?code=FAM-RAMIREZ o ?pases=3 o ?tel=...)
+  // Destinatario general de cortesía
   const [guestRecipient, setGuestRecipient] = useState("Familia & Amigos");
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const params = new URLSearchParams(window.location.search);
-      const name = params.get("para") || params.get("invitado") || params.get("guest") || params.get("code");
-      const seats = params.get("pases") || params.get("seats");
-      const phoneParam = params.get("tel") || params.get("phone") || params.get("telefono");
-      if (phoneParam) setGuestPhone(phoneParam);
-      if (name) {
-        // Formatear código si viene como FAM-RAMIREZ -> Familia Ramirez
-        const formatted = name.startsWith("FAM-")
-          ? "Familia " + name.replace("FAM-", "").replace(/[-_]/g, " ")
-          : name;
-        setGuestRecipient(formatted);
-        setGuestName(formatted);
-      }
-      if (seats) {
-        setSelectedSeats(seats);
-      }
-    }
-  }, []);
 
   // Idioma (es | en | bilingual)
   const isBilingual = data.idiomaDefault === "bilingual";
@@ -1212,8 +1191,11 @@ export default function BlueButterflyTemplate({
                 <label className="block text-[11px] font-semibold text-slate-600 uppercase tracking-wider mb-1 font-serif-roman">
                   {isEn ? "Confirmed Guests" : "Pases Confirmados"}
                 </label>
-                <div className="flex gap-4 pt-1 text-xs text-slate-600">
-                  {["1", "2", "3+"].map((seat) => (
+                <div className="flex flex-wrap gap-4 pt-1 text-xs text-slate-600">
+                  {Array.from(
+                    { length: Math.max(1, data.maxPasesPorInvitado || 4) },
+                    (_, i) => String(i + 1)
+                  ).map((seat) => (
                     <label key={seat} className="flex items-center gap-1.5 cursor-pointer">
                       <input
                         type="radio"

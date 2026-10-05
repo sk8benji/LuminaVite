@@ -11,6 +11,14 @@ export async function GET(
     const { searchParams } = new URL(req.url);
     const key = searchParams.get("key");
 
+    // Seguridad estricta: Se requiere token secreto para acceder al panel
+    if (!key) {
+      return NextResponse.json(
+        { error: "Acceso denegado. Se requiere clave secreta (?key=...)." },
+        { status: 404 }
+      );
+    }
+
     // Buscar evento
     const evento = await prisma.evento.findUnique({
       where: { slug },
@@ -65,6 +73,14 @@ export async function GET(
 
       return NextResponse.json(
         { error: "Evento no encontrado." },
+        { status: 404 }
+      );
+    }
+
+    // Validar token de seguridad contra el registrado en base de datos
+    if (evento.panelToken && key !== evento.panelToken) {
+      return NextResponse.json(
+        { error: "Clave de acceso inválida o expirada." },
         { status: 404 }
       );
     }

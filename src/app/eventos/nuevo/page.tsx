@@ -310,9 +310,10 @@ export default function NuevoEventoPage() {
       }
 
       const origin = typeof window !== "undefined" ? window.location.origin : "";
+      const panelKey = result.evento?.panelToken || result.panelToken || "";
       setCreatedLinks({
         publicUrl: `${origin}/${formData.slug}`,
-        magicLink: `${origin}/${formData.slug}/panel`,
+        magicLink: `${origin}/${formData.slug}/panel?key=${panelKey}`,
         titulo: formData.titulo,
       });
       setIsSaving(false);

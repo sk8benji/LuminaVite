@@ -65,6 +65,7 @@ model Evento {
   salonId            String?
   salon              Salon?          @relation(fields: [salonId], references: [id], onDelete: SetNull)
   slug               String          @unique // URL pública: tudominio.com/[slug]
+  panelToken         String?         // Token secreto para el Magic Link del cliente (Mamá): ?key=...
   tipoEvento         TipoEvento      @default(QUINCEANERA)
   estiloPlantilla    EstiloPlantilla @default(PRINCESA_ROSA)
 

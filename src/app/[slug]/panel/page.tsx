@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useEffect, useState, use } from "react";
+import React, { useEffect, useState, use, Suspense } from "react";
 import Link from "next/link";
+import { notFound, useSearchParams } from "next/navigation";
 import {
   Users,
   CheckCircle2,
@@ -43,30 +44,51 @@ interface PanelData {
   }>;
 }
 
-export default function ClientMagicLinkPanelPage({
-  params,
-}: {
-  params: Promise<{ slug: string }> | { slug: string };
-}) {
-  const resolvedParams = use(params as any) as { slug: string };
-  const slug = resolvedParams.slug;
+function PanelContent({ slug }: { slug: string }) {
+  const searchParams = useSearchParams();
+  const key = searchParams.get("key");
 
   const [data, setData] = useState<PanelData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [unauthorized, setUnauthorized] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
+  const [copiedMagicLink, setCopiedMagicLink] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
-    fetch(`/api/eventos/${slug}/panel`)
-      .then((res) => res.json())
+    // Si no se proporcionó ninguna key en la URL, acceso no autorizado inmediato
+    if (!key) {
+      setUnauthorized(true);
+      setLoading(false);
+      return;
+    }
+
+    fetch(`/api/eventos/${slug}/panel?key=${encodeURIComponent(key)}`)
+      .then((res) => {
+        if (!res.ok) {
+          setUnauthorized(true);
+          return null;
+        }
+        return res.json();
+      })
       .then((resData) => {
-        if (resData.evento) {
+        if (resData && resData.evento) {
           setData(resData);
+        } else {
+          setUnauthorized(true);
         }
       })
-      .catch((err) => console.error(err))
+      .catch((err) => {
+        console.error(err);
+        setUnauthorized(true);
+      })
       .finally(() => setLoading(false));
-  }, [slug]);
+  }, [slug, key]);
+
+  // Si no está cargando y fue rechazado por seguridad, renderiza 404
+  if (!loading && unauthorized) {
+    notFound();
+  }
 
   const copyPublicLink = () => {
     const url = `${window.location.origin}/${slug}`;
@@ -300,5 +322,25 @@ export default function ClientMagicLinkPanelPage({
         </div>
       </main>
     </div>
+  );
+}
+
+export default function ClientMagicLinkPanelPage({
+  params,
+}: {
+  params: Promise<{ slug: string }> | { slug: string };
+}) {
+  const resolvedParams = "then" in params ? use(params) : params;
+
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-stone-50 flex items-center justify-center">
+          <div className="w-8 h-8 border-4 border-stone-200 border-t-stone-800 rounded-full animate-spin" />
+        </div>
+      }
+    >
+      <PanelContent slug={resolvedParams.slug} />
+    </Suspense>
   );
 }

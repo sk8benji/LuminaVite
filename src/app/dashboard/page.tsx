@@ -24,6 +24,7 @@ interface EventoItem {
   fotoPortadaUrl: string;
   activo: boolean;
   telefonoWhatsappRsvp: string;
+  panelToken?: string | null;
   _count?: {
     rsvps: number;
   };
@@ -297,7 +298,7 @@ export default function DashboardPage() {
 
                       {/* Magic Link para el Cliente (Mamá / Novios) */}
                       <Link
-                        href={`/${ev.slug}/panel`}
+                        href={`/${ev.slug}/panel?key=${ev.panelToken || "demo"}`}
                         target="_blank"
                         className="w-full flex items-center justify-center gap-1.5 py-2 px-3 bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-900 rounded-xl text-xs font-semibold transition"
                       >
