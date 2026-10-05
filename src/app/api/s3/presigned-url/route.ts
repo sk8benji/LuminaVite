@@ -14,27 +14,31 @@ export async function POST(req: NextRequest) {
     }
 
     // Validar tipo MIME permitido
-    const allowedImages = ["image/jpeg", "image/png", "image/webp", "image/heic"];
-    const allowedAudio = ["audio/mpeg", "audio/mp3", "audio/wav", "audio/m4a"];
+    const allowedImages = ["image/jpeg", "image/png", "image/webp", "image/heic", "image/svg+xml"];
+    const allowedAudio = ["audio/mpeg", "audio/mp3", "audio/wav", "audio/m4a", "audio/ogg"];
 
-    if (folder === "audio" && !allowedAudio.includes(contentType)) {
+    const isAudioFolder = folder === "audio" || (typeof folder === "string" && folder.includes("audio"));
+    if (isAudioFolder && !allowedAudio.includes(contentType)) {
       return NextResponse.json(
         { error: "Formato de audio no permitido. Usa MP3 o WAV." },
         { status: 400 }
       );
     }
 
-    if (folder === "images" && !allowedImages.includes(contentType)) {
+    if (!isAudioFolder && !allowedImages.includes(contentType)) {
       return NextResponse.json(
         { error: "Formato de imagen no permitido. Usa JPEG, PNG o WebP." },
         { status: 400 }
       );
     }
 
+    // Carpeta destino saneada: templates/*, clientes/* o carpeta por defecto
+    const targetFolder = typeof folder === "string" && folder.trim().length > 0 ? folder.trim() : "images";
+
     const presignedData = await getPresignedUploadUrl(
       filename,
       contentType,
-      folder === "audio" ? "audio" : "images"
+      targetFolder
     );
 
     return NextResponse.json(presignedData);

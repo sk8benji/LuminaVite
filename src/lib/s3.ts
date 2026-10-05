@@ -29,11 +29,12 @@ export interface PresignedUrlResponse {
 export async function getPresignedUploadUrl(
   filename: string,
   contentType: string,
-  folder: "images" | "audio" = "images"
+  folder: string = "images"
 ): Promise<PresignedUrlResponse> {
   const sanitizedName = filename.replace(/[^a-zA-Z0-9.-]/g, "_");
   const uniquePrefix = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
-  const fileKey = `${folder}/${uniquePrefix}-${sanitizedName}`;
+  const cleanFolder = folder.replace(/^\/+|\/+$/g, "");
+  const fileKey = `${cleanFolder}/${uniquePrefix}-${sanitizedName}`;
 
   const command = new PutObjectCommand({
     Bucket: BUCKET_NAME,

@@ -73,15 +73,135 @@ export default function NuevoEventoPage() {
     },
   });
 
+  // Presets con fotos reales y textos para la previsualización de cada plantilla
+  const TEMPLATE_PRESETS: Partial<Record<TemplateId, Partial<InvitationData>>> = {
+    BLUE_BUTTERFLY: {
+      estiloPlantilla: "BLUE_BUTTERFLY",
+      tipoEvento: "QUINCEANERA",
+      titulo: "Valeria Sofía",
+      subtitulo: "My Quinceañera",
+      frasePersonalizada:
+        "Doy gracias a Dios por cada instante de mi vida y a mis padres por su amor incondicional en esta noche tan soñada.",
+      fechaTextoPersonalizada: "SÁBADO 24 DE OCTUBRE, 2026",
+      fotoPortadaUrl: "/assets/template-butterfly/foto-columpio-portada.png",
+      fotoInfanciaUrl: "/assets/template-butterfly/foto-sesion-1.jpg",
+      fotoActualUrl: "/assets/template-butterfly/foto-sesion-2.jpg",
+      fotoCierreUrl: "/assets/template-butterfly/foto-gala-vestido.jpg",
+      musicaUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+      textoDisco: "Click to Play Music",
+      dressCodeTitulo: "Formal Elegante",
+      dressCodeNota: "Agradecemos reservar los tonos azul celeste y blanco para la quinceañera.",
+      ceremoniaNombre: "Catedral Nuestra Señora del Carmen",
+      ceremoniaDireccion: "Av. Las Rosas #450, Centro",
+      recepcionNombre: "Hacienda Los Jardines Celestiales",
+      recepcionDireccion: "Carr. Nacional Km 14.5, Jardín Real",
+      corteHonorJson: {
+        chambelan: "Jeremiah Smith",
+        damas: ["Magdalena", "Violeta", "Tania"],
+        parents: "Carlos Mendoza & Patricia Solís",
+      },
+    },
+    ELEGANT_ROSE: {
+      estiloPlantilla: "ELEGANT_ROSE",
+      tipoEvento: "QUINCEANERA",
+      titulo: "Isabella Rose",
+      subtitulo: "Mis Quince Primaveras",
+      frasePersonalizada:
+        "Con inmensa gratitud en mi corazón, celebro el comienzo de una nueva etapa llena de sueños y esperanza.",
+      fechaTextoPersonalizada: "SÁBADO 18 DE NOVIEMBRE, 2026",
+      fotoPortadaUrl: "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=800&q=80",
+      fotoInfanciaUrl: "https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&w=400&q=80",
+      fotoActualUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80",
+      fotoCierreUrl: "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=800&q=80",
+      musicaUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+      dressCodeTitulo: "Etiqueta Rigurosa / Gala",
+      dressCodeNota: "Por favor reservar tonos rosa pastel exclusivamente para la quinceañera.",
+      ceremoniaNombre: "Parroquia San Francisco de Asís",
+      ceremoniaDireccion: "Calle Central 102",
+      recepcionNombre: "Salón Cristal Real",
+      recepcionDireccion: "Av. Diamante 789",
+    },
+    FAIRYTALE_CHATEAU: {
+      estiloPlantilla: "FAIRYTALE_CHATEAU",
+      tipoEvento: "BODA",
+      titulo: "Emma & Lucas",
+      subtitulo: "Nuestra Boda de Ensueño",
+      frasePersonalizada:
+        "Dos almas con un solo pensamiento, dos corazones que laten como uno solo.",
+      fechaTextoPersonalizada: "SATURDAY, JULY 22 • 3:30 PM",
+      fotoPortadaUrl: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80",
+      fotoInfanciaUrl: "https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=400&q=80",
+      fotoActualUrl: "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=400&q=80",
+      musicaUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
+      dressCodeTitulo: "Black Tie / Formal",
+      dressCodeNota: "Rogamos vestir de gala. El blanco está reservado exclusivamente para la novia.",
+      ceremoniaNombre: "Château de Chambord Chapel",
+      ceremoniaDireccion: "Château Domain, Loire Valley",
+      recepcionNombre: "The Grand Ballroom at Château",
+      recepcionDireccion: "Palais Central, Suite Royale",
+    },
+    CORALINE_MYSTICAL: {
+      estiloPlantilla: "CORALINE_MYSTICAL",
+      tipoEvento: "CUMPLEANOS",
+      titulo: "Coraline Jones",
+      subtitulo: "Welcome to The Other World",
+      frasePersonalizada:
+        "Ten cuidado con lo que deseas... estás cordialmente invitado a cruzar la puerta secreta.",
+      fechaTextoPersonalizada: "OCTOBER 31 • 6:00 PM",
+      fotoPortadaUrl: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=800&q=80",
+      musicaUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
+      dressCodeTitulo: "Gótico / Fantasía Mística",
+      dressCodeNota: "Trae tu mejor atuendo de otro mundo o detalle amarillo.",
+      recepcionNombre: "The Pink Palace Apartments",
+      recepcionDireccion: "Ashland, Oregon",
+    },
+    PRINCESA_ROSA: {
+      estiloPlantilla: "PRINCESA_ROSA",
+      tipoEvento: "QUINCEANERA",
+      titulo: "Sofía",
+      subtitulo: "An Unforgettable Celebration Awaits",
+      frasePersonalizada:
+        "Hoy doy el hermoso paso de niña a señorita, rodeada de las personas que más amo en el mundo.",
+      fechaTextoPersonalizada: "15 DE NOVIEMBRE, 2026",
+      fotoPortadaUrl: "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=800&q=80",
+      fotoInfanciaUrl: "https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&w=400&q=80",
+      fotoActualUrl: "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=400&q=80",
+      musicaUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+      dressCodeTitulo: "Elegante y Formal",
+      dressCodeNota: "Por favor reservamos tonos rosa pastel para la quinceañera.",
+      ceremoniaNombre: "Parroquia Nuestra Señora",
+      ceremoniaDireccion: "Av. Las Flores 123",
+      recepcionNombre: "Gran Salón Diamante",
+      recepcionDireccion: "Blvd. Principal 456, Suite A",
+    },
+  };
+
   const updateField = (field: keyof InvitationData, value: any) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  // Subida a AWS S3 con Presigned URL
+  // Al seleccionar plantilla, se actualizan el estilo y los datos de demo/preview
+  const handleSelectTemplate = (tempKey: TemplateId) => {
+    const preset = TEMPLATE_PRESETS[tempKey];
+    if (preset) {
+      setFormData((prev) => ({
+        ...prev,
+        ...preset,
+        estiloPlantilla: tempKey,
+      }));
+    } else {
+      updateField("estiloPlantilla", tempKey);
+    }
+  };
+
+  // Subida a AWS S3 con Presigned URL respetando la estructura del bucket:
+  // - Templates: templates/<nombre-template>/
+  // - Clientes invitaciones: clientes/invitaciones/<slug-o-id>/
+  // - Clientes invitados: clientes/subidas-invitados/<slug-o-id>/
   const handleFileUpload = async (
     e: React.ChangeEvent<HTMLInputElement>,
     field: "fotoPortadaUrl" | "fotoInfanciaUrl" | "fotoActualUrl" | "musicaUrl",
-    folder: "images" | "audio" = "images"
+    mediaType: "images" | "audio" = "images"
   ) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -90,6 +210,9 @@ export default function NuevoEventoPage() {
     setErrorMsg(null);
 
     try {
+      // Carpeta estructurada dentro del bucket luminavite-storage
+      const clientFolder = `clientes/invitaciones/${formData.slug || "general"}`;
+
       // 1. Pedir presigned URL a la API
       const res = await fetch("/api/s3/presigned-url", {
         method: "POST",
@@ -97,7 +220,7 @@ export default function NuevoEventoPage() {
         body: JSON.stringify({
           filename: file.name,
           contentType: file.type,
-          folder,
+          folder: clientFolder,
         }),
       });
 
@@ -320,7 +443,7 @@ export default function NuevoEventoPage() {
                       return (
                         <div
                           key={tempKey}
-                          onClick={() => updateField("estiloPlantilla", tempKey)}
+                          onClick={() => handleSelectTemplate(tempKey)}
                           className={`p-3.5 rounded-2xl border-2 cursor-pointer transition ${
                             isSelected
                               ? "border-[#5A3E44] bg-pink-50/50 shadow-sm"
