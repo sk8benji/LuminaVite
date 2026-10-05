@@ -36,7 +36,7 @@ export async function GET(
 
     if (!evento) {
       // Mock demo para slugs de ejemplo o si la BD aún no tiene el evento
-      if (slug.startsWith("demo-") || slug === "valeria-xv" || slug === "mariposas-xv") {
+      if (key === "demo" || slug.startsWith("demo-") || slug === "valeria-xv" || slug === "mariposas-xv") {
         return NextResponse.json({
           evento: {
             titulo: "Valeria Sofía",
@@ -118,10 +118,13 @@ export async function GET(
       },
       rsvps,
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error al obtener panel de evento:", error);
     return NextResponse.json(
-      { error: "Error interno del servidor." },
+      {
+        error: "Error interno del servidor.",
+        details: error?.message || String(error),
+      },
       { status: 500 }
     );
   }
