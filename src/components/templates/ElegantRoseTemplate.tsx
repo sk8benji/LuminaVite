@@ -27,7 +27,7 @@ function WavyColumn({
     <div
       className={`relative w-full max-w-[340px] mx-auto py-8 px-4 flex flex-col items-center text-center select-none ${className}`}
     >
-      {/* Silueta negra original al 20% de transparencia (como pide el usuario) */}
+      {/* Silueta negra original al 30% de transparencia (como pide el usuario) */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={ELEGANT_ROSE_ASSETS.frostedBlurStrip}
@@ -36,7 +36,7 @@ function WavyColumn({
         }}
         alt=""
         aria-hidden="true"
-        className="absolute inset-0 w-full h-full object-fill opacity-20 pointer-events-none select-none"
+        className="absolute inset-0 w-full h-full object-fill opacity-30 pointer-events-none select-none"
       />
       {/* Contenido en primer plano */}
       <div className="relative z-10 w-full flex flex-col items-center">
@@ -318,15 +318,15 @@ export default function ElegantRoseTemplate({
           <div className="absolute inset-0 bg-black/10 pointer-events-none" />
 
           {/* ======================================================== */}
-          {/* SILUETA CENTRAL ONDULADA AL 20% DE TRANSPARENCIA         */}
+          {/* SILUETA CENTRAL ONDULADA AL 30% DE TRANSPARENCIA         */}
           {/* ======================================================== */}
           <WavyColumn className="my-auto z-10">
 
-            {/* 1. Texto en Arco Curvo Superior (SVG textPath) */}
+            {/* 1. Texto en Arco Curvo Superior (SVG textPath) con espacio amplio */}
             <div className="w-full flex justify-center -mb-2">
-              <svg viewBox="0 0 300 60" className="w-[270px] h-[55px] overflow-visible">
-                <path id="curvePath" d="M 10,50 Q 150,8 290,50" fill="transparent" />
-                <text className="font-['Cinzel'] text-[11px] font-semibold tracking-[0.25em] fill-white uppercase drop-shadow-sm">
+              <svg viewBox="0 0 380 70" className="w-[310px] sm:w-[340px] h-[55px] overflow-visible">
+                <path id="curvePath" d="M 15,55 Q 190,12 365,55" fill="transparent" />
+                <text className="font-['Cinzel'] text-[12px] sm:text-[13px] font-semibold tracking-[0.24em] fill-white uppercase drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
                   <textPath href="#curvePath" startOffset="50%" textAnchor="middle">
                     {data.autorBendicion || data.corteHonorJson?.parents || "MR & MRS RODRÍGUEZ"}
                   </textPath>
@@ -335,26 +335,26 @@ export default function ElegantRoseTemplate({
             </div>
 
             {/* 2. Subtítulos Superiores */}
-            <p className="font-['Cinzel'] text-[9px] tracking-[0.25em] uppercase text-white font-medium mb-1 drop-shadow-sm">
+            <p className="font-['Cinzel'] text-xs sm:text-[13px] tracking-[0.28em] uppercase text-white font-semibold mb-1 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
               {isEn ? "WARMLY INVITE YOU" : "LE INVITAN CORDIALMENTE"}
             </p>
-            <p className="font-['Cinzel'] text-[10px] tracking-[0.25em] uppercase text-white font-semibold mb-1 drop-shadow-sm">
+            <p className="font-['Cinzel'] text-xs sm:text-[13px] tracking-[0.28em] uppercase text-white font-bold mb-1.5 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
               {isEn ? "TO CELEBRATE THE" : "A CELEBRAR LOS"}
             </p>
 
             {/* 3. Quinceañera con Resplandor Blanco */}
             <h1
-              className="font-['Alex_Brush'] text-6xl text-white my-1 leading-tight select-none"
+              className="font-['Alex_Brush'] text-6xl sm:text-7xl text-white my-1 leading-tight select-none"
               style={{
                 filter:
-                  "drop-shadow(0 0 12px rgba(255, 255, 255, 0.95)) drop-shadow(0 0 24px rgba(255, 255, 255, 0.6))",
+                  "drop-shadow(0 0 10px rgba(255, 255, 255, 0.95)) drop-shadow(0 0 22px rgba(255, 255, 255, 0.65)) drop-shadow(0 4px 8px rgba(0,0,0,0.5))",
               }}
             >
               Quinceañera
             </h1>
 
             {/* 4. Subtítulo Central */}
-            <p className="font-['Cinzel'] text-[9px] tracking-[0.3em] uppercase text-white/90 font-medium my-1 drop-shadow-sm">
+            <p className="font-['Cinzel'] text-xs sm:text-[13px] tracking-[0.3em] uppercase text-white font-semibold my-1.5 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
               {isEn ? "OF THEIR DAUGHTER" : "DE SU HIJA"}
             </p>
 
@@ -363,19 +363,19 @@ export default function ElegantRoseTemplate({
               className="font-['Alex_Brush'] text-5xl sm:text-6xl text-white my-2 leading-tight select-none"
               style={{
                 filter:
-                  "drop-shadow(0 0 12px rgba(255, 255, 255, 0.95)) drop-shadow(0 0 24px rgba(255, 255, 255, 0.6))",
+                  "drop-shadow(0 0 10px rgba(255, 255, 255, 0.95)) drop-shadow(0 0 22px rgba(255, 255, 255, 0.65)) drop-shadow(0 4px 8px rgba(0,0,0,0.5))",
               }}
             >
               {data.titulo}
             </h2>
 
-            {/* 6. Bloque de Fecha Horizontal y Minimalista */}
-            <div className="w-full max-w-[280px] mx-auto mt-4 pt-2">
+            {/* 6. Bloque de Fecha Horizontal Elegante */}
+            <div className="w-full max-w-[300px] mx-auto mt-4 pt-2">
               {/* Mes Arqueado */}
               <div className="w-full flex justify-center -mb-1">
-                <svg viewBox="0 0 160 32" className="w-28 h-6 overflow-visible">
-                  <path id="curveMonth" d="M 15,26 Q 80,6 145,26" fill="transparent" />
-                  <text className="font-['Cinzel'] text-[12px] font-bold tracking-[0.35em] fill-white uppercase drop-shadow-sm">
+                <svg viewBox="0 0 180 38" className="w-32 h-7 overflow-visible">
+                  <path id="curveMonth" d="M 12,32 Q 90,8 168,32" fill="transparent" />
+                  <text className="font-['Cinzel'] text-[14px] font-bold tracking-[0.35em] fill-white uppercase drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
                     <textPath href="#curveMonth" startOffset="50%" textAnchor="middle">
                       {monthName}
                     </textPath>
@@ -383,37 +383,49 @@ export default function ElegantRoseTemplate({
                 </svg>
               </div>
 
-              {/* Barra Central: Día de la Semana | Número | Hora */}
-              <div className="flex items-center justify-between border-y border-white/50 py-1.5 my-1">
-                <span className="font-['Cinzel'] text-[9px] tracking-[0.2em] uppercase text-white font-medium flex-1 text-center">
-                  {dayName}
-                </span>
-                <span className="font-['Cinzel'] text-3xl font-bold text-white px-3 drop-shadow-sm">
-                  {dayNumber}
-                </span>
-                <span className="font-['Cinzel'] text-[9px] tracking-[0.2em] uppercase text-white font-medium flex-1 text-center">
-                  {eventTime}
-                </span>
+              {/* Barra Central con Doble Línea: Día de la Semana | Número | Hora */}
+              <div className="flex items-center justify-between w-full my-1">
+                <div className="flex-1 flex flex-col justify-center items-center px-1">
+                  <div className="w-full border-t border-white/70 mb-1" />
+                  <span className="font-['Cinzel'] text-xs sm:text-[13px] tracking-[0.22em] uppercase text-white font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] text-center">
+                    {dayName}
+                  </span>
+                  <div className="w-full border-b border-white/70 mt-1" />
+                </div>
+
+                <div className="px-3 flex flex-col items-center">
+                  <span className="font-['Cinzel'] text-4xl sm:text-5xl font-bold text-white drop-shadow-[0_2px_6px_rgba(0,0,0,0.8)] leading-none">
+                    {dayNumber}
+                  </span>
+                </div>
+
+                <div className="flex-1 flex flex-col justify-center items-center px-1">
+                  <div className="w-full border-t border-white/70 mb-1" />
+                  <span className="font-['Cinzel'] text-xs sm:text-[13px] tracking-[0.22em] uppercase text-white font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] text-center">
+                    {eventTime}
+                  </span>
+                  <div className="w-full border-b border-white/70 mt-1" />
+                </div>
               </div>
 
               {/* Dirección / Locación */}
-              <p className="font-['Cinzel'] text-[8px] tracking-[0.25em] uppercase text-white/90 mt-2 leading-relaxed">
+              <p className="font-['Cinzel'] text-xs sm:text-[13px] tracking-[0.22em] uppercase text-white font-bold mt-3 leading-relaxed drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
                 {data.recepcionNombre || data.ceremoniaNombre || "ANY CITY, ANY STREET, AZ 12345"}
               </p>
               {data.recepcionDireccion && (
-                <p className="font-['Cinzel'] text-[7px] tracking-[0.2em] uppercase text-white/75 mt-0.5">
+                <p className="font-['Cinzel'] text-[11px] sm:text-xs tracking-[0.18em] uppercase text-white font-medium mt-1 leading-relaxed drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
                   {data.recepcionDireccion}
                 </p>
               )}
 
-              {/* Botón Google Maps elegante */}
+              {/* Botón Google Maps elegante y legible */}
               <a
                 href={churchMapUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-3 bg-white/20 border border-white/50 text-white font-['Cinzel'] text-[8px] tracking-[0.25em] uppercase py-1.5 px-4 rounded-full hover:bg-white/30 transition-all shadow-sm inline-flex items-center gap-1.5 cursor-pointer backdrop-blur-sm"
+                className="mt-3.5 bg-white/25 border border-white/60 text-white font-['Cinzel'] text-[10px] sm:text-xs tracking-[0.25em] uppercase py-2 px-6 rounded-full hover:bg-white/40 transition-all shadow-lg inline-flex items-center gap-2 cursor-pointer backdrop-blur-md font-semibold drop-shadow"
               >
-                <MapPin className="w-3 h-3" />
+                <MapPin className="w-3.5 h-3.5 text-rose-200" />
                 <span>GOOGLE MAPS</span>
               </a>
             </div>
@@ -439,15 +451,15 @@ export default function ElegantRoseTemplate({
                 />
               </div>
 
-              <p className="font-['Cinzel'] text-[10px] tracking-wider text-[#5A3E44] font-bold truncate">
+              <p className="font-['Cinzel'] text-xs sm:text-sm tracking-wider text-[#5A3E44] font-bold truncate">
                 {data.musicaTitulo || "Photograph - Ed Sheeran"}
               </p>
-              <p className="text-[9px] text-stone-500 font-light truncate">
+              <p className="text-xs text-stone-600 font-medium truncate">
                 {isEn ? "Official Quince Song" : "Canción Oficial"}
               </p>
 
               {/* Barra de progreso */}
-              <div className="w-full bg-stone-200 h-1 rounded-full my-2 overflow-hidden">
+              <div className="w-full bg-stone-200 h-1.5 rounded-full my-2.5 overflow-hidden">
                 <div
                   className={`bg-[#CE8486] h-full ${
                     isPlaying ? "w-2/3 animate-pulse" : "w-1/3"
@@ -456,19 +468,19 @@ export default function ElegantRoseTemplate({
               </div>
 
               {/* Botones de control */}
-              <div className="flex items-center justify-center gap-4 text-stone-600">
+              <div className="flex items-center justify-center gap-5 text-stone-700 py-1">
                 <button type="button" className="hover:text-stone-900 transition cursor-pointer">
-                  <SkipBack className="w-3.5 h-3.5" />
+                  <SkipBack className="w-4 h-4" />
                 </button>
                 <button
                   type="button"
                   onClick={togglePlay}
-                  className="w-8 h-8 rounded-full bg-[#CE8486] text-white flex items-center justify-center shadow-md hover:scale-105 active:scale-95 transition cursor-pointer"
+                  className="w-9 h-9 rounded-full bg-[#CE8486] text-white flex items-center justify-center shadow-lg hover:scale-105 active:scale-95 transition cursor-pointer"
                 >
-                  {isPlaying ? <Pause className="w-3.5 h-3.5 fill-current" /> : <Play className="w-3.5 h-3.5 fill-current ml-0.5" />}
+                  {isPlaying ? <Pause className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current ml-0.5" />}
                 </button>
                 <button type="button" className="hover:text-stone-900 transition cursor-pointer">
-                  <SkipForward className="w-3.5 h-3.5" />
+                  <SkipForward className="w-4 h-4" />
                 </button>
               </div>
             </div>
@@ -494,30 +506,59 @@ export default function ElegantRoseTemplate({
             <img
               src={ELEGANT_ROSE_ASSETS.crown}
               alt="Corona"
-              className="w-8 h-auto my-2 opacity-90 drop-shadow"
+              className="w-9 h-auto my-2.5 opacity-95 drop-shadow-md"
             />
 
-            {/* 5 Marcos de Tiras de Película Celuloide con Perforaciones */}
-            <div className="space-y-10 w-full max-w-[270px] mt-6">
+            {/* Marcos de Tiras de Película Celuloide con Perforaciones y Mariposas */}
+            <div className="space-y-12 w-full max-w-[280px] mt-6">
               {hitos.map((hito, idx) => (
                 <div key={idx} className="text-center group">
-                  {/* Marco Filmstrip */}
-                  <div className="bg-black p-2 border-y-4 border-dashed border-white/60 shadow-2xl rounded-sm">
-                    <div className="aspect-square w-full overflow-hidden bg-neutral-900">
+                  {/* Marco Filmstrip Auténtico con Foto Integrada */}
+                  <div className="relative w-full aspect-square max-w-[270px] mx-auto">
+                    {/* Foto recortada dentro de la ventana de celuloide */}
+                    <div className="absolute top-[13.5%] bottom-[13.5%] left-[4.5%] right-[4.5%] overflow-hidden bg-black flex items-center justify-center">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={hito.foto}
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                         alt={hito.titulo}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                       />
                     </div>
+
+                    {/* Marco de película fotográfica auténtica overlay */}
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={ELEGANT_ROSE_ASSETS.polaroidFrame}
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = ELEGANT_ROSE_ASSETS.s3.polaroidFrame;
+                      }}
+                      alt=""
+                      aria-hidden="true"
+                      className="absolute inset-0 w-full h-full object-fill pointer-events-none drop-shadow-2xl"
+                    />
+
+                    {/* Mariposas de acuarela en las esquinas inferiores como en Canva */}
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={ELEGANT_ROSE_ASSETS.churchIcon}
+                      alt=""
+                      className="absolute -bottom-2 -left-2 w-10 h-10 object-contain drop-shadow-lg -rotate-12 pointer-events-none"
+                    />
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={ELEGANT_ROSE_ASSETS.dressIcon}
+                      alt=""
+                      className="absolute -bottom-2 -right-2 w-10 h-10 object-contain drop-shadow-lg rotate-12 pointer-events-none"
+                    />
                   </div>
 
-                  {/* Etiqueta y texto */}
-                  <span className="inline-block font-['Cinzel'] text-[10px] tracking-[0.2em] uppercase text-rose-200 font-semibold mt-3">
-                    {hito.fecha} • {hito.titulo}
-                  </span>
-                  <p className="font-['Cinzel'] text-[9px] text-white/80 italic tracking-wider leading-relaxed mt-1 px-1">
+                  {/* Fecha elegante en Bodoni Moda itálica */}
+                  <p className="font-['Bodoni_Moda',serif] italic text-2xl sm:text-3xl text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)] mt-3">
+                    {hito.fecha === "2011" ? "10-8-2012" : hito.fecha}
+                  </p>
+
+                  {/* Descripción altamente legible */}
+                  <p className="font-['Cormorant_Garamond',serif] text-sm sm:text-[15px] text-white font-medium leading-relaxed mt-1.5 px-1 drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
                     {hito.texto}
                   </p>
                 </div>
@@ -526,8 +567,10 @@ export default function ElegantRoseTemplate({
 
             {/* Frase Cierre Growing Up */}
             <div className="mt-10 border-t border-white/30 pt-4 w-full">
-              <p className="font-['Cinzel'] text-[9px] tracking-[0.2em] uppercase text-rose-200 font-semibold leading-relaxed">
-                Celebrating Fifteen Amazing Years — The Best Is Yet to Come.
+              <p className="font-['Cinzel'] text-xs sm:text-[13px] tracking-[0.2em] uppercase text-rose-100 font-bold leading-relaxed drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
+                {isEn
+                  ? "Celebrating Fifteen Amazing Years — The Best Is Yet to Come."
+                  : "Celebrando Quince Años Inolvidables — Lo Mejor Está Por Venir."}
               </p>
             </div>
           </WavyColumn>
@@ -550,47 +593,47 @@ export default function ElegantRoseTemplate({
               alt="Corona"
               className="w-7 h-auto my-1.5 opacity-90 drop-shadow"
             />
-            <p className="font-['Cinzel'] text-[9px] tracking-[0.25em] uppercase text-rose-200 font-semibold mb-6">
-              TO SWEET QUINCE DAY HAS BEGUN!
+            <p className="font-['Cinzel'] text-xs sm:text-[13px] tracking-[0.25em] uppercase text-rose-100 font-bold mb-6 drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
+              {isEn ? "TO SWEET QUINCE DAY HAS BEGUN!" : "¡RUMBO A LOS QUINCE AÑOS!"}
             </p>
 
             {/* 4 Píldoras de Cuenta Regresiva */}
-            <div className="grid grid-cols-4 gap-2 w-full max-w-[280px]">
-              <div className="bg-white/15 backdrop-blur-md rounded-xl py-3 border border-white/25 shadow-lg">
-                <span className="block font-['Cinzel'] text-2xl font-bold text-white">
+            <div className="grid grid-cols-4 gap-2.5 w-full max-w-[300px]">
+              <div className="bg-white/20 backdrop-blur-md rounded-2xl py-3.5 border border-white/40 shadow-xl text-center">
+                <span className="block font-['Cinzel'] text-3xl sm:text-4xl font-bold text-white drop-shadow-md">
                   {String(timeLeft.days).padStart(2, "0")}
                 </span>
-                <span className="text-[8px] uppercase tracking-widest text-rose-200 font-semibold">
+                <span className="text-[10px] sm:text-xs uppercase tracking-widest text-rose-200 font-bold drop-shadow-sm mt-1 block">
                   {isEn ? "Days" : "Días"}
                 </span>
               </div>
-              <div className="bg-white/15 backdrop-blur-md rounded-xl py-3 border border-white/25 shadow-lg">
-                <span className="block font-['Cinzel'] text-2xl font-bold text-white">
+              <div className="bg-white/20 backdrop-blur-md rounded-2xl py-3.5 border border-white/40 shadow-xl text-center">
+                <span className="block font-['Cinzel'] text-3xl sm:text-4xl font-bold text-white drop-shadow-md">
                   {String(timeLeft.hours).padStart(2, "0")}
                 </span>
-                <span className="text-[8px] uppercase tracking-widest text-rose-200 font-semibold">
+                <span className="text-[10px] sm:text-xs uppercase tracking-widest text-rose-200 font-bold drop-shadow-sm mt-1 block">
                   {isEn ? "Hours" : "Horas"}
                 </span>
               </div>
-              <div className="bg-white/15 backdrop-blur-md rounded-xl py-3 border border-white/25 shadow-lg">
-                <span className="block font-['Cinzel'] text-2xl font-bold text-white">
+              <div className="bg-white/20 backdrop-blur-md rounded-2xl py-3.5 border border-white/40 shadow-xl text-center">
+                <span className="block font-['Cinzel'] text-3xl sm:text-4xl font-bold text-white drop-shadow-md">
                   {String(timeLeft.minutes).padStart(2, "0")}
                 </span>
-                <span className="text-[8px] uppercase tracking-widest text-rose-200 font-semibold">
+                <span className="text-[10px] sm:text-xs uppercase tracking-widest text-rose-200 font-bold drop-shadow-sm mt-1 block">
                   {isEn ? "Mins" : "Min"}
                 </span>
               </div>
-              <div className="bg-white/15 backdrop-blur-md rounded-xl py-3 border border-white/25 shadow-lg">
-                <span className="block font-['Cinzel'] text-2xl font-bold text-white">
+              <div className="bg-white/20 backdrop-blur-md rounded-2xl py-3.5 border border-white/40 shadow-xl text-center">
+                <span className="block font-['Cinzel'] text-3xl sm:text-4xl font-bold text-white drop-shadow-md">
                   {String(timeLeft.seconds).padStart(2, "0")}
                 </span>
-                <span className="text-[8px] uppercase tracking-widest text-rose-200 font-semibold">
+                <span className="text-[10px] sm:text-xs uppercase tracking-widest text-rose-200 font-bold drop-shadow-sm mt-1 block">
                   {isEn ? "Secs" : "Seg"}
                 </span>
               </div>
             </div>
 
-            <p className="font-['Alex_Brush'] text-2xl text-rose-100 mt-6 select-none">
+            <p className="font-['Alex_Brush'] text-3xl sm:text-4xl text-rose-100 mt-8 select-none drop-shadow-md">
               {isEn ? "I can’t wait to celebrate with you!" : "¡No puedo esperar para celebrar contigo!"}
             </p>
           </WavyColumn>
@@ -604,109 +647,111 @@ export default function ElegantRoseTemplate({
           style={{ backgroundImage: `url(${heroPhotoUrl})` }}
         >
           <WavyColumn className="py-12">
-            <h3 className="font-['Alex_Brush'] text-5xl text-white select-none">
+            <h3 className="font-['Alex_Brush'] text-5xl sm:text-6xl text-white select-none drop-shadow-md">
               The Day
             </h3>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={ELEGANT_ROSE_ASSETS.crown}
               alt="Corona"
-              className="w-7 h-auto my-1.5 opacity-90 drop-shadow"
+              className="w-8 h-auto my-2 opacity-95 drop-shadow"
             />
-            <p className="font-['Cinzel'] text-[9px] tracking-[0.25em] uppercase text-rose-200 mb-8 font-semibold">
+            <p className="font-['Cinzel'] text-xs sm:text-[13px] tracking-[0.25em] uppercase text-rose-100 mb-8 font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
               {isEn ? "PROGRAM OF THE BIG DAY" : "PROGRAMA DEL EVENTO"}
             </p>
 
-            <div className="space-y-6 w-full max-w-[280px]">
+            <div className="space-y-8 w-full max-w-[300px]">
               {/* 4:00 PM Misa */}
               <div className="flex flex-col items-center">
-                <span className="font-['Cinzel'] text-xs font-bold text-rose-200 tracking-wider">
+                <span className="font-['Cinzel'] text-sm sm:text-base font-bold text-rose-200 tracking-wider drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
                   4:00 PM
                 </span>
-                <div className="w-10 h-10 my-1">
+                <div className="w-12 h-12 my-1.5 flex items-center justify-center">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={ELEGANT_ROSE_ASSETS.churchIcon} alt="Church" className="w-full h-full object-contain filter invert brightness-200" />
+                  <img src={ELEGANT_ROSE_ASSETS.churchIcon} alt="Mass" className="w-full h-full object-contain drop-shadow-lg" />
                 </div>
-                <p className="font-['Cinzel'] text-[10px] tracking-widest uppercase text-white font-semibold">
-                  MASS
+                <p className="font-['Cinzel'] text-xs sm:text-sm tracking-[0.25em] uppercase text-white font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
+                  {isEn ? "MASS" : "MISA"}
                 </p>
-                <p className="text-[9px] text-white/80 font-light">
+                <p className="text-xs sm:text-[13px] text-white font-medium mt-0.5 drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
                   {data.ceremoniaNombre || "St. Mary’s Church, your city, az"}
                 </p>
                 <a
                   href={churchMapUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-1.5 bg-white/20 border border-white/40 text-white font-['Cinzel'] text-[8px] tracking-[0.2em] uppercase py-1 px-4 rounded-full hover:bg-white/30 transition"
+                  className="mt-2 bg-white/25 border border-white/60 text-white font-['Cinzel'] text-[10px] sm:text-xs tracking-[0.2em] uppercase py-1.5 px-5 rounded-full hover:bg-white/40 transition font-semibold shadow-md inline-flex items-center gap-1.5 backdrop-blur-sm drop-shadow"
                 >
-                  GOOGLE MAPS
+                  <MapPin className="w-3 h-3 text-rose-200" />
+                  <span>GOOGLE MAPS</span>
                 </a>
               </div>
 
               {/* 5:00 PM Entrada / Recepción */}
               <div className="flex flex-col items-center pt-2">
-                <span className="font-['Cinzel'] text-xs font-bold text-rose-200 tracking-wider">
+                <span className="font-['Cinzel'] text-sm sm:text-base font-bold text-rose-200 tracking-wider drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
                   5:00 PM
                 </span>
-                <div className="w-10 h-10 my-1">
+                <div className="w-12 h-12 my-1.5 flex items-center justify-center">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={ELEGANT_ROSE_ASSETS.dressIcon} alt="Entrance" className="w-full h-full object-contain filter invert brightness-200" />
+                  <img src={ELEGANT_ROSE_ASSETS.dressIcon} alt="Entrance" className="w-full h-full object-contain drop-shadow-lg" />
                 </div>
-                <p className="font-['Cinzel'] text-[10px] tracking-widest uppercase text-white font-semibold">
-                  ENTRANCE
+                <p className="font-['Cinzel'] text-xs sm:text-sm tracking-[0.25em] uppercase text-white font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
+                  {isEn ? "ENTRANCE" : "RECEPCIÓN"}
                 </p>
-                <p className="text-[9px] text-white/80 font-light">
+                <p className="text-xs sm:text-[13px] text-white font-medium mt-0.5 drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
                   {data.recepcionNombre || "Grand Ballroom, your city, az"}
                 </p>
                 <a
                   href={ballroomMapUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-1.5 bg-white/20 border border-white/40 text-white font-['Cinzel'] text-[8px] tracking-[0.2em] uppercase py-1 px-4 rounded-full hover:bg-white/30 transition"
+                  className="mt-2 bg-white/25 border border-white/60 text-white font-['Cinzel'] text-[10px] sm:text-xs tracking-[0.2em] uppercase py-1.5 px-5 rounded-full hover:bg-white/40 transition font-semibold shadow-md inline-flex items-center gap-1.5 backdrop-blur-sm drop-shadow"
                 >
-                  GOOGLE MAPS
+                  <MapPin className="w-3 h-3 text-rose-200" />
+                  <span>GOOGLE MAPS</span>
                 </a>
               </div>
 
               {/* 6:00 PM Vals */}
               <div className="flex flex-col items-center pt-2">
-                <span className="font-['Cinzel'] text-xs font-bold text-rose-200 tracking-wider">
+                <span className="font-['Cinzel'] text-sm sm:text-base font-bold text-rose-200 tracking-wider drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
                   6:00 PM
                 </span>
-                <div className="w-10 h-10 my-1">
+                <div className="w-12 h-12 my-1.5 flex items-center justify-center">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={ELEGANT_ROSE_ASSETS.waltzIcon} alt="Waltz" className="w-full h-full object-contain filter invert brightness-200" />
+                  <img src={ELEGANT_ROSE_ASSETS.waltzIcon} alt="Waltz" className="w-full h-full object-contain drop-shadow-lg" />
                 </div>
-                <p className="font-['Cinzel'] text-[10px] tracking-widest uppercase text-white font-semibold">
-                  WALTZ
+                <p className="font-['Cinzel'] text-xs sm:text-sm tracking-[0.25em] uppercase text-white font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
+                  {isEn ? "WALTZ" : "VALS"}
                 </p>
               </div>
 
               {/* 7:00 PM Cena */}
               <div className="flex flex-col items-center pt-2">
-                <span className="font-['Cinzel'] text-xs font-bold text-rose-200 tracking-wider">
+                <span className="font-['Cinzel'] text-sm sm:text-base font-bold text-rose-200 tracking-wider drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
                   7:00 PM
                 </span>
-                <div className="w-10 h-10 my-1">
+                <div className="w-12 h-12 my-1.5 flex items-center justify-center">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={ELEGANT_ROSE_ASSETS.ballroomIcon} alt="Dinner" className="w-full h-full object-contain filter invert brightness-200" />
+                  <img src={ELEGANT_ROSE_ASSETS.ballroomIcon} alt="Dinner" className="w-full h-full object-contain drop-shadow-lg" />
                 </div>
-                <p className="font-['Cinzel'] text-[10px] tracking-widest uppercase text-white font-semibold">
-                  DINNER
+                <p className="font-['Cinzel'] text-xs sm:text-sm tracking-[0.25em] uppercase text-white font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
+                  {isEn ? "DINNER" : "CENA"}
                 </p>
               </div>
 
               {/* 9:00 PM Fiesta */}
               <div className="flex flex-col items-center pt-2">
-                <span className="font-['Cinzel'] text-xs font-bold text-rose-200 tracking-wider">
+                <span className="font-['Cinzel'] text-sm sm:text-base font-bold text-rose-200 tracking-wider drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
                   9:00 PM
                 </span>
-                <div className="w-10 h-10 my-1">
+                <div className="w-12 h-12 my-1.5 flex items-center justify-center">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={ELEGANT_ROSE_ASSETS.musicIcon} alt="Party" className="w-full h-full object-contain filter invert brightness-200" />
+                  <img src={ELEGANT_ROSE_ASSETS.musicIcon} alt="Party" className="w-full h-full object-contain drop-shadow-lg" />
                 </div>
-                <p className="font-['Cinzel'] text-[10px] tracking-widest uppercase text-white font-semibold">
-                  PARTY
+                <p className="font-['Cinzel'] text-xs sm:text-sm tracking-[0.25em] uppercase text-white font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
+                  {isEn ? "PARTY" : "FIESTA"}
                 </p>
               </div>
             </div>
@@ -722,43 +767,43 @@ export default function ElegantRoseTemplate({
         >
           <WavyColumn className="py-12">
             {/* Padrinos */}
-            <h3 className="font-['Alex_Brush'] text-5xl text-rose-100 select-none">
+            <h3 className="font-['Alex_Brush'] text-5xl sm:text-6xl text-rose-100 select-none drop-shadow-md">
               Padrinos
             </h3>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={ELEGANT_ROSE_ASSETS.crown} alt="Crown" className="w-6 h-auto my-1 drop-shadow" />
-            <p className="font-['Cinzel'] text-xs uppercase tracking-widest text-white font-semibold mb-8">
+            <img src={ELEGANT_ROSE_ASSETS.crown} alt="Crown" className="w-7 h-auto my-1.5 opacity-90 drop-shadow" />
+            <p className="font-['Cinzel'] text-sm sm:text-base uppercase tracking-widest text-white font-bold mb-8 drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
               {corteHonor.padrinos?.join(" & ") || "Miguel & Daniela Herrera"}
             </p>
 
             {/* Quince Court */}
-            <h3 className="font-['Alex_Brush'] text-5xl text-rose-100 select-none">
+            <h3 className="font-['Alex_Brush'] text-5xl sm:text-6xl text-rose-100 select-none drop-shadow-md">
               Quince Court
             </h3>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={ELEGANT_ROSE_ASSETS.crown} alt="Crown" className="w-6 h-auto my-1 drop-shadow" />
-            <p className="font-['Cinzel'] text-xs uppercase tracking-widest text-white font-semibold">
+            <img src={ELEGANT_ROSE_ASSETS.crown} alt="Crown" className="w-7 h-auto my-1.5 opacity-90 drop-shadow" />
+            <p className="font-['Cinzel'] text-sm sm:text-base uppercase tracking-widest text-white font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
               {corteHonor.chambelan || "Emilio Salazar"}
             </p>
-            <p className="font-['Cinzel'] text-[9px] tracking-widest uppercase text-rose-200 mb-6">
+            <p className="font-['Cinzel'] text-xs sm:text-[13px] tracking-widest uppercase text-rose-200 mb-6 font-semibold drop-shadow-sm">
               CHAMBERLAIN OF HONOR
             </p>
 
             {/* Damas */}
-            <p className="font-['Cinzel'] text-[11px] font-bold tracking-[0.2em] uppercase text-rose-200 mt-2 mb-2">
+            <p className="font-['Cinzel'] text-xs sm:text-sm font-bold tracking-[0.25em] uppercase text-rose-200 mt-3 mb-2 drop-shadow-sm">
               DAMAS
             </p>
-            <div className="space-y-0.5 text-xs font-['Cinzel'] tracking-wider text-white/90">
+            <div className="space-y-1 text-xs sm:text-sm font-['Cinzel'] tracking-wider text-white font-medium drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
               {corteHonor.damas?.map((dama: string, i: number) => (
                 <p key={i}>{dama}</p>
               ))}
             </div>
 
             {/* Chambelanes */}
-            <p className="font-['Cinzel'] text-[11px] font-bold tracking-[0.2em] uppercase text-rose-200 mt-6 mb-2">
+            <p className="font-['Cinzel'] text-xs sm:text-sm font-bold tracking-[0.25em] uppercase text-rose-200 mt-6 mb-2 drop-shadow-sm">
               CHAMBELANES
             </p>
-            <div className="space-y-0.5 text-xs font-['Cinzel'] tracking-wider text-white/90">
+            <div className="space-y-1 text-xs sm:text-sm font-['Cinzel'] tracking-wider text-white font-medium drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
               {corteHonor.chambelanes?.map((chambelan: string, i: number) => (
                 <p key={i}>{chambelan}</p>
               ))}
@@ -774,39 +819,47 @@ export default function ElegantRoseTemplate({
           style={{ backgroundImage: `url(${ELEGANT_ROSE_ASSETS.bouquetBg})` }}
         >
           <WavyColumn className="py-12">
-            <h3 className="font-['Alex_Brush'] text-5xl text-rose-100 select-none">
+            <h3 className="font-['Alex_Brush'] text-5xl sm:text-6xl text-rose-100 select-none drop-shadow-md">
               Details
             </h3>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={ELEGANT_ROSE_ASSETS.crown} alt="Crown" className="w-6 h-auto my-1 drop-shadow" />
+            <img src={ELEGANT_ROSE_ASSETS.crown} alt="Crown" className="w-7 h-auto my-1.5 opacity-90 drop-shadow" />
 
             {/* Dress Code */}
             <div className="mt-6 mb-6">
-              <p className="font-['Cinzel'] text-xs font-bold tracking-[0.2em] uppercase text-rose-200">
+              <p className="font-['Cinzel'] text-xs sm:text-sm font-bold tracking-[0.25em] uppercase text-rose-200 drop-shadow-sm">
                 DRESS CODE
               </p>
-              <div className="w-10 h-10 mx-auto my-2">
+              <div className="w-24 h-auto mx-auto my-3">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={ELEGANT_ROSE_ASSETS.dressIcon} alt="Dress" className="w-full h-full object-contain filter invert brightness-200" />
+                <img
+                  src={ELEGANT_ROSE_ASSETS.dressIllustration}
+                  alt="Dress Code"
+                  className="w-full h-full object-contain drop-shadow-xl"
+                />
               </div>
-              <p className="font-['Cinzel'] text-[10px] tracking-wider uppercase text-white font-semibold">
+              <p className="font-['Cinzel'] text-xs sm:text-sm tracking-wider uppercase text-white font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
                 FORMAL & ELEGANT ATTIRE
               </p>
-              <p className="text-[9px] text-white/80 font-light max-w-[260px] mx-auto leading-relaxed mt-1">
+              <p className="text-xs sm:text-[13px] text-white font-medium max-w-[280px] mx-auto leading-relaxed mt-1.5 drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
                 We invite our guests to dress in elegant formal attire as we celebrate this special occasion together.
               </p>
             </div>
 
             {/* Gifts */}
             <div className="my-6">
-              <p className="font-['Cinzel'] text-xs font-bold tracking-[0.2em] uppercase text-rose-200">
+              <p className="font-['Cinzel'] text-xs sm:text-sm font-bold tracking-[0.25em] uppercase text-rose-200 drop-shadow-sm">
                 GIFTS
               </p>
-              <div className="w-10 h-10 mx-auto my-2">
+              <div className="w-40 h-auto mx-auto my-2.5">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={ELEGANT_ROSE_ASSETS.giftIcon} alt="Gift" className="w-full h-full object-contain filter invert brightness-200" />
+                <img
+                  src={ELEGANT_ROSE_ASSETS.heartDivider}
+                  alt="Gifts"
+                  className="w-full h-full object-contain drop-shadow-md"
+                />
               </div>
-              <p className="text-[9px] text-white/80 font-light max-w-[260px] mx-auto leading-relaxed">
+              <p className="text-xs sm:text-[13px] text-white font-medium max-w-[280px] mx-auto leading-relaxed drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
                 Your presence is the greatest gift we could ask for. If you’d like to celebrate with a gift, we invite you to browse our wishlist below.
               </p>
               {data.wishlistUrl && (
@@ -814,7 +867,7 @@ export default function ElegantRoseTemplate({
                   href={data.wishlistUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-block mt-3 bg-white/20 border border-white/40 text-white font-['Cinzel'] text-[8px] tracking-[0.2em] uppercase py-1.5 px-5 rounded-full hover:bg-white/30 transition"
+                  className="inline-block mt-3.5 bg-white/25 border border-white/60 text-white font-['Cinzel'] text-[10px] sm:text-xs tracking-[0.2em] uppercase py-2 px-6 rounded-full hover:bg-white/40 transition font-semibold shadow-md backdrop-blur-sm drop-shadow"
                 >
                   WISHLIST
                 </a>
@@ -823,20 +876,20 @@ export default function ElegantRoseTemplate({
 
             {/* Accommodation */}
             <div className="my-6">
-              <p className="font-['Cinzel'] text-xs font-bold tracking-[0.2em] uppercase text-rose-200">
+              <p className="font-['Cinzel'] text-xs sm:text-sm font-bold tracking-[0.25em] uppercase text-rose-200 drop-shadow-sm">
                 ACCOMMODATION
               </p>
-              <p className="text-[9px] text-white/80 font-light max-w-[260px] mx-auto leading-relaxed mt-1">
+              <p className="text-xs sm:text-[13px] text-white font-medium max-w-[280px] mx-auto leading-relaxed mt-1.5 drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
                 A room block has been reserved for our guests. Please contact us for reservation details and booking information.
               </p>
             </div>
 
             {/* Thank you */}
-            <div className="mt-6 pt-4 border-t border-white/30 w-full">
-              <p className="font-['Cinzel'] text-[9px] tracking-widest uppercase text-white/80 mb-2">
+            <div className="mt-8 pt-4 border-t border-white/30 w-full">
+              <p className="font-['Cinzel'] text-xs sm:text-[13px] tracking-widest uppercase text-white/95 mb-2 drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)] font-semibold">
                 We can’t wait to celebrate with you!
               </p>
-              <h4 className="font-['Alex_Brush'] text-4xl text-rose-100 select-none">
+              <h4 className="font-['Alex_Brush'] text-5xl sm:text-6xl text-rose-100 select-none drop-shadow-md">
                 Thank you!
               </h4>
             </div>
@@ -852,40 +905,40 @@ export default function ElegantRoseTemplate({
           style={{ backgroundImage: `url(${ELEGANT_ROSE_ASSETS.petalsBg})` }}
         >
           <WavyColumn className="py-12">
-            <h3 className="font-['Alex_Brush'] text-5xl text-rose-100 select-none">
+            <h3 className="font-['Alex_Brush'] text-5xl sm:text-6xl text-rose-100 select-none drop-shadow-md">
               Please
             </h3>
 
             {/* Letras Doradas Gigantes RSVP */}
-            <h2 className="font-['Cinzel'] text-6xl font-bold tracking-[0.2em] text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-rose-100 to-amber-300 my-1 drop-shadow-md">
+            <h2 className="font-['Cinzel'] text-6xl sm:text-7xl font-bold tracking-[0.2em] text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-rose-100 to-amber-300 my-1 drop-shadow-lg">
               RSVP
             </h2>
 
-            <p className="font-['Cinzel'] text-[9px] tracking-widest uppercase text-rose-200 mb-6 font-semibold">
+            <p className="font-['Cinzel'] text-xs sm:text-[13px] tracking-widest uppercase text-rose-100 mb-6 font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
               {data.rsvpFechaLimite || data.fechaLimiteRsvp || (isEn ? "BY JUNE 20TH" : "ANTES DEL 20 DE JUNIO")}
             </p>
 
             {rsvpSubmitted ? (
-              <div className="bg-white/15 p-5 rounded-xl border border-white/30 animate-fade-in text-center w-full max-w-[270px]">
-                <Check className="w-8 h-8 text-emerald-400 mx-auto mb-2" />
-                <h4 className="font-['Cinzel'] text-xs font-bold text-white tracking-wider uppercase">
+              <div className="bg-white/20 backdrop-blur-md p-6 rounded-2xl border border-white/40 animate-fade-in text-center w-full max-w-[280px] shadow-xl">
+                <Check className="w-9 h-9 text-emerald-400 mx-auto mb-2" />
+                <h4 className="font-['Cinzel'] text-sm font-bold text-white tracking-wider uppercase drop-shadow-sm">
                   {isEn ? "Thank you for confirming!" : "¡Gracias por confirmar!"}
                 </h4>
-                <p className="font-['Cinzel'] text-[10px] text-rose-200/90 mt-1">
+                <p className="font-['Cinzel'] text-xs text-rose-100 mt-1.5 drop-shadow-sm">
                   {isEn ? "Your response was sent via WhatsApp." : "Tu respuesta ha sido enviada por WhatsApp."}
                 </p>
                 <button
                   type="button"
                   onClick={() => setRsvpSubmitted(false)}
-                  className="mt-3 text-[10px] uppercase font-['Cinzel'] tracking-wider text-rose-300 underline font-semibold cursor-pointer"
+                  className="mt-3.5 text-xs uppercase font-['Cinzel'] tracking-wider text-rose-200 underline font-semibold cursor-pointer hover:text-white transition"
                 >
                   {isEn ? "Modify confirmation" : "Modificar respuesta"}
                 </button>
               </div>
             ) : (
-              <form onSubmit={handleRsvpSubmit} className="space-y-3 w-full max-w-[270px] text-left">
+              <form onSubmit={handleRsvpSubmit} className="space-y-3.5 w-full max-w-[280px] text-left">
                 <div>
-                  <label className="block font-['Cinzel'] text-[8px] tracking-wider text-rose-200 uppercase mb-1 font-semibold">
+                  <label className="block font-['Cinzel'] text-[10px] sm:text-xs tracking-wider text-rose-200 uppercase mb-1 font-bold drop-shadow-sm">
                     {isEn ? "Full Name *" : "Nombre Completo *"}
                   </label>
                   <input
@@ -894,12 +947,12 @@ export default function ElegantRoseTemplate({
                     value={rsvpNombre}
                     onChange={(e) => setRsvpNombre(e.target.value)}
                     placeholder={isEn ? "e.g. Maria Perez" : "Ej. María Pérez"}
-                    className="w-full bg-white/10 border border-white/30 rounded-lg px-3 py-2 text-xs text-white placeholder-white/40 focus:outline-none focus:border-rose-300"
+                    className="w-full bg-black/40 border border-white/40 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-white placeholder-white/50 focus:outline-none focus:border-rose-300 backdrop-blur-sm"
                   />
                 </div>
 
                 <div>
-                  <label className="block font-['Cinzel'] text-[8px] tracking-wider text-rose-200 uppercase mb-1 font-semibold">
+                  <label className="block font-['Cinzel'] text-[10px] sm:text-xs tracking-wider text-rose-200 uppercase mb-1 font-bold drop-shadow-sm">
                     {isEn ? "Mobile Phone *" : "Teléfono Móvil *"}
                   </label>
                   <input
@@ -908,18 +961,18 @@ export default function ElegantRoseTemplate({
                     value={rsvpTelefono}
                     onChange={(e) => setRsvpTelefono(e.target.value)}
                     placeholder={isEn ? "e.g. +1 818 123 4567" : "Ej. 818 123 4567"}
-                    className="w-full bg-white/10 border border-white/30 rounded-lg px-3 py-2 text-xs text-white placeholder-white/40 focus:outline-none focus:border-rose-300"
+                    className="w-full bg-black/40 border border-white/40 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-white placeholder-white/50 focus:outline-none focus:border-rose-300 backdrop-blur-sm"
                   />
                 </div>
 
                 <div>
-                  <label className="block font-['Cinzel'] text-[8px] tracking-wider text-rose-200 uppercase mb-1 font-semibold">
+                  <label className="block font-['Cinzel'] text-[10px] sm:text-xs tracking-wider text-rose-200 uppercase mb-1 font-bold drop-shadow-sm">
                     {isEn ? "Confirmed Passes" : "Pases Confirmados"}
                   </label>
                   <select
                     value={rsvpPases}
                     onChange={(e) => setRsvpPases(e.target.value)}
-                    className="w-full bg-neutral-900 border border-white/30 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-rose-300"
+                    className="w-full bg-neutral-900 border border-white/40 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-white focus:outline-none focus:border-rose-300"
                   >
                     <option value="1">1 {isEn ? "Pass" : "Pase"}</option>
                     <option value="2">2 {isEn ? "Passes" : "Pases"}</option>
@@ -930,9 +983,9 @@ export default function ElegantRoseTemplate({
 
                 <button
                   type="submit"
-                  className="w-full bg-white/20 hover:bg-white/30 border border-white/50 text-white font-['Cinzel'] text-[10px] tracking-[0.25em] uppercase py-3 rounded-lg font-semibold shadow-lg transition-all mt-4 cursor-pointer flex items-center justify-center gap-2"
+                  className="w-full bg-white/25 hover:bg-white/35 border border-white/60 text-white font-['Cinzel'] text-xs sm:text-[13px] tracking-[0.25em] uppercase py-3.5 rounded-xl font-bold shadow-xl transition-all mt-4 cursor-pointer flex items-center justify-center gap-2 drop-shadow"
                 >
-                  <Send className="w-3.5 h-3.5" />
+                  <Send className="w-4 h-4" />
                   <span>{isEn ? "CONFIRM VIA WHATSAPP" : "CONFIRMAR POR WHATSAPP"}</span>
                 </button>
               </form>

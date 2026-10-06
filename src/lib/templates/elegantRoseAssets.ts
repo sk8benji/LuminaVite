@@ -26,13 +26,17 @@ export const ELEGANT_ROSE_ASSETS = {
   growingPreteen: `${LOCAL_BASE}/97da854ac288883d24133acda9d854ca.jpg`,
   growingCompanion: `${LOCAL_BASE}/39e6d693ec9d82a484d96df04a0cffd3.jpg`,
 
-  // Icons
+  // Icons & Graphics
   dressIcon: `${LOCAL_BASE}/bb7e37fcad91b7ee125ccddd0df6dab7.png`,
   churchIcon: `${LOCAL_BASE}/9f363120d7cbdd81131ec2cf9373bd8f.png`,
   ballroomIcon: `${LOCAL_BASE}/7d51cb4f0dc96e48cac1e7be4e83e779.png`,
   waltzIcon: `${LOCAL_BASE}/ed9f319d33dbef42e1b752f9027fb93c.png`,
   giftIcon: `${LOCAL_BASE}/de72738875d848a46a2c4e1a8931d762.png`,
   musicIcon: `${LOCAL_BASE}/a46eef2ee11437351260db2b11329d5f.png`,
+  dressIllustration: `${LOCAL_BASE}/4572e5907853f1b57bff933cb6e7a290.png`,
+  coupleIcon: `${LOCAL_BASE}/de72738875d848a46a2c4e1a8931d762.png`,
+  sparkleDust: `${LOCAL_BASE}/353f99381a7024374ff5e3aaece4b340.png`,
+  heartDivider: `${LOCAL_BASE}/c73a3cffbcfac02ed98b6abb9fd52d59.png`,
   ornamentDivider: `${LOCAL_BASE}/6b9e2419d8ca9275e8034c8a462af1a9.png`,
   pillBadge: `${LOCAL_BASE}/c73a3cffbcfac02ed98b6abb9fd52d59.png`,
   bannerArch: `${LOCAL_BASE}/8363410b9d8456a8daaa432fd01a5df0.png`,
@@ -63,6 +67,7 @@ export const ELEGANT_ROSE_ASSETS = {
     waltzIcon: `${S3_BASE}/ed9f319d33dbef42e1b752f9027fb93c.png`,
     giftIcon: `${S3_BASE}/de72738875d848a46a2c4e1a8931d762.png`,
     musicIcon: `${S3_BASE}/a46eef2ee11437351260db2b11329d5f.png`,
+    dressIllustration: `${S3_BASE}/4572e5907853f1b57bff933cb6e7a290.png`,
     frostedBlurStrip: `${S3_BASE}/339872b4722f5715a436439eedbd3ab5.png`,
   }
 };
