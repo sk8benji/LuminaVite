@@ -14,6 +14,9 @@ export const ELEGANT_ROSE_ASSETS = {
   castlePhoto: `${LOCAL_BASE}/5f24871f73b9424764387ef47bb5723e.png`,
   crown: `${LOCAL_BASE}/ba47feef59edd928b7c840eae54838b3.png`,
   rosesBg: `${LOCAL_BASE}/c8005962c2f1a9e3456d560da50c4ec8.jpg`,
+  peachBg: `${LOCAL_BASE}/08c973400ebfcfa800c016bf24608480.jpg`,
+  bouquetBg: `${LOCAL_BASE}/9ef042dcf0eb2ae4150fe4aa7209e94d.jpg`,
+  petalsBg: `${LOCAL_BASE}/93b6ed5bbc58b2a22d52ae7baa96db41.jpg`,
   polaroidFrame: `${LOCAL_BASE}/7682b88019dfb1b516da808e76e036cf.png`,
 
   // Childhood photos

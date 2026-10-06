@@ -3,17 +3,16 @@
 import React, { useState, useEffect, useRef } from "react";
 import {
   MapPin,
-  Calendar,
   Send,
   Check,
   Play,
   Pause,
-  Music,
+  SkipBack,
+  SkipForward,
 } from "lucide-react";
 import { getTemplate } from "@/lib/templates";
 import { getMapDirectionsUrl } from "@/lib/maps";
 import { ELEGANT_ROSE_ASSETS } from "@/lib/templates/elegantRoseAssets";
-import AudioPlayer from "../invitation/AudioPlayer";
 import EnvelopeIntro from "../invitation/EnvelopeIntro";
 import { InvitationData } from "../invitation/InvitationMobileView";
 
@@ -75,7 +74,7 @@ export default function ElegantRoseTemplate({
     const calculateTime = () => {
       const target = data.fechaEvento
         ? new Date(data.fechaEvento).getTime()
-        : new Date("2026-10-18T16:00:00").getTime();
+        : new Date("2026-07-18T16:00:00").getTime();
       const now = new Date().getTime();
       const diff = Math.max(0, target - now);
 
@@ -119,24 +118,86 @@ export default function ElegantRoseTemplate({
   };
 
   const heroPhotoUrl = data.fotoPortadaUrl || ELEGANT_ROSE_ASSETS.heroPhoto;
-  const fotoInfancia = data.fotoInfanciaUrl || ELEGANT_ROSE_ASSETS.growingBaby;
-  const fotoNinez = data.fotoActualUrl || ELEGANT_ROSE_ASSETS.growingChild;
-  const fotoActual = data.fotoCierreUrl || ELEGANT_ROSE_ASSETS.castlePhoto;
 
-  const itinerarioList =
-    Array.isArray(data.itinerarioJson) && data.itinerarioJson.length > 0
-      ? data.itinerarioJson
-      : [
-          { hora: "4:00 PM", titulo: isEn ? "Mass Ceremony" : "Misa de Acción de Gracias" },
-          { hora: "5:00 PM", titulo: isEn ? "Grand Entrance" : "Entrada al Salón" },
-          { hora: "6:00 PM", titulo: isEn ? "The Waltz" : "Vals de Honor" },
-          { hora: "7:00 PM", titulo: isEn ? "Dinner" : "Cena de Gala" },
-          { hora: "9:00 PM", titulo: isEn ? "Party & Dance" : "Fiesta y Baile" },
-        ];
+  const hitos = [
+    {
+      foto: ELEGANT_ROSE_ASSETS.growingBaby,
+      fecha: "2011",
+      titulo: isEn ? "Baby Girl" : "Primeros Pasos",
+      texto: isEn
+        ? "Every story has a beginning, and mine started with the love of family, the comfort of home, and countless little moments that became treasured memories."
+        : "Toda historia tiene un comienzo, y la mía comenzó rodeada del amor de mi familia, la calidez de mi hogar y un sinfín de pequeños recuerdos.",
+    },
+    {
+      foto: ELEGANT_ROSE_ASSETS.growingChild,
+      fecha: "2016",
+      titulo: isEn ? "First Steps" : "Nuevas Aventuras",
+      texto: isEn
+        ? "With each new adventure came exciting firsts, growing confidence, and friendships that would become an important part of my journey."
+        : "Cada nueva aventura trajo consigo emocionantes primeras experiencias, una confianza creciente y amistades que se convirtieron en parte de mi camino.",
+    },
+    {
+      foto: ELEGANT_ROSE_ASSETS.growingPreteen,
+      fecha: "2019",
+      titulo: isEn ? "Special Bonds" : "Momentos Inolvidables",
+      texto: isEn
+        ? "From laughter-filled days to unforgettable memories, these special people helped shape the person I am today."
+        : "Entre días llenos de risas y recuerdos inolvidables, estas personas tan especiales me ayudaron a convertirme en la persona que soy hoy.",
+    },
+    {
+      foto: ELEGANT_ROSE_ASSETS.growingCompanion,
+      fecha: "2022",
+      titulo: isEn ? "Loyal Companion" : "Compañero Fiel",
+      texto: isEn
+        ? "Along the way, I discovered the things that inspire me, bring me joy, and help me become the best version of myself."
+        : "En el camino, descubrí las cosas que me inspiran, me dan alegría y me motivan a ser la mejor versión de mí misma.",
+    },
+    {
+      foto: heroPhotoUrl,
+      fecha: "2026",
+      titulo: isEn ? "Sweet Fifteen" : "Mis Quince Años",
+      texto: isEn
+        ? "And through every chapter, celebrating fifteen amazing years with all my loved ones—the best is yet to come."
+        : "Celebrando quince años de recuerdos, sueños y momentos inolvidables… lo mejor está por venir.",
+    },
+  ];
+
+  const corteHonor = data.corteHonorJson || {
+    padrinos: ["Miguel Herrera", "Daniela Herrera"],
+    chambelan: "Emilio Salazar",
+    damas: [
+      "Isabella Cordero",
+      "Valeria Morales",
+      "Sofia Villanueva",
+      "Emilia Rodriguez",
+      "Camila Aguilar",
+      "Maria Paz Leon",
+      "Alondra Jimenez",
+      "Regina Castro",
+      "Natalia Sanchez",
+    ],
+    chambelanes: [
+      "Diego Alvarez",
+      "Santiago Lopez",
+      "Francisco Ruiz",
+      "Mateo Ramírez",
+      "Alejandro Torres",
+    ],
+  };
+
+  const churchMapUrl = getMapDirectionsUrl(
+    data.ceremoniaMapUrl,
+    `${data.ceremoniaNombre || "St. Mary's Church"} ${data.ceremoniaDireccion || "Any City, Any Street, AZ 12345"}`.trim()
+  );
+
+  const ballroomMapUrl = getMapDirectionsUrl(
+    data.recepcionMapUrl,
+    `${data.recepcionNombre || "Grand Ballroom"} ${data.recepcionDireccion || "Any City, Any Street, AZ 12345"}`.trim()
+  );
 
   return (
     <div className="min-h-screen flex justify-center bg-[#150D11] selection:bg-rose-300/30 antialiased font-['Montserrat',sans-serif]">
-      {/* Elemento de Audio Real */}
+      {/* Audio Real */}
       {data.musicaUrl && (
         <audio
           ref={audioRef}
@@ -161,10 +222,10 @@ export default function ElegantRoseTemplate({
         />
       )}
 
-      {/* Contenedor Principal (430px) */}
+      {/* Contenedor Principal Móvil (430px) */}
       <main className="relative w-full max-w-[430px] mx-auto min-h-screen text-white select-none overflow-x-hidden font-['Montserrat',sans-serif] shadow-2xl bg-[#1C1016]">
         {/* Switch de Idioma Superior Flotante */}
-        <header className="sticky top-0 z-40 bg-black/40 backdrop-blur-md px-5 py-2 flex justify-between items-center border-b border-white/10">
+        <header className="sticky top-0 z-40 bg-black/50 backdrop-blur-md px-5 py-2 flex justify-between items-center border-b border-white/10">
           <span className="font-['Cinzel'] text-[10px] tracking-widest text-rose-200 font-semibold">
             {data.titulo.toUpperCase()} • XV
           </span>
@@ -189,283 +250,525 @@ export default function ElegantRoseTemplate({
           </div>
         </header>
 
-        {/* ======================================================== */}
-        {/* 1. HERO SECTION: PORTADA SOBRE VESTIDO ROSA             */}
-        {/* ======================================================== */}
-        <section className="relative min-h-[580px] flex flex-col items-center justify-center text-center px-4 py-12">
-          {/* Fondo Foto Portada (Vestido Rosa) con viñeta oscura suave */}
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={heroPhotoUrl}
-            alt="Portada Quinceañera"
-            className="absolute inset-0 w-full h-full object-cover -z-20 filter brightness-95"
-          />
-          <div className="absolute inset-0 bg-black/35 backdrop-blur-[1px] -z-10" />
+        {/* ══════════════════════════════════════════════════════════
+            1. HERO SECTION: PORTADA SOBRE VESTIDO ROSA
+        ══════════════════════════════════════════════════════════ */}
+        <section
+          className="relative w-full bg-cover bg-top overflow-hidden"
+          style={{ backgroundImage: `url(${heroPhotoUrl})` }}
+        >
+          {/* Columna Central Esmerilada */}
+          <div className="w-full max-w-[340px] mx-auto bg-black/40 backdrop-blur-[8px] border-x border-white/20 px-4 pt-12 pb-14 flex flex-col items-center text-center">
+            {/* Texto Arqueado "YOU ARE CORDIALLY" */}
+            <div className="w-full flex justify-center -mb-2">
+              <svg viewBox="0 0 300 50" className="w-60 h-10 overflow-visible">
+                <path id="curve-hero" d="M 20 40 Q 150 12 280 40" fill="transparent" />
+                <text className="text-[10px] uppercase font-bold tracking-[0.3em] fill-rose-100 font-['Cinzel']">
+                  <textPath href="#curve-hero" startOffset="50%" textAnchor="middle">
+                    YOU ARE CORDIALLY
+                  </textPath>
+                </text>
+              </svg>
+            </div>
 
-          {/* Columna Central Glassmorphism */}
-          <div className="w-full max-w-[320px] bg-white/20 border border-white/40 rounded-2xl p-6 shadow-2xl backdrop-blur-md">
-            <p className="font-['Cinzel'] text-[9px] tracking-[0.3em] uppercase text-rose-100 font-semibold mb-1">
-              {isEn ? "We Are Delighted To Invite You" : "Nos Complace Invitarle"}
-            </p>
-            <p className="font-['Cinzel'] text-[11px] tracking-[0.25em] uppercase text-white font-bold mb-1">
-              {isEn ? "To Celebrate The" : "A Celebrar La"}
-            </p>
+            {/* Corona Tiara Dorada */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={ELEGANT_ROSE_ASSETS.crown}
+              alt="Corona"
+              className="w-10 h-auto my-1 drop-shadow"
+            />
 
-            {/* Título Quinceañera */}
-            <h1 className="font-['Alex_Brush'] text-5xl sm:text-6xl text-white my-1 drop-shadow-md select-none">
+            {/* "Quinceañera" Cursiva */}
+            <h1 className="font-['Alex_Brush'] text-5xl sm:text-6xl text-white my-0.5 drop-shadow-md select-none">
               Quinceañera
             </h1>
 
-            <p className="font-['Cinzel'] text-[9px] tracking-[0.25em] uppercase text-rose-100 font-semibold">
-              {isEn ? "Of" : "De"}
+            <p className="font-['Cinzel'] text-[9px] tracking-[0.25em] uppercase text-rose-100 font-semibold my-1">
+              {isEn ? "OF THEIR DAUGHTER" : "DE SU HIJA"}
             </p>
 
             {/* Nombre */}
-            <h2 className="font-['Alex_Brush'] text-4xl sm:text-5xl text-rose-100 my-2 drop-shadow-md select-none">
+            <h2 className="font-['Alex_Brush'] text-5xl sm:text-6xl text-rose-100 my-1 drop-shadow-md select-none">
               {data.titulo}
             </h2>
 
-            {/* Separador Corona / Fecha */}
-            <div className="my-4 border-t border-white/40 pt-3">
-              <p className="font-['Cinzel'] text-[10px] tracking-[0.2em] uppercase text-rose-200">
-                {isEn ? "Saturday" : "Sábado"}
+            {/* Bloque de Fecha Elegante */}
+            <div className="my-5 border-y border-white/30 py-3 w-48">
+              <p className="font-['Cinzel'] text-[10px] tracking-[0.25em] uppercase text-rose-200">
+                {isEn ? "SUNDAY" : "DOMINGO"}
               </p>
-              <span className="block font-['Cinzel'] text-3xl font-bold text-white tracking-widest my-0.5">
+              <span className="block font-['Cinzel'] text-4xl font-bold text-white tracking-widest my-0.5 drop-shadow-sm">
                 18
               </span>
-              <p className="font-['Cinzel'] text-[10px] tracking-[0.2em] uppercase text-rose-200">
-                {isEn ? "October • 2026" : "Octubre • 2026"}
+              <p className="font-['Cinzel'] text-[10px] tracking-[0.25em] uppercase text-rose-200">
+                {isEn ? "JULY • 2026" : "JULIO • 2026"}
               </p>
             </div>
 
-            {/* Botón de apertura */}
+            <p className="font-['Cinzel'] text-[10px] tracking-widest text-white/90">
+              4:00 PM • {data.ceremoniaNombre || "ST. MARY'S CHURCH"}
+            </p>
+
             <a
-              href="#growing-up"
-              className="inline-block mt-2 bg-white/30 border border-white/60 text-white font-['Cinzel'] text-[9px] tracking-[0.25em] uppercase py-2 px-6 rounded-full hover:bg-white/40 transition-all cursor-pointer"
+              href={churchMapUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-4 bg-white/20 border border-white/50 text-white font-['Cinzel'] text-[9px] tracking-[0.25em] uppercase py-2 px-6 rounded-full hover:bg-white/30 transition-all shadow-sm inline-flex items-center gap-1.5 cursor-pointer"
             >
-              {isEn ? "Open Invite" : "Ver Invitación"}
+              <MapPin className="w-3 h-3" />
+              <span>GOOGLE MAPS</span>
             </a>
           </div>
         </section>
 
-        {/* ======================================================== */}
-        {/* 2. REPRODUCTOR DE MÚSICA MINIMALISTA                     */}
-        {/* ======================================================== */}
-        <section className="bg-[#2D1B22]/90 py-4 px-6 border-y border-white/10 flex items-center justify-center">
-          <div className="w-full max-w-[320px] bg-white/10 border border-white/20 rounded-xl p-3 flex items-center gap-3 backdrop-blur-md">
-            {/* Miniatura Foto */}
-            <div className="w-12 h-12 rounded-lg overflow-hidden border border-white/40 shrink-0 bg-neutral-800">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={heroPhotoUrl}
-                className="w-full h-full object-cover"
-                alt="Canción"
-              />
-            </div>
+        {/* ══════════════════════════════════════════════════════════
+            2. REPRODUCTOR DE MÚSICA CON FONDO DE ROSAS BLANCAS
+        ══════════════════════════════════════════════════════════ */}
+        <section
+          className="relative w-full bg-cover bg-center overflow-hidden"
+          style={{ backgroundImage: `url(${ELEGANT_ROSE_ASSETS.rosesBg})` }}
+        >
+          <div className="w-full max-w-[340px] mx-auto bg-black/45 backdrop-blur-[8px] border-x border-white/20 px-4 py-8 flex flex-col items-center text-center">
+            {/* Tarjeta Álbum Polaroid con Mariposas */}
+            <div className="w-52 bg-white/90 p-3 rounded-2xl shadow-2xl border border-white text-stone-800 text-center relative group">
+              <div className="w-full aspect-square rounded-xl overflow-hidden mb-2 bg-rose-50 shadow-inner">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={heroPhotoUrl}
+                  alt="Track"
+                  className="w-full h-full object-cover"
+                />
+              </div>
 
-            {/* Info y Controles */}
-            <div className="flex-1 min-w-0">
-              <p className="font-['Cinzel'] text-[10px] tracking-wider text-rose-200 truncate">
+              <p className="font-['Cinzel'] text-[10px] tracking-wider text-[#5A3E44] font-bold truncate">
                 {data.musicaTitulo || "Photograph - Ed Sheeran"}
               </p>
-              <p className="text-[9px] text-white/60 truncate">
-                {isEn ? "Official Song" : "Música Oficial"}
+              <p className="text-[9px] text-stone-500 font-light truncate">
+                {isEn ? "Official Quince Song" : "Canción Oficial"}
               </p>
-              {/* Barra de progreso simulada */}
-              <div className="w-full bg-white/20 h-1 rounded-full mt-2 overflow-hidden">
+
+              {/* Barra de progreso */}
+              <div className="w-full bg-stone-200 h-1 rounded-full my-2 overflow-hidden">
                 <div
-                  className={`bg-rose-300 h-full ${
+                  className={`bg-[#CE8486] h-full ${
                     isPlaying ? "w-2/3 animate-pulse" : "w-1/3"
                   } transition-all duration-500`}
                 />
               </div>
-            </div>
 
-            {/* Botón Play/Pause */}
-            <button
-              onClick={togglePlay}
-              className="w-8 h-8 rounded-full bg-white/20 border border-white/40 flex items-center justify-center text-white text-xs hover:scale-105 active:scale-95 transition-transform cursor-pointer"
-            >
-              {isPlaying ? <Pause className="w-3.5 h-3.5 fill-current" /> : <Play className="w-3.5 h-3.5 fill-current ml-0.5" />}
-            </button>
+              {/* Botones de control */}
+              <div className="flex items-center justify-center gap-4 text-stone-600">
+                <button type="button" className="hover:text-stone-900 transition cursor-pointer">
+                  <SkipBack className="w-3.5 h-3.5" />
+                </button>
+                <button
+                  type="button"
+                  onClick={togglePlay}
+                  className="w-8 h-8 rounded-full bg-[#CE8486] text-white flex items-center justify-center shadow-md hover:scale-105 active:scale-95 transition cursor-pointer"
+                >
+                  {isPlaying ? <Pause className="w-3.5 h-3.5 fill-current" /> : <Play className="w-3.5 h-3.5 fill-current ml-0.5" />}
+                </button>
+                <button type="button" className="hover:text-stone-900 transition cursor-pointer">
+                  <SkipForward className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            </div>
           </div>
         </section>
 
-        {/* ======================================================== */}
-        {/* 3. SECCIÓN GROWING UP (FILMSTRIP / NEGATIVO)              */}
-        {/* ======================================================== */}
-        <section id="growing-up" className="relative py-12 px-4 flex flex-col items-center">
-          {/* Fondo Rosas Oscuras / Foto difuminada */}
-          <div className="absolute inset-0 bg-[#25161C] -z-20" />
-
-          <div className="text-center mb-8">
-            <h3 className="font-['Alex_Brush'] text-5xl text-rose-200 drop-shadow-md select-none">
-              Growing Up
+        {/* ══════════════════════════════════════════════════════════
+            3. GROWING UP: CASTILLO & TIRAS DE PELÍCULA NEGATIVAS
+        ══════════════════════════════════════════════════════════ */}
+        <section
+          id="growing-up"
+          className="relative w-full bg-cover bg-top overflow-hidden"
+          style={{ backgroundImage: `url(${ELEGANT_ROSE_ASSETS.castlePhoto})` }}
+        >
+          <div className="w-full max-w-[340px] mx-auto bg-black/45 backdrop-blur-[8px] border-x border-white/20 px-4 py-12 flex flex-col items-center text-center">
+            <h3 className="font-['Alex_Brush'] text-5xl sm:text-6xl text-rose-100 drop-shadow-md select-none leading-none">
+              Growing
             </h3>
-            <span className="text-xs text-[#D8B772] block mt-1">👑</span>
-          </div>
+            <p className="font-['Alex_Brush'] text-4xl sm:text-5xl text-rose-200 drop-shadow-md select-none -mt-2">
+              Up
+            </p>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={ELEGANT_ROSE_ASSETS.crown}
+              alt="Corona"
+              className="w-8 h-auto my-2 opacity-90 drop-shadow"
+            />
 
-          {/* Contenedor Central de Tiras de Fotos */}
-          <div className="w-full max-w-[300px] space-y-8">
-            {/* Hito 1 */}
-            <div className="text-center">
-              {/* Marco Filmstrip (Negativo de película negro con borde punteado) */}
-              <div className="bg-black p-2 border-y-4 border-dashed border-white/30 shadow-2xl rounded-sm">
-                <div className="aspect-square w-full overflow-hidden bg-neutral-800">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={fotoInfancia}
-                    className="w-full h-full object-cover"
-                    alt="Baby"
-                  />
+            {/* 5 Marcos de Tiras de Película Celuloide con Perforaciones */}
+            <div className="space-y-10 w-full max-w-[270px] mt-6">
+              {hitos.map((hito, idx) => (
+                <div key={idx} className="text-center group">
+                  {/* Marco Filmstrip */}
+                  <div className="bg-black p-2 border-y-4 border-dashed border-white/60 shadow-2xl rounded-sm">
+                    <div className="aspect-square w-full overflow-hidden bg-neutral-900">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={hito.foto}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        alt={hito.titulo}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Etiqueta y texto */}
+                  <span className="inline-block font-['Cinzel'] text-[10px] tracking-[0.2em] uppercase text-rose-200 font-semibold mt-3">
+                    {hito.fecha} • {hito.titulo}
+                  </span>
+                  <p className="font-['Cinzel'] text-[9px] text-white/80 italic tracking-wider leading-relaxed mt-1 px-1">
+                    {hito.texto}
+                  </p>
                 </div>
-              </div>
-              <p className="font-['Cinzel'] text-[10px] tracking-[0.2em] uppercase text-rose-300 font-semibold mt-3">
-                Baby Girl
-              </p>
-              <p className="font-['Cinzel'] text-[9px] text-white/70 italic tracking-wider mt-0.5">
-                {isEn ? "The beginning of my journey" : "El comienzo de mi camino"}
-              </p>
+              ))}
             </div>
 
-            {/* Hito 2 */}
-            <div className="text-center">
-              <div className="bg-black p-2 border-y-4 border-dashed border-white/30 shadow-2xl rounded-sm">
-                <div className="aspect-square w-full overflow-hidden bg-neutral-800">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={fotoNinez}
-                    className="w-full h-full object-cover"
-                    alt="Niñez"
-                  />
-                </div>
-              </div>
-              <p className="font-['Cinzel'] text-[10px] tracking-[0.2em] uppercase text-rose-300 font-semibold mt-3">
-                First Steps
-              </p>
-              <p className="font-['Cinzel'] text-[9px] text-white/70 italic tracking-wider mt-0.5">
-                {isEn ? "Growing through laughter" : "Creciendo entre risas"}
-              </p>
-            </div>
-
-            {/* Hito 3 */}
-            <div className="text-center">
-              <div className="bg-black p-2 border-y-4 border-dashed border-white/30 shadow-2xl rounded-sm">
-                <div className="aspect-square w-full overflow-hidden bg-neutral-800">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={fotoActual}
-                    className="w-full h-full object-cover"
-                    alt="Quinceañera"
-                  />
-                </div>
-              </div>
-              <p className="font-['Cinzel'] text-[10px] tracking-[0.2em] uppercase text-rose-300 font-semibold mt-3">
-                Sweet Fifteen
-              </p>
-              <p className="font-['Cinzel'] text-[9px] text-white/70 italic tracking-wider mt-0.5">
-                {isEn ? "Today stepping into womanhood" : "Hoy convertida en señorita"}
+            {/* Frase Cierre Growing Up */}
+            <div className="mt-10 border-t border-white/30 pt-4 w-full">
+              <p className="font-['Cinzel'] text-[9px] tracking-[0.2em] uppercase text-rose-200 font-semibold leading-relaxed">
+                Celebrating Fifteen Amazing Years — The Best Is Yet to Come.
               </p>
             </div>
           </div>
         </section>
 
-        {/* ======================================================== */}
-        {/* 4. CUENTA REGRESIVA ELEGANTE                             */}
-        {/* ======================================================== */}
-        <section className="relative py-12 px-4 text-center border-t border-white/10">
-          <div className="w-full max-w-[320px] mx-auto bg-black/40 border border-white/20 rounded-2xl p-6 backdrop-blur-md">
-            <h3 className="font-['Alex_Brush'] text-4xl text-rose-200 mb-1 select-none">
+        {/* ══════════════════════════════════════════════════════════
+            4. THE COUNTDOWN CON FONDO DE ROSAS BLANCAS
+        ══════════════════════════════════════════════════════════ */}
+        <section
+          className="relative w-full bg-cover bg-center overflow-hidden"
+          style={{ backgroundImage: `url(${ELEGANT_ROSE_ASSETS.rosesBg})` }}
+        >
+          <div className="w-full max-w-[340px] mx-auto bg-black/45 backdrop-blur-[8px] border-x border-white/20 px-4 py-12 flex flex-col items-center text-center">
+            <h3 className="font-['Alex_Brush'] text-5xl text-rose-100 select-none">
               The Countdown
             </h3>
-            <p className="font-['Cinzel'] text-[9px] tracking-[0.2em] uppercase text-white/70 mb-4">
-              {isEn ? "I can't wait to celebrate with you!" : "¡No puedo esperar para celebrar contigo!"}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={ELEGANT_ROSE_ASSETS.crown}
+              alt="Corona"
+              className="w-7 h-auto my-1.5 opacity-90 drop-shadow"
+            />
+            <p className="font-['Cinzel'] text-[9px] tracking-[0.25em] uppercase text-rose-200 font-semibold mb-6">
+              TO SWEET QUINCE DAY HAS BEGUN!
             </p>
 
-            <div className="grid grid-cols-4 gap-2">
-              <div className="bg-white/10 rounded-lg py-2 border border-white/10">
-                <span className="block font-['Cinzel'] text-xl font-bold text-white">
+            {/* 4 Píldoras de Cuenta Regresiva */}
+            <div className="grid grid-cols-4 gap-2 w-full max-w-[280px]">
+              <div className="bg-white/15 backdrop-blur-md rounded-xl py-3 border border-white/25 shadow-lg">
+                <span className="block font-['Cinzel'] text-2xl font-bold text-white">
                   {String(timeLeft.days).padStart(2, "0")}
                 </span>
-                <span className="text-[8px] uppercase tracking-widest text-rose-200">
+                <span className="text-[8px] uppercase tracking-widest text-rose-200 font-semibold">
                   {isEn ? "Days" : "Días"}
                 </span>
               </div>
-              <div className="bg-white/10 rounded-lg py-2 border border-white/10">
-                <span className="block font-['Cinzel'] text-xl font-bold text-white">
+              <div className="bg-white/15 backdrop-blur-md rounded-xl py-3 border border-white/25 shadow-lg">
+                <span className="block font-['Cinzel'] text-2xl font-bold text-white">
                   {String(timeLeft.hours).padStart(2, "0")}
                 </span>
-                <span className="text-[8px] uppercase tracking-widest text-rose-200">
+                <span className="text-[8px] uppercase tracking-widest text-rose-200 font-semibold">
                   {isEn ? "Hours" : "Horas"}
                 </span>
               </div>
-              <div className="bg-white/10 rounded-lg py-2 border border-white/10">
-                <span className="block font-['Cinzel'] text-xl font-bold text-white">
+              <div className="bg-white/15 backdrop-blur-md rounded-xl py-3 border border-white/25 shadow-lg">
+                <span className="block font-['Cinzel'] text-2xl font-bold text-white">
                   {String(timeLeft.minutes).padStart(2, "0")}
                 </span>
-                <span className="text-[8px] uppercase tracking-widest text-rose-200">
+                <span className="text-[8px] uppercase tracking-widest text-rose-200 font-semibold">
                   {isEn ? "Mins" : "Min"}
                 </span>
               </div>
-              <div className="bg-white/10 rounded-lg py-2 border border-white/10">
-                <span className="block font-['Cinzel'] text-xl font-bold text-white">
+              <div className="bg-white/15 backdrop-blur-md rounded-xl py-3 border border-white/25 shadow-lg">
+                <span className="block font-['Cinzel'] text-2xl font-bold text-white">
                   {String(timeLeft.seconds).padStart(2, "0")}
                 </span>
-                <span className="text-[8px] uppercase tracking-widest text-rose-200">
+                <span className="text-[8px] uppercase tracking-widest text-rose-200 font-semibold">
                   {isEn ? "Secs" : "Seg"}
                 </span>
               </div>
             </div>
+
+            <p className="font-['Alex_Brush'] text-2xl text-rose-100 mt-6 select-none">
+              {isEn ? "I can’t wait to celebrate with you!" : "¡No puedo esperar para celebrar contigo!"}
+            </p>
           </div>
         </section>
 
-        {/* ======================================================== */}
-        {/* 5. ITINERARIO VERTICAL EN CRISTAL                        */}
-        {/* ======================================================== */}
-        <section className="py-12 px-4 flex flex-col items-center">
-          <div className="w-full max-w-[320px] bg-white/20 border border-white/30 rounded-2xl p-6 backdrop-blur-md">
-            <div className="text-center mb-6">
-              <h3 className="font-['Alex_Brush'] text-4xl text-white select-none">The Day</h3>
-              <p className="font-['Cinzel'] text-[9px] tracking-[0.2em] uppercase text-rose-200">
-                {isEn ? "Event Itinerary" : "Itinerario del Evento"}
-              </p>
+        {/* ══════════════════════════════════════════════════════════
+            5. THE BIG DAY / ITINERARIO SOBRE VESTIDO ROSA
+        ══════════════════════════════════════════════════════════ */}
+        <section
+          className="relative w-full bg-cover bg-bottom overflow-hidden"
+          style={{ backgroundImage: `url(${heroPhotoUrl})` }}
+        >
+          <div className="w-full max-w-[340px] mx-auto bg-black/45 backdrop-blur-[8px] border-x border-white/20 px-4 py-12 flex flex-col items-center text-center">
+            <h3 className="font-['Alex_Brush'] text-5xl text-white select-none">
+              The Day
+            </h3>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={ELEGANT_ROSE_ASSETS.crown}
+              alt="Corona"
+              className="w-7 h-auto my-1.5 opacity-90 drop-shadow"
+            />
+            <p className="font-['Cinzel'] text-[9px] tracking-[0.25em] uppercase text-rose-200 mb-8 font-semibold">
+              {isEn ? "PROGRAM OF THE BIG DAY" : "PROGRAMA DEL EVENTO"}
+            </p>
+
+            <div className="space-y-6 w-full max-w-[280px]">
+              {/* 4:00 PM Misa */}
+              <div className="flex flex-col items-center">
+                <span className="font-['Cinzel'] text-xs font-bold text-rose-200 tracking-wider">
+                  4:00 PM
+                </span>
+                <div className="w-10 h-10 my-1">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={ELEGANT_ROSE_ASSETS.churchIcon} alt="Church" className="w-full h-full object-contain filter invert brightness-200" />
+                </div>
+                <p className="font-['Cinzel'] text-[10px] tracking-widest uppercase text-white font-semibold">
+                  MASS
+                </p>
+                <p className="text-[9px] text-white/80 font-light">
+                  {data.ceremoniaNombre || "St. Mary’s Church, your city, az"}
+                </p>
+                <a
+                  href={churchMapUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-1.5 bg-white/20 border border-white/40 text-white font-['Cinzel'] text-[8px] tracking-[0.2em] uppercase py-1 px-4 rounded-full hover:bg-white/30 transition"
+                >
+                  GOOGLE MAPS
+                </a>
+              </div>
+
+              {/* 5:00 PM Entrada / Recepción */}
+              <div className="flex flex-col items-center pt-2">
+                <span className="font-['Cinzel'] text-xs font-bold text-rose-200 tracking-wider">
+                  5:00 PM
+                </span>
+                <div className="w-10 h-10 my-1">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={ELEGANT_ROSE_ASSETS.dressIcon} alt="Entrance" className="w-full h-full object-contain filter invert brightness-200" />
+                </div>
+                <p className="font-['Cinzel'] text-[10px] tracking-widest uppercase text-white font-semibold">
+                  ENTRANCE
+                </p>
+                <p className="text-[9px] text-white/80 font-light">
+                  {data.recepcionNombre || "Grand Ballroom, your city, az"}
+                </p>
+                <a
+                  href={ballroomMapUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-1.5 bg-white/20 border border-white/40 text-white font-['Cinzel'] text-[8px] tracking-[0.2em] uppercase py-1 px-4 rounded-full hover:bg-white/30 transition"
+                >
+                  GOOGLE MAPS
+                </a>
+              </div>
+
+              {/* 6:00 PM Vals */}
+              <div className="flex flex-col items-center pt-2">
+                <span className="font-['Cinzel'] text-xs font-bold text-rose-200 tracking-wider">
+                  6:00 PM
+                </span>
+                <div className="w-10 h-10 my-1">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={ELEGANT_ROSE_ASSETS.waltzIcon} alt="Waltz" className="w-full h-full object-contain filter invert brightness-200" />
+                </div>
+                <p className="font-['Cinzel'] text-[10px] tracking-widest uppercase text-white font-semibold">
+                  WALTZ
+                </p>
+              </div>
+
+              {/* 7:00 PM Cena */}
+              <div className="flex flex-col items-center pt-2">
+                <span className="font-['Cinzel'] text-xs font-bold text-rose-200 tracking-wider">
+                  7:00 PM
+                </span>
+                <div className="w-10 h-10 my-1">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={ELEGANT_ROSE_ASSETS.ballroomIcon} alt="Dinner" className="w-full h-full object-contain filter invert brightness-200" />
+                </div>
+                <p className="font-['Cinzel'] text-[10px] tracking-widest uppercase text-white font-semibold">
+                  DINNER
+                </p>
+              </div>
+
+              {/* 9:00 PM Fiesta */}
+              <div className="flex flex-col items-center pt-2">
+                <span className="font-['Cinzel'] text-xs font-bold text-rose-200 tracking-wider">
+                  9:00 PM
+                </span>
+                <div className="w-10 h-10 my-1">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={ELEGANT_ROSE_ASSETS.musicIcon} alt="Party" className="w-full h-full object-contain filter invert brightness-200" />
+                </div>
+                <p className="font-['Cinzel'] text-[10px] tracking-widest uppercase text-white font-semibold">
+                  PARTY
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ══════════════════════════════════════════════════════════
+            6. CORTE DE HONOR CON FONDO DE ROSAS CREMA
+        ══════════════════════════════════════════════════════════ */}
+        <section
+          className="relative w-full bg-cover bg-center overflow-hidden"
+          style={{ backgroundImage: `url(${ELEGANT_ROSE_ASSETS.peachBg})` }}
+        >
+          <div className="w-full max-w-[340px] mx-auto bg-black/45 backdrop-blur-[8px] border-x border-white/20 px-4 py-12 flex flex-col items-center text-center">
+            {/* Padrinos */}
+            <h3 className="font-['Alex_Brush'] text-5xl text-rose-100 select-none">
+              Padrinos
+            </h3>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={ELEGANT_ROSE_ASSETS.crown} alt="Crown" className="w-6 h-auto my-1 drop-shadow" />
+            <p className="font-['Cinzel'] text-xs uppercase tracking-widest text-white font-semibold mb-8">
+              {corteHonor.padrinos?.join(" & ") || "Miguel & Daniela Herrera"}
+            </p>
+
+            {/* Quince Court */}
+            <h3 className="font-['Alex_Brush'] text-5xl text-rose-100 select-none">
+              Quince Court
+            </h3>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={ELEGANT_ROSE_ASSETS.crown} alt="Crown" className="w-6 h-auto my-1 drop-shadow" />
+            <p className="font-['Cinzel'] text-xs uppercase tracking-widest text-white font-semibold">
+              {corteHonor.chambelan || "Emilio Salazar"}
+            </p>
+            <p className="font-['Cinzel'] text-[9px] tracking-widest uppercase text-rose-200 mb-6">
+              CHAMBERLAIN OF HONOR
+            </p>
+
+            {/* Damas */}
+            <p className="font-['Cinzel'] text-[11px] font-bold tracking-[0.2em] uppercase text-rose-200 mt-2 mb-2">
+              DAMAS
+            </p>
+            <div className="space-y-0.5 text-xs font-['Cinzel'] tracking-wider text-white/90">
+              {corteHonor.damas?.map((dama: string, i: number) => (
+                <p key={i}>{dama}</p>
+              ))}
             </div>
 
-            <div className="space-y-4">
-              {itinerarioList.map((item: any, idx: number) => (
-                <div
-                  key={idx}
-                  className="flex items-center justify-between border-b border-white/20 pb-2 text-center"
-                >
-                  <span className="font-['Cinzel'] text-[11px] font-semibold text-rose-200 tracking-wider">
-                    {item.hora}
-                  </span>
-                  <span className="font-['Cinzel'] text-xs text-white tracking-widest uppercase">
-                    {item.titulo}
-                  </span>
-                </div>
+            {/* Chambelanes */}
+            <p className="font-['Cinzel'] text-[11px] font-bold tracking-[0.2em] uppercase text-rose-200 mt-6 mb-2">
+              CHAMBELANES
+            </p>
+            <div className="space-y-0.5 text-xs font-['Cinzel'] tracking-wider text-white/90">
+              {corteHonor.chambelanes?.map((chambelan: string, i: number) => (
+                <p key={i}>{chambelan}</p>
               ))}
             </div>
           </div>
         </section>
 
-        {/* ======================================================== */}
-        {/* 6. RSVP GLASSMORPHISM FINAL                              */}
-        {/* ======================================================== */}
-        <section className="py-12 px-4 pb-20 flex flex-col items-center">
-          <div className="w-full max-w-[320px] bg-white/20 border border-white/40 rounded-2xl p-6 shadow-2xl backdrop-blur-md text-center">
-            <h3 className="font-['Alex_Brush'] text-3xl text-rose-200 select-none">
-              {isEn ? "Please" : "Por Favor"}
+        {/* ══════════════════════════════════════════════════════════
+            7. DETAILS CON FONDO DE BOUQUET DE ROSAS
+        ══════════════════════════════════════════════════════════ */}
+        <section
+          className="relative w-full bg-cover bg-center overflow-hidden"
+          style={{ backgroundImage: `url(${ELEGANT_ROSE_ASSETS.bouquetBg})` }}
+        >
+          <div className="w-full max-w-[340px] mx-auto bg-black/45 backdrop-blur-[8px] border-x border-white/20 px-4 py-12 flex flex-col items-center text-center">
+            <h3 className="font-['Alex_Brush'] text-5xl text-rose-100 select-none">
+              Details
             </h3>
-            <h2 className="font-['Cinzel'] text-2xl font-bold tracking-[0.25em] text-white mb-1">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={ELEGANT_ROSE_ASSETS.crown} alt="Crown" className="w-6 h-auto my-1 drop-shadow" />
+
+            {/* Dress Code */}
+            <div className="mt-6 mb-6">
+              <p className="font-['Cinzel'] text-xs font-bold tracking-[0.2em] uppercase text-rose-200">
+                DRESS CODE
+              </p>
+              <div className="w-10 h-10 mx-auto my-2">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={ELEGANT_ROSE_ASSETS.dressIcon} alt="Dress" className="w-full h-full object-contain filter invert brightness-200" />
+              </div>
+              <p className="font-['Cinzel'] text-[10px] tracking-wider uppercase text-white font-semibold">
+                FORMAL & ELEGANT ATTIRE
+              </p>
+              <p className="text-[9px] text-white/80 font-light max-w-[260px] mx-auto leading-relaxed mt-1">
+                We invite our guests to dress in elegant formal attire as we celebrate this special occasion together.
+              </p>
+            </div>
+
+            {/* Gifts */}
+            <div className="my-6">
+              <p className="font-['Cinzel'] text-xs font-bold tracking-[0.2em] uppercase text-rose-200">
+                GIFTS
+              </p>
+              <div className="w-10 h-10 mx-auto my-2">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={ELEGANT_ROSE_ASSETS.giftIcon} alt="Gift" className="w-full h-full object-contain filter invert brightness-200" />
+              </div>
+              <p className="text-[9px] text-white/80 font-light max-w-[260px] mx-auto leading-relaxed">
+                Your presence is the greatest gift we could ask for. If you’d like to celebrate with a gift, we invite you to browse our wishlist below.
+              </p>
+              {data.wishlistUrl && (
+                <a
+                  href={data.wishlistUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block mt-3 bg-white/20 border border-white/40 text-white font-['Cinzel'] text-[8px] tracking-[0.2em] uppercase py-1.5 px-5 rounded-full hover:bg-white/30 transition"
+                >
+                  WISHLIST
+                </a>
+              )}
+            </div>
+
+            {/* Accommodation */}
+            <div className="my-6">
+              <p className="font-['Cinzel'] text-xs font-bold tracking-[0.2em] uppercase text-rose-200">
+                ACCOMMODATION
+              </p>
+              <p className="text-[9px] text-white/80 font-light max-w-[260px] mx-auto leading-relaxed mt-1">
+                A room block has been reserved for our guests. Please contact us for reservation details and booking information.
+              </p>
+            </div>
+
+            {/* Thank you */}
+            <div className="mt-6 pt-4 border-t border-white/30 w-full">
+              <p className="font-['Cinzel'] text-[9px] tracking-widest uppercase text-white/80 mb-2">
+                We can’t wait to celebrate with you!
+              </p>
+              <h4 className="font-['Alex_Brush'] text-4xl text-rose-100 select-none">
+                Thank you!
+              </h4>
+            </div>
+          </div>
+        </section>
+
+        {/* ══════════════════════════════════════════════════════════
+            8. PLEASE RSVP CON FONDO DE PÉTALOS DE ROSA
+        ══════════════════════════════════════════════════════════ */}
+        <section
+          id="rsvp"
+          className="relative w-full bg-cover bg-center overflow-hidden"
+          style={{ backgroundImage: `url(${ELEGANT_ROSE_ASSETS.petalsBg})` }}
+        >
+          <div className="w-full max-w-[340px] mx-auto bg-black/50 backdrop-blur-[8px] border-x border-white/20 px-4 py-12 flex flex-col items-center text-center">
+            <h3 className="font-['Alex_Brush'] text-5xl text-rose-100 select-none">
+              Please
+            </h3>
+
+            {/* Letras Doradas Gigantes RSVP */}
+            <h2 className="font-['Cinzel'] text-6xl font-bold tracking-[0.2em] text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-rose-100 to-amber-300 my-1 drop-shadow-md">
               RSVP
             </h2>
-            <p className="font-['Cinzel'] text-[9px] tracking-widest uppercase text-rose-100 mb-6 font-semibold">
-              {data.rsvpFechaLimite || data.fechaLimiteRsvp || (isEn ? "Please confirm by October 1st" : "Favor de confirmar antes del 1 de Octubre")}
+
+            <p className="font-['Cinzel'] text-[9px] tracking-widest uppercase text-rose-200 mb-6 font-semibold">
+              {data.rsvpFechaLimite || data.fechaLimiteRsvp || (isEn ? "BY JUNE 20TH" : "ANTES DEL 20 DE JUNIO")}
             </p>
 
             {rsvpSubmitted ? (
-              <div className="bg-white/10 p-5 rounded-xl border border-white/20 animate-fade-in text-center">
+              <div className="bg-white/15 p-5 rounded-xl border border-white/30 animate-fade-in text-center w-full max-w-[270px]">
                 <Check className="w-8 h-8 text-emerald-400 mx-auto mb-2" />
                 <h4 className="font-['Cinzel'] text-xs font-bold text-white tracking-wider uppercase">
                   {isEn ? "Thank you for confirming!" : "¡Gracias por confirmar!"}
@@ -482,7 +785,7 @@ export default function ElegantRoseTemplate({
                 </button>
               </div>
             ) : (
-              <form onSubmit={handleRsvpSubmit} className="space-y-3 text-left">
+              <form onSubmit={handleRsvpSubmit} className="space-y-3 w-full max-w-[270px] text-left">
                 <div>
                   <label className="block font-['Cinzel'] text-[8px] tracking-wider text-rose-200 uppercase mb-1 font-semibold">
                     {isEn ? "Full Name *" : "Nombre Completo *"}
@@ -518,7 +821,7 @@ export default function ElegantRoseTemplate({
                   <select
                     value={rsvpPases}
                     onChange={(e) => setRsvpPases(e.target.value)}
-                    className="w-full bg-neutral-900/80 border border-white/30 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-rose-300"
+                    className="w-full bg-neutral-900 border border-white/30 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-rose-300"
                   >
                     <option value="1">1 {isEn ? "Pass" : "Pase"}</option>
                     <option value="2">2 {isEn ? "Passes" : "Pases"}</option>
@@ -529,10 +832,10 @@ export default function ElegantRoseTemplate({
 
                 <button
                   type="submit"
-                  className="w-full bg-white/30 hover:bg-white/40 border border-white/60 text-white font-['Cinzel'] text-[10px] tracking-[0.25em] uppercase py-3 rounded-lg font-semibold shadow-lg transition-all mt-4 cursor-pointer flex items-center justify-center gap-2"
+                  className="w-full bg-white/20 hover:bg-white/30 border border-white/50 text-white font-['Cinzel'] text-[10px] tracking-[0.25em] uppercase py-3 rounded-lg font-semibold shadow-lg transition-all mt-4 cursor-pointer flex items-center justify-center gap-2"
                 >
                   <Send className="w-3.5 h-3.5" />
-                  <span>{isEn ? "Confirm Attendance" : "Confirmar Asistencia"}</span>
+                  <span>{isEn ? "CONFIRM VIA WHATSAPP" : "CONFIRMAR POR WHATSAPP"}</span>
                 </button>
               </form>
             )}
