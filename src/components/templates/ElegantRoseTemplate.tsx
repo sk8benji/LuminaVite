@@ -204,6 +204,21 @@ export default function ElegantRoseTemplate({
     WebkitBackdropFilter: "blur(6px)",
   };
 
+  // Datos formateados de fecha para el bloque de la portada
+  const eventDate = data.fechaEvento ? new Date(data.fechaEvento) : new Date("2026-07-18T16:00:00");
+  const monthName = !isNaN(eventDate.getTime())
+    ? eventDate.toLocaleDateString(isEn ? "en-US" : "es-ES", { month: "long" }).toUpperCase()
+    : (isEn ? "JULY" : "JULIO");
+  const dayName = !isNaN(eventDate.getTime())
+    ? eventDate.toLocaleDateString(isEn ? "en-US" : "es-ES", { weekday: "long" }).toUpperCase()
+    : (isEn ? "SUNDAY" : "DOMINGO");
+  const dayNumber = !isNaN(eventDate.getTime())
+    ? String(eventDate.getDate())
+    : "18";
+  const eventTime = data.fechaTextoPersonalizada?.includes(":")
+    ? data.fechaTextoPersonalizada.match(/\d{1,2}:\d{2}\s*(?:AM|PM|am|pm)?/)?.[0] || "4:00 PM"
+    : "4:00 PM";
+
   return (
     <div className="min-h-screen flex justify-center bg-[#150D11] selection:bg-rose-300/30 antialiased font-['Montserrat',sans-serif]">
       {/* Audio Real */}
@@ -234,24 +249,24 @@ export default function ElegantRoseTemplate({
       {/* Contenedor Principal Móvil (430px) */}
       <main className="relative w-full max-w-[430px] mx-auto min-h-screen text-white select-none overflow-x-hidden font-['Montserrat',sans-serif] shadow-2xl bg-[#1C1016]">
         {/* Switch de Idioma Superior Flotante */}
-        <header className="sticky top-0 z-40 bg-black/50 backdrop-blur-md px-5 py-2 flex justify-between items-center border-b border-white/10">
-          <span className="font-['Cinzel'] text-[10px] tracking-widest text-rose-200 font-semibold">
+        <header className="sticky top-0 z-40 bg-[#D4A39D] text-white px-5 py-2.5 flex justify-between items-center shadow-md">
+          <span className="font-['Cinzel'] text-[10px] tracking-widest text-white font-semibold">
             {data.titulo.toUpperCase()} • XV
           </span>
 
-          <div className="flex items-center gap-1 bg-white/10 border border-white/20 rounded-full p-0.5 text-[9px] font-bold">
+          <div className="flex items-center gap-1 bg-white/20 border border-white/30 rounded-full p-0.5 text-[9px] font-bold">
             <button
               onClick={() => setLang("en")}
-              className={`px-2 py-0.5 rounded-full transition-all ${
-                isEn ? "bg-white/30 text-white shadow-xs" : "text-white/60 hover:text-white"
+              className={`px-2.5 py-0.5 rounded-full transition-all ${
+                isEn ? "bg-white text-[#8A5155] shadow-xs" : "text-white/80 hover:text-white"
               }`}
             >
               EN
             </button>
             <button
               onClick={() => setLang("es")}
-              className={`px-2 py-0.5 rounded-full transition-all ${
-                !isEn ? "bg-white/30 text-white shadow-xs" : "text-white/60 hover:text-white"
+              className={`px-2.5 py-0.5 rounded-full transition-all ${
+                !isEn ? "bg-white text-[#8A5155] shadow-xs" : "text-white/80 hover:text-white"
               }`}
             >
               ES
@@ -260,77 +275,137 @@ export default function ElegantRoseTemplate({
         </header>
 
         {/* ══════════════════════════════════════════════════════════
-            1. HERO SECTION: PORTADA SOBRE VESTIDO ROSA
+            1. HERO SECTION: PORTADA EXACTA (SOPHIE DESIGN STUDIO)
+               Silueta curva ondulada, sin caja rectangular oscura,
+               con resplandor blanco en la tipografía cursiva.
         ══════════════════════════════════════════════════════════ */}
-        <section
-          className="relative w-full bg-cover bg-top overflow-hidden"
-          style={{ backgroundImage: `url(${heroPhotoUrl})` }}
-        >
-          {/* Columna Central Esmerilada */}
-          <div
-            style={frostedColumnStyle}
-            className="w-full max-w-[340px] mx-auto border-x border-white/20 px-4 pt-12 pb-14 flex flex-col items-center text-center shadow-2xl relative"
-          >
-            {/* Texto Arqueado "YOU ARE CORDIALLY" */}
+        <section className="relative w-full max-w-[430px] min-h-[760px] mx-auto overflow-hidden flex flex-col items-center justify-center text-center select-none pt-4 pb-8 px-4">
+          {/* Foto de Fondo Maestra (La Quinceañera en Cuerpo Completo) */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={heroPhotoUrl}
+            alt={data.titulo}
+            className="absolute inset-0 w-full h-full object-cover object-top -z-20"
+          />
+
+          {/* Capa de Contraste Suave */}
+          <div className="absolute inset-0 bg-black/20 -z-10" />
+
+          {/* ======================================================== */}
+          {/* SILUETA CENTRAL DE RELOJ DE ARENA (GLASSMORPHISM CURVO)   */}
+          {/* ======================================================== */}
+          <div className="relative w-full max-w-[340px] my-auto py-8 px-4 rounded-[45px] bg-black/25 backdrop-blur-[5px] border border-white/30 shadow-[0_10px_35px_rgba(0,0,0,0.3)] flex flex-col items-center">
+            {/* Silueta ondulada translúcida exacta con 339872b4722f5715a436439eedbd3ab5.png */}
+            <div
+              className="absolute inset-0 -z-10 pointer-events-none rounded-[45px]"
+              style={{
+                WebkitMaskImage: `url(${ELEGANT_ROSE_ASSETS.frostedBlurStrip})`,
+                maskImage: `url(${ELEGANT_ROSE_ASSETS.frostedBlurStrip})`,
+                WebkitMaskSize: "100% 100%",
+                maskSize: "100% 100%",
+                WebkitMaskRepeat: "no-repeat",
+                maskRepeat: "no-repeat",
+                backdropFilter: "blur(4px)",
+                WebkitBackdropFilter: "blur(4px)",
+                backgroundColor: "rgba(0, 0, 0, 0.20)",
+              }}
+            />
+
+            {/* 1. Texto en Arco Curvo Superior (SVG textPath) */}
             <div className="w-full flex justify-center -mb-2">
-              <svg viewBox="0 0 300 50" className="w-60 h-10 overflow-visible">
-                <path id="curve-hero" d="M 20 40 Q 150 12 280 40" fill="transparent" />
-                <text className="text-[10px] uppercase font-bold tracking-[0.3em] fill-rose-100 font-['Cinzel']">
-                  <textPath href="#curve-hero" startOffset="50%" textAnchor="middle">
-                    YOU ARE CORDIALLY
+              <svg viewBox="0 0 300 60" className="w-[270px] h-[55px] overflow-visible">
+                <path id="curvePath" d="M 10,50 Q 150,8 290,50" fill="transparent" />
+                <text className="font-['Cinzel'] text-[11px] font-semibold tracking-[0.25em] fill-white uppercase drop-shadow-sm">
+                  <textPath href="#curvePath" startOffset="50%" textAnchor="middle">
+                    {data.autorBendicion || data.corteHonorJson?.parents || "MR & MRS RODRÍGUEZ"}
                   </textPath>
                 </text>
               </svg>
             </div>
 
-            {/* Corona Tiara Dorada */}
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={ELEGANT_ROSE_ASSETS.crown}
-              alt="Corona"
-              className="w-10 h-auto my-1 drop-shadow"
-            />
+            {/* 2. Subtítulos Superiores */}
+            <p className="font-['Cinzel'] text-[9px] tracking-[0.25em] uppercase text-white font-medium mb-1 drop-shadow-sm">
+              {isEn ? "WARMLY INVITE YOU" : "LE INVITAN CORDIALMENTE"}
+            </p>
+            <p className="font-['Cinzel'] text-[10px] tracking-[0.25em] uppercase text-white font-semibold mb-1 drop-shadow-sm">
+              {isEn ? "TO CELEBRATE THE" : "A CELEBRAR LOS"}
+            </p>
 
-            {/* "Quinceañera" Cursiva */}
-            <h1 className="font-['Alex_Brush'] text-5xl sm:text-6xl text-white my-0.5 drop-shadow-md select-none">
+            {/* 3. Quinceañera con Resplandor Blanco */}
+            <h1
+              className="font-['Alex_Brush'] text-6xl text-white my-1 leading-tight select-none"
+              style={{
+                filter:
+                  "drop-shadow(0 0 12px rgba(255, 255, 255, 0.95)) drop-shadow(0 0 24px rgba(255, 255, 255, 0.6))",
+              }}
+            >
               Quinceañera
             </h1>
 
-            <p className="font-['Cinzel'] text-[9px] tracking-[0.25em] uppercase text-rose-100 font-semibold my-1">
+            {/* 4. Subtítulo Central */}
+            <p className="font-['Cinzel'] text-[9px] tracking-[0.3em] uppercase text-white/90 font-medium my-1 drop-shadow-sm">
               {isEn ? "OF THEIR DAUGHTER" : "DE SU HIJA"}
             </p>
 
-            {/* Nombre */}
-            <h2 className="font-['Alex_Brush'] text-5xl sm:text-6xl text-rose-100 my-1 drop-shadow-md select-none">
+            {/* 5. Nombre con Resplandor Blanco */}
+            <h2
+              className="font-['Alex_Brush'] text-5xl sm:text-6xl text-white my-2 leading-tight select-none"
+              style={{
+                filter:
+                  "drop-shadow(0 0 12px rgba(255, 255, 255, 0.95)) drop-shadow(0 0 24px rgba(255, 255, 255, 0.6))",
+              }}
+            >
               {data.titulo}
             </h2>
 
-            {/* Bloque de Fecha Elegante */}
-            <div className="my-5 border-y border-white/30 py-3 w-48">
-              <p className="font-['Cinzel'] text-[10px] tracking-[0.25em] uppercase text-rose-200">
-                {isEn ? "SUNDAY" : "DOMINGO"}
+            {/* 6. Bloque de Fecha Horizontal y Minimalista */}
+            <div className="w-full max-w-[280px] mx-auto mt-4 pt-2">
+              {/* Mes Arqueado */}
+              <div className="w-full flex justify-center -mb-1">
+                <svg viewBox="0 0 160 32" className="w-28 h-6 overflow-visible">
+                  <path id="curveMonth" d="M 15,26 Q 80,6 145,26" fill="transparent" />
+                  <text className="font-['Cinzel'] text-[12px] font-bold tracking-[0.35em] fill-white uppercase drop-shadow-sm">
+                    <textPath href="#curveMonth" startOffset="50%" textAnchor="middle">
+                      {monthName}
+                    </textPath>
+                  </text>
+                </svg>
+              </div>
+
+              {/* Barra Central: Día de la Semana | Número | Hora */}
+              <div className="flex items-center justify-between border-y border-white/50 py-1.5 my-1">
+                <span className="font-['Cinzel'] text-[9px] tracking-[0.2em] uppercase text-white font-medium flex-1 text-center">
+                  {dayName}
+                </span>
+                <span className="font-['Cinzel'] text-3xl font-bold text-white px-3 drop-shadow-sm">
+                  {dayNumber}
+                </span>
+                <span className="font-['Cinzel'] text-[9px] tracking-[0.2em] uppercase text-white font-medium flex-1 text-center">
+                  {eventTime}
+                </span>
+              </div>
+
+              {/* Dirección / Locación */}
+              <p className="font-['Cinzel'] text-[8px] tracking-[0.25em] uppercase text-white/90 mt-2 leading-relaxed">
+                {data.recepcionNombre || data.ceremoniaNombre || "ANY CITY, ANY STREET, AZ 12345"}
               </p>
-              <span className="block font-['Cinzel'] text-4xl font-bold text-white tracking-widest my-0.5 drop-shadow-sm">
-                18
-              </span>
-              <p className="font-['Cinzel'] text-[10px] tracking-[0.25em] uppercase text-rose-200">
-                {isEn ? "JULY • 2026" : "JULIO • 2026"}
-              </p>
+              {data.recepcionDireccion && (
+                <p className="font-['Cinzel'] text-[7px] tracking-[0.2em] uppercase text-white/75 mt-0.5">
+                  {data.recepcionDireccion}
+                </p>
+              )}
+
+              {/* Botón Google Maps elegante */}
+              <a
+                href={churchMapUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-3 bg-white/20 border border-white/50 text-white font-['Cinzel'] text-[8px] tracking-[0.25em] uppercase py-1.5 px-4 rounded-full hover:bg-white/30 transition-all shadow-sm inline-flex items-center gap-1.5 cursor-pointer backdrop-blur-sm"
+              >
+                <MapPin className="w-3 h-3" />
+                <span>GOOGLE MAPS</span>
+              </a>
             </div>
-
-            <p className="font-['Cinzel'] text-[10px] tracking-widest text-white/90">
-              4:00 PM • {data.ceremoniaNombre || "ST. MARY'S CHURCH"}
-            </p>
-
-            <a
-              href={churchMapUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-4 bg-white/20 border border-white/50 text-white font-['Cinzel'] text-[9px] tracking-[0.25em] uppercase py-2 px-6 rounded-full hover:bg-white/30 transition-all shadow-sm inline-flex items-center gap-1.5 cursor-pointer"
-            >
-              <MapPin className="w-3 h-3" />
-              <span>GOOGLE MAPS</span>
-            </a>
           </div>
         </section>
 
