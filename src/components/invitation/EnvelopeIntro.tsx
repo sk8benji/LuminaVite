@@ -115,12 +115,12 @@ export default function EnvelopeIntro({
         {/* Panel central de cristal esmerilado réplica fiel de Canva */}
         <div
           onClick={() => handleOpen()}
-          className="relative z-10 w-full max-w-[340px] sm:max-w-[360px] rounded-3xl p-6 sm:p-7 flex flex-col items-center text-center shadow-2xl cursor-pointer group transition-all duration-300 hover:shadow-pink-900/30 bg-cover bg-center border border-white/60"
+          className="relative z-10 w-full max-w-[340px] sm:max-w-[360px] rounded-3xl p-6 sm:p-7 flex flex-col items-center text-center shadow-2xl cursor-pointer group transition-all duration-300 hover:shadow-pink-900/30 border border-white/60"
           style={{
-            backgroundImage: `url(/assets/template-rose/339872b4722f5715a436439eedbd3ab5.png)`,
-            backgroundColor: "rgba(255, 255, 255, 0.35)",
-            backdropFilter: "blur(8px)",
-            boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.35), inset 0 0 15px rgba(255, 255, 255, 0.4)",
+            backgroundColor: "rgba(255, 255, 255, 0.45)",
+            backdropFilter: "blur(12px)",
+            WebkitBackdropFilter: "blur(12px)",
+            boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.35), inset 0 0 15px rgba(255, 255, 255, 0.5)",
           }}
         >
           {/* Texto arqueado "YOU ARE CORDIALLY" */}

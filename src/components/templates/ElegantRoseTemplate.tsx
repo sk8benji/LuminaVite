@@ -16,6 +16,44 @@ import { ELEGANT_ROSE_ASSETS } from "@/lib/templates/elegantRoseAssets";
 import EnvelopeIntro from "../invitation/EnvelopeIntro";
 import { InvitationData } from "../invitation/InvitationMobileView";
 
+function WavyColumn({
+  children,
+  className = "",
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <div
+      className={`relative w-full max-w-[340px] mx-auto py-8 px-4 flex flex-col items-center text-center select-none ${className}`}
+    >
+      {/* Silueta ondulada original semitransparente (~35% de opacidad como en Canva, sin bordes ni cajas) */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={ELEGANT_ROSE_ASSETS.frostedBlurStrip}
+        alt=""
+        aria-hidden="true"
+        className="absolute inset-0 w-full h-full object-fill opacity-35 pointer-events-none -z-10 select-none"
+      />
+      {/* Desenfoque suave enmascarado con la misma silueta orgánica */}
+      <div
+        className="absolute inset-0 -z-10 pointer-events-none"
+        style={{
+          WebkitMaskImage: `url(${ELEGANT_ROSE_ASSETS.frostedBlurStrip})`,
+          maskImage: `url(${ELEGANT_ROSE_ASSETS.frostedBlurStrip})`,
+          WebkitMaskSize: "100% 100%",
+          maskSize: "100% 100%",
+          WebkitMaskRepeat: "no-repeat",
+          maskRepeat: "no-repeat",
+          backdropFilter: "blur(4px)",
+          WebkitBackdropFilter: "blur(4px)",
+        }}
+      />
+      {children}
+    </div>
+  );
+}
+
 export default function ElegantRoseTemplate({
   data,
   skipIntro = false,
@@ -195,14 +233,7 @@ export default function ElegantRoseTemplate({
     `${data.recepcionNombre || "Grand Ballroom"} ${data.recepcionDireccion || "Any City, Any Street, AZ 12345"}`.trim()
   );
 
-  const frostedColumnStyle: React.CSSProperties = {
-    backgroundImage: `url(${ELEGANT_ROSE_ASSETS.frostedBlurStrip})`,
-    backgroundColor: "rgba(0, 0, 0, 0.40)",
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    backdropFilter: "blur(6px)",
-    WebkitBackdropFilter: "blur(6px)",
-  };
+
 
   // Datos formateados de fecha para el bloque de la portada
   const eventDate = data.fechaEvento ? new Date(data.fechaEvento) : new Date("2026-07-18T16:00:00");
@@ -292,24 +323,9 @@ export default function ElegantRoseTemplate({
           <div className="absolute inset-0 bg-black/20 -z-10" />
 
           {/* ======================================================== */}
-          {/* SILUETA CENTRAL DE RELOJ DE ARENA (GLASSMORPHISM CURVO)   */}
+          {/* SILUETA CENTRAL ONDULADA SEMITRANSPARENTE (CANVA ORIGINAL)*/}
           {/* ======================================================== */}
-          <div className="relative w-full max-w-[340px] my-auto py-8 px-4 rounded-[45px] bg-black/25 backdrop-blur-[5px] border border-white/30 shadow-[0_10px_35px_rgba(0,0,0,0.3)] flex flex-col items-center">
-            {/* Silueta ondulada translúcida exacta con 339872b4722f5715a436439eedbd3ab5.png */}
-            <div
-              className="absolute inset-0 -z-10 pointer-events-none rounded-[45px]"
-              style={{
-                WebkitMaskImage: `url(${ELEGANT_ROSE_ASSETS.frostedBlurStrip})`,
-                maskImage: `url(${ELEGANT_ROSE_ASSETS.frostedBlurStrip})`,
-                WebkitMaskSize: "100% 100%",
-                maskSize: "100% 100%",
-                WebkitMaskRepeat: "no-repeat",
-                maskRepeat: "no-repeat",
-                backdropFilter: "blur(4px)",
-                WebkitBackdropFilter: "blur(4px)",
-                backgroundColor: "rgba(0, 0, 0, 0.20)",
-              }}
-            />
+          <WavyColumn className="my-auto">
 
             {/* 1. Texto en Arco Curvo Superior (SVG textPath) */}
             <div className="w-full flex justify-center -mb-2">
@@ -406,7 +422,7 @@ export default function ElegantRoseTemplate({
                 <span>GOOGLE MAPS</span>
               </a>
             </div>
-          </div>
+          </WavyColumn>
         </section>
 
         {/* ══════════════════════════════════════════════════════════
@@ -416,10 +432,7 @@ export default function ElegantRoseTemplate({
           className="relative w-full bg-cover bg-center overflow-hidden"
           style={{ backgroundImage: `url(${ELEGANT_ROSE_ASSETS.rosesBg})` }}
         >
-          <div
-            style={frostedColumnStyle}
-            className="w-full max-w-[340px] mx-auto border-x border-white/20 px-4 py-8 flex flex-col items-center text-center shadow-2xl relative"
-          >
+          <WavyColumn>
             {/* Tarjeta Álbum Polaroid con Mariposas */}
             <div className="w-52 bg-white/90 p-3 rounded-2xl shadow-2xl border border-white text-stone-800 text-center relative group">
               <div className="w-full aspect-square rounded-xl overflow-hidden mb-2 bg-rose-50 shadow-inner">
@@ -464,7 +477,7 @@ export default function ElegantRoseTemplate({
                 </button>
               </div>
             </div>
-          </div>
+          </WavyColumn>
         </section>
 
         {/* ══════════════════════════════════════════════════════════
@@ -475,10 +488,7 @@ export default function ElegantRoseTemplate({
           className="relative w-full bg-cover bg-top overflow-hidden"
           style={{ backgroundImage: `url(${ELEGANT_ROSE_ASSETS.castlePhoto})` }}
         >
-          <div
-            style={frostedColumnStyle}
-            className="w-full max-w-[340px] mx-auto border-x border-white/20 px-4 py-12 flex flex-col items-center text-center shadow-2xl relative"
-          >
+          <WavyColumn className="py-12">
             <h3 className="font-['Alex_Brush'] text-5xl sm:text-6xl text-rose-100 drop-shadow-md select-none leading-none">
               Growing
             </h3>
@@ -525,7 +535,7 @@ export default function ElegantRoseTemplate({
                 Celebrating Fifteen Amazing Years — The Best Is Yet to Come.
               </p>
             </div>
-          </div>
+          </WavyColumn>
         </section>
 
         {/* ══════════════════════════════════════════════════════════
@@ -535,10 +545,7 @@ export default function ElegantRoseTemplate({
           className="relative w-full bg-cover bg-center overflow-hidden"
           style={{ backgroundImage: `url(${ELEGANT_ROSE_ASSETS.rosesBg})` }}
         >
-          <div
-            style={frostedColumnStyle}
-            className="w-full max-w-[340px] mx-auto border-x border-white/20 px-4 py-12 flex flex-col items-center text-center shadow-2xl relative"
-          >
+          <WavyColumn className="py-12">
             <h3 className="font-['Alex_Brush'] text-5xl text-rose-100 select-none">
               The Countdown
             </h3>
@@ -591,7 +598,7 @@ export default function ElegantRoseTemplate({
             <p className="font-['Alex_Brush'] text-2xl text-rose-100 mt-6 select-none">
               {isEn ? "I can’t wait to celebrate with you!" : "¡No puedo esperar para celebrar contigo!"}
             </p>
-          </div>
+          </WavyColumn>
         </section>
 
         {/* ══════════════════════════════════════════════════════════
@@ -601,10 +608,7 @@ export default function ElegantRoseTemplate({
           className="relative w-full bg-cover bg-bottom overflow-hidden"
           style={{ backgroundImage: `url(${heroPhotoUrl})` }}
         >
-          <div
-            style={frostedColumnStyle}
-            className="w-full max-w-[340px] mx-auto border-x border-white/20 px-4 py-12 flex flex-col items-center text-center shadow-2xl relative"
-          >
+          <WavyColumn className="py-12">
             <h3 className="font-['Alex_Brush'] text-5xl text-white select-none">
               The Day
             </h3>
@@ -711,7 +715,7 @@ export default function ElegantRoseTemplate({
                 </p>
               </div>
             </div>
-          </div>
+          </WavyColumn>
         </section>
 
         {/* ══════════════════════════════════════════════════════════
@@ -721,10 +725,7 @@ export default function ElegantRoseTemplate({
           className="relative w-full bg-cover bg-center overflow-hidden"
           style={{ backgroundImage: `url(${ELEGANT_ROSE_ASSETS.peachBg})` }}
         >
-          <div
-            style={frostedColumnStyle}
-            className="w-full max-w-[340px] mx-auto border-x border-white/20 px-4 py-12 flex flex-col items-center text-center shadow-2xl relative"
-          >
+          <WavyColumn className="py-12">
             {/* Padrinos */}
             <h3 className="font-['Alex_Brush'] text-5xl text-rose-100 select-none">
               Padrinos
@@ -767,7 +768,7 @@ export default function ElegantRoseTemplate({
                 <p key={i}>{chambelan}</p>
               ))}
             </div>
-          </div>
+          </WavyColumn>
         </section>
 
         {/* ══════════════════════════════════════════════════════════
@@ -777,10 +778,7 @@ export default function ElegantRoseTemplate({
           className="relative w-full bg-cover bg-center overflow-hidden"
           style={{ backgroundImage: `url(${ELEGANT_ROSE_ASSETS.bouquetBg})` }}
         >
-          <div
-            style={frostedColumnStyle}
-            className="w-full max-w-[340px] mx-auto border-x border-white/20 px-4 py-12 flex flex-col items-center text-center shadow-2xl relative"
-          >
+          <WavyColumn className="py-12">
             <h3 className="font-['Alex_Brush'] text-5xl text-rose-100 select-none">
               Details
             </h3>
@@ -847,7 +845,7 @@ export default function ElegantRoseTemplate({
                 Thank you!
               </h4>
             </div>
-          </div>
+          </WavyColumn>
         </section>
 
         {/* ══════════════════════════════════════════════════════════
@@ -858,10 +856,7 @@ export default function ElegantRoseTemplate({
           className="relative w-full bg-cover bg-center overflow-hidden"
           style={{ backgroundImage: `url(${ELEGANT_ROSE_ASSETS.petalsBg})` }}
         >
-          <div
-            style={frostedColumnStyle}
-            className="w-full max-w-[340px] mx-auto border-x border-white/20 px-4 py-12 flex flex-col items-center text-center shadow-2xl relative"
-          >
+          <WavyColumn className="py-12">
             <h3 className="font-['Alex_Brush'] text-5xl text-rose-100 select-none">
               Please
             </h3>
@@ -947,7 +942,7 @@ export default function ElegantRoseTemplate({
                 </button>
               </form>
             )}
-          </div>
+          </WavyColumn>
         </section>
       </main>
     </div>
