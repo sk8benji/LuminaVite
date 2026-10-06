@@ -50,6 +50,7 @@ export const TEMPLATES: Record<TemplateId, TemplateConfig> = {
     fontBody: "'Montserrat', sans-serif",
     ribbonGradient: "from-rose-300 via-pink-200 to-rose-400",
     badgeBg: "#FDECEF",
+    previewThumbnail: "/assets/template-rose/51d8fb6fdca05936497b8c7f02e14280.png",
     description: "Bilingüe (EN/ES), video embed YouTube, línea de tiempo 'Growing Up' con fotos por año y wishlist.",
   },
   FAIRYTALE_CHATEAU: {

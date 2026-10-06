@@ -83,24 +83,26 @@ export const DEMO_ISABELLA: InvitationData = {
   frasePersonalizada: "Celebrating Fifteen Amazing Years—The Best Is Yet to Come.",
   fechaEvento: new Date("2026-07-18T16:00:00Z"),
   fechaTextoPersonalizada: "SUNDAY, JULY 18 • 4:00 PM",
-  fotoPortadaUrl:
-    "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80",
-  fotoInfanciaUrl:
-    "https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&w=400&q=80",
-  fotoActualUrl:
-    "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=400&q=80",
+  fotoPortadaUrl: "/assets/template-rose/51d8fb6fdca05936497b8c7f02e14280.png",
+  fotoInfanciaUrl: "/assets/template-rose/722d78548334333072ad7200e4f8233e.jpg",
+  fotoActualUrl: "/assets/template-rose/5f24871f73b9424764387ef47bb5723e.png",
+  fotoCierreUrl: "/assets/template-rose/51d8fb6fdca05936497b8c7f02e14280.png",
   musicaUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
+  musicaTitulo: "Photograph - Ed Sheeran",
   videoUrl: "https://www.youtube.com/embed/0ZVsGVE1qCg",
   telefonoWhatsappRsvp: "18181234567",
   fechaLimiteRsvp: "June 20th",
   maxPasesPorInvitado: 4,
-  recepcionNombre: "St. Mary's Church & Grand Ballroom",
+  ceremoniaNombre: "St. Mary's Church",
+  ceremoniaDireccion: "Any City, Any Street, AZ 12345",
+  ceremoniaMapUrl: "https://maps.google.com/?q=St.+Mary's+Church",
+  recepcionNombre: "Grand Ballroom",
   recepcionDireccion: "Any City, Any Street, AZ 12345",
-  recepcionMapUrl: "https://maps.google.com",
+  recepcionMapUrl: "https://maps.google.com/?q=Grand+Ballroom",
   dressCodeTitulo: "Formal & Elegant Attire",
-  dressCodeNota: "We invite our guests to dress in elegant formal attire as we celebrate together.",
+  dressCodeNota: "We invite our guests to dress in elegant formal attire as we celebrate together. Reserved color: Blush pink for the Quinceañera.",
   wishlistUrl: "https://www.amazon.com/baby-reg",
-  idiomaDefault: "en",
+  idiomaDefault: "bilingual",
   itinerarioJson: [
     { hora: "4:00 PM", titulo: "Mass - St. Mary's Church", tipoIcono: "church" },
     { hora: "5:00 PM", titulo: "Entrance - Grand Ballroom", tipoIcono: "car" },
@@ -109,11 +111,37 @@ export const DEMO_ISABELLA: InvitationData = {
     { hora: "9:00 PM", titulo: "Party", tipoIcono: "party" },
   ],
   corteHonorJson: {
-    chambelan: "Emilio Salazar (Chamberlain of Honor)",
-    damas: ["Isabella", "Valeria", "Sofia", "Emilia", "Camila", "Maria", "Regina", "Natalia"],
-    chambelanes: ["Diego", "Santiago", "Francisco", "Mateo", "Alejandro"],
-    padrinos: ["Miguel & Daniela Herrera"],
+    chambelan: "Emilio Salazar",
+    damas: ["Isabella Cordero", "Valeria Morales", "Sofia Villanueva", "Emilia Rodriguez", "Camila Aguilar", "Maria Paz Leon", "Alondra Jimenez", "Regina Castro", "Natalia Sanchez"],
+    chambelanes: ["Diego Alvarez", "Santiago Lopez", "Francisco Ruiz", "Mateo Ramírez", "Alejandro Torres"],
+    padrinos: ["Miguel Herrera", "Daniela Herrera"],
   },
+  historiaHitosJson: [
+    {
+      foto: "/assets/template-rose/722d78548334333072ad7200e4f8233e.jpg",
+      fecha: "2011",
+      titulo: "First Steps",
+      texto: "Every story has a beginning, and mine started with the love of family, the comfort of home, and countless little moments that became treasured memories.",
+    },
+    {
+      foto: "/assets/template-rose/94a9fcddf0e62c3f0ffe60a5a769dd9c.jpg",
+      fecha: "2016",
+      titulo: "New Adventures",
+      texto: "With each new adventure came exciting firsts, growing confidence, and friendships that would become an important part of my journey.",
+    },
+    {
+      foto: "/assets/template-rose/97da854ac288883d24133acda9d854ca.jpg",
+      fecha: "2020",
+      titulo: "Treasured Memories",
+      texto: "From laughter-filled days to unforgettable memories, these special people helped shape the person I am today.",
+    },
+    {
+      foto: "/assets/template-rose/39e6d693ec9d82a484d96df04a0cffd3.jpg",
+      fecha: "2024",
+      titulo: "Loyal Companion",
+      texto: "And through every chapter, there was one loyal companion by my side—sharing the cuddles, the adventures, and all of life's happiest moments.",
+    },
+  ],
 };
 
 // ==========================================

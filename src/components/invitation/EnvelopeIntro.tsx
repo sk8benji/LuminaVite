@@ -13,6 +13,7 @@ interface EnvelopeIntroProps {
   onOpen?: (selectedLang?: "es" | "en") => void;
   destinatarioInicial?: string;
   idiomaDefault?: "es" | "en" | "bilingual" | string;
+  coverPhotoUrl?: string;
 }
 
 export default function EnvelopeIntro({
@@ -23,6 +24,7 @@ export default function EnvelopeIntro({
   onOpen,
   destinatarioInicial = "Familia & Amigos",
   idiomaDefault = "es",
+  coverPhotoUrl,
 }: EnvelopeIntroProps) {
   const [guestName, setGuestName] = useState(destinatarioInicial);
   const [isOpen, setIsOpen] = useState(false);
@@ -80,6 +82,137 @@ export default function EnvelopeIntro({
   };
 
   if (isRemoved) return null;
+
+  if (template.id === "ELEGANT_ROSE") {
+    const isEnDefault = idiomaDefault === "en";
+    const heroBg = coverPhotoUrl || "/assets/template-rose/51d8fb6fdca05936497b8c7f02e14280.png";
+
+    return (
+      <div
+        className={`fixed inset-0 z-50 flex flex-col items-center justify-center p-4 transition-all duration-700 select-none overflow-hidden ${
+          isFading ? "opacity-0 scale-105 pointer-events-none" : "opacity-100 scale-100"
+        }`}
+      >
+        {/* Foto de fondo pantalla completa de la quinceañera */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={heroBg}
+          alt="Quinceañera"
+          className="absolute inset-0 w-full h-full object-cover object-center filter brightness-95"
+        />
+        {/* Degradado y velo translúcido rosa suave */}
+        <div className="absolute inset-0 bg-gradient-to-b from-stone-900/40 via-stone-900/20 to-stone-900/60 backdrop-blur-[1.5px]" />
+
+        {/* Destinatario si viene personalizado */}
+        {guestName && (
+          <div className="relative z-10 mb-4 px-4 py-1.5 rounded-full bg-white/20 backdrop-blur-md border border-white/40 shadow-lg animate-fade-in text-center">
+            <span className="text-xs uppercase tracking-widest text-pink-100 font-serif">
+              Para: <strong className="font-semibold text-white ml-1">{guestName}</strong>
+            </span>
+          </div>
+        )}
+
+        {/* Panel central de cristal esmerilado réplica fiel de Canva */}
+        <div
+          onClick={() => handleOpen()}
+          className="relative z-10 w-full max-w-[340px] sm:max-w-[360px] rounded-3xl p-6 sm:p-7 flex flex-col items-center text-center shadow-2xl cursor-pointer group transition-all duration-300 hover:shadow-pink-900/30 bg-white/35 backdrop-blur-xl border border-white/60"
+          style={{
+            boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.35), inset 0 0 15px rgba(255, 255, 255, 0.4)",
+          }}
+        >
+          {/* Texto arqueado "YOU ARE CORDIALLY" */}
+          <div className="w-full flex justify-center -mb-2">
+            <svg viewBox="0 0 300 55" className="w-64 h-12 overflow-visible">
+              <path id="curve" d="M 15 45 Q 150 15 285 45" fill="transparent" />
+              <text className="text-[12px] uppercase font-bold tracking-[0.3em] fill-[#5A3E44]">
+                <textPath href="#curve" startOffset="50%" textAnchor="middle">
+                  YOU ARE CORDIALLY
+                </textPath>
+              </text>
+            </svg>
+          </div>
+
+          {/* Corona Tiara Dorada */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/assets/template-rose/ba47feef59edd928b7c840eae54838b3.png"
+            alt="Corona"
+            className="w-12 h-auto my-1 drop-shadow transition-transform duration-300 group-hover:scale-110"
+          />
+
+          {/* "invited!" Cursiva elegante */}
+          <h2
+            className="text-5xl sm:text-6xl text-[#5A3E44] -mt-1 mb-3 select-none"
+            style={{ fontFamily: "'Alex Brush', 'Pinyon Script', cursive" }}
+          >
+            invited!
+          </h2>
+
+          {/* Sobre Rosa de Terciopelo con sello de corona */}
+          <div className="relative my-2 w-48 sm:w-52 transition-transform duration-500 group-hover:scale-105 active:scale-95">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/assets/template-rose/cb257414402ef9963727de1a6d13bd5c.png"
+              alt="Sobre Quinceañera"
+              className={`w-full h-auto drop-shadow-2xl transition-all duration-500 ${
+                isOpen ? "scale-110 -translate-y-4 opacity-80" : ""
+              }`}
+            />
+          </div>
+
+          {/* Selector de idioma o botón de apertura */}
+          {idiomaDefault === "bilingual" ? (
+            <div className="mt-4 flex flex-col items-center gap-2.5 w-full" onClick={(e) => e.stopPropagation()}>
+              <p
+                className="text-[11px] uppercase tracking-widest text-[#5A3E44]/90 font-serif leading-tight"
+                style={{ fontFamily: "'Cinzel', serif" }}
+              >
+                Select your language<br />
+                <span className="text-[10px] opacity-80">Selecciona tu idioma</span>
+              </p>
+              <div className="flex items-center justify-center gap-3 w-full pt-1">
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleOpen("en");
+                  }}
+                  className="flex-1 py-2 px-3 rounded-full text-[11px] font-bold tracking-widest uppercase transition-all duration-200 border border-white/60 bg-white/50 hover:bg-white/80 text-[#5A3E44] shadow-md hover:scale-105 active:scale-95 cursor-pointer"
+                  style={{ fontFamily: "'Cinzel', serif" }}
+                >
+                  ENGLISH
+                </button>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleOpen("es");
+                  }}
+                  className="flex-1 py-2 px-3 rounded-full text-[11px] font-bold tracking-widest uppercase transition-all duration-200 border border-white/60 bg-white/50 hover:bg-white/80 text-[#5A3E44] shadow-md hover:scale-105 active:scale-95 cursor-pointer"
+                  style={{ fontFamily: "'Cinzel', serif" }}
+                >
+                  ESPAÑOL
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="mt-4 w-full flex flex-col items-center">
+              <button
+                type="button"
+                onClick={() => handleOpen(isEnDefault ? "en" : "es")}
+                disabled={isOpen}
+                className="w-full py-2.5 px-4 rounded-full text-[11px] font-bold tracking-widest uppercase transition-all duration-300 border border-white/80 bg-white/60 hover:bg-white/90 text-[#5A3E44] shadow-lg flex items-center justify-center gap-2 hover:scale-105 active:scale-95 animate-pulse cursor-pointer"
+                style={{ fontFamily: "'Cinzel', serif" }}
+              >
+                <span>{isEnDefault ? "Tap envelope to open" : "Toca el sobre para abrir"}</span>
+                <Sparkles className="w-3.5 h-3.5 text-[#CE8486]" />
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
