@@ -271,38 +271,12 @@ export default function ElegantRoseTemplate({
 
       {/* Contenedor Principal Móvil (430px) */}
       <main className="relative w-full max-w-[430px] mx-auto min-h-screen text-white select-none overflow-x-hidden font-['Montserrat',sans-serif] shadow-2xl bg-[#1C1016]">
-        {/* Switch de Idioma Superior Flotante */}
-        <header className="sticky top-0 z-40 bg-[#D4A39D] text-white px-5 py-2.5 flex justify-between items-center shadow-md">
-          <span className="font-['Cinzel'] text-[10px] tracking-widest text-white font-semibold">
-            {data.titulo.toUpperCase()} • XV
-          </span>
-
-          <div className="flex items-center gap-1 bg-white/20 border border-white/30 rounded-full p-0.5 text-[9px] font-bold">
-            <button
-              onClick={() => setLang("en")}
-              className={`px-2.5 py-0.5 rounded-full transition-all ${
-                isEn ? "bg-white text-[#8A5155] shadow-xs" : "text-white/80 hover:text-white"
-              }`}
-            >
-              EN
-            </button>
-            <button
-              onClick={() => setLang("es")}
-              className={`px-2.5 py-0.5 rounded-full transition-all ${
-                !isEn ? "bg-white text-[#8A5155] shadow-xs" : "text-white/80 hover:text-white"
-              }`}
-            >
-              ES
-            </button>
-          </div>
-        </header>
-
         {/* ══════════════════════════════════════════════════════════
             1. HERO SECTION: PORTADA EXACTA (SOPHIE DESIGN STUDIO)
-               Silueta curva ondulada, sin caja rectangular oscura,
-               con resplandor blanco en la tipografía cursiva.
+               Silueta curva ondulada desde el borde superior absoluto (top-0),
+               sin barra en el top, con resplandor blanco en la cursiva.
         ══════════════════════════════════════════════════════════ */}
-        <section className="relative isolate w-full max-w-[430px] min-h-[760px] mx-auto overflow-hidden flex flex-col items-center justify-center text-center select-none pt-0 pb-6 px-4">
+        <section className="relative isolate w-full max-w-[430px] min-h-screen mx-auto overflow-hidden flex flex-col items-center justify-center text-center select-none pt-4 pb-10 px-4">
           {/* Foto de Fondo Maestra (La Quinceañera en Cuerpo Completo) */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
@@ -318,10 +292,43 @@ export default function ElegantRoseTemplate({
           <div className="absolute inset-0 bg-black/10 pointer-events-none" />
 
           {/* ======================================================== */}
-          {/* SILUETA CENTRAL ONDULADA AL 30% DE TRANSPARENCIA         */}
+          {/* SILUETA CENTRAL ONDULADA DESDE EL TOPE ABSOLUTO (top-0)   */}
           {/* ======================================================== */}
-          <WavyColumn className="my-auto z-10 pt-6 pb-8">
+          <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-full max-w-[340px] pointer-events-none select-none z-0">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={ELEGANT_ROSE_ASSETS.frostedBlurStrip}
+              onError={(e) => {
+                (e.target as HTMLImageElement).src = ELEGANT_ROSE_ASSETS.s3.frostedBlurStrip;
+              }}
+              alt=""
+              aria-hidden="true"
+              className="w-full h-full object-fill opacity-30"
+            />
+          </div>
 
+          {/* Selector de Idioma Flotante Minimalista (Discreto y sin barra fija) */}
+          <div className="absolute top-3 right-3 z-30 flex items-center gap-1 bg-black/35 backdrop-blur-md border border-white/30 rounded-full p-0.5 text-[9px] font-bold shadow-lg">
+            <button
+              onClick={() => setLang("en")}
+              className={`px-2 py-0.5 rounded-full transition-all ${
+                isEn ? "bg-white text-[#8A5155] shadow-xs" : "text-white/80 hover:text-white"
+              }`}
+            >
+              EN
+            </button>
+            <button
+              onClick={() => setLang("es")}
+              className={`px-2 py-0.5 rounded-full transition-all ${
+                !isEn ? "bg-white text-[#8A5155] shadow-xs" : "text-white/80 hover:text-white"
+              }`}
+            >
+              ES
+            </button>
+          </div>
+
+          {/* Contenido en Primer Plano */}
+          <div className="relative z-10 w-full max-w-[340px] mx-auto py-4 px-2 flex flex-col items-center text-center select-none my-auto">
             {/* 1. Texto en Arco Curvo Superior (SVG textPath) con espacio amplio */}
             <div className="w-full flex justify-center -mb-2">
               <svg viewBox="0 0 380 70" className="w-[310px] sm:w-[340px] h-[55px] overflow-visible">
@@ -428,7 +435,7 @@ export default function ElegantRoseTemplate({
                 GOOGLE MAPS
               </a>
             </div>
-          </WavyColumn>
+          </div>
         </section>
 
         {/* ══════════════════════════════════════════════════════════
