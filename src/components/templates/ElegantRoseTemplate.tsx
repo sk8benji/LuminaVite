@@ -302,7 +302,7 @@ export default function ElegantRoseTemplate({
                Silueta curva ondulada, sin caja rectangular oscura,
                con resplandor blanco en la tipografía cursiva.
         ══════════════════════════════════════════════════════════ */}
-        <section className="relative isolate w-full max-w-[430px] min-h-[760px] mx-auto overflow-hidden flex flex-col items-center justify-center text-center select-none pt-4 pb-8 px-4">
+        <section className="relative isolate w-full max-w-[430px] min-h-[760px] mx-auto overflow-hidden flex flex-col items-center justify-center text-center select-none pt-0 pb-6 px-4">
           {/* Foto de Fondo Maestra (La Quinceañera en Cuerpo Completo) */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
@@ -320,13 +320,13 @@ export default function ElegantRoseTemplate({
           {/* ======================================================== */}
           {/* SILUETA CENTRAL ONDULADA AL 30% DE TRANSPARENCIA         */}
           {/* ======================================================== */}
-          <WavyColumn className="my-auto z-10">
+          <WavyColumn className="my-auto z-10 pt-6 pb-8">
 
             {/* 1. Texto en Arco Curvo Superior (SVG textPath) con espacio amplio */}
             <div className="w-full flex justify-center -mb-2">
               <svg viewBox="0 0 380 70" className="w-[310px] sm:w-[340px] h-[55px] overflow-visible">
                 <path id="curvePath" d="M 15,55 Q 190,12 365,55" fill="transparent" />
-                <text className="font-['Cinzel'] text-[12px] sm:text-[13px] font-semibold tracking-[0.24em] fill-white uppercase drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
+                <text className="font-['Cinzel'] text-[13px] sm:text-[14px] font-bold tracking-[0.22em] fill-white uppercase drop-shadow-[0_2px_4px_rgba(0,0,0,0.95)]">
                   <textPath href="#curvePath" startOffset="50%" textAnchor="middle">
                     {data.autorBendicion || data.corteHonorJson?.parents || "MR & MRS RODRÍGUEZ"}
                   </textPath>
@@ -335,10 +335,10 @@ export default function ElegantRoseTemplate({
             </div>
 
             {/* 2. Subtítulos Superiores */}
-            <p className="font-['Cinzel'] text-xs sm:text-[13px] tracking-[0.28em] uppercase text-white font-semibold mb-1 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+            <p className="font-['Cinzel'] text-xs sm:text-sm tracking-[0.28em] uppercase text-white font-bold mb-1 drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
               {isEn ? "WARMLY INVITE YOU" : "LE INVITAN CORDIALMENTE"}
             </p>
-            <p className="font-['Cinzel'] text-xs sm:text-[13px] tracking-[0.28em] uppercase text-white font-bold mb-1.5 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+            <p className="font-['Cinzel'] text-xs sm:text-sm tracking-[0.28em] uppercase text-white font-extrabold mb-1.5 drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
               {isEn ? "TO CELEBRATE THE" : "A CELEBRAR LOS"}
             </p>
 
@@ -354,7 +354,7 @@ export default function ElegantRoseTemplate({
             </h1>
 
             {/* 4. Subtítulo Central */}
-            <p className="font-['Cinzel'] text-xs sm:text-[13px] tracking-[0.3em] uppercase text-white font-semibold my-1.5 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+            <p className="font-['Cinzel'] text-xs sm:text-sm tracking-[0.3em] uppercase text-white font-bold my-1.5 drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
               {isEn ? "OF THEIR DAUGHTER" : "DE SU HIJA"}
             </p>
 
@@ -375,7 +375,7 @@ export default function ElegantRoseTemplate({
               <div className="w-full flex justify-center -mb-1">
                 <svg viewBox="0 0 180 38" className="w-32 h-7 overflow-visible">
                   <path id="curveMonth" d="M 12,32 Q 90,8 168,32" fill="transparent" />
-                  <text className="font-['Cinzel'] text-[14px] font-bold tracking-[0.35em] fill-white uppercase drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
+                  <text className="font-['Cinzel'] text-[15px] font-bold tracking-[0.35em] fill-white uppercase drop-shadow-[0_2px_4px_rgba(0,0,0,0.95)]">
                     <textPath href="#curveMonth" startOffset="50%" textAnchor="middle">
                       {monthName}
                     </textPath>
@@ -387,21 +387,21 @@ export default function ElegantRoseTemplate({
               <div className="flex items-center justify-between w-full my-1">
                 <div className="flex-1 flex flex-col justify-center items-center px-1">
                   <div className="w-full border-t border-white/70 mb-1" />
-                  <span className="font-['Cinzel'] text-xs sm:text-[13px] tracking-[0.22em] uppercase text-white font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] text-center">
+                  <span className="font-['Cinzel'] text-xs sm:text-sm tracking-[0.22em] uppercase text-white font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] text-center">
                     {dayName}
                   </span>
                   <div className="w-full border-b border-white/70 mt-1" />
                 </div>
 
                 <div className="px-3 flex flex-col items-center">
-                  <span className="font-['Cinzel'] text-4xl sm:text-5xl font-bold text-white drop-shadow-[0_2px_6px_rgba(0,0,0,0.8)] leading-none">
+                  <span className="font-['Cinzel'] text-5xl sm:text-6xl font-bold text-white drop-shadow-[0_2px_6px_rgba(0,0,0,0.9)] leading-none">
                     {dayNumber}
                   </span>
                 </div>
 
                 <div className="flex-1 flex flex-col justify-center items-center px-1">
                   <div className="w-full border-t border-white/70 mb-1" />
-                  <span className="font-['Cinzel'] text-xs sm:text-[13px] tracking-[0.22em] uppercase text-white font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] text-center">
+                  <span className="font-['Cinzel'] text-xs sm:text-sm tracking-[0.22em] uppercase text-white font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] text-center">
                     {eventTime}
                   </span>
                   <div className="w-full border-b border-white/70 mt-1" />
@@ -409,24 +409,23 @@ export default function ElegantRoseTemplate({
               </div>
 
               {/* Dirección / Locación */}
-              <p className="font-['Cinzel'] text-xs sm:text-[13px] tracking-[0.22em] uppercase text-white font-bold mt-3 leading-relaxed drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
+              <p className="font-['Cinzel'] text-xs sm:text-sm tracking-[0.22em] uppercase text-white font-bold mt-3 leading-relaxed drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
                 {data.recepcionNombre || data.ceremoniaNombre || "ANY CITY, ANY STREET, AZ 12345"}
               </p>
               {data.recepcionDireccion && (
-                <p className="font-['Cinzel'] text-[11px] sm:text-xs tracking-[0.18em] uppercase text-white font-medium mt-1 leading-relaxed drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
+                <p className="font-['Cinzel'] text-xs sm:text-[13px] tracking-[0.18em] uppercase text-white font-semibold mt-1 leading-relaxed drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
                   {data.recepcionDireccion}
                 </p>
               )}
 
-              {/* Botón Google Maps elegante y legible */}
+              {/* Botón Google Maps elegante y legible a juego con Canva */}
               <a
                 href={churchMapUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-3.5 bg-white/25 border border-white/60 text-white font-['Cinzel'] text-[10px] sm:text-xs tracking-[0.25em] uppercase py-2 px-6 rounded-full hover:bg-white/40 transition-all shadow-lg inline-flex items-center gap-2 cursor-pointer backdrop-blur-md font-semibold drop-shadow"
+                className="mt-3.5 bg-[#BE8A87] hover:bg-[#b07b78] text-white font-['Cinzel'] text-[10px] sm:text-[11px] tracking-[0.2em] uppercase py-1.5 px-6 rounded-full font-bold shadow-md transition inline-block drop-shadow active:scale-95 cursor-pointer"
               >
-                <MapPin className="w-3.5 h-3.5 text-rose-200" />
-                <span>GOOGLE MAPS</span>
+                GOOGLE MAPS
               </a>
             </div>
           </WavyColumn>
@@ -641,118 +640,269 @@ export default function ElegantRoseTemplate({
 
         {/* ══════════════════════════════════════════════════════════
             5. THE BIG DAY / ITINERARIO SOBRE VESTIDO ROSA
+               Réplica exacta de Canva (media_1791270959870.png)
         ══════════════════════════════════════════════════════════ */}
         <section
-          className="relative w-full bg-cover bg-bottom overflow-hidden"
+          className="relative w-full bg-cover bg-bottom overflow-hidden select-none"
           style={{ backgroundImage: `url(${heroPhotoUrl})` }}
         >
           <WavyColumn className="py-12">
-            <h3 className="font-['Alex_Brush'] text-5xl sm:text-6xl text-white select-none drop-shadow-md">
-              The Day
-            </h3>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={ELEGANT_ROSE_ASSETS.crown}
-              alt="Corona"
-              className="w-8 h-auto my-2 opacity-95 drop-shadow"
-            />
-            <p className="font-['Cinzel'] text-xs sm:text-[13px] tracking-[0.25em] uppercase text-rose-100 mb-8 font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
-              {isEn ? "PROGRAM OF THE BIG DAY" : "PROGRAMA DEL EVENTO"}
-            </p>
+            {/* Header: The Day + Corona + Sparkle Dust */}
+            <div className="relative w-full flex items-center justify-center pt-2 pb-6">
+              {/* Sparkle dust across the header */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={ELEGANT_ROSE_ASSETS.sparkleDust}
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = ELEGANT_ROSE_ASSETS.s3.sparkleDust;
+                }}
+                alt=""
+                className="absolute -top-4 left-1/2 -translate-x-1/2 w-[340px] max-w-none h-auto pointer-events-none opacity-85 select-none"
+              />
+              <div className="relative flex items-center justify-center gap-2.5 z-10">
+                <h3
+                  className="font-['Alex_Brush'] text-5xl sm:text-6xl text-white select-none leading-none"
+                  style={{
+                    filter:
+                      "drop-shadow(0 0 10px rgba(255, 255, 255, 0.95)) drop-shadow(0 0 22px rgba(255, 255, 255, 0.6)) drop-shadow(0 4px 8px rgba(0,0,0,0.6))",
+                  }}
+                >
+                  The Day
+                </h3>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={ELEGANT_ROSE_ASSETS.crownHeader}
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = ELEGANT_ROSE_ASSETS.s3.crownHeader;
+                  }}
+                  alt="Crown"
+                  className="w-12 sm:w-14 h-auto object-contain -mt-3 drop-shadow-md select-none"
+                />
+              </div>
+            </div>
 
-            <div className="space-y-8 w-full max-w-[300px]">
-              {/* 4:00 PM Misa */}
-              <div className="flex flex-col items-center">
-                <span className="font-['Cinzel'] text-sm sm:text-base font-bold text-rose-200 tracking-wider drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
-                  4:00 PM
-                </span>
-                <div className="w-12 h-12 my-1.5 flex items-center justify-center">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={ELEGANT_ROSE_ASSETS.churchIcon} alt="Mass" className="w-full h-full object-contain drop-shadow-lg" />
+            {/* Contenedor de Itinerario */}
+            <div className="w-full max-w-[310px] space-y-6 mt-2">
+              {/* ────────────────────────────────────────────────────────── */}
+              {/* 1. MASS (4:PM) - Izquierda: Texto | Derecha: Iglesia SVG  */}
+              {/* ────────────────────────────────────────────────────────── */}
+              <div className="flex flex-col items-center w-full">
+                <div className="grid grid-cols-2 items-center gap-2 w-full text-center">
+                  {/* Columna Izquierda: Hora + Divisor Oro + Título + Lugar */}
+                  <div className="flex flex-col items-center justify-center">
+                    <span className="font-['Bodoni_Moda',serif] text-2xl sm:text-3xl font-bold text-white tracking-wide drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
+                      4:PM
+                    </span>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={ELEGANT_ROSE_ASSETS.goldDividerLine}
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = ELEGANT_ROSE_ASSETS.s3.goldDividerLine;
+                      }}
+                      alt=""
+                      className="w-28 sm:w-32 h-auto my-1 object-contain"
+                    />
+                    <span className="font-['Bodoni_Moda',serif] text-base sm:text-lg font-bold tracking-[0.2em] uppercase text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
+                      {isEn ? "MASS" : "MISA"}
+                    </span>
+                    <span className="font-['Bodoni_Moda',serif] text-[11px] sm:text-xs uppercase text-white font-medium tracking-wide leading-tight drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)] mt-1 px-1">
+                      {data.ceremoniaNombre || (isEn ? "ST. MARY’S CHURCH, YOUR CITY, AZ" : "IGLESIA SANTA MARÍA, TU CIUDAD, AZ")}
+                    </span>
+                  </div>
+
+                  {/* Columna Derecha: Iglesia Line Art Blanca */}
+                  <div className="flex items-center justify-center">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={ELEGANT_ROSE_ASSETS.churchLineArt}
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = ELEGANT_ROSE_ASSETS.s3.churchLineArt;
+                      }}
+                      alt="Church"
+                      className="w-24 sm:w-28 h-auto object-contain mx-auto drop-shadow-xl"
+                    />
+                  </div>
                 </div>
-                <p className="font-['Cinzel'] text-xs sm:text-sm tracking-[0.25em] uppercase text-white font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
-                  {isEn ? "MASS" : "MISA"}
-                </p>
-                <p className="text-xs sm:text-[13px] text-white font-medium mt-0.5 drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
-                  {data.ceremoniaNombre || "St. Mary’s Church, your city, az"}
-                </p>
+
+                {/* Botón Google Maps Centrado */}
                 <a
                   href={churchMapUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-2 bg-white/25 border border-white/60 text-white font-['Cinzel'] text-[10px] sm:text-xs tracking-[0.2em] uppercase py-1.5 px-5 rounded-full hover:bg-white/40 transition font-semibold shadow-md inline-flex items-center gap-1.5 backdrop-blur-sm drop-shadow"
+                  className="mt-3.5 bg-[#BE8A87] hover:bg-[#b07b78] text-white font-['Cinzel'] text-[10px] sm:text-[11px] tracking-[0.2em] uppercase py-1.5 px-6 rounded-full font-bold shadow-md transition inline-block drop-shadow active:scale-95 cursor-pointer"
                 >
-                  <MapPin className="w-3 h-3 text-rose-200" />
-                  <span>GOOGLE MAPS</span>
+                  GOOGLE MAPS
                 </a>
               </div>
 
-              {/* 5:00 PM Entrada / Recepción */}
-              <div className="flex flex-col items-center pt-2">
-                <span className="font-['Cinzel'] text-sm sm:text-base font-bold text-rose-200 tracking-wider drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
-                  5:00 PM
-                </span>
-                <div className="w-12 h-12 my-1.5 flex items-center justify-center">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={ELEGANT_ROSE_ASSETS.dressIcon} alt="Entrance" className="w-full h-full object-contain drop-shadow-lg" />
+              {/* ────────────────────────────────────────────────────────── */}
+              {/* 2. ENTRANCE (5:PM) - Izquierda: Vestido | Derecha: Texto   */}
+              {/* ────────────────────────────────────────────────────────── */}
+              <div className="flex flex-col items-center w-full pt-2">
+                <div className="grid grid-cols-2 items-center gap-2 w-full text-center">
+                  {/* Columna Izquierda: Vestido Quinceañera Rosa Espalda */}
+                  <div className="flex items-center justify-center">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={ELEGANT_ROSE_ASSETS.dressIllustration}
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = ELEGANT_ROSE_ASSETS.s3.dressIllustration;
+                      }}
+                      alt="Quinceañera Dress"
+                      className="w-28 sm:w-32 h-auto object-contain mx-auto drop-shadow-2xl"
+                    />
+                  </div>
+
+                  {/* Columna Derecha: Hora + Divisor Oro + Título + Lugar */}
+                  <div className="flex flex-col items-center justify-center">
+                    <span className="font-['Bodoni_Moda',serif] text-2xl sm:text-3xl font-bold text-white tracking-wide drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
+                      5:PM
+                    </span>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={ELEGANT_ROSE_ASSETS.goldDividerLine}
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = ELEGANT_ROSE_ASSETS.s3.goldDividerLine;
+                      }}
+                      alt=""
+                      className="w-28 sm:w-32 h-auto my-1 object-contain"
+                    />
+                    <span className="font-['Bodoni_Moda',serif] text-base sm:text-lg font-bold tracking-[0.2em] uppercase text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
+                      {isEn ? "ENTRANCE" : "RECEPCIÓN"}
+                    </span>
+                    <span className="font-['Bodoni_Moda',serif] text-[11px] sm:text-xs uppercase text-white font-medium tracking-wide leading-tight drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)] mt-1 px-1">
+                      {data.recepcionNombre || (isEn ? "GRAND BALLROOM, YOUR CITY, AZ" : "SALÓN PRINCIPAL, TU CIUDAD, AZ")}
+                    </span>
+                  </div>
                 </div>
-                <p className="font-['Cinzel'] text-xs sm:text-sm tracking-[0.25em] uppercase text-white font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
-                  {isEn ? "ENTRANCE" : "RECEPCIÓN"}
-                </p>
-                <p className="text-xs sm:text-[13px] text-white font-medium mt-0.5 drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
-                  {data.recepcionNombre || "Grand Ballroom, your city, az"}
-                </p>
+
+                {/* Botón Google Maps Centrado */}
                 <a
                   href={ballroomMapUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-2 bg-white/25 border border-white/60 text-white font-['Cinzel'] text-[10px] sm:text-xs tracking-[0.2em] uppercase py-1.5 px-5 rounded-full hover:bg-white/40 transition font-semibold shadow-md inline-flex items-center gap-1.5 backdrop-blur-sm drop-shadow"
+                  className="mt-3.5 bg-[#BE8A87] hover:bg-[#b07b78] text-white font-['Cinzel'] text-[10px] sm:text-[11px] tracking-[0.2em] uppercase py-1.5 px-6 rounded-full font-bold shadow-md transition inline-block drop-shadow active:scale-95 cursor-pointer"
                 >
-                  <MapPin className="w-3 h-3 text-rose-200" />
-                  <span>GOOGLE MAPS</span>
+                  GOOGLE MAPS
                 </a>
               </div>
 
-              {/* 6:00 PM Vals */}
-              <div className="flex flex-col items-center pt-2">
-                <span className="font-['Cinzel'] text-sm sm:text-base font-bold text-rose-200 tracking-wider drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
-                  6:00 PM
-                </span>
-                <div className="w-12 h-12 my-1.5 flex items-center justify-center">
+              {/* ────────────────────────────────────────────────────────── */}
+              {/* 3. WALTZ (6:00 PM) - Pareja | Divisor Vertical Oro | Texto */}
+              {/* ────────────────────────────────────────────────────────── */}
+              <div className="flex items-center justify-between w-full pt-4">
+                {/* Pareja Bailando Vals Oro */}
+                <div className="flex-1 flex items-center justify-center">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={ELEGANT_ROSE_ASSETS.waltzIcon} alt="Waltz" className="w-full h-full object-contain drop-shadow-lg" />
+                  <img
+                    src={ELEGANT_ROSE_ASSETS.coupleIcon}
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = ELEGANT_ROSE_ASSETS.s3.coupleIcon;
+                    }}
+                    alt="Waltz"
+                    className="w-20 sm:w-24 h-auto object-contain mx-auto drop-shadow-xl"
+                  />
                 </div>
-                <p className="font-['Cinzel'] text-xs sm:text-sm tracking-[0.25em] uppercase text-white font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
-                  {isEn ? "WALTZ" : "VALS"}
-                </p>
+
+                {/* Divisor Vertical Dorado con Rombo Central */}
+                <div className="flex flex-col items-center justify-center mx-2 h-20 select-none pointer-events-none">
+                  <div className="w-[1.5px] h-8 bg-gradient-to-b from-transparent to-[#e8c872]" />
+                  <div className="w-2.5 h-2.5 rotate-45 border border-[#f5db94] bg-[#cda052] shadow-sm my-0.5" />
+                  <div className="w-[1.5px] h-8 bg-gradient-to-t from-transparent to-[#e8c872]" />
+                </div>
+
+                {/* Hora + Divisor Oro + Título */}
+                <div className="flex-1 flex flex-col items-center justify-center text-center">
+                  <span className="font-['Bodoni_Moda',serif] text-2xl sm:text-3xl font-bold text-white tracking-wide drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
+                    6:00 PM
+                  </span>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={ELEGANT_ROSE_ASSETS.goldDividerLine}
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = ELEGANT_ROSE_ASSETS.s3.goldDividerLine;
+                    }}
+                    alt=""
+                    className="w-28 sm:w-32 h-auto my-1 object-contain"
+                  />
+                  <span className="font-['Bodoni_Moda',serif] text-base sm:text-lg font-bold tracking-[0.2em] uppercase text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
+                    {isEn ? "WALTZ" : "VALS"}
+                  </span>
+                </div>
               </div>
 
-              {/* 7:00 PM Cena */}
-              <div className="flex flex-col items-center pt-2">
-                <span className="font-['Cinzel'] text-sm sm:text-base font-bold text-rose-200 tracking-wider drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
-                  7:00 PM
-                </span>
-                <div className="w-12 h-12 my-1.5 flex items-center justify-center">
+              {/* ────────────────────────────────────────────────────────── */}
+              {/* 4. DINNER (7:00 PM) - Plato Floral Oro | Divisor | Texto   */}
+              {/* ────────────────────────────────────────────────────────── */}
+              <div className="grid grid-cols-2 items-center gap-2 w-full text-center pt-3">
+                {/* Plato y Cubiertos con Flores en Oro */}
+                <div className="flex items-center justify-center">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={ELEGANT_ROSE_ASSETS.ballroomIcon} alt="Dinner" className="w-full h-full object-contain drop-shadow-lg" />
+                  <img
+                    src={ELEGANT_ROSE_ASSETS.ballroomIcon}
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = ELEGANT_ROSE_ASSETS.s3.ballroomIcon;
+                    }}
+                    alt="Dinner"
+                    className="w-24 sm:w-28 h-auto object-contain mx-auto drop-shadow-xl"
+                  />
                 </div>
-                <p className="font-['Cinzel'] text-xs sm:text-sm tracking-[0.25em] uppercase text-white font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
-                  {isEn ? "DINNER" : "CENA"}
-                </p>
+
+                {/* Hora + Divisor Oro + Título */}
+                <div className="flex flex-col items-center justify-center">
+                  <span className="font-['Bodoni_Moda',serif] text-2xl sm:text-3xl font-bold text-white tracking-wide drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
+                    7:00 PM
+                  </span>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={ELEGANT_ROSE_ASSETS.goldDividerLine}
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = ELEGANT_ROSE_ASSETS.s3.goldDividerLine;
+                    }}
+                    alt=""
+                    className="w-28 sm:w-32 h-auto my-1 object-contain"
+                  />
+                  <span className="font-['Bodoni_Moda',serif] text-base sm:text-lg font-bold tracking-[0.2em] uppercase text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
+                    {isEn ? "DINNER" : "CENA"}
+                  </span>
+                </div>
               </div>
 
-              {/* 9:00 PM Fiesta */}
-              <div className="flex flex-col items-center pt-2">
-                <span className="font-['Cinzel'] text-sm sm:text-base font-bold text-rose-200 tracking-wider drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
-                  9:00 PM
-                </span>
-                <div className="w-12 h-12 my-1.5 flex items-center justify-center">
+              {/* ────────────────────────────────────────────────────────── */}
+              {/* 5. PARTY (9:00 PM) - Bola Disco Oro | Divisor | Texto     */}
+              {/* ────────────────────────────────────────────────────────── */}
+              <div className="grid grid-cols-2 items-center gap-2 w-full text-center pt-3 pb-2">
+                {/* Bola Disco / Destellos en Oro */}
+                <div className="flex items-center justify-center">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={ELEGANT_ROSE_ASSETS.musicIcon} alt="Party" className="w-full h-full object-contain drop-shadow-lg" />
+                  <img
+                    src={ELEGANT_ROSE_ASSETS.musicIcon}
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = ELEGANT_ROSE_ASSETS.s3.musicIcon;
+                    }}
+                    alt="Party"
+                    className="w-20 sm:w-24 h-auto object-contain mx-auto drop-shadow-xl"
+                  />
                 </div>
-                <p className="font-['Cinzel'] text-xs sm:text-sm tracking-[0.25em] uppercase text-white font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
-                  {isEn ? "PARTY" : "FIESTA"}
-                </p>
+
+                {/* Hora + Divisor Oro + Título */}
+                <div className="flex flex-col items-center justify-center">
+                  <span className="font-['Bodoni_Moda',serif] text-2xl sm:text-3xl font-bold text-white tracking-wide drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
+                    9:00 PM
+                  </span>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={ELEGANT_ROSE_ASSETS.goldDividerLine}
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = ELEGANT_ROSE_ASSETS.s3.goldDividerLine;
+                    }}
+                    alt=""
+                    className="w-28 sm:w-32 h-auto my-1 object-contain"
+                  />
+                  <span className="font-['Bodoni_Moda',serif] text-base sm:text-lg font-bold tracking-[0.2em] uppercase text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
+                    {isEn ? "PARTY" : "FIESTA"}
+                  </span>
+                </div>
               </div>
             </div>
           </WavyColumn>
