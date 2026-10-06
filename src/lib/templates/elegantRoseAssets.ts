@@ -63,5 +63,6 @@ export const ELEGANT_ROSE_ASSETS = {
     waltzIcon: `${S3_BASE}/ed9f319d33dbef42e1b752f9027fb93c.png`,
     giftIcon: `${S3_BASE}/de72738875d848a46a2c4e1a8931d762.png`,
     musicIcon: `${S3_BASE}/a46eef2ee11437351260db2b11329d5f.png`,
+    frostedBlurStrip: `${S3_BASE}/339872b4722f5715a436439eedbd3ab5.png`,
   }
 };

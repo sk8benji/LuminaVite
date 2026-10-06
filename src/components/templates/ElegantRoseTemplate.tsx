@@ -27,29 +27,21 @@ function WavyColumn({
     <div
       className={`relative w-full max-w-[340px] mx-auto py-8 px-4 flex flex-col items-center text-center select-none ${className}`}
     >
-      {/* Silueta ondulada original semitransparente (~35% de opacidad como en Canva, sin bordes ni cajas) */}
+      {/* Silueta negra original al 20% de transparencia (como pide el usuario) */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={ELEGANT_ROSE_ASSETS.frostedBlurStrip}
+        onError={(e) => {
+          (e.target as HTMLImageElement).src = ELEGANT_ROSE_ASSETS.s3.frostedBlurStrip;
+        }}
         alt=""
         aria-hidden="true"
-        className="absolute inset-0 w-full h-full object-fill opacity-35 pointer-events-none -z-10 select-none"
+        className="absolute inset-0 w-full h-full object-fill opacity-20 pointer-events-none select-none"
       />
-      {/* Desenfoque suave enmascarado con la misma silueta orgánica */}
-      <div
-        className="absolute inset-0 -z-10 pointer-events-none"
-        style={{
-          WebkitMaskImage: `url(${ELEGANT_ROSE_ASSETS.frostedBlurStrip})`,
-          maskImage: `url(${ELEGANT_ROSE_ASSETS.frostedBlurStrip})`,
-          WebkitMaskSize: "100% 100%",
-          maskSize: "100% 100%",
-          WebkitMaskRepeat: "no-repeat",
-          maskRepeat: "no-repeat",
-          backdropFilter: "blur(4px)",
-          WebkitBackdropFilter: "blur(4px)",
-        }}
-      />
-      {children}
+      {/* Contenido en primer plano */}
+      <div className="relative z-10 w-full flex flex-col items-center">
+        {children}
+      </div>
     </div>
   );
 }
@@ -310,22 +302,25 @@ export default function ElegantRoseTemplate({
                Silueta curva ondulada, sin caja rectangular oscura,
                con resplandor blanco en la tipografía cursiva.
         ══════════════════════════════════════════════════════════ */}
-        <section className="relative w-full max-w-[430px] min-h-[760px] mx-auto overflow-hidden flex flex-col items-center justify-center text-center select-none pt-4 pb-8 px-4">
+        <section className="relative isolate w-full max-w-[430px] min-h-[760px] mx-auto overflow-hidden flex flex-col items-center justify-center text-center select-none pt-4 pb-8 px-4">
           {/* Foto de Fondo Maestra (La Quinceañera en Cuerpo Completo) */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={heroPhotoUrl}
+            onError={(e) => {
+              (e.target as HTMLImageElement).src = ELEGANT_ROSE_ASSETS.s3.heroPhoto;
+            }}
             alt={data.titulo}
-            className="absolute inset-0 w-full h-full object-cover object-top -z-20"
+            className="absolute inset-0 w-full h-full object-cover object-top pointer-events-none"
           />
 
           {/* Capa de Contraste Suave */}
-          <div className="absolute inset-0 bg-black/20 -z-10" />
+          <div className="absolute inset-0 bg-black/10 pointer-events-none" />
 
           {/* ======================================================== */}
-          {/* SILUETA CENTRAL ONDULADA SEMITRANSPARENTE (CANVA ORIGINAL)*/}
+          {/* SILUETA CENTRAL ONDULADA AL 20% DE TRANSPARENCIA         */}
           {/* ======================================================== */}
-          <WavyColumn className="my-auto">
+          <WavyColumn className="my-auto z-10">
 
             {/* 1. Texto en Arco Curvo Superior (SVG textPath) */}
             <div className="w-full flex justify-center -mb-2">
