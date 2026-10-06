@@ -17,6 +17,7 @@ export const ELEGANT_ROSE_ASSETS = {
   peachBg: `${LOCAL_BASE}/08c973400ebfcfa800c016bf24608480.jpg`,
   bouquetBg: `${LOCAL_BASE}/9ef042dcf0eb2ae4150fe4aa7209e94d.jpg`,
   petalsBg: `${LOCAL_BASE}/93b6ed5bbc58b2a22d52ae7baa96db41.jpg`,
+  frostedBlurStrip: `${LOCAL_BASE}/339872b4722f5715a436439eedbd3ab5.png`,
   polaroidFrame: `${LOCAL_BASE}/7682b88019dfb1b516da808e76e036cf.png`,
 
   // Childhood photos

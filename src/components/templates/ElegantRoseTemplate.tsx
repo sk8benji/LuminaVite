@@ -195,6 +195,15 @@ export default function ElegantRoseTemplate({
     `${data.recepcionNombre || "Grand Ballroom"} ${data.recepcionDireccion || "Any City, Any Street, AZ 12345"}`.trim()
   );
 
+  const frostedColumnStyle: React.CSSProperties = {
+    backgroundImage: `url(${ELEGANT_ROSE_ASSETS.frostedBlurStrip})`,
+    backgroundColor: "rgba(0, 0, 0, 0.40)",
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+    backdropFilter: "blur(6px)",
+    WebkitBackdropFilter: "blur(6px)",
+  };
+
   return (
     <div className="min-h-screen flex justify-center bg-[#150D11] selection:bg-rose-300/30 antialiased font-['Montserrat',sans-serif]">
       {/* Audio Real */}
@@ -258,7 +267,10 @@ export default function ElegantRoseTemplate({
           style={{ backgroundImage: `url(${heroPhotoUrl})` }}
         >
           {/* Columna Central Esmerilada */}
-          <div className="w-full max-w-[340px] mx-auto bg-black/40 backdrop-blur-[8px] border-x border-white/20 px-4 pt-12 pb-14 flex flex-col items-center text-center">
+          <div
+            style={frostedColumnStyle}
+            className="w-full max-w-[340px] mx-auto border-x border-white/20 px-4 pt-12 pb-14 flex flex-col items-center text-center shadow-2xl relative"
+          >
             {/* Texto Arqueado "YOU ARE CORDIALLY" */}
             <div className="w-full flex justify-center -mb-2">
               <svg viewBox="0 0 300 50" className="w-60 h-10 overflow-visible">
@@ -329,7 +341,10 @@ export default function ElegantRoseTemplate({
           className="relative w-full bg-cover bg-center overflow-hidden"
           style={{ backgroundImage: `url(${ELEGANT_ROSE_ASSETS.rosesBg})` }}
         >
-          <div className="w-full max-w-[340px] mx-auto bg-black/45 backdrop-blur-[8px] border-x border-white/20 px-4 py-8 flex flex-col items-center text-center">
+          <div
+            style={frostedColumnStyle}
+            className="w-full max-w-[340px] mx-auto border-x border-white/20 px-4 py-8 flex flex-col items-center text-center shadow-2xl relative"
+          >
             {/* Tarjeta Álbum Polaroid con Mariposas */}
             <div className="w-52 bg-white/90 p-3 rounded-2xl shadow-2xl border border-white text-stone-800 text-center relative group">
               <div className="w-full aspect-square rounded-xl overflow-hidden mb-2 bg-rose-50 shadow-inner">
@@ -385,7 +400,10 @@ export default function ElegantRoseTemplate({
           className="relative w-full bg-cover bg-top overflow-hidden"
           style={{ backgroundImage: `url(${ELEGANT_ROSE_ASSETS.castlePhoto})` }}
         >
-          <div className="w-full max-w-[340px] mx-auto bg-black/45 backdrop-blur-[8px] border-x border-white/20 px-4 py-12 flex flex-col items-center text-center">
+          <div
+            style={frostedColumnStyle}
+            className="w-full max-w-[340px] mx-auto border-x border-white/20 px-4 py-12 flex flex-col items-center text-center shadow-2xl relative"
+          >
             <h3 className="font-['Alex_Brush'] text-5xl sm:text-6xl text-rose-100 drop-shadow-md select-none leading-none">
               Growing
             </h3>
@@ -442,7 +460,10 @@ export default function ElegantRoseTemplate({
           className="relative w-full bg-cover bg-center overflow-hidden"
           style={{ backgroundImage: `url(${ELEGANT_ROSE_ASSETS.rosesBg})` }}
         >
-          <div className="w-full max-w-[340px] mx-auto bg-black/45 backdrop-blur-[8px] border-x border-white/20 px-4 py-12 flex flex-col items-center text-center">
+          <div
+            style={frostedColumnStyle}
+            className="w-full max-w-[340px] mx-auto border-x border-white/20 px-4 py-12 flex flex-col items-center text-center shadow-2xl relative"
+          >
             <h3 className="font-['Alex_Brush'] text-5xl text-rose-100 select-none">
               The Countdown
             </h3>
@@ -505,7 +526,10 @@ export default function ElegantRoseTemplate({
           className="relative w-full bg-cover bg-bottom overflow-hidden"
           style={{ backgroundImage: `url(${heroPhotoUrl})` }}
         >
-          <div className="w-full max-w-[340px] mx-auto bg-black/45 backdrop-blur-[8px] border-x border-white/20 px-4 py-12 flex flex-col items-center text-center">
+          <div
+            style={frostedColumnStyle}
+            className="w-full max-w-[340px] mx-auto border-x border-white/20 px-4 py-12 flex flex-col items-center text-center shadow-2xl relative"
+          >
             <h3 className="font-['Alex_Brush'] text-5xl text-white select-none">
               The Day
             </h3>
@@ -622,7 +646,10 @@ export default function ElegantRoseTemplate({
           className="relative w-full bg-cover bg-center overflow-hidden"
           style={{ backgroundImage: `url(${ELEGANT_ROSE_ASSETS.peachBg})` }}
         >
-          <div className="w-full max-w-[340px] mx-auto bg-black/45 backdrop-blur-[8px] border-x border-white/20 px-4 py-12 flex flex-col items-center text-center">
+          <div
+            style={frostedColumnStyle}
+            className="w-full max-w-[340px] mx-auto border-x border-white/20 px-4 py-12 flex flex-col items-center text-center shadow-2xl relative"
+          >
             {/* Padrinos */}
             <h3 className="font-['Alex_Brush'] text-5xl text-rose-100 select-none">
               Padrinos
@@ -675,7 +702,10 @@ export default function ElegantRoseTemplate({
           className="relative w-full bg-cover bg-center overflow-hidden"
           style={{ backgroundImage: `url(${ELEGANT_ROSE_ASSETS.bouquetBg})` }}
         >
-          <div className="w-full max-w-[340px] mx-auto bg-black/45 backdrop-blur-[8px] border-x border-white/20 px-4 py-12 flex flex-col items-center text-center">
+          <div
+            style={frostedColumnStyle}
+            className="w-full max-w-[340px] mx-auto border-x border-white/20 px-4 py-12 flex flex-col items-center text-center shadow-2xl relative"
+          >
             <h3 className="font-['Alex_Brush'] text-5xl text-rose-100 select-none">
               Details
             </h3>
@@ -753,7 +783,10 @@ export default function ElegantRoseTemplate({
           className="relative w-full bg-cover bg-center overflow-hidden"
           style={{ backgroundImage: `url(${ELEGANT_ROSE_ASSETS.petalsBg})` }}
         >
-          <div className="w-full max-w-[340px] mx-auto bg-black/50 backdrop-blur-[8px] border-x border-white/20 px-4 py-12 flex flex-col items-center text-center">
+          <div
+            style={frostedColumnStyle}
+            className="w-full max-w-[340px] mx-auto border-x border-white/20 px-4 py-12 flex flex-col items-center text-center shadow-2xl relative"
+          >
             <h3 className="font-['Alex_Brush'] text-5xl text-rose-100 select-none">
               Please
             </h3>
