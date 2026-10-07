@@ -4,6 +4,9 @@ import prisma from "@/lib/db";
 import { fallbackEventStore } from "@/lib/event-fallback-store";
 import { ensurePostgresTables } from "@/lib/init-db";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const slug = searchParams.get("slug");
@@ -11,20 +14,31 @@ export async function GET(req: NextRequest) {
   // Si se solicita un evento específico por slug
   if (slug) {
     const cleanSlug = slug.toLowerCase().trim();
+    let dbEvento: any = null;
     try {
-      const evento = await prisma.evento.findUnique({
+      dbEvento = await prisma.evento.findUnique({
         where: { slug: cleanSlug },
       });
-      if (evento) {
-        return NextResponse.json({ evento });
-      }
     } catch (err) {
       console.warn("Aviso al consultar evento en DB:", err);
     }
 
     const fallback = await fallbackEventStore.getEvent(cleanSlug);
-    if (fallback) {
-      return NextResponse.json({ evento: fallback });
+
+    // Si ambos existen, devolver el registro más reciente por updatedAt
+    let mostRecent: any = null;
+    if (dbEvento && fallback) {
+      const dbTime = new Date(dbEvento.updatedAt || 0).getTime();
+      const fbTime = new Date(fallback.updatedAt || 0).getTime();
+      mostRecent = fbTime >= dbTime ? fallback : dbEvento;
+    } else if (fallback) {
+      mostRecent = fallback;
+    } else if (dbEvento) {
+      mostRecent = dbEvento;
+    }
+
+    if (mostRecent) {
+      return NextResponse.json({ evento: mostRecent });
     }
 
     return NextResponse.json({ error: "Evento no encontrado." }, { status: 404 });
@@ -355,6 +369,9 @@ export async function PUT(req: NextRequest) {
 
     // 1. Intentar actualizar en PostgreSQL
     try {
+      if (body.estiloPlantilla === "QUINCE_ROSADO") {
+        await prisma.$executeRawUnsafe(`ALTER TYPE "EstiloPlantilla" ADD VALUE IF NOT EXISTS 'QUINCE_ROSADO';`).catch(() => {});
+      }
       updatedEvento = await prisma.evento.update({
         where: { slug: cleanSlug },
         data: {

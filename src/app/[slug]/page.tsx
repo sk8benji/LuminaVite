@@ -5,6 +5,9 @@ import { fallbackEventStore } from "@/lib/event-fallback-store";
 import { InvitationData } from "@/components/invitation/InvitationMobileView";
 import TemplateDispatcher from "@/components/templates/TemplateDispatcher";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 interface PageProps {
   params: Promise<{ slug: string }> | { slug: string };
 }
@@ -286,87 +289,95 @@ async function getEventoData(rawSlug: string): Promise<InvitationData | null> {
   if (slug === "coraline-party") return DEMO_CORALINE;
   if (slug === "sofia-y-alejandro") return DEMO_BODA;
 
+  let dbEvento: any = null;
   try {
-    const evento = await prisma.evento.findUnique({
+    dbEvento = await prisma.evento.findUnique({
       where: { slug, activo: true },
     });
-
-    if (!evento) {
-      const fallback = await fallbackEventStore.getEvent(slug);
-      if (fallback) {
-        return {
-          ...fallback,
-          fechaEvento: new Date(fallback.fechaEvento),
-        } as any;
-      }
-      return null;
-    }
-
-    return {
-      id: evento.id,
-      slug: evento.slug,
-      tipoEvento: evento.tipoEvento as any,
-      estiloPlantilla: evento.estiloPlantilla as any,
-      titulo: evento.titulo,
-      subtitulo: evento.subtitulo,
-      frasePersonalizada: evento.frasePersonalizada,
-      fechaEvento: evento.fechaEvento,
-      fechaTextoPersonalizada: evento.fechaTextoPersonalizada,
-      fotoPortadaUrl: evento.fotoPortadaUrl,
-      fotoInfanciaUrl: evento.fotoInfanciaUrl,
-      fotoActualUrl: evento.fotoActualUrl,
-      fotoCierreUrl: evento.fotoCierreUrl,
-      musicaUrl: evento.musicaUrl,
-      videoUrl: evento.videoUrl,
-      galeriaFotosUrls: evento.galeriaFotosUrls,
-      telefonoWhatsappRsvp: evento.telefonoWhatsappRsvp,
-      fechaLimiteRsvp: evento.fechaLimiteRsvp ? evento.fechaLimiteRsvp.toLocaleDateString() : null,
-      maxPasesPorInvitado: evento.maxPasesPorInvitado,
-      ceremoniaNombre: evento.ceremoniaNombre,
-      ceremoniaDireccion: evento.ceremoniaDireccion,
-      ceremoniaMapUrl: evento.ceremoniaMapUrl,
-      recepcionNombre: evento.recepcionNombre,
-      recepcionDireccion: evento.recepcionDireccion,
-      recepcionMapUrl: evento.recepcionMapUrl,
-      fechaPlacaMes: (evento as any).fechaPlacaMes,
-      fechaPlacaHora: (evento as any).fechaPlacaHora,
-      fechaPlacaLugar: (evento as any).fechaPlacaLugar,
-      countdownEncabezado: (evento as any).countdownEncabezado,
-      dressCodeEtiqueta: (evento as any).dressCodeEtiqueta,
-      dressCodeColoresReservados: (evento as any).dressCodeColoresReservados,
-      regalosMensaje: (evento as any).regalosMensaje,
-      regalosZelle: (evento as any).regalosZelle,
-      regalosCashApp: (evento as any).regalosCashApp,
-      rsvpFechaLimite: (evento as any).rsvpFechaLimite,
-      rsvpDiasAntes: (evento as any).rsvpDiasAntes ?? 15,
-      autorBendicion: (evento as any).autorBendicion,
-      textoDisco: (evento as any).textoDisco,
-      mensajeDespedida: (evento as any).mensajeDespedida,
-      dressCodeTitulo: evento.dressCodeTitulo,
-      dressCodeNota: evento.dressCodeNota,
-      coloresReservados: evento.coloresReservados,
-      celebrationGuideline: evento.celebrationGuideline,
-      wishlistUrl: evento.wishlistUrl,
-      idiomaDefault: evento.idiomaDefault,
-      itinerario: ((evento as any).itinerarioJson as any) || undefined,
-      itinerarioJson: evento.itinerarioJson,
-      corteHonorJson: evento.corteHonorJson,
-      mesaRegalosJson: evento.mesaRegalosJson,
-      hospedajeJson: evento.hospedajeJson,
-      transporteJson: evento.transporteJson,
-      historiaHitosJson: evento.historiaHitosJson,
-    };
   } catch (error) {
     console.warn("Base de datos no disponible o error al consultar slug:", slug, error);
-    const fallback = await fallbackEventStore.getEvent(slug);
-    if (fallback) {
-      return {
-        ...fallback,
-        fechaEvento: new Date(fallback.fechaEvento),
-      } as any;
-    }
+  }
+
+  // Consultar fallback (memoria y AWS S3)
+  const fallback = await fallbackEventStore.getEvent(slug);
+
+  // Si ambos existen, priorizar el registro con updatedAt más reciente
+  let selected: any = null;
+  if (dbEvento && fallback) {
+    const dbTime = new Date(dbEvento.updatedAt || 0).getTime();
+    const fbTime = new Date(fallback.updatedAt || 0).getTime();
+    selected = fbTime >= dbTime ? fallback : dbEvento;
+  } else if (fallback) {
+    selected = fallback;
+  } else if (dbEvento) {
+    selected = dbEvento;
+  }
+
+  if (!selected) {
     return null;
   }
+
+  return {
+    id: selected.id,
+    slug: selected.slug,
+    tipoEvento: selected.tipoEvento as any,
+    estiloPlantilla: selected.estiloPlantilla as any,
+    titulo: selected.titulo,
+    subtitulo: selected.subtitulo,
+    frasePersonalizada: selected.frasePersonalizada,
+    fechaEvento: new Date(selected.fechaEvento),
+    fechaTextoPersonalizada: selected.fechaTextoPersonalizada,
+    fotoPortadaUrl: selected.fotoPortadaUrl,
+    fotoInfanciaUrl: selected.fotoInfanciaUrl,
+    fotoActualUrl: selected.fotoActualUrl,
+    fotoCierreUrl: selected.fotoCierreUrl,
+    musicaUrl: selected.musicaUrl,
+    videoUrl: selected.videoUrl,
+    galeriaFotosUrls: selected.galeriaFotosUrls,
+    telefonoWhatsappRsvp: selected.telefonoWhatsappRsvp,
+    fechaLimiteRsvp: selected.fechaLimiteRsvp
+      ? selected.fechaLimiteRsvp instanceof Date
+        ? selected.fechaLimiteRsvp.toLocaleDateString()
+        : String(selected.fechaLimiteRsvp)
+      : null,
+    maxPasesPorInvitado: selected.maxPasesPorInvitado,
+    ceremoniaNombre: selected.ceremoniaNombre,
+    ceremoniaDireccion: selected.ceremoniaDireccion,
+    ceremoniaMapUrl: selected.ceremoniaMapUrl,
+    recepcionNombre: selected.recepcionNombre,
+    recepcionDireccion: selected.recepcionDireccion,
+    recepcionMapUrl: selected.recepcionMapUrl,
+    fechaPlacaMes: (selected as any).fechaPlacaMes,
+    fechaPlacaHora: (selected as any).fechaPlacaHora,
+    fechaPlacaLugar: (selected as any).fechaPlacaLugar,
+    countdownEncabezado: (selected as any).countdownEncabezado,
+    dressCodeEtiqueta: (selected as any).dressCodeEtiqueta,
+    dressCodeColoresReservados: (selected as any).dressCodeColoresReservados,
+    regalosMensaje: (selected as any).regalosMensaje,
+    regalosZelle: (selected as any).regalosZelle,
+    regalosCashApp: (selected as any).regalosCashApp,
+    rsvpFechaLimite: (selected as any).rsvpFechaLimite,
+    rsvpDiasAntes: (selected as any).rsvpDiasAntes ?? 15,
+    autorBendicion: (selected as any).autorBendicion,
+    textoDisco: (selected as any).textoDisco,
+    mensajeDespedida: (selected as any).mensajeDespedida,
+    dressCodeTitulo: selected.dressCodeTitulo,
+    dressCodeNota: selected.dressCodeNota,
+    coloresReservados: selected.coloresReservados,
+    celebrationGuideline: selected.celebrationGuideline,
+    wishlistUrl: selected.wishlistUrl,
+    idiomaDefault: selected.idiomaDefault,
+    itinerario:
+      ((selected as any).itinerarioJson as any) ||
+      (selected as any).itinerario ||
+      undefined,
+    itinerarioJson: selected.itinerarioJson,
+    corteHonorJson: selected.corteHonorJson,
+    mesaRegalosJson: selected.mesaRegalosJson,
+    hospedajeJson: selected.hospedajeJson,
+    transporteJson: selected.transporteJson,
+    historiaHitosJson: selected.historiaHitosJson,
+  };
 }
 
 /**

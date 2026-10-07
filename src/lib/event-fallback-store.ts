@@ -137,20 +137,22 @@ export const fallbackEventStore = {
   async getEvent(slug: string): Promise<FallbackEvento | undefined> {
     const key = slug.toLowerCase().trim();
     let ev = memoryStore.get(key);
+
+    // Consultar S3 para asegurar los datos más recientes entre contenedores e instancias
+    try {
+      const s3Ev = await getEventFromS3(key);
+      if (s3Ev) {
+        if (!ev || new Date(s3Ev.updatedAt || 0).getTime() >= new Date(ev.updatedAt || 0).getTime()) {
+          ev = s3Ev;
+          memoryStore.set(key, s3Ev);
+          saveStoreToFile();
+        }
+      }
+    } catch {}
+
     if (!ev) {
       loadStoreFromFile();
       ev = memoryStore.get(key);
-    }
-    if (!ev) {
-      // Si el contenedor fue reiniciado o reconstruido por Railway, recuperar de AWS S3
-      try {
-        const s3Ev = await getEventFromS3(key);
-        if (s3Ev) {
-          memoryStore.set(key, s3Ev);
-          saveStoreToFile();
-          ev = s3Ev;
-        }
-      } catch {}
     }
     return ev;
   },
