@@ -134,10 +134,18 @@ export default function QuinceRosadoTemplate({
   );
 
   // Fallbacks de fotos y textos exactos de Canva
+  const isDefaultOrReplicaPhoto =
+    !data.fotoPortadaUrl ||
+    data.fotoPortadaUrl.includes("unsplash") ||
+    data.fotoPortadaUrl.includes("90043c428c5ec72c7adb26dce69dedd2") ||
+    data.fotoPortadaUrl.includes("da616fa36a10f18a133b2dc0383a07d0") ||
+    data.fotoPortadaUrl.includes("d0a18f8a869419b00c0c5185dc620397") ||
+    data.fotoPortadaUrl.includes("template-quince-rosado");
+
   const heroPhotoUrl =
-    data.fotoPortadaUrl && !data.fotoPortadaUrl.includes("unsplash")
+    !isDefaultOrReplicaPhoto && data.fotoPortadaUrl
       ? data.fotoPortadaUrl
-      : QUINCE_ROSADO_ASSETS.heroHorseArch;
+      : QUINCE_ROSADO_ASSETS.heroHorseCutout;
 
   const photoChildhood =
     data.fotoInfanciaUrl && !data.fotoInfanciaUrl.includes("unsplash")
@@ -352,43 +360,90 @@ export default function QuinceRosadoTemplate({
         {/* ══════════════════════════════════════════════════════════════
             SECCIÓN 1: HERO PORTADA ARCO & CABALLO BLANCO
         ══════════════════════════════════════════════════════════════ */}
-        <section className="relative w-full flex flex-col items-center pt-8 pb-10 px-4 bg-gradient-to-b from-pink-50/70 via-white to-pink-50/30">
-          {/* Encabezado: "con Amor le invitamos" */}
-          <div className="text-center mb-4">
-            <p className="font-['Alex_Brush',cursive] text-3xl sm:text-4xl text-[#7A002A] leading-tight">
-              con
-            </p>
-            <h2 className="font-['Alex_Brush',cursive] text-6xl sm:text-7xl text-[#7A002A] leading-none -mt-2">
-              Amor
-            </h2>
-            <p className="font-['Libre_Baskerville',serif] text-xs tracking-[0.25em] uppercase text-[#7A002A] font-semibold mt-1">
-              le invitamos
-            </p>
-          </div>
-
-          {/* Marco de Arco Romano con Quinceañera en Caballo Blanco */}
-          <div className="relative w-[310px] sm:w-[330px] aspect-[3/4] rounded-t-[160px] overflow-hidden shadow-2xl border-4 border-white mb-6 bg-pink-100">
+        {/* ══════════════════════════════════════════════════════════════
+            SECCIÓN 1: HERO PORTADA ARCO & CABALLO BLANCO (RÉPLICA CANVA)
+        ══════════════════════════════════════════════════════════════ */}
+        <section className="relative w-full flex flex-col items-center pt-6 pb-10 px-4 overflow-hidden select-none">
+          {/* Fondo de Nubes Rosadas (90043c428c5ec72c7adb26dce69dedd2.png) */}
+          <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none select-none">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={heroPhotoUrl}
+              src={QUINCE_ROSADO_ASSETS.heroCloudsBg}
               onError={(e) => {
-                (e.target as HTMLImageElement).src = QUINCE_ROSADO_ASSETS.s3.heroHorseArch;
+                (e.target as HTMLImageElement).src = QUINCE_ROSADO_ASSETS.s3.heroCloudsBg;
               }}
-              alt={data.titulo}
-              className="w-full h-full object-cover object-center"
+              alt=""
+              className="w-full h-full object-cover object-top"
             />
+            {/* Difuminado suave hacia el blanco inferior */}
+            <div className="absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-white via-white/80 to-transparent" />
+          </div>
+
+          {/* Encabezado: "CON Amor LE INVITAMOS" */}
+          <div className="relative w-full max-w-[340px] mx-auto text-center mb-2 z-10">
+            {/* "CON" */}
+            <p className="font-['Libre_Baskerville',serif] text-sm sm:text-base tracking-[0.35em] uppercase text-[#7A002A] font-bold">
+              CON
+            </p>
+
+            {/* "Amor" */}
+            <h2 className="font-['Alex_Brush',cursive] text-7xl sm:text-8xl text-[#7A002A] leading-[0.8] -mt-1 drop-shadow-sm select-none">
+              Amor
+            </h2>
+
+            {/* "LE INVITAMOS" (Alineado a la derecha debajo de "Amor") */}
+            <div className="w-full flex justify-end pr-3 sm:pr-4 -mt-1 sm:-mt-2">
+              <p className="font-['Libre_Baskerville',serif] text-[11px] sm:text-xs tracking-[0.3em] uppercase text-[#7A002A] font-bold">
+                LE INVITAMOS
+              </p>
+            </div>
+          </div>
+
+          {/* Marco de Arco 3D con Pop-Out de Quinceañera & Caballo Blanco */}
+          <div className="relative w-full max-w-[335px] sm:max-w-[350px] mx-auto my-3 z-10">
+            {/* 1. Marco de Arco Base con el Fondo del Jardín (d0a18f8a869419b00c0c5185dc620397.png) */}
+            <div className="relative w-full aspect-[52/64] rounded-t-[175px] border-[4.5px] border-white shadow-[0_15px_35px_rgba(122,0,42,0.18)] overflow-hidden bg-pink-100">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={QUINCE_ROSADO_ASSETS.heroGardenBg}
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = QUINCE_ROSADO_ASSETS.s3.heroGardenBg;
+                }}
+                alt="Jardín Quinceañera"
+                className="w-full h-full object-cover object-center"
+              />
+            </div>
+
+            {/* 2. Capa Pop-Out 3D: Chica con el Caballo (da616fa36a10f18a133b2dc0383a07d0.png) */}
+            <div className="absolute inset-0 pointer-events-none overflow-visible">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={
+                  isDefaultOrReplicaPhoto
+                    ? QUINCE_ROSADO_ASSETS.heroHorseCutout
+                    : heroPhotoUrl
+                }
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = QUINCE_ROSADO_ASSETS.s3.heroHorseCutout;
+                }}
+                alt={data.titulo}
+                className="w-full h-full object-cover object-center scale-[1.01] translate-x-[-1%] translate-y-[2%]"
+              />
+            </div>
           </div>
 
           {/* Nombre & Quinceañera */}
-          <h1 className="font-['Great_Vibes',cursive] text-6xl sm:text-7xl text-[#7A002A] text-center leading-none">
-            {data.titulo || "Magdalena"}
-          </h1>
-          <p className="font-['Cinzel',serif] text-sm tracking-[0.3em] uppercase text-[#7A002A] font-bold text-center mt-2 mb-6">
-            LA QUINCEAÑERA
-          </p>
+          <div className="relative z-10 text-center mt-2 mb-6">
+            <h1 className="font-['Alex_Brush',cursive] text-6xl sm:text-7xl text-[#7A002A] leading-none drop-shadow-sm">
+              {data.titulo || "Magdalena"}
+            </h1>
+            <p className="font-['Libre_Baskerville',serif] text-xs sm:text-sm tracking-[0.45em] uppercase text-[#7A002A] font-bold mt-2">
+              {data.subtitulo || "LA QUINCEAÑERA"}
+            </p>
+          </div>
 
           {/* Medallón de Fecha Circular con Cinta */}
-          <div className="relative flex items-center justify-center gap-4 w-full max-w-[290px] mx-auto py-2">
+          <div className="relative z-10 flex items-center justify-center gap-4 w-full max-w-[290px] mx-auto py-2">
             {/* Medallón circular dusty rose */}
             <div className="relative w-24 h-24 rounded-full bg-[#A55B64] text-white flex flex-col items-center justify-center shadow-lg border-2 border-white">
               <span className="font-['Great_Vibes',cursive] text-3xl leading-none">15</span>

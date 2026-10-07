@@ -109,7 +109,7 @@ function NuevoEventoContent() {
       fechaTextoPersonalizada: "SÁBADO 15 DE MAYO, 2027 • 4:00 PM",
       fechaPlacaMes: "MAYO",
       fechaPlacaHora: "A las 4:00 PM 2027",
-      fotoPortadaUrl: "/assets/template-quince-rosado/90043c428c5ec72c7adb26dce69dedd2.png",
+      fotoPortadaUrl: "/assets/template-quince-rosado/da616fa36a10f18a133b2dc0383a07d0.png",
       fotoInfanciaUrl: "/assets/template-quince-rosado/083dc0c793669d4a4d4a782851e93f65.png",
       fotoActualUrl: "/assets/template-quince-rosado/c0ec302539da1389b4c6b7d0b122ddd7.png",
       fotoCierreUrl: "/assets/template-quince-rosado/4046b1a7e943f6186c4bd79419897578.png",

@@ -19,7 +19,10 @@ export const QUINCE_ROSADO_ASSETS = {
   introGlitter: `${LOCAL_BASE}/654465affdf79bbde844dc6643b43181.png`,
 
   // 2. Hero & Portrait Assets
-  heroHorseArch: `${LOCAL_BASE}/90043c428c5ec72c7adb26dce69dedd2.png`,
+  heroCloudsBg: `${LOCAL_BASE}/90043c428c5ec72c7adb26dce69dedd2.png`,
+  heroGardenBg: `${LOCAL_BASE}/d0a18f8a869419b00c0c5185dc620397.png`,
+  heroHorseCutout: `${LOCAL_BASE}/da616fa36a10f18a133b2dc0383a07d0.png`,
+  heroHorseArch: `${LOCAL_BASE}/d0a18f8a869419b00c0c5185dc620397.png`,
   heroDateBadge: `${LOCAL_BASE}/39dd6766b16bcd2bafc00b680bd8e5b6.png`,
   heroRoseAccent: `${LOCAL_BASE}/13bac4f00679cd99d51ed2f3d7422432.png`,
 
@@ -58,7 +61,10 @@ export const QUINCE_ROSADO_ASSETS = {
     introPolaroidSat: `${S3_BASE}/c0ec302539da1389b4c6b7d0b122ddd7.png`,
     introRoseFlower: `${S3_BASE}/rosa.png`,
     introGlitter: `${S3_BASE}/654465affdf79bbde844dc6643b43181.png`,
-    heroHorseArch: `${S3_BASE}/90043c428c5ec72c7adb26dce69dedd2.png`,
+    heroCloudsBg: `${S3_BASE}/90043c428c5ec72c7adb26dce69dedd2.png`,
+    heroGardenBg: `${S3_BASE}/d0a18f8a869419b00c0c5185dc620397.png`,
+    heroHorseCutout: `${S3_BASE}/da616fa36a10f18a133b2dc0383a07d0.png`,
+    heroHorseArch: `${S3_BASE}/d0a18f8a869419b00c0c5185dc620397.png`,
     heroDateBadge: `${S3_BASE}/39dd6766b16bcd2bafc00b680bd8e5b6.png`,
     heroRoseAccent: `${S3_BASE}/13bac4f00679cd99d51ed2f3d7422432.png`,
     archCouplePhoto: `${S3_BASE}/4046b1a7e943f6186c4bd79419897578.png`,
