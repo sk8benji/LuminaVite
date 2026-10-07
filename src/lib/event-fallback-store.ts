@@ -17,6 +17,7 @@ export interface FallbackEvento {
   fotoActualUrl?: string | null;
   fotoCierreUrl?: string | null;
   musicaUrl?: string | null;
+  reproducirMusicaAlAbrir?: boolean;
   videoUrl?: string | null;
   galeriaFotosUrls?: string[];
   wishlistUrl?: string | null;

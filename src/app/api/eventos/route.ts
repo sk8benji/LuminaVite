@@ -109,6 +109,7 @@ export async function POST(req: NextRequest) {
       wishlistUrl,
       idiomaDefault = "es",
       celebrationGuideline,
+      reproducirMusicaAlAbrir,
       telefonoWhatsappRsvp,
       emailOrganizador,
       aforoTotal = 200,
@@ -203,6 +204,7 @@ export async function POST(req: NextRequest) {
             fotoActualUrl: fotoActualUrl || null,
             fotoCierreUrl: fotoCierreUrl || null,
             musicaUrl: musicaUrl || null,
+            reproducirMusicaAlAbrir: reproducirMusicaAlAbrir !== false,
             videoUrl: videoUrl || null,
             galeriaFotosUrls: Array.isArray(galeriaFotosUrls) ? galeriaFotosUrls : [],
             wishlistUrl: wishlistUrl || null,
@@ -369,6 +371,9 @@ export async function PUT(req: NextRequest) {
 
     // 1. Intentar actualizar en PostgreSQL
     try {
+      await prisma.$executeRawUnsafe(
+        `ALTER TABLE "Evento" ADD COLUMN IF NOT EXISTS "reproducirMusicaAlAbrir" BOOLEAN DEFAULT true;`
+      ).catch(() => {});
       if (body.estiloPlantilla === "QUINCE_ROSADO") {
         await prisma.$executeRawUnsafe(`ALTER TYPE "EstiloPlantilla" ADD VALUE IF NOT EXISTS 'QUINCE_ROSADO';`).catch(() => {});
       }
@@ -387,6 +392,7 @@ export async function PUT(req: NextRequest) {
           fotoActualUrl: body.fotoActualUrl || null,
           fotoCierreUrl: body.fotoCierreUrl || null,
           musicaUrl: body.musicaUrl || null,
+          reproducirMusicaAlAbrir: body.reproducirMusicaAlAbrir !== undefined ? Boolean(body.reproducirMusicaAlAbrir) : undefined,
           videoUrl: body.videoUrl || null,
           galeriaFotosUrls: Array.isArray(body.galeriaFotosUrls) ? body.galeriaFotosUrls : [],
           wishlistUrl: body.wishlistUrl || null,

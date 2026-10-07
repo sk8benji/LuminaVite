@@ -41,6 +41,7 @@ export default function CoralineThemedTemplate({
           tipoEvento="CUMPLEANOS"
           fechaTexto={data.fechaTextoPersonalizada || "OCTOBER 31 • 6:00 PM"}
           template={template}
+          reproducirMusicaAlAbrir={data.reproducirMusicaAlAbrir}
         />
       )}
 

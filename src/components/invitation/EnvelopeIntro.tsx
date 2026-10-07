@@ -14,6 +14,7 @@ interface EnvelopeIntroProps {
   destinatarioInicial?: string;
   idiomaDefault?: "es" | "en" | "bilingual" | string;
   coverPhotoUrl?: string;
+  reproducirMusicaAlAbrir?: boolean;
 }
 
 export default function EnvelopeIntro({
@@ -25,6 +26,7 @@ export default function EnvelopeIntro({
   destinatarioInicial = "Familia & Amigos",
   idiomaDefault = "es",
   coverPhotoUrl,
+  reproducirMusicaAlAbrir = true,
 }: EnvelopeIntroProps) {
   const [guestName, setGuestName] = useState(destinatarioInicial);
   const [isOpen, setIsOpen] = useState(false);
@@ -48,8 +50,8 @@ export default function EnvelopeIntro({
     if (isOpen) return;
     setIsOpen(true);
 
-    // 1. Activar audio inmediatamente en la interacción táctil (desbloquea autoplay en iOS/Android)
-    if (typeof window !== "undefined") {
+    // 1. Activar audio inmediatamente en la interacción táctil si está habilitado
+    if (typeof window !== "undefined" && reproducirMusicaAlAbrir !== false) {
       window.dispatchEvent(new CustomEvent("luminavite:play-audio"));
     }
     if (onOpen) {

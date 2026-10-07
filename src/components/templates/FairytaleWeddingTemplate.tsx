@@ -51,6 +51,7 @@ export default function FairytaleWeddingTemplate({
           tipoEvento="BODA"
           fechaTexto={data.fechaTextoPersonalizada || "SATURDAY, JULY 22 • 3:30 PM"}
           template={template}
+          reproducirMusicaAlAbrir={data.reproducirMusicaAlAbrir}
         />
       )}
 

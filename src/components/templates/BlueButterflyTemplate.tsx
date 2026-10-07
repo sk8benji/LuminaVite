@@ -64,8 +64,8 @@ export default function BlueButterflyTemplate({
     if (isEnvelopeOpen) return;
     setIsEnvelopeOpen(true);
 
-    // Reproducir música tras el gesto táctil del usuario (desbloquea autoplay)
-    if (audioRef.current) {
+    // Reproducir música tras el gesto táctil del usuario si está habilitado
+    if (data.reproducirMusicaAlAbrir !== false && audioRef.current) {
       audioRef.current
         .play()
         .then(() => setIsPlaying(true))

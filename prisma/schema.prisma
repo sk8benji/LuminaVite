@@ -83,6 +83,7 @@ model Evento {
   fotoActualUrl      String?         // Foto actual
   fotoCierreUrl      String?         // Foto de despedida / cierre
   musicaUrl          String?         // URL del audio MP3 en S3
+  reproducirMusicaAlAbrir Boolean    @default(true) // Reproducir automáticamente al abrir el sobre
   videoUrl           String?         // Enlace a video YouTube o MP4
   galeriaFotosUrls   String[]        @default([]) // Galería de fotos o hitos históricos
 

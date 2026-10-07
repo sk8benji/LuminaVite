@@ -136,7 +136,9 @@ export default function QuinceRosadoTemplate({
   const handleOpenEnvelope = () => {
     if (animatingOpen || introOpen) return;
     setAnimatingOpen(true);
-    startMusic();
+    if (data.reproducirMusicaAlAbrir !== false) {
+      startMusic();
+    }
     setTimeout(() => {
       setIntroOpen(true);
     }, 900);

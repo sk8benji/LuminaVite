@@ -19,6 +19,8 @@ import {
   X,
   Copy,
   Edit3,
+  Volume2,
+  VolumeX,
 } from "lucide-react";
 import { TEMPLATES, TemplateId } from "@/lib/templates";
 import { InvitationData } from "@/components/invitation/InvitationMobileView";
@@ -55,6 +57,7 @@ function NuevoEventoContent() {
     fotoActualUrl:
       "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=400&q=80",
     musicaUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+    reproducirMusicaAlAbrir: true,
     telefonoWhatsappRsvp: "18181234567",
     emailOrganizador: "mama.valeria@example.com",
     aforoTotal: 200,
@@ -1168,6 +1171,48 @@ function NuevoEventoContent() {
                       placeholder="Ej. Click to Play Music o Toca para Escuchar Música"
                       className="w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs"
                     />
+                  </div>
+
+                  {/* Switch para reproducir música al abrir el sobre */}
+                  <div className="pt-3 border-t border-stone-200/80 flex items-center justify-between gap-3">
+                    <div className="space-y-0.5 pr-2">
+                      <div className="flex items-center gap-1.5 text-xs font-bold text-stone-800">
+                        {formData.reproducirMusicaAlAbrir !== false ? (
+                          <Volume2 className="w-4 h-4 text-emerald-600" />
+                        ) : (
+                          <VolumeX className="w-4 h-4 text-stone-400" />
+                        )}
+                        <span>Reproducir música al abrir el sobre</span>
+                      </div>
+                      <p className="text-[11px] text-stone-500 leading-snug">
+                        {formData.reproducirMusicaAlAbrir !== false
+                          ? "Activado: El audio comenzará a sonar automáticamente cuando el invitado abra el sobre."
+                          : "Desactivado: Modo silencioso al abrir. El audio solo sonará si el invitado toca el reproductor o el disco."}
+                      </p>
+                    </div>
+
+                    <button
+                      type="button"
+                      role="switch"
+                      aria-checked={formData.reproducirMusicaAlAbrir !== false}
+                      onClick={() =>
+                        updateField(
+                          "reproducirMusicaAlAbrir",
+                          formData.reproducirMusicaAlAbrir === false ? true : false
+                        )
+                      }
+                      className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                        formData.reproducirMusicaAlAbrir !== false ? "bg-emerald-600" : "bg-stone-300"
+                      }`}
+                    >
+                      <span
+                        className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                          formData.reproducirMusicaAlAbrir !== false
+                            ? "translate-x-5"
+                            : "translate-x-0"
+                        }`}
+                      />
+                    </button>
                   </div>
                 </div>
 

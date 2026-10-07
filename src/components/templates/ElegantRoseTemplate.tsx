@@ -265,6 +265,7 @@ export default function ElegantRoseTemplate({
           template={template}
           coverPhotoUrl={heroPhotoUrl}
           idiomaDefault={data.idiomaDefault || "bilingual"}
+          reproducirMusicaAlAbrir={data.reproducirMusicaAlAbrir}
           onOpen={handleEnvelopeOpen}
         />
       )}

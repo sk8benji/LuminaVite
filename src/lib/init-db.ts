@@ -68,6 +68,7 @@ export async function ensurePostgresTables(): Promise<boolean> {
           "fotoActualUrl" TEXT,
           "fotoCierreUrl" TEXT,
           "musicaUrl" TEXT,
+          "reproducirMusicaAlAbrir" BOOLEAN DEFAULT true,
           "videoUrl" TEXT,
           "galeriaFotosUrls" TEXT[] DEFAULT ARRAY[]::TEXT[],
           "telefonoWhatsappRsvp" TEXT NOT NULL,
@@ -126,7 +127,8 @@ export async function ensurePostgresTables(): Promise<boolean> {
           "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
           "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
           CONSTRAINT "RsvpRegistro_eventoId_telefono_key" UNIQUE ("eventoId", "telefono")
-      );`
+      );`,
+      `ALTER TABLE "Evento" ADD COLUMN IF NOT EXISTS "reproducirMusicaAlAbrir" BOOLEAN DEFAULT true;`
     ];
 
     for (const sql of sqlStatements) {

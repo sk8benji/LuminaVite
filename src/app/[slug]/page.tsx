@@ -332,6 +332,7 @@ async function getEventoData(rawSlug: string): Promise<InvitationData | null> {
     fotoActualUrl: selected.fotoActualUrl,
     fotoCierreUrl: selected.fotoCierreUrl,
     musicaUrl: selected.musicaUrl,
+    reproducirMusicaAlAbrir: (selected as any).reproducirMusicaAlAbrir !== false,
     videoUrl: selected.videoUrl,
     galeriaFotosUrls: selected.galeriaFotosUrls,
     telefonoWhatsappRsvp: selected.telefonoWhatsappRsvp,

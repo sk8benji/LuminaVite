@@ -33,6 +33,7 @@ export interface InvitationData {
   fotoCierreUrl?: string | null;
   musicaUrl?: string | null;
   musicaTitulo?: string | null;
+  reproducirMusicaAlAbrir?: boolean;
   telefonoWhatsappRsvp: string;
   fechaLimiteRsvp?: string | null;
   maxPasesPorInvitado?: number;
