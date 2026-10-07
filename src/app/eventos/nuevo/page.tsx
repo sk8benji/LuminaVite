@@ -35,6 +35,7 @@ function NuevoEventoContent() {
   const [uploadingS3, setUploadingS3] = useState(false);
   const [uploadingField, setUploadingField] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [saveSuccessMsg, setSaveSuccessMsg] = useState<string | null>(null);
   const [showMobilePreview, setShowMobilePreview] = useState(false);
 
   // Estado del formulario
@@ -489,6 +490,14 @@ function NuevoEventoContent() {
           prev.fechaEvento,
           (prev.idiomaDefault || preset.idiomaDefault || "es") as any
         );
+
+        // Si el usuario subió una foto propia a S3, respetarla; si es una foto de plantilla por defecto, adoptar la del nuevo template
+        const isUserUploadedPhoto =
+          prev.fotoPortadaUrl &&
+          (prev.fotoPortadaUrl.includes("s3.") ||
+            prev.fotoPortadaUrl.includes("amazonaws.com") ||
+            prev.fotoPortadaUrl.includes("clientes/"));
+
         return {
           ...preset,
           ...prev,
@@ -499,7 +508,7 @@ function NuevoEventoContent() {
           fechaTextoPersonalizada: formatted.formalText || prev.fechaTextoPersonalizada,
           fechaPlacaMes: formatted.mes || prev.fechaPlacaMes,
           fechaPlacaHora: formatted.horaPlaca || prev.fechaPlacaHora,
-          fotoPortadaUrl: preset.fotoPortadaUrl || prev.fotoPortadaUrl,
+          fotoPortadaUrl: isUserUploadedPhoto ? prev.fotoPortadaUrl : (preset.fotoPortadaUrl || prev.fotoPortadaUrl),
           fotoInfanciaUrl: preset.fotoInfanciaUrl || prev.fotoInfanciaUrl,
           fotoActualUrl: preset.fotoActualUrl || prev.fotoActualUrl,
           fotoCierreUrl: preset.fotoCierreUrl || prev.fotoCierreUrl,
@@ -641,13 +650,18 @@ function NuevoEventoContent() {
         throw new Error(result.error || "No se pudo guardar la invitación.");
       }
 
-      const origin = typeof window !== "undefined" ? window.location.origin : "";
-      const panelKey = result.evento?.panelToken || result.panelToken || "";
-      setCreatedLinks({
-        publicUrl: `${origin}/${formData.slug}`,
-        magicLink: `${origin}/${formData.slug}/panel?key=${panelKey}`,
-        titulo: formData.titulo,
-      });
+      if (isEditMode) {
+        setSaveSuccessMsg("¡Cambios guardados con éxito en la invitación!");
+        setTimeout(() => setSaveSuccessMsg(null), 4000);
+      } else {
+        const origin = typeof window !== "undefined" ? window.location.origin : "";
+        const panelKey = result.evento?.panelToken || result.panelToken || "";
+        setCreatedLinks({
+          publicUrl: `${origin}/${formData.slug}`,
+          magicLink: `${origin}/${formData.slug}/panel?key=${panelKey}`,
+          titulo: formData.titulo,
+        });
+      }
       setIsSaving(false);
     } catch (err: any) {
       console.error(err);
@@ -697,16 +711,34 @@ function NuevoEventoContent() {
             {showMobilePreview ? "Ocultar Vista" : "Previsualizar"}
           </button>
 
+          {/* En modo edición: botón GUARDAR CAMBIOS siempre disponible en la barra superior */}
+          {isEditMode && (
+            <button
+              type="button"
+              disabled={isSaving || isLoadingEdit}
+              onClick={handleSave}
+              className="flex items-center gap-1.5 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-semibold shadow transition disabled:opacity-50"
+            >
+              <Check className="w-4 h-4" />
+              {isSaving ? "Guardando..." : "Guardar Cambios"}
+            </button>
+          )}
+
           {step < 4 ? (
             <button
               type="button"
-              onClick={() => setStep((s) => s + 1)}
+              onClick={() => {
+                if (isEditMode) {
+                  handleSave();
+                }
+                setStep((s) => s + 1);
+              }}
               className="flex items-center gap-1 px-4 py-2 bg-[#5A3E44] hover:bg-[#432d32] text-white rounded-xl text-xs font-semibold shadow transition"
             >
               Siguiente
               <ChevronRight className="w-4 h-4" />
             </button>
-          ) : (
+          ) : !isEditMode ? (
             <button
               type="button"
               disabled={isSaving || isLoadingEdit}
@@ -714,15 +746,26 @@ function NuevoEventoContent() {
               className="flex items-center gap-1 px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-semibold shadow transition disabled:opacity-50"
             >
               <Check className="w-4 h-4" />
-              {isSaving
-                ? "Guardando..."
-                : isEditMode
-                ? "Guardar Cambios"
-                : "Publicar Invitación"}
+              {isSaving ? "Guardando..." : "Publicar Invitación"}
             </button>
-          )}
+          ) : null}
         </div>
       </header>
+
+      {/* Alerta de éxito al guardar cambios */}
+      {saveSuccessMsg && (
+        <div className="max-w-7xl mx-auto px-6 mt-4">
+          <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-800 text-xs font-semibold flex justify-between items-center shadow-sm">
+            <span>✅ {saveSuccessMsg}</span>
+            <button
+              onClick={() => setSaveSuccessMsg(null)}
+              className="font-bold ml-2 text-emerald-600 hover:text-emerald-800"
+            >
+              ×
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Alerta de error si ocurre */}
       {errorMsg && (
@@ -1740,26 +1783,45 @@ function NuevoEventoContent() {
                 <div />
               )}
 
-              {step < 4 ? (
-                <button
-                  type="button"
-                  onClick={() => setStep((s) => s + 1)}
-                  className="flex items-center gap-1 px-5 py-2.5 bg-[#5A3E44] hover:bg-[#432d32] text-white rounded-xl text-xs font-semibold shadow transition"
-                >
-                  Continuar
-                  <ChevronRight className="w-4 h-4" />
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  disabled={isSaving}
-                  onClick={handleSave}
-                  className="flex items-center gap-1.5 px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-semibold shadow-md transition disabled:opacity-50"
-                >
-                  <Check className="w-4 h-4" />
-                  {isSaving ? "Guardando..." : isEditMode ? "Guardar Cambios" : "Publicar Invitación"}
-                </button>
-              )}
+              <div className="flex items-center gap-2">
+                {isEditMode && (
+                  <button
+                    type="button"
+                    disabled={isSaving}
+                    onClick={handleSave}
+                    className="flex items-center gap-1.5 px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-semibold shadow-md transition disabled:opacity-50"
+                  >
+                    <Check className="w-4 h-4" />
+                    {isSaving ? "Guardando..." : "Guardar Cambios"}
+                  </button>
+                )}
+
+                {step < 4 ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (isEditMode) {
+                        handleSave();
+                      }
+                      setStep((s) => s + 1);
+                    }}
+                    className="flex items-center gap-1 px-5 py-2.5 bg-[#5A3E44] hover:bg-[#432d32] text-white rounded-xl text-xs font-semibold shadow transition"
+                  >
+                    Continuar
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
+                ) : !isEditMode ? (
+                  <button
+                    type="button"
+                    disabled={isSaving}
+                    onClick={handleSave}
+                    className="flex items-center gap-1.5 px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-semibold shadow-md transition disabled:opacity-50"
+                  >
+                    <Check className="w-4 h-4" />
+                    {isSaving ? "Guardando..." : "Publicar Invitación"}
+                  </button>
+                ) : null}
+              </div>
             </div>
           </div>
         </div>

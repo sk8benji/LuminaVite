@@ -25,6 +25,7 @@ enum EstiloPlantilla {
   ESMERALDA_ROYAL         // Esmeralda Royal
   JARDIN_BOTANICA         // Jardín Botánica
   MINIMALISTA_EDITORIAL   // Minimalista Editorial
+  QUINCE_ROSADO           // Quince Rosado (Magdalena - Canva Réplica)
 }
 
 enum RolUsuario {
