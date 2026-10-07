@@ -98,6 +98,47 @@ function NuevoEventoContent() {
 
   // Presets con fotos reales y textos para la previsualización de cada plantilla
   const TEMPLATE_PRESETS: Partial<Record<TemplateId, Partial<InvitationData>>> = {
+    QUINCE_ROSADO: {
+      estiloPlantilla: "QUINCE_ROSADO",
+      tipoEvento: "QUINCEANERA",
+      idiomaDefault: "es",
+      titulo: "Magdalena",
+      subtitulo: "La Quinceañera",
+      frasePersonalizada:
+        "Desde que era una niña, Magdalena ha soñado con este mismo momento: un día lleno de amor, belleza y recuerdos inolvidables. Hoy, ese sueño se hace realidad mientras celebra su quinceañera, marcando la hermosa transición de una niña a una señorita elegante. Rodeada de familia, tradición y aquellos que la han guiado a lo largo del camino, este día representa no solo una celebración, sino un hito de crecimiento, fuerza y nuevos comienzos.",
+      fechaTextoPersonalizada: "SÁBADO 15 DE MAYO, 2027 • 4:00 PM",
+      fechaPlacaMes: "MAYO",
+      fechaPlacaHora: "A las 4:00 PM 2027",
+      fotoPortadaUrl: "/assets/template-quince-rosado/90043c428c5ec72c7adb26dce69dedd2.png",
+      fotoInfanciaUrl: "/assets/template-quince-rosado/083dc0c793669d4a4d4a782851e93f65.png",
+      fotoActualUrl: "/assets/template-quince-rosado/c0ec302539da1389b4c6b7d0b122ddd7.png",
+      fotoCierreUrl: "/assets/template-quince-rosado/4046b1a7e943f6186c4bd79419897578.png",
+      musicaUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+      dressCodeTitulo: "Elegante y Formal",
+      dressCodeNota: "Se invita a los invitados a vestir elegantemente. Por favor, NO usar atuendos ROSADOS ni BLANCOS.",
+      ceremoniaNombre: "St. Mary's Church",
+      ceremoniaDireccion: "Any City, Any Street, AZ 12345",
+      ceremoniaMapUrl: "https://maps.google.com/?q=St.+Mary's+Church",
+      recepcionNombre: "Grand Ballroom Palace",
+      recepcionDireccion: "Any City, Any Street, AZ 12345",
+      recepcionMapUrl: "https://maps.google.com/?q=Grand+Ballroom",
+      rsvpFechaLimite: "Por favor, confirma tu asistencia antes del 20 de Octubre de 2026",
+      itinerarioJson: [
+        { hora: "11:00 am", titulo: "Ceremonia de la iglesia", tipoIcono: "church" },
+        { hora: "12:00 am", titulo: "Llegada en carruaje", tipoIcono: "carriage" },
+        { hora: "1:00 pm", titulo: "Llegada al salón", tipoIcono: "hall" },
+        { hora: "3:00 pm", titulo: "Se servira la comida", tipoIcono: "dinner" },
+        { hora: "4:00 pm", titulo: "Vals, Baile Sorpresa", tipoIcono: "waltz" },
+        { hora: "5:00 pm", titulo: "Vals de padre e hija", tipoIcono: "father_dance" },
+        { hora: "6:00 pm", titulo: "Padrinos de honor", tipoIcono: "crown" },
+        { hora: "7:00 pm", titulo: "Hora de bailar", tipoIcono: "party" },
+      ],
+      corteHonorJson: {
+        chambelan: "Jeremiah",
+        parents: "Magdalena & Adrian",
+        padrinos: ["Tania", "Carl"],
+      },
+    },
     BLUE_BUTTERFLY: {
       estiloPlantilla: "BLUE_BUTTERFLY",
       tipoEvento: "QUINCEANERA",

@@ -6,6 +6,7 @@ import ElegantRoseTemplate from "./ElegantRoseTemplate";
 import FairytaleWeddingTemplate from "./FairytaleWeddingTemplate";
 import BlueButterflyTemplate from "./BlueButterflyTemplate";
 import CoralineThemedTemplate from "./CoralineThemedTemplate";
+import QuinceRosadoTemplate from "./QuinceRosadoTemplate";
 
 export default function TemplateDispatcher({
   data,
@@ -15,6 +16,8 @@ export default function TemplateDispatcher({
   skipIntro?: boolean;
 }) {
   switch (data.estiloPlantilla) {
+    case "QUINCE_ROSADO":
+      return <QuinceRosadoTemplate data={data} skipIntro={skipIntro} />;
     case "ELEGANT_ROSE":
       return <ElegantRoseTemplate data={data} skipIntro={skipIntro} />;
     case "FAIRYTALE_CHATEAU":

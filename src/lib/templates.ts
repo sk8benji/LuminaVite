@@ -1,4 +1,5 @@
 export type TemplateId =
+  | "QUINCE_ROSADO"
   | "PRINCESA_ROSA"
   | "ELEGANT_ROSE"
   | "FAIRYTALE_CHATEAU"
@@ -32,6 +33,27 @@ export interface TemplateConfig {
 }
 
 export const TEMPLATES: Record<TemplateId, TemplateConfig> = {
+  QUINCE_ROSADO: {
+    id: "QUINCE_ROSADO",
+    name: "Quince Rosado (Magdalena - Canva)",
+    category: "QUINCEANERA",
+    bgColor: "#FFFFFF",
+    cardBg: "#FFFFFF",
+    textPrimary: "#7A002A",
+    textSecondary: "#B74F5F",
+    accentColor: "#CE2962",
+    accentSoft: "#FDF0F3",
+    borderSoft: "#F3C5D0",
+    buttonBg: "#7A002A",
+    buttonText: "#FFFFFF",
+    fontHeading: "'Great Vibes', cursive",
+    fontSubheading: "'Libre Baskerville', serif",
+    fontBody: "'Lora', serif",
+    ribbonGradient: "from-pink-300 via-rose-200 to-pink-400",
+    badgeBg: "#FDF0F3",
+    previewThumbnail: "/assets/template-quince-rosado/90043c428c5ec72c7adb26dce69dedd2.png",
+    description: "Sobre interactivo 3D con lazo de seda y rosas, arco de princesa a caballo, línea de tiempo floral, dress code, regalos y confirmación.",
+  },
   ELEGANT_ROSE: {
     id: "ELEGANT_ROSE",
     name: "Elegant Rose (Isabella - Canva T1)",
