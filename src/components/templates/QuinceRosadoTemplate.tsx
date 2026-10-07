@@ -24,10 +24,85 @@ interface QuinceRosadoTemplateProps {
   skipIntro?: boolean;
 }
 
+const MONTH_NAMES_ES = [
+  "Enero",
+  "Febrero",
+  "Marzo",
+  "Abril",
+  "Mayo",
+  "Junio",
+  "Julio",
+  "Agosto",
+  "Septiembre",
+  "Octubre",
+  "Noviembre",
+  "Diciembre",
+];
+
+const WEEKDAY_NAMES_ES = [
+  "DOMINGO",
+  "LUNES",
+  "MARTES",
+  "MIÉRCOLES",
+  "JUEVES",
+  "VIERNES",
+  "SÁBADO",
+];
+
+function parseEventDate(fechaEvento?: string | Date | null) {
+  if (!fechaEvento) {
+    return { year: 2027, month: 4, day: 15 }; // Mayo 15, 2027 por defecto
+  }
+  if (fechaEvento instanceof Date) {
+    return {
+      year: fechaEvento.getFullYear(),
+      month: fechaEvento.getMonth(),
+      day: fechaEvento.getDate(),
+    };
+  }
+  const str = String(fechaEvento);
+  const match = str.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (match) {
+    return {
+      year: parseInt(match[1], 10),
+      month: parseInt(match[2], 10) - 1,
+      day: parseInt(match[3], 10),
+    };
+  }
+  const d = new Date(fechaEvento);
+  if (!isNaN(d.getTime())) {
+    return {
+      year: d.getFullYear(),
+      month: d.getMonth(),
+      day: d.getDate(),
+    };
+  }
+  return { year: 2027, month: 4, day: 15 };
+}
+
 export default function QuinceRosadoTemplate({
   data,
   skipIntro = false,
 }: QuinceRosadoTemplateProps) {
+  // ── CÁLCULO DINÁMICO DE FECHA PARA CALENDARIO Y MEDALLÓN ─────────────
+  const eventDateInfo = parseEventDate(data.fechaEvento);
+  const eventYear = eventDateInfo.year;
+  const eventMonth = eventDateInfo.month; // 0..11
+  const eventDay = eventDateInfo.day;
+  const eventMonthName = MONTH_NAMES_ES[eventMonth] || "Mayo";
+  const eventDayOfWeek = WEEKDAY_NAMES_ES[new Date(eventYear, eventMonth, eventDay).getDay()];
+
+  // Total de días del mes y desplazamiento del día 1 (0 = Domingo)
+  const totalDaysInMonth = new Date(eventYear, eventMonth + 1, 0).getDate();
+  const firstDayOfMonthIndex = new Date(eventYear, eventMonth, 1).getDay();
+  const calendarBlanks = Array.from({ length: firstDayOfMonthIndex });
+  const calendarDays = Array.from({ length: totalDaysInMonth }, (_, i) => i + 1);
+
+  // Parámetros dinámicos para Google Calendar
+  const padTwo = (n: number) => String(n).padStart(2, "0");
+  const gcalStart = `${eventYear}${padTwo(eventMonth + 1)}${padTwo(eventDay)}T220000Z`;
+  const gcalEnd = `${eventYear}${padTwo(eventMonth + 1)}${padTwo(Math.min(eventDay + 1, totalDaysInMonth))}T040000Z`;
+
   // ── ESTADO DEL SOBRE INTRO ──────────────────────────────────────────
   const [introOpen, setIntroOpen] = useState(skipIntro);
   const [animatingOpen, setAnimatingOpen] = useState(false);
@@ -244,11 +319,11 @@ export default function QuinceRosadoTemplate({
                   />
                 </div>
                 <p className="font-['Cinzel',serif] text-[10px] tracking-[0.25em] uppercase text-[#B74F5F] font-bold text-center mt-2.5">
-                  {data.fechaPlacaMes || "MAYO 2027"}
+                  {data.fechaPlacaMes || `${eventMonthName.toUpperCase()} ${eventYear}`}
                 </p>
               </div>
 
-              {/* Polaroid Derecha: SABADO 15 (Rotada +8deg) */}
+              {/* Polaroid Derecha: Dinámico (Día y Número) */}
               <div
                 className={`absolute right-3 top-2 w-[170px] bg-white p-2 pb-5 shadow-2xl rounded-sm transform rotate-8 transition-transform duration-700 border border-pink-100 ${
                   animatingOpen ? "-translate-y-16 rotate-12" : ""
@@ -258,12 +333,12 @@ export default function QuinceRosadoTemplate({
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={photoLady}
-                    alt="Sábado 15"
+                    alt={`${eventDayOfWeek} ${eventDay}`}
                     className="w-full h-full object-cover"
                   />
                 </div>
                 <p className="font-['Cinzel',serif] text-[10px] tracking-[0.25em] uppercase text-[#B74F5F] font-bold text-center mt-2.5">
-                  SÁBADO 15
+                  {`${eventDayOfWeek} ${eventDay}`}
                 </p>
               </div>
             </div>
@@ -455,16 +530,16 @@ export default function QuinceRosadoTemplate({
             {/* Bloque de Fecha */}
             <div className="flex flex-col text-left">
               <span className="font-['Cinzel',serif] text-xs tracking-[0.2em] uppercase font-bold text-[#7A002A]">
-                SÁBADO
+                {eventDayOfWeek}
               </span>
               <span className="font-['Cinzel',serif] text-xs tracking-[0.2em] uppercase font-bold text-[#7A002A]">
-                {data.fechaPlacaMes || "MAYO"}
+                {data.fechaPlacaMes || eventMonthName.toUpperCase()}
               </span>
               <span className="font-['Great_Vibes',cursive] text-4xl text-[#B74F5F] leading-none my-0.5">
-                15
+                {eventDay}
               </span>
               <span className="font-['Cinzel',serif] text-[10px] tracking-wider text-[#7A002A] font-medium">
-                {data.fechaPlacaHora || "A las 4:00 PM 2027"}
+                {data.fechaPlacaHora || `A las 4:00 PM ${eventYear}`}
               </span>
             </div>
 
@@ -961,17 +1036,28 @@ export default function QuinceRosadoTemplate({
               </div>
             </div>
 
-            {/* Calendario de Mayo 2027 */}
-            <div className="bg-pink-50/50 p-6 rounded-3xl border border-pink-200 max-w-[310px] mx-auto mb-8">
-              <h4 className="font-['Great_Vibes',cursive] text-4xl text-[#7A002A] leading-none">
-                Mayo
+            {/* Calendario Dinámico del Evento */}
+            <div className="bg-pink-50/50 p-6 rounded-3xl border border-pink-200 max-w-[320px] mx-auto mb-8 shadow-sm">
+              <h4 className="font-['Alex_Brush',cursive] text-5xl sm:text-6xl text-[#7A002A] leading-tight drop-shadow-sm">
+                {eventMonthName}
               </h4>
-              <p className="font-['Cinzel',serif] text-xs font-bold text-[#7A002A] tracking-widest uppercase mb-4">
-                2027
+              <p className="font-['Libre_Baskerville',serif] text-sm font-bold text-[#7A002A] tracking-[0.45em] uppercase mt-1 mb-2">
+                {eventYear}
               </p>
 
+              {/* Lazo divisor horizontal idéntico a Canva */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={QUINCE_ROSADO_ASSETS.calendarRibbonDivider}
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = QUINCE_ROSADO_ASSETS.s3.calendarRibbonDivider;
+                }}
+                alt=""
+                className="w-full max-w-[260px] h-auto my-3 mx-auto object-contain"
+              />
+
               {/* Días de la semana */}
-              <div className="grid grid-cols-7 gap-1 text-[11px] font-['Cinzel',serif] font-bold text-[#7A002A] mb-2">
+              <div className="grid grid-cols-7 gap-1 text-center font-['Libre_Baskerville',serif] font-bold text-[#7A002A] text-xs sm:text-sm tracking-wider mb-2">
                 <span>D</span>
                 <span>L</span>
                 <span>M</span>
@@ -981,67 +1067,49 @@ export default function QuinceRosadoTemplate({
                 <span>S</span>
               </div>
 
-              {/* Días del mes */}
-              <div className="grid grid-cols-7 gap-1 text-xs text-[#7A002A] font-medium items-center">
-                {/* Vacíos antes del día 1 (Sábado) */}
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span>1</span>
+              {/* Días del mes con Lazo en el día del evento */}
+              <div className="grid grid-cols-7 gap-1 text-center font-['Libre_Baskerville',serif] text-xs sm:text-sm text-[#7A002A] font-medium items-center">
+                {calendarBlanks.map((_, i) => (
+                  <span key={`blank-${i}`} />
+                ))}
 
-                <span>2</span>
-                <span>3</span>
-                <span>4</span>
-                <span>5</span>
-                <span>6</span>
-                <span>7</span>
-                <span>8</span>
-
-                <span>9</span>
-                <span>10</span>
-                <span>11</span>
-                <span>12</span>
-                <span>13</span>
-                <span>14</span>
-                {/* Día 15 con Corazón / Lazo Resaltado */}
-                <div className="relative flex items-center justify-center font-bold text-[#7A002A]">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={QUINCE_ROSADO_ASSETS.calendarHeart}
-                    alt=""
-                    className="absolute inset-0 w-full h-full object-contain scale-125"
-                  />
-                  <span className="relative z-10 text-white font-bold text-[11px]">15</span>
-                </div>
-
-                <span>16</span>
-                <span>17</span>
-                <span>18</span>
-                <span>19</span>
-                <span>20</span>
-                <span>21</span>
-                <span>22</span>
-
-                <span>23</span>
-                <span>24</span>
-                <span>25</span>
-                <span>26</span>
-                <span>27</span>
-                <span>28</span>
-                <span>29</span>
-
-                <span>30</span>
-                <span>31</span>
+                {calendarDays.map((dayNum) => {
+                  const isEventDay = dayNum === eventDay;
+                  return (
+                    <div
+                      key={`day-${dayNum}`}
+                      className="relative flex items-center justify-center aspect-square font-bold"
+                    >
+                      {isEventDay && (
+                        /* eslint-disable-next-line @next/next/no-img-element */
+                        <img
+                          src={QUINCE_ROSADO_ASSETS.calendarBowDay}
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).src = QUINCE_ROSADO_ASSETS.s3.calendarBowDay;
+                          }}
+                          alt="Día especial"
+                          className="absolute inset-0 m-auto w-7 h-7 sm:w-8 sm:h-8 object-contain drop-shadow-md pointer-events-none select-none z-10 scale-125"
+                        />
+                      )}
+                      <span
+                        className={`relative z-0 font-['Libre_Baskerville',serif] text-xs sm:text-sm font-bold ${
+                          isEventDay
+                            ? "text-[#7A002A] font-black drop-shadow-[0_1px_1px_rgba(255,255,255,0.9)]"
+                            : ""
+                        }`}
+                      >
+                        {dayNum}
+                      </span>
+                    </div>
+                  );
+                })}
               </div>
 
               {/* Enlace para añadir a Google Calendar */}
               <a
                 href={`https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(
                   "Quinceañera de " + (data.titulo || "Magdalena")
-                )}&dates=20270515T230000Z/20270516T050000Z&details=${encodeURIComponent(
+                )}&dates=${gcalStart}/${gcalEnd}&details=${encodeURIComponent(
                   "Celebración de Quince Años"
                 )}`}
                 target="_blank"

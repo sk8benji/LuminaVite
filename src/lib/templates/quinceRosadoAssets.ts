@@ -50,6 +50,8 @@ export const QUINCE_ROSADO_ASSETS = {
   // 7. Video & Countdown
   youtubeThumb: `${LOCAL_BASE}/sddefault.webp`,
   calendarHeart: `${LOCAL_BASE}/crazonlazo.png`,
+  calendarBowDay: `${LOCAL_BASE}/200fb4fb3aa8cfeee2e3ad51db6258ac.png`,
+  calendarRibbonDivider: `${LOCAL_BASE}/blob_https___digitalpushcreations.my.svg`,
 
   // S3 Fallbacks
   s3: {
@@ -70,6 +72,8 @@ export const QUINCE_ROSADO_ASSETS = {
     archCouplePhoto: `${S3_BASE}/4046b1a7e943f6186c4bd79419897578.png`,
     courtGroupPhoto: `${S3_BASE}/2ee930ccdb3ae2305fe0c5a6278bfc0d.png`,
     calendarHeart: `${S3_BASE}/crazonlazo.png`,
+    calendarBowDay: `${S3_BASE}/200fb4fb3aa8cfeee2e3ad51db6258ac.png`,
+    calendarRibbonDivider: `${S3_BASE}/blob_https___digitalpushcreations.my.svg`,
     crownIcon: `${S3_BASE}/corona.png`,
   },
 };
