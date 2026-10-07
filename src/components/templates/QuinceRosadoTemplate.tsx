@@ -302,10 +302,13 @@ export default function QuinceRosadoTemplate({
             </p>
           </div>
 
-          {/* SOBRE ROSA 3D CON POLAROIDS Y LAZO */}
-          <div className="relative w-full max-w-[360px] mx-auto my-auto flex flex-col items-center px-2">
+          {/* SOBRE ROSA 3D CON POLAROIDS Y LAZO (CLICABLE EN TODA EL ÁREA) */}
+          <div
+            onClick={handleOpenEnvelope}
+            className="relative w-full max-w-[360px] mx-auto my-auto flex flex-col items-center px-2 cursor-pointer group select-none transition-transform duration-300 hover:scale-[1.02] active:scale-[0.98]"
+          >
             {/* POLAROIDS QUE SALEN DEL SOBRE */}
-            <div className="relative w-full h-52 -mb-28 z-0">
+            <div className="relative w-full h-52 -mb-28 z-0 pointer-events-none">
               {/* Polaroid Izquierda: MAYO 2027 (Rotada -14deg) */}
               <div
                 className={`absolute left-3 top-0 w-[170px] bg-white p-2 pb-5 shadow-2xl rounded-sm transform -rotate-12 transition-transform duration-700 border border-pink-100 ${
@@ -346,7 +349,7 @@ export default function QuinceRosadoTemplate({
             </div>
 
             {/* BASE DEL SOBRE ROSADO ABIERTO */}
-            <div className="relative w-full z-10">
+            <div className="relative w-full z-10 cursor-pointer">
               {/* Lecho de Rosas dentro del sobre */}
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
@@ -382,12 +385,10 @@ export default function QuinceRosadoTemplate({
                 />
               </div>
 
-              {/* Botón Sello Interactivo: TOCA AQUÍ */}
-              <button
-                type="button"
-                onClick={handleOpenEnvelope}
+              {/* Sello Interactivo: Más grande y con efecto visual destacado */}
+              <div
                 aria-label="Abrir invitación"
-                className="absolute top-[52%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 rounded-full flex items-center justify-center cursor-pointer transition-transform duration-300 hover:scale-110 active:scale-95 group focus:outline-none"
+                className="absolute top-[52%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 sm:w-22 sm:h-22 rounded-full flex items-center justify-center cursor-pointer transition-transform duration-300 group-hover:scale-110 active:scale-95 focus:outline-none z-20"
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
@@ -395,20 +396,23 @@ export default function QuinceRosadoTemplate({
                   onError={(e) => {
                     (e.target as HTMLImageElement).src = QUINCE_ROSADO_ASSETS.s3.introSeal;
                   }}
-                  alt="Toca aquí"
-                  className="w-full h-full object-contain drop-shadow-lg animate-pulse"
+                  alt="Toca para abrir"
+                  className="w-full h-full object-contain drop-shadow-xl animate-pulse"
                 />
-              </button>
+              </div>
             </div>
           </div>
 
           {/* TEXTO INFERIOR INTRO */}
-          <div className="relative z-10 pb-8 text-center px-4">
+          <div
+            onClick={handleOpenEnvelope}
+            className="relative z-10 pb-8 text-center px-4 cursor-pointer transition-transform duration-200 hover:scale-105 active:scale-95"
+          >
             <h2 className="font-['Great_Vibes',cursive] text-5xl sm:text-6xl text-[#7A002A] leading-tight drop-shadow-sm">
               ¡Estás invitado!
             </h2>
             <p className="font-['Cinzel',serif] text-xs tracking-[0.25em] uppercase text-[#B74F5F] font-semibold mt-1">
-              Toca el sello para abrir
+              Toca el sobre para abrir
             </p>
           </div>
         </div>
