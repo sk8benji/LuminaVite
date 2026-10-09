@@ -4,8 +4,8 @@ import { SESClient, SendEmailCommand } from "@aws-sdk/client-ses";
 const sesClient = new SESClient({
   region: process.env.AWS_REGION || "us-east-1",
   credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID || "",
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || "",
+    accessKeyId: process.env.AWS_ACCESS_SES_KEY || process.env.AWS_ACCESS_KEY_ID || "",
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_SES_KEY || process.env.AWS_SECRET_ACCESS_KEY || "",
   },
 });
 
@@ -144,11 +144,8 @@ export async function sendHostNotificationEmail(params: HostEmailParams): Promis
 `;
 
   // Si no hay credenciales válidas en .env, logueamos el modo simulación para desarrollo local
-  if (
-    !process.env.AWS_ACCESS_KEY_ID ||
-    process.env.AWS_ACCESS_KEY_ID === "demo_key" ||
-    !hostEmail
-  ) {
+  const hasCredentials = !!(process.env.AWS_ACCESS_SES_KEY || process.env.AWS_ACCESS_KEY_ID);
+  if (!hasCredentials || !hostEmail) {
     console.log(
       `[AWS SES SIMULACIÓN] Email enviado a "${hostEmail}": "${subject}". Magic Link: ${magicLink}`
     );

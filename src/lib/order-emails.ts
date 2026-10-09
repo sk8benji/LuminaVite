@@ -4,8 +4,8 @@ import { OrderData } from "./order-store";
 const sesClient = new SESClient({
   region: process.env.AWS_REGION || "us-east-1",
   credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID || "",
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || "",
+    accessKeyId: process.env.AWS_ACCESS_SES_KEY || process.env.AWS_ACCESS_KEY_ID || "",
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_SES_KEY || process.env.AWS_SECRET_ACCESS_KEY || "",
   },
 });
 
@@ -117,7 +117,8 @@ export async function sendCustomerOrderConfirmationEmail(
 
   // Enviar con AWS SES
   try {
-    if (!process.env.AWS_ACCESS_KEY_ID || process.env.AWS_ACCESS_KEY_ID === "") {
+    const hasCredentials = !!(process.env.AWS_ACCESS_SES_KEY || process.env.AWS_ACCESS_KEY_ID);
+    if (!hasCredentials) {
       console.log(`[AWS SES SIMULACIÓN] Email de confirmación enviado a cliente "${toEmail}": "${subject}"`);
       return { success: true, simulated: true };
     }
@@ -250,7 +251,8 @@ export async function sendAdminOrderAlertEmail(
   `;
 
   try {
-    if (!process.env.AWS_ACCESS_KEY_ID || process.env.AWS_ACCESS_KEY_ID === "") {
+    const hasCredentials = !!(process.env.AWS_ACCESS_SES_KEY || process.env.AWS_ACCESS_KEY_ID);
+    if (!hasCredentials) {
       console.log(`[AWS SES SIMULACIÓN] Alerta enviada al Admin "${adminEmail}": "${subject}"`);
       return { success: true, simulated: true };
     }
