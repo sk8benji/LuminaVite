@@ -69,11 +69,15 @@ export default async function ClientMagicLinkPanelPage({
       return notFound();
     }
 
-    // Si coincide, establecer sesión segura HttpOnly para visitas posteriores y continuar
+    // Si coincide, asentar cookie HttpOnly para visitas posteriores sin requerir volver a escribir la clave
     if (evento.panelToken) {
-      const signedToken = generatePanelToken(slug, evento.panelToken);
-      const cookieOpts = getPanelCookieOptions();
-      cookieStore.set(cookieName, signedToken, cookieOpts);
+      try {
+        const signedToken = generatePanelToken(slug, evento.panelToken);
+        const cookieOpts = getPanelCookieOptions();
+        cookieStore.set(cookieName, signedToken, cookieOpts);
+      } catch (e) {
+        // En Next.js Server Components, si las cabeceras ya se enviaron, ignorar error de cookie
+      }
     }
   } else {
     // 2. Si no viene key en la URL, verificar la cookie de sesión previa
@@ -105,12 +109,18 @@ export default async function ClientMagicLinkPanelPage({
   const declinados = rsvps.filter((r) => !r.asistira);
   const totalPases = confirmados.reduce((acc, r) => acc + (r.pases || 1), 0);
 
+  const fechaEventoStr = evento.fechaEvento instanceof Date
+    ? evento.fechaEvento.toISOString()
+    : evento.fechaEvento
+    ? new Date(evento.fechaEvento).toISOString()
+    : new Date().toISOString();
+
   const panelData: PanelData = {
     evento: {
       id: evento.id,
       titulo: evento.titulo,
       slug: evento.slug,
-      fechaEvento: evento.fechaEvento.toISOString(),
+      fechaEvento: fechaEventoStr,
       recepcionNombre: evento.recepcionNombre,
       maxPasesPorInvitado: evento.maxPasesPorInvitado,
     },
