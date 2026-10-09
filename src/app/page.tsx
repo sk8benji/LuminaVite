@@ -22,6 +22,7 @@ import {
   Star,
   ChevronRight,
   Sliders,
+  Loader2,
 } from "lucide-react";
 import { Language, translations } from "@/lib/home-translations";
 import InteractivePhoneMockup from "@/components/home/InteractivePhoneMockup";
@@ -32,12 +33,35 @@ export default function HomePage() {
   const [lang, setLang] = useState<Language>("es");
   const [isDemoModalOpen, setIsDemoModalOpen] = useState(false);
   const [activeDemoSlug, setActiveDemoSlug] = useState("mariposas-xv");
+  const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null);
 
   const t = translations[lang];
 
   const handleOpenDemo = (slug: string = "mariposas-xv") => {
     setActiveDemoSlug(slug);
     setIsDemoModalOpen(true);
+  };
+
+  const handleCheckout = async (plan: "basic" | "signature" | "atelier") => {
+    setCheckoutLoading(plan);
+    try {
+      const res = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ plan }),
+      });
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        alert("Hubo un error al iniciar la compra. Por favor intenta de nuevo.");
+        setCheckoutLoading(null);
+      }
+    } catch (err) {
+      console.error("Error en checkout:", err);
+      alert("Error de conexión al procesar la compra.");
+      setCheckoutLoading(null);
+    }
   };
 
   return (
@@ -579,12 +603,20 @@ export default function HomePage() {
               </ul>
             </div>
 
-            <Link
-              href="/eventos/nuevo?plan=basic"
-              className="mt-8 w-full py-3.5 px-4 rounded-xl border border-[#2C1F1B] text-[#2C1F1B] font-['Cinzel'] text-[11px] tracking-[0.2em] uppercase font-bold hover:bg-[#F5EFE4] active:scale-95 transition-all text-center block"
+            <button
+              onClick={() => handleCheckout("basic")}
+              disabled={checkoutLoading !== null}
+              className="mt-8 w-full py-3.5 px-4 rounded-xl border border-[#2C1F1B] text-[#2C1F1B] font-['Cinzel'] text-[11px] tracking-[0.2em] uppercase font-bold hover:bg-[#F5EFE4] active:scale-95 transition-all text-center flex items-center justify-center gap-2 disabled:opacity-50"
             >
-              {t.pricing.plans[0].cta}
-            </Link>
+              {checkoutLoading === "basic" ? (
+                <>
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  <span>Procesando...</span>
+                </>
+              ) : (
+                t.pricing.plans[0].cta
+              )}
+            </button>
           </div>
 
           {/* 2. PLAN SIGNATURE VIP ($89) - TARJETA DESTACADA EN ORO */}
@@ -634,12 +666,20 @@ export default function HomePage() {
               </ul>
             </div>
 
-            <Link
-              href="/eventos/nuevo?plan=signature"
-              className="mt-8 w-full py-4 px-4 rounded-xl bg-gradient-to-r from-[#C5A059] via-[#EED3A1] to-[#C5A059] text-[#2C1F1B] font-['Cinzel'] text-xs tracking-[0.25em] uppercase font-bold hover:brightness-105 active:scale-95 transition-all shadow-[0_5px_20px_rgba(197,160,89,0.35)] text-center block"
+            <button
+              onClick={() => handleCheckout("signature")}
+              disabled={checkoutLoading !== null}
+              className="mt-8 w-full py-4 px-4 rounded-xl bg-gradient-to-r from-[#C5A059] via-[#EED3A1] to-[#C5A059] text-[#2C1F1B] font-['Cinzel'] text-xs tracking-[0.25em] uppercase font-bold hover:brightness-105 active:scale-95 transition-all shadow-[0_5px_20px_rgba(197,160,89,0.35)] text-center flex items-center justify-center gap-2 disabled:opacity-50"
             >
-              {t.pricing.plans[1].cta}
-            </Link>
+              {checkoutLoading === "signature" ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin text-[#2C1F1B]" />
+                  <span>Procesando Reserva...</span>
+                </>
+              ) : (
+                t.pricing.plans[1].cta
+              )}
+            </button>
           </div>
 
           {/* 3. PLAN CONCIERGE ($149) */}
@@ -684,12 +724,20 @@ export default function HomePage() {
               </ul>
             </div>
 
-            <Link
-              href="/eventos/nuevo?plan=concierge"
-              className="mt-8 w-full py-3.5 px-4 rounded-xl border border-[#2C1F1B] text-[#2C1F1B] font-['Cinzel'] text-[11px] tracking-[0.2em] uppercase font-bold hover:bg-[#F5EFE4] active:scale-95 transition-all text-center block"
+            <button
+              onClick={() => handleCheckout("atelier")}
+              disabled={checkoutLoading !== null}
+              className="mt-8 w-full py-3.5 px-4 rounded-xl border border-[#2C1F1B] text-[#2C1F1B] font-['Cinzel'] text-[11px] tracking-[0.2em] uppercase font-bold hover:bg-[#F5EFE4] active:scale-95 transition-all text-center flex items-center justify-center gap-2 disabled:opacity-50"
             >
-              {t.pricing.plans[2].cta}
-            </Link>
+              {checkoutLoading === "atelier" ? (
+                <>
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  <span>Procesando...</span>
+                </>
+              ) : (
+                t.pricing.plans[2].cta
+              )}
+            </button>
           </div>
         </div>
 
