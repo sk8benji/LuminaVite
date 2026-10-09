@@ -7,13 +7,14 @@ export async function middleware(request: NextRequest) {
   const pathname = url.pathname;
   const host = (request.headers.get("host") || "").toLowerCase();
 
-  // 1. Excluir recursos estáticos, imágenes, fuentes y APIs públicas
+  // 1. Excluir recursos estáticos, imágenes, fuentes, health y APIs públicas
   if (
     pathname.startsWith("/_next") ||
     pathname.startsWith("/assets") ||
     pathname.startsWith("/api/rsvp") ||
     pathname.startsWith("/api/og") ||
     pathname.startsWith("/api/s3") ||
+    pathname === "/api/health" ||
     pathname === "/favicon.ico" ||
     pathname === "/icon.png" ||
     pathname.includes(".")
