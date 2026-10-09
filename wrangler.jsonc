@@ -13,5 +13,8 @@
       "binding": "WORKER_SELF_REFERENCE",
       "service": "luminavite"
     }
-  ]
+  ],
+  "build": {
+    "command": "npx @opennextjs/cloudflare build"
+  }
 }
