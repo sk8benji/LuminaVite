@@ -277,6 +277,38 @@ export const DEMO_BODA: InvitationData = {
   recepcionMapUrl: "https://maps.google.com",
 };
 
+// Evento del cliente: Maydelin Mendez (Quince Rosado)
+export const EVENT_MAYDELIN_MENDEZ: InvitationData = {
+  id: "client-maydelin-mendez",
+  slug: "maydelin-mendez",
+  tipoEvento: "QUINCEANERA",
+  estiloPlantilla: "QUINCE_ROSADO",
+  titulo: "Maydelin Mendez",
+  subtitulo: "Mis Quinceaños",
+  frasePersonalizada:
+    "Con la bendición de Dios y el amor de mi familia, tengo el honor de invitarte a celebrar este día tan esperado.",
+  fechaEvento: new Date("2026-12-05T22:38:00Z"),
+  fechaTextoPersonalizada: "SÁBADO 5 DE DICIEMBRE, 2026",
+  fotoPortadaUrl: "/assets/template-quince-rosado/90043c428c5ec72c7adb26dce69dedd2.png",
+  fotoInfanciaUrl: "/assets/template-rose/722d78548334333072ad7200e4f8233e.jpg",
+  fotoActualUrl: "/assets/template-quince-rosado/90043c428c5ec72c7adb26dce69dedd2.png",
+  fotoCierreUrl: "/assets/template-quince-rosado/90043c428c5ec72c7adb26dce69dedd2.png",
+  musicaUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+  telefonoWhatsappRsvp: "18181234567",
+  fechaLimiteRsvp: "15 de Noviembre, 2026",
+  maxPasesPorInvitado: 4,
+  ceremoniaNombre: "Parroquia San Juan Bautista",
+  ceremoniaDireccion: "Av. Las Rosas 450",
+  ceremoniaMapUrl: "https://maps.google.com",
+  recepcionNombre: "Hacienda Real Gala",
+  recepcionDireccion: "Km 12 Carretera Antigua",
+  recepcionMapUrl: "https://maps.google.com",
+  dressCodeTitulo: "Rigurosa Etiqueta & Elegante",
+  dressCodeNota: "Agradecemos reservar los tonos rosa para la quinceañera.",
+  coloresReservados: ["#F3C5D0", "#7A002A"],
+  idiomaDefault: "bilingual",
+};
+
 async function getEventoData(rawSlug: string): Promise<InvitationData | null> {
   if (!rawSlug) return null;
   const slug = decodeURIComponent(rawSlug).toLowerCase().trim();
@@ -376,7 +408,9 @@ async function getEventoData(rawSlug: string): Promise<InvitationData | null> {
   }
 
   // 3. ÚLTIMO RECURSO (FALLBACK): Solo si NO existe en la base de datos ni en el almacenamiento,
-  // verificar si coincide con las plantillas de demostración del catálogo
+  // verificar invitaciones registradas o plantillas de demostración
+  if (slug === "maydelin-mendez") return EVENT_MAYDELIN_MENDEZ;
+  if (slug === "quince-rosado") return EVENT_MAYDELIN_MENDEZ;
   if (slug === "elsy-xv") return DEMO_ELSY;
   if (slug === "isabella-xv") return DEMO_ISABELLA;
   if (slug === "emma-and-lucas") return DEMO_EMMA_LUCAS;

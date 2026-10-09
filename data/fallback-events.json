@@ -1,0 +1,37 @@
+[
+  {
+    "id": "client-maydelin-mendez",
+    "slug": "maydelin-mendez",
+    "tipoEvento": "QUINCEANERA",
+    "estiloPlantilla": "QUINCE_ROSADO",
+    "titulo": "Maydelin Mendez",
+    "subtitulo": "Mis Quinceaños",
+    "frasePersonalizada": "Con la bendición de Dios y el amor de mi familia, tengo el honor de invitarte a celebrar este día tan esperado.",
+    "fechaEvento": "2026-12-05T22:38:00.000Z",
+    "fechaTextoPersonalizada": "SÁBADO 5 DE DICIEMBRE, 2026",
+    "fotoPortadaUrl": "/assets/template-quince-rosado/90043c428c5ec72c7adb26dce69dedd2.png",
+    "fotoInfanciaUrl": "/assets/template-rose/722d78548334333072ad7200e4f8233e.jpg",
+    "fotoActualUrl": "/assets/template-quince-rosado/90043c428c5ec72c7adb26dce69dedd2.png",
+    "fotoCierreUrl": "/assets/template-quince-rosado/90043c428c5ec72c7adb26dce69dedd2.png",
+    "musicaUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+    "telefonoWhatsappRsvp": "18181234567",
+    "fechaLimiteRsvp": "15 de Noviembre, 2026",
+    "maxPasesPorInvitado": 4,
+    "ceremoniaNombre": "Parroquia San Juan Bautista",
+    "ceremoniaDireccion": "Av. Las Rosas 450",
+    "ceremoniaMapUrl": "https://maps.google.com",
+    "recepcionNombre": "Hacienda Real Gala",
+    "recepcionDireccion": "Km 12 Carretera Antigua",
+    "recepcionMapUrl": "https://maps.google.com",
+    "dressCodeTitulo": "Rigurosa Etiqueta & Elegante",
+    "dressCodeNota": "Agradecemos reservar los tonos rosa para la quinceañera.",
+    "coloresReservados": [
+      "#F3C5D0",
+      "#7A002A"
+    ],
+    "idiomaDefault": "bilingual",
+    "rsvps": [],
+    "createdAt": "2026-10-09T18:52:00.000Z",
+    "updatedAt": "2026-10-09T18:52:00.000Z"
+  }
+]
