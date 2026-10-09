@@ -137,10 +137,10 @@ export const translations: Record<Language, HomeTranslations> = {
     },
     hero: {
       pill: "Papelería Digital de Alta Costura",
-      title1: "La Papelería Digital de Alta Costura",
-      title2: "Para Eventos Inolvidables",
+      title1: "Tu celebración merece",
+      title2: "una entrada triunfal.",
       subtitle:
-        "Diseño interactivo con sobre 3D, música de fondo de alta fidelidad, confirmación SMS vía Twilio y panel de control privado con Magic Link. Cero descargas, cero contraseñas.",
+        "Invitaciones web de lujo con confirmación en tiempo real y álbum de fotos compartido.",
       ctaCatalog: "Ver Catálogo de Plantillas",
       ctaDemo: "Explorar Invitación Demo",
       phoneBadge1: "SMS Twilio • Confirmado",
@@ -394,10 +394,10 @@ export const translations: Record<Language, HomeTranslations> = {
     },
     hero: {
       pill: "Haute Couture Digital Stationery",
-      title1: "Haute Couture Digital Stationery",
-      title2: "For Unforgettable Events",
+      title1: "Your celebration deserves",
+      title2: "a triumphal entrance.",
       subtitle:
-        "Luxury interactive invitations with 3D opening envelopes, high-fidelity ambient music, instant Twilio SMS confirmations, and private real-time attendance dashboards. Zero downloads, zero passwords.",
+        "Luxury web invitations with real-time RSVP confirmation and shared guest photo albums.",
       ctaCatalog: "Explore Collections",
       ctaDemo: "Test Interactive Demo",
       phoneBadge1: "Twilio SMS • Confirmed",
