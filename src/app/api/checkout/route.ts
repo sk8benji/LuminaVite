@@ -8,7 +8,10 @@ export async function POST(req: NextRequest) {
     const { plan = "signature" } = body;
 
     const pkg = PACKAGES[plan] || PACKAGES.signature;
-    const origin = req.nextUrl.origin || "https://clickandlove.app";
+    const host = req.headers.get("x-forwarded-host") || req.headers.get("host") || "";
+    const proto = req.headers.get("x-forwarded-proto") || "https";
+    const publicHost = host.replace(/^admin\./, "");
+    const origin = publicHost ? `${proto}://${publicHost}` : (process.env.NEXT_PUBLIC_SITE_URL || "https://clickandlove.app");
 
     const stripe = getStripe();
 
