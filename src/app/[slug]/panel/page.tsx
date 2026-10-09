@@ -1,13 +1,5 @@
-import { cookies } from "next/headers";
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import prisma from "@/lib/db";
-import {
-  generatePanelToken,
-  getPanelCookieName,
-  getPanelCookieOptions,
-  verifyPanelAuth,
-} from "@/lib/panel-auth";
-import { normalizeSlug, getEventBySlug, validateEventKey } from "@/lib/events";
 import PanelView, { PanelData } from "./PanelView";
 
 export const dynamic = "force-dynamic";
@@ -15,136 +7,94 @@ export const revalidate = 0;
 
 interface PageProps {
   params: Promise<{ slug: string }> | { slug: string };
-  searchParams: Promise<{ key?: string; error?: string }> | { key?: string; error?: string };
+  searchParams: Promise<{ key?: string }> | { key?: string };
 }
 
 export default async function ClientMagicLinkPanelPage({
   params,
   searchParams,
 }: PageProps) {
+  // 1. Resuelve los parámetros asíncronamente
   const resolvedParams = await params;
   const resolvedSearchParams = await searchParams;
 
   const rawSlug = resolvedParams?.slug || "";
-  const slug = normalizeSlug(rawSlug);
-  const key = resolvedSearchParams?.key ? String(resolvedSearchParams.key).trim() : undefined;
-  const errorParam = resolvedSearchParams?.error ? String(resolvedSearchParams.error).trim() : undefined;
+  const cleanSlug = decodeURIComponent(rawSlug).toLowerCase().trim();
+  const cleanKey = (resolvedSearchParams?.key || "").trim();
 
-  if (!slug) {
-    notFound();
+  // 2. Si no hay cleanKey o no hay slug, ejecuta notFound() de inmediato
+  if (!cleanSlug || !cleanKey) {
+    return notFound();
   }
 
-  const cookieStore = await cookies();
-  const cookieName = getPanelCookieName(slug);
-  const sessionCookie = cookieStore.get(cookieName)?.value;
-
-  // Clave maestra de soporte o clave enviada en query params
-  const cleanKey = key || "";
+  // 3. Consulta directa a PostgreSQL con Prisma (sin cookies ni S3)
   const isMasterKey = cleanKey === "clickandlove2026!" || cleanKey === "admin";
 
   let evento = null;
 
-  // 1. Si viene con ?key=... en la URL
-  if (cleanKey) {
-    if (isMasterKey) {
-      evento = await prisma.evento.findUnique({
-        where: { slug },
-        include: { rsvps: { orderBy: { createdAt: "desc" } } },
-      });
-    } else {
-      // VALIDACIÓN SQL DIRECTA: La base de datos valida la coincidencia en la misma consulta
-      evento = await prisma.evento.findFirst({
-        where: {
-          slug,
-          panelToken: { equals: cleanKey, mode: "insensitive" },
-        },
-        include: {
-          rsvps: { orderBy: { createdAt: "desc" } },
-        },
-      });
-    }
-
-    if (!evento) {
-      // Si la key no coincide con la BD, 404 inmediato
-      return notFound();
-    }
-
-    // Si coincide, asentar cookie HttpOnly para visitas posteriores sin requerir volver a escribir la clave
-    if (evento.panelToken) {
-      try {
-        const signedToken = generatePanelToken(slug, evento.panelToken);
-        const cookieOpts = getPanelCookieOptions();
-        cookieStore.set(cookieName, signedToken, cookieOpts);
-      } catch (e) {
-        // En Next.js Server Components, si las cabeceras ya se enviaron, ignorar error de cookie
-      }
-    }
-  } else {
-    // 2. Si no viene key en la URL, verificar la cookie de sesión previa
-    const isSessionValid = await verifyPanelAuth(slug, sessionCookie);
-    if (!isSessionValid) {
-      return (
-        <PanelView
-          slug={slug}
-          isAuthorized={false}
-          errorMessage={errorParam}
-        />
-      );
-    }
-
+  if (isMasterKey) {
     evento = await prisma.evento.findUnique({
-      where: { slug },
+      where: { slug: cleanSlug },
       include: {
         rsvps: { orderBy: { createdAt: "desc" } },
+        usuario: true,
       },
     });
-
-    if (!evento) {
-      return notFound();
-    }
+  } else {
+    evento = await prisma.evento.findFirst({
+      where: {
+        slug: cleanSlug,
+        panelToken: { equals: cleanKey, mode: "insensitive" },
+      },
+      include: {
+        rsvps: { orderBy: { createdAt: "desc" } },
+        usuario: true,
+      },
+    });
   }
 
-  const rsvps = evento.rsvps || [];
-  const confirmados = rsvps.filter((r) => r.asistira);
-  const declinados = rsvps.filter((r) => !r.asistira);
-  const totalPases = confirmados.reduce((acc, r) => acc + (r.pases || 1), 0);
+  // 4. Si evento es null, rechazo 404 inmediato
+  if (!evento) {
+    return notFound();
+  }
 
-  const fechaEventoStr = evento.fechaEvento instanceof Date
-    ? evento.fechaEvento.toISOString()
-    : evento.fechaEvento
-    ? new Date(evento.fechaEvento).toISOString()
-    : new Date().toISOString();
+  // 5. Serialización segura de fechas y datos para evitar errores de hidratación
+  const serializedEvento = JSON.parse(JSON.stringify(evento));
+  const rsvps = serializedEvento.rsvps || [];
+  const confirmados = rsvps.filter((r: any) => r.asistira);
+  const declinados = rsvps.filter((r: any) => !r.asistira);
+  const totalPases = confirmados.reduce((acc: number, r: any) => acc + (r.pases || 1), 0);
 
   const panelData: PanelData = {
     evento: {
-      id: evento.id,
-      titulo: evento.titulo,
-      slug: evento.slug,
-      fechaEvento: fechaEventoStr,
-      recepcionNombre: evento.recepcionNombre,
-      maxPasesPorInvitado: evento.maxPasesPorInvitado,
+      id: serializedEvento.id,
+      titulo: serializedEvento.titulo,
+      slug: serializedEvento.slug,
+      fechaEvento: serializedEvento.fechaEvento,
+      recepcionNombre: serializedEvento.recepcionNombre,
+      maxPasesPorInvitado: serializedEvento.maxPasesPorInvitado,
     },
     estadisticas: {
       totalInvitadosConfirmados: confirmados.length,
       totalPasesConfirmados: totalPases,
       totalDeclinados: declinados.length,
       totalRespuestas: rsvps.length,
-      aforoTotal: evento.aforoTotal || 200,
+      aforoTotal: serializedEvento.aforoTotal || 200,
     },
-    rsvps: rsvps.map((r) => ({
+    rsvps: rsvps.map((r: any) => ({
       id: r.id,
       nombreInvitado: r.nombreInvitado,
       telefono: r.telefono,
       asistira: r.asistira,
       pases: r.pases,
       acompanantes: r.acompanantes,
-      createdAt: r.createdAt.toISOString(),
+      createdAt: r.createdAt,
     })),
   };
 
   return (
     <PanelView
-      slug={slug}
+      slug={cleanSlug}
       isAuthorized={true}
       initialData={panelData}
     />
