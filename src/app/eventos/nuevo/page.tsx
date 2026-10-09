@@ -657,7 +657,11 @@ function NuevoEventoContent() {
         setSaveSuccessMsg("¡Cambios guardados con éxito en la invitación!");
         setTimeout(() => setSaveSuccessMsg(null), 4000);
       } else {
-        const origin = typeof window !== "undefined" ? window.location.origin : "";
+        let origin = typeof window !== "undefined" ? window.location.origin : "";
+        if (typeof window !== "undefined" && window.location.host.startsWith("admin.")) {
+          const publicHost = window.location.host.replace(/^admin\./, "");
+          origin = `${window.location.protocol}//${publicHost}`;
+        }
         const panelKey = result.evento?.panelToken || result.panelToken || "";
         setCreatedLinks({
           publicUrl: `${origin}/${formData.slug}`,

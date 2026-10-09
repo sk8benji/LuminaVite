@@ -14,6 +14,7 @@ import {
   Check,
   MessageCircle,
   Edit3,
+  LogOut,
 } from "lucide-react";
 
 interface EventoItem {
@@ -35,6 +36,22 @@ export default function DashboardPage() {
   const [eventos, setEventos] = useState<EventoItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [copiedSlug, setCopiedSlug] = useState<string | null>(null);
+
+  const getPublicEventUrl = (path: string) => {
+    if (typeof window !== "undefined" && window.location.host.startsWith("admin.")) {
+      const publicHost = window.location.host.replace(/^admin\./, "");
+      return `${window.location.protocol}//${publicHost}/${path.replace(/^\//, "")}`;
+    }
+    return `/${path.replace(/^\//, "")}`;
+  };
+
+  const handleLogout = async () => {
+    try {
+      await fetch("/api/admin/logout", { method: "POST" });
+    } finally {
+      window.location.href = "/login";
+    }
+  };
 
   useEffect(() => {
     fetch("/api/eventos")
@@ -113,7 +130,12 @@ export default function DashboardPage() {
   }, []);
 
   const handleCopyLink = (slug: string) => {
-    const url = `${window.location.origin}/${slug}`;
+    let origin = window.location.origin;
+    if (window.location.host.startsWith("admin.")) {
+      const publicHost = window.location.host.replace(/^admin\./, "");
+      origin = `${window.location.protocol}//${publicHost}`;
+    }
+    const url = `${origin}/${slug}`;
     navigator.clipboard.writeText(url);
     setCopiedSlug(slug);
     setTimeout(() => setCopiedSlug(null), 2000);
@@ -126,22 +148,33 @@ export default function DashboardPage() {
       {/* Barra superior de navegación */}
       <nav className="bg-white border-b border-stone-200 px-6 py-4 flex items-center justify-between sticky top-0 z-30">
         <div className="flex items-center gap-2">
-          <span className="text-2xl">✨</span>
+          <span className="text-2xl">🎀</span>
           <span className="text-base font-bold tracking-tight text-stone-900 font-serif">
-            LuminaVite SaaS
+            Click and love
           </span>
-          <span className="text-[10px] uppercase tracking-wider font-semibold bg-pink-100 text-[#5A3E44] px-2 py-0.5 rounded-full ml-2">
-            Panel de Salones & Anfitriones
+          <span className="text-[10px] uppercase tracking-wider font-semibold bg-pink-100 text-[#7A002A] px-2.5 py-0.5 rounded-full ml-2">
+            Admin
           </span>
         </div>
 
-        <Link
-          href="/eventos/nuevo"
-          className="flex items-center gap-1.5 px-4 py-2 bg-[#5A3E44] hover:bg-[#432d32] text-white rounded-xl text-xs font-semibold shadow transition"
-        >
-          <Plus className="w-4 h-4" />
-          Nueva Invitación
-        </Link>
+        <div className="flex items-center gap-2">
+          <Link
+            href="/eventos/nuevo"
+            className="flex items-center gap-1.5 px-4 py-2 bg-[#7A002A] hover:bg-[#5e0020] text-white rounded-xl text-xs font-semibold shadow transition"
+          >
+            <Plus className="w-4 h-4" />
+            Nueva Invitación
+          </Link>
+          <button
+            type="button"
+            onClick={handleLogout}
+            title="Cerrar sesión"
+            className="flex items-center gap-1.5 px-3 py-2 bg-stone-100 hover:bg-stone-200 text-stone-700 rounded-xl text-xs font-semibold transition cursor-pointer"
+          >
+            <LogOut className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">Salir</span>
+          </button>
+        </div>
       </nav>
 
       <main className="max-w-7xl mx-auto px-6 py-8 space-y-8">
@@ -291,7 +324,7 @@ export default function DashboardPage() {
 
                       <div className="grid grid-cols-2 gap-2">
                         <Link
-                          href={`/${ev.slug}`}
+                          href={getPublicEventUrl(ev.slug)}
                           target="_blank"
                           className="flex items-center justify-center gap-1.5 py-2 px-3 bg-stone-100 hover:bg-stone-200 text-stone-800 rounded-xl text-xs font-semibold transition"
                         >
@@ -301,7 +334,7 @@ export default function DashboardPage() {
 
                         <button
                           onClick={() => handleCopyLink(ev.slug)}
-                          className="flex items-center justify-center gap-1.5 py-2 px-3 bg-[#5A3E44] hover:bg-[#432d32] text-white rounded-xl text-xs font-semibold shadow-sm transition cursor-pointer"
+                          className="flex items-center justify-center gap-1.5 py-2 px-3 bg-[#7A002A] hover:bg-[#5e0020] text-white rounded-xl text-xs font-semibold shadow-sm transition cursor-pointer"
                         >
                           {copiedSlug === ev.slug ? (
                             <>
@@ -319,7 +352,7 @@ export default function DashboardPage() {
 
                       {/* Magic Link para el Cliente (Mamá / Novios) */}
                       <Link
-                        href={`/${ev.slug}/panel?key=${ev.panelToken || "demo"}`}
+                        href={getPublicEventUrl(`${ev.slug}/panel?key=${ev.panelToken || "demo"}`)}
                         target="_blank"
                         className="w-full flex items-center justify-center gap-1.5 py-2 px-3 bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-900 rounded-xl text-xs font-semibold transition"
                       >

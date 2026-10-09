@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "LuminaVite - Invitaciones Digitales Interactivas",
+  title: "Click and love - Invitaciones Digitales Interactivas",
   description: "Plataforma SaaS para crear y compartir invitaciones digitales de Bodas y Quinceañeras con RSVP por WhatsApp.",
 };
 

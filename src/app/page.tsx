@@ -9,7 +9,7 @@ export default function HomePage() {
         <div className="flex items-center gap-2">
           <span className="text-3xl">🎀</span>
           <span className="text-xl font-bold tracking-tight text-[#5A3E44] font-serif">
-            LuminaVite
+            Click and love
           </span>
         </div>
 
@@ -98,7 +98,7 @@ export default function HomePage() {
 
       {/* Footer */}
       <footer className="py-6 text-center text-xs text-stone-400 border-t border-pink-100/60">
-        © {new Date().getFullYear()} LuminaVite SaaS • Diseñado para Railway, AWS S3 y PostgreSQL
+        © {new Date().getFullYear()} Click and love • Invitaciones Digitales Interactivas
       </footer>
     </div>
   );
