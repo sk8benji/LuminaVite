@@ -57,6 +57,7 @@ async function syncMaydelinKey() {
         ceremoniaDireccion: "Av. Las Rosas 450",
         recepcionNombre: "Hacienda Real Gala",
         recepcionDireccion: "Km 12 Carretera Antigua",
+        recepcionMapUrl: "https://maps.google.com",
         dressCodeTitulo: "Rigurosa Etiqueta & Elegante",
         dressCodeNota: "Agradecemos reservar los tonos rosa para la quinceañera.",
         coloresReservados: ["#F3C5D0", "#7A002A"],
