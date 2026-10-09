@@ -15,6 +15,22 @@ enum TipoEvento {
   CUMPLEANOS
 }
 
+enum EstadoPago {
+  PENDIENTE
+  PAGADO
+  FALLIDO
+  REEMBOLSADO
+}
+
+enum EstadoPedido {
+  NUEVO
+  CONTACTADO
+  RECOPILANDO_DATOS
+  EN_DISENO
+  PUBLICADO
+  CANCELADO
+}
+
 enum EstiloPlantilla {
   PRINCESA_ROSA           // Elsy (Réplica exacta de referencia)
   ELEGANT_ROSE            // T1: Isabella (Bilingüe, Video embed, Growing Up timeline)
@@ -146,6 +162,7 @@ model Evento {
   updatedAt          DateTime        @updatedAt
 
   rsvps              RsvpRegistro[]
+  ordenesCompra      OrdenCompra[]
 }
 
 model RsvpRegistro {
@@ -162,3 +179,35 @@ model RsvpRegistro {
 
   @@unique([eventoId, telefono], name: "eventoId_telefono")
 }
+
+model OrdenCompra {
+  id                    String          @id @default(uuid())
+  stripeSessionId       String          @unique
+  stripePaymentIntentId String?
+  montoTotal            Float
+  moneda                String          @default("usd")
+  paqueteId             String          // "basic" | "signature" | "atelier"
+  paqueteNombre         String          // "Digital Basic", "Signature VIP", "Atelier Custom"
+  estadoPago            EstadoPago      @default(PENDIENTE)
+  estadoPedido          EstadoPedido    @default(NUEVO)
+
+  // Datos del Cliente
+  nombreCliente         String?
+  emailCliente          String
+  telefonoCliente       String?
+
+  // Datos del Evento (completados en el Thank You page)
+  tipoEvento            TipoEvento?     @default(QUINCEANERA)
+  fechaEvento           DateTime?
+  plantillaDeseada      EstiloPlantilla?
+  comentarios           String?
+  onboardingCompletado  Boolean         @default(false)
+
+  // Relación opcional con Evento si ya se creó la invitación
+  eventoId              String?
+  evento                Evento?         @relation(fields: [eventoId], references: [id], onDelete: SetNull)
+
+  createdAt             DateTime        @default(now())
+  updatedAt             DateTime        @updatedAt
+}
+

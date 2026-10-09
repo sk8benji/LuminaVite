@@ -128,7 +128,40 @@ export async function ensurePostgresTables(): Promise<boolean> {
           "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
           CONSTRAINT "RsvpRegistro_eventoId_telefono_key" UNIQUE ("eventoId", "telefono")
       );`,
-      `ALTER TABLE "Evento" ADD COLUMN IF NOT EXISTS "reproducirMusicaAlAbrir" BOOLEAN DEFAULT true;`
+      `ALTER TABLE "Evento" ADD COLUMN IF NOT EXISTS "reproducirMusicaAlAbrir" BOOLEAN DEFAULT true;`,
+
+      `DO $$ BEGIN
+        CREATE TYPE "EstadoPago" AS ENUM ('PENDIENTE', 'PAGADO', 'FALLIDO', 'REEMBOLSADO');
+      EXCEPTION WHEN duplicate_object THEN null;
+      END $$;`,
+
+      `DO $$ BEGIN
+        CREATE TYPE "EstadoPedido" AS ENUM ('NUEVO', 'CONTACTADO', 'RECOPILANDO_DATOS', 'EN_DISENO', 'PUBLICADO', 'CANCELADO');
+      EXCEPTION WHEN duplicate_object THEN null;
+      END $$;`,
+
+      `CREATE TABLE IF NOT EXISTS "OrdenCompra" (
+          "id" TEXT NOT NULL PRIMARY KEY,
+          "stripeSessionId" TEXT UNIQUE NOT NULL,
+          "stripePaymentIntentId" TEXT,
+          "montoTotal" DOUBLE PRECISION NOT NULL,
+          "moneda" TEXT NOT NULL DEFAULT 'usd',
+          "paqueteId" TEXT NOT NULL,
+          "paqueteNombre" TEXT NOT NULL,
+          "estadoPago" "EstadoPago" NOT NULL DEFAULT 'PENDIENTE',
+          "estadoPedido" "EstadoPedido" NOT NULL DEFAULT 'NUEVO',
+          "nombreCliente" TEXT,
+          "emailCliente" TEXT NOT NULL,
+          "telefonoCliente" TEXT,
+          "tipoEvento" "TipoEvento" DEFAULT 'QUINCEANERA',
+          "fechaEvento" TIMESTAMP(3),
+          "plantillaDeseada" "EstiloPlantilla",
+          "comentarios" TEXT,
+          "onboardingCompletado" BOOLEAN NOT NULL DEFAULT false,
+          "eventoId" TEXT REFERENCES "Evento"("id") ON DELETE SET NULL,
+          "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
+      );`
     ];
 
     for (const sql of sqlStatements) {

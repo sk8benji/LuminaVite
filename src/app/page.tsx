@@ -355,7 +355,7 @@ export default function HomePage() {
                   </button>
 
                   <a
-                    href={`/${item.slug}`}
+                    href={`/demo/${item.slug}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="p-3 rounded-xl border border-[#E8E3D9] text-[#5E534C] hover:text-[#2C1F1B] hover:bg-[#F5EFE4] transition"
@@ -367,6 +367,17 @@ export default function HomePage() {
               </div>
             </div>
           ))}
+        </div>
+
+        {/* Botón para ver el catálogo completo de 8+ demos */}
+        <div className="mt-12 text-center">
+          <Link
+            href="/demo"
+            className="inline-flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-white border-2 border-[#C5A059]/40 hover:border-[#C5A059] text-[#2C1F1B] font-['Cinzel'] text-xs tracking-[0.2em] uppercase font-bold shadow-[0_4px_15px_rgba(44,31,27,0.06)] hover:bg-[#F5EFE4] transition-all group"
+          >
+            <span>{lang === "es" ? "Explorar las 8+ Colecciones en el Catálogo Completo" : "Explore all 8+ Collections in Full Catalog"}</span>
+            <ArrowRight className="w-4 h-4 text-[#C5A059] group-hover:translate-x-1 transition-transform" />
+          </Link>
         </div>
       </section>
 

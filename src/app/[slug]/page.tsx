@@ -285,8 +285,11 @@ async function getEventoData(rawSlug: string): Promise<InvitationData | null> {
   let dbEvento: any = null;
   try {
     dbEvento = await prisma.evento.findUnique({
-      where: { slug, activo: true },
+      where: { slug },
     });
+    if (dbEvento && dbEvento.activo === false) {
+      dbEvento = null;
+    }
   } catch (error) {
     console.warn("Base de datos no disponible o error al consultar slug:", slug, error);
   }

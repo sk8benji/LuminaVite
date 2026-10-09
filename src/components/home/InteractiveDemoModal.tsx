@@ -73,14 +73,14 @@ export default function InteractiveDemoModal({
             </p>
 
             {/* Selector de Demos */}
-            <div className="space-y-2 mb-6">
+            <div className="space-y-2 mb-4 max-h-[300px] overflow-y-auto pr-1">
               <span className="font-['Cinzel'] text-[10px] tracking-widest uppercase text-[#C5A059] font-bold block">
                 {lang === "es" ? "Selecciona una Colección:" : "Select a Collection:"}
               </span>
 
               <button
                 onClick={() => setSelectedSlug("mariposas-xv")}
-                className={`w-full p-3 rounded-xl border text-left transition-all flex items-center justify-between ${
+                className={`w-full p-2.5 rounded-xl border text-left transition-all flex items-center justify-between ${
                   selectedSlug === "mariposas-xv"
                     ? "bg-[#F5EFE4] border-[#C5A059] text-[#2C1F1B]"
                     : "bg-[#FAF8F5] border-[#E8E3D9] text-[#5E534C] hover:text-[#2C1F1B]"
@@ -99,7 +99,7 @@ export default function InteractiveDemoModal({
 
               <button
                 onClick={() => setSelectedSlug("isabella-xv")}
-                className={`w-full p-3 rounded-xl border text-left transition-all flex items-center justify-between ${
+                className={`w-full p-2.5 rounded-xl border text-left transition-all flex items-center justify-between ${
                   selectedSlug === "isabella-xv"
                     ? "bg-[#F5EFE4] border-[#C5A059] text-[#2C1F1B]"
                     : "bg-[#FAF8F5] border-[#E8E3D9] text-[#5E534C] hover:text-[#2C1F1B]"
@@ -118,7 +118,7 @@ export default function InteractiveDemoModal({
 
               <button
                 onClick={() => setSelectedSlug("emma-and-lucas")}
-                className={`w-full p-3 rounded-xl border text-left transition-all flex items-center justify-between ${
+                className={`w-full p-2.5 rounded-xl border text-left transition-all flex items-center justify-between ${
                   selectedSlug === "emma-and-lucas"
                     ? "bg-[#F5EFE4] border-[#C5A059] text-[#2C1F1B]"
                     : "bg-[#FAF8F5] border-[#E8E3D9] text-[#5E534C] hover:text-[#2C1F1B]"
@@ -134,12 +134,63 @@ export default function InteractiveDemoModal({
                   <span className="w-2 h-2 rounded-full bg-[#C5A059]" />
                 )}
               </button>
+
+              <button
+                onClick={() => setSelectedSlug("quince-rosado")}
+                className={`w-full p-2.5 rounded-xl border text-left transition-all flex items-center justify-between ${
+                  selectedSlug === "quince-rosado"
+                    ? "bg-[#F5EFE4] border-[#C5A059] text-[#2C1F1B]"
+                    : "bg-[#FAF8F5] border-[#E8E3D9] text-[#5E534C] hover:text-[#2C1F1B]"
+                }`}
+              >
+                <div>
+                  <div className="font-['Cinzel'] text-xs font-bold text-[#2C1F1B]">Quince Rosado</div>
+                  <div className="font-['Montserrat'] text-[10px] text-[#8C8077]">
+                    Princesa a Caballo • 15 Años
+                  </div>
+                </div>
+                {selectedSlug === "quince-rosado" && (
+                  <span className="w-2 h-2 rounded-full bg-[#C5A059]" />
+                )}
+              </button>
+
+              <button
+                onClick={() => setSelectedSlug("coraline-party")}
+                className={`w-full p-2.5 rounded-xl border text-left transition-all flex items-center justify-between ${
+                  selectedSlug === "coraline-party"
+                    ? "bg-[#F5EFE4] border-[#C5A059] text-[#2C1F1B]"
+                    : "bg-[#FAF8F5] border-[#E8E3D9] text-[#5E534C] hover:text-[#2C1F1B]"
+                }`}
+              >
+                <div>
+                  <div className="font-['Cinzel'] text-xs font-bold text-[#2C1F1B]">Coraline World</div>
+                  <div className="font-['Montserrat'] text-[10px] text-[#8C8077]">
+                    Mística • Puerta Secreta
+                  </div>
+                </div>
+                {selectedSlug === "coraline-party" && (
+                  <span className="w-2 h-2 rounded-full bg-[#C5A059]" />
+                )}
+              </button>
+            </div>
+
+            {/* Enlace al Catálogo Completo */}
+            <div className="mb-4">
+              <a
+                href="/demo"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[11px] font-['Cinzel'] text-[#C5A059] hover:underline font-bold flex items-center gap-1"
+              >
+                <span>{lang === "es" ? "✦ Ver las 8+ demos en el catálogo" : "✦ View all 8+ demos in catalog"}</span>
+                <ExternalLink className="w-3 h-3" />
+              </a>
             </div>
           </div>
 
-          <div className="pt-4 border-t border-[#E8E3D9] space-y-3">
+          <div className="pt-3 border-t border-[#E8E3D9] space-y-2.5">
             <a
-              href={`/${selectedSlug}`}
+              href={`/demo/${selectedSlug}`}
               target="_blank"
               rel="noopener noreferrer"
               className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-[#C5A059] to-[#EED3A1] text-[#2C1F1B] font-['Cinzel'] text-xs tracking-wider uppercase font-bold flex items-center justify-center gap-2 hover:brightness-105 active:scale-95 transition shadow-md"
@@ -150,7 +201,7 @@ export default function InteractiveDemoModal({
 
             <button
               onClick={onClose}
-              className="w-full py-2.5 px-4 rounded-xl border border-[#E8E3D9] text-[#5E534C] font-['Cinzel'] text-xs tracking-wider uppercase hover:bg-neutral-100 transition font-semibold"
+              className="w-full py-2 px-4 rounded-xl border border-[#E8E3D9] text-[#5E534C] font-['Cinzel'] text-xs tracking-wider uppercase hover:bg-neutral-100 transition font-semibold"
             >
               {lang === "es" ? "Regresar a la Página" : "Back to Website"}
             </button>
@@ -172,7 +223,7 @@ export default function InteractiveDemoModal({
             {/* Iframe interactivo en vivo */}
             <div className="w-full h-full rounded-[40px] overflow-hidden bg-black relative">
               <iframe
-                src={`/${selectedSlug}?preview=1`}
+                src={`/demo/${selectedSlug}?preview=1`}
                 title="Invitación Interactiva"
                 className="w-full h-full border-0 select-auto"
                 allow="autoplay; clipboard-write"
