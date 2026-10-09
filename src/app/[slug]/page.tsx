@@ -5,8 +5,20 @@ import { fallbackEventStore } from "@/lib/event-fallback-store";
 import { InvitationData } from "@/components/invitation/InvitationMobileView";
 import TemplateDispatcher from "@/components/templates/TemplateDispatcher";
 
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+export const dynamicParams = true;
+
+export async function generateStaticParams() {
+  return [
+    { slug: "maydelin-mendez" },
+    { slug: "quince-rosado" },
+    { slug: "mariposas-xv" },
+    { slug: "isabella-xv" },
+    { slug: "emma-and-lucas" },
+    { slug: "elsy-xv" },
+    { slug: "coraline-party" },
+    { slug: "sofia-y-alejandro" },
+  ];
+}
 
 interface PageProps {
   params: Promise<{ slug: string }> | { slug: string };
