@@ -186,7 +186,7 @@ export const translations: Record<Language, HomeTranslations> = {
           tag: "XV Años & Gala",
           description:
             "Nuestra colección más icónica. Mariposas que despiertan al tacto, cielo en acuarela, música orquestal y sobre interactivo con sello azul real.",
-          slug: "maydelin-mendez",
+          slug: "mariposas-xv",
           image: "/assets/template-butterfly/foto-columpio-portada.png",
           features: ["Sobre 3D con sello de cera", "Música de fondo", "RSVP por WhatsApp y SMS"],
         },
@@ -443,7 +443,7 @@ export const translations: Record<Language, HomeTranslations> = {
           tag: "Quinceañera & Gala",
           description:
             "Our signature piece. Butterflies that animate on touch, soft watercolor skies, orchestral music, and an interactive envelope with royal blue wax seal.",
-          slug: "maydelin-mendez",
+          slug: "mariposas-xv",
           image: "/assets/template-butterfly/foto-columpio-portada.png",
           features: ["3D envelope with wax seal", "Background audio track", "WhatsApp & SMS RSVP"],
         },

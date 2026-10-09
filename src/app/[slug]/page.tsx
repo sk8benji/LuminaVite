@@ -277,28 +277,11 @@ export const DEMO_BODA: InvitationData = {
   recepcionMapUrl: "https://maps.google.com",
 };
 
-// Demo Maydelin Méndez (Click & Love live invitation)
-export const DEMO_MAYDELIN: InvitationData = {
-  ...DEMO_BUTTERFLY,
-  id: "demo-maydelin",
-  slug: "maydelin-mendez",
-  titulo: "Maydelin Méndez",
-  subtitulo: "Mis Quince Años",
-};
-
 async function getEventoData(rawSlug: string): Promise<InvitationData | null> {
   if (!rawSlug) return null;
   const slug = decodeURIComponent(rawSlug).toLowerCase().trim();
 
-  // Demos instantáneos con las 4 réplicas de Canva + Elsy + Maydelin Méndez
-  if (slug === "elsy-xv") return DEMO_ELSY;
-  if (slug === "isabella-xv") return DEMO_ISABELLA;
-  if (slug === "emma-and-lucas") return DEMO_EMMA_LUCAS;
-  if (slug === "mariposas-xv") return DEMO_BUTTERFLY;
-  if (slug === "maydelin-mendez") return DEMO_MAYDELIN;
-  if (slug === "coraline-party") return DEMO_CORALINE;
-  if (slug === "sofia-y-alejandro") return DEMO_BODA;
-
+  // 1. PRIORIDAD ABSOLUTA: Consultar base de datos y almacenamiento real del usuario
   let dbEvento: any = null;
   try {
     dbEvento = await prisma.evento.findUnique({
@@ -308,7 +291,7 @@ async function getEventoData(rawSlug: string): Promise<InvitationData | null> {
     console.warn("Base de datos no disponible o error al consultar slug:", slug, error);
   }
 
-  // Consultar fallback (memoria y AWS S3)
+  // Consultar fallback (memoria, almacenamiento local y AWS S3)
   const fallback = await fallbackEventStore.getEvent(slug);
 
   // Si ambos existen, priorizar el registro con updatedAt más reciente
@@ -323,72 +306,82 @@ async function getEventoData(rawSlug: string): Promise<InvitationData | null> {
     selected = dbEvento;
   }
 
-  if (!selected) {
-    return null;
+  // 2. Si existe un evento guardado por el usuario, retornarlo siempre
+  if (selected) {
+    return {
+      id: selected.id,
+      slug: selected.slug,
+      tipoEvento: selected.tipoEvento as any,
+      estiloPlantilla: selected.estiloPlantilla as any,
+      titulo: selected.titulo,
+      subtitulo: selected.subtitulo,
+      frasePersonalizada: selected.frasePersonalizada,
+      fechaEvento: new Date(selected.fechaEvento),
+      fechaTextoPersonalizada: selected.fechaTextoPersonalizada,
+      fotoPortadaUrl: selected.fotoPortadaUrl,
+      fotoInfanciaUrl: selected.fotoInfanciaUrl,
+      fotoActualUrl: selected.fotoActualUrl,
+      fotoCierreUrl: selected.fotoCierreUrl,
+      musicaUrl: selected.musicaUrl,
+      reproducirMusicaAlAbrir: (selected as any).reproducirMusicaAlAbrir !== false,
+      videoUrl: selected.videoUrl,
+      galeriaFotosUrls: selected.galeriaFotosUrls,
+      telefonoWhatsappRsvp: selected.telefonoWhatsappRsvp,
+      fechaLimiteRsvp: selected.fechaLimiteRsvp
+        ? selected.fechaLimiteRsvp instanceof Date
+          ? selected.fechaLimiteRsvp.toLocaleDateString()
+          : String(selected.fechaLimiteRsvp)
+        : null,
+      maxPasesPorInvitado: selected.maxPasesPorInvitado,
+      ceremoniaNombre: selected.ceremoniaNombre,
+      ceremoniaDireccion: selected.ceremoniaDireccion,
+      ceremoniaMapUrl: selected.ceremoniaMapUrl,
+      recepcionNombre: selected.recepcionNombre,
+      recepcionDireccion: selected.recepcionDireccion,
+      recepcionMapUrl: selected.recepcionMapUrl,
+      fechaPlacaMes: (selected as any).fechaPlacaMes,
+      fechaPlacaHora: (selected as any).fechaPlacaHora,
+      fechaPlacaLugar: (selected as any).fechaPlacaLugar,
+      countdownEncabezado: (selected as any).countdownEncabezado,
+      dressCodeEtiqueta: (selected as any).dressCodeEtiqueta,
+      dressCodeColoresReservados: (selected as any).dressCodeColoresReservados,
+      regalosMensaje: (selected as any).regalosMensaje,
+      regalosZelle: (selected as any).regalosZelle,
+      regalosCashApp: (selected as any).regalosCashApp,
+      rsvpFechaLimite: (selected as any).rsvpFechaLimite,
+      rsvpDiasAntes: (selected as any).rsvpDiasAntes ?? 15,
+      autorBendicion: (selected as any).autorBendicion,
+      textoDisco: (selected as any).textoDisco,
+      mensajeDespedida: (selected as any).mensajeDespedida,
+      dressCodeTitulo: selected.dressCodeTitulo,
+      dressCodeNota: selected.dressCodeNota,
+      coloresReservados: selected.coloresReservados,
+      celebrationGuideline: selected.celebrationGuideline,
+      wishlistUrl: selected.wishlistUrl,
+      idiomaDefault: selected.idiomaDefault,
+      itinerario:
+        ((selected as any).itinerarioJson as any) ||
+        (selected as any).itinerario ||
+        undefined,
+      itinerarioJson: selected.itinerarioJson,
+      corteHonorJson: selected.corteHonorJson,
+      mesaRegalosJson: selected.mesaRegalosJson,
+      hospedajeJson: selected.hospedajeJson,
+      transporteJson: selected.transporteJson,
+      historiaHitosJson: selected.historiaHitosJson,
+    };
   }
 
-  return {
-    id: selected.id,
-    slug: selected.slug,
-    tipoEvento: selected.tipoEvento as any,
-    estiloPlantilla: selected.estiloPlantilla as any,
-    titulo: selected.titulo,
-    subtitulo: selected.subtitulo,
-    frasePersonalizada: selected.frasePersonalizada,
-    fechaEvento: new Date(selected.fechaEvento),
-    fechaTextoPersonalizada: selected.fechaTextoPersonalizada,
-    fotoPortadaUrl: selected.fotoPortadaUrl,
-    fotoInfanciaUrl: selected.fotoInfanciaUrl,
-    fotoActualUrl: selected.fotoActualUrl,
-    fotoCierreUrl: selected.fotoCierreUrl,
-    musicaUrl: selected.musicaUrl,
-    reproducirMusicaAlAbrir: (selected as any).reproducirMusicaAlAbrir !== false,
-    videoUrl: selected.videoUrl,
-    galeriaFotosUrls: selected.galeriaFotosUrls,
-    telefonoWhatsappRsvp: selected.telefonoWhatsappRsvp,
-    fechaLimiteRsvp: selected.fechaLimiteRsvp
-      ? selected.fechaLimiteRsvp instanceof Date
-        ? selected.fechaLimiteRsvp.toLocaleDateString()
-        : String(selected.fechaLimiteRsvp)
-      : null,
-    maxPasesPorInvitado: selected.maxPasesPorInvitado,
-    ceremoniaNombre: selected.ceremoniaNombre,
-    ceremoniaDireccion: selected.ceremoniaDireccion,
-    ceremoniaMapUrl: selected.ceremoniaMapUrl,
-    recepcionNombre: selected.recepcionNombre,
-    recepcionDireccion: selected.recepcionDireccion,
-    recepcionMapUrl: selected.recepcionMapUrl,
-    fechaPlacaMes: (selected as any).fechaPlacaMes,
-    fechaPlacaHora: (selected as any).fechaPlacaHora,
-    fechaPlacaLugar: (selected as any).fechaPlacaLugar,
-    countdownEncabezado: (selected as any).countdownEncabezado,
-    dressCodeEtiqueta: (selected as any).dressCodeEtiqueta,
-    dressCodeColoresReservados: (selected as any).dressCodeColoresReservados,
-    regalosMensaje: (selected as any).regalosMensaje,
-    regalosZelle: (selected as any).regalosZelle,
-    regalosCashApp: (selected as any).regalosCashApp,
-    rsvpFechaLimite: (selected as any).rsvpFechaLimite,
-    rsvpDiasAntes: (selected as any).rsvpDiasAntes ?? 15,
-    autorBendicion: (selected as any).autorBendicion,
-    textoDisco: (selected as any).textoDisco,
-    mensajeDespedida: (selected as any).mensajeDespedida,
-    dressCodeTitulo: selected.dressCodeTitulo,
-    dressCodeNota: selected.dressCodeNota,
-    coloresReservados: selected.coloresReservados,
-    celebrationGuideline: selected.celebrationGuideline,
-    wishlistUrl: selected.wishlistUrl,
-    idiomaDefault: selected.idiomaDefault,
-    itinerario:
-      ((selected as any).itinerarioJson as any) ||
-      (selected as any).itinerario ||
-      undefined,
-    itinerarioJson: selected.itinerarioJson,
-    corteHonorJson: selected.corteHonorJson,
-    mesaRegalosJson: selected.mesaRegalosJson,
-    hospedajeJson: selected.hospedajeJson,
-    transporteJson: selected.transporteJson,
-    historiaHitosJson: selected.historiaHitosJson,
-  };
+  // 3. ÚLTIMO RECURSO (FALLBACK): Solo si NO existe en la base de datos ni en el almacenamiento,
+  // verificar si coincide con las plantillas de demostración del catálogo
+  if (slug === "elsy-xv") return DEMO_ELSY;
+  if (slug === "isabella-xv") return DEMO_ISABELLA;
+  if (slug === "emma-and-lucas") return DEMO_EMMA_LUCAS;
+  if (slug === "mariposas-xv") return DEMO_BUTTERFLY;
+  if (slug === "coraline-party") return DEMO_CORALINE;
+  if (slug === "sofia-y-alejandro") return DEMO_BODA;
+
+  return null;
 }
 
 /**

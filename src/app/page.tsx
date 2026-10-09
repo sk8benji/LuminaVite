@@ -31,11 +31,11 @@ import RoiCalculator from "@/components/home/RoiCalculator";
 export default function HomePage() {
   const [lang, setLang] = useState<Language>("es");
   const [isDemoModalOpen, setIsDemoModalOpen] = useState(false);
-  const [activeDemoSlug, setActiveDemoSlug] = useState("maydelin-mendez");
+  const [activeDemoSlug, setActiveDemoSlug] = useState("mariposas-xv");
 
   const t = translations[lang];
 
-  const handleOpenDemo = (slug: string = "maydelin-mendez") => {
+  const handleOpenDemo = (slug: string = "mariposas-xv") => {
     setActiveDemoSlug(slug);
     setIsDemoModalOpen(true);
   };
@@ -186,7 +186,7 @@ export default function HomePage() {
             </a>
 
             <button
-              onClick={() => handleOpenDemo("maydelin-mendez")}
+              onClick={() => handleOpenDemo("mariposas-xv")}
               className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-white border-2 border-[#C5A059]/60 hover:bg-[#F5EFE4] text-[#2C1F1B] font-['Cinzel'] text-xs tracking-[0.25em] uppercase font-bold transition-all shadow-[0_4px_15px_rgba(44,31,27,0.06)] flex items-center justify-center gap-2 group"
             >
               <Sparkles className="w-4 h-4 text-[#C5A059] group-hover:rotate-12 transition-transform" />
@@ -268,7 +268,7 @@ export default function HomePage() {
 
           <div className="flex-shrink-0">
             <button
-              onClick={() => handleOpenDemo("maydelin-mendez")}
+              onClick={() => handleOpenDemo("mariposas-xv")}
               className="py-4 px-8 rounded-2xl bg-gradient-to-r from-[#C5A059] via-[#EED3A1] to-[#C5A059] text-[#2C1F1B] font-['Cinzel'] text-xs tracking-[0.25em] uppercase font-bold hover:brightness-105 active:scale-95 transition shadow-[0_8px_25px_rgba(197,160,89,0.35)] flex items-center gap-3"
             >
               <Smartphone className="w-4 h-4 text-[#2C1F1B]" />

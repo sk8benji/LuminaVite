@@ -14,7 +14,7 @@ interface InteractiveDemoModalProps {
 export default function InteractiveDemoModal({
   isOpen,
   onClose,
-  initialSlug = "maydelin-mendez",
+  initialSlug = "mariposas-xv",
   lang,
 }: InteractiveDemoModalProps) {
   const [selectedSlug, setSelectedSlug] = useState(initialSlug);
@@ -79,20 +79,20 @@ export default function InteractiveDemoModal({
               </span>
 
               <button
-                onClick={() => setSelectedSlug("maydelin-mendez")}
+                onClick={() => setSelectedSlug("mariposas-xv")}
                 className={`w-full p-3 rounded-xl border text-left transition-all flex items-center justify-between ${
-                  selectedSlug === "maydelin-mendez"
+                  selectedSlug === "mariposas-xv"
                     ? "bg-[#F5EFE4] border-[#C5A059] text-[#2C1F1B]"
                     : "bg-[#FAF8F5] border-[#E8E3D9] text-[#5E534C] hover:text-[#2C1F1B]"
                 }`}
               >
                 <div>
-                  <div className="font-['Cinzel'] text-xs font-bold text-[#2C1F1B]">Maydelin Méndez</div>
+                  <div className="font-['Cinzel'] text-xs font-bold text-[#2C1F1B]">Valeria Morales</div>
                   <div className="font-['Montserrat'] text-[10px] text-[#8C8077]">
                     Blue Butterfly • 15 Años
                   </div>
                 </div>
-                {selectedSlug === "maydelin-mendez" && (
+                {selectedSlug === "mariposas-xv" && (
                   <span className="w-2 h-2 rounded-full bg-[#C5A059]" />
                 )}
               </button>

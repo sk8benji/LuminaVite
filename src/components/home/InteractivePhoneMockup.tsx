@@ -37,7 +37,7 @@ export default function InteractivePhoneMockup({
 
   const currentSlug =
     activeTab === "butterfly"
-      ? "maydelin-mendez"
+      ? "mariposas-xv"
       : activeTab === "rose"
       ? "isabella-xv"
       : "emma-and-lucas";
@@ -225,7 +225,7 @@ export default function InteractivePhoneMockup({
                     </span>
                     <h4 className="font-['Cinzel'] text-xl font-bold text-white tracking-wide">
                       {activeTab === "butterfly"
-                        ? "Maydelin Méndez"
+                        ? "Valeria Morales"
                         : activeTab === "rose"
                         ? "Isabella Cordero"
                         : "Emma & Lucas"}
@@ -291,8 +291,8 @@ export default function InteractivePhoneMockup({
         <ExternalLink className="w-3.5 h-3.5" />
         <span>
           {lang === "es"
-            ? `Probar ${activeTab === "butterfly" ? "Maydelin Méndez" : activeTab === "rose" ? "Isabella" : "Emma & Lucas"} en Vivo`
-            : `Test ${activeTab === "butterfly" ? "Maydelin Mendez" : activeTab === "rose" ? "Isabella" : "Emma & Lucas"} Live`}
+            ? `Probar ${activeTab === "butterfly" ? "Valeria (Butterfly)" : activeTab === "rose" ? "Isabella" : "Emma & Lucas"} en Vivo`
+            : `Test ${activeTab === "butterfly" ? "Valeria (Butterfly)" : activeTab === "rose" ? "Isabella" : "Emma & Lucas"} Live`}
         </span>
       </button>
     </div>
