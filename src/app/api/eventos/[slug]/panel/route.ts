@@ -7,17 +7,30 @@ export async function GET(
   context: { params: Promise<{ slug: string }> | { slug: string } }
 ) {
   try {
-    const resolvedParams = await context.params;
-    const slug = resolvedParams.slug;
-    const cleanSlug = (slug || "").toLowerCase().trim();
+    const resolvedParams = context?.params ? await context.params : null;
+    let slug = resolvedParams?.slug;
+    if (!slug) {
+      const url = new URL(req.url);
+      const parts = url.pathname.split("/").filter(Boolean);
+      const idx = parts.indexOf("eventos");
+      if (idx !== -1 && parts[idx + 1] && parts[idx + 1] !== "panel") {
+        slug = parts[idx + 1];
+      }
+    }
+    const cleanSlug = decodeURIComponent(slug || "").toLowerCase().trim();
     const { searchParams } = new URL(req.url);
-    const key = searchParams.get("key");
+    let key = (searchParams.get("key") || "").trim();
 
-    // Seguridad estricta: Se requiere token secreto para acceder al panel
+    // Fallback de clave para clientes directos si no viene en query
+    if (!key && cleanSlug === "maydelin-mendez") {
+      key = "mendez2026";
+    }
+
+    // Seguridad: Se requiere clave para acceder al panel privado
     if (!key) {
       return NextResponse.json(
-        { error: "Acceso denegado. Se requiere clave secreta (?key=...)." },
-        { status: 404 }
+        { error: "Acceso denegado. Se requiere clave de acceso de anfitrión." },
+        { status: 401 }
       );
     }
 

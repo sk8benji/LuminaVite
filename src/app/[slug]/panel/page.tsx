@@ -44,7 +44,8 @@ interface PanelData {
   }>;
 }
 
-function PanelContent({ slug }: { slug: string }) {
+function PanelContent({ slug: initialSlug }: { slug?: string }) {
+  const [slug, setSlug] = useState(initialSlug || "");
   const searchParams = useSearchParams();
   const paramKey = searchParams.get("key");
 
@@ -58,11 +59,12 @@ function PanelContent({ slug }: { slug: string }) {
   const [submittingKey, setSubmittingKey] = useState(false);
   const [keyError, setKeyError] = useState("");
 
-  const loadPanelWithKey = (accessKey: string) => {
+  const loadPanelWithKey = (accessKey: string, currentSlug = slug) => {
+    if (!currentSlug) return;
     setLoading(true);
     setKeyError("");
 
-    fetch(`/api/eventos/${slug}/panel?key=${encodeURIComponent(accessKey)}`)
+    fetch(`/api/eventos/${currentSlug}/panel?key=${encodeURIComponent(accessKey)}`)
       .then((res) => {
         if (!res.ok) {
           setUnauthorized(true);
@@ -76,7 +78,7 @@ function PanelContent({ slug }: { slug: string }) {
           setUnauthorized(false);
           // Guardar permanentemente en el navegador de la familia para que nunca se pierda
           try {
-            localStorage.setItem(`clickandlove_key_${slug}`, accessKey);
+            localStorage.setItem(`clickandlove_key_${currentSlug}`, accessKey);
           } catch {}
         } else {
           setUnauthorized(true);
@@ -90,26 +92,37 @@ function PanelContent({ slug }: { slug: string }) {
   };
 
   useEffect(() => {
+    let effectiveSlug = slug;
+    if (!effectiveSlug && typeof window !== "undefined") {
+      const parts = window.location.pathname.split("/").filter(Boolean);
+      if (parts[0] && parts[0] !== "panel") {
+        effectiveSlug = parts[0];
+        setSlug(effectiveSlug);
+      }
+    }
+
+    if (!effectiveSlug) return;
+
     // 1. Intentar clave desde la URL
     if (paramKey) {
-      loadPanelWithKey(paramKey);
+      loadPanelWithKey(paramKey, effectiveSlug);
       return;
     }
 
     // 2. Intentar clave recordada en el navegador de la familia
     let savedKey: string | null = null;
     try {
-      savedKey = localStorage.getItem(`clickandlove_key_${slug}`);
+      savedKey = localStorage.getItem(`clickandlove_key_${effectiveSlug}`);
     } catch {}
 
     if (savedKey) {
-      loadPanelWithKey(savedKey);
+      loadPanelWithKey(savedKey, effectiveSlug);
       return;
     }
 
     // 3. Fallback inmediato para eventos conocidos
-    if (slug === "maydelin-mendez") {
-      loadPanelWithKey("mendez2026");
+    if (effectiveSlug === "maydelin-mendez") {
+      loadPanelWithKey("mendez2026", effectiveSlug);
       return;
     }
 
@@ -277,7 +290,7 @@ function PanelContent({ slug }: { slug: string }) {
               {data?.evento.titulo || "Evento"} • Panel de Invitados
             </h1>
             <p className="text-[10px] text-stone-500">
-              Magic Link en vivo (sin contraseñas)
+              Panel familiar • Actualización en tiempo real
             </p>
           </div>
         </div>
