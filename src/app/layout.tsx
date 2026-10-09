@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Click and love - Invitaciones Digitales Interactivas",
-  description: "Plataforma SaaS para crear y compartir invitaciones digitales de Bodas y Quinceañeras con RSVP por WhatsApp.",
+  title: "Click & Love • Papelería Digital de Alta Costura",
+  description:
+    "Invitaciones interactivas de lujo con sobre 3D, música envolvente, confirmación SMS vía Twilio y panel de control con Magic Link.",
 };
 
 export default function RootLayout({
@@ -21,7 +22,7 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="antialiased bg-stone-100 min-h-screen text-stone-800 selection:bg-pink-200">
+      <body className="antialiased bg-[#0B0A0D] min-h-screen text-stone-100 selection:bg-[#C5A059]/30 selection:text-white">
         {children}
       </body>
     </html>

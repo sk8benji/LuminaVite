@@ -18,6 +18,14 @@ const config: Config = {
         sans: ["'Montserrat'", "'Inter'", "sans-serif"],
       },
       colors: {
+        "brand-dark": "#0F0E11",
+        "brand-gold": "#C5A059",
+        "brand-surface": "#FBF9F5",
+        brand: {
+          dark: "#0F0E11",
+          gold: "#C5A059",
+          surface: "#FBF9F5",
+        },
         gold: {
           50: "#FAF7EE",
           100: "#F5EDDC",

@@ -277,15 +277,25 @@ export const DEMO_BODA: InvitationData = {
   recepcionMapUrl: "https://maps.google.com",
 };
 
+// Demo Maydelin Méndez (Click & Love live invitation)
+export const DEMO_MAYDELIN: InvitationData = {
+  ...DEMO_BUTTERFLY,
+  id: "demo-maydelin",
+  slug: "maydelin-mendez",
+  titulo: "Maydelin Méndez",
+  subtitulo: "Mis Quince Años",
+};
+
 async function getEventoData(rawSlug: string): Promise<InvitationData | null> {
   if (!rawSlug) return null;
   const slug = decodeURIComponent(rawSlug).toLowerCase().trim();
 
-  // Demos instantáneos con las 4 réplicas de Canva + Elsy
+  // Demos instantáneos con las 4 réplicas de Canva + Elsy + Maydelin Méndez
   if (slug === "elsy-xv") return DEMO_ELSY;
   if (slug === "isabella-xv") return DEMO_ISABELLA;
   if (slug === "emma-and-lucas") return DEMO_EMMA_LUCAS;
   if (slug === "mariposas-xv") return DEMO_BUTTERFLY;
+  if (slug === "maydelin-mendez") return DEMO_MAYDELIN;
   if (slug === "coraline-party") return DEMO_CORALINE;
   if (slug === "sofia-y-alejandro") return DEMO_BODA;
 
