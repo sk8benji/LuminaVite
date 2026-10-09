@@ -63,32 +63,6 @@ export async function getPresignedUploadUrl(
 }
 
 /**
- * Respalda un evento en S3 como archivo JSON persistente.
- * Esto asegura que las invitaciones sigan existiendo aún si el contenedor de Railway se reinicia.
- */
-export async function saveEventToS3(slug: string, eventData: any): Promise<boolean> {
-  if (!process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY) {
-    return false;
-  }
-  try {
-    const cleanSlug = slug.toLowerCase().trim();
-    const fileKey = `events-db/${cleanSlug}.json`;
-    const command = new PutObjectCommand({
-      Bucket: BUCKET_NAME,
-      Key: fileKey,
-      Body: JSON.stringify(eventData),
-      ContentType: "application/json",
-    });
-    await s3Client.send(command);
-    console.log(`✅ [S3] Evento respaldado con éxito en S3: ${fileKey}`);
-    return true;
-  } catch (err: any) {
-    console.warn(`⚠️ [S3] Aviso al respaldar evento en S3:`, err?.message);
-    return false;
-  }
-}
-
-/**
  * Recupera un evento respaldado en S3.
  */
 export async function getEventFromS3(slug: string): Promise<any | null> {

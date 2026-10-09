@@ -1,30 +1,21 @@
 import { ImageResponse } from "next/og";
 import { NextRequest } from "next/server";
-import prisma from "@/lib/db";
-import { fallbackEventStore } from "@/lib/event-fallback-store";
+import { normalizeSlug, getEventBySlug } from "@/lib/events";
 
 export const runtime = "nodejs";
 
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
-    const slug = searchParams.get("slug")?.toLowerCase().trim();
+    const rawSlug = searchParams.get("slug");
+    const slug = normalizeSlug(rawSlug);
 
     if (!slug) {
       return new Response("Slug parameter is required", { status: 400 });
     }
 
-    // 1. Obtener datos del evento desde DB o fallback
-    let evento: any = null;
-    try {
-      evento = await prisma.evento.findUnique({
-        where: { slug },
-      });
-    } catch {}
-
-    if (!evento) {
-      evento = await fallbackEventStore.getEvent(slug);
-    }
+    // 1. Obtener datos del evento desde PostgreSQL vía getEventBySlug
+    const evento = await getEventBySlug(slug);
 
     const baseUrl =
       process.env.NEXT_PUBLIC_APP_URL ||

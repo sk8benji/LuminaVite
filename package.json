@@ -4,11 +4,13 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "node scripts/db-sync.mjs && next build",
+    "build": "prisma generate && node scripts/db-sync.mjs && next build",
     "start": "node scripts/db-sync.mjs && next start",
     "lint": "next lint",
     "postinstall": "prisma generate",
     "db:push": "prisma db push",
+    "migrate:s3": "npx tsx scripts/migrate-s3-to-postgres.ts",
+    "sync:key": "npx tsx scripts/sync-maydelin-key.ts",
     "build:worker": "opennextjs-cloudflare build",
     "s3:upload": "node scripts/upload-assets-to-s3.mjs"
   },

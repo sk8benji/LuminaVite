@@ -1,24 +1,11 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import prisma from "@/lib/db";
-import { fallbackEventStore } from "@/lib/event-fallback-store";
 import { InvitationData } from "@/components/invitation/InvitationMobileView";
 import TemplateDispatcher from "@/components/templates/TemplateDispatcher";
+import { normalizeSlug, getEventBySlug } from "@/lib/events";
 
-export const dynamicParams = true;
-
-export async function generateStaticParams() {
-  return [
-    { slug: "maydelin-mendez" },
-    { slug: "quince-rosado" },
-    { slug: "mariposas-xv" },
-    { slug: "isabella-xv" },
-    { slug: "emma-and-lucas" },
-    { slug: "elsy-xv" },
-    { slug: "coraline-party" },
-    { slug: "sofia-y-alejandro" },
-  ];
-}
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 interface PageProps {
   params: Promise<{ slug: string }> | { slug: string };
@@ -322,113 +309,86 @@ export const EVENT_MAYDELIN_MENDEZ: InvitationData = {
 };
 
 async function getEventoData(rawSlug: string): Promise<InvitationData | null> {
-  if (!rawSlug) return null;
-  const slug = decodeURIComponent(rawSlug).toLowerCase().trim();
+  const cleanSlug = decodeURIComponent(rawSlug || "").trim().toLowerCase();
+  if (!cleanSlug) return null;
 
-  // 1. PRIORIDAD ABSOLUTA: Consultar base de datos y almacenamiento real del usuario
-  let dbEvento: any = null;
-  try {
-    dbEvento = await prisma.evento.findUnique({
-      where: { slug },
-    });
-    if (dbEvento && dbEvento.activo === false) {
-      dbEvento = null;
-    }
-  } catch (error) {
-    console.warn("Base de datos no disponible o error al consultar slug:", slug, error);
-  }
+  // 1. Consultar base de datos PostgreSQL en Railway directamente (Única Fuente de Verdad)
+  const dbEvento = await getEventBySlug(cleanSlug);
 
-  // Consultar fallback (memoria, almacenamiento local y AWS S3)
-  const fallback = await fallbackEventStore.getEvent(slug);
-
-  // Si ambos existen, priorizar el registro con updatedAt más reciente
-  let selected: any = null;
-  if (dbEvento && fallback) {
-    const dbTime = new Date(dbEvento.updatedAt || 0).getTime();
-    const fbTime = new Date(fallback.updatedAt || 0).getTime();
-    selected = fbTime >= dbTime ? fallback : dbEvento;
-  } else if (fallback) {
-    selected = fallback;
-  } else if (dbEvento) {
-    selected = dbEvento;
-  }
-
-  // 2. Si existe un evento guardado por el usuario, retornarlo siempre
-  if (selected) {
+  if (dbEvento && dbEvento.activo !== false) {
     return {
-      id: selected.id,
-      slug: selected.slug,
-      tipoEvento: selected.tipoEvento as any,
-      estiloPlantilla: selected.estiloPlantilla as any,
-      titulo: selected.titulo,
-      subtitulo: selected.subtitulo,
-      frasePersonalizada: selected.frasePersonalizada,
-      fechaEvento: new Date(selected.fechaEvento),
-      fechaTextoPersonalizada: selected.fechaTextoPersonalizada,
-      fotoPortadaUrl: selected.fotoPortadaUrl,
-      fotoInfanciaUrl: selected.fotoInfanciaUrl,
-      fotoActualUrl: selected.fotoActualUrl,
-      fotoCierreUrl: selected.fotoCierreUrl,
-      musicaUrl: selected.musicaUrl,
-      reproducirMusicaAlAbrir: (selected as any).reproducirMusicaAlAbrir !== false,
-      videoUrl: selected.videoUrl,
-      galeriaFotosUrls: selected.galeriaFotosUrls,
-      telefonoWhatsappRsvp: selected.telefonoWhatsappRsvp,
-      fechaLimiteRsvp: selected.fechaLimiteRsvp
-        ? selected.fechaLimiteRsvp instanceof Date
-          ? selected.fechaLimiteRsvp.toLocaleDateString()
-          : String(selected.fechaLimiteRsvp)
+      id: dbEvento.id,
+      slug: dbEvento.slug,
+      tipoEvento: dbEvento.tipoEvento as any,
+      estiloPlantilla: dbEvento.estiloPlantilla as any,
+      titulo: dbEvento.titulo,
+      subtitulo: dbEvento.subtitulo,
+      frasePersonalizada: dbEvento.frasePersonalizada,
+      fechaEvento: new Date(dbEvento.fechaEvento),
+      fechaTextoPersonalizada: dbEvento.fechaTextoPersonalizada,
+      fotoPortadaUrl: dbEvento.fotoPortadaUrl,
+      fotoInfanciaUrl: dbEvento.fotoInfanciaUrl,
+      fotoActualUrl: dbEvento.fotoActualUrl,
+      fotoCierreUrl: dbEvento.fotoCierreUrl,
+      musicaUrl: dbEvento.musicaUrl,
+      reproducirMusicaAlAbrir: dbEvento.reproducirMusicaAlAbrir !== false,
+      videoUrl: dbEvento.videoUrl,
+      galeriaFotosUrls: dbEvento.galeriaFotosUrls,
+      telefonoWhatsappRsvp: dbEvento.telefonoWhatsappRsvp,
+      fechaLimiteRsvp: dbEvento.fechaLimiteRsvp
+        ? dbEvento.fechaLimiteRsvp instanceof Date
+          ? dbEvento.fechaLimiteRsvp.toLocaleDateString()
+          : String(dbEvento.fechaLimiteRsvp)
         : null,
-      maxPasesPorInvitado: selected.maxPasesPorInvitado,
-      ceremoniaNombre: selected.ceremoniaNombre,
-      ceremoniaDireccion: selected.ceremoniaDireccion,
-      ceremoniaMapUrl: selected.ceremoniaMapUrl,
-      recepcionNombre: selected.recepcionNombre,
-      recepcionDireccion: selected.recepcionDireccion,
-      recepcionMapUrl: selected.recepcionMapUrl,
-      fechaPlacaMes: (selected as any).fechaPlacaMes,
-      fechaPlacaHora: (selected as any).fechaPlacaHora,
-      fechaPlacaLugar: (selected as any).fechaPlacaLugar,
-      countdownEncabezado: (selected as any).countdownEncabezado,
-      dressCodeEtiqueta: (selected as any).dressCodeEtiqueta,
-      dressCodeColoresReservados: (selected as any).dressCodeColoresReservados,
-      regalosMensaje: (selected as any).regalosMensaje,
-      regalosZelle: (selected as any).regalosZelle,
-      regalosCashApp: (selected as any).regalosCashApp,
-      rsvpFechaLimite: (selected as any).rsvpFechaLimite,
-      rsvpDiasAntes: (selected as any).rsvpDiasAntes ?? 15,
-      autorBendicion: (selected as any).autorBendicion,
-      textoDisco: (selected as any).textoDisco,
-      mensajeDespedida: (selected as any).mensajeDespedida,
-      dressCodeTitulo: selected.dressCodeTitulo,
-      dressCodeNota: selected.dressCodeNota,
-      coloresReservados: selected.coloresReservados,
-      celebrationGuideline: selected.celebrationGuideline,
-      wishlistUrl: selected.wishlistUrl,
-      idiomaDefault: selected.idiomaDefault,
+      maxPasesPorInvitado: dbEvento.maxPasesPorInvitado,
+      ceremoniaNombre: dbEvento.ceremoniaNombre,
+      ceremoniaDireccion: dbEvento.ceremoniaDireccion,
+      ceremoniaMapUrl: dbEvento.ceremoniaMapUrl,
+      recepcionNombre: dbEvento.recepcionNombre,
+      recepcionDireccion: dbEvento.recepcionDireccion,
+      recepcionMapUrl: dbEvento.recepcionMapUrl,
+      fechaPlacaMes: (dbEvento as any).fechaPlacaMes,
+      fechaPlacaHora: (dbEvento as any).fechaPlacaHora,
+      fechaPlacaLugar: (dbEvento as any).fechaPlacaLugar,
+      countdownEncabezado: (dbEvento as any).countdownEncabezado,
+      dressCodeEtiqueta: (dbEvento as any).dressCodeEtiqueta,
+      dressCodeColoresReservados: (dbEvento as any).dressCodeColoresReservados,
+      regalosMensaje: (dbEvento as any).regalosMensaje,
+      regalosZelle: (dbEvento as any).regalosZelle,
+      regalosCashApp: (dbEvento as any).regalosCashApp,
+      rsvpFechaLimite: (dbEvento as any).rsvpFechaLimite,
+      rsvpDiasAntes: (dbEvento as any).rsvpDiasAntes ?? 15,
+      autorBendicion: (dbEvento as any).autorBendicion,
+      textoDisco: (dbEvento as any).textoDisco,
+      mensajeDespedida: (dbEvento as any).mensajeDespedida,
+      dressCodeTitulo: dbEvento.dressCodeTitulo,
+      dressCodeNota: dbEvento.dressCodeNota,
+      coloresReservados: dbEvento.coloresReservados,
+      celebrationGuideline: dbEvento.celebrationGuideline,
+      wishlistUrl: dbEvento.wishlistUrl,
+      idiomaDefault: dbEvento.idiomaDefault,
       itinerario:
-        ((selected as any).itinerarioJson as any) ||
-        (selected as any).itinerario ||
+        ((dbEvento as any).itinerarioJson as any) ||
+        (dbEvento as any).itinerario ||
         undefined,
-      itinerarioJson: selected.itinerarioJson,
-      corteHonorJson: selected.corteHonorJson,
-      mesaRegalosJson: selected.mesaRegalosJson,
-      hospedajeJson: selected.hospedajeJson,
-      transporteJson: selected.transporteJson,
-      historiaHitosJson: selected.historiaHitosJson,
+      itinerarioJson: dbEvento.itinerarioJson,
+      corteHonorJson: dbEvento.corteHonorJson,
+      mesaRegalosJson: dbEvento.mesaRegalosJson,
+      hospedajeJson: dbEvento.hospedajeJson,
+      transporteJson: dbEvento.transporteJson,
+      historiaHitosJson: dbEvento.historiaHitosJson,
     };
   }
 
-  // 3. ÚLTIMO RECURSO (FALLBACK): Solo si NO existe en la base de datos ni en el almacenamiento,
-  // verificar invitaciones registradas o plantillas de demostración
-  if (slug === "maydelin-mendez") return EVENT_MAYDELIN_MENDEZ;
-  if (slug === "quince-rosado") return EVENT_MAYDELIN_MENDEZ;
-  if (slug === "elsy-xv") return DEMO_ELSY;
-  if (slug === "isabella-xv") return DEMO_ISABELLA;
-  if (slug === "emma-and-lucas") return DEMO_EMMA_LUCAS;
-  if (slug === "mariposas-xv") return DEMO_BUTTERFLY;
-  if (slug === "coraline-party") return DEMO_CORALINE;
-  if (slug === "sofia-y-alejandro") return DEMO_BODA;
+  // 2. Demos estáticos de catálogo (solo si no es un evento registrado en base de datos)
+  if (cleanSlug === "maydelin-mendez") return EVENT_MAYDELIN_MENDEZ;
+  if (cleanSlug === "quince-rosado") return EVENT_MAYDELIN_MENDEZ;
+  if (cleanSlug === "elsy-xv") return DEMO_ELSY;
+  if (cleanSlug === "isabella-xv") return DEMO_ISABELLA;
+  if (cleanSlug === "emma-and-lucas") return DEMO_EMMA_LUCAS;
+  if (cleanSlug === "mariposas-xv") return DEMO_BUTTERFLY;
+  if (cleanSlug === "coraline-party") return DEMO_CORALINE;
+  if (cleanSlug === "sofia-y-alejandro") return DEMO_BODA;
 
   return null;
 }
@@ -438,7 +398,8 @@ async function getEventoData(rawSlug: string): Promise<InvitationData | null> {
  */
 export async function generateMetadata(props: PageProps): Promise<Metadata> {
   const resolvedParams = await props.params;
-  const data = await getEventoData(resolvedParams?.slug);
+  const cleanSlug = decodeURIComponent(resolvedParams?.slug || "").trim().toLowerCase();
+  const data = await getEventoData(cleanSlug);
 
   if (!data) {
     return {
@@ -538,7 +499,8 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
 
 export default async function InvitationPage(props: PageProps) {
   const resolvedParams = await props.params;
-  const data = await getEventoData(resolvedParams?.slug);
+  const cleanSlug = decodeURIComponent(resolvedParams?.slug || "").trim().toLowerCase();
+  const data = await getEventoData(cleanSlug);
 
   if (!data) {
     notFound();
