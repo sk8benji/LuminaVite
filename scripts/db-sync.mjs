@@ -10,6 +10,13 @@ if (dbUrl) {
   } catch (err) {
     console.warn("⚠️ Aviso al sincronizar base de datos con prisma db push (se usará sincronización nativa en tiempo de ejecución):", err.message);
   }
+
+  try {
+    console.log("⚡ Sincronizando evento y clave de anfitrión maydelin-mendez...");
+    execSync("npx tsx scripts/sync-maydelin-key.ts", { stdio: "inherit" });
+  } catch (err) {
+    console.warn("⚠️ Aviso al sincronizar clave de anfitrión:", err.message);
+  }
 } else {
   console.log("ℹ️ No hay DATABASE_URL configurada en el entorno actual.");
 }
