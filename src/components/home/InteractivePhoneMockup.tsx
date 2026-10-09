@@ -156,7 +156,7 @@ export default function InteractivePhoneMockup({
                   {/* Sello de cera dorado */}
                   <div className="relative z-10 w-14 h-14 rounded-full bg-gradient-to-br from-[#EED3A1] via-[#C5A059] to-[#92702E] shadow-[0_4px_15px_rgba(197,160,89,0.5)] flex items-center justify-center border-2 border-[#FFF0D0] group-hover:rotate-6 transition-transform">
                     <span className="font-['Cinzel'] text-xs font-bold text-[#2A1F0D]">
-                      {activeTab === "butterfly" ? "MM" : activeTab === "rose" ? "IR" : "E&L"}
+                      {activeTab === "butterfly" ? "VM" : activeTab === "rose" ? "IR" : "E&L"}
                     </span>
                   </div>
 
