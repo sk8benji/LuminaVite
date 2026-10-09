@@ -22,7 +22,7 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="antialiased bg-[#0B0A0D] min-h-screen text-stone-100 selection:bg-[#C5A059]/30 selection:text-white">
+      <body className="antialiased bg-[#FAF8F5] min-h-screen text-[#2C1F1B] selection:bg-[#C5A059]/30 selection:text-[#2C1F1B]">
         {children}
       </body>
     </html>

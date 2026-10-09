@@ -44,42 +44,42 @@ export default function InteractivePhoneMockup({
 
   return (
     <div className="relative flex flex-col items-center select-none w-full max-w-[440px] mx-auto">
-      {/* Resplandor ambiental detrás del mockup */}
-      <div className="absolute inset-0 bg-gradient-to-tr from-[#C5A059]/20 via-[#EED3A1]/10 to-transparent rounded-full blur-[90px] pointer-events-none -z-10" />
+      {/* Resplandor ambiental cálido detrás del mockup */}
+      <div className="absolute inset-0 bg-gradient-to-tr from-[#C5A059]/25 via-[#EED3A1]/15 to-transparent rounded-full blur-[100px] pointer-events-none -z-10" />
 
-      {/* Floating Badges Superiores */}
-      <div className="hidden sm:flex absolute -top-5 -left-12 z-20 items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#18161D]/90 border border-[#C5A059]/40 shadow-xl backdrop-blur-md animate-bounce [animation-duration:4s]">
-        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-        <span className="font-['Montserrat'] text-[11px] font-semibold text-white">
+      {/* Floating Badges Superiores (Modo Claro de Lujo) */}
+      <div className="hidden sm:flex absolute -top-5 -left-12 z-20 items-center gap-2 px-4 py-2 rounded-full bg-white/95 border border-[#E8E3D9] shadow-[0_10px_25px_rgba(44,31,27,0.08)] backdrop-blur-md animate-bounce [animation-duration:4s]">
+        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
+        <span className="font-['Montserrat'] text-[11px] font-semibold text-[#2C1F1B]">
           {lang === "es" ? "⚡ SMS vía Twilio • Confirmado" : "⚡ Twilio SMS • Confirmed"}
         </span>
       </div>
 
-      <div className="hidden sm:flex absolute top-1/3 -right-14 z-20 items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#18161D]/90 border border-white/15 shadow-xl backdrop-blur-md">
+      <div className="hidden sm:flex absolute top-1/3 -right-14 z-20 items-center gap-2 px-4 py-2 rounded-full bg-white/95 border border-[#E8E3D9] shadow-[0_10px_25px_rgba(44,31,27,0.08)] backdrop-blur-md">
         <CheckCircle2 className="w-3.5 h-3.5 text-[#C5A059]" />
-        <span className="font-['Montserrat'] text-[11px] font-semibold text-white">
+        <span className="font-['Montserrat'] text-[11px] font-semibold text-[#2C1F1B]">
           {lang === "es" ? "RSVP 98% aforo en vivo" : "Live RSVP • 98% capacity"}
         </span>
       </div>
 
-      <div className="hidden sm:flex absolute bottom-12 -left-10 z-20 items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#18161D]/90 border border-[#C5A059]/30 shadow-xl backdrop-blur-md">
+      <div className="hidden sm:flex absolute bottom-12 -left-10 z-20 items-center gap-2 px-4 py-2 rounded-full bg-white/95 border border-[#E8E3D9] shadow-[0_10px_25px_rgba(44,31,27,0.08)] backdrop-blur-md">
         <span className="text-[#C5A059] text-xs">🔒</span>
-        <span className="font-['Montserrat'] text-[11px] font-semibold text-white">
+        <span className="font-['Montserrat'] text-[11px] font-semibold text-[#2C1F1B]">
           {lang === "es" ? "Cero contraseñas • 1 Clic" : "Zero passwords • 1 Click"}
         </span>
       </div>
 
       {/* Selector de Colección Rápido en Mockup */}
-      <div className="flex items-center gap-1.5 p-1 bg-[#141218]/90 border border-white/10 rounded-full mb-3 shadow-lg backdrop-blur-md">
+      <div className="flex items-center gap-1.5 p-1.5 bg-white border border-[#E8E3D9] rounded-full mb-4 shadow-[0_4px_20px_rgba(44,31,27,0.06)] backdrop-blur-md">
         <button
           onClick={() => {
             setActiveTab("butterfly");
             setIsEnvelopeOpen(false);
           }}
-          className={`px-3 py-1 rounded-full text-[10px] font-['Cinzel'] tracking-wider uppercase transition-all ${
+          className={`px-3.5 py-1.5 rounded-full text-[10px] font-['Cinzel'] tracking-wider uppercase transition-all ${
             activeTab === "butterfly"
-              ? "bg-[#C5A059] text-black font-bold shadow-sm"
-              : "text-[#A89F91] hover:text-white"
+              ? "bg-gradient-to-r from-[#C5A059] to-[#EED3A1] text-[#2C1F1B] font-bold shadow-sm"
+              : "text-[#5E534C] hover:text-[#2C1F1B]"
           }`}
         >
           Butterfly XV
@@ -89,10 +89,10 @@ export default function InteractivePhoneMockup({
             setActiveTab("rose");
             setIsEnvelopeOpen(false);
           }}
-          className={`px-3 py-1 rounded-full text-[10px] font-['Cinzel'] tracking-wider uppercase transition-all ${
+          className={`px-3.5 py-1.5 rounded-full text-[10px] font-['Cinzel'] tracking-wider uppercase transition-all ${
             activeTab === "rose"
-              ? "bg-[#C5A059] text-black font-bold shadow-sm"
-              : "text-[#A89F91] hover:text-white"
+              ? "bg-gradient-to-r from-[#C5A059] to-[#EED3A1] text-[#2C1F1B] font-bold shadow-sm"
+              : "text-[#5E534C] hover:text-[#2C1F1B]"
           }`}
         >
           Blush Rose
@@ -102,18 +102,18 @@ export default function InteractivePhoneMockup({
             setActiveTab("chateau");
             setIsEnvelopeOpen(false);
           }}
-          className={`px-3 py-1 rounded-full text-[10px] font-['Cinzel'] tracking-wider uppercase transition-all ${
+          className={`px-3.5 py-1.5 rounded-full text-[10px] font-['Cinzel'] tracking-wider uppercase transition-all ${
             activeTab === "chateau"
-              ? "bg-[#C5A059] text-black font-bold shadow-sm"
-              : "text-[#A89F91] hover:text-white"
+              ? "bg-gradient-to-r from-[#C5A059] to-[#EED3A1] text-[#2C1F1B] font-bold shadow-sm"
+              : "text-[#5E534C] hover:text-[#2C1F1B]"
           }`}
         >
           Ivory Boda
         </button>
       </div>
 
-      {/* Marco de Smartphone Físico 9:16 con bisel titanio */}
-      <div className="relative w-[310px] sm:w-[340px] h-[620px] sm:h-[680px] bg-[#0E0D12] rounded-[52px] p-3 shadow-[0_25px_70px_rgba(0,0,0,0.8),0_0_40px_rgba(197,160,89,0.25)] border-[5px] border-[#2B2733] ring-1 ring-[#C5A059]/40 flex flex-col">
+      {/* Marco de Smartphone Físico 9:16 con bisel de gala */}
+      <div className="relative w-[310px] sm:w-[340px] h-[620px] sm:h-[680px] bg-[#0E0D12] rounded-[52px] p-3 shadow-[0_30px_90px_rgba(44,31,27,0.22),0_0_40px_rgba(197,160,89,0.35)] border-[5px] border-[#25212A] ring-2 ring-[#C5A059]/40 flex flex-col">
         {/* Dynamic Island */}
         <div className="absolute top-4 left-1/2 -translate-x-1/2 w-28 h-5 bg-black rounded-full z-40 flex items-center justify-between px-3">
           <div className="w-2.5 h-2.5 rounded-full bg-[#1A1820]" />
@@ -168,7 +168,7 @@ export default function InteractivePhoneMockup({
                 </div>
 
                 {/* Llamado a la acción con brillo */}
-                <div className="mt-5 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#C5A059] text-black font-['Cinzel'] text-[10px] tracking-[0.2em] uppercase font-bold shadow-[0_0_20px_rgba(197,160,89,0.4)] group-hover:bg-[#EED3A1] transition-all">
+                <div className="mt-5 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-[#C5A059] to-[#EED3A1] text-[#2C1F1B] font-['Cinzel'] text-[10px] tracking-[0.2em] uppercase font-bold shadow-[0_0_20px_rgba(197,160,89,0.4)] hover:brightness-110 transition-all">
                   <Sparkles className="w-3.5 h-3.5" />
                   <span>{lang === "es" ? "Toca para abrir el sobre" : "Tap to open envelope"}</span>
                 </div>
@@ -268,7 +268,7 @@ export default function InteractivePhoneMockup({
                 <div className="w-full pt-2">
                   <button
                     onClick={() => onOpenModal(currentSlug)}
-                    className="w-full py-3 rounded-xl bg-gradient-to-r from-[#C5A059] to-[#EED3A1] text-black font-['Cinzel'] text-[11px] tracking-[0.2em] uppercase font-bold shadow-lg flex items-center justify-center gap-2 hover:brightness-110 active:scale-95 transition"
+                    className="w-full py-3 rounded-xl bg-gradient-to-r from-[#C5A059] to-[#EED3A1] text-[#2C1F1B] font-['Cinzel'] text-[11px] tracking-[0.2em] uppercase font-bold shadow-lg flex items-center justify-center gap-2 hover:brightness-110 active:scale-95 transition"
                   >
                     <span>{lang === "es" ? "Confirmar Asistencia (RSVP)" : "Confirm Attendance (RSVP)"}</span>
                     <ArrowRight className="w-3.5 h-3.5" />
@@ -286,7 +286,7 @@ export default function InteractivePhoneMockup({
       {/* Botón debajo del teléfono para probar a pantalla completa */}
       <button
         onClick={() => onOpenModal(currentSlug)}
-        className="mt-4 inline-flex items-center gap-2 text-xs font-['Cinzel'] tracking-widest uppercase text-[#C5A059] hover:text-[#EED3A1] transition-colors font-semibold"
+        className="mt-4 inline-flex items-center gap-2 text-xs font-['Cinzel'] tracking-widest uppercase text-[#C5A059] hover:text-[#AA8643] transition-colors font-bold"
       >
         <ExternalLink className="w-3.5 h-3.5" />
         <span>

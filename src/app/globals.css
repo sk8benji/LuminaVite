@@ -3,15 +3,25 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+  /* La luz y los neutros de Click & Love (Modo Claro de Lujo - Pearl Alabaster) */
+  --color-bg: #FAF8F5;          /* Fondo base: Pearl Alabaster, luminoso y natural */
+  --color-surface: #FFFFFF;     /* Tarjetas e inputs: Blanco puro */
+  --color-card-border: #E8E3D9;  /* Bordes finos: Tono arena muy suave */
+  
+  /* Textos de alta jerarquía */
+  --color-text-main: #2C1F1B;   /* Títulos principales: Chocolate oscuro */
+  --color-text-muted: #5E534C;  /* Párrafos: Café tostado, suave pero legible */
+  --color-text-light: #8C8077;  /* Etiquetas secundarias */
+  
+  /* Los Acentos de Gala */
+  --color-gold: #C5A059;        /* Oro Champán para botones, etiquetas e iconos */
+  --color-gold-hover: #AA8643;  /* Transición de botón */
+  --color-gold-bg: #F5EFE4;     /* Fondos sutiles dorados o alertas */
+  
+  --color-rose: #C2847A;        /* Dusty Rose para bodas/quinceañeras */
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --background: #FAF8F5;
+  --foreground: #2C1F1B;
 }
 
 body {
