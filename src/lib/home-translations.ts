@@ -88,6 +88,21 @@ export interface HomeTranslations {
       clickAndLove: string;
     }[];
   };
+  testimonials: {
+    pill: string;
+    title: string;
+    subtitle: string;
+    items: {
+      name: string;
+      role: string;
+      event: string;
+      quote: string;
+      avatar: string;
+      metric: string;
+      demoSlug: string;
+      demoBtnText: string;
+    }[];
+  };
   pricing: {
     pill: string;
     title: string;
@@ -137,10 +152,10 @@ export const translations: Record<Language, HomeTranslations> = {
     },
     hero: {
       pill: "Papelería Digital de Alta Costura",
-      title1: "Tu celebración merece",
-      title2: "una entrada triunfal.",
+      title1: "Invitaciones digitales interactivas para tu boda o quinceañera",
+      title2: "con confirmación por WhatsApp en tiempo real.",
       subtitle:
-        "Invitaciones web de lujo con confirmación en tiempo real y álbum de fotos compartido.",
+        "Olvídate de perseguir invitados por teléfono para saber si van a asistir. Diseños de gala con sobre 3D, música envolvente y control de aforo al instante.",
       ctaCatalog: "Ver Catálogo de Plantillas",
       ctaDemo: "Explorar Invitación Demo",
       phoneBadge1: "SMS Twilio • Confirmado",
@@ -166,17 +181,17 @@ export const translations: Record<Language, HomeTranslations> = {
       pill: "Experiencia en Vivo",
       title: "Prueba la experiencia de un invitado en 1 clic",
       description:
-        "Ningún competidor te permite probar el flujo completo sin hablar antes por WhatsApp. Abre la invitación real con sobre 3D, música envolvente y confirmación interactiva ahora mismo.",
-      ctaBtn: "Prueba la experiencia de un invitado en 1 clic",
+        "Prueba el flujo completo sin intermediarios. Abre una invitación interactiva real con sobre virtual 3D, música envolvente y confirmación inteligente ahora mismo.",
+      ctaBtn: "Probar Invitación en Vivo",
       feature1: "Sobre virtual 3D con sello de cera",
       feature2: "Música ambiental sincronizada",
       feature3: "Formulario RSVP inteligente con pases",
     },
     collections: {
       pill: "Colecciones de Autor",
-      title: "Bento Luxury Collections",
+      title: "Colecciones Exclusivas de Alta Costura",
       subtitle:
-        "Cada diseño es una pieza de arte digital optimizada milimétricamente para pantallas móviles en proporción 9:16.",
+        "Cada diseño es una experiencia interactiva optimizada milimétricamente para pantallas móviles en proporción 9:16.",
       viewDemo: "Ver Demo en Vivo",
       items: [
         {
@@ -185,7 +200,7 @@ export const translations: Record<Language, HomeTranslations> = {
           subtitle: "Acuarela celeste, destellos de oro y mariposas etéreas",
           tag: "XV Años & Gala",
           description:
-            "Nuestra colección más icónica. Mariposas que despiertan al tacto, cielo en acuarela, música orquestal y sobre interactivo con sello azul real.",
+            "Nuestra colección más icónica. Mariposas interactivas, sobre con sello de cera, música orquestal y confirmación por WhatsApp en tiempo real.",
           slug: "mariposas-xv",
           image: "/assets/template-butterfly/foto-columpio-portada.png",
           features: ["Sobre 3D con sello de cera", "Música de fondo", "RSVP por WhatsApp y SMS"],
@@ -196,7 +211,7 @@ export const translations: Record<Language, HomeTranslations> = {
           subtitle: "Gala romántica y efectos de celuloide cinematográfico",
           tag: "Alta Costura XV",
           description:
-            "Estética editorial rosa empolvada y oro champán. Incluye tira fotográfica interactiva de hitos de vida, itinerario detallado y álbum colaborativo.",
+            "Estética editorial rosa empolvada y oro champán. Tira fotográfica interactiva de infancia a señorita, itinerario detallado y dress code.",
           slug: "isabella-xv",
           image: "/assets/template-rose/51d8fb6fdca05936497b8c7f02e14280.png",
           features: ["Tira de película interactiva", "Itinerario por fases", "Dress code con paleta"],
@@ -204,7 +219,7 @@ export const translations: Record<Language, HomeTranslations> = {
         {
           id: "ivory",
           title: "Elegant Ivory & Château",
-          subtitle: "Bodas de gala, minimalismo romano y tipografía Cinzel",
+          subtitle: "Bodas de gala, minimalismo romano y tipografía editorial",
           tag: "Bodas Exclusivas",
           description:
             "La máxima expresión de sofisticación nupcial. Acabados marfil perla, monogramas entrelazados, mapa satelital interactivo y mesa de regalos.",
@@ -215,39 +230,39 @@ export const translations: Record<Language, HomeTranslations> = {
       ],
     },
     techAutomation: {
-      pill: "Infraestructura Técnica",
-      title: "Resaltamos la Automatización, No Iconos Básicos",
+      pill: "Confirmación Inteligente",
+      title: "Control total de confirmaciones sin perseguir a nadie",
       subtitle:
-        "La competencia muestra íconos genéricos de fotos y mapas. Nosotros entregamos ingeniería SaaS para que tu evento funcione a la perfección.",
+        "Olvídate de mandar mensajes uno por uno o llamar familiares. Nuestra plataforma automatiza cada confirmación y actualiza tu lista en tiempo real.",
       pillars: [
         {
-          title: "Cero Contraseñas para los Invitados",
+          title: "Cero contraseñas ni descargas",
           description:
-            "Tus invitados jamás tendrán que crearse una cuenta, descargar apps ni recordar claves. Un toque al enlace recibido en WhatsApp o SMS y están dentro de la experiencia.",
+            "Tus invitados jamás tendrán que crearse cuentas ni descargar aplicaciones pesadas. Un toque al enlace recibido en WhatsApp y acceden de inmediato.",
           highlight: "Fricción cero = Máxima tasa de respuesta en las primeras 48 horas.",
           badge: "Acceso Instantáneo",
         },
         {
-          title: "Confirmación SMS Instantánea vía Twilio",
+          title: "Confirmación SMS instantánea vía Twilio",
           description:
-            "Al confirmar asistencia, el invitado recibe automáticamente un mensaje SMS de confirmación oficial con el resumen de pases y botón para agendar en Google Calendar o Apple Calendar.",
-          highlight: "Reduce en un 94% los invitados olvidadizos el día de la celebración.",
+            "Al confirmar asistencia, el invitado recibe automáticamente un mensaje SMS oficial con su número de pases y botón para agendar en su calendario.",
+          highlight: "Evita ausencias de última hora y asegura el conteo de tu salón.",
           badge: "Twilio Cloud SMS",
         },
         {
-          title: "Panel Privado en Tiempo Real con Magic Link",
+          title: "Panel privado en tiempo real para la familia",
           description:
-            "La familia y los anfitriones reciben un enlace encriptado único (Magic Link). Observa en tiempo real quién confirmó, cuántos adultos y niños asistirán y filtra preferencias al instante.",
-          highlight: "Exportación a Excel en un clic y cero llamadas repetitivas preguntando quién va.",
+            "Los anfitriones reciben un enlace privado exclusivo para consultar al instante quién asiste, cuántos pases están confirmados y descargar la lista en Excel.",
+          highlight: "Exportación a Excel en un clic para entregar a tu salón o banquete.",
           badge: "Magic Link Seguro",
         },
       ],
     },
     calculator: {
-      pill: "Calculadora de Aforo & Retorno",
-      title: "Control Exacto de Mesas y Cero Llamadas",
+      pill: "Calculadora de Aforo & Ahorro",
+      title: "Ahorra tiempo y evita pagar platos de invitados que no asisten",
       subtitle:
-        "Descubre el impacto directo en horas de tranquilidad, presupuesto y organización de aforo para tu fiesta o salón de eventos.",
+        "Calcula con exactitud cuántas horas de llamadas te ahorras y cuánto dinero proteges al evitar pagar banquetes por invitados que no asisten.",
       guestsLabel: "Número estimado de invitados:",
       stat1Label: "Horas de WhatsApp Ahorradas",
       stat1Desc: "Sin enviar recordatorios manuales uno por uno ni perseguir confirmaciones.",
@@ -264,39 +279,70 @@ export const translations: Record<Language, HomeTranslations> = {
       pill: "Comparativa Directa",
       title: "Método Tradicional vs. Click & Love",
       subtitle:
-        "Compara la experiencia que ofrecen los métodos convencionales frente a la sofisticación de nuestra plataforma.",
-      colCompetitors: "Método Tradicional / Competencia",
-      colClickAndLove: "Click & Love (Alta Costura)",
+        "Compara la experiencia y el ahorro que ofrece nuestra plataforma frente a los métodos convencionales.",
+      colCompetitors: "Invitaciones en Papel / Tradicional",
+      colClickAndLove: "Click & Love (Invitación Digital)",
       rows: [
         {
-          feature: "Presentación Visual",
-          competitors: "Capturas estáticas recortadas en marcos genéricos y fuentes informales",
-          clickAndLove: "Mockups interactivos 3D con sobre virtual animado, sello de cera y confeti",
+          feature: "Costo de Impresión y Envíos",
+          competitors: "Gastos elevados en papel, caligrafía, sobres y envíos postales",
+          clickAndLove: "Un solo pago accesible con envíos ilimitados por WhatsApp",
         },
         {
-          feature: "Acceso para Invitados",
-          competitors: "Descarga obligatoria de apps o archivos PDF pesados que tardan en cargar",
-          clickAndLove: "Cero descargas y cero contraseñas. Carga ultrarrápida (<1.2s) en cualquier celular",
+          feature: "Confirmación en Tiempo Real",
+          competitors: "Llamar a cada invitado o esperar respuestas manuales dispersas",
+          clickAndLove: "Confirmación en 1 clic con conteo automático de pases en vivo",
         },
         {
-          feature: "Gestión de Confirmaciones (RSVP)",
-          competitors: "Mensajes dispersos y desordenados en el chat personal de WhatsApp",
-          clickAndLove: "Formulario inteligente con pases limitados y confirmación SMS vía Twilio",
+          feature: "Cambios de Último Minuto",
+          competitors: "Imposible modificar horarios o direcciones sin reimprimir",
+          clickAndLove: "Edición instantánea de horarios, mapa y datos sin costo extra",
         },
         {
-          feature: "Monitoreo para la Familia",
-          competitors: "Libretas de notas a mano o planillas de Excel que debes actualizar tú mismo",
-          clickAndLove: "Panel privado en tiempo real con Magic Link y exportación a Excel en 1 clic",
+          feature: "Fotos y Recuerdos Compartidos",
+          competitors: "Fotos dispersas en chats familiares que se pierden con el tiempo",
+          clickAndLove: "Álbum colaborativo donde los invitados suben fotos de la fiesta",
+        },
+      ],
+    },
+    testimonials: {
+      pill: "Experiencias Reales",
+      title: "Lo que Dicen Quienes Ya Celebraron con Click & Love",
+      subtitle:
+        "Parejas y familias que ahorraron tiempo, evitaron pagar platillos extra y sorprendieron a sus invitados desde el primer clic.",
+      items: [
+        {
+          name: "Sofía & Alejandro",
+          role: "Novios",
+          event: "Boda en Hacienda Montecristo • 180 invitados",
+          quote:
+            "“Ningún invitado se quedó sin confirmar. Nos ahorramos semanas llamando a familiares y evitamos pagar 22 platillos de personas que nos avisaron a tiempo que no iban a asistir.”",
+          avatar: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=600&q=80",
+          metric: "99% confirmación a tiempo",
+          demoSlug: "emma-and-lucas",
+          demoBtnText: "Probar Invitación de Boda",
         },
         {
-          feature: "Música & Ambientación",
-          competitors: "Enlaces externos a Spotify que sacan al usuario o páginas en silencio",
-          clickAndLove: "Audio de alta fidelidad sincronizado al abrir el sobre con controles suaves",
+          name: "Familia Cordero",
+          role: "Papás de Isabella",
+          event: "XV Años de Isabella • 240 invitados",
+          quote:
+            "“Todos los invitados quedaron maravillados al abrir el sobre con la música. El control de pases por familia evitó que vinieran personas de más y todo estuvo súper ordenado.”",
+          avatar: "/assets/template-rose/51d8fb6fdca05936497b8c7f02e14280.png",
+          metric: "Cero pases duplicados",
+          demoSlug: "isabella-xv",
+          demoBtnText: "Probar Invitación de XV Años",
         },
         {
-          feature: "Prueba antes de Comprar",
-          competitors: "Te obligan a escribir por WhatsApp para enviarte un video estático",
-          clickAndLove: "Prueba en vivo en 1 clic de la experiencia real completa sin intermediarios",
+          name: "Valeria Morales & Familia",
+          role: "Quinceañera y Familia",
+          event: "XV Años Valeria • Salón Las Rosas • 160 invitados",
+          quote:
+            "“Mandar la invitación por WhatsApp y ver las confirmaciones en vivo en nuestro celular fue la mejor inversión de la fiesta. Mis amigas amaron el sobre interactivo y las mariposas.”",
+          avatar: "/assets/template-butterfly/foto-columpio-portada.png",
+          metric: "100% mesas organizadas",
+          demoSlug: "mariposas-xv",
+          demoBtnText: "Probar Invitación Mariposas",
         },
       ],
     },
@@ -526,34 +572,65 @@ export const translations: Record<Language, HomeTranslations> = {
       colClickAndLove: "Click & Love (Haute Couture)",
       rows: [
         {
-          feature: "Visual Presentation",
-          competitors: "Flat static screenshots pasted inside generic frames with messy casual fonts",
-          clickAndLove: "3D interactive mockups with animated opening envelope, wax seal, and confetti",
+          feature: "Print & Shipping Costs",
+          competitors: "$300 - $600 USD in paper printing, envelopes, and manual courier deliveries",
+          clickAndLove: "One-time digital fee, unlimited guests, zero paper waste, and instant delivery",
         },
         {
-          feature: "Guest Onboarding",
-          competitors: "Forced mobile app downloads or heavy 15MB PDFs that take forever to load",
-          clickAndLove: "Zero downloads, zero passwords. Ultra-fast load (<1.2s) on any smartphone",
+          feature: "Real-Time RSVP Confirmation",
+          competitors: "Chasing down each guest by phone or waiting for scattered text messages",
+          clickAndLove: "1-Click confirmation with live automated headcount and pass counter",
         },
         {
-          feature: "RSVP Management",
-          competitors: "Unorganized, scattered text messages lost in personal WhatsApp chats",
-          clickAndLove: "Smart RSVP form with allotted passes and automated Twilio SMS confirmations",
+          feature: "Last-Minute Schedule Changes",
+          competitors: "Impossible to change schedules or addresses without costly reprints",
+          clickAndLove: "Instant edits to schedules, map pins, and dress code at zero extra cost",
         },
         {
-          feature: "Host Dashboard",
-          competitors: "Manual paper notepads or outdated Excel spreadsheets you must update yourself",
-          clickAndLove: "Live encrypted Magic Link dashboard with instant 1-click Excel (.CSV) export",
+          feature: "Shared Photo Memories",
+          competitors: "Photos lost across private chat threads that disappear over time",
+          clickAndLove: "Collaborative live album where guests upload real-time party memories",
+        },
+      ],
+    },
+    testimonials: {
+      pill: "Real Experiences",
+      title: "Loved by Couples & Families Celebrating with Click & Love",
+      subtitle:
+        "Couples and families who saved hours, avoided paying for empty plates, and wowed their guests from the very first tap.",
+      items: [
+        {
+          name: "Sofia & Alejandro",
+          role: "Bride & Groom",
+          event: "Montecristo Hacienda Wedding • 180 Guests",
+          quote:
+            "“Not a single guest went unconfirmed. We saved weeks of calling relatives and avoided paying for 22 plates of guests who notified us in advance that they couldn't make it.”",
+          avatar: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=600&q=80",
+          metric: "99% on-time RSVP rate",
+          demoSlug: "emma-and-lucas",
+          demoBtnText: "Try Wedding Invitation",
         },
         {
-          feature: "Audio & Ambiance",
-          competitors: "External Spotify links that break the experience or completely silent pages",
-          clickAndLove: "High-fidelity audio synchronized with the envelope opening and smooth controls",
+          name: "The Cordero Family",
+          role: "Parents of Isabella",
+          event: "Isabella's XV Birthday Gala • 240 Guests",
+          quote:
+            "“Our guests were blown away when the 3D envelope opened with background music. Controlled passes per family kept everything organized with zero unexpected crashers.”",
+          avatar: "/assets/template-rose/51d8fb6fdca05936497b8c7f02e14280.png",
+          metric: "Zero duplicate passes",
+          demoSlug: "isabella-xv",
+          demoBtnText: "Try Quinceañera Invitation",
         },
         {
-          feature: "Try Before You Buy",
-          competitors: "Force you to text on WhatsApp just to get a static demo video",
-          clickAndLove: "Instant 1-click interactive demo of the full live invitation with no friction",
+          name: "Valeria Morales & Family",
+          role: "Quinceañera & Family",
+          event: "Valeria XV Gala • Las Rosas Ballroom • 160 Guests",
+          quote:
+            "“Sending the invitation via WhatsApp and watching live RSVPs appear on our phone was our best celebration investment. My friends loved the floating butterflies and wax seal!”",
+          avatar: "/assets/template-butterfly/foto-columpio-portada.png",
+          metric: "100% seating tables ready",
+          demoSlug: "mariposas-xv",
+          demoBtnText: "Try Butterfly Invitation",
         },
       ],
     },

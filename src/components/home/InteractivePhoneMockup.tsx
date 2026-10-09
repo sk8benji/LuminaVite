@@ -15,8 +15,8 @@ export default function InteractivePhoneMockup({
   onOpenModal,
 }: InteractivePhoneMockupProps) {
   const [activeTab, setActiveTab] = useState<"butterfly" | "rose" | "chateau">("butterfly");
-  const [isEnvelopeOpen, setIsEnvelopeOpen] = useState(false);
-  const [isPlayingAudio, setIsPlayingAudio] = useState(false);
+  const [isEnvelopeOpen, setIsEnvelopeOpen] = useState(true);
+  const [isPlayingAudio, setIsPlayingAudio] = useState(true);
 
   const handleOpenEnvelope = () => {
     if (isEnvelopeOpen) return;
@@ -264,8 +264,28 @@ export default function InteractivePhoneMockup({
                   </div>
                 </div>
 
+                {/* Botones de acción directa: WhatsApp y Mapa */}
+                <div className="w-full grid grid-cols-2 gap-2 pt-1">
+                  <a
+                    href="https://maps.google.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="py-2 px-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-white text-[10px] font-['Montserrat'] font-semibold flex items-center justify-center gap-1.5 border border-white/10 transition"
+                  >
+                    <span>📍 Ver en Mapa</span>
+                  </a>
+                  <a
+                    href="https://wa.me/18181234567"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="py-2 px-2.5 rounded-xl bg-emerald-600/30 hover:bg-emerald-600/40 text-emerald-300 text-[10px] font-['Montserrat'] font-semibold flex items-center justify-center gap-1.5 border border-emerald-500/30 transition"
+                  >
+                    <span>💬 WhatsApp</span>
+                  </a>
+                </div>
+
                 {/* Botón RSVP simulado */}
-                <div className="w-full pt-2">
+                <div className="w-full pt-1">
                   <button
                     onClick={() => onOpenModal(currentSlug)}
                     className="w-full py-3 rounded-xl bg-gradient-to-r from-[#C5A059] to-[#EED3A1] text-[#2C1F1B] font-['Cinzel'] text-[11px] tracking-[0.2em] uppercase font-bold shadow-lg flex items-center justify-center gap-2 hover:brightness-110 active:scale-95 transition"

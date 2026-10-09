@@ -75,7 +75,7 @@ export default function HomePage() {
           className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold transition-all ${
             lang === "es"
               ? "bg-gradient-to-r from-[#C5A059] to-[#EED3A1] text-[#2C1F1B] shadow-sm font-bold"
-              : "text-[#5E534C] hover:text-[#2C1F1B]"
+              : "text-[#2B2B2B] hover:text-black"
           }`}
           aria-label="Cambiar a Español"
         >
@@ -88,7 +88,7 @@ export default function HomePage() {
           className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold transition-all ${
             lang === "en"
               ? "bg-gradient-to-r from-[#C5A059] to-[#EED3A1] text-[#2C1F1B] shadow-sm font-bold"
-              : "text-[#5E534C] hover:text-[#2C1F1B]"
+              : "text-[#2B2B2B] hover:text-black"
           }`}
           aria-label="Switch to English"
         >
@@ -118,34 +118,40 @@ export default function HomePage() {
           </Link>
 
           {/* Menú de Enlaces */}
-          <nav className="hidden md:flex items-center gap-8">
+          <nav className="hidden md:flex items-center gap-7">
             <a
               href="#colecciones"
-              className="text-xs font-['Cinzel'] tracking-widest uppercase text-[#5E534C] hover:text-[#C5A059] transition font-semibold"
+              className="text-xs font-['Cinzel'] tracking-widest uppercase text-[#2B2B2B] hover:text-[#C5A059] transition font-semibold"
             >
               {t.nav.catalog}
             </a>
             <a
               href="#automatizacion"
-              className="text-xs font-['Cinzel'] tracking-widest uppercase text-[#5E534C] hover:text-[#C5A059] transition font-semibold"
+              className="text-xs font-['Cinzel'] tracking-widest uppercase text-[#2B2B2B] hover:text-[#C5A059] transition font-semibold"
             >
               {lang === "es" ? "Tecnología" : "Technology"}
             </a>
             <a
               href="#calculadora"
-              className="text-xs font-['Cinzel'] tracking-widest uppercase text-[#5E534C] hover:text-[#C5A059] transition font-semibold"
+              className="text-xs font-['Cinzel'] tracking-widest uppercase text-[#2B2B2B] hover:text-[#C5A059] transition font-semibold"
             >
-              {lang === "es" ? "Aforo & Retorno" : "Calculator"}
+              {lang === "es" ? "Calculadora" : "Calculator"}
             </a>
             <a
               href="#comparativa"
-              className="text-xs font-['Cinzel'] tracking-widest uppercase text-[#5E534C] hover:text-[#C5A059] transition font-semibold"
+              className="text-xs font-['Cinzel'] tracking-widest uppercase text-[#2B2B2B] hover:text-[#C5A059] transition font-semibold"
             >
               {t.nav.compare}
             </a>
             <a
+              href="#testimonios"
+              className="text-xs font-['Cinzel'] tracking-widest uppercase text-[#2B2B2B] hover:text-[#C5A059] transition font-semibold"
+            >
+              {lang === "es" ? "Testimonios" : "Reviews"}
+            </a>
+            <a
               href="#precios"
-              className="text-xs font-['Cinzel'] tracking-widest uppercase text-[#5E534C] hover:text-[#C5A059] transition font-semibold"
+              className="text-xs font-['Cinzel'] tracking-widest uppercase text-[#2B2B2B] hover:text-[#C5A059] transition font-semibold"
             >
               {t.nav.pricing}
             </a>
@@ -186,16 +192,16 @@ export default function HomePage() {
             </span>
           </div>
 
-          {/* Encabezado Principal en Cinzel (Chocolate Profundo) */}
-          <h1 className="font-['Cinzel'] text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-[#2C1F1B] max-w-5xl leading-[1.15]">
+          {/* Encabezado Principal en Cormorant Garamond / Playfair Display de Alto Peso */}
+          <h1 className="font-serif-roman text-3xl sm:text-5xl lg:text-6xl font-bold tracking-normal text-[#2C1F1B] max-w-5xl leading-[1.2]">
             {t.hero.title1}
             <span className="block text-transparent bg-clip-text bg-gradient-to-r from-[#9C7736] via-[#C5A059] to-[#2C1F1B] mt-2">
               {t.hero.title2}
             </span>
           </h1>
 
-          {/* Subtítulo Técnico en Montserrat Café Tostado */}
-          <p className="font-['Montserrat'] text-xs sm:text-base text-[#5E534C] max-w-3xl mt-6 leading-relaxed font-normal">
+          {/* Subtítulo enfocado en dolor y beneficios en Alto Contraste */}
+          <p className="font-['Montserrat'] text-sm sm:text-base text-[#2B2B2B] max-w-3xl mt-6 leading-relaxed font-normal">
             {t.hero.subtitle}
           </p>
 
@@ -240,10 +246,10 @@ export default function HomePage() {
                   key={idx}
                   className="p-5 rounded-2xl bg-white border border-[#E8E3D9] shadow-[0_4px_20px_rgba(44,31,27,0.04)] text-center"
                 >
-                  <div className="font-['Cinzel'] text-2xl sm:text-3xl font-bold text-[#2C1F1B]">
+                  <div className="font-serif-roman text-2xl sm:text-3xl font-bold text-[#2C1F1B]">
                     {m.value}
                   </div>
-                  <div className="font-['Montserrat'] text-[11px] text-[#5E534C] mt-1 font-medium">
+                  <div className="font-['Montserrat'] text-[11px] text-[#2B2B2B] mt-1 font-medium">
                     {m.label}
                   </div>
                 </div>
@@ -266,11 +272,11 @@ export default function HomePage() {
               </span>
             </div>
 
-            <h3 className="font-['Cinzel'] text-2xl sm:text-4xl font-bold text-[#2C1F1B] tracking-tight mb-3">
+            <h3 className="font-serif-roman text-2xl sm:text-4xl font-bold text-[#2C1F1B] tracking-tight mb-3">
               {t.interactiveDemoBanner.title}
             </h3>
 
-            <p className="font-['Montserrat'] text-xs sm:text-sm text-[#5E534C] leading-relaxed mb-6">
+            <p className="font-['Montserrat'] text-xs sm:text-sm text-[#2B2B2B] leading-relaxed mb-6 font-normal">
               {t.interactiveDemoBanner.description}
             </p>
 
@@ -313,21 +319,25 @@ export default function HomePage() {
             </span>
           </div>
 
-          <h2 className="font-['Cinzel'] text-3xl sm:text-5xl font-bold tracking-tight text-[#2C1F1B] mb-3">
+          <h2 className="font-serif-roman text-3xl sm:text-5xl font-bold tracking-tight text-[#2C1F1B] mb-3">
             {t.collections.title}
           </h2>
 
-          <p className="font-['Montserrat'] text-xs sm:text-sm text-[#5E534C] leading-relaxed">
+          <p className="font-['Montserrat'] text-sm text-[#2B2B2B] leading-relaxed">
             {t.collections.subtitle}
           </p>
         </div>
 
-        {/* Bento Grid con Bloques de Color Marfil Suave */}
+        {/* Bento Grid con Bloques de Color Marfil Suave y Elementos Interactivos Reales */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {t.collections.items.map((item, idx) => (
             <div
               key={item.id}
-              className="group relative rounded-3xl bg-white border border-[#E8E3D9] hover:border-[#C5A059] overflow-hidden flex flex-col justify-between transition-all duration-300 shadow-[0_10px_30px_rgba(44,31,27,0.06)] hover:shadow-[0_20px_40px_rgba(44,31,27,0.1)]"
+              className={`group relative rounded-3xl bg-white border ${
+                idx === 1
+                  ? "border-[#C5A059] ring-2 ring-[#C5A059]/20 shadow-[0_15px_40px_rgba(197,160,89,0.2)]"
+                  : "border-[#E8E3D9] hover:border-[#C5A059] shadow-[0_10px_30px_rgba(44,31,27,0.06)]"
+              } overflow-hidden flex flex-col justify-between transition-all duration-300 hover:shadow-[0_20px_40px_rgba(44,31,27,0.1)]`}
             >
               {/* Imagen con Relieve Luminosa */}
               <div className="relative h-72 sm:h-80 w-full overflow-hidden bg-stone-100">
@@ -337,25 +347,55 @@ export default function HomePage() {
                   alt={item.title}
                   className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
                 <div className="absolute top-4 left-4">
                   <span className="px-3.5 py-1 rounded-full text-[10px] font-['Cinzel'] uppercase tracking-wider bg-white/95 border border-[#E8E3D9] text-[#2C1F1B] backdrop-blur-md font-bold shadow-sm">
                     {item.tag}
                   </span>
                 </div>
+
+                {/* Si es la tarjeta del medio (Bento Luxury), mostrar badge interactivo de música y cuenta regresiva */}
+                {idx === 1 && (
+                  <div className="absolute bottom-3 left-3 right-3 p-3 rounded-2xl bg-white/95 backdrop-blur-md border border-[#C5A059]/40 shadow-lg flex flex-col gap-2">
+                    <div className="flex items-center justify-between text-[11px] font-['Montserrat'] font-bold text-[#2C1F1B]">
+                      <span className="flex items-center gap-1.5 text-[#C5A059]">
+                        <Music className="w-3.5 h-3.5 animate-bounce" />
+                        <span>Música de Fondo Activa</span>
+                      </span>
+                      <span className="px-2 py-0.5 rounded-full bg-[#F5EFE4] text-[9px] uppercase tracking-wider text-[#2C1F1B]">
+                        En Vivo
+                      </span>
+                    </div>
+                    {/* Contador regresivo animado real en la tarjeta */}
+                    <div className="grid grid-cols-3 gap-1 text-center font-['Montserrat']">
+                      <div className="bg-[#FAF8F5] py-1 rounded border border-[#E8E3D9]">
+                        <span className="block text-xs font-bold text-[#2C1F1B]">142</span>
+                        <span className="text-[8px] text-[#2B2B2B] uppercase">Días</span>
+                      </div>
+                      <div className="bg-[#FAF8F5] py-1 rounded border border-[#E8E3D9]">
+                        <span className="block text-xs font-bold text-[#2C1F1B]">18</span>
+                        <span className="text-[8px] text-[#2B2B2B] uppercase">Horas</span>
+                      </div>
+                      <div className="bg-[#FAF8F5] py-1 rounded border border-[#E8E3D9]">
+                        <span className="block text-xs font-bold text-[#2C1F1B]">35</span>
+                        <span className="text-[8px] text-[#2B2B2B] uppercase">Min</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
 
-              {/* Contenido Editorial en Tonos Chocolate y Café */}
+              {/* Contenido Editorial en Tonos Chocolate y Café con tipografía robusta */}
               <div className="p-6 flex-1 flex flex-col justify-between">
                 <div>
-                  <h3 className="font-['Cinzel'] text-xl font-bold text-[#2C1F1B] mb-1">
+                  <h3 className="font-serif-roman text-2xl font-bold text-[#2C1F1B] mb-1">
                     {item.title}
                   </h3>
                   <div className="font-['Montserrat'] text-xs text-[#C5A059] mb-3 font-semibold">
                     {item.subtitle}
                   </div>
-                  <p className="font-['Montserrat'] text-xs text-[#5E534C] leading-relaxed mb-6">
+                  <p className="font-['Montserrat'] text-xs text-[#2B2B2B] leading-relaxed mb-6 font-normal">
                     {item.description}
                   </p>
 
@@ -363,7 +403,7 @@ export default function HomePage() {
                     {item.features.map((f, fi) => (
                       <li key={fi} className="flex items-center gap-2">
                         <span className="w-1.5 h-1.5 rounded-full bg-[#C5A059]" />
-                        <span>{f}</span>
+                        <span className="font-medium">{f}</span>
                       </li>
                     ))}
                   </ul>
@@ -382,7 +422,7 @@ export default function HomePage() {
                     href={`/demo/${item.slug}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="p-3 rounded-xl border border-[#E8E3D9] text-[#5E534C] hover:text-[#2C1F1B] hover:bg-[#F5EFE4] transition"
+                    className="p-3 rounded-xl border border-[#E8E3D9] text-[#2B2B2B] hover:text-[#2C1F1B] hover:bg-[#F5EFE4] transition"
                     title={lang === "es" ? "Abrir en nueva pestaña" : "Open in new tab"}
                   >
                     <ExternalLink className="w-4 h-4 text-[#8C8077]" />
@@ -417,11 +457,11 @@ export default function HomePage() {
               </span>
             </div>
 
-            <h2 className="font-['Cinzel'] text-3xl sm:text-5xl font-bold tracking-tight text-[#2C1F1B] mb-3">
+            <h2 className="font-serif-roman text-3xl sm:text-5xl font-bold tracking-tight text-[#2C1F1B] mb-3">
               {t.techAutomation.title}
             </h2>
 
-            <p className="font-['Montserrat'] text-xs sm:text-sm text-[#5E534C] leading-relaxed">
+            <p className="font-['Montserrat'] text-sm text-[#2B2B2B] leading-relaxed">
               {t.techAutomation.subtitle}
             </p>
           </div>
@@ -434,7 +474,7 @@ export default function HomePage() {
               >
                 <div>
                   <div className="flex justify-between items-center mb-6">
-                    <span className="w-12 h-12 rounded-2xl bg-[#F5EFE4] border border-[#C5A059]/30 text-[#C5A059] flex items-center justify-center font-['Cinzel'] text-lg font-bold">
+                    <span className="w-12 h-12 rounded-2xl bg-[#F5EFE4] border border-[#C5A059]/30 text-[#C5A059] flex items-center justify-center font-serif-roman text-lg font-bold">
                       {idx === 0 ? "01" : idx === 1 ? "02" : "03"}
                     </span>
                     <span className="text-[10px] font-['Montserrat'] uppercase tracking-wider text-[#2C1F1B] font-semibold bg-[#F5EFE4] border border-[#C5A059]/30 px-3 py-1 rounded-full">
@@ -442,11 +482,11 @@ export default function HomePage() {
                     </span>
                   </div>
 
-                  <h3 className="font-['Cinzel'] text-xl font-bold text-[#2C1F1B] mb-3 leading-snug">
+                  <h3 className="font-serif-roman text-2xl font-bold text-[#2C1F1B] mb-3 leading-snug">
                     {pillar.title}
                   </h3>
 
-                  <p className="font-['Montserrat'] text-xs sm:text-sm text-[#5E534C] leading-relaxed mb-6">
+                  <p className="font-['Montserrat'] text-xs sm:text-sm text-[#2B2B2B] leading-relaxed mb-6 font-normal">
                     {pillar.description}
                   </p>
                 </div>
@@ -479,11 +519,11 @@ export default function HomePage() {
             </span>
           </div>
 
-          <h2 className="font-['Cinzel'] text-3xl sm:text-5xl font-bold tracking-tight text-[#2C1F1B] mb-3">
+          <h2 className="font-serif-roman text-3xl sm:text-5xl font-bold tracking-tight text-[#2C1F1B] mb-3">
             {t.comparison.title}
           </h2>
 
-          <p className="font-['Montserrat'] text-xs sm:text-sm text-[#5E534C] leading-relaxed">
+          <p className="font-['Montserrat'] text-sm text-[#2B2B2B] leading-relaxed">
             {t.comparison.subtitle}
           </p>
         </div>
@@ -492,7 +532,7 @@ export default function HomePage() {
         <div className="rounded-3xl bg-white border border-[#E8E3D9] overflow-hidden shadow-[0_15px_45px_rgba(44,31,27,0.06)]">
           <div className="grid grid-cols-1 md:grid-cols-12 bg-[#F5EFE4] border-b border-[#E8E3D9] p-5 text-xs font-['Cinzel'] uppercase tracking-wider font-bold">
             <div className="md:col-span-4 text-[#2C1F1B]">
-              {lang === "es" ? "Criterio Editorial & Técnico" : "Editorial & Technical Criteria"}
+              {lang === "es" ? "Criterio Clave" : "Key Criteria"}
             </div>
             <div className="md:col-span-4 text-[#8C8077] mt-2 md:mt-0">
               {t.comparison.colCompetitors}
@@ -508,7 +548,7 @@ export default function HomePage() {
                 key={rIdx}
                 className="grid grid-cols-1 md:grid-cols-12 p-5 text-xs font-['Montserrat'] items-center hover:bg-[#FAF8F5] transition"
               >
-                <div className="md:col-span-4 font-['Cinzel'] text-sm font-bold text-[#2C1F1B] mb-2 md:mb-0">
+                <div className="md:col-span-4 font-serif-roman text-base font-bold text-[#2C1F1B] mb-2 md:mb-0">
                   {row.feature}
                 </div>
                 <div className="md:col-span-4 text-[#8C8077] pr-4 line-through opacity-80 mb-2 md:mb-0">
@@ -527,7 +567,97 @@ export default function HomePage() {
       </section>
 
       {/* ============================================================== */}
-      {/* 8. SECCIÓN PRECIOS CLICK & LOVE (MODO CLARO DE LUJO) */}
+      {/* 8. SECCIÓN TESTIMONIOS REALES & ENLACES DE MUESTRA AL TELÉFONO */}
+      {/* ============================================================== */}
+      <section id="testimonios" className="relative py-24 px-4 bg-[#F5EFE4] select-none border-t border-[#E8E3D9]">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[#C5A059]/40 bg-white mb-3 backdrop-blur-md">
+              <span className="font-['Cinzel'] text-[10px] tracking-[0.3em] uppercase text-[#2C1F1B] font-bold">
+                {t.testimonials.pill}
+              </span>
+            </div>
+
+            <h2 className="font-serif-roman text-3xl sm:text-5xl font-bold tracking-tight text-[#2C1F1B] mb-3">
+              {t.testimonials.title}
+            </h2>
+
+            <p className="font-['Montserrat'] text-sm text-[#2B2B2B] leading-relaxed">
+              {t.testimonials.subtitle}
+            </p>
+          </div>
+
+          {/* Grid de 3 Testimonios Reales con Enlace para Probar la Invitación */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {t.testimonials.items.map((item, idx) => (
+              <div
+                key={idx}
+                className="relative rounded-3xl bg-white border border-[#E8E3D9] p-8 flex flex-col justify-between shadow-[0_10px_30px_rgba(44,31,27,0.05)] hover:border-[#C5A059] transition-all duration-300 group"
+              >
+                <div>
+                  {/* Calificación 5 Estrellas */}
+                  <div className="flex items-center gap-1 mb-4 text-[#C5A059]">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="w-4 h-4 fill-[#C5A059]" />
+                    ))}
+                    <span className="ml-2 font-['Montserrat'] text-[11px] font-bold text-[#2C1F1B] bg-[#F5EFE4] px-2 py-0.5 rounded-full">
+                      5.0
+                    </span>
+                  </div>
+
+                  {/* Cita */}
+                  <p className="font-['Montserrat'] text-xs sm:text-sm text-[#2B2B2B] leading-relaxed italic mb-6">
+                    {item.quote}
+                  </p>
+                </div>
+
+                <div className="pt-6 border-t border-[#E8E3D9]">
+                  {/* Perfil & Foto */}
+                  <div className="flex items-center gap-4 mb-5">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={item.avatar}
+                      alt={item.name}
+                      className="w-14 h-14 rounded-full object-cover object-center border-2 border-[#C5A059] shadow-sm flex-shrink-0"
+                    />
+                    <div>
+                      <h4 className="font-serif-roman text-lg font-bold text-[#2C1F1B] leading-tight">
+                        {item.name}
+                      </h4>
+                      <p className="font-['Montserrat'] text-[11px] text-[#C5A059] font-semibold">
+                        {item.role}
+                      </p>
+                      <p className="font-['Montserrat'] text-[10px] text-[#2B2B2B]/75 leading-tight mt-0.5">
+                        {item.event}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Métrica de Éxito & Botón de Probar Invitación */}
+                  <div className="flex items-center justify-between gap-2 p-3 rounded-2xl bg-[#F5EFE4] mb-4 text-[11px] font-['Montserrat'] font-semibold text-[#2C1F1B]">
+                    <span className="flex items-center gap-1.5 text-[#C5A059]">
+                      <CheckCircle2 className="w-4 h-4" />
+                      <span>{item.metric}</span>
+                    </span>
+                    <span className="text-[10px] uppercase tracking-wider text-[#8C8077]">Verificado</span>
+                  </div>
+
+                  <button
+                    onClick={() => handleOpenDemo(item.demoSlug)}
+                    className="w-full py-3 px-4 rounded-xl bg-white border-2 border-[#C5A059]/60 hover:bg-[#F5EFE4] text-[#2C1F1B] font-['Cinzel'] text-[11px] tracking-wider uppercase font-bold transition flex items-center justify-center gap-2 group-hover:border-[#C5A059] shadow-sm"
+                  >
+                    <Smartphone className="w-3.5 h-3.5 text-[#C5A059]" />
+                    <span>{item.demoBtnText}</span>
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ============================================================== */}
+      {/* 9. SECCIÓN PRECIOS CLICK & LOVE (MODO CLARO DE LUJO) */}
       {/* ============================================================== */}
       <section id="precios" className="relative py-24 px-4 bg-[#FAF8F5] text-[#2C1F1B] overflow-hidden select-none border-t border-[#E8E3D9]">
         {/* Resplandores ambientales dorados suaves */}
@@ -542,10 +672,10 @@ export default function HomePage() {
               {t.pricing.pill}
             </span>
           </div>
-          <h2 className="font-['Cinzel'] text-3xl sm:text-5xl font-bold tracking-tight text-[#2C1F1B]">
+          <h2 className="font-serif-roman text-3xl sm:text-5xl font-bold tracking-tight text-[#2C1F1B]">
             {t.pricing.title}
           </h2>
-          <p className="font-['Montserrat'] text-xs sm:text-sm text-[#5E534C] mt-3 max-w-lg mx-auto leading-relaxed">
+          <p className="font-['Montserrat'] text-sm text-[#2B2B2B] mt-3 max-w-lg mx-auto leading-relaxed">
             {t.pricing.subtitle}
           </p>
         </div>
@@ -559,20 +689,20 @@ export default function HomePage() {
                 <span className="font-['Cinzel'] text-xs tracking-[0.25em] uppercase text-[#8C8077] font-bold">
                   {t.pricing.plans[0].badge}
                 </span>
-                <span className="text-[10px] uppercase font-['Montserrat'] text-[#5E534C] bg-[#F5EFE4] px-2.5 py-1 rounded-full border border-[#E8E3D9] font-semibold">
+                <span className="text-[10px] uppercase font-['Montserrat'] text-[#2C1F1B] bg-[#F5EFE4] px-2.5 py-1 rounded-full border border-[#E8E3D9] font-semibold">
                   {t.pricing.plans[0].typeTag}
                 </span>
               </div>
 
-              <h3 className="font-['Cinzel'] text-2xl font-bold text-[#2C1F1B] mb-2">
+              <h3 className="font-serif-roman text-2xl font-bold text-[#2C1F1B] mb-2">
                 {t.pricing.plans[0].name}
               </h3>
-              <p className="font-['Montserrat'] text-xs text-[#5E534C] mb-6 leading-relaxed">
+              <p className="font-['Montserrat'] text-xs text-[#2B2B2B] mb-6 leading-relaxed font-normal">
                 {t.pricing.plans[0].description}
               </p>
 
               <div className="flex items-baseline gap-1 mb-8 pb-6 border-b border-[#E8E3D9]">
-                <span className="font-['Cinzel'] text-5xl font-bold text-[#2C1F1B]">
+                <span className="font-serif-roman text-5xl font-bold text-[#2C1F1B]">
                   {t.pricing.plans[0].price}
                 </span>
                 <span className="font-['Montserrat'] text-xs text-[#8C8077] uppercase tracking-wider font-medium">
@@ -619,7 +749,7 @@ export default function HomePage() {
             </button>
           </div>
 
-          {/* 2. PLAN SIGNATURE VIP ($89) - TARJETA DESTACADA EN ORO */}
+          {/* 2. PLAN SIGNATURE VIP ($89) - TARJETA DESTACADA CON BOTÓN DE MÁXIMO CONTRASTE */}
           <div className="relative rounded-3xl bg-white border-2 border-[#C5A059] p-8 flex flex-col justify-between shadow-[0_20px_50px_rgba(197,160,89,0.25)] lg:-translate-y-4">
             {/* Cinta superior distintiva */}
             <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-[#C5A059] via-[#EED3A1] to-[#9C7736] text-[#2C1F1B] font-['Cinzel'] text-[9px] font-bold tracking-[0.3em] uppercase py-1 px-5 rounded-full shadow-md">
@@ -636,15 +766,15 @@ export default function HomePage() {
                 </span>
               </div>
 
-              <h3 className="font-['Cinzel'] text-2xl font-bold text-[#2C1F1B] mb-2">
+              <h3 className="font-serif-roman text-2xl font-bold text-[#2C1F1B] mb-2">
                 {t.pricing.plans[1].name}
               </h3>
-              <p className="font-['Montserrat'] text-xs text-[#5E534C] mb-6 leading-relaxed">
+              <p className="font-['Montserrat'] text-xs text-[#2B2B2B] mb-6 leading-relaxed font-normal">
                 {t.pricing.plans[1].description}
               </p>
 
               <div className="flex items-baseline gap-1 mb-8 pb-6 border-b border-[#C5A059]/30">
-                <span className="font-['Cinzel'] text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#9C7736] via-[#C5A059] to-[#2C1F1B]">
+                <span className="font-serif-roman text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#9C7736] via-[#C5A059] to-[#2C1F1B]">
                   {t.pricing.plans[1].price}
                 </span>
                 <span className="font-['Montserrat'] text-xs text-[#8C8077] uppercase tracking-wider font-medium">
@@ -666,18 +796,23 @@ export default function HomePage() {
               </ul>
             </div>
 
+            {/* BOTÓN CON CONTRASTE SUPREMO RESPECTO AL BLANCO DE LA TARJETA */}
             <button
               onClick={() => handleCheckout("signature")}
               disabled={checkoutLoading !== null}
-              className="mt-8 w-full py-4 px-4 rounded-xl bg-gradient-to-r from-[#C5A059] via-[#EED3A1] to-[#C5A059] text-[#2C1F1B] font-['Cinzel'] text-xs tracking-[0.25em] uppercase font-bold hover:brightness-105 active:scale-95 transition-all shadow-[0_5px_20px_rgba(197,160,89,0.35)] text-center flex items-center justify-center gap-2 disabled:opacity-50"
+              className="mt-8 w-full py-4 px-4 rounded-xl bg-[#1A1A1A] hover:bg-black text-[#FAF8F5] border border-[#C5A059]/60 font-['Cinzel'] text-xs tracking-[0.25em] uppercase font-bold active:scale-95 transition-all shadow-[0_10px_25px_rgba(0,0,0,0.35)] text-center flex items-center justify-center gap-2 disabled:opacity-50 group hover:shadow-[0_12px_30px_rgba(197,160,89,0.35)]"
             >
               {checkoutLoading === "signature" ? (
                 <>
-                  <Loader2 className="w-4 h-4 animate-spin text-[#2C1F1B]" />
+                  <Loader2 className="w-4 h-4 animate-spin text-[#EED3A1]" />
                   <span>Procesando Reserva...</span>
                 </>
               ) : (
-                t.pricing.plans[1].cta
+                <>
+                  <span className="text-[#EED3A1] group-hover:text-white transition-colors">✦</span>
+                  <span>{t.pricing.plans[1].cta}</span>
+                  <span className="text-[#EED3A1] group-hover:text-white transition-colors">✦</span>
+                </>
               )}
             </button>
           </div>
@@ -689,20 +824,20 @@ export default function HomePage() {
                 <span className="font-['Cinzel'] text-xs tracking-[0.25em] uppercase text-[#8C8077] font-bold">
                   {t.pricing.plans[2].badge}
                 </span>
-                <span className="text-[10px] uppercase font-['Montserrat'] text-[#5E534C] bg-[#F5EFE4] px-2.5 py-1 rounded-full border border-[#E8E3D9] font-semibold">
+                <span className="text-[10px] uppercase font-['Montserrat'] text-[#2C1F1B] bg-[#F5EFE4] px-2.5 py-1 rounded-full border border-[#E8E3D9] font-semibold">
                   {t.pricing.plans[2].typeTag}
                 </span>
               </div>
 
-              <h3 className="font-['Cinzel'] text-2xl font-bold text-[#2C1F1B] mb-2">
+              <h3 className="font-serif-roman text-2xl font-bold text-[#2C1F1B] mb-2">
                 {t.pricing.plans[2].name}
               </h3>
-              <p className="font-['Montserrat'] text-xs text-[#5E534C] mb-6 leading-relaxed">
+              <p className="font-['Montserrat'] text-xs text-[#2B2B2B] mb-6 leading-relaxed font-normal">
                 {t.pricing.plans[2].description}
               </p>
 
               <div className="flex items-baseline gap-1 mb-8 pb-6 border-b border-[#E8E3D9]">
-                <span className="font-['Cinzel'] text-5xl font-bold text-[#2C1F1B]">
+                <span className="font-serif-roman text-5xl font-bold text-[#2C1F1B]">
                   {t.pricing.plans[2].price}
                 </span>
                 <span className="font-['Montserrat'] text-xs text-[#8C8077] uppercase tracking-wider font-medium">
@@ -773,7 +908,7 @@ export default function HomePage() {
                 Click & Love
               </span>
             </div>
-            <p className="font-['Montserrat'] text-xs text-[#5E534C] mt-2 max-w-sm">
+            <p className="font-['Montserrat'] text-xs text-[#2B2B2B] mt-2 max-w-sm">
               {t.footer.brandSubtitle}
             </p>
           </div>
@@ -795,7 +930,7 @@ export default function HomePage() {
 
           {/* Selector de idioma & Copyright */}
           <div className="flex flex-col items-center md:items-end gap-2">
-            <div className="flex items-center gap-2 text-xs text-[#5E534C]">
+            <div className="flex items-center gap-2 text-xs text-[#2B2B2B]">
               <Globe className="w-3.5 h-3.5 text-[#C5A059]" />
               <button
                 onClick={() => setLang("es")}

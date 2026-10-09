@@ -8,20 +8,20 @@
   --color-surface: #FFFFFF;     /* Tarjetas e inputs: Blanco puro */
   --color-card-border: #E8E3D9;  /* Bordes finos: Tono arena muy suave */
   
-  /* Textos de alta jerarquía */
-  --color-text-main: #2C1F1B;   /* Títulos principales: Chocolate oscuro */
-  --color-text-muted: #5E534C;  /* Párrafos: Café tostado, suave pero legible */
-  --color-text-light: #8C8077;  /* Etiquetas secundarias */
+  /* Textos de alta jerarquía con máximo contraste WCAG */
+  --color-text-main: #1A1A1A;   /* Títulos principales: Negro carbón profundo con legibilidad óptima */
+  --color-text-muted: #2B2B2B;  /* Párrafos: Gris oscuro #2B2B2B para lectura descansada y alto contraste */
+  --color-text-light: #525252;  /* Etiquetas secundarias */
   
   /* Los Acentos de Gala */
-  --color-gold: #C5A059;        /* Oro Champán para botones, etiquetas e iconos */
-  --color-gold-hover: #AA8643;  /* Transición de botón */
+  --color-gold: #B38938;        /* Oro Champán con mayor contraste */
+  --color-gold-hover: #967029;  /* Transición de botón */
   --color-gold-bg: #F5EFE4;     /* Fondos sutiles dorados o alertas */
   
-  --color-rose: #C2847A;        /* Dusty Rose para bodas/quinceañeras */
+  --color-rose: #B87368;        /* Dusty Rose para bodas/quinceañeras */
 
   --background: #FAF8F5;
-  --foreground: #2C1F1B;
+  --foreground: #1A1A1A;
 }
 
 body {
@@ -51,8 +51,9 @@ body {
 
 /* Tipografías especializadas */
 .font-script { font-family: 'Alex Brush', 'Great Vibes', cursive; }
-.font-serif-roman { font-family: 'Cinzel', serif; }
+.font-serif-roman { font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif; }
 .font-cormorant { font-family: 'Cormorant Garamond', serif; }
+.font-playfair { font-family: 'Playfair Display', Georgia, serif; }
 .font-sans-body { font-family: 'Montserrat', sans-serif; }
 
 /* Borde rasgado (Torn Paper Mask) */
