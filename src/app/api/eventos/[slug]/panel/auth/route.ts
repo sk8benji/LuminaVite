@@ -25,7 +25,9 @@ export async function GET(
   const { searchParams } = new URL(req.url);
   const key = searchParams.get("key")?.trim();
 
-  const baseUrl = req.nextUrl.origin || "https://clickandlove.app";
+  const forwardedProto = req.headers.get("x-forwarded-proto") || "https";
+  const forwardedHost = req.headers.get("x-forwarded-host") || req.headers.get("host") || "clickandlove.app";
+  const baseUrl = `${forwardedProto}://${forwardedHost}`;
   const panelRedirectUrl = new URL(`/${cleanSlug}/panel`, baseUrl);
 
   if (!key) {
