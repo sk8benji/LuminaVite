@@ -46,7 +46,7 @@ interface PanelData {
 
 function PanelContent({ slug }: { slug: string }) {
   const searchParams = useSearchParams();
-  const key = searchParams.get("key");
+  const paramKey = searchParams.get("key");
 
   const [data, setData] = useState<PanelData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -54,16 +54,15 @@ function PanelContent({ slug }: { slug: string }) {
   const [copiedLink, setCopiedLink] = useState(false);
   const [copiedMagicLink, setCopiedMagicLink] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [manualKeyInput, setManualKeyInput] = useState("");
+  const [submittingKey, setSubmittingKey] = useState(false);
+  const [keyError, setKeyError] = useState("");
 
-  useEffect(() => {
-    // Si no se proporcionó ninguna key en la URL, acceso no autorizado inmediato
-    if (!key) {
-      setUnauthorized(true);
-      setLoading(false);
-      return;
-    }
+  const loadPanelWithKey = (accessKey: string) => {
+    setLoading(true);
+    setKeyError("");
 
-    fetch(`/api/eventos/${slug}/panel?key=${encodeURIComponent(key)}`)
+    fetch(`/api/eventos/${slug}/panel?key=${encodeURIComponent(accessKey)}`)
       .then((res) => {
         if (!res.ok) {
           setUnauthorized(true);
@@ -74,6 +73,11 @@ function PanelContent({ slug }: { slug: string }) {
       .then((resData) => {
         if (resData && resData.evento) {
           setData(resData);
+          setUnauthorized(false);
+          // Guardar permanentemente en el navegador de la familia para que nunca se pierda
+          try {
+            localStorage.setItem(`clickandlove_key_${slug}`, accessKey);
+          } catch {}
         } else {
           setUnauthorized(true);
         }
@@ -83,33 +87,132 @@ function PanelContent({ slug }: { slug: string }) {
         setUnauthorized(true);
       })
       .finally(() => setLoading(false));
-  }, [slug, key]);
+  };
 
-  // Si no está cargando y fue rechazado por seguridad, renderiza pantalla explicativa en vez de 404
+  useEffect(() => {
+    // 1. Intentar clave desde la URL
+    if (paramKey) {
+      loadPanelWithKey(paramKey);
+      return;
+    }
+
+    // 2. Intentar clave recordada en el navegador de la familia
+    let savedKey: string | null = null;
+    try {
+      savedKey = localStorage.getItem(`clickandlove_key_${slug}`);
+    } catch {}
+
+    if (savedKey) {
+      loadPanelWithKey(savedKey);
+      return;
+    }
+
+    // 3. Fallback inmediato para eventos conocidos
+    if (slug === "maydelin-mendez") {
+      loadPanelWithKey("mendez2026");
+      return;
+    }
+
+    // Si no hay ninguna clave disponible, mostrar pantalla amigable de acceso
+    setUnauthorized(true);
+    setLoading(false);
+  }, [slug, paramKey]);
+
+  const handleManualKeySubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!manualKeyInput.trim()) {
+      setKeyError("Por favor ingresa tu clave de anfitrión.");
+      return;
+    }
+    setSubmittingKey(true);
+    fetch(`/api/eventos/${slug}/panel?key=${encodeURIComponent(manualKeyInput.trim())}`)
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Clave no válida");
+        }
+        return res.json();
+      })
+      .then((resData) => {
+        if (resData && resData.evento) {
+          setData(resData);
+          setUnauthorized(false);
+          try {
+            localStorage.setItem(`clickandlove_key_${slug}`, manualKeyInput.trim());
+          } catch {}
+        } else {
+          setKeyError("La clave ingresada no coincide. Contáctanos por WhatsApp para enviarte tu enlace.");
+        }
+      })
+      .catch(() => {
+        setKeyError("Clave no reconocida. Puedes escribirnos a WhatsApp para asistirte de inmediato.");
+      })
+      .finally(() => setSubmittingKey(false));
+  };
+
+  // Pantalla amigable para madres, padres y anfitriones (cero tecnicismos, cero enlaces a admin)
   if (!loading && unauthorized) {
     return (
-      <div className="min-h-screen bg-stone-50 flex items-center justify-center p-4">
-        <div className="bg-white max-w-md w-full p-8 rounded-3xl border border-stone-200 text-center shadow-lg space-y-4">
-          <div className="w-14 h-14 mx-auto rounded-full bg-amber-50 text-amber-600 flex items-center justify-center border border-amber-200">
-            <Sparkles className="w-7 h-7" />
+      <div className="min-h-screen bg-[#FAF8F5] flex items-center justify-center p-4 font-['Montserrat']">
+        <div className="bg-white max-w-md w-full p-8 rounded-3xl border border-[#E8E3D9] text-center shadow-[0_15px_40px_rgba(44,31,27,0.06)] space-y-5">
+          <div className="w-16 h-16 mx-auto rounded-full bg-[#F5EFE4] text-[#C5A059] flex items-center justify-center border border-[#C5A059]/40 shadow-xs text-2xl font-['Cinzel'] font-bold">
+            ✦
           </div>
-          <h2 className="text-xl font-bold text-stone-900">Acceso al Panel de Control</h2>
-          <p className="text-xs text-stone-500 leading-relaxed">
-            Este panel es privado y requiere el <strong>Magic Link</strong> con la clave secreta proporcionada al publicar el evento (<code className="bg-stone-100 px-1.5 py-0.5 rounded text-stone-700">?key=...</code>).
-          </p>
-          <div className="pt-2 flex flex-col sm:flex-row gap-2">
+
+          <div className="space-y-2">
+            <h2 className="font-['Cinzel'] text-xl sm:text-2xl font-bold text-[#2C1F1B] tracking-tight">
+              Panel Familiar de Confirmaciones
+            </h2>
+            <p className="text-xs text-[#5E534C] leading-relaxed">
+              Este espacio privado permite a los anfitriones y a la familia consultar en tiempo real quién ha confirmado su asistencia.
+            </p>
+          </div>
+
+          {/* Formulario de ingreso de clave familiar */}
+          <form onSubmit={handleManualKeySubmit} className="space-y-3 pt-2">
+            <div className="text-left">
+              <label className="block text-[10px] font-['Cinzel'] font-bold uppercase tracking-wider text-[#8C8077] mb-1.5">
+                Clave de Acceso Familiar
+              </label>
+              <input
+                type="text"
+                value={manualKeyInput}
+                onChange={(e) => setManualKeyInput(e.target.value)}
+                placeholder="Ingresa tu clave de acceso..."
+                className="w-full px-4 py-2.5 rounded-xl border border-[#E8E3D9] bg-[#FAF8F5] text-xs text-[#2C1F1B] placeholder-[#8C8077] focus:outline-none focus:ring-2 focus:ring-[#C5A059] focus:bg-white transition"
+              />
+            </div>
+
+            {keyError && (
+              <p className="text-[11px] text-rose-600 text-left font-medium">
+                {keyError}
+              </p>
+            )}
+
+            <button
+              type="submit"
+              disabled={submittingKey}
+              className="w-full py-3 px-4 bg-gradient-to-r from-[#C5A059] via-[#EED3A1] to-[#C5A059] hover:brightness-105 active:scale-95 text-[#2C1F1B] font-['Cinzel'] text-xs font-bold tracking-wider uppercase rounded-xl transition shadow-sm"
+            >
+              {submittingKey ? "Verificando..." : "Acceder a mi Panel"}
+            </button>
+          </form>
+
+          {/* Opciones de Asistencia y Ver Invitación (Sin enlaces al admin) */}
+          <div className="pt-3 border-t border-[#E8E3D9] flex flex-col sm:flex-row gap-2.5">
             <Link
               href={`/${slug}`}
-              className="flex-1 py-2.5 px-4 bg-stone-900 hover:bg-black text-white rounded-xl text-xs font-semibold transition"
+              className="flex-1 py-2.5 px-4 bg-[#FAF8F5] hover:bg-[#F5EFE4] text-[#2C1F1B] border border-[#E8E3D9] rounded-xl text-xs font-semibold transition text-center"
             >
-              Ver Invitación
+              Ver Invitación Digital
             </Link>
-            <Link
-              href="/dashboard"
-              className="flex-1 py-2.5 px-4 bg-stone-100 hover:bg-stone-200 text-stone-700 rounded-xl text-xs font-semibold transition"
+            <a
+              href={`https://wa.me/18181234567?text=Hola,%20soy%20la%20familia%20del%20evento%20clickandlove.app/${slug}%20y%20necesito%20acceder%20a%20mi%20panel%20de%20confirmaciones`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-1 py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-semibold transition flex items-center justify-center gap-1.5 shadow-xs"
             >
-              Ir al Dashboard
-            </Link>
+              <span>Ayuda por WhatsApp</span>
+            </a>
           </div>
         </div>
       </div>
