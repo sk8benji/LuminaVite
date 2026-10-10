@@ -18,6 +18,7 @@ import {
 import { QUINCE_ROSADO_ASSETS } from "@/lib/templates/quinceRosadoAssets";
 import { getMapDirectionsUrl } from "@/lib/maps";
 import { InvitationData } from "../invitation/InvitationMobileView";
+import DynamicRsvpForm from "../invitation/DynamicRsvpForm";
 
 interface QuinceRosadoTemplateProps {
   data: InvitationData;
@@ -629,80 +630,19 @@ export default function QuinceRosadoTemplate({
         ══════════════════════════════════════════════════════════════ */}
         <section className="relative w-full py-12 px-5 bg-gradient-to-b from-pink-50/50 to-white">
           <div className="max-w-[360px] mx-auto">
-            {/* Tarjeta de Confirmación de Asistencia */}
-            <div className="bg-white/90 p-6 rounded-3xl shadow-xl border border-pink-200 text-center mb-8">
-              <h3 className="font-['Cinzel',serif] text-sm tracking-[0.25em] uppercase text-[#7A002A] font-bold mb-2">
-                ¿SERÁS PARTE DE
-              </h3>
-              <h2 className="font-['Great_Vibes',cursive] text-4xl text-[#7A002A] mb-4">
-                Mi Celebración?
-              </h2>
-
-              <p className="font-['Cinzel',serif] text-[11px] tracking-wider uppercase text-[#7A002A] font-bold mb-6">
-                {data.rsvpFechaLimite || "POR FAVOR, CONFIRMA TU ASISTENCIA ANTES DEL 20 DE OCTUBRE DE 2026."}
-              </p>
-
-              {rsvpConfirmado ? (
-                <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs">
-                  <Check className="w-6 h-6 mx-auto mb-1 text-emerald-600" />
-                  <p className="font-bold">¡Gracias por confirmar!</p>
-                  <p className="mt-1">Te esperamos con mucha emoción.</p>
-                </div>
-              ) : (
-                <form onSubmit={handleRsvpSubmit} className="space-y-3.5 text-left">
-                  <div>
-                    <label className="block text-[10px] font-['Cinzel',serif] tracking-wider uppercase text-[#7A002A] font-bold mb-1">
-                      Nombre Completo *
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      value={rsvpNombre}
-                      onChange={(e) => setRsvpNombre(e.target.value)}
-                      placeholder="Ej. Familia Rodríguez"
-                      className="w-full bg-pink-50/50 border border-pink-200 rounded-xl px-3.5 py-2 text-xs text-[#7A002A] focus:outline-none focus:border-[#7A002A]"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-[10px] font-['Cinzel',serif] tracking-wider uppercase text-[#7A002A] font-bold mb-1">
-                      Teléfono
-                    </label>
-                    <input
-                      type="tel"
-                      value={rsvpTelefono}
-                      onChange={(e) => setRsvpTelefono(e.target.value)}
-                      placeholder="Ej. +1 (818) 555-0123"
-                      className="w-full bg-pink-50/50 border border-pink-200 rounded-xl px-3.5 py-2 text-xs text-[#7A002A] focus:outline-none focus:border-[#7A002A]"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-[10px] font-['Cinzel',serif] tracking-wider uppercase text-[#7A002A] font-bold mb-1">
-                      Número de Pases Confirmados
-                    </label>
-                    <select
-                      value={rsvpPases}
-                      onChange={(e) => setRsvpPases(e.target.value)}
-                      className="w-full bg-pink-50/50 border border-pink-200 rounded-xl px-3 py-2 text-xs text-[#7A002A] focus:outline-none focus:border-[#7A002A]"
-                    >
-                      <option value="1">1 Pase</option>
-                      <option value="2">2 Pases</option>
-                      <option value="3">3 Pases</option>
-                      <option value="4">4 Pases</option>
-                      <option value="5">5 Pases</option>
-                    </select>
-                  </div>
-
-                  <button
-                    type="submit"
-                    className="w-full mt-2 bg-[#7A002A] hover:bg-[#600021] text-white py-2.5 rounded-full font-['Cinzel',serif] text-xs tracking-widest uppercase font-bold shadow-md transition flex items-center justify-center gap-2 cursor-pointer active:scale-95"
-                  >
-                    <Send className="w-3.5 h-3.5" />
-                    <span>CONFIRMAR POR WHATSAPP</span>
-                  </button>
-                </form>
-              )}
+            {/* Tarjeta de Confirmación de Asistencia Dinámica con Búsqueda de Invitados */}
+            <div className="mb-8">
+              <DynamicRsvpForm
+                slug={data.slug || "demo"}
+                eventTitle={data.titulo}
+                eventDate={data.fechaEvento}
+                recepcionMapUrl={hallMapUrl}
+                telefonoWhatsapp={data.telefonoWhatsappRsvp}
+                primaryColor="#7A002A"
+                accentBgColor="bg-white/95"
+                deadlineText={data.rsvpFechaLimite || "POR FAVOR, CONFIRMA TU ASISTENCIA ANTES DEL 20 DE OCTUBRE."}
+                lang="es"
+              />
             </div>
 
             {/* Foto de Pareja / Arco Chambelán */}

@@ -162,7 +162,25 @@ model Evento {
   updatedAt          DateTime        @updatedAt
 
   rsvps              RsvpRegistro[]
+  guests             Guest[]
   ordenesCompra      OrdenCompra[]
+}
+
+model Guest {
+  id           String    @id @default(uuid())
+  eventId      String    @map("event_id")
+  evento       Evento    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  name         String    @db.VarChar(255)
+  phone        String?   @db.VarChar(50)
+  maxPax       Int       @default(1) @map("max_pax")
+  confirmedPax Int       @default(0) @map("confirmed_pax")
+  status       String    @default("pending") @db.VarChar(20) // 'pending', 'attending', 'declined'
+  notes        String?   @db.Text
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @default(now()) @updatedAt @map("updated_at")
+
+  @@index([eventId, name], name: "idx_guests_event_search")
+  @@map("guests")
 }
 
 model RsvpRegistro {

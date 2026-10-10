@@ -37,6 +37,7 @@ export default async function ClientMagicLinkPanelPage({
       where: { slug: cleanSlug },
       include: {
         rsvps: { orderBy: { createdAt: "desc" } },
+        guests: { orderBy: [{ status: "asc" }, { name: "asc" }] },
         usuario: true,
       },
     });
@@ -48,6 +49,7 @@ export default async function ClientMagicLinkPanelPage({
       },
       include: {
         rsvps: { orderBy: { createdAt: "desc" } },
+        guests: { orderBy: [{ status: "asc" }, { name: "asc" }] },
         usuario: true,
       },
     });
@@ -61,6 +63,7 @@ export default async function ClientMagicLinkPanelPage({
   // 5. Serialización segura de fechas y datos para evitar errores de hidratación
   const serializedEvento = JSON.parse(JSON.stringify(evento));
   const rsvps = serializedEvento.rsvps || [];
+  const rawGuests = serializedEvento.guests || [];
   const confirmados = rsvps.filter((r: any) => r.asistira);
   const declinados = rsvps.filter((r: any) => !r.asistira);
   const totalPases = confirmados.reduce((acc: number, r: any) => acc + (r.pases || 1), 0);
@@ -90,6 +93,17 @@ export default async function ClientMagicLinkPanelPage({
       acompanantes: r.acompanantes,
       createdAt: r.createdAt,
     })),
+    guests: rawGuests.map((g: any) => ({
+      id: g.id,
+      name: g.name,
+      phone: g.phone,
+      max_pax: g.maxPax,
+      confirmed_pax: g.confirmedPax,
+      status: g.status,
+      notes: g.notes,
+      created_at: g.createdAt,
+      updated_at: g.updatedAt,
+    })),
   };
 
   return (
@@ -97,6 +111,7 @@ export default async function ClientMagicLinkPanelPage({
       slug={cleanSlug}
       isAuthorized={true}
       initialData={panelData}
+      panelKey={cleanKey}
     />
   );
 }

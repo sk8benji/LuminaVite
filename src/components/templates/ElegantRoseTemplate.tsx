@@ -15,6 +15,7 @@ import { getMapDirectionsUrl } from "@/lib/maps";
 import { ELEGANT_ROSE_ASSETS } from "@/lib/templates/elegantRoseAssets";
 import EnvelopeIntro from "../invitation/EnvelopeIntro";
 import { InvitationData } from "../invitation/InvitationMobileView";
+import DynamicRsvpForm from "../invitation/DynamicRsvpForm";
 
 function WavyColumn({
   children,
@@ -1076,78 +1077,19 @@ export default function ElegantRoseTemplate({
               {data.rsvpFechaLimite || data.fechaLimiteRsvp || (isEn ? "BY JUNE 20TH" : "ANTES DEL 20 DE JUNIO")}
             </p>
 
-            {rsvpSubmitted ? (
-              <div className="bg-white/20 backdrop-blur-md p-6 rounded-2xl border border-white/40 animate-fade-in text-center w-full max-w-[280px] shadow-xl">
-                <Check className="w-9 h-9 text-emerald-400 mx-auto mb-2" />
-                <h4 className="font-['Cinzel'] text-sm font-bold text-white tracking-wider uppercase drop-shadow-sm">
-                  {isEn ? "Thank you for confirming!" : "¡Gracias por confirmar!"}
-                </h4>
-                <p className="font-['Cinzel'] text-xs text-rose-100 mt-1.5 drop-shadow-sm">
-                  {isEn ? "Your response was sent via WhatsApp." : "Tu respuesta ha sido enviada por WhatsApp."}
-                </p>
-                <button
-                  type="button"
-                  onClick={() => setRsvpSubmitted(false)}
-                  className="mt-3.5 text-xs uppercase font-['Cinzel'] tracking-wider text-rose-200 underline font-semibold cursor-pointer hover:text-white transition"
-                >
-                  {isEn ? "Modify confirmation" : "Modificar respuesta"}
-                </button>
-              </div>
-            ) : (
-              <form onSubmit={handleRsvpSubmit} className="space-y-3.5 w-full max-w-[280px] text-left">
-                <div>
-                  <label className="block font-['Cinzel'] text-[10px] sm:text-xs tracking-wider text-rose-200 uppercase mb-1 font-bold drop-shadow-sm">
-                    {isEn ? "Full Name *" : "Nombre Completo *"}
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={rsvpNombre}
-                    onChange={(e) => setRsvpNombre(e.target.value)}
-                    placeholder={isEn ? "e.g. Maria Perez" : "Ej. María Pérez"}
-                    className="w-full bg-black/40 border border-white/40 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-white placeholder-white/50 focus:outline-none focus:border-rose-300 backdrop-blur-sm"
-                  />
-                </div>
-
-                <div>
-                  <label className="block font-['Cinzel'] text-[10px] sm:text-xs tracking-wider text-rose-200 uppercase mb-1 font-bold drop-shadow-sm">
-                    {isEn ? "Mobile Phone *" : "Teléfono Móvil *"}
-                  </label>
-                  <input
-                    type="tel"
-                    required
-                    value={rsvpTelefono}
-                    onChange={(e) => setRsvpTelefono(e.target.value)}
-                    placeholder={isEn ? "e.g. +1 818 123 4567" : "Ej. 818 123 4567"}
-                    className="w-full bg-black/40 border border-white/40 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-white placeholder-white/50 focus:outline-none focus:border-rose-300 backdrop-blur-sm"
-                  />
-                </div>
-
-                <div>
-                  <label className="block font-['Cinzel'] text-[10px] sm:text-xs tracking-wider text-rose-200 uppercase mb-1 font-bold drop-shadow-sm">
-                    {isEn ? "Confirmed Passes" : "Pases Confirmados"}
-                  </label>
-                  <select
-                    value={rsvpPases}
-                    onChange={(e) => setRsvpPases(e.target.value)}
-                    className="w-full bg-neutral-900 border border-white/40 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-white focus:outline-none focus:border-rose-300"
-                  >
-                    <option value="1">1 {isEn ? "Pass" : "Pase"}</option>
-                    <option value="2">2 {isEn ? "Passes" : "Pases"}</option>
-                    <option value="3">3 {isEn ? "Passes" : "Pases"}</option>
-                    <option value="4">4 {isEn ? "Passes" : "Pases"}</option>
-                  </select>
-                </div>
-
-                <button
-                  type="submit"
-                  className="w-full bg-white/25 hover:bg-white/35 border border-white/60 text-white font-['Cinzel'] text-xs sm:text-[13px] tracking-[0.25em] uppercase py-3.5 rounded-xl font-bold shadow-xl transition-all mt-4 cursor-pointer flex items-center justify-center gap-2 drop-shadow"
-                >
-                  <Send className="w-4 h-4" />
-                  <span>{isEn ? "CONFIRM VIA WHATSAPP" : "CONFIRMAR POR WHATSAPP"}</span>
-                </button>
-              </form>
-            )}
+            <div className="w-full max-w-[320px]">
+              <DynamicRsvpForm
+                slug={data.slug || "isabella-xv"}
+                eventTitle={data.titulo}
+                eventDate={data.fechaEvento}
+                recepcionMapUrl={data.recepcionMapUrl}
+                telefonoWhatsapp={data.telefonoWhatsappRsvp}
+                primaryColor="#8B4513"
+                accentBgColor="bg-white/95"
+                deadlineText={data.rsvpFechaLimite || data.fechaLimiteRsvp || (isEn ? "BY JUNE 20TH" : "ANTES DEL 20 DE JUNIO")}
+                lang={lang}
+              />
+            </div>
           </WavyColumn>
         </section>
       </main>

@@ -17,6 +17,13 @@ if (dbUrl) {
   } catch (err) {
     console.warn("⚠️ Aviso al sincronizar clave de anfitrión:", err.message);
   }
+
+  try {
+    console.log("⚡ Asegurando tabla de invitados 'guests'...");
+    execSync("npx tsx scripts/sync-guests-table.ts", { stdio: "inherit" });
+  } catch (err) {
+    console.warn("⚠️ Aviso al sincronizar tabla guests:", err.message);
+  }
 } else {
   console.log("ℹ️ No hay DATABASE_URL configurada en el entorno actual.");
 }
