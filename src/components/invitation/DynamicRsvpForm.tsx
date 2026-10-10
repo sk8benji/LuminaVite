@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import { useSearchParams } from "next/navigation";
 import confetti from "canvas-confetti";
 import {
   Search,
@@ -47,6 +48,8 @@ export default function DynamicRsvpForm({
   lang = "es",
 }: DynamicRsvpFormProps) {
   const isEn = lang === "en";
+  const searchParams = useSearchParams();
+  const directGuestId = searchParams?.get("guest") || searchParams?.get("guest_id") || searchParams?.get("id");
 
   // Estados del flujo: 1 = Buscar, 2 = Seleccionar Asistencia/Pases, 3 = Éxito, "manual" = Fallback
   const [step, setStep] = useState<1 | 2 | 3 | "manual">(1);
@@ -80,6 +83,40 @@ export default function DynamicRsvpForm({
   const [manualPhone, setManualPhone] = useState("");
   const [manualPax, setManualPax] = useState("2");
   const [manualSubmitted, setManualSubmitted] = useState(false);
+
+  // 1. Detección y carga directa de invitado por URL (?guest=UUID o ?guest_id=UUID)
+  useEffect(() => {
+    if (!directGuestId) return;
+
+    let isMounted = true;
+    setIsSearching(true);
+
+    fetch(
+      `/api/events/${encodeURIComponent(slug)}/guests/search?id=${encodeURIComponent(directGuestId)}`
+    )
+      .then(async (res) => {
+        if (!res.ok) return null;
+        return res.json();
+      })
+      .then((guest) => {
+        if (isMounted && guest && guest.id) {
+          setSelectedGuest(guest);
+          setConfirmedPax(Math.min(guest.max_pax || 1, 2));
+          setAsistencia("SI");
+          setStep(2); // Salta directamente al Estado 2
+        }
+      })
+      .catch((err) => {
+        console.warn("No se pudo cargar el invitado directo por URL:", err);
+      })
+      .finally(() => {
+        if (isMounted) setIsSearching(false);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [directGuestId, slug]);
 
   // Debounce para búsqueda pública
   useEffect(() => {

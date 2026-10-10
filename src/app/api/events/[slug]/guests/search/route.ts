@@ -20,13 +20,15 @@ export async function GET(req: NextRequest, context: RouteContext) {
     const cleanSlug = normalizeSlug(decodeURIComponent(slug || "").toLowerCase().trim()).replace(/^slug-/, "");
     const searchParams = req.nextUrl.searchParams;
     const query = (searchParams.get("q") || "").trim();
+    const directId = (
+      searchParams.get("id") ||
+      searchParams.get("guest") ||
+      searchParams.get("guest_id") ||
+      ""
+    ).trim();
 
     if (!cleanSlug) {
       return NextResponse.json({ error: "Slug inválido" }, { status: 400 });
-    }
-
-    if (!query || query.length < 2) {
-      return NextResponse.json([], { status: 200 });
     }
 
     // Buscar evento
@@ -37,6 +39,43 @@ export async function GET(req: NextRequest, context: RouteContext) {
 
     if (!evento) {
       return NextResponse.json({ error: "Evento no encontrado" }, { status: 404 });
+    }
+
+    // 1. Si viene búsqueda directa por ID de invitado (?id=UUID o ?guest=UUID)
+    if (directId) {
+      const guest = await prisma.guest.findFirst({
+        where: {
+          id: directId,
+          eventId: evento.id,
+        },
+        select: {
+          id: true,
+          name: true,
+          maxPax: true,
+          status: true,
+        },
+      });
+
+      if (!guest) {
+        return NextResponse.json(
+          { error: "Invitado no encontrado con ese identificador" },
+          { status: 404 }
+        );
+      }
+
+      return NextResponse.json({
+        id: guest.id,
+        name: guest.name,
+        max_pax: guest.maxPax,
+        status: guest.status,
+      }, {
+        status: 200,
+        headers: { "Cache-Control": "no-store, max-age=0" },
+      });
+    }
+
+    if (!query || query.length < 2) {
+      return NextResponse.json([], { status: 200 });
     }
 
     // Buscar coincidencias parciales case-insensitive (ILIKE %query%)

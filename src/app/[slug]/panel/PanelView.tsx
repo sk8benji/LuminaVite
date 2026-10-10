@@ -19,6 +19,9 @@ import {
   AlertCircle,
   Loader2,
   UserCheck,
+  Link2,
+  MessageSquare,
+  Share2,
 } from "lucide-react";
 
 export interface GuestItem {
@@ -81,6 +84,7 @@ export default function PanelView({
   const [activeTab, setActiveTab] = useState<"guests" | "rsvps">("guests");
 
   const [copiedLink, setCopiedLink] = useState(false);
+  const [copiedGuestId, setCopiedGuestId] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [manualKeyInput, setManualKeyInput] = useState("");
   const [submittingKey, setSubmittingKey] = useState(false);
@@ -91,6 +95,29 @@ export default function PanelView({
       ? "Por favor introduce tu clave de anfitrión."
       : ""
   );
+
+  // Copiar enlace directo personalizado de un invitado (?guest=UUID)
+  const copyGuestLink = (guestId: string) => {
+    const origin = typeof window !== "undefined" ? window.location.origin : "https://clickandlove.app";
+    const url = `${origin}/${slug}?guest=${guestId}`;
+    navigator.clipboard.writeText(url);
+    setCopiedGuestId(guestId);
+    setTimeout(() => setCopiedGuestId(null), 2500);
+  };
+
+  // Enviar invitación personalizada por WhatsApp
+  const sendGuestWhatsApp = (guest: GuestItem) => {
+    const origin = typeof window !== "undefined" ? window.location.origin : "https://clickandlove.app";
+    const guestLink = `${origin}/${slug}?guest=${guest.id}`;
+    const text = encodeURIComponent(
+      `¡Hola ${guest.name}! Queremos compartir este momento contigo. Tienes ${guest.max_pax} pases reservados para nuestro evento. Confirma tu asistencia aquí: ${guestLink}`
+    );
+    const cleanPhone = guest.phone ? guest.phone.replace(/[^0-9]/g, "") : "";
+    const whatsappUrl = cleanPhone
+      ? `https://wa.me/${cleanPhone}?text=${text}`
+      : `https://wa.me/?text=${text}`;
+    window.open(whatsappUrl, "_blank");
+  };
 
   // Formulario rápido para añadir invitado
   const [newGuestName, setNewGuestName] = useState("");
@@ -641,6 +668,28 @@ export default function PanelView({
                           </td>
                           <td className="py-3 px-4 text-right">
                             <div className="flex items-center justify-end gap-1">
+                              <button
+                                onClick={() => copyGuestLink(guest.id)}
+                                title="Copiar enlace personalizado"
+                                className={`p-1.5 rounded-lg transition cursor-pointer ${
+                                  copiedGuestId === guest.id
+                                    ? "text-emerald-700 bg-emerald-50 border border-emerald-200"
+                                    : "text-stone-500 hover:text-[#2C1F1B] hover:bg-[#F5EFE4]"
+                                }`}
+                              >
+                                {copiedGuestId === guest.id ? (
+                                  <Check className="w-3.5 h-3.5" />
+                                ) : (
+                                  <Link2 className="w-3.5 h-3.5" />
+                                )}
+                              </button>
+                              <button
+                                onClick={() => sendGuestWhatsApp(guest)}
+                                title="Enviar invitación por WhatsApp"
+                                className="p-1.5 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg transition cursor-pointer"
+                              >
+                                <MessageSquare className="w-3.5 h-3.5" />
+                              </button>
                               <button
                                 onClick={() => handleStartEdit(guest)}
                                 title="Editar invitado"

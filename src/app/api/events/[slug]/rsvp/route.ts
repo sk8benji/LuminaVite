@@ -1,9 +1,28 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/db";
 import { normalizeSlug } from "@/lib/events";
+import twilio from "twilio";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
+
+function formatE164(phone: string): string | null {
+  const trimmed = phone.trim();
+  if (!trimmed) return null;
+  if (trimmed.startsWith("+")) {
+    const clean = "+" + trimmed.slice(1).replace(/\D/g, "");
+    return clean.length >= 8 ? clean : null;
+  }
+  const digitsOnly = trimmed.replace(/\D/g, "");
+  if (digitsOnly.length === 10) {
+    return `+1${digitsOnly}`;
+  } else if (digitsOnly.length === 11 && digitsOnly.startsWith("1")) {
+    return `+${digitsOnly}`;
+  } else if (digitsOnly.length >= 10) {
+    return `+${digitsOnly}`;
+  }
+  return null;
+}
 
 interface RouteContext {
   params: Promise<{ slug: string }> | { slug: string };
@@ -152,6 +171,34 @@ export async function POST(req: NextRequest, context: RouteContext) {
       }
     } catch (syncErr) {
       console.warn("Aviso: No se pudo sincronizar RsvpRegistro histórico:", syncErr);
+    }
+
+    // Notificación opcional por Twilio SMS (si está configurado)
+    if (status === "attending" && cleanPhone) {
+      try {
+        const accountSid = process.env.TWILIO_ACCOUNT_SID;
+        const authToken = process.env.TWILIO_AUTH_TOKEN;
+        const fromNumber = process.env.TWILIO_PHONE_NUMBER;
+
+        if (accountSid && authToken && fromNumber) {
+          const formattedTo = formatE164(cleanPhone);
+          if (formattedTo) {
+            const client = twilio(accountSid, authToken);
+            const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://clickandlove.app";
+            const eventUrl = `${siteUrl}/${cleanSlug}`;
+            const eventTitle = evento.titulo || "el evento";
+            const bodyText = `¡Confirmación registrada! Hola ${updatedGuest.name}, tus ${finalConfirmedPax} ${finalConfirmedPax === 1 ? "pase está asegurado" : "pases están asegurados"} para ${eventTitle}. Revisa el mapa y detalles aquí: ${eventUrl}`;
+
+            await client.messages.create({
+              body: bodyText,
+              from: fromNumber,
+              to: formattedTo,
+            });
+          }
+        }
+      } catch (twilioErr) {
+        console.warn("Aviso: No se pudo enviar SMS de confirmación con Twilio:", twilioErr);
+      }
     }
 
     return NextResponse.json({
