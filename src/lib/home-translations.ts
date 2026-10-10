@@ -15,6 +15,9 @@ export interface HomeTranslations {
     subtitle: string;
     ctaCatalog: string;
     ctaDemo: string;
+    ctaCreate: string;
+    multiChannelTitle: string;
+    channels: string[];
     phoneBadge1: string;
     phoneBadge2: string;
     phoneBadge3: string;
@@ -23,6 +26,15 @@ export interface HomeTranslations {
     fullscreenDemo: string;
     trustBar: string[];
     metrics: { value: string; label: string }[];
+  };
+  agitation: {
+    pill: string;
+    title: string;
+    subtitle: string;
+    cards: {
+      title: string;
+      text: string;
+    }[];
   };
   interactiveDemoBanner: {
     pill: string;
@@ -151,13 +163,21 @@ export const translations: Record<Language, HomeTranslations> = {
       createBtn: "Crear Invitación",
     },
     hero: {
-      pill: "Papelería Digital de Alta Costura",
-      title1: "Invitaciones digitales interactivas para tu boda o quinceañera",
-      title2: "con confirmación por WhatsApp en tiempo real.",
+      pill: "Invitaciones Digitales Interactivas",
+      title1: "Deja de perseguir a tus invitados",
+      title2: "para saber si van a asistir",
       subtitle:
-        "Olvídate de perseguir invitados por teléfono para saber si van a asistir. Diseños de gala con sobre 3D, música envolvente y control de aforo al instante.",
+        "La plataforma para bodas y quinceañeras con confirmación instantánea, control de mesas y navegación directa al evento.",
       ctaCatalog: "Ver Catálogo de Plantillas",
-      ctaDemo: "Explorar Invitación Demo",
+      ctaDemo: "Ver demo en vivo",
+      ctaCreate: "Crear mi invitación",
+      multiChannelTitle: "Comparte tu enlace por el medio que prefieras:",
+      channels: [
+        "WhatsApp",
+        "Mensaje de Texto (SMS)",
+        "Instagram / Messenger",
+        "Código QR",
+      ],
       phoneBadge1: "SMS Twilio • Confirmado",
       phoneBadge2: "RSVP en vivo • 98% aforo",
       phoneBadge3: "Cero contraseñas • 1 Clic",
@@ -175,6 +195,26 @@ export const translations: Record<Language, HomeTranslations> = {
         { value: "100%", label: "Personalizado a tu Temática" },
         { value: "0", label: "Contraseñas Requeridas" },
         { value: "+1,200", label: "Eventos Inolvidables" },
+      ],
+    },
+    agitation: {
+      pill: "El Costo Oculto",
+      title: "El alto costo del método tradicional",
+      subtitle:
+        "Organizar tu evento con invitaciones en papel genera estrés, descontrol y pérdidas de dinero antes del gran día.",
+      cards: [
+        {
+          title: "Dinero perdido en el banquete",
+          text: "Pagas platos y bebidas por invitados que confirman de palabra pero no asisten o cancelan a última hora.",
+        },
+        {
+          title: "Semanas perdiendo tiempo",
+          text: "Llamadas telefónicas y cadenas interminables de mensajes para saber quién asiste con cuántos acompañantes.",
+        },
+        {
+          title: "Cambios de última hora imposibles",
+          text: "Si cambia la hora de la misa, el salón o la mesa, las invitaciones de papel ya no sirven y causan confusión.",
+        },
       ],
     },
     interactiveDemoBanner: {
@@ -230,31 +270,30 @@ export const translations: Record<Language, HomeTranslations> = {
       ],
     },
     techAutomation: {
-      pill: "Confirmación Inteligente",
-      title: "Control total de confirmaciones sin perseguir a nadie",
-      subtitle:
-        "Olvídate de mandar mensajes uno por uno o llamar familiares. Nuestra plataforma automatiza cada confirmación y actualiza tu lista en tiempo real.",
+      pill: "Solución completa",
+      title: "Todo el control de tu evento en un solo enlace inteligente",
+      subtitle: "Confirmaciones automáticas y organización sin esfuerzo",
       pillars: [
         {
-          title: "Cero contraseñas ni descargas",
+          title: "RSVP y Pases Asignados",
           description:
-            "Tus invitados jamás tendrán que crearse cuentas ni descargar aplicaciones pesadas. Un toque al enlace recibido en WhatsApp y acceden de inmediato.",
-          highlight: "Fricción cero = Máxima tasa de respuesta en las primeras 48 horas.",
-          badge: "Acceso Instantáneo",
+            "Cada invitado recibe un enlace con el número exacto de asientos permitidos.",
+          highlight: "Control exacto por familia sin invitados sorpresa ni colados.",
+          badge: "Pases Asignados",
         },
         {
-          title: "Confirmación SMS instantánea vía Twilio",
+          title: "Ruta directa en Maps y Waze",
           description:
-            "Al confirmar asistencia, el invitado recibe automáticamente un mensaje SMS oficial con su número de pases y botón para agendar en su calendario.",
-          highlight: "Evita ausencias de última hora y asegura el conteo de tu salón.",
-          badge: "Twilio Cloud SMS",
+            "El invitado toca un botón y abre la navegación paso a paso hacia la iglesia o el salón.",
+          highlight: "Navegación GPS paso a paso directa sin perderse en el camino.",
+          badge: "Maps & Waze",
         },
         {
-          title: "Panel privado en tiempo real para la familia",
+          title: "Organización de Mesas en Vivo",
           description:
-            "Los anfitriones reciben un enlace privado exclusivo para consultar al instante quién asiste, cuántos pases están confirmados y descargar la lista en Excel.",
-          highlight: "Exportación a Excel en un clic para entregar a tu salón o banquete.",
-          badge: "Magic Link Seguro",
+            "Sabes en tiempo real qué mesas están llenas y cuáles quedan libres.",
+          highlight: "Conteo en vivo y lista descargable en Excel para el banquete.",
+          badge: "Mesas en Vivo",
         },
       ],
     },
@@ -264,14 +303,14 @@ export const translations: Record<Language, HomeTranslations> = {
       subtitle:
         "Calcula con exactitud cuántas horas de llamadas te ahorras y cuánto dinero proteges al evitar pagar banquetes por invitados que no asisten.",
       guestsLabel: "Número estimado de invitados:",
-      stat1Label: "Horas de WhatsApp Ahorradas",
-      stat1Desc: "Sin enviar recordatorios manuales uno por uno ni perseguir confirmaciones.",
-      stat2Label: "Ahorro en Papelería Impresa",
-      stat2Desc: "Ahorro directo en impresión de tarjetas físicas, caligrafía y envíos.",
-      stat3Label: "Tasa de Respuesta Confirmada",
-      stat3Desc: "Frente al 48% habitual de las invitaciones en papel tradicionales.",
-      stat4Label: "Control de Mesas en 1 Clic",
-      stat4Desc: "Descarga la lista oficial de catering en formato Excel (.CSV) en cualquier momento.",
+      stat1Label: "horas ahorradas",
+      stat1Desc: "en llamadas manuales",
+      stat2Label: "USD ahorrados",
+      stat2Desc: "en platos no desperdiciados",
+      stat3Label: "control de pases",
+      stat3Desc: "sin invitados sorpresa",
+      stat4Label: "impresiones desechadas",
+      stat4Desc: "cero gasto en reimpresión",
       venuesNote: "¿Administras un salón de banquetes o eres Wedding Planner profesional?",
       venuesLink: "Conoce nuestro programa especial de licencias y alianzas para salones",
     },
@@ -279,29 +318,29 @@ export const translations: Record<Language, HomeTranslations> = {
       pill: "Comparativa Directa",
       title: "Método Tradicional vs. Click & Love",
       subtitle:
-        "Compara la experiencia y el ahorro que ofrece nuestra plataforma frente a los métodos convencionales.",
-      colCompetitors: "Invitaciones en Papel / Tradicional",
-      colClickAndLove: "Click & Love (Invitación Digital)",
+        "Compara la experiencia y el control que ofrece nuestra plataforma frente a los métodos convencionales.",
+      colCompetitors: "Invitación en Papel Tradicional",
+      colClickAndLove: "Click & Love",
       rows: [
         {
-          feature: "Costo de Impresión y Envíos",
-          competitors: "Gastos elevados en papel, caligrafía, sobres y envíos postales",
-          clickAndLove: "Un solo pago accesible con envíos ilimitados por WhatsApp",
+          feature: "Confirmación de asistencia",
+          competitors: "Manual por llamada o mensaje",
+          clickAndLove: "Automática en tiempo real",
         },
         {
-          feature: "Confirmación en Tiempo Real",
-          competitors: "Llamar a cada invitado o esperar respuestas manuales dispersas",
-          clickAndLove: "Confirmación en 1 clic con conteo automático de pases en vivo",
+          feature: "Pases y acompañantes",
+          competitors: "Difícil de limitar",
+          clickAndLove: "Control exacto por familia",
         },
         {
-          feature: "Cambios de Último Minuto",
-          competitors: "Imposible modificar horarios o direcciones sin reimprimir",
-          clickAndLove: "Edición instantánea de horarios, mapa y datos sin costo extra",
+          feature: "Ubicación y llegada",
+          competitors: "Dirección escrita estática",
+          clickAndLove: "Ruta directa con Waze y Google Maps",
         },
         {
-          feature: "Fotos y Recuerdos Compartidos",
-          competitors: "Fotos dispersas en chats familiares que se pierden con el tiempo",
-          clickAndLove: "Álbum colaborativo donde los invitados suben fotos de la fiesta",
+          feature: "Cambios de horario o salón",
+          competitors: "Requiere reimpresión",
+          clickAndLove: "Actualización instantánea en el enlace",
         },
       ],
     },
@@ -439,13 +478,21 @@ export const translations: Record<Language, HomeTranslations> = {
       createBtn: "Create Invitation",
     },
     hero: {
-      pill: "Haute Couture Digital Stationery",
-      title1: "Your celebration deserves",
-      title2: "a triumphal entrance.",
+      pill: "Interactive Digital Invitations",
+      title1: "Stop chasing your guests",
+      title2: "to find out if they will attend",
       subtitle:
-        "Luxury web invitations with real-time RSVP confirmation and shared guest photo albums.",
+        "The platform for weddings and quinceañeras with instant confirmation, table management, and direct GPS navigation.",
       ctaCatalog: "Explore Collections",
-      ctaDemo: "Test Interactive Demo",
+      ctaDemo: "See live demo",
+      ctaCreate: "Create my invitation",
+      multiChannelTitle: "Share your link through whichever channel you prefer:",
+      channels: [
+        "WhatsApp",
+        "Text Message (SMS)",
+        "Instagram / Messenger",
+        "QR Code",
+      ],
       phoneBadge1: "Twilio SMS • Confirmed",
       phoneBadge2: "Live RSVP • 98% confirmed",
       phoneBadge3: "Zero Passwords • 1 Click",
@@ -463,6 +510,26 @@ export const translations: Record<Language, HomeTranslations> = {
         { value: "100%", label: "Tailored to Your Theme" },
         { value: "0", label: "Passwords Required" },
         { value: "+1,200", label: "Celebrated Events" },
+      ],
+    },
+    agitation: {
+      pill: "The Hidden Cost",
+      title: "The high cost of the traditional method",
+      subtitle:
+        "Planning your celebration with paper invitations causes stress, chaos, and wasted budget before your big day.",
+      cards: [
+        {
+          title: "Money wasted on catering",
+          text: "You pay for meals and drinks for guests who verbally confirm but don't show up or cancel last minute.",
+        },
+        {
+          title: "Weeks wasted on the phone",
+          text: "Endless phone calls and texting chains just to know who is attending and with how many plus-ones.",
+        },
+        {
+          title: "Impossible last-minute changes",
+          text: "If the ceremony time, venue, or table changes, paper invitations are useless and cause confusion.",
+        },
       ],
     },
     interactiveDemoBanner: {
@@ -518,48 +585,47 @@ export const translations: Record<Language, HomeTranslations> = {
       ],
     },
     techAutomation: {
-      pill: "Technical Infrastructure",
-      title: "Highlighting Technical Automation, Not Basic Icons",
-      subtitle:
-        "Competitors list generic icons for photos and maps. We deliver modern SaaS engineering so your celebration operates effortlessly.",
+      pill: "Complete Solution",
+      title: "Full control of your event in one smart link",
+      subtitle: "Automatic RSVPs and effortless guest management",
       pillars: [
         {
-          title: "Zero Passwords for Guests",
+          title: "RSVP & Assigned Passes",
           description:
-            "Guests never need to download heavy applications, create accounts, or remember passwords. A single tap on the link received via WhatsApp or SMS opens the full experience.",
-          highlight: "Zero friction = Maximum RSVP confirmation rate within the first 48 hours.",
-          badge: "Instant Access",
+            "Each guest receives a link with the exact number of allocated seats.",
+          highlight: "Exact guest count with zero uninvited plus-ones.",
+          badge: "Assigned Passes",
         },
         {
-          title: "Instant SMS Confirmation via Twilio",
+          title: "Direct Route on Maps & Waze",
           description:
-            "Upon RSVP confirmation, each guest immediately receives an official SMS message summarizing their passes and a button to add the event to Google Calendar or Apple Calendar (.ics).",
-          highlight: "Reduces absentminded guests by 94% on the day of the celebration.",
-          badge: "Twilio Cloud SMS",
+            "Guests tap one button to open step-by-step navigation to the church or banquet hall.",
+          highlight: "1-tap step-by-step navigation directly to the exact venue.",
+          badge: "Maps & Waze",
         },
         {
-          title: "Private Real-Time Dashboard with Magic Link",
+          title: "Live Table Seating Management",
           description:
-            "Hosts and families receive an encrypted Magic Link. Monitor live confirmations, guest counts (adults & children), and dietary preferences from any device.",
-          highlight: "1-Click Excel export and zero repetitive phone calls asking who is attending.",
-          badge: "Secure Magic Link",
+            "Know in real time which tables are filled and which seats remain free.",
+          highlight: "Live count and 1-click Excel export for your catering staff.",
+          badge: "Live Tables",
         },
       ],
     },
     calculator: {
       pill: "Capacity & ROI Calculator",
-      title: "Accurate Table Control and Zero Phone Calls",
+      title: "Save time and stop paying for no-show guest plates",
       subtitle:
-        "See the direct savings in planning hours, physical stationery costs, and guest coordination for your celebration or event venue.",
+        "Calculate the exact hours and money you protect by avoiding catering charges for guests who don't attend.",
       guestsLabel: "Estimated number of guests:",
-      stat1Label: "WhatsApp Hours Saved",
-      stat1Desc: "No more sending manual reminders one-by-one or chasing down RSVPs.",
-      stat2Label: "Physical Stationery Savings",
-      stat2Desc: "Direct savings on paper card printing, calligraphy, postage, and envelopes.",
-      stat3Label: "Confirmed Response Rate",
-      stat3Desc: "Compared to the typical 48% response rate of traditional paper stationery.",
-      stat4Label: "1-Click Table Seating Export",
-      stat4Desc: "Download the official catering list as an Excel (.CSV) spreadsheet anytime.",
+      stat1Label: "hours saved",
+      stat1Desc: "on manual calls",
+      stat2Label: "USD saved",
+      stat2Desc: "on wasted catering plates",
+      stat3Label: "pass control",
+      stat3Desc: "zero surprise uninvited guests",
+      stat4Label: "wasted paper prints",
+      stat4Desc: "zero reprinting fees",
       venuesNote: "Are you an event venue manager or a professional Wedding Planner?",
       venuesLink: "Learn about our volume partner packages for banquet halls & venues",
     },
@@ -568,28 +634,28 @@ export const translations: Record<Language, HomeTranslations> = {
       title: "Traditional Method vs. Click & Love",
       subtitle:
         "Contrast the outdated workflow of standard solutions with the bespoke luxury of our digital platform.",
-      colCompetitors: "Traditional Method / Competitors",
-      colClickAndLove: "Click & Love (Haute Couture)",
+      colCompetitors: "Traditional Paper Invitation",
+      colClickAndLove: "Click & Love",
       rows: [
         {
-          feature: "Print & Shipping Costs",
-          competitors: "$300 - $600 USD in paper printing, envelopes, and manual courier deliveries",
-          clickAndLove: "One-time digital fee, unlimited guests, zero paper waste, and instant delivery",
+          feature: "Attendance confirmation",
+          competitors: "Manual via calls or texts",
+          clickAndLove: "Automatic in real-time",
         },
         {
-          feature: "Real-Time RSVP Confirmation",
-          competitors: "Chasing down each guest by phone or waiting for scattered text messages",
-          clickAndLove: "1-Click confirmation with live automated headcount and pass counter",
+          feature: "Passes & plus-ones",
+          competitors: "Hard to limit",
+          clickAndLove: "Exact control per family",
         },
         {
-          feature: "Last-Minute Schedule Changes",
-          competitors: "Impossible to change schedules or addresses without costly reprints",
-          clickAndLove: "Instant edits to schedules, map pins, and dress code at zero extra cost",
+          feature: "Location & directions",
+          competitors: "Static printed address",
+          clickAndLove: "Direct route with Waze and Google Maps",
         },
         {
-          feature: "Shared Photo Memories",
-          competitors: "Photos lost across private chat threads that disappear over time",
-          clickAndLove: "Collaborative live album where guests upload real-time party memories",
+          feature: "Time or venue changes",
+          competitors: "Requires reprinting",
+          clickAndLove: "Instant link update with zero cost",
         },
       ],
     },

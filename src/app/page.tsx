@@ -23,6 +23,12 @@ import {
   ChevronRight,
   Sliders,
   Loader2,
+  MessageCircle,
+  Send,
+  QrCode,
+  AlertCircle,
+  PhoneCall,
+  Clock,
 } from "lucide-react";
 import { Language, translations } from "@/lib/home-translations";
 import InteractivePhoneMockup from "@/components/home/InteractivePhoneMockup";
@@ -174,34 +180,66 @@ export default function HomePage() {
           {/* Pill superior de exclusividad */}
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#C5A059]/40 bg-[#F5EFE4] mb-6 backdrop-blur-md">
             <span className="w-1.5 h-1.5 rounded-full bg-[#C5A059] animate-pulse" />
-            <span className="font-['Cinzel'] text-[10px] sm:text-[11px] tracking-[0.3em] uppercase text-[#2C1F1B] font-bold">
+            <span className="font-['Cinzel'] text-[10px] sm:text-[11px] tracking-[0.2em] uppercase text-[#2C1F1B] font-bold">
               {t.hero.pill}
             </span>
           </div>
 
           {/* Encabezado Principal en Cormorant Garamond / Playfair Display de Alto Peso */}
-          <h1 className="font-serif-roman text-3xl sm:text-5xl lg:text-6xl font-bold tracking-normal text-[#2C1F1B] max-w-5xl leading-[1.2]">
-            {t.hero.title1}
+          <h1 className="font-serif-roman text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-[#2C1F1B] max-w-5xl leading-[1.2]">
+            {t.hero.title1}{" "}
             <span className="block text-transparent bg-clip-text bg-gradient-to-r from-[#9C7736] via-[#C5A059] to-[#2C1F1B] mt-2">
               {t.hero.title2}
             </span>
           </h1>
 
           {/* Subtítulo enfocado en dolor y beneficios en Alto Contraste */}
-          <p className="font-['Montserrat'] text-sm sm:text-base text-[#2B2B2B] max-w-3xl mt-6 leading-relaxed font-normal">
+          <p className="font-['Montserrat'] text-sm sm:text-base text-[#1F2937] max-w-3xl mt-6 leading-relaxed font-normal">
             {t.hero.subtitle}
           </p>
 
-          {/* CTA Principal de Impacto */}
-          <div className="mt-8 flex justify-center w-full">
+          {/* Botones de Acción (CTAs) */}
+          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4 w-full max-w-xl">
             <button
               onClick={() => handleOpenDemo("mariposas-xv")}
-              className="w-full sm:w-auto px-10 py-4.5 rounded-2xl bg-gradient-to-r from-[#C5A059] via-[#EED3A1] to-[#C5A059] text-[#2C1F1B] font-['Cinzel'] text-xs sm:text-sm tracking-[0.25em] uppercase font-bold hover:brightness-105 active:scale-95 transition-all shadow-[0_8px_30px_rgba(197,160,89,0.35)] hover:shadow-[0_12px_40px_rgba(197,160,89,0.5)] flex items-center justify-center gap-3 group border border-[#EED3A1]"
+              className="w-full sm:w-auto px-8 sm:px-9 py-4 rounded-2xl bg-gradient-to-r from-[#C5A059] via-[#EED3A1] to-[#C5A059] text-[#2C1F1B] font-['Cinzel'] text-xs sm:text-sm tracking-[0.15em] uppercase font-bold hover:brightness-105 active:scale-95 transition-all shadow-[0_8px_30px_rgba(197,160,89,0.35)] hover:shadow-[0_12px_40px_rgba(197,160,89,0.5)] flex items-center justify-center gap-2.5 border border-[#EED3A1] group"
             >
               <Sparkles className="w-4 h-4 text-[#2C1F1B] animate-pulse" />
               <span>{t.hero.ctaDemo}</span>
               <ArrowRight className="w-4 h-4 text-[#2C1F1B] group-hover:translate-x-1 transition-transform" />
             </button>
+
+            <a
+              href="#precios"
+              className="w-full sm:w-auto px-8 sm:px-9 py-4 rounded-2xl bg-white border-2 border-[#C5A059] text-[#2C1F1B] font-['Cinzel'] text-xs sm:text-sm tracking-[0.15em] uppercase font-bold hover:bg-[#F5EFE4] active:scale-95 transition-all shadow-[0_4px_18px_rgba(44,31,27,0.06)] flex items-center justify-center gap-2"
+            >
+              <span>{t.hero.ctaCreate}</span>
+            </a>
+          </div>
+
+          {/* Fila Multicanal (Envío por cualquier medio) */}
+          <div className="mt-7 flex flex-col items-center gap-2.5">
+            <span className="font-['Montserrat'] text-xs font-semibold text-[#374151]">
+              {t.hero.multiChannelTitle}
+            </span>
+            <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-2.5">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-['Montserrat'] font-semibold shadow-sm">
+                <MessageCircle className="w-3.5 h-3.5 text-emerald-600" />
+                <span>{t.hero.channels[0]}</span>
+              </div>
+              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-blue-50 border border-blue-200 text-blue-800 text-xs font-['Montserrat'] font-semibold shadow-sm">
+                <Smartphone className="w-3.5 h-3.5 text-blue-600" />
+                <span>{t.hero.channels[1]}</span>
+              </div>
+              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-pink-50 border border-pink-200 text-pink-800 text-xs font-['Montserrat'] font-semibold shadow-sm">
+                <Send className="w-3.5 h-3.5 text-pink-600" />
+                <span>{t.hero.channels[2]}</span>
+              </div>
+              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-50 border border-amber-200 text-amber-900 text-xs font-['Montserrat'] font-semibold shadow-sm">
+                <QrCode className="w-3.5 h-3.5 text-amber-700" />
+                <span>{t.hero.channels[3]}</span>
+              </div>
+            </div>
           </div>
 
           {/* Visual Central: Mockup Interactivo del Teléfono con Sobre y Confeti sobre fondo claro */}
@@ -229,11 +267,91 @@ export default function HomePage() {
                   <div className="font-['Montserrat'] text-2xl sm:text-3xl font-bold text-[#2C1F1B] tracking-tight">
                     {m.value}
                   </div>
-                  <div className="font-['Montserrat'] text-[11px] text-[#2B2B2B] mt-1 font-medium">
+                  <div className="font-['Montserrat'] text-[11px] text-[#374151] mt-1 font-semibold">
                     {m.label}
                   </div>
                 </div>
               ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ============================================================== */}
+      {/* 2.5 SECCIÓN DE AGITACIÓN (EL COSTO DEL MÉTODO TRADICIONAL - FÓRMULA PAS) */}
+      {/* ============================================================== */}
+      <section className="relative py-20 px-4 bg-[#FAF8F5] border-t border-[#E8E3D9] select-none">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center max-w-3xl mx-auto mb-14">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-red-200 bg-red-50 mb-3 backdrop-blur-md">
+              <AlertCircle className="w-3.5 h-3.5 text-red-600" />
+              <span className="font-['Cinzel'] text-[10px] tracking-[0.2em] uppercase text-red-900 font-bold">
+                {t.agitation.pill}
+              </span>
+            </div>
+
+            <h2 className="font-serif-roman text-3xl sm:text-5xl font-bold tracking-tight text-[#2C1F1B] mb-3">
+              {t.agitation.title}
+            </h2>
+
+            <p className="font-['Montserrat'] text-sm sm:text-base text-[#374151] max-w-2xl mx-auto leading-relaxed">
+              {t.agitation.subtitle}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+            {/* Card 1: Dinero perdido en el banquete */}
+            <div className="relative rounded-3xl bg-white border border-red-200/80 p-8 flex flex-col justify-between shadow-[0_10px_30px_rgba(239,68,68,0.06)] hover:border-red-300 transition-all duration-300 group">
+              <div>
+                <div className="w-12 h-12 rounded-2xl bg-red-50 border border-red-200 text-red-600 flex items-center justify-center mb-6 group-hover:scale-105 transition-transform">
+                  <AlertCircle className="w-6 h-6" />
+                </div>
+                <h3 className="font-serif-roman text-xl sm:text-2xl font-bold text-[#1F2937] mb-3 leading-snug">
+                  {t.agitation.cards[0].title}
+                </h3>
+                <p className="font-['Montserrat'] text-xs sm:text-sm text-[#374151] leading-relaxed font-normal">
+                  {t.agitation.cards[0].text}
+                </p>
+              </div>
+              <div className="mt-6 pt-4 border-t border-red-100 flex items-center gap-2 text-[11px] font-['Montserrat'] font-bold text-red-700">
+                <span>✕ Desperdicio de presupuesto en platos vacíos</span>
+              </div>
+            </div>
+
+            {/* Card 2: Semanas perdiendo tiempo */}
+            <div className="relative rounded-3xl bg-white border border-amber-200/80 p-8 flex flex-col justify-between shadow-[0_10px_30px_rgba(245,158,11,0.06)] hover:border-amber-300 transition-all duration-300 group">
+              <div>
+                <div className="w-12 h-12 rounded-2xl bg-amber-50 border border-amber-200 text-amber-700 flex items-center justify-center mb-6 group-hover:scale-105 transition-transform">
+                  <Clock className="w-6 h-6" />
+                </div>
+                <h3 className="font-serif-roman text-xl sm:text-2xl font-bold text-[#1F2937] mb-3 leading-snug">
+                  {t.agitation.cards[1].title}
+                </h3>
+                <p className="font-['Montserrat'] text-xs sm:text-sm text-[#374151] leading-relaxed font-normal">
+                  {t.agitation.cards[1].text}
+                </p>
+              </div>
+              <div className="mt-6 pt-4 border-t border-amber-100 flex items-center gap-2 text-[11px] font-['Montserrat'] font-bold text-amber-800">
+                <span>✕ Semanas agotadoras llamando a invitados</span>
+              </div>
+            </div>
+
+            {/* Card 3: Cambios de última hora imposibles */}
+            <div className="relative rounded-3xl bg-white border border-[#E8E3D9] p-8 flex flex-col justify-between shadow-[0_10px_30px_rgba(44,31,27,0.05)] hover:border-[#C5A059]/60 transition-all duration-300 group">
+              <div>
+                <div className="w-12 h-12 rounded-2xl bg-[#F5EFE4] border border-[#C5A059]/30 text-[#C5A059] flex items-center justify-center mb-6 group-hover:scale-105 transition-transform">
+                  <PhoneCall className="w-6 h-6" />
+                </div>
+                <h3 className="font-serif-roman text-xl sm:text-2xl font-bold text-[#1F2937] mb-3 leading-snug">
+                  {t.agitation.cards[2].title}
+                </h3>
+                <p className="font-['Montserrat'] text-xs sm:text-sm text-[#374151] leading-relaxed font-normal">
+                  {t.agitation.cards[2].text}
+                </p>
+              </div>
+              <div className="mt-6 pt-4 border-t border-[#E8E3D9] flex items-center gap-2 text-[11px] font-['Montserrat'] font-bold text-[#4B5563]">
+                <span>✕ Papel obsoleto si cambia hora o salón</span>
+              </div>
             </div>
           </div>
         </div>
@@ -511,14 +629,15 @@ export default function HomePage() {
         {/* Tabla Comparativa en Modo Claro de Lujo */}
         <div className="rounded-3xl bg-white border border-[#E8E3D9] overflow-hidden shadow-[0_15px_45px_rgba(44,31,27,0.06)]">
           <div className="grid grid-cols-1 md:grid-cols-12 bg-[#F5EFE4] border-b border-[#E8E3D9] p-5 text-xs font-['Cinzel'] uppercase tracking-wider font-bold">
-            <div className="md:col-span-4 text-[#2C1F1B]">
+            <div className="md:col-span-4 text-[#1F2937]">
               {lang === "es" ? "Criterio Clave" : "Key Criteria"}
             </div>
-            <div className="md:col-span-4 text-[#8C8077] mt-2 md:mt-0">
+            <div className="md:col-span-4 text-[#4B5563] mt-2 md:mt-0">
               {t.comparison.colCompetitors}
             </div>
-            <div className="md:col-span-4 text-[#C5A059] font-bold mt-2 md:mt-0">
-              {t.comparison.colClickAndLove}
+            <div className="md:col-span-4 text-[#9C7736] font-bold mt-2 md:mt-0 flex items-center gap-1.5">
+              <span>✦</span>
+              <span>{t.comparison.colClickAndLove}</span>
             </div>
           </div>
 
@@ -528,13 +647,13 @@ export default function HomePage() {
                 key={rIdx}
                 className="grid grid-cols-1 md:grid-cols-12 p-5 text-xs font-['Montserrat'] items-center hover:bg-[#FAF8F5] transition"
               >
-                <div className="md:col-span-4 font-serif-roman text-base font-bold text-[#2C1F1B] mb-2 md:mb-0">
+                <div className="md:col-span-4 font-['Montserrat'] text-sm sm:text-base font-bold text-[#1F2937] mb-2 md:mb-0">
                   {row.feature}
                 </div>
-                <div className="md:col-span-4 text-[#8C8077] pr-4 line-through opacity-80 mb-2 md:mb-0">
+                <div className="md:col-span-4 text-[#4B5563] font-medium pr-4 line-through opacity-90 mb-2 md:mb-0">
                   ✕ {row.competitors}
                 </div>
-                <div className="md:col-span-4 text-[#2C1F1B] font-semibold flex items-start gap-2">
+                <div className="md:col-span-4 text-[#111827] font-semibold flex items-start gap-2">
                   <span className="w-4 h-4 rounded-full bg-[#C5A059] text-white flex items-center justify-center text-[10px] font-bold flex-shrink-0 mt-0.5">
                     ✓
                   </span>
@@ -776,22 +895,22 @@ export default function HomePage() {
               </ul>
             </div>
 
-            {/* BOTÓN CON CONTRASTE SUPREMO RESPECTO AL BLANCO DE LA TARJETA */}
+            {/* BOTÓN DESTACADO: FONDO DORADO SÓLIDO #C5A880 CON TEXTO OSCURO #1A1A1A PARA MÁXIMO CONTRASTE */}
             <button
               onClick={() => handleCheckout("signature")}
               disabled={checkoutLoading !== null}
-              className="mt-8 w-full py-4 px-4 rounded-xl bg-[#1A1A1A] hover:bg-black text-[#FAF8F5] border border-[#C5A059]/60 font-['Cinzel'] text-xs tracking-[0.25em] uppercase font-bold active:scale-95 transition-all shadow-[0_10px_25px_rgba(0,0,0,0.35)] text-center flex items-center justify-center gap-2 disabled:opacity-50 group hover:shadow-[0_12px_30px_rgba(197,160,89,0.35)]"
+              className="mt-8 w-full py-4 px-4 rounded-xl bg-[#C5A880] hover:bg-[#B39366] text-[#1A1A1A] font-['Cinzel'] text-xs tracking-[0.2em] uppercase font-extrabold active:scale-95 transition-all shadow-[0_10px_25px_rgba(197,168,128,0.45)] text-center flex items-center justify-center gap-2 disabled:opacity-50 group hover:shadow-[0_12px_30px_rgba(197,168,128,0.6)]"
             >
               {checkoutLoading === "signature" ? (
                 <>
-                  <Loader2 className="w-4 h-4 animate-spin text-[#EED3A1]" />
+                  <Loader2 className="w-4 h-4 animate-spin text-[#1A1A1A]" />
                   <span>Procesando Reserva...</span>
                 </>
               ) : (
                 <>
-                  <span className="text-[#EED3A1] group-hover:text-white transition-colors">✦</span>
+                  <span className="text-[#1A1A1A]">✦</span>
                   <span>{t.pricing.plans[1].cta}</span>
-                  <span className="text-[#EED3A1] group-hover:text-white transition-colors">✦</span>
+                  <span className="text-[#1A1A1A]">✦</span>
                 </>
               )}
             </button>

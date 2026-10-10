@@ -74,7 +74,7 @@ export default function InteractivePhoneMockup({
         <button
           onClick={() => {
             setActiveTab("butterfly");
-            setIsEnvelopeOpen(false);
+            setIsEnvelopeOpen(true);
           }}
           className={`px-3.5 py-1.5 rounded-full text-[10px] font-['Cinzel'] tracking-wider uppercase transition-all ${
             activeTab === "butterfly"
@@ -87,7 +87,7 @@ export default function InteractivePhoneMockup({
         <button
           onClick={() => {
             setActiveTab("rose");
-            setIsEnvelopeOpen(false);
+            setIsEnvelopeOpen(true);
           }}
           className={`px-3.5 py-1.5 rounded-full text-[10px] font-['Cinzel'] tracking-wider uppercase transition-all ${
             activeTab === "rose"
@@ -100,7 +100,7 @@ export default function InteractivePhoneMockup({
         <button
           onClick={() => {
             setActiveTab("chateau");
-            setIsEnvelopeOpen(false);
+            setIsEnvelopeOpen(true);
           }}
           className={`px-3.5 py-1.5 rounded-full text-[10px] font-['Cinzel'] tracking-wider uppercase transition-all ${
             activeTab === "chateau"
@@ -288,10 +288,14 @@ export default function InteractivePhoneMockup({
                 <div className="w-full pt-1">
                   <button
                     onClick={() => onOpenModal(currentSlug)}
-                    className="w-full py-3 rounded-xl bg-gradient-to-r from-[#C5A059] to-[#EED3A1] text-[#2C1F1B] font-['Cinzel'] text-[11px] tracking-[0.2em] uppercase font-bold shadow-lg flex items-center justify-center gap-2 hover:brightness-110 active:scale-95 transition"
+                    className="w-full py-3 px-2 rounded-xl bg-gradient-to-r from-[#C5A059] via-[#EED3A1] to-[#C5A059] text-[#2C1F1B] font-['Cinzel'] text-[10px] sm:text-[11px] tracking-wider uppercase font-bold shadow-lg flex items-center justify-center gap-1.5 hover:brightness-110 active:scale-95 transition"
                   >
-                    <span>{lang === "es" ? "Confirmar Asistencia (RSVP)" : "Confirm Attendance (RSVP)"}</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
+                    <span>
+                      {lang === "es"
+                        ? "Confirmar asistencia (2 pases asignados)"
+                        : "Confirm attendance (2 passes assigned)"}
+                    </span>
+                    <ArrowRight className="w-3.5 h-3.5 flex-shrink-0" />
                   </button>
                 </div>
               </div>

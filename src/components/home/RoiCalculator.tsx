@@ -12,10 +12,8 @@ export default function RoiCalculator({ lang }: RoiCalculatorProps) {
   const [guests, setGuests] = useState(150);
   const t = translations[lang].calculator;
 
-  const hoursSaved = Math.round(guests * 0.22);
+  const hoursSaved = Math.round(guests * 0.12);
   const moneySaved = Math.round(guests * 3.5);
-  const estimatedTables = Math.ceil(guests / 10);
-  const confirmedAttendees = Math.round(guests * 0.96);
 
   return (
     <section className="relative py-20 px-4 bg-[#FAF8F5] text-[#2C1F1B] overflow-hidden select-none border-t border-b border-[#E8E3D9]">
@@ -27,16 +25,16 @@ export default function RoiCalculator({ lang }: RoiCalculatorProps) {
         <div className="text-center max-w-3xl mx-auto mb-14">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[#C5A059]/40 bg-[#F5EFE4] mb-3 backdrop-blur-md">
             <Sparkles className="w-3.5 h-3.5 text-[#C5A059]" />
-            <span className="font-['Cinzel'] text-[10px] tracking-[0.3em] uppercase text-[#2C1F1B] font-bold">
+            <span className="font-['Cinzel'] text-[10px] tracking-[0.25em] uppercase text-[#2C1F1B] font-bold">
               {t.pill}
             </span>
           </div>
 
-          <h2 className="font-['Cinzel'] text-3xl sm:text-5xl font-bold tracking-tight text-[#2C1F1B] mb-3">
+          <h2 className="font-serif-roman text-3xl sm:text-5xl font-bold tracking-tight text-[#2C1F1B] mb-3">
             {t.title}
           </h2>
 
-          <p className="font-['Montserrat'] text-xs sm:text-sm text-[#5E534C] max-w-xl mx-auto leading-relaxed">
+          <p className="font-['Montserrat'] text-xs sm:text-sm text-[#374151] max-w-xl mx-auto leading-relaxed">
             {t.subtitle}
           </p>
         </div>
@@ -50,10 +48,10 @@ export default function RoiCalculator({ lang }: RoiCalculatorProps) {
                 {t.guestsLabel}
               </span>
               <div className="flex items-baseline gap-1">
-                <span className="font-['Cinzel'] text-4xl sm:text-5xl font-bold text-[#2C1F1B]">
+                <span className="font-['Montserrat'] text-4xl sm:text-5xl font-extrabold text-[#2C1F1B]">
                   {guests}
                 </span>
-                <span className="font-['Montserrat'] text-xs text-[#8C8077] uppercase font-semibold">
+                <span className="font-['Montserrat'] text-xs text-[#374151] uppercase font-bold">
                   {lang === "es" ? "Personas" : "Guests"}
                 </span>
               </div>
@@ -69,7 +67,7 @@ export default function RoiCalculator({ lang }: RoiCalculatorProps) {
               className="w-full h-2.5 bg-[#E8E3D9] rounded-lg appearance-none cursor-pointer accent-[#C5A059]"
             />
 
-            <div className="flex justify-between text-[11px] font-['Montserrat'] text-[#8C8077] mt-2 font-medium">
+            <div className="flex justify-between text-[11px] font-['Montserrat'] text-[#374151] mt-2 font-semibold">
               <span>50 {lang === "es" ? "invitados" : "guests"}</span>
               <span>250 {lang === "es" ? "invitados" : "guests"}</span>
               <span>500 {lang === "es" ? "invitados" : "guests"}</span>
@@ -84,13 +82,13 @@ export default function RoiCalculator({ lang }: RoiCalculatorProps) {
                 <Clock className="w-5 h-5" />
               </div>
               <div>
-                <div className="font-['Cinzel'] text-3xl sm:text-4xl font-bold text-[#2C1F1B] mb-1">
-                  ~{hoursSaved} hrs
+                <div className="font-['Montserrat'] text-2xl sm:text-3xl font-extrabold text-[#2C1F1B] mb-1">
+                  {hoursSaved} hrs
                 </div>
-                <h4 className="font-['Cinzel'] text-xs uppercase tracking-wider text-[#2C1F1B] font-bold mb-2">
+                <h4 className="font-['Montserrat'] text-xs uppercase tracking-wider text-[#2C1F1B] font-bold mb-1">
                   {t.stat1Label}
                 </h4>
-                <p className="font-['Montserrat'] text-xs text-[#5E534C] leading-relaxed">
+                <p className="font-['Montserrat'] text-xs text-[#374151] leading-relaxed font-medium">
                   {t.stat1Desc}
                 </p>
               </div>
@@ -102,49 +100,49 @@ export default function RoiCalculator({ lang }: RoiCalculatorProps) {
                 <DollarSign className="w-5 h-5" />
               </div>
               <div>
-                <div className="font-['Cinzel'] text-3xl sm:text-4xl font-bold text-[#2C1F1B] mb-1">
-                  ~${moneySaved} USD
+                <div className="font-['Montserrat'] text-2xl sm:text-3xl font-extrabold text-emerald-800 mb-1">
+                  +${moneySaved} USD
                 </div>
-                <h4 className="font-['Cinzel'] text-xs uppercase tracking-wider text-[#2C1F1B] font-bold mb-2">
+                <h4 className="font-['Montserrat'] text-xs uppercase tracking-wider text-[#2C1F1B] font-bold mb-1">
                   {t.stat2Label}
                 </h4>
-                <p className="font-['Montserrat'] text-xs text-[#5E534C] leading-relaxed">
+                <p className="font-['Montserrat'] text-xs text-[#374151] leading-relaxed font-medium">
                   {t.stat2Desc}
                 </p>
               </div>
             </div>
 
-            {/* 3. Tasa de Confirmación */}
+            {/* 3. Control de pases */}
             <div className="bg-[#FAF8F5] border border-[#E8E3D9] rounded-2xl p-6 flex flex-col justify-between hover:border-[#C5A059]/60 hover:shadow-md transition">
               <div className="w-10 h-10 rounded-xl bg-[#F5EFE4] border border-[#C5A059]/30 text-[#C5A059] flex items-center justify-center mb-4">
                 <Users className="w-5 h-5" />
               </div>
               <div>
-                <div className="font-['Cinzel'] text-3xl sm:text-4xl font-bold text-[#2C1F1B] mb-1">
-                  ~{confirmedAttendees} {lang === "es" ? "pases" : "passes"}
+                <div className="font-['Montserrat'] text-2xl sm:text-3xl font-extrabold text-[#2C1F1B] mb-1">
+                  100%
                 </div>
-                <h4 className="font-['Cinzel'] text-xs uppercase tracking-wider text-[#2C1F1B] font-bold mb-2">
+                <h4 className="font-['Montserrat'] text-xs uppercase tracking-wider text-[#2C1F1B] font-bold mb-1">
                   {t.stat3Label}
                 </h4>
-                <p className="font-['Montserrat'] text-xs text-[#5E534C] leading-relaxed">
+                <p className="font-['Montserrat'] text-xs text-[#374151] leading-relaxed font-medium">
                   {t.stat3Desc}
                 </p>
               </div>
             </div>
 
-            {/* 4. Excel en 1 Clic */}
+            {/* 4. Cero impresiones desechadas */}
             <div className="bg-[#FAF8F5] border border-[#E8E3D9] rounded-2xl p-6 flex flex-col justify-between hover:border-[#C5A059]/60 hover:shadow-md transition">
               <div className="w-10 h-10 rounded-xl bg-amber-50 border border-amber-200 text-amber-700 flex items-center justify-center mb-4">
                 <FileSpreadsheet className="w-5 h-5" />
               </div>
               <div>
-                <div className="font-['Cinzel'] text-3xl sm:text-4xl font-bold text-[#2C1F1B] mb-1">
-                  {estimatedTables} {lang === "es" ? "Mesas" : "Tables"}
+                <div className="font-['Montserrat'] text-2xl sm:text-3xl font-extrabold text-[#2C1F1B] mb-1">
+                  0
                 </div>
-                <h4 className="font-['Cinzel'] text-xs uppercase tracking-wider text-[#2C1F1B] font-bold mb-2">
+                <h4 className="font-['Montserrat'] text-xs uppercase tracking-wider text-[#2C1F1B] font-bold mb-1">
                   {t.stat4Label}
                 </h4>
-                <p className="font-['Montserrat'] text-xs text-[#5E534C] leading-relaxed">
+                <p className="font-['Montserrat'] text-xs text-[#374151] leading-relaxed font-medium">
                   {t.stat4Desc}
                 </p>
               </div>
@@ -157,7 +155,7 @@ export default function RoiCalculator({ lang }: RoiCalculatorProps) {
               <CheckCircle2 className="w-5 h-5 text-[#C5A059] flex-shrink-0" />
               <p className="font-['Montserrat'] text-xs text-[#2C1F1B]">
                 <strong>{t.venuesNote}</strong>{" "}
-                <span className="text-[#5E534C]">
+                <span className="text-[#374151] font-medium">
                   {lang === "es"
                     ? "Ofrece invitaciones interactivas como servicio prémium sin esfuerzo adicional."
                     : "Offer interactive invitations as a premium turnkey service with zero overhead."}
