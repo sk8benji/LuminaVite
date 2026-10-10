@@ -192,22 +192,15 @@ export default function HomePage() {
             {t.hero.subtitle}
           </p>
 
-          {/* Los Dos CTAs de Impacto */}
-          <div className="flex flex-col sm:flex-row items-center gap-4 mt-8 w-full sm:w-auto">
-            <a
-              href="#colecciones"
-              className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-[#C5A059] via-[#EED3A1] to-[#C5A059] text-[#2C1F1B] font-['Cinzel'] text-xs tracking-[0.25em] uppercase font-bold hover:brightness-105 active:scale-95 transition-all shadow-[0_8px_25px_rgba(197,160,89,0.35)] flex items-center justify-center gap-2"
-            >
-              <span>{t.hero.ctaCatalog}</span>
-              <ArrowRight className="w-4 h-4" />
-            </a>
-
+          {/* CTA Principal de Impacto */}
+          <div className="mt-8 flex justify-center w-full">
             <button
               onClick={() => handleOpenDemo("mariposas-xv")}
-              className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-white border-2 border-[#C5A059]/60 hover:bg-[#F5EFE4] text-[#2C1F1B] font-['Cinzel'] text-xs tracking-[0.25em] uppercase font-bold transition-all shadow-[0_4px_15px_rgba(44,31,27,0.06)] flex items-center justify-center gap-2 group"
+              className="w-full sm:w-auto px-10 py-4.5 rounded-2xl bg-gradient-to-r from-[#C5A059] via-[#EED3A1] to-[#C5A059] text-[#2C1F1B] font-['Cinzel'] text-xs sm:text-sm tracking-[0.25em] uppercase font-bold hover:brightness-105 active:scale-95 transition-all shadow-[0_8px_30px_rgba(197,160,89,0.35)] hover:shadow-[0_12px_40px_rgba(197,160,89,0.5)] flex items-center justify-center gap-3 group border border-[#EED3A1]"
             >
-              <Sparkles className="w-4 h-4 text-[#C5A059] group-hover:rotate-12 transition-transform" />
+              <Sparkles className="w-4 h-4 text-[#2C1F1B] animate-pulse" />
               <span>{t.hero.ctaDemo}</span>
+              <ArrowRight className="w-4 h-4 text-[#2C1F1B] group-hover:translate-x-1 transition-transform" />
             </button>
           </div>
 
