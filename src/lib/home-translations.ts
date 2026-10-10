@@ -172,7 +172,7 @@ export const translations: Record<Language, HomeTranslations> = {
       ],
       metrics: [
         { value: "98.7%", label: "Tasa de Asistencia Confirmada" },
-        { value: "< 1.2s", label: "Carga Ultrarrápida en 4G/5G" },
+        { value: "100%", label: "Personalizado a tu Temática" },
         { value: "0", label: "Contraseñas Requeridas" },
         { value: "+1,200", label: "Eventos Inolvidables" },
       ],
@@ -460,7 +460,7 @@ export const translations: Record<Language, HomeTranslations> = {
       ],
       metrics: [
         { value: "98.7%", label: "Confirmed Guest Attendance" },
-        { value: "< 1.2s", label: "Ultra-fast 4G/5G Load Time" },
+        { value: "100%", label: "Tailored to Your Theme" },
         { value: "0", label: "Passwords Required" },
         { value: "+1,200", label: "Celebrated Events" },
       ],

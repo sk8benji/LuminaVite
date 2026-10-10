@@ -226,7 +226,7 @@ export default function HomePage() {
                   key={idx}
                   className="p-5 rounded-2xl bg-white border border-[#E8E3D9] shadow-[0_4px_20px_rgba(44,31,27,0.04)] text-center"
                 >
-                  <div className="font-serif-roman text-2xl sm:text-3xl font-bold text-[#2C1F1B]">
+                  <div className="font-['Montserrat'] text-2xl sm:text-3xl font-bold text-[#2C1F1B] tracking-tight">
                     {m.value}
                   </div>
                   <div className="font-['Montserrat'] text-[11px] text-[#2B2B2B] mt-1 font-medium">
