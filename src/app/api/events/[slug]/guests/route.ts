@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/db";
 import { normalizeSlug } from "@/lib/events";
+import { ensureGuestsTable } from "@/lib/guests-table";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -57,6 +58,8 @@ export async function GET(req: NextRequest, context: RouteContext) {
         { status: 401 }
       );
     }
+
+    await ensureGuestsTable();
 
     // Obtener lista completa de invitados
     const guests = await prisma.guest.findMany({
@@ -138,6 +141,8 @@ export async function POST(req: NextRequest, context: RouteContext) {
         { status: 401 }
       );
     }
+
+    await ensureGuestsTable();
 
     const body = await req.json();
 

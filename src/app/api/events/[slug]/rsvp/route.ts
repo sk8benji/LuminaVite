@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/db";
 import { normalizeSlug } from "@/lib/events";
+import { ensureGuestsTable } from "@/lib/guests-table";
 import twilio from "twilio";
 
 export const dynamic = "force-dynamic";
@@ -49,6 +50,8 @@ export async function POST(req: NextRequest, context: RouteContext) {
     if (!cleanSlug) {
       return NextResponse.json({ error: "Slug inválido" }, { status: 400 });
     }
+
+    await ensureGuestsTable();
 
     const body = await req.json();
     const {

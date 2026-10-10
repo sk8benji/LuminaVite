@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/db";
 import { normalizeSlug } from "@/lib/events";
+import { ensureGuestsTable } from "@/lib/guests-table";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -57,6 +58,8 @@ export async function DELETE(req: NextRequest, context: RouteContext) {
       );
     }
 
+    await ensureGuestsTable();
+
     // Verificar que el invitado pertenezca a este evento
     const guest = await prisma.guest.findFirst({
       where: { id, eventId: evento.id },
@@ -108,6 +111,8 @@ export async function PUT(req: NextRequest, context: RouteContext) {
         { status: 401 }
       );
     }
+
+    await ensureGuestsTable();
 
     const guest = await prisma.guest.findFirst({
       where: { id, eventId: evento.id },

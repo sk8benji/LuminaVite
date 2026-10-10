@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import prisma from "@/lib/db";
+import { ensureGuestsTable } from "@/lib/guests-table";
 import PanelView, { PanelData } from "./PanelView";
 
 export const dynamic = "force-dynamic";
@@ -27,32 +28,81 @@ export default async function ClientMagicLinkPanelPage({
     return notFound();
   }
 
+  // Asegurar que la tabla guests existe en PostgreSQL (evita error P2021 en producción)
+  await ensureGuestsTable();
+
   // 3. Consulta directa a PostgreSQL con Prisma (sin cookies ni S3)
   const isMasterKey = cleanKey === "clickandlove2026!" || cleanKey === "admin";
 
-  let evento = null;
+  let evento: any = null;
 
-  if (isMasterKey) {
-    evento = await prisma.evento.findUnique({
-      where: { slug: cleanSlug },
-      include: {
-        rsvps: { orderBy: { createdAt: "desc" } },
-        guests: { orderBy: [{ status: "asc" }, { name: "asc" }] },
-        usuario: true,
-      },
-    });
-  } else {
-    evento = await prisma.evento.findFirst({
-      where: {
-        slug: cleanSlug,
-        panelToken: { equals: cleanKey, mode: "insensitive" },
-      },
-      include: {
-        rsvps: { orderBy: { createdAt: "desc" } },
-        guests: { orderBy: [{ status: "asc" }, { name: "asc" }] },
-        usuario: true,
-      },
-    });
+  try {
+    if (isMasterKey) {
+      evento = await prisma.evento.findUnique({
+        where: { slug: cleanSlug },
+        include: {
+          rsvps: { orderBy: { createdAt: "desc" } },
+          guests: { orderBy: [{ status: "asc" }, { name: "asc" }] },
+          usuario: true,
+        },
+      });
+    } else {
+      evento = await prisma.evento.findFirst({
+        where: {
+          slug: cleanSlug,
+          panelToken: { equals: cleanKey, mode: "insensitive" },
+        },
+        include: {
+          rsvps: { orderBy: { createdAt: "desc" } },
+          guests: { orderBy: [{ status: "asc" }, { name: "asc" }] },
+          usuario: true,
+        },
+      });
+    }
+  } catch (dbErr: any) {
+    // Si la tabla no existía aún en Railway, forzar creación DDL y reintentar
+    if (dbErr?.code === "P2021" || String(dbErr).includes("guests")) {
+      await ensureGuestsTable();
+      try {
+        if (isMasterKey) {
+          evento = await prisma.evento.findUnique({
+            where: { slug: cleanSlug },
+            include: {
+              rsvps: { orderBy: { createdAt: "desc" } },
+              guests: { orderBy: [{ status: "asc" }, { name: "asc" }] },
+              usuario: true,
+            },
+          });
+        } else {
+          evento = await prisma.evento.findFirst({
+            where: {
+              slug: cleanSlug,
+              panelToken: { equals: cleanKey, mode: "insensitive" },
+            },
+            include: {
+              rsvps: { orderBy: { createdAt: "desc" } },
+              guests: { orderBy: [{ status: "asc" }, { name: "asc" }] },
+              usuario: true,
+            },
+          });
+        }
+      } catch (retryErr) {
+        console.error("Fallo tras reintento de ensureGuestsTable:", retryErr);
+        // Fallback: consultar sin relación guests para no romper la carga de la página
+        evento = await prisma.evento.findFirst({
+          where: isMasterKey
+            ? { slug: cleanSlug }
+            : { slug: cleanSlug, panelToken: { equals: cleanKey, mode: "insensitive" } },
+          include: {
+            rsvps: { orderBy: { createdAt: "desc" } },
+            usuario: true,
+          },
+        });
+        if (evento) evento.guests = [];
+      }
+    } else {
+      throw dbErr;
+    }
   }
 
   // 4. Si evento es null, rechazo 404 inmediato
