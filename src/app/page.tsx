@@ -102,19 +102,11 @@ export default function HomePage() {
       {/* ============================================================== */}
       <header className="sticky top-0 z-40 bg-[#FAF8F5]/90 backdrop-blur-md border-b border-[#E8E3D9]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between">
-          {/* Logotipo Editorial Romano */}
-          <Link href="/" className="flex items-center gap-3 group">
-            <span className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#C5A059] to-[#EED3A1] text-[#2C1F1B] font-['Cinzel'] font-bold flex items-center justify-center text-sm shadow-[0_2px_10px_rgba(197,160,89,0.3)] group-hover:rotate-12 transition-transform">
+          {/* Logotipo Editorial Solo Emblema */}
+          <Link href="/" className="flex items-center group" aria-label="Click and love">
+            <span className="w-10 h-10 rounded-full bg-gradient-to-tr from-[#C5A059] via-[#EED3A1] to-[#C5A059] text-[#2C1F1B] font-['Cinzel'] font-bold flex items-center justify-center text-base shadow-[0_2px_12px_rgba(197,160,89,0.35)] group-hover:scale-105 group-hover:rotate-12 transition-all duration-300 ring-2 ring-[#C5A059]/25 border border-white">
               ✦
             </span>
-            <div className="flex flex-col">
-              <span className="font-['Cinzel'] text-xl sm:text-2xl font-bold tracking-[0.2em] uppercase text-[#2C1F1B]">
-                Click & Love
-              </span>
-              <span className="text-[9px] font-['Montserrat'] tracking-[0.3em] uppercase text-[#8C8077] -mt-1 hidden sm:block font-medium">
-                Haute Couture Stationery
-              </span>
-            </div>
           </Link>
 
           {/* Menú de Enlaces */}
@@ -151,26 +143,21 @@ export default function HomePage() {
             </a>
             <a
               href="#precios"
-              className="text-xs font-['Cinzel'] tracking-widest uppercase text-[#2B2B2B] hover:text-[#C5A059] transition font-semibold"
+              className="text-xs font-['Cinzel'] tracking-widest uppercase text-[#C5A059] hover:text-[#9C7736] transition font-bold"
             >
               {t.nav.pricing}
             </a>
           </nav>
 
-          {/* Acciones de Cabecera */}
+          {/* Acción Principal: Botón Llamativo de Precios */}
           <div className="flex items-center gap-3 pr-20 sm:pr-24">
-            <Link
-              href="/dashboard"
-              className="hidden sm:inline-flex px-4 py-2 text-xs font-['Cinzel'] tracking-wider uppercase text-[#2C1F1B] hover:bg-white rounded-xl border border-[#E8E3D9] transition font-semibold"
+            <a
+              href="#precios"
+              className="px-5 sm:px-6 py-2.5 bg-gradient-to-r from-[#C5A059] via-[#EED3A1] to-[#C5A059] hover:brightness-105 text-[#2C1F1B] rounded-full text-xs font-['Cinzel'] tracking-[0.2em] uppercase font-bold shadow-[0_4px_18px_rgba(197,160,89,0.35)] hover:shadow-[0_6px_22px_rgba(197,160,89,0.5)] transition-all duration-300 active:scale-95 flex items-center gap-2 border border-[#EED3A1]/70"
             >
-              {t.nav.dashboard}
-            </Link>
-            <Link
-              href="/eventos/nuevo"
-              className="px-4 sm:px-5 py-2.5 bg-gradient-to-r from-[#C5A059] to-[#EED3A1] hover:brightness-105 text-[#2C1F1B] rounded-xl text-[11px] font-['Cinzel'] tracking-[0.15em] uppercase font-bold shadow-[0_4px_15px_rgba(197,160,89,0.3)] transition active:scale-95"
-            >
-              {t.nav.createBtn}
-            </Link>
+              <Sparkles className="w-3.5 h-3.5 text-[#2C1F1B] animate-pulse" />
+              <span>{t.nav.pricing}</span>
+            </a>
           </div>
         </div>
       </header>

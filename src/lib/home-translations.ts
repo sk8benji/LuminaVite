@@ -147,7 +147,7 @@ export const translations: Record<Language, HomeTranslations> = {
       dashboard: "Panel Familiar",
       catalog: "Colecciones",
       compare: "Comparativa",
-      pricing: "Tarifas",
+      pricing: "Precios",
       createBtn: "Crear Invitación",
     },
     hero: {
@@ -347,7 +347,7 @@ export const translations: Record<Language, HomeTranslations> = {
       ],
     },
     pricing: {
-      pill: "Tarifas Transparentes",
+      pill: "Precios Transparentes",
       title: "Un Solo Pago por Evento",
       subtitle:
         "Sin mensualidades ni costos ocultos. Tu invitación interactiva activa y lista para compartir hasta el día de la celebración.",
