@@ -5,6 +5,7 @@ import { MapPin, CheckCircle2, Sparkles, MessageCircle } from "lucide-react";
 import confetti from "canvas-confetti";
 import { InvitationData } from "../invitation/InvitationMobileView";
 import { getMapEmbedUrl, getMapDirectionsUrl } from "@/lib/maps";
+import { parseTemplateConfig, BlueButterflyConfig } from "@/types/templateConfigs";
 
 export default function BlueButterflyTemplate({
   data,
@@ -13,6 +14,7 @@ export default function BlueButterflyTemplate({
   data: InvitationData;
   skipIntro?: boolean;
 }) {
+  const templateConfig = parseTemplateConfig<BlueButterflyConfig>(data.configPlantilla);
   // Estado para la Intro 3D del Sobre
   const [isEnvelopeOpen, setIsEnvelopeOpen] = useState(false);
   const [isEnvelopeFading, setIsEnvelopeFading] = useState(false);
@@ -662,7 +664,8 @@ export default function BlueButterflyTemplate({
 
                 {/* Frase emotiva */}
                 <p className="font-cormorant italic text-[13px] text-slate-600 my-2 leading-relaxed">
-                  {data.frasePersonalizada ||
+                  {templateConfig.fraseBiblica ||
+                    data.frasePersonalizada ||
                     (isEn
                       ? "“I thank God for this special day and invite you to share this magical night with me.”"
                       : "“Doy gracias a Dios por este día tan especial y te invito a compartir conmigo esta noche mágica.”")}
@@ -778,7 +781,8 @@ export default function BlueButterflyTemplate({
         {/* ======================================================= */}
         <section className="px-8 py-4 text-center z-20">
           <p className="font-cormorant italic text-base leading-relaxed text-slate-700">
-            {data.frasePersonalizada ||
+            {templateConfig.fraseBiblica ||
+              data.frasePersonalizada ||
               (isEn
                 ? "“I thank God for granting me the blessing of celebrating my sweet fifteen, and my parents for guiding every step of my journey with unconditional love.”"
                 : "“Doy gracias a Dios por concederme la dicha de celebrar mis quince primaveras, y a mis padres por guiar cada uno de mis pasos con amor incondicional.”")}
