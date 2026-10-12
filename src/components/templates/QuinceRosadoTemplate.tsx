@@ -214,11 +214,9 @@ export default function QuinceRosadoTemplate({
   // Fallbacks de fotos y textos exactos de Canva
   const isDefaultOrReplicaPhoto =
     !data.fotoPortadaUrl ||
-    data.fotoPortadaUrl.includes("unsplash") ||
     data.fotoPortadaUrl.includes("90043c428c5ec72c7adb26dce69dedd2") ||
     data.fotoPortadaUrl.includes("da616fa36a10f18a133b2dc0383a07d0") ||
-    data.fotoPortadaUrl.includes("d0a18f8a869419b00c0c5185dc620397") ||
-    data.fotoPortadaUrl.includes("template-quince-rosado");
+    data.fotoPortadaUrl.includes("d0a18f8a869419b00c0c5185dc620397");
 
   const heroPhotoUrl =
     !isDefaultOrReplicaPhoto && data.fotoPortadaUrl
@@ -226,14 +224,21 @@ export default function QuinceRosadoTemplate({
       : QUINCE_ROSADO_ASSETS.heroHorseCutout;
 
   const photoChildhood =
-    data.fotoInfanciaUrl && !data.fotoInfanciaUrl.includes("unsplash")
+    data.fotoInfanciaUrl && !data.fotoInfanciaUrl.includes("083dc0c793669d4a4d4a782851e93f65")
       ? data.fotoInfanciaUrl
       : QUINCE_ROSADO_ASSETS.polaroidDeNina;
 
   const photoLady =
-    data.fotoActualUrl && !data.fotoActualUrl.includes("unsplash")
+    data.fotoActualUrl && !data.fotoActualUrl.includes("c0ec302539da1389b4c6b7d0b122ddd7")
       ? data.fotoActualUrl
       : QUINCE_ROSADO_ASSETS.polaroidASenorita;
+
+  const photoFarewell =
+    data.fotoCierreUrl &&
+    !data.fotoCierreUrl.includes("90043c428c5ec72c7adb26dce69dedd2") &&
+    !data.fotoCierreUrl.includes("4046b1a7e943f6186c4bd79419897578")
+      ? data.fotoCierreUrl
+      : photoLady;
 
   // Itinerario default exacto de Canva si no viene personalizado
   const itinerario =
@@ -481,37 +486,50 @@ export default function QuinceRosadoTemplate({
             </div>
           </div>
 
-          {/* Marco de Arco 3D con Pop-Out de Quinceañera & Caballo Blanco */}
+          {/* Marco de Arco Quinceañera (Réplica Canva con soporte de Foto Personalizada) */}
           <div className="relative w-full max-w-[335px] sm:max-w-[350px] mx-auto my-3 z-10">
-            {/* 1. Marco de Arco Base con el Fondo del Jardín (d0a18f8a869419b00c0c5185dc620397.png) */}
-            <div className="relative w-full aspect-[52/64] rounded-t-[175px] border-[4.5px] border-white shadow-[0_15px_35px_rgba(122,0,42,0.18)] overflow-hidden bg-pink-100">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={QUINCE_ROSADO_ASSETS.heroGardenBg}
-                onError={(e) => {
-                  (e.target as HTMLImageElement).src = QUINCE_ROSADO_ASSETS.s3.heroGardenBg;
-                }}
-                alt="Jardín Quinceañera"
-                className="w-full h-full object-cover object-center"
-              />
-            </div>
+            {isDefaultOrReplicaPhoto ? (
+              <>
+                {/* 1. Marco de Arco Base con el Fondo del Jardín (Demo) */}
+                <div className="relative w-full aspect-[52/64] rounded-t-[175px] border-[4.5px] border-white shadow-[0_15px_35px_rgba(122,0,42,0.18)] overflow-hidden bg-pink-100">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={QUINCE_ROSADO_ASSETS.heroGardenBg}
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = QUINCE_ROSADO_ASSETS.s3.heroGardenBg;
+                    }}
+                    alt="Jardín Quinceañera"
+                    className="w-full h-full object-cover object-center"
+                  />
+                </div>
 
-            {/* 2. Capa Pop-Out 3D: Chica con el Caballo (da616fa36a10f18a133b2dc0383a07d0.png) */}
-            <div className="absolute inset-0 pointer-events-none overflow-visible">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={
-                  isDefaultOrReplicaPhoto
-                    ? QUINCE_ROSADO_ASSETS.heroHorseCutout
-                    : heroPhotoUrl
-                }
-                onError={(e) => {
-                  (e.target as HTMLImageElement).src = QUINCE_ROSADO_ASSETS.s3.heroHorseCutout;
-                }}
-                alt={data.titulo}
-                className="w-full h-full object-cover object-center scale-[1.01] translate-x-[-1%] translate-y-[2%]"
-              />
-            </div>
+                {/* 2. Capa Pop-Out 3D: Chica con el Caballo (Demo) */}
+                <div className="absolute inset-0 pointer-events-none overflow-visible">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={QUINCE_ROSADO_ASSETS.heroHorseCutout}
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = QUINCE_ROSADO_ASSETS.s3.heroHorseCutout;
+                    }}
+                    alt={data.titulo}
+                    className="w-full h-full object-cover object-center scale-[1.01] translate-x-[-1%] translate-y-[2%]"
+                  />
+                </div>
+              </>
+            ) : (
+              /* Foto Personalizada del Cliente: DENTRO del arco con su borde blanco y sombra suave */
+              <div className="relative w-full aspect-[52/64] rounded-t-[175px] border-[4.5px] border-white shadow-[0_15px_35px_rgba(122,0,42,0.18)] overflow-hidden bg-gradient-to-b from-rose-100 via-pink-50 to-white">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={heroPhotoUrl}
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = QUINCE_ROSADO_ASSETS.heroGardenBg;
+                  }}
+                  alt={data.titulo || "Foto de portada"}
+                  className="w-full h-full object-cover object-center"
+                />
+              </div>
+            )}
           </div>
 
           {/* Nombre & Quinceañera */}
@@ -1082,7 +1100,7 @@ export default function QuinceRosadoTemplate({
             <div className="relative w-[240px] aspect-[3/4] mx-auto rounded-t-[120px] overflow-hidden shadow-2xl border-4 border-white mb-4 bg-pink-100">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={photoLady}
+                src={photoFarewell}
                 alt="Despedida"
                 className="w-full h-full object-cover"
               />
