@@ -56,6 +56,8 @@ function NuevoEventoContent() {
       "https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&w=400&q=80",
     fotoActualUrl:
       "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=400&q=80",
+    fotoZapato1Url: "",
+    fotoZapato2Url: "",
     musicaUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
     reproducirMusicaAlAbrir: true,
     telefonoWhatsappRsvp: "18181234567",
@@ -531,7 +533,14 @@ function NuevoEventoContent() {
   // - Clientes invitados: clientes/subidas-invitados/<slug-o-id>/
   const handleFileUpload = async (
     e: React.ChangeEvent<HTMLInputElement>,
-    field: "fotoPortadaUrl" | "fotoInfanciaUrl" | "fotoActualUrl" | "musicaUrl" | "fotoCierreUrl",
+    field:
+      | "fotoPortadaUrl"
+      | "fotoInfanciaUrl"
+      | "fotoActualUrl"
+      | "musicaUrl"
+      | "fotoCierreUrl"
+      | "fotoZapato1Url"
+      | "fotoZapato2Url",
     mediaType: "images" | "audio" = "images"
   ) => {
     const file = e.target.files?.[0];
@@ -1260,6 +1269,70 @@ function NuevoEventoContent() {
                         onChange={(e) => handleFileUpload(e, "fotoCierreUrl", "images")}
                       />
                     </label>
+                  </div>
+                </div>
+
+                {/* Fotografías de Zapatos / Zapatillas de Quinceañera */}
+                <div className="p-4 bg-stone-50 border border-stone-200 rounded-2xl space-y-4">
+                  <div>
+                    <label className="block text-xs font-bold text-stone-800">
+                      👠 Fotografías de Zapatos / Zapatillas (Quinceañera)
+                    </label>
+                    <p className="text-[11px] text-stone-500 mt-0.5">
+                      Personaliza las imágenes de zapatos de la plantilla (Zapatilla de cristal previa a la ceremonia y zapatilla en cojín para el cambio de zapatillas).
+                    </p>
+                  </div>
+
+                  {/* Zapato 1: Zapatilla de Cristal (Ceremonia) */}
+                  <div className="space-y-1.5">
+                    <span className="text-[11px] font-semibold text-stone-700 block">
+                      Foto Zapato 1 (Zapatilla de Cristal / Previa a Ceremonia)
+                    </span>
+                    <div className="flex flex-col sm:flex-row gap-2">
+                      <input
+                        type="text"
+                        value={formData.fotoZapato1Url || ""}
+                        onChange={(e) => updateField("fotoZapato1Url", e.target.value)}
+                        placeholder="URL de foto o sube a S3 (dejar vacío para diseño por defecto)"
+                        className="flex-1 min-w-0 px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs focus:outline-none"
+                      />
+                      <label className="flex items-center justify-center gap-1.5 px-3.5 py-2 bg-stone-900 hover:bg-black text-white rounded-xl text-xs font-semibold cursor-pointer transition shrink-0">
+                        <Upload className="w-3.5 h-3.5" />
+                        <span>{uploadingField === "fotoZapato1Url" ? "Subiendo..." : "Subir a S3"}</span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={(e) => handleFileUpload(e, "fotoZapato1Url", "images")}
+                        />
+                      </label>
+                    </div>
+                  </div>
+
+                  {/* Zapato 2: Zapatilla en Cojín (Corte y Baile) */}
+                  <div className="space-y-1.5">
+                    <span className="text-[11px] font-semibold text-stone-700 block">
+                      Foto Zapato 2 (Zapatilla en Cojín / Corte de Honor y Damas)
+                    </span>
+                    <div className="flex flex-col sm:flex-row gap-2">
+                      <input
+                        type="text"
+                        value={formData.fotoZapato2Url || ""}
+                        onChange={(e) => updateField("fotoZapato2Url", e.target.value)}
+                        placeholder="URL de foto o sube a S3 (dejar vacío para diseño por defecto)"
+                        className="flex-1 min-w-0 px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs focus:outline-none"
+                      />
+                      <label className="flex items-center justify-center gap-1.5 px-3.5 py-2 bg-stone-900 hover:bg-black text-white rounded-xl text-xs font-semibold cursor-pointer transition shrink-0">
+                        <Upload className="w-3.5 h-3.5" />
+                        <span>{uploadingField === "fotoZapato2Url" ? "Subiendo..." : "Subir a S3"}</span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={(e) => handleFileUpload(e, "fotoZapato2Url", "images")}
+                        />
+                      </label>
+                    </div>
                   </div>
                 </div>
 

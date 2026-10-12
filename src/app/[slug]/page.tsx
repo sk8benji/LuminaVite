@@ -330,6 +330,8 @@ async function getEventoData(rawSlug: string): Promise<InvitationData | null> {
       fotoInfanciaUrl: dbEvento.fotoInfanciaUrl,
       fotoActualUrl: dbEvento.fotoActualUrl,
       fotoCierreUrl: dbEvento.fotoCierreUrl,
+      fotoZapato1Url: (dbEvento as any).fotoZapato1Url ?? null,
+      fotoZapato2Url: (dbEvento as any).fotoZapato2Url ?? null,
       musicaUrl: dbEvento.musicaUrl,
       reproducirMusicaAlAbrir: dbEvento.reproducirMusicaAlAbrir !== false,
       videoUrl: dbEvento.videoUrl,

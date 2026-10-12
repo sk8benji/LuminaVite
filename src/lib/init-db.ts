@@ -67,6 +67,8 @@ export async function ensurePostgresTables(): Promise<boolean> {
           "fotoInfanciaUrl" TEXT,
           "fotoActualUrl" TEXT,
           "fotoCierreUrl" TEXT,
+          "fotoZapato1Url" TEXT,
+          "fotoZapato2Url" TEXT,
           "musicaUrl" TEXT,
           "reproducirMusicaAlAbrir" BOOLEAN DEFAULT true,
           "videoUrl" TEXT,
@@ -129,6 +131,8 @@ export async function ensurePostgresTables(): Promise<boolean> {
           CONSTRAINT "RsvpRegistro_eventoId_telefono_key" UNIQUE ("eventoId", "telefono")
       );`,
       `ALTER TABLE "Evento" ADD COLUMN IF NOT EXISTS "reproducirMusicaAlAbrir" BOOLEAN DEFAULT true;`,
+      `ALTER TABLE "Evento" ADD COLUMN IF NOT EXISTS "fotoZapato1Url" TEXT;`,
+      `ALTER TABLE "Evento" ADD COLUMN IF NOT EXISTS "fotoZapato2Url" TEXT;`,
 
       `DO $$ BEGIN
         CREATE TYPE "EstadoPago" AS ENUM ('PENDIENTE', 'PAGADO', 'FALLIDO', 'REEMBOLSADO');

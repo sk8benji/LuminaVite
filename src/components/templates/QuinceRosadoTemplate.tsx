@@ -40,6 +40,21 @@ const MONTH_NAMES_ES = [
   "Diciembre",
 ];
 
+const MONTH_NAMES_EN = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+
 const WEEKDAY_NAMES_ES = [
   "DOMINGO",
   "LUNES",
@@ -48,6 +63,16 @@ const WEEKDAY_NAMES_ES = [
   "JUEVES",
   "VIERNES",
   "SÁBADO",
+];
+
+const WEEKDAY_NAMES_EN = [
+  "SUNDAY",
+  "MONDAY",
+  "TUESDAY",
+  "WEDNESDAY",
+  "THURSDAY",
+  "FRIDAY",
+  "SATURDAY",
 ];
 
 function parseEventDate(fechaEvento?: string | Date | null) {
@@ -85,13 +110,24 @@ export default function QuinceRosadoTemplate({
   data,
   skipIntro = false,
 }: QuinceRosadoTemplateProps) {
+  // ── IDIOMA (es | en | bilingual) ────────────────────────────────────
+  const isBilingual = data.idiomaDefault === "bilingual";
+  const [currentLang, setCurrentLang] = useState<"es" | "en">(
+    data.idiomaDefault === "en" ? "en" : "es"
+  );
+  const isEn = currentLang === "en";
+
   // ── CÁLCULO DINÁMICO DE FECHA PARA CALENDARIO Y MEDALLÓN ─────────────
   const eventDateInfo = parseEventDate(data.fechaEvento);
   const eventYear = eventDateInfo.year;
   const eventMonth = eventDateInfo.month; // 0..11
   const eventDay = eventDateInfo.day;
-  const eventMonthName = MONTH_NAMES_ES[eventMonth] || "Mayo";
-  const eventDayOfWeek = WEEKDAY_NAMES_ES[new Date(eventYear, eventMonth, eventDay).getDay()];
+  const eventMonthName = isEn
+    ? MONTH_NAMES_EN[eventMonth] || "May"
+    : MONTH_NAMES_ES[eventMonth] || "Mayo";
+  const eventDayOfWeek = isEn
+    ? WEEKDAY_NAMES_EN[new Date(eventYear, eventMonth, eventDay).getDay()]
+    : WEEKDAY_NAMES_ES[new Date(eventYear, eventMonth, eventDay).getDay()];
 
   // Total de días del mes y desplazamiento del día 1 (0 = Domingo)
   const totalDaysInMonth = new Date(eventYear, eventMonth + 1, 0).getDate();
@@ -134,7 +170,10 @@ export default function QuinceRosadoTemplate({
     }
   };
 
-  const handleOpenEnvelope = () => {
+  const handleOpenEnvelope = (chosenLang?: "es" | "en") => {
+    if (chosenLang) {
+      setCurrentLang(chosenLang);
+    }
     if (animatingOpen || introOpen) return;
     setAnimatingOpen(true);
     if (data.reproducirMusicaAlAbrir !== false) {
@@ -310,7 +349,7 @@ export default function QuinceRosadoTemplate({
 
           {/* SOBRE ROSA 3D CON POLAROIDS Y LAZO (CLICABLE EN TODA EL ÁREA) */}
           <div
-            onClick={handleOpenEnvelope}
+            onClick={() => handleOpenEnvelope()}
             className="relative w-full max-w-[360px] mx-auto my-auto flex flex-col items-center px-2 cursor-pointer group select-none transition-transform duration-300 hover:scale-[1.02] active:scale-[0.98]"
           >
             {/* POLAROIDS QUE SALEN DEL SOBRE */}
@@ -410,17 +449,52 @@ export default function QuinceRosadoTemplate({
           </div>
 
           {/* TEXTO INFERIOR INTRO */}
-          <div
-            onClick={handleOpenEnvelope}
-            className="relative z-10 pb-8 text-center px-4 cursor-pointer transition-transform duration-200 hover:scale-105 active:scale-95"
-          >
-            <h2 className="font-['Great_Vibes',cursive] text-5xl sm:text-6xl text-[#7A002A] leading-tight drop-shadow-sm">
-              ¡Estás invitado!
-            </h2>
-            <p className="font-['Cinzel',serif] text-xs tracking-[0.25em] uppercase text-[#B74F5F] font-semibold mt-1">
-              Toca el sobre para abrir
-            </p>
-          </div>
+          {isBilingual ? (
+            <div className="relative z-10 pb-8 text-center px-4">
+              <h2 className="font-['Great_Vibes',cursive] text-4xl sm:text-5xl text-[#7A002A] leading-tight drop-shadow-sm mb-2">
+                ¡Estás invitado! • You’re Invited!
+              </h2>
+              <p className="font-['Cinzel',serif] text-[10px] sm:text-xs tracking-[0.2em] uppercase text-[#B74F5F] font-semibold mb-4">
+                Selecciona tu idioma para abrir • Choose your language
+              </p>
+              <div className="flex items-center justify-center gap-3 sm:gap-4">
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleOpenEnvelope("es");
+                  }}
+                  className="px-5 py-2.5 rounded-full bg-[#7A002A] text-white hover:bg-[#600021] border border-pink-200 shadow-lg font-['Cinzel',serif] text-xs tracking-[0.15em] uppercase font-bold transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-1.5"
+                >
+                  <span>🇲🇽</span>
+                  <span>ESPAÑOL</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleOpenEnvelope("en");
+                  }}
+                  className="px-5 py-2.5 rounded-full bg-[#7A002A] text-white hover:bg-[#600021] border border-pink-200 shadow-lg font-['Cinzel',serif] text-xs tracking-[0.15em] uppercase font-bold transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-1.5"
+                >
+                  <span>🇺🇸</span>
+                  <span>ENGLISH</span>
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div
+              onClick={() => handleOpenEnvelope(isEn ? "en" : "es")}
+              className="relative z-10 pb-8 text-center px-4 cursor-pointer transition-transform duration-200 hover:scale-105 active:scale-95"
+            >
+              <h2 className="font-['Great_Vibes',cursive] text-5xl sm:text-6xl text-[#7A002A] leading-tight drop-shadow-sm">
+                {isEn ? "You’re Invited!" : "¡Estás invitado!"}
+              </h2>
+              <p className="font-['Cinzel',serif] text-xs tracking-[0.25em] uppercase text-[#B74F5F] font-semibold mt-1">
+                {isEn ? "Tap the envelope to open" : "Toca el sobre para abrir"}
+              </p>
+            </div>
+          )}
         </div>
       )}
 
@@ -428,6 +502,37 @@ export default function QuinceRosadoTemplate({
           CONTENEDOR PRINCIPAL MÓVIL (430px)
       ══════════════════════════════════════════════════════════════ */}
       <main className="relative w-full max-w-[430px] mx-auto min-h-screen bg-white shadow-2xl overflow-x-hidden text-[#7A002A]">
+        {/* SELECTOR DE IDIOMA FLOTANTE (Solo si la invitación es Bilingüe) */}
+        {isBilingual && (
+          <aside
+            aria-label="Selector de idioma"
+            className="fixed top-4 right-4 z-40 bg-white/95 backdrop-blur-md border border-pink-200 rounded-full shadow-lg p-1 flex items-center gap-1 text-[11px] font-['Cinzel',serif] tracking-wider"
+          >
+            <button
+              type="button"
+              onClick={() => setCurrentLang("es")}
+              className={`px-3 py-1 rounded-full transition-all cursor-pointer font-bold ${
+                currentLang === "es"
+                  ? "bg-[#7A002A] text-white shadow-sm"
+                  : "text-[#B74F5F] hover:text-[#7A002A]"
+              }`}
+            >
+              ES
+            </button>
+            <span className="text-pink-200">|</span>
+            <button
+              type="button"
+              onClick={() => setCurrentLang("en")}
+              className={`px-3 py-1 rounded-full transition-all cursor-pointer font-bold ${
+                currentLang === "en"
+                  ? "bg-[#7A002A] text-white shadow-sm"
+                  : "text-[#B74F5F] hover:text-[#7A002A]"
+              }`}
+            >
+              EN
+            </button>
+          </aside>
+        )}
         {/* BOTÓN REPRODUCTOR FLOTANTE DISCRETO */}
         {data.musicaUrl && (
           <button
@@ -470,18 +575,18 @@ export default function QuinceRosadoTemplate({
           <div className="relative w-full max-w-[340px] mx-auto text-center mb-2 z-10">
             {/* "CON" */}
             <p className="font-['Libre_Baskerville',serif] text-sm sm:text-base tracking-[0.35em] uppercase text-[#7A002A] font-bold">
-              CON
+              {isEn ? "WITH" : "CON"}
             </p>
 
             {/* "Amor" */}
             <h2 className="font-['Alex_Brush',cursive] text-7xl sm:text-8xl text-[#7A002A] leading-[0.8] -mt-1 drop-shadow-sm select-none">
-              Amor
+              {isEn ? "Love" : "Amor"}
             </h2>
 
             {/* "LE INVITAMOS" (Alineado a la derecha debajo de "Amor") */}
             <div className="w-full flex justify-end pr-3 sm:pr-4 -mt-1 sm:-mt-2">
               <p className="font-['Libre_Baskerville',serif] text-[11px] sm:text-xs tracking-[0.3em] uppercase text-[#7A002A] font-bold">
-                LE INVITAMOS
+                {isEn ? "YOU ARE INVITED" : "LE INVITAMOS"}
               </p>
             </div>
           </div>
@@ -538,7 +643,7 @@ export default function QuinceRosadoTemplate({
               {data.titulo || "Magdalena"}
             </h1>
             <p className="font-['Libre_Baskerville',serif] text-xs sm:text-sm tracking-[0.45em] uppercase text-[#7A002A] font-bold mt-2">
-              {data.subtitulo || "LA QUINCEAÑERA"}
+              {data.subtitulo || (isEn ? "MY QUINCEAÑERA" : "LA QUINCEAÑERA")}
             </p>
           </div>
 
@@ -548,7 +653,7 @@ export default function QuinceRosadoTemplate({
             <div className="relative w-24 h-24 rounded-full bg-[#A55B64] text-white flex flex-col items-center justify-center shadow-lg border-2 border-white">
               <span className="font-['Great_Vibes',cursive] text-3xl leading-none">15</span>
               <span className="font-['Cinzel',serif] text-[9px] tracking-widest uppercase font-bold -mt-0.5">
-                AÑOS
+                {isEn ? "YEARS" : "AÑOS"}
               </span>
             </div>
 
@@ -615,7 +720,7 @@ export default function QuinceRosadoTemplate({
                 />
               </div>
               <p className="font-['Great_Vibes',cursive] text-2xl text-[#B74F5F] text-center mt-3">
-                De niña
+                {isEn ? "Childhood" : "De niña"}
               </p>
             </div>
 
@@ -632,12 +737,12 @@ export default function QuinceRosadoTemplate({
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={photoLady}
-                  alt="A señorita"
+                  alt={isEn ? "Sweet 15" : "A señorita"}
                   className="w-full h-full object-cover"
                 />
               </div>
               <p className="font-['Great_Vibes',cursive] text-2xl text-[#B74F5F] text-center mt-3">
-                A señorita
+                {isEn ? "Sweet 15" : "A señorita"}
               </p>
             </div>
           </div>
@@ -658,20 +763,20 @@ export default function QuinceRosadoTemplate({
                 telefonoWhatsapp={data.telefonoWhatsappRsvp}
                 primaryColor="#7A002A"
                 accentBgColor="bg-white/95"
-                deadlineText={data.rsvpFechaLimite || "POR FAVOR, CONFIRMA TU ASISTENCIA ANTES DEL 20 DE OCTUBRE."}
-                lang="es"
+                deadlineText={data.rsvpFechaLimite || (isEn ? "PLEASE CONFIRM YOUR ATTENDANCE BEFORE NOVEMBER 15." : "POR FAVOR, CONFIRMA TU ASISTENCIA ANTES DEL 20 DE OCTUBRE.")}
+                lang={currentLang}
               />
             </div>
 
-            {/* Foto de Pareja / Arco Chambelán */}
+            {/* Foto de Zapatos 1 (Zapatilla de Cristal / Decorativa Ceremonia) */}
             <div className="relative w-full aspect-[4/5] rounded-3xl overflow-hidden shadow-xl border-4 border-white mb-8 bg-pink-100">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={QUINCE_ROSADO_ASSETS.archCouplePhoto}
+                src={data.fotoZapato1Url || QUINCE_ROSADO_ASSETS.archCouplePhoto}
                 onError={(e) => {
                   (e.target as HTMLImageElement).src = QUINCE_ROSADO_ASSETS.s3.archCouplePhoto;
                 }}
-                alt="Quinceañera y Chambelán"
+                alt="Zapatos Quinceañera 1"
                 className="w-full h-full object-cover"
               />
             </div>
@@ -681,7 +786,7 @@ export default function QuinceRosadoTemplate({
               {/* Iglesia */}
               <div className="bg-white p-4 rounded-2xl shadow-md border border-pink-100 text-center">
                 <h4 className="font-['Cinzel',serif] text-xs tracking-widest uppercase text-[#7A002A] font-bold">
-                  CEREMONIA RELIGIOSA
+                  {isEn ? "RELIGIOUS CEREMONY" : "CEREMONIA RELIGIOSA"}
                 </h4>
                 <p className="text-xs text-[#7A002A] font-semibold mt-1">
                   {data.ceremoniaNombre || "St. Mary’s Church"}
@@ -698,14 +803,14 @@ export default function QuinceRosadoTemplate({
                   className="mt-3 inline-flex items-center gap-1.5 bg-[#7A002A] text-white px-5 py-1.5 rounded-full font-['Cinzel',serif] text-[10px] tracking-wider uppercase font-bold shadow hover:bg-[#600021] transition"
                 >
                   <MapPin className="w-3 h-3" />
-                  <span>VER MAPA</span>
+                  <span>{isEn ? "VIEW MAP" : "VER MAPA"}</span>
                 </a>
               </div>
 
               {/* Salón de Recepción */}
               <div className="bg-white p-4 rounded-2xl shadow-md border border-pink-100 text-center">
                 <h4 className="font-['Cinzel',serif] text-xs tracking-widest uppercase text-[#7A002A] font-bold">
-                  RECEPCIÓN & FIESTA
+                  {isEn ? "RECEPTION & PARTY" : "RECEPCIÓN & FIESTA"}
                 </h4>
                 <p className="text-xs text-[#7A002A] font-semibold mt-1">
                   {data.recepcionNombre || "Grand Ballroom Palace"}
@@ -722,7 +827,7 @@ export default function QuinceRosadoTemplate({
                   className="mt-3 inline-flex items-center gap-1.5 bg-[#7A002A] text-white px-5 py-1.5 rounded-full font-['Cinzel',serif] text-[10px] tracking-wider uppercase font-bold shadow hover:bg-[#600021] transition"
                 >
                   <MapPin className="w-3 h-3" />
-                  <span>VER MAPA</span>
+                  <span>{isEn ? "VIEW MAP" : "VER MAPA"}</span>
                 </a>
               </div>
             </div>
@@ -730,24 +835,27 @@ export default function QuinceRosadoTemplate({
             {/* Código de Vestimenta */}
             <div className="bg-white p-6 rounded-3xl shadow-xl border border-pink-100 text-center mb-8">
               <h3 className="font-['Cinzel',serif] text-sm tracking-[0.25em] uppercase text-[#7A002A] font-bold mb-2">
-                DRESS CODE
+                {isEn ? "DRESS CODE" : "CÓDIGO DE VESTIMENTA"}
               </h3>
               <h4 className="font-['Cinzel',serif] text-xs tracking-widest uppercase text-[#B74F5F] font-bold mb-3">
-                ELEGANTE Y FORMAL
+                {data.dressCodeTitulo || (isEn ? "ELEGANT & FORMAL" : "ELEGANTE Y FORMAL")}
               </h4>
               <p className="text-xs leading-relaxed text-[#722927]">
-                Acompáñanos en esta hermosa celebración y luce tu mejor atuendo para impresionar a la quinceañera. Se invita a los invitados a vestir elegantemente.{" "}
-                <strong className="text-[#7A002A]">Por favor, NO usar atuendos ROSADOS ni BLANCOS</strong>, creando así una celebración tan hermosa y atemporal como este día tan especial.
+                {data.dressCodeNota || (isEn
+                  ? "Join us in this wonderful celebration dressed in your best attire. Guests are encouraged to wear elegant formal clothes. Please NO pink or white attire, keeping the celebration timeless and reserved for the quinceañera."
+                  : "Acompáñanos en esta hermosa celebración y luce tu mejor atuendo para impresionar a la quinceañera. Se invita a los invitados a vestir elegantemente. Por favor, NO usar atuendos ROSADOS ni BLANCOS, creando así una celebración tan hermosa y atemporal como este día tan especial.")}
               </p>
             </div>
 
             {/* Mesa de Regalos */}
             <div className="bg-white p-6 rounded-3xl shadow-xl border border-pink-100 text-center">
               <h3 className="font-['Great_Vibes',cursive] text-4xl text-[#7A002A] mb-1">
-                Lista de Regalos
+                {isEn ? "Gift Registry" : "Lista de Regalos"}
               </h3>
               <p className="text-xs leading-relaxed text-[#722927] mb-4">
-                Celebrar contigo es el mejor regalo de todos. Para quienes deseen tener un detalle o traer una contribución, será recibida con mucho cariño.
+                {data.regalosMensaje || (isEn
+                  ? "Celebrating with you is the greatest gift of all. For those wishing to bring a contribution or detail, it will be received with love."
+                  : "Celebrar contigo es el mejor regalo de todos. Para quienes deseen tener un detalle o traer una contribución, será recibida con mucho cariño.")}
               </p>
 
               {/* Botones de Métodos de Contribución */}
@@ -776,7 +884,7 @@ export default function QuinceRosadoTemplate({
                   rel="noopener noreferrer"
                   className="mt-5 inline-block bg-[#7A002A] text-white px-6 py-2 rounded-full font-['Cinzel',serif] text-xs tracking-wider uppercase font-bold shadow hover:bg-[#600021] transition"
                 >
-                  VER LISTA COMPLETA
+                  {isEn ? "VIEW FULL REGISTRY" : "VER LISTA COMPLETA"}
                 </a>
               )}
             </div>
@@ -791,10 +899,10 @@ export default function QuinceRosadoTemplate({
             {/* Cabecera Itinerario */}
             <div className="mb-8">
               <h3 className="font-['Alex_Brush',cursive] text-4xl text-[#7A002A]">
-                El
+                {isEn ? "The" : "El"}
               </h3>
               <h2 className="font-['Cinzel',serif] text-2xl tracking-[0.2em] uppercase text-[#7A002A] font-bold -mt-1">
-                Plan de la Fiesta
+                {isEn ? "Party Timeline" : "Plan de la Fiesta"}
               </h2>
             </div>
 
@@ -822,34 +930,38 @@ export default function QuinceRosadoTemplate({
               ))}
             </div>
 
-            {/* Foto de las Damas y Quinceañera con Mariposa y Zapato */}
+            {/* Foto de Zapatos 2 (Zapatilla en Cojín / Corte de Honor y Damas) */}
             <div className="mt-12 mb-8 relative">
               <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl border-4 border-white bg-pink-100">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={QUINCE_ROSADO_ASSETS.courtGroupPhoto}
+                  src={data.fotoZapato2Url || QUINCE_ROSADO_ASSETS.courtGroupPhoto}
                   onError={(e) => {
                     (e.target as HTMLImageElement).src = QUINCE_ROSADO_ASSETS.s3.courtGroupPhoto;
                   }}
-                  alt="Damas de Honor"
+                  alt="Zapatos Quinceañera 2"
                   className="w-full h-full object-cover"
                 />
               </div>
               <p className="font-['Great_Vibes',cursive] text-3xl text-[#7A002A] text-center mt-4">
-                No puedo celebrar sin ti
+                {data.mensajeDespedida || (isEn ? "I can’t celebrate without you" : "No puedo celebrar sin ti")}
               </p>
             </div>
 
             {/* Aviso: Para Nuestros Niños */}
             <div className="bg-pink-50/70 p-5 rounded-2xl border border-pink-200 text-center">
               <h4 className="font-['Cinzel',serif] text-xs tracking-widest uppercase text-[#A55B64] font-bold mb-2">
-                PARA NUESTROS NIÑOS
+                {isEn ? "FOR OUR LITTLE GUESTS" : "PARA NUESTROS NIÑOS"}
               </h4>
               <p className="text-xs leading-relaxed text-[#CE2962] font-medium">
-                Nuestros pequeños invitados son una parte muy especial de esta celebración. Les pedimos amablemente que permanezcan sentados y acompañados por padre o tutor durante los bailes especiales y las presentaciones.
+                {isEn
+                  ? "Our little guests are a very special part of this celebration. We kindly ask that they remain seated and accompanied by a parent or guardian during special dances and presentations."
+                  : "Nuestros pequeños invitados son una parte muy especial de esta celebración. Les pedimos amablemente que permanezcan sentados y acompañados por padre o tutor durante los bailes especiales y las presentaciones."}
               </p>
               <p className="text-[11px] text-[#CE2962] font-semibold mt-2">
-                Gracias por ayudarnos a mantener estos momentos hermosos para todos.
+                {isEn
+                  ? "Thank you for helping us keep these moments beautiful for everyone."
+                  : "Gracias por ayudarnos a mantener estos momentos hermosos para todos."}
               </p>
             </div>
           </div>
@@ -869,7 +981,7 @@ export default function QuinceRosadoTemplate({
                 className="w-6 h-6 object-contain"
               />
               <h2 className="font-['Cinzel',serif] text-xl tracking-[0.2em] uppercase text-[#7A002A] font-bold">
-                LA CORTE DE HONOR
+                {isEn ? "THE COURT OF HONOR" : "LA CORTE DE HONOR"}
               </h2>
             </div>
 
@@ -878,13 +990,13 @@ export default function QuinceRosadoTemplate({
               <div className="grid grid-cols-2 gap-3 bg-white p-4 rounded-2xl shadow-sm border border-pink-100">
                 <div>
                   <p className="font-bold uppercase tracking-wider text-[10px] text-[#B74F5F]">
-                    Quinceañera
+                    {isEn ? "Quinceañera" : "Quinceañera"}
                   </p>
                   <p className="font-medium mt-0.5">{data.titulo || "Magdalena"}</p>
                 </div>
                 <div>
                   <p className="font-bold uppercase tracking-wider text-[10px] text-[#B74F5F]">
-                    Mini Quinceañera
+                    {isEn ? "Junior Quinceañera" : "Mini Quinceañera"}
                   </p>
                   <p className="font-medium mt-0.5">Elsy</p>
                 </div>
@@ -893,13 +1005,13 @@ export default function QuinceRosadoTemplate({
               <div className="grid grid-cols-2 gap-3 bg-white p-4 rounded-2xl shadow-sm border border-pink-100">
                 <div>
                   <p className="font-bold uppercase tracking-wider text-[10px] text-[#B74F5F]">
-                    Chambelán Principal
+                    {isEn ? "Main Escort" : "Chambelán Principal"}
                   </p>
                   <p className="font-medium mt-0.5">{data.corteHonorJson?.chambelan || "Jeremiah"}</p>
                 </div>
                 <div>
                   <p className="font-bold uppercase tracking-wider text-[10px] text-[#B74F5F]">
-                    Mini Chambelán
+                    {isEn ? "Junior Escort" : "Mini Chambelán"}
                   </p>
                   <p className="font-medium mt-0.5">Jose</p>
                 </div>
@@ -907,7 +1019,7 @@ export default function QuinceRosadoTemplate({
 
               <div className="bg-white p-4 rounded-2xl shadow-sm border border-pink-100 text-center">
                 <p className="font-bold uppercase tracking-wider text-[10px] text-[#B74F5F] mb-1">
-                  Damiselas de Honor
+                  {isEn ? "Maids of Honor" : "Damiselas de Honor"}
                 </p>
                 <p className="font-medium leading-relaxed">
                   Violeta • Zoe • Elsy Magdalena • Tania • Yani
@@ -916,7 +1028,7 @@ export default function QuinceRosadoTemplate({
 
               <div className="bg-white p-4 rounded-2xl shadow-sm border border-pink-100 text-center">
                 <p className="font-bold uppercase tracking-wider text-[10px] text-[#B74F5F] mb-1">
-                  Damitas de Hojitas
+                  {isEn ? "Flower Girls" : "Damitas de Hojitas"}
                 </p>
                 <p className="font-medium leading-relaxed">Violet • Zoe • Green</p>
               </div>
@@ -925,14 +1037,14 @@ export default function QuinceRosadoTemplate({
             {/* Padres y Padrinos */}
             <div className="bg-white p-5 rounded-2xl shadow-md border border-pink-100 text-center mb-8">
               <p className="font-bold uppercase tracking-wider text-[10px] text-[#B74F5F]">
-                Mis Padres
+                {isEn ? "My Parents" : "Mis Padres"}
               </p>
               <p className="text-sm font-semibold text-[#7A002A] mt-0.5 mb-3">
                 {data.corteHonorJson?.parents || "Magdalena & Adrian"}
               </p>
 
               <p className="font-bold uppercase tracking-wider text-[10px] text-[#B74F5F]">
-                Padrinos de Honor
+                {isEn ? "Honor Godparents" : "Padrinos de Honor"}
               </p>
               <p className="text-sm font-semibold text-[#7A002A] mt-0.5">
                 {data.corteHonorJson?.padrinos?.join(" & ") || "Tania & Carl"}
@@ -942,10 +1054,12 @@ export default function QuinceRosadoTemplate({
             {/* Agradecimiento Especial */}
             <div className="text-center px-3">
               <h3 className="font-['Great_Vibes',cursive] text-4xl text-[#7A002A] mb-2">
-                Un agradecimiento especial
+                {isEn ? "A special thank you" : "Un agradecimiento especial"}
               </h3>
               <p className="text-xs italic leading-relaxed text-[#722927]">
-                Con infinita gratitud por su amor, apoyo y generosidad al dar vida a este hermoso sueño. Su presencia, orientación y amabilidad han hecho que esta celebración sea verdaderamente inolvidable.
+                {isEn
+                  ? "With endless gratitude for your love, support, and generosity in bringing this beautiful dream to life. Your presence, guidance, and kindness have made this celebration truly unforgettable."
+                  : "Con infinita gratitud por su amor, apoyo y generosidad al dar vida a este hermoso sueño. Su presencia, orientación y amabilidad han hecho que esta celebración sea verdaderamente inolvidable."}
               </p>
             </div>
           </div>
@@ -958,10 +1072,10 @@ export default function QuinceRosadoTemplate({
           <div className="max-w-[360px] mx-auto">
             {/* Encabezado Cierre */}
             <p className="font-['Cinzel',serif] text-xs tracking-[0.2em] uppercase text-[#CE2962] font-bold">
-              NO PUEDO ESPERAR PARA PODER
+              {isEn ? "I CANNOT WAIT TO" : "NO PUEDO ESPERAR PARA PODER"}
             </p>
             <h2 className="font-['Cinzel',serif] text-2xl tracking-[0.15em] uppercase text-[#CE2962] font-black mt-1 mb-6">
-              ¡CELEBRAR CONTIGO!
+              {isEn ? "CELEBRATE WITH YOU!" : "¡CELEBRAR CONTIGO!"}
             </h2>
 
             {/* Contador en Vivo */}
@@ -971,7 +1085,7 @@ export default function QuinceRosadoTemplate({
                   {timeLeft.days}
                 </span>
                 <span className="text-[9px] uppercase tracking-wider text-[#A55B64] font-bold mt-1 block">
-                  Días
+                  {isEn ? "Days" : "Días"}
                 </span>
               </div>
               <div className="bg-pink-50/80 p-3 rounded-2xl border border-pink-200">
@@ -979,7 +1093,7 @@ export default function QuinceRosadoTemplate({
                   {timeLeft.hours}
                 </span>
                 <span className="text-[9px] uppercase tracking-wider text-[#A55B64] font-bold mt-1 block">
-                  Horas
+                  {isEn ? "Hours" : "Horas"}
                 </span>
               </div>
               <div className="bg-pink-50/80 p-3 rounded-2xl border border-pink-200">
@@ -987,7 +1101,7 @@ export default function QuinceRosadoTemplate({
                   {timeLeft.minutes}
                 </span>
                 <span className="text-[9px] uppercase tracking-wider text-[#A55B64] font-bold mt-1 block">
-                  Min
+                  {isEn ? "Min" : "Min"}
                 </span>
               </div>
               <div className="bg-pink-50/80 p-3 rounded-2xl border border-pink-200">
@@ -995,7 +1109,7 @@ export default function QuinceRosadoTemplate({
                   {timeLeft.seconds}
                 </span>
                 <span className="text-[9px] uppercase tracking-wider text-[#A55B64] font-bold mt-1 block">
-                  Seg
+                  {isEn ? "Sec" : "Seg"}
                 </span>
               </div>
             </div>
@@ -1022,13 +1136,27 @@ export default function QuinceRosadoTemplate({
 
               {/* Días de la semana */}
               <div className="grid grid-cols-7 gap-1 text-center font-['Libre_Baskerville',serif] font-bold text-[#7A002A] text-xs sm:text-sm tracking-wider mb-2">
-                <span>D</span>
-                <span>L</span>
-                <span>M</span>
-                <span>M</span>
-                <span>J</span>
-                <span>V</span>
-                <span>S</span>
+                {isEn ? (
+                  <>
+                    <span>S</span>
+                    <span>M</span>
+                    <span>T</span>
+                    <span>W</span>
+                    <span>T</span>
+                    <span>F</span>
+                    <span>S</span>
+                  </>
+                ) : (
+                  <>
+                    <span>D</span>
+                    <span>L</span>
+                    <span>M</span>
+                    <span>M</span>
+                    <span>J</span>
+                    <span>V</span>
+                    <span>S</span>
+                  </>
+                )}
               </div>
 
               {/* Días del mes con Lazo en el día del evento */}
@@ -1072,16 +1200,16 @@ export default function QuinceRosadoTemplate({
               {/* Enlace para añadir a Google Calendar */}
               <a
                 href={`https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(
-                  "Quinceañera de " + (data.titulo || "Magdalena")
+                  (isEn ? "Quinceañera of " : "Quinceañera de ") + (data.titulo || "Magdalena")
                 )}&dates=${gcalStart}/${gcalEnd}&details=${encodeURIComponent(
-                  "Celebración de Quince Años"
+                  isEn ? "Sweet 15 Celebration" : "Celebración de Quince Años"
                 )}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1.5 mt-5 font-['Cinzel',serif] text-[10px] tracking-widest uppercase text-[#7A002A] font-bold hover:underline"
               >
                 <CalendarIcon className="w-3.5 h-3.5" />
-                <span>AÑADIR AL CALENDARIO...</span>
+                <span>{isEn ? "ADD TO CALENDAR..." : "AÑADIR AL CALENDARIO..."}</span>
               </a>
             </div>
 
@@ -1107,7 +1235,9 @@ export default function QuinceRosadoTemplate({
             </div>
 
             <p className="font-['Cinzel',serif] text-xs tracking-wider uppercase text-[#7A002A] font-semibold mt-6 mb-2">
-              Con amor y gratitud... te estaré esperando
+              {isEn
+                ? "With love and gratitude... I’ll be waiting for you"
+                : "Con amor y gratitud... te estaré esperando"}
             </p>
           </div>
         </section>
