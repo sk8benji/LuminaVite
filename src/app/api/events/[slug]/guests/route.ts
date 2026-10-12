@@ -178,10 +178,11 @@ export async function POST(req: NextRequest, context: RouteContext) {
 
     // 2. Creación individual
     const { name, max_pax = 1, phone, notes } = body;
+    const cleanName = String(name || "").trim().replace(/\s+/g, " ");
 
-    if (!name || !String(name).trim()) {
+    if (!cleanName || cleanName.length < 3) {
       return NextResponse.json(
-        { error: "El nombre o familia del invitado es obligatorio." },
+        { error: "El nombre o familia del invitado debe tener al menos 3 caracteres." },
         { status: 400 }
       );
     }
@@ -189,7 +190,7 @@ export async function POST(req: NextRequest, context: RouteContext) {
     const newGuest = await prisma.guest.create({
       data: {
         eventId: evento.id,
-        name: String(name).trim(),
+        name: cleanName,
         maxPax: Math.max(1, Number(max_pax) || 1),
         phone: phone ? String(phone).trim() : null,
         notes: notes ? String(notes).trim() : null,

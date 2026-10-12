@@ -174,7 +174,11 @@ export default function PanelView({
   // Crear invitado
   const handleAddGuest = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newGuestName.trim()) return;
+    const cleanName = newGuestName.trim().replace(/\s+/g, " ");
+    if (!cleanName || cleanName.length < 3) {
+      setAddGuestError("Por favor ingresa un nombre o familia válido de al menos 3 caracteres.");
+      return;
+    }
 
     setIsAddingGuest(true);
     setAddGuestError("");
@@ -184,7 +188,7 @@ export default function PanelView({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name: newGuestName.trim(),
+          name: cleanName,
           max_pax: Number(newGuestPax) || 1,
           phone: newGuestPhone.trim() || undefined,
         }),

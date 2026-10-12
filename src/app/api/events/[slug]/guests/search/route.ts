@@ -77,7 +77,7 @@ export async function GET(req: NextRequest, context: RouteContext) {
       });
     }
 
-    if (!query || query.length < 2) {
+    if (!query || query.length < 3) {
       return NextResponse.json([], { status: 200 });
     }
 
@@ -105,7 +105,9 @@ export async function GET(req: NextRequest, context: RouteContext) {
     const formatted = guests.map((g) => ({
       id: g.id,
       name: g.name,
+      nombre: g.name,
       max_pax: g.maxPax,
+      pasesAsignados: g.maxPax,
       status: g.status,
     }));
 
