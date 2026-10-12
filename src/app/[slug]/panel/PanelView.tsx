@@ -652,6 +652,10 @@ export default function PanelView({
                               <span className="inline-flex items-center gap-1 text-[10px] font-bold text-rose-600 bg-rose-50 px-2.5 py-0.5 rounded-full border border-rose-200">
                                 <XCircle className="w-3 h-3" /> Cancelado
                               </span>
+                            ) : guest.status === "PENDIENTE_APROBACION" || guest.status === "pending_approval" ? (
+                              <span className="inline-flex items-center gap-1 text-[10px] font-bold text-amber-800 bg-amber-50 px-2.5 py-0.5 rounded-full border border-amber-300">
+                                <AlertCircle className="w-3 h-3 text-amber-600" /> Solicitud Manual
+                              </span>
                             ) : (
                               <span className="inline-flex items-center gap-1 text-[10px] font-bold text-stone-500 bg-stone-100 px-2.5 py-0.5 rounded-full border border-stone-200">
                                 <Clock className="w-3 h-3" /> Pendiente
@@ -835,6 +839,7 @@ export default function PanelView({
                       className="w-full px-3 py-2 bg-[#FAF8F5] border border-[#E8E3D9] rounded-xl text-xs text-[#2C1F1B] focus:outline-none focus:ring-2 focus:ring-[#C5A059]"
                     >
                       <option value="pending">Pendiente</option>
+                      <option value="PENDIENTE_APROBACION">Solicitud Manual (Por Aprobar)</option>
                       <option value="attending">Confirmado</option>
                       <option value="declined">Cancelado</option>
                     </select>

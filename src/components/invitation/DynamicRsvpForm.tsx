@@ -88,6 +88,8 @@ export default function DynamicRsvpForm({
   const [manualPhone, setManualPhone] = useState("");
   const [manualPax, setManualPax] = useState("2");
   const [manualSubmitted, setManualSubmitted] = useState(false);
+  const [isSubmittingManual, setIsSubmittingManual] = useState(false);
+  const [manualError, setManualError] = useState("");
 
   // 1. Detección y carga directa de invitado por URL (?guest=UUID o ?guest_id=UUID)
   useEffect(() => {
@@ -259,23 +261,36 @@ export default function DynamicRsvpForm({
     window.open(url, "_blank");
   };
 
-  // Envío manual fallback
-  const handleManualSubmit = (e: React.FormEvent) => {
+  // Envío manual fallback interno (CERO SMS de Twilio para eliminar riesgo de toll fraud)
+  const handleManualSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!manualName.trim()) return;
 
-    const phoneClean = (telefonoWhatsapp || "").replace(/[^0-9]/g, "");
-    let text = `Solicitud de asistencia para ${eventTitle}:\n`;
-    text += `Nombre: ${manualName.trim()}\n`;
-    if (manualPhone.trim()) text += `Teléfono: ${manualPhone.trim()}\n`;
-    text += `Pases Solicitados: ${manualPax}`;
+    setIsSubmittingManual(true);
+    setManualError("");
 
-    const url = phoneClean
-      ? `sms:${phoneClean}?&body=${encodeURIComponent(text)}`
-      : `sms:?body=${encodeURIComponent(text)}`;
+    try {
+      const res = await fetch(`/api/events/${encodeURIComponent(slug)}/manual-request`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: manualName.trim(),
+          phone: manualPhone.trim() || undefined,
+          pax: Number(manualPax) || 1,
+        }),
+      });
 
-    setManualSubmitted(true);
-    window.open(url, "_blank");
+      const resData = await res.json();
+      if (!res.ok) {
+        throw new Error(resData.error || "No se pudo procesar tu solicitud.");
+      }
+
+      setManualSubmitted(true);
+    } catch (err: any) {
+      setManualError(err.message || "Ocurrió un error al enviar tu solicitud.");
+    } finally {
+      setIsSubmittingManual(false);
+    }
   };
 
   return (
@@ -644,17 +659,33 @@ export default function DynamicRsvpForm({
           </h3>
           <p className="text-[11px] text-stone-500 leading-relaxed">
             {isEn
-              ? "If your name does not appear in the search, send your details directly to the hosts via WhatsApp."
-              : "Si no apareces en la lista, envía tus datos directamente a la anfitriona por WhatsApp para que te agregue a la lista oficial."}
+              ? "If your name does not appear in the search, send your details so the hosts can review and authorize your passes."
+              : "Si no apareces en la lista, envía tus datos directamente para que los anfitriones puedan revisar y autorizar tus pases."}
           </p>
 
           {manualSubmitted ? (
-            <div className="p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs text-center space-y-1">
-              <CheckCircle2 className="w-5 h-5 mx-auto text-emerald-600" />
-              <p className="font-bold">{isEn ? "Request Sent via WhatsApp!" : "¡Solicitud enviada por WhatsApp!"}</p>
-              <p className="text-[11px] text-emerald-700">
-                {isEn ? "The host has received your details." : "La anfitriona ya recibió tus datos en su chat."}
+            <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs text-center space-y-2">
+              <CheckCircle2 className="w-6 h-6 mx-auto text-emerald-600" />
+              <p className="font-bold text-sm">
+                {isEn ? "Request Submitted!" : "¡Solicitud Enviada!"}
               </p>
+              <p className="text-[12px] text-emerald-700 leading-relaxed font-medium">
+                {isEn
+                  ? "Your request has been sent to the hosts. They will contact you to confirm your passes."
+                  : "Tu solicitud fue enviada a los anfitriones. Te contactarán para confirmar tus pases."}
+              </p>
+              <button
+                type="button"
+                onClick={() => {
+                  setStep(1);
+                  setManualSubmitted(false);
+                  setManualName("");
+                  setManualPhone("");
+                }}
+                className="mt-2 text-[11px] font-bold text-emerald-800 underline hover:text-emerald-950 transition cursor-pointer"
+              >
+                {isEn ? "Back to search" : "Volver a buscar"}
+              </button>
             </div>
           ) : (
             <form onSubmit={handleManualSubmit} className="space-y-3">
@@ -701,13 +732,29 @@ export default function DynamicRsvpForm({
                 </select>
               </div>
 
+              {manualError && (
+                <p className="text-[11px] text-rose-600 font-semibold bg-rose-50 p-2.5 rounded-xl border border-rose-200">
+                  {manualError}
+                </p>
+              )}
+
               <button
                 type="submit"
-                className="w-full py-2.5 rounded-full text-white font-bold text-xs tracking-wider uppercase shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95"
+                disabled={isSubmittingManual}
+                className="w-full py-2.5 rounded-full text-white font-bold text-xs tracking-wider uppercase shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95 disabled:opacity-50"
                 style={{ backgroundColor: primaryColor }}
               >
-                <Send className="w-3.5 h-3.5" />
-                <span>{isEn ? "Send to Host via WhatsApp" : "Enviar a Anfitriona por WhatsApp"}</span>
+                {isSubmittingManual ? (
+                  <>
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    <span>{isEn ? "SENDING REQUEST..." : "ENVIANDO SOLICITUD..."}</span>
+                  </>
+                ) : (
+                  <>
+                    <Send className="w-3.5 h-3.5" />
+                    <span>{isEn ? "SEND REQUEST TO HOSTS" : "ENVIAR SOLICITUD A LOS ANFITRIONES"}</span>
+                  </>
+                )}
               </button>
             </form>
           )}

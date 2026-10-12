@@ -23,12 +23,13 @@ export async function ensureGuestsTable(): Promise<void> {
             email VARCHAR(255),
             max_pax INT NOT NULL DEFAULT 1,
             confirmed_pax INT DEFAULT 0,
-            status VARCHAR(20) NOT NULL DEFAULT 'pending',
+            status VARCHAR(50) NOT NULL DEFAULT 'pending',
             notes TEXT,
             created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
         );
         ALTER TABLE guests ADD COLUMN IF NOT EXISTS email VARCHAR(255);
+        ALTER TABLE guests ALTER COLUMN status TYPE VARCHAR(50);
       `);
 
       // 2. Clave foránea hacia "Evento"(id) si aún no existe

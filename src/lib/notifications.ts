@@ -432,3 +432,164 @@ export async function sendGuestConfirmationEmail(
   }
 }
 
+export interface HostManualRequestEmailParams {
+  hostEmail: string;
+  eventoTitulo: string;
+  slug: string;
+  panelToken?: string | null;
+  nombreSolicitante: string;
+  telefono?: string | null;
+  pasesSolicitados: number;
+  siteUrl?: string;
+}
+
+/**
+ * Enviar alerta interna por correo al anfitrión con AWS SES cuando alguien
+ * que no está en la lista oficial solicita confirmación manual.
+ * (100% interno vía AWS SES - Cero SMS de Twilio para eliminar riesgo de toll fraud / SMS bombing)
+ */
+export async function sendHostManualRequestEmail(
+  params: HostManualRequestEmailParams
+): Promise<{ success: boolean; simulated?: boolean; error?: string }> {
+  const {
+    hostEmail,
+    eventoTitulo,
+    slug,
+    panelToken,
+    nombreSolicitante,
+    telefono,
+    pasesSolicitados,
+    siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://clickandlove.app",
+  } = params;
+
+  const magicLink = panelToken
+    ? `${siteUrl}/${slug}/panel?key=${panelToken}`
+    : `${siteUrl}/${slug}/panel`;
+
+  const subject = `🔔 Solicitud de Aprobación de Pases: ${nombreSolicitante} (${pasesSolicitados} ${pasesSolicitados === 1 ? "pase" : "pases"}) • ${eventoTitulo}`;
+
+  const htmlBody = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>${subject}</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #fafaf9; margin: 0; padding: 20px; color: #292524; }
+    .container { max-width: 580px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,0.06); border: 1px solid #e7e5e4; }
+    .header { background: linear-gradient(135deg, #78350f 0%, #b45309 100%); padding: 32px 24px; text-align: center; color: white; }
+    .header h1 { margin: 6px 0 0; font-size: 20px; font-weight: 700; letter-spacing: 0.3px; }
+    .header p { margin: 4px 0 0; font-size: 13px; color: #fef3c7; }
+    .content { padding: 32px 24px; }
+    .card { background-color: #fffbeb; border: 1px solid #fde68a; border-radius: 12px; padding: 20px; margin-bottom: 24px; }
+    .field { margin-bottom: 12px; }
+    .field:last-child { margin-bottom: 0; }
+    .label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: #92400e; font-weight: 600; }
+    .value { font-size: 16px; color: #451a03; font-weight: 700; margin-top: 2px; }
+    .badge-status { display: inline-block; background-color: #fef3c7; color: #b45309; border: 1px solid #fcd34d; padding: 4px 10px; border-radius: 9999px; font-weight: 700; font-size: 12px; }
+    .btn-container { text-align: center; margin: 28px 0 16px; }
+    .btn { display: inline-block; background-color: #1c1917; color: #ffffff !important; text-decoration: none; padding: 14px 28px; font-size: 14px; font-weight: 700; border-radius: 10px; }
+    .footer { text-align: center; font-size: 12px; color: #a8a29e; padding: 20px 24px; border-top: 1px solid #f5f5f4; background: #fafaf9; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div style="font-size: 28px; margin-bottom: 4px;">📩 ⚠️</div>
+      <h1>Solicitud de Confirmación Manual</h1>
+      <p>${eventoTitulo}</p>
+    </div>
+
+    <div class="content">
+      <p style="font-size: 14px; line-height: 1.6; margin-top: 0; color: #44403c;">
+        Una persona no registrada en la lista oficial de invitados ha enviado una <strong>Solicitud de Confirmación Manual</strong> desde la invitación:
+      </p>
+
+      <div class="card">
+        <div class="field">
+          <div class="label">Nombre / Familia</div>
+          <div class="value">${nombreSolicitante}</div>
+        </div>
+        <div class="field">
+          <div class="label">Pases Solicitados</div>
+          <div class="value" style="font-size: 18px; color: #b45309;">
+            ${pasesSolicitados} ${pasesSolicitados === 1 ? "pase" : "pases"}
+          </div>
+        </div>
+        <div class="field">
+          <div class="label">Teléfono Móvil de Contacto</div>
+          <div class="value" style="font-size: 14px; font-family: monospace;">${telefono || "No especificado"}</div>
+        </div>
+        <div class="field">
+          <div class="label">Estado en Sistema</div>
+          <div style="margin-top: 4px;">
+            <span class="badge-status">⏳ PENDIENTE DE APROBACIÓN</span>
+          </div>
+        </div>
+      </div>
+
+      <p style="font-size: 13px; color: #57534e; line-height: 1.5;">
+        Esta solicitud quedó guardada en tu base de datos de PostgreSQL con estado <strong>PENDIENTE_APROBACION</strong>. Puedes ingresar a tu panel para autorizar, modificar o contactar al invitado:
+      </p>
+
+      <div class="btn-container">
+        <a href="${magicLink}" class="btn" target="_blank">
+          Revisar Solicitud en el Panel
+        </a>
+      </div>
+      <p style="text-align: center; font-size: 11px; color: #78716c; margin-top: 8px;">
+        Acceso directo seguro al panel de control de invitados.
+      </p>
+    </div>
+
+    <div class="footer">
+      LuminaVite • Control de Pases y Notificaciones
+    </div>
+  </div>
+</body>
+</html>
+`;
+
+  const hasCredentials = !!(process.env.AWS_ACCESS_SES_KEY || process.env.AWS_ACCESS_KEY_ID);
+  if (!hasCredentials || !hostEmail) {
+    console.log(
+      `[AWS SES SIMULACIÓN] Alerta interna enviada a "${hostEmail}": "${subject}". Magic Link: ${magicLink}`
+    );
+    return { success: true, simulated: true };
+  }
+
+  try {
+    const fromEmail = process.env.AWS_SES_FROM_EMAIL || "notificaciones@luminavite.com";
+    const command = new SendEmailCommand({
+      Source: fromEmail,
+      Destination: {
+        ToAddresses: [hostEmail],
+      },
+      Message: {
+        Subject: {
+          Data: subject,
+          Charset: "UTF-8",
+        },
+        Body: {
+          Html: {
+            Data: htmlBody,
+            Charset: "UTF-8",
+          },
+          Text: {
+            Data: `Solicitud de confirmación manual de ${nombreSolicitante} (${pasesSolicitados} pases) para ${eventoTitulo}.\nTeléfono: ${telefono || "No especificado"}.\nRevisar en: ${magicLink}`,
+            Charset: "UTF-8",
+          },
+        },
+      },
+    });
+
+    await sesClient.send(command);
+    console.log(`[AWS SES] Alerta de solicitud manual enviada con éxito a ${hostEmail}`);
+    return { success: true };
+  } catch (err: any) {
+    console.error("[AWS SES Error Alerta Manual]:", err?.message || err);
+    return { success: false, error: err?.message };
+  }
+}
+
+
