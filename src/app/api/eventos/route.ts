@@ -104,6 +104,7 @@ export async function POST(req: NextRequest) {
       hospedajeJson,
       transporteJson,
       historiaHitosJson,
+      configPlantilla,
     } = body;
 
     if (!titulo || !slug || !fechaEvento || !fotoPortadaUrl || !telefonoWhatsappRsvp || !recepcionNombre || !recepcionMapUrl) {
@@ -198,6 +199,7 @@ export async function POST(req: NextRequest) {
         hospedajeJson: hospedajeJson || null,
         transporteJson: transporteJson || null,
         historiaHitosJson: historiaHitosJson || null,
+        configPlantilla: configPlantilla || {},
         activo: true,
       },
     });
@@ -287,6 +289,7 @@ export async function PUT(req: NextRequest) {
         hospedajeJson: body.hospedajeJson ?? null,
         transporteJson: body.transporteJson ?? null,
         historiaHitosJson: body.historiaHitosJson ?? null,
+        configPlantilla: body.configPlantilla ?? undefined,
       },
     });
 

@@ -157,6 +157,7 @@ model Evento {
   hospedajeJson      Json?           // { hotelNombre: "Oheka Castle", suitesInfo: "...", tarifas: "$250/night", link: "..." }
   transporteJson     Json?           // { shuttlesInfo: "Shuttles saldrán a las 4:30 PM..." }
   historiaHitosJson  Json?           // Array de hitos [{ anio: "2012", titulo: "...", fotoUrl: "...", texto: "..." }]
+  configPlantilla    Json?           @default("{}") // Contenedor dinámico JSONB para variables por plantilla
 
   activo             Boolean         @default(true)
   vistasContador     Int             @default(0)

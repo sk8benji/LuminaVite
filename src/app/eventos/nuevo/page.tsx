@@ -99,6 +99,7 @@ function NuevoEventoContent() {
       titulo: "Lluvia de Sobres",
       mensaje: "Tu presencia es nuestro mayor regalo. Disponemos de un cofre en la recepción.",
     },
+    configPlantilla: {},
     idiomaDefault: "es",
   });
 

@@ -19,6 +19,7 @@ import { QUINCE_ROSADO_ASSETS } from "@/lib/templates/quinceRosadoAssets";
 import { getMapDirectionsUrl } from "@/lib/maps";
 import { InvitationData } from "../invitation/InvitationMobileView";
 import DynamicRsvpForm from "../invitation/DynamicRsvpForm";
+import { parseTemplateConfig, QuinceRosadoConfig } from "@/types/templateConfigs";
 
 interface QuinceRosadoTemplateProps {
   data: InvitationData;
@@ -278,6 +279,19 @@ export default function QuinceRosadoTemplate({
     !data.fotoCierreUrl.includes("4046b1a7e943f6186c4bd79419897578")
       ? data.fotoCierreUrl
       : photoLady;
+
+  // Configuración dinámica por plantilla (JSONB: configPlantilla) con fallback en cascada
+  const templateConfig = parseTemplateConfig<QuinceRosadoConfig>(data.configPlantilla);
+
+  const photoShoe1 =
+    templateConfig.cambioZapatillas?.fotoZapato1Url ||
+    data.fotoZapato1Url ||
+    QUINCE_ROSADO_ASSETS.archCouplePhoto;
+
+  const photoShoe2 =
+    templateConfig.cambioZapatillas?.fotoZapato2Url ||
+    data.fotoZapato2Url ||
+    QUINCE_ROSADO_ASSETS.courtGroupPhoto;
 
   // Itinerario default exacto de Canva si no viene personalizado
   const itinerario =
@@ -772,7 +786,7 @@ export default function QuinceRosadoTemplate({
             <div className="relative w-full aspect-[4/5] rounded-3xl overflow-hidden shadow-xl border-4 border-white mb-8 bg-pink-100">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={data.fotoZapato1Url || QUINCE_ROSADO_ASSETS.archCouplePhoto}
+                src={photoShoe1}
                 onError={(e) => {
                   (e.target as HTMLImageElement).src = QUINCE_ROSADO_ASSETS.s3.archCouplePhoto;
                 }}
@@ -935,7 +949,7 @@ export default function QuinceRosadoTemplate({
               <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl border-4 border-white bg-pink-100">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={data.fotoZapato2Url || QUINCE_ROSADO_ASSETS.courtGroupPhoto}
+                  src={photoShoe2}
                   onError={(e) => {
                     (e.target as HTMLImageElement).src = QUINCE_ROSADO_ASSETS.s3.courtGroupPhoto;
                   }}

@@ -96,6 +96,7 @@ export interface InvitationData {
   hospedajeJson?: any;
   transporteJson?: any;
   historiaHitosJson?: any;
+  configPlantilla?: Record<string, any> | null;
   idiomaDefault?: string;
 }
 

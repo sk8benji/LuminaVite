@@ -379,6 +379,7 @@ async function getEventoData(rawSlug: string): Promise<InvitationData | null> {
       hospedajeJson: dbEvento.hospedajeJson,
       transporteJson: dbEvento.transporteJson,
       historiaHitosJson: dbEvento.historiaHitosJson,
+      configPlantilla: (dbEvento as any).configPlantilla ?? {},
     };
   }
 

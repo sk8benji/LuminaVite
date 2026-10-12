@@ -110,6 +110,7 @@ export async function ensurePostgresTables(): Promise<boolean> {
           "hospedajeJson" JSONB,
           "transporteJson" JSONB,
           "historiaHitosJson" JSONB,
+          "configPlantilla" JSONB DEFAULT '{}'::jsonb,
           "activo" BOOLEAN NOT NULL DEFAULT true,
           "vistasContador" INTEGER NOT NULL DEFAULT 0,
           "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -133,6 +134,7 @@ export async function ensurePostgresTables(): Promise<boolean> {
       `ALTER TABLE "Evento" ADD COLUMN IF NOT EXISTS "reproducirMusicaAlAbrir" BOOLEAN DEFAULT true;`,
       `ALTER TABLE "Evento" ADD COLUMN IF NOT EXISTS "fotoZapato1Url" TEXT;`,
       `ALTER TABLE "Evento" ADD COLUMN IF NOT EXISTS "fotoZapato2Url" TEXT;`,
+      `ALTER TABLE "Evento" ADD COLUMN IF NOT EXISTS "configPlantilla" JSONB DEFAULT '{}'::jsonb;`,
 
       `DO $$ BEGIN
         CREATE TYPE "EstadoPago" AS ENUM ('PENDIENTE', 'PAGADO', 'FALLIDO', 'REEMBOLSADO');
