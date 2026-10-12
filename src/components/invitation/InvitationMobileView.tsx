@@ -98,6 +98,7 @@ export interface InvitationData {
   historiaHitosJson?: any;
   configPlantilla?: Record<string, any> | null;
   idiomaDefault?: string;
+  tipoPlan?: string | null;
 }
 
 export default function InvitationMobileView({

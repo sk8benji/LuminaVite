@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/db";
 import { normalizeSlug } from "@/lib/events";
 import { ensureGuestsTable } from "@/lib/guests-table";
+import { sendHostNotificationEmail } from "@/lib/notifications";
 import twilio from "twilio";
 
 export const dynamic = "force-dynamic";
@@ -79,7 +80,13 @@ export async function POST(req: NextRequest, context: RouteContext) {
     // Buscar evento
     const evento = await prisma.evento.findFirst({
       where: { slug: cleanSlug },
-      select: { id: true, titulo: true, aforoTotal: true },
+      include: {
+        usuario: true,
+        ordenesCompra: {
+          orderBy: { createdAt: "desc" },
+          take: 1,
+        },
+      },
     });
 
     if (!evento) {
@@ -176,8 +183,34 @@ export async function POST(req: NextRequest, context: RouteContext) {
       console.warn("Aviso: No se pudo sincronizar RsvpRegistro histórico:", syncErr);
     }
 
-    // Notificación opcional por Twilio SMS (si está configurado)
-    if (status === "attending" && cleanPhone) {
+    // 1. Alerta por correo siempre activa para el anfitrión (AWS SES)
+    const hostEmail =
+      evento.emailOrganizador ||
+      evento.usuario?.email ||
+      process.env.ADMIN_NOTIFICATION_EMAIL ||
+      process.env.ADMIN_EMAIL;
+
+    if (hostEmail && status === "attending") {
+      const siteUrl = req.headers.get("origin") || process.env.NEXT_PUBLIC_SITE_URL || "https://clickandlove.app";
+      sendHostNotificationEmail({
+        hostEmail,
+        eventoTitulo: evento.titulo,
+        slug: cleanSlug,
+        panelToken: evento.panelToken,
+        nombreInvitado: updatedGuest.name,
+        telefono: cleanPhone,
+        pases: finalConfirmedPax,
+        totalPasesConfirmados: finalConfirmedPax,
+        aforoTotal: evento.aforoTotal || 200,
+        siteUrl,
+      }).catch((err) => console.error("Error Email SES en segundo plano:", err));
+    }
+
+    // 2. Notificación por Twilio SMS condicionada al plan (Planes VIP/Custom)
+    const paquete = (evento.ordenesCompra?.[0]?.paqueteId || "").toLowerCase();
+    const planConSms = !evento.ordenesCompra?.length || !paquete || !paquete.includes("basic");
+
+    if (planConSms && status === "attending" && cleanPhone) {
       try {
         const accountSid = process.env.TWILIO_ACCOUNT_SID;
         const authToken = process.env.TWILIO_AUTH_TOKEN;

@@ -46,6 +46,10 @@ export async function POST(req: NextRequest) {
         },
         include: {
           usuario: true,
+          ordenesCompra: {
+            orderBy: { createdAt: "desc" },
+            take: 1,
+          },
         },
       });
 
@@ -161,7 +165,10 @@ export async function POST(req: NextRequest) {
     const { evento, rsvp, isUpdate, seatsChanged, totalPasesConfirmados } = txResult;
 
     // 7. Disparar notificaciones en segundo plano (no bloqueantes)
-    if (normalizedPhone && isAttending) {
+    const paquete = ((evento as any).ordenesCompra?.[0]?.paqueteId || "").toLowerCase();
+    const planConSms = !(evento as any).ordenesCompra?.length || !paquete || !paquete.includes("basic");
+
+    if (planConSms && normalizedPhone && isAttending) {
       sendGuestConfirmationSms({
         telefono: normalizedPhone,
         nombreInvitado: rsvp.nombreInvitado,

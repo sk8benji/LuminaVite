@@ -233,24 +233,22 @@ export default function DynamicRsvpForm({
     return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${details}&dates=${dateParam}/${dateParam}`;
   };
 
-  // Notificar por WhatsApp
+  // Notificar por WhatsApp / SMS
   const handleShareToWhatsApp = () => {
     if (!confirmedDetails) return;
     const phoneClean = (telefonoWhatsapp || "").replace(/[^0-9]/g, "");
-    let text = `¡Hola! Confirmación de asistencia para ${eventTitle}:\n\n`;
-    text += `👤 Invitado: ${confirmedDetails.name}\n`;
+    let text = `Confirmación de asistencia para ${eventTitle}:\n`;
+    text += `Invitado: ${confirmedDetails.name}\n`;
     if (confirmedDetails.status === "attending") {
-      text += `🎟️ Pases Confirmados: ${confirmedDetails.confirmed_pax} de ${confirmedDetails.max_pax}\n`;
-      text += `✨ ¡Muchísimas gracias! Nos vemos en la celebración.`;
+      text += `Pases Confirmados: ${confirmedDetails.confirmed_pax} de ${confirmedDetails.max_pax}`;
     } else {
-      text += `🕊️ Estado: No podré asistir\n`;
-      if (notes) text += `💬 Mensaje: ${notes}\n`;
-      text += `¡Muchas felicidades y les deseo lo mejor!`;
+      text += `Estado: No podré asistir`;
+      if (notes) text += `\nMensaje: ${notes}`;
     }
 
     const url = phoneClean
-      ? `https://wa.me/${phoneClean}?text=${encodeURIComponent(text)}`
-      : `https://wa.me/?text=${encodeURIComponent(text)}`;
+      ? `sms:${phoneClean}?&body=${encodeURIComponent(text)}`
+      : `sms:?body=${encodeURIComponent(text)}`;
     window.open(url, "_blank");
   };
 
@@ -260,15 +258,14 @@ export default function DynamicRsvpForm({
     if (!manualName.trim()) return;
 
     const phoneClean = (telefonoWhatsapp || "").replace(/[^0-9]/g, "");
-    let text = `¡Hola! Deseo confirmar mi asistencia para ${eventTitle} (Solicitud Manual):\n\n`;
-    text += `👤 Nombre / Familia: ${manualName.trim()}\n`;
-    if (manualPhone.trim()) text += `📱 Teléfono: ${manualPhone.trim()}\n`;
-    text += `🎟️ Pases Solicitados: ${manualPax}\n`;
-    text += `No aparecí en el buscador automático. ¡Gracias!`;
+    let text = `Solicitud de asistencia para ${eventTitle}:\n`;
+    text += `Nombre: ${manualName.trim()}\n`;
+    if (manualPhone.trim()) text += `Teléfono: ${manualPhone.trim()}\n`;
+    text += `Pases Solicitados: ${manualPax}`;
 
     const url = phoneClean
-      ? `https://wa.me/${phoneClean}?text=${encodeURIComponent(text)}`
-      : `https://wa.me/?text=${encodeURIComponent(text)}`;
+      ? `sms:${phoneClean}?&body=${encodeURIComponent(text)}`
+      : `sms:?body=${encodeURIComponent(text)}`;
 
     setManualSubmitted(true);
     window.open(url, "_blank");
@@ -576,13 +573,13 @@ export default function DynamicRsvpForm({
               <span>{isEn ? "Add to Calendar" : "Agregar al Calendario"}</span>
             </a>
 
-            {/* Avisar a la anfitriona por WhatsApp */}
+            {/* Avisar a la anfitriona por SMS */}
             <button
               onClick={handleShareToWhatsApp}
-              className="w-full py-2.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold flex items-center justify-center gap-2 transition shadow-xs cursor-pointer"
+              className="w-full py-2.5 px-3 rounded-xl bg-stone-900 hover:bg-black text-white text-xs font-bold flex items-center justify-center gap-2 transition shadow-xs cursor-pointer"
             >
               <Send className="w-3.5 h-3.5" />
-              <span>{isEn ? "Send WhatsApp to Host" : "Avisar a la Anfitriona por WhatsApp"}</span>
+              <span>{isEn ? "Share Confirmation via SMS" : "Compartir Confirmación por SMS"}</span>
             </button>
           </div>
 

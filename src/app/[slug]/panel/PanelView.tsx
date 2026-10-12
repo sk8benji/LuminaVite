@@ -105,18 +105,18 @@ export default function PanelView({
     setTimeout(() => setCopiedGuestId(null), 2500);
   };
 
-  // Enviar invitación personalizada por WhatsApp
-  const sendGuestWhatsApp = (guest: GuestItem) => {
+  // Enviar invitación personalizada por SMS
+  const sendGuestSms = (guest: GuestItem) => {
     const origin = typeof window !== "undefined" ? window.location.origin : "https://clickandlove.app";
     const guestLink = `${origin}/${slug}?guest=${guest.id}`;
     const text = encodeURIComponent(
       `¡Hola ${guest.name}! Queremos compartir este momento contigo. Tienes ${guest.max_pax} pases reservados para nuestro evento. Confirma tu asistencia aquí: ${guestLink}`
     );
     const cleanPhone = guest.phone ? guest.phone.replace(/[^0-9]/g, "") : "";
-    const whatsappUrl = cleanPhone
-      ? `https://wa.me/${cleanPhone}?text=${text}`
-      : `https://wa.me/?text=${text}`;
-    window.open(whatsappUrl, "_blank");
+    const smsUrl = cleanPhone
+      ? `sms:${cleanPhone}?&body=${text}`
+      : `sms:?body=${text}`;
+    window.open(smsUrl, "_blank");
   };
 
   // Formulario rápido para añadir invitado
@@ -342,12 +342,10 @@ export default function PanelView({
               Ver Invitación Digital
             </Link>
             <a
-              href={`https://wa.me/18181234567?text=Hola,%20necesito%20acceder%20a%20mi%20panel%20del%20evento%20${slug}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex-1 py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-semibold transition flex items-center justify-center gap-1.5 shadow-xs"
+              href={`sms:18181234567?&body=${encodeURIComponent(`Hola, necesito acceder a mi panel del evento ${slug}`)}`}
+              className="flex-1 py-2.5 px-4 bg-stone-900 hover:bg-black text-white rounded-xl text-xs font-semibold transition flex items-center justify-center gap-1.5 shadow-xs"
             >
-              <span>Ayuda por WhatsApp</span>
+              <span>Ayuda por SMS</span>
             </a>
           </div>
         </div>
@@ -684,9 +682,9 @@ export default function PanelView({
                                 )}
                               </button>
                               <button
-                                onClick={() => sendGuestWhatsApp(guest)}
-                                title="Enviar invitación por WhatsApp"
-                                className="p-1.5 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg transition cursor-pointer"
+                                onClick={() => sendGuestSms(guest)}
+                                title="Enviar invitación por Mensaje de Texto (SMS)"
+                                className="p-1.5 text-stone-700 hover:text-stone-900 hover:bg-stone-100 rounded-lg transition cursor-pointer"
                               >
                                 <MessageSquare className="w-3.5 h-3.5" />
                               </button>

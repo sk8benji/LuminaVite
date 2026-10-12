@@ -7,6 +7,10 @@ export type EventWithRsvps = Prisma.EventoGetPayload<{
       orderBy: { createdAt: "desc" };
     };
     usuario: true;
+    ordenesCompra: {
+      orderBy: { createdAt: "desc" };
+      take: 1;
+    };
   };
 }>;
 
@@ -50,6 +54,10 @@ export async function getEventBySlug(rawSlug: string): Promise<EventWithRsvps | 
           orderBy: { createdAt: "desc" },
         },
         usuario: true,
+        ordenesCompra: {
+          orderBy: { createdAt: "desc" },
+          take: 1,
+        },
       },
     });
 

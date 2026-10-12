@@ -12,6 +12,7 @@ import {
   Calendar,
   MapPin,
   MessageCircle,
+  Bell,
   Music,
   Eye,
   Sliders,
@@ -413,11 +414,15 @@ function NuevoEventoContent() {
     const rawMonthEn = deadlineDate.toLocaleDateString("en-US", { month: "long" });
     const monthEs = rawMonthEs.charAt(0).toUpperCase() + rawMonthEs.slice(1);
     const monthEn = rawMonthEn.charAt(0).toUpperCase() + rawMonthEn.slice(1);
+    const deadlineYear = deadlineDate.getFullYear();
 
     return {
       deadlineDay,
+      deadlineYear,
       monthEs,
       monthEn,
+      fechaDestacadaEs: `${deadlineDay} de ${monthEs}, ${deadlineYear}`,
+      fechaDestacadaEn: `${monthEn} ${deadlineDay}, ${deadlineYear}`,
       fraseEs: `Favor de confirmar antes del ${deadlineDay} de ${monthEs}`,
       fraseEn: `Please confirm before ${monthEn} ${deadlineDay}`,
       fechaLimiteRsvp: `${deadlineDay} de ${monthEs.toLowerCase()}`,
@@ -641,9 +646,12 @@ function NuevoEventoContent() {
             };
           }
 
+          const paquete = ev.ordenesCompra?.[0]?.paqueteId || ev.tipoPlan || null;
+
           setFormData((prev) => ({
             ...prev,
             ...ev,
+            tipoPlan: paquete || prev.tipoPlan,
             configPlantilla: parsedConfig,
             fechaEvento: ev.fechaEvento
               ? new Date(ev.fechaEvento).toISOString().slice(0, 16)
@@ -1480,30 +1488,42 @@ function NuevoEventoContent() {
                   />
                 </div>
 
-                {/* WhatsApp & RSVP Límite */}
+                {/* Confirmaciones y Notificaciones */}
                 <div className="p-4 bg-stone-50 border border-stone-200 rounded-2xl space-y-3">
                   <div className="flex items-center gap-2">
-                    <MessageCircle className="w-4 h-4 text-emerald-600" />
+                    <Bell className="w-4 h-4 text-stone-700" />
                     <span className="text-xs font-bold text-stone-800">
-                      Recepción de Confirmaciones por WhatsApp & Control de Pases
+                      Confirmaciones y Notificaciones
                     </span>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <div>
-                      <label className="block text-[11px] text-stone-600 mb-1">
-                        Teléfono WhatsApp (Con lada, sin signos +)
+                      <label className="block text-[11px] font-semibold text-stone-700 mb-1">
+                        Teléfono Móvil (SMS)
                       </label>
                       <input
                         type="text"
+                        disabled={formData.tipoPlan === "basic"}
                         value={formData.telefonoWhatsappRsvp}
                         onChange={(e) => updateField("telefonoWhatsappRsvp", e.target.value)}
-                        placeholder="Ej: 18181234567 o 5215512345678"
-                        className="w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs"
+                        placeholder="Ej: 18181234567 (+1 USA)"
+                        className={`w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs ${
+                          formData.tipoPlan === "basic" ? "opacity-60 bg-stone-100 cursor-not-allowed" : ""
+                        }`}
                       />
+                      {formData.tipoPlan === "basic" ? (
+                        <p className="text-[10px] text-amber-600 mt-1">
+                          Notificaciones por mensaje de texto no incluidas en este paquete. Las alertas se enviarán únicamente por correo electrónico.
+                        </p>
+                      ) : (
+                        <p className="text-[10px] text-stone-400 mt-1">
+                          Número con código de país para alertas SMS (+1 USA o internacional).
+                        </p>
+                      )}
                     </div>
                     <div>
-                      <label className="block text-[11px] text-stone-600 mb-1">
+                      <label className="block text-[11px] font-semibold text-stone-700 mb-1">
                         Máximo de pases por invitado
                       </label>
                       <input
@@ -1514,6 +1534,9 @@ function NuevoEventoContent() {
                         onChange={(e) => updateField("maxPasesPorInvitado", Number(e.target.value))}
                         className="w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs"
                       />
+                      <p className="text-[10px] text-stone-400 mt-1">
+                        Límite sugerido por reserva individual.
+                      </p>
                     </div>
                     <div className="bg-stone-50/80 p-3 rounded-2xl border border-stone-200/80 space-y-2">
                       <div className="flex items-center justify-between">
@@ -1558,18 +1581,22 @@ function NuevoEventoContent() {
                         ))}
                       </div>
 
-                      {/* Vista previa en vivo con texto fijo en ambos idiomas */}
+                      {/* Vista previa en vivo con formato de tarjeta informativa limpia */}
                       {(() => {
                         const previewCalc = computeRsvpPhrases(formData.fechaEvento, formData.rsvpDiasAntes || 15);
                         return (
-                          <div className="p-2 bg-white rounded-xl border border-stone-100 space-y-1 text-[10.5px]">
-                            <div className="flex items-center gap-1.5 text-stone-600">
-                              <span className="text-[10px]">🇲🇽</span>
-                              <span className="font-semibold text-stone-800">{previewCalc.fraseEs}</span>
+                          <div className="bg-neutral-50 border border-neutral-200 rounded-lg p-2.5 mt-2 space-y-1">
+                            <div className="text-[10px] uppercase font-bold text-neutral-500 tracking-wider">
+                              Fecha límite calculada
                             </div>
-                            <div className="flex items-center gap-1.5 text-stone-600">
-                              <span className="text-[10px]">🇺🇸</span>
-                              <span className="font-semibold text-stone-800">{previewCalc.fraseEn}</span>
+                            <div className="text-xs font-bold text-neutral-900">
+                              {previewCalc.fechaDestacadaEs}
+                            </div>
+                            <div className="text-[11px] text-neutral-700 font-medium pt-0.5">
+                              🇲🇽 {previewCalc.fraseEs}
+                            </div>
+                            <div className="text-xs text-neutral-400">
+                              🇺🇸 {previewCalc.fraseEn}
                             </div>
                           </div>
                         );
@@ -1577,26 +1604,21 @@ function NuevoEventoContent() {
                     </div>
                   </div>
 
-                  {/* Notificaciones Inmediatas por Correo al Anfitrión (AWS SES) */}
+                  {/* Notificaciones Inmediatas por Correo al Anfitrión */}
                   <div className="pt-3 border-t border-stone-200/80 grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                      <div className="flex items-center gap-1.5 mb-1">
-                        <label className="block text-[11px] font-semibold text-stone-700">
-                          Email del Anfitrión / Mamá (Alertas en Tiempo Real)
-                        </label>
-                        <span className="text-[9px] bg-blue-50 text-blue-700 px-1.5 py-0.2 rounded font-medium">
-                          AWS SES
-                        </span>
-                      </div>
+                      <label className="block text-[11px] font-semibold text-stone-700 mb-1">
+                        Correo para Notificaciones
+                      </label>
                       <input
                         type="email"
                         value={formData.emailOrganizador || ""}
                         onChange={(e) => updateField("emailOrganizador", e.target.value)}
-                        placeholder="mama.valeria@gmail.com"
+                        placeholder="ejemplo@gmail.com"
                         className="w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs"
                       />
                       <p className="text-[10px] text-stone-400 mt-1">
-                        Recibe un correo breve al instante con el balance y el Magic Link por cada confirmación.
+                        Recibe un correo breve al instante con el balance y el enlace de acceso por cada confirmación.
                       </p>
                     </div>
 
