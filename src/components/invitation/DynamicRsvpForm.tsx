@@ -457,7 +457,7 @@ export default function DynamicRsvpForm({
 
               <div>
                 <label className="block text-[10px] font-bold tracking-wider uppercase text-stone-600 mb-1">
-                  {isEn ? "Phone (Optional for reminders):" : "Teléfono de contacto (Opcional):"}
+                  {isEn ? "MOBILE NUMBER TO RECEIVE YOUR PASSES VIA SMS:" : "MÓVIL PARA RECIBIR TUS PASES POR SMS:"}
                 </label>
                 <input
                   type="tel"
@@ -466,6 +466,11 @@ export default function DynamicRsvpForm({
                   placeholder={isEn ? "e.g. +1 (818) 555-0123" : "Ej. +1 (818) 555-0123"}
                   className="w-full bg-stone-50 border border-stone-200 rounded-xl px-3 py-2 text-xs text-stone-800 focus:outline-none focus:ring-2 focus:ring-stone-400"
                 />
+                <p className="text-xs text-neutral-500 mt-1 text-left">
+                  {isEn
+                    ? "We'll send your access details and location via text message."
+                    : "Te enviaremos los detalles de tu acceso y ubicación por mensaje de texto."}
+                </p>
               </div>
             </div>
           ) : (

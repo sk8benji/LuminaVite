@@ -1305,15 +1305,20 @@ export default function BlueButterflyTemplate({
 
                 <div>
                   <label className="block text-[11px] font-semibold text-slate-600 uppercase tracking-wider mb-1 font-serif-roman">
-                    {isEn ? "Phone Number (For SMS Confirmation & Location)" : "Teléfono Móvil (Para confirmación y mapa por SMS)"}
+                    {isEn ? "MOBILE NUMBER TO RECEIVE YOUR PASSES VIA SMS:" : "MÓVIL PARA RECIBIR TUS PASES POR SMS:"}
                   </label>
                   <input
                     type="tel"
                     value={guestPhone}
                     onChange={(e) => setGuestPhone(e.target.value)}
                     className="w-full bg-[#F4F9FD] border border-blue-100 rounded-xl px-3.5 py-2.5 text-xs text-slate-800 focus:outline-none focus:border-[#2F5A84]"
-                    placeholder={isEn ? "e.g. 555-123-4567" : "Ej. 55 1234 5678"}
+                    placeholder={isEn ? "e.g. +1 (818) 555-0123" : "Ej. +1 (818) 555-0123"}
                   />
+                  <p className="text-xs text-neutral-500 mt-1 text-left">
+                    {isEn
+                      ? "We'll send your access details and location via text message."
+                      : "Te enviaremos los detalles de tu acceso y ubicación por mensaje de texto."}
+                  </p>
                 </div>
 
                 <div>
