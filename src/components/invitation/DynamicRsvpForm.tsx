@@ -426,15 +426,15 @@ export default function DynamicRsvpForm({
                     </p>
                   </div>
                 ) : (
-                  /* Modo Híbrido: Auto-registro con aforo */
+                  /* Modo Híbrido: Registro de nuevo invitado */
                   <div className="p-3.5 rounded-2xl bg-amber-50/80 border border-amber-200 text-amber-950 text-xs text-center space-y-2">
                     <p className="font-semibold text-stone-800">
-                      {isEn ? "Can't find your name on the list?" : "¿No encuentras tu nombre en la lista?"}
+                      {isEn ? "Can't find your name?" : "¿No encuentras tu nombre en la lista?"}
                     </p>
-                    <p className="text-[10px] text-stone-600">
+                    <p className="text-[11px] text-stone-600 leading-relaxed">
                       {isEn
-                        ? "You can register directly to confirm your attendance."
-                        : "Puedes registrarte y confirmar tus pases hasta completar el aforo."}
+                        ? "Register here to confirm your attendance."
+                        : "Regístrate aquí para confirmar tu asistencia a la celebración."}
                     </p>
                     <button
                       type="button"
@@ -445,24 +445,11 @@ export default function DynamicRsvpForm({
                       className="w-full py-2.5 px-3 rounded-xl bg-stone-900 hover:bg-black text-white text-xs font-bold transition shadow-xs cursor-pointer flex items-center justify-center gap-1.5"
                     >
                       <Sparkles className="w-3.5 h-3.5 text-amber-300" />
-                      <span>{isEn ? "Confirm as New Guest" : "Confirmar como nuevo invitado"}</span>
+                      <span>{isEn ? "Confirm RSVP" : "Confirmar Asistencia"}</span>
                     </button>
                   </div>
                 )
               ) : null}
-            </div>
-          )}
-
-          {/* Enlace secundario (Solo si NO es Modo Estricto) */}
-          {!isEstricto && (
-            <div className="pt-2 border-t border-stone-100">
-              <button
-                type="button"
-                onClick={() => setStep("register")}
-                className="text-[11px] font-medium text-stone-500 hover:text-stone-800 underline transition cursor-pointer"
-              >
-                {isEn ? "¿Not on the list? Register here" : "¿No encuentras tu nombre? Regístrate aquí"}
-              </button>
             </div>
           )}
         </div>
