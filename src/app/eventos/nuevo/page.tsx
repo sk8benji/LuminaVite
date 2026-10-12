@@ -1256,13 +1256,24 @@ function NuevoEventoContent() {
                   </div>
                 </div>
 
-                {/* Video del Evento (YouTube o MP4) */}
+                {/* Video del Evento (YouTube o MP4 - Opcional) */}
                 <div className="p-4 bg-stone-50 border border-stone-200 rounded-2xl space-y-2">
-                  <label className="block text-xs font-bold text-stone-800 mb-1">
-                    Video de Agradecimiento o Sesión Previa (YouTube o MP4)
-                  </label>
+                  <div className="flex items-center justify-between">
+                    <label className="block text-xs font-bold text-stone-800">
+                      Video de Agradecimiento o Sesión Previa (Opcional)
+                    </label>
+                    {formData.videoUrl && (
+                      <button
+                        type="button"
+                        onClick={() => updateField("videoUrl", "")}
+                        className="text-[10px] text-rose-600 hover:text-rose-800 font-semibold underline cursor-pointer"
+                      >
+                        Quitar video
+                      </button>
+                    )}
+                  </div>
                   <p className="text-[11px] text-stone-500">
-                    Se reproducirá embebido de forma elegante en la sección audiovisual de la plantilla.
+                    Opcional. Si no ingresas ningún enlace, la sección de video se ocultará automáticamente en la invitación.
                   </p>
                   <input
                     type="text"

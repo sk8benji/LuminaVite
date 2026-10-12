@@ -107,6 +107,37 @@ function parseEventDate(fechaEvento?: string | Date | null) {
   return { year: 2027, month: 4, day: 15 };
 }
 
+function parseVideoEmbed(rawUrl?: string | null): { type: "youtube" | "video"; src: string } | null {
+  if (!rawUrl || !rawUrl.trim()) return null;
+  const url = rawUrl.trim();
+
+  // YouTube standard, embed o youtu.be enlaces cortos
+  const ytMatch = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/);
+  if (ytMatch && ytMatch[1]) {
+    return {
+      type: "youtube",
+      src: `https://www.youtube.com/embed/${ytMatch[1]}?rel=0`,
+    };
+  }
+
+  // Archivos directos de video (MP4, WebM, etc.)
+  if (/\.(mp4|webm|ogg|mov)(\?.*)?$/i.test(url)) {
+    return {
+      type: "video",
+      src: url,
+    };
+  }
+
+  if (url.startsWith("https://") || url.startsWith("http://")) {
+    return {
+      type: "youtube",
+      src: url,
+    };
+  }
+
+  return null;
+}
+
 export default function QuinceRosadoTemplate({
   data,
   skipIntro = false,
@@ -1231,16 +1262,32 @@ export default function QuinceRosadoTemplate({
               </a>
             </div>
 
-            {/* Video de YouTube Embebido */}
-            <div className="relative w-full aspect-video rounded-2xl overflow-hidden shadow-2xl border-4 border-white mb-8 bg-black">
-              <iframe
-                src="https://www.youtube.com/embed/o_1aF54DO60?rel=0"
-                title="Quinceañera Video"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                className="w-full h-full"
-              />
-            </div>
+            {/* Video de Agradecimiento o Sesión Previa (Opcional: solo se muestra si el anfitrión configuró un videoUrl) */}
+            {(() => {
+              const videoEmbed = parseVideoEmbed(data.videoUrl);
+              if (!videoEmbed) return null;
+
+              return (
+                <div className="relative w-full aspect-video rounded-2xl overflow-hidden shadow-2xl border-4 border-white mb-8 bg-black">
+                  {videoEmbed.type === "youtube" ? (
+                    <iframe
+                      src={videoEmbed.src}
+                      title="Quinceañera Video"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                      className="w-full h-full"
+                    />
+                  ) : (
+                    <video
+                      src={videoEmbed.src}
+                      controls
+                      playsInline
+                      className="w-full h-full object-cover"
+                    />
+                  )}
+                </div>
+              );
+            })()}
 
             {/* Retrato Final de Despedida */}
             <div className="relative w-[240px] aspect-[3/4] mx-auto rounded-t-[120px] overflow-hidden shadow-2xl border-4 border-white mb-4 bg-pink-100">
