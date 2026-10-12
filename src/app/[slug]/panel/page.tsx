@@ -126,6 +126,7 @@ export default async function ClientMagicLinkPanelPage({
       fechaEvento: serializedEvento.fechaEvento,
       recepcionNombre: serializedEvento.recepcionNombre,
       maxPasesPorInvitado: serializedEvento.maxPasesPorInvitado,
+      modalidadRsvp: serializedEvento.modalidadRsvp || "HIBRIDO",
     },
     estadisticas: {
       totalInvitadosConfirmados: confirmados.length,

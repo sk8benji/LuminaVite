@@ -66,13 +66,22 @@ export async function POST(req: NextRequest) {
         throw new Error(`MAX_PASSES_EXCEEDED:${maxAllowed}`);
       }
 
-      // 3. Buscar confirmación previa existente
+      // 3. Buscar confirmación previa existente por teléfono o email
       let rsvpExistente = null;
       if (normalizedPhone) {
         rsvpExistente = await tx.rsvpRegistro.findFirst({
           where: {
             eventoId: evento.id,
             telefono: normalizedPhone,
+          },
+        });
+      }
+
+      if (!rsvpExistente && cleanEmail) {
+        rsvpExistente = await tx.rsvpRegistro.findFirst({
+          where: {
+            eventoId: evento.id,
+            email: cleanEmail,
           },
         });
       }
@@ -87,6 +96,12 @@ export async function POST(req: NextRequest) {
             },
           },
         });
+      }
+
+      // Regla de deduplicación: Si ya tiene confirmación activa, prevenir duplicado y alertar
+      if (rsvpExistente && rsvpExistente.asistira && isAttending && !body.permitirActualizacion) {
+        const canal = (normalizedPhone && rsvpExistente.telefono === normalizedPhone) ? "número" : "correo";
+        throw new Error(`ALREADY_CONFIRMED:${canal}:${rsvpExistente.pases}:${rsvpExistente.nombreInvitado}`);
       }
 
       // 4. Verificación de Aforo Máximo
@@ -143,6 +158,47 @@ export async function POST(req: NextRequest) {
             acompanantes: acompanantes ?? null,
           },
         });
+      }
+
+      // Sincronizar o crear en la tabla Guest para que aparezca en el panel del anfitrión
+      try {
+        const guestExistente = await tx.guest.findFirst({
+          where: {
+            eventId: evento.id,
+            OR: [
+              ...(normalizedPhone ? [{ phone: normalizedPhone }] : []),
+              ...(cleanEmail ? [{ email: cleanEmail }] : []),
+              { name: { equals: String(nombreInvitado).trim(), mode: "insensitive" } },
+            ],
+          },
+        });
+
+        if (guestExistente) {
+          await tx.guest.update({
+            where: { id: guestExistente.id },
+            data: {
+              status: isAttending ? "attending" : "declined",
+              confirmedPax: isAttending ? requestedPasses : 0,
+              phone: normalizedPhone || guestExistente.phone,
+              email: cleanEmail || guestExistente.email,
+              updatedAt: new Date(),
+            },
+          });
+        } else {
+          await tx.guest.create({
+            data: {
+              eventId: evento.id,
+              name: String(nombreInvitado).trim(),
+              phone: normalizedPhone,
+              email: cleanEmail,
+              maxPax: requestedPasses,
+              confirmedPax: isAttending ? requestedPasses : 0,
+              status: isAttending ? "attending" : "declined",
+            },
+          });
+        }
+      } catch (guestSyncErr) {
+        console.warn("Aviso: Sincronización con tabla guest omitida:", guestSyncErr);
       }
 
       // 6. Recalcular total acumulado confirmado
@@ -238,6 +294,22 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(
         { error: "El evento especificado no existe o no se encuentra activo." },
         { status: 404 }
+      );
+    }
+
+    if (error?.message?.startsWith("ALREADY_CONFIRMED:")) {
+      const parts = error.message.split(":");
+      const canal = parts[1] || "contacto";
+      const pases = parts[2] || "1";
+      const nombre = parts.slice(3).join(":") || "otro invitado";
+      return NextResponse.json(
+        {
+          error: `Este ${canal} ya tiene ${pases} ${Number(pases) === 1 ? "pase confirmado" : "pases confirmados"} a nombre de ${nombre}. Para modificar tu asistencia, contacta al anfitrión.`,
+          alreadyConfirmed: true,
+          confirmedName: nombre,
+          confirmedPax: Number(pases),
+        },
+        { status: 409 }
       );
     }
 

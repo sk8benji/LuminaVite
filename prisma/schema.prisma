@@ -158,6 +158,7 @@ model Evento {
   transporteJson     Json?           // { shuttlesInfo: "Shuttles saldrán a las 4:30 PM..." }
   historiaHitosJson  Json?           // Array de hitos [{ anio: "2012", titulo: "...", fotoUrl: "...", texto: "..." }]
   configPlantilla    Json?           @default("{}") // Contenedor dinámico JSONB para variables por plantilla
+  modalidadRsvp      String?         @default("HIBRIDO") // "ESTRICTO" | "HIBRIDO" | "ABIERTO"
 
   activo             Boolean         @default(true)
   vistasContador     Int             @default(0)

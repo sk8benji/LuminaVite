@@ -781,6 +781,8 @@ export default function QuinceRosadoTemplate({
                 lang={currentLang}
                 permiteSms={data.permiteSms}
                 tipoPlan={data.tipoPlan}
+                modalidadRsvp={data.modalidadRsvp || undefined}
+                maxPasesPorInvitado={data.maxPasesPorInvitado}
               />
             </div>
 

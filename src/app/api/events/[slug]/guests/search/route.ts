@@ -25,6 +25,7 @@ export async function GET(req: NextRequest, context: RouteContext) {
       searchParams.get("id") ||
       searchParams.get("guest") ||
       searchParams.get("guest_id") ||
+      searchParams.get("inv") ||
       ""
     ).trim();
 

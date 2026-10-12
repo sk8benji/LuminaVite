@@ -100,6 +100,7 @@ export interface InvitationData {
   idiomaDefault?: string;
   tipoPlan?: string | null;
   permiteSms?: boolean;
+  modalidadRsvp?: "ESTRICTO" | "HIBRIDO" | "ABIERTO" | string | null;
 }
 
 export default function InvitationMobileView({

@@ -70,6 +70,7 @@ export async function GET(
         fechaEvento: evento.fechaEvento,
         recepcionNombre: evento.recepcionNombre,
         maxPasesPorInvitado: evento.maxPasesPorInvitado,
+        modalidadRsvp: (evento as any).modalidadRsvp || "HIBRIDO",
       },
       estadisticas: {
         totalInvitadosConfirmados: confirmados.length,
@@ -87,6 +88,85 @@ export async function GET(
         error: "Error interno del servidor.",
         details: error?.message || String(error),
       },
+      { status: 500 }
+    );
+  }
+}
+
+export async function PATCH(
+  req: NextRequest,
+  context: { params: Promise<{ slug: string }> | { slug: string } }
+) {
+  try {
+    const resolvedParams = context?.params ? await context.params : null;
+    let slug = resolvedParams?.slug;
+    if (!slug) {
+      const url = new URL(req.url);
+      const parts = url.pathname.split("/").filter(Boolean);
+      const idx = parts.indexOf("eventos");
+      if (idx !== -1 && parts[idx + 1] && parts[idx + 1] !== "panel") {
+        slug = parts[idx + 1];
+      }
+    }
+    const cleanSlug = normalizeSlug(slug);
+
+    const { searchParams } = new URL(req.url);
+    const queryKey = searchParams.get("key")?.trim();
+
+    // 1. Validar autorización vía Cookie de Sesión HttpOnly o vía Clave en Query
+    const cookieName = getPanelCookieName(cleanSlug);
+    const sessionCookie = req.cookies.get(cookieName)?.value;
+
+    let isAuthorized = false;
+    if (sessionCookie) {
+      isAuthorized = await verifyPanelAuth(cleanSlug, sessionCookie);
+    }
+
+    const evento = await getEventBySlug(cleanSlug);
+    if (!evento) {
+      return NextResponse.json(
+        { error: "Evento no encontrado." },
+        { status: 404 }
+      );
+    }
+
+    if (!isAuthorized && queryKey) {
+      isAuthorized = validateEventKey(queryKey, evento.panelToken);
+    }
+
+    if (!isAuthorized) {
+      return NextResponse.json(
+        { error: "Acceso no autorizado al panel del anfitrión." },
+        { status: 401 }
+      );
+    }
+
+    const body = await req.json();
+    const { modalidadRsvp } = body;
+
+    const validModalities = ["ESTRICTO", "HIBRIDO", "ABIERTO"];
+    if (!modalidadRsvp || !validModalities.includes(modalidadRsvp)) {
+      return NextResponse.json(
+        { error: "Modalidad inválida. Debe ser ESTRICTO, HIBRIDO o ABIERTO." },
+        { status: 400 }
+      );
+    }
+
+    const prismaClient = (await import("@/lib/db")).default;
+    const updated = await prismaClient.evento.update({
+      where: { id: evento.id },
+      data: { modalidadRsvp },
+    });
+
+    return NextResponse.json({
+      success: true,
+      modalidadRsvp: updated.modalidadRsvp,
+      message: "Modalidad de RSVP actualizada correctamente.",
+    });
+  } catch (error: any) {
+    console.error("Error al actualizar modalidad de RSVP en el panel:", error);
+    return NextResponse.json(
+      { error: "No se pudo actualizar la modalidad de RSVP.", details: error?.message },
       { status: 500 }
     );
   }

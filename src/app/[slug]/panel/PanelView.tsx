@@ -22,6 +22,9 @@ import {
   Link2,
   MessageSquare,
   Share2,
+  Globe,
+  Zap,
+  Shield,
 } from "lucide-react";
 
 export interface GuestItem {
@@ -44,6 +47,7 @@ export interface PanelData {
     fechaEvento: string;
     recepcionNombre?: string;
     maxPasesPorInvitado?: number;
+    modalidadRsvp?: "ESTRICTO" | "HIBRIDO" | "ABIERTO" | string;
   };
   estadisticas: {
     totalInvitadosConfirmados: number;
@@ -95,6 +99,39 @@ export default function PanelView({
       ? "Por favor introduce tu clave de anfitrión."
       : ""
   );
+
+  const [modalidadRsvp, setModalidadRsvp] = useState<string>(
+    initialData?.evento?.modalidadRsvp || "HIBRIDO"
+  );
+  const [isUpdatingModalidad, setIsUpdatingModalidad] = useState(false);
+  const [modalidadSuccess, setModalidadSuccess] = useState(false);
+
+  const handleUpdateModalidad = async (newModalidad: "ESTRICTO" | "HIBRIDO" | "ABIERTO") => {
+    if (newModalidad === modalidadRsvp || isUpdatingModalidad) return;
+    const prev = modalidadRsvp;
+    setModalidadRsvp(newModalidad);
+    setIsUpdatingModalidad(true);
+
+    try {
+      const res = await fetch(`/api/eventos/${encodeURIComponent(slug)}/panel?key=${encodeURIComponent(panelKey)}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ modalidadRsvp: newModalidad }),
+      });
+
+      if (!res.ok) {
+        throw new Error("No se pudo actualizar la modalidad");
+      }
+
+      setModalidadSuccess(true);
+      setTimeout(() => setModalidadSuccess(false), 2500);
+    } catch (err) {
+      console.error("Error al actualizar modalidad de RSVP:", err);
+      setModalidadRsvp(prev);
+    } finally {
+      setIsUpdatingModalidad(false);
+    }
+  };
 
   // Copiar enlace directo personalizado de un invitado (?guest=UUID)
   const copyGuestLink = (guestId: string) => {
@@ -418,6 +455,81 @@ export default function PanelView({
           </div>
           <div className="absolute -right-6 -bottom-8 opacity-10 text-8xl pointer-events-none select-none">
             ✦
+          </div>
+        </div>
+
+        {/* ============================================================== */}
+        {/* SELECTOR DE MODALIDAD RSVP EN VIVO */}
+        {/* ============================================================== */}
+        <div className="bg-white rounded-2xl border border-[#E8E3D9] p-4 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-3">
+          <div className="space-y-0.5">
+            <div className="flex items-center gap-2">
+              <span className="text-sm">⚙️</span>
+              <h3 className="text-xs font-bold text-[#2C1F1B] uppercase tracking-wider">
+                Modalidad de RSVP Activa
+              </h3>
+              {isUpdatingModalidad && (
+                <span className="inline-flex items-center gap-1 text-[10px] text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full font-medium">
+                  <Loader2 className="w-3 h-3 animate-spin" /> Guardando...
+                </span>
+              )}
+              {modalidadSuccess && (
+                <span className="inline-flex items-center gap-1 text-[10px] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full font-bold animate-fade-in">
+                  <Check className="w-3 h-3" /> Guardado en vivo
+                </span>
+              )}
+            </div>
+            <p className="text-[11px] text-[#8C8077]">
+              {modalidadRsvp === "ESTRICTO"
+                ? "🔒 Modo Estricto: Solo pueden confirmar los invitados de tu lista oficial. Nadie fuera de la lista puede registrarse."
+                : modalidadRsvp === "ABIERTO"
+                ? `🌐 Modo Abierto: Formulario abierto sin buscador. Cualquier persona puede registrarse hasta agotar ${data.estadisticas.aforoTotal || 200} pases.`
+                : `⚡ Modo Híbrido: Buscan su nombre; si no lo encuentran, se registran y confirman al instante con tope de aforo (${data.estadisticas.aforoTotal || 200} pases).`}
+            </p>
+          </div>
+
+          <div className="inline-flex items-center bg-[#FAF8F5] p-1 rounded-xl border border-[#E8E3D9] self-start md:self-auto shrink-0">
+            <button
+              type="button"
+              onClick={() => handleUpdateModalidad("ESTRICTO")}
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
+                modalidadRsvp === "ESTRICTO"
+                  ? "bg-[#2C1F1B] text-white shadow-xs"
+                  : "text-[#8C8077] hover:text-[#2C1F1B]"
+              }`}
+            >
+              <Shield className="w-3.5 h-3.5" />
+              <span>Estricto</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => handleUpdateModalidad("HIBRIDO")}
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
+                modalidadRsvp === "HIBRIDO"
+                  ? "bg-[#C5A059] text-[#2C1F1B] shadow-xs"
+                  : "text-[#8C8077] hover:text-[#2C1F1B]"
+              }`}
+            >
+              <Zap className="w-3.5 h-3.5" />
+              <span>Híbrido</span>
+              <span className="text-[8px] uppercase tracking-wide bg-amber-900/10 px-1 rounded font-extrabold hidden sm:inline">
+                Top
+              </span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => handleUpdateModalidad("ABIERTO")}
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
+                modalidadRsvp === "ABIERTO"
+                  ? "bg-stone-800 text-white shadow-xs"
+                  : "text-[#8C8077] hover:text-[#2C1F1B]"
+              }`}
+            >
+              <Globe className="w-3.5 h-3.5" />
+              <span>Abierto</span>
+            </button>
           </div>
         </div>
 

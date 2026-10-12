@@ -384,6 +384,7 @@ async function getEventoData(rawSlug: string): Promise<InvitationData | null> {
       permiteSms:
         !(dbEvento as any).ordenesCompra?.length ||
         (!((dbEvento as any).ordenesCompra?.[0]?.paqueteId?.toLowerCase() || "").includes("basic")),
+      modalidadRsvp: (dbEvento as any).modalidadRsvp || "HIBRIDO",
     };
   }
 

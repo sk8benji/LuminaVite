@@ -36,6 +36,8 @@ interface DynamicRsvpFormProps {
   lang?: "es" | "en";
   permiteSms?: boolean;
   tipoPlan?: string | null;
+  modalidadRsvp?: "ESTRICTO" | "HIBRIDO" | "ABIERTO" | string;
+  maxPasesPorInvitado?: number;
 }
 
 export default function DynamicRsvpForm({
@@ -50,14 +52,27 @@ export default function DynamicRsvpForm({
   lang = "es",
   permiteSms,
   tipoPlan,
+  modalidadRsvp = "HIBRIDO",
+  maxPasesPorInvitado = 4,
 }: DynamicRsvpFormProps) {
   const isEn = lang === "en";
   const isSmsEnabled = permiteSms ?? (!tipoPlan || !tipoPlan.toLowerCase().includes("basic"));
   const searchParams = useSearchParams();
-  const directGuestId = searchParams?.get("guest") || searchParams?.get("guest_id") || searchParams?.get("id");
+  const directGuestId =
+    searchParams?.get("inv") ||
+    searchParams?.get("guest") ||
+    searchParams?.get("guest_id") ||
+    searchParams?.get("id");
 
-  // Estados del flujo: 1 = Buscar, 2 = Seleccionar Asistencia/Pases, 3 = Éxito, "manual" = Fallback
-  const [step, setStep] = useState<1 | 2 | 3 | "manual">(1);
+  const activeMode = (modalidadRsvp || "HIBRIDO").toUpperCase();
+  const isAbierto = activeMode === "ABIERTO";
+  const isEstricto = activeMode === "ESTRICTO";
+  const isHibrido = activeMode === "HIBRIDO";
+
+  // Estados del flujo: 1 = Buscar, 2 = Seleccionar Asistencia/Pases, 3 = Éxito, "register" = Formulario libre/auto-registro
+  const [step, setStep] = useState<1 | 2 | 3 | "register">(
+    isAbierto && !directGuestId ? "register" : 1
+  );
 
   // Estado 1: Búsqueda
   const [searchQuery, setSearchQuery] = useState("");
@@ -261,8 +276,8 @@ export default function DynamicRsvpForm({
     window.open(url, "_blank");
   };
 
-  // Envío manual fallback interno (CERO SMS de Twilio para eliminar riesgo de toll fraud)
-  const handleManualSubmit = async (e: React.FormEvent) => {
+  // Envío de registro directo para Modo Híbrido o Modo Abierto
+  const handleRegisterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!manualName.trim()) return;
 
@@ -270,24 +285,48 @@ export default function DynamicRsvpForm({
     setManualError("");
 
     try {
-      const res = await fetch(`/api/events/${encodeURIComponent(slug)}/manual-request`, {
+      const contactVal = manualPhone.trim();
+      const payload = {
+        slug,
+        nombreInvitado: manualName.trim(),
+        telefono: isSmsEnabled ? contactVal || undefined : undefined,
+        email: !isSmsEnabled ? contactVal || undefined : undefined,
+        pases: Number(manualPax) || 1,
+        asistira: true,
+        acompanantes: notes.trim() || undefined,
+      };
+
+      const res = await fetch("/api/rsvp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: manualName.trim(),
-          phone: manualPhone.trim() || undefined,
-          pax: Number(manualPax) || 1,
-        }),
+        body: JSON.stringify(payload),
       });
 
       const resData = await res.json();
       if (!res.ok) {
-        throw new Error(resData.error || "No se pudo procesar tu solicitud.");
+        throw new Error(resData.error || "No se pudo procesar tu confirmación.");
       }
 
-      setManualSubmitted(true);
+      // Si asiste, lanzar confeti
+      try {
+        confetti({
+          particleCount: 90,
+          spread: 75,
+          origin: { y: 0.75 },
+          colors: ["#C5A059", "#EED3A1", "#7A002A", "#FFFFFF"],
+        });
+      } catch (_) {}
+
+      setConfirmedDetails({
+        name: manualName.trim(),
+        confirmed_pax: Number(manualPax) || 1,
+        max_pax: Number(manualPax) || 1,
+        status: "attending",
+      });
+
+      setStep(3);
     } catch (err: any) {
-      setManualError(err.message || "Ocurrió un error al enviar tu solicitud.");
+      setManualError(err.message || "Ocurrió un error al enviar tu confirmación.");
     } finally {
       setIsSubmittingManual(false);
     }
@@ -296,7 +335,7 @@ export default function DynamicRsvpForm({
   return (
     <div className={`w-full max-w-[340px] mx-auto p-5 sm:p-6 rounded-3xl shadow-xl border border-pink-200/80 ${accentBgColor} text-center select-none`}>
       {/* ─────────────────────────────────────────────────────────────
-          ESTADO 1: BÚSQUEDA DEL INVITADO
+          ESTADO 1: BÚSQUEDA DEL INVITADO (MODO ESTRICTO & HÍBRIDO)
       ───────────────────────────────────────────────────────────── */}
       {step === 1 && (
         <div className="space-y-4">
@@ -374,26 +413,58 @@ export default function DynamicRsvpForm({
                   ))}
                 </div>
               ) : hasSearched && !isSearching ? (
-                <div className="p-3.5 rounded-2xl bg-stone-50 border border-stone-200 text-stone-600 text-xs text-center space-y-1">
-                  <p className="font-semibold">{isEn ? "No guest found with that name." : "No encontramos ese nombre en la lista."}</p>
-                  <p className="text-[10px] text-stone-500">
-                    {isEn ? "Try typing your last name only." : "Intenta escribir solo tu apellido o primer nombre."}
-                  </p>
-                </div>
+                isEstricto ? (
+                  /* Modo Estricto: Solo lista oficial */
+                  <div className="p-3.5 rounded-2xl bg-rose-50/80 border border-rose-200 text-rose-800 text-xs text-center space-y-1">
+                    <p className="font-bold">
+                      {isEn ? "You are not on the official guest list." : "No estás en la lista oficial."}
+                    </p>
+                    <p className="text-[10px] text-rose-600">
+                      {isEn
+                        ? "Contact the hosts to request your passes."
+                        : "Por favor contacta directamente a los anfitriones."}
+                    </p>
+                  </div>
+                ) : (
+                  /* Modo Híbrido: Auto-registro con aforo */
+                  <div className="p-3.5 rounded-2xl bg-amber-50/80 border border-amber-200 text-amber-950 text-xs text-center space-y-2">
+                    <p className="font-semibold text-stone-800">
+                      {isEn ? "Can't find your name on the list?" : "¿No encuentras tu nombre en la lista?"}
+                    </p>
+                    <p className="text-[10px] text-stone-600">
+                      {isEn
+                        ? "You can register directly to confirm your attendance."
+                        : "Puedes registrarte y confirmar tus pases hasta completar el aforo."}
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setManualName(searchQuery.trim());
+                        setStep("register");
+                      }}
+                      className="w-full py-2.5 px-3 rounded-xl bg-stone-900 hover:bg-black text-white text-xs font-bold transition shadow-xs cursor-pointer flex items-center justify-center gap-1.5"
+                    >
+                      <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+                      <span>{isEn ? "Confirm as New Guest" : "Confirmar como nuevo invitado"}</span>
+                    </button>
+                  </div>
+                )
               ) : null}
             </div>
           )}
 
-          {/* Enlace secundario: escape manual */}
-          <div className="pt-2 border-t border-stone-100">
-            <button
-              type="button"
-              onClick={() => setStep("manual")}
-              className="text-[11px] font-medium text-stone-500 hover:text-stone-800 underline transition cursor-pointer"
-            >
-              {isEn ? "¿Not on the list? Request manual confirmation" : "¿No estás en la lista? Solicitar confirmación manual"}
-            </button>
-          </div>
+          {/* Enlace secundario (Solo si NO es Modo Estricto) */}
+          {!isEstricto && (
+            <div className="pt-2 border-t border-stone-100">
+              <button
+                type="button"
+                onClick={() => setStep("register")}
+                className="text-[11px] font-medium text-stone-500 hover:text-stone-800 underline transition cursor-pointer"
+              >
+                {isEn ? "¿Not on the list? Register here" : "¿No encuentras tu nombre? Regístrate aquí"}
+              </button>
+            </div>
+          )}
         </div>
       )}
 
@@ -629,9 +700,15 @@ export default function DynamicRsvpForm({
           <button
             type="button"
             onClick={() => {
-              setStep(1);
-              setSelectedGuest(null);
-              setSearchQuery("");
+              if (isAbierto) {
+                setStep("register");
+                setManualName("");
+                setManualPhone("");
+              } else {
+                setStep(1);
+                setSelectedGuest(null);
+                setSearchQuery("");
+              }
             }}
             className="text-[10px] text-stone-400 hover:text-stone-700 uppercase tracking-wider font-semibold transition cursor-pointer pt-2"
           >
@@ -641,123 +718,143 @@ export default function DynamicRsvpForm({
       )}
 
       {/* ─────────────────────────────────────────────────────────────
-          FALLBACK: SOLICITUD MANUAL
+          ESTADO: REGISTRO LIBRE / AUTO-REGISTRO (MODO HÍBRIDO & ABIERTO)
       ───────────────────────────────────────────────────────────── */}
-      {step === "manual" && (
+      {step === "register" && (
         <div className="space-y-3.5 text-left animate-fade-in">
-          <button
-            type="button"
-            onClick={() => setStep(1)}
-            className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-stone-500 hover:text-stone-800 transition cursor-pointer mb-1"
-          >
-            <ArrowLeft className="w-3 h-3" />
-            <span>{isEn ? "Back to search" : "Volver a buscar"}</span>
-          </button>
-
-          <h3 className="text-sm font-bold text-stone-900 leading-tight">
-            {isEn ? "Manual Confirmation Request" : "Solicitud de Confirmación Manual"}
-          </h3>
-          <p className="text-[11px] text-stone-500 leading-relaxed">
-            {isEn
-              ? "If your name does not appear in the search, send your details so the hosts can review and authorize your passes."
-              : "Si no apareces en la lista, envía tus datos directamente para que los anfitriones puedan revisar y autorizar tus pases."}
-          </p>
-
-          {manualSubmitted ? (
-            <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs text-center space-y-2">
-              <CheckCircle2 className="w-6 h-6 mx-auto text-emerald-600" />
-              <p className="font-bold text-sm">
-                {isEn ? "Request Submitted!" : "¡Solicitud Enviada!"}
-              </p>
-              <p className="text-[12px] text-emerald-700 leading-relaxed font-medium">
-                {isEn
-                  ? "Your request has been sent to the hosts. They will contact you to confirm your passes."
-                  : "Tu solicitud fue enviada a los anfitriones. Te contactarán para confirmar tus pases."}
-              </p>
-              <button
-                type="button"
-                onClick={() => {
-                  setStep(1);
-                  setManualSubmitted(false);
-                  setManualName("");
-                  setManualPhone("");
-                }}
-                className="mt-2 text-[11px] font-bold text-emerald-800 underline hover:text-emerald-950 transition cursor-pointer"
-              >
-                {isEn ? "Back to search" : "Volver a buscar"}
-              </button>
-            </div>
-          ) : (
-            <form onSubmit={handleManualSubmit} className="space-y-3">
-              <div>
-                <label className="block text-[10px] font-bold tracking-wider uppercase text-stone-600 mb-1">
-                  {isEn ? "Full Name / Family *" : "Nombre Completo o Familia *"}
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={manualName}
-                  onChange={(e) => setManualName(e.target.value)}
-                  placeholder="Ej. Familia Pérez López"
-                  className="w-full bg-stone-50 border border-stone-200 rounded-xl px-3 py-2 text-xs text-stone-800 focus:outline-none focus:ring-2 focus:ring-stone-400"
-                />
-              </div>
-
-              <div>
-                <label className="block text-[10px] font-bold tracking-wider uppercase text-stone-600 mb-1">
-                  {isEn ? "Phone (Optional)" : "Teléfono (Opcional)"}
-                </label>
-                <input
-                  type="tel"
-                  value={manualPhone}
-                  onChange={(e) => setManualPhone(e.target.value)}
-                  placeholder="Ej. +1 (818) 555-0123"
-                  className="w-full bg-stone-50 border border-stone-200 rounded-xl px-3 py-2 text-xs text-stone-800 focus:outline-none focus:ring-2 focus:ring-stone-400"
-                />
-              </div>
-
-              <div>
-                <label className="block text-[10px] font-bold tracking-wider uppercase text-stone-600 mb-1">
-                  {isEn ? "Requested Passes" : "Pases Solicitados"}
-                </label>
-                <select
-                  value={manualPax}
-                  onChange={(e) => setManualPax(e.target.value)}
-                  className="w-full bg-stone-50 border border-stone-200 rounded-xl px-3 py-2 text-xs text-stone-800 focus:outline-none focus:ring-2 focus:ring-stone-400 font-medium"
-                >
-                  <option value="1">1 Pase</option>
-                  <option value="2">2 Pases</option>
-                  <option value="3">3 Pases</option>
-                  <option value="4">4 Pases</option>
-                </select>
-              </div>
-
-              {manualError && (
-                <p className="text-[11px] text-rose-600 font-semibold bg-rose-50 p-2.5 rounded-xl border border-rose-200">
-                  {manualError}
-                </p>
-              )}
-
-              <button
-                type="submit"
-                disabled={isSubmittingManual}
-                className="w-full py-2.5 rounded-full text-white font-bold text-xs tracking-wider uppercase shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95 disabled:opacity-50"
-                style={{ backgroundColor: primaryColor }}
-              >
-                {isSubmittingManual ? (
-                  <>
-                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                    <span>{isEn ? "SENDING REQUEST..." : "ENVIANDO SOLICITUD..."}</span>
-                  </>
-                ) : (
-                  <>
-                    <Send className="w-3.5 h-3.5" />
-                    <span>{isEn ? "SEND REQUEST TO HOSTS" : "ENVIAR SOLICITUD A LOS ANFITRIONES"}</span>
-                  </>
-                )}
-              </button>
-            </form>
+          {!isAbierto && (
+            <button
+              type="button"
+              onClick={() => setStep(1)}
+              className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-stone-500 hover:text-stone-800 transition cursor-pointer mb-1"
+            >
+              <ArrowLeft className="w-3 h-3" />
+              <span>{isEn ? "Back to search" : "Volver a buscar"}</span>
+            </button>
           )}
+
+          {isAbierto && (
+            <div className="text-center pb-1">
+              <span className="text-2xl">💌</span>
+              <h3
+                className="text-xs font-bold uppercase tracking-[0.2em] mt-1"
+                style={{ color: primaryColor }}
+              >
+                {isEn ? "WILL YOU JOIN US?" : "CONFIRMA TU ASISTENCIA"}
+              </h3>
+              <h2
+                className="text-3xl font-serif italic mt-0.5"
+                style={{ color: primaryColor }}
+              >
+                {isEn ? "Our Celebration" : "Nuestra Celebración"}
+              </h2>
+              <p className="text-[10px] font-semibold tracking-wider uppercase text-stone-500 mt-2">
+                {deadlineText}
+              </p>
+            </div>
+          )}
+
+          <div>
+            <h3 className="text-sm font-bold text-stone-900 leading-tight">
+              {isEn ? "Guest Confirmation" : "Confirmación de Asistencia"}
+            </h3>
+            <p className="text-[11px] text-stone-500 leading-relaxed mt-0.5">
+              {isEn
+                ? "Enter your details to secure your passes and confirm your attendance."
+                : "Completa tus datos para confirmar tu asistencia y asegurar tus pases."}
+            </p>
+          </div>
+
+          <form onSubmit={handleRegisterSubmit} className="space-y-3 pt-1">
+            <div>
+              <label className="block text-[10px] font-bold tracking-wider uppercase text-stone-600 mb-1">
+                {isEn ? "Full Name / Family *" : "Nombre Completo o Familia *"}
+              </label>
+              <input
+                type="text"
+                required
+                value={manualName}
+                onChange={(e) => setManualName(e.target.value)}
+                placeholder={isEn ? "e.g. Rodriguez Family or John Doe" : "Ej. Familia Rodríguez o María López"}
+                className="w-full bg-stone-50 border border-stone-200 rounded-xl px-3 py-2 text-xs text-stone-800 focus:outline-none focus:ring-2 focus:ring-stone-400"
+              />
+            </div>
+
+            <div>
+              <label className="block text-[10px] font-bold tracking-wider uppercase text-stone-600 mb-1">
+                {isSmsEnabled
+                  ? isEn
+                    ? "MOBILE NUMBER TO RECEIVE YOUR PASSES VIA SMS *"
+                    : "MÓVIL PARA RECIBIR TUS PASES POR SMS *"
+                  : isEn
+                  ? "EMAIL TO RECEIVE YOUR PASSES *"
+                  : "CORREO ELECTRÓNICO PARA RECIBIR TUS PASES *"}
+              </label>
+              <input
+                type={isSmsEnabled ? "tel" : "email"}
+                required
+                value={manualPhone}
+                onChange={(e) => setManualPhone(e.target.value)}
+                placeholder={isSmsEnabled ? "(818) 555-0123" : "nombre@ejemplo.com"}
+                className="w-full bg-stone-50 border border-stone-200 rounded-xl px-3 py-2 text-xs text-stone-800 focus:outline-none focus:ring-2 focus:ring-stone-400"
+              />
+              <p className="text-xs text-neutral-500 mt-1">
+                {isSmsEnabled
+                  ? isEn
+                    ? "We'll send your access details and location via text message."
+                    : "Te enviaremos los detalles de tu acceso y ubicación por mensaje de texto."
+                  : isEn
+                  ? "We'll send your access details and location via email."
+                  : "Te enviaremos los detalles de tu acceso y ubicación por email."}
+              </p>
+            </div>
+
+            <div>
+              <label className="block text-[10px] font-bold tracking-wider uppercase text-stone-600 mb-1">
+                {isEn ? "Number of Passes" : "Número de Pases"}
+              </label>
+              <select
+                value={manualPax}
+                onChange={(e) => setManualPax(e.target.value)}
+                className="w-full bg-stone-50 border border-stone-200 rounded-xl px-3 py-2 text-xs text-stone-800 focus:outline-none focus:ring-2 focus:ring-stone-400 font-medium"
+              >
+                {Array.from({ length: maxPasesPorInvitado || 4 }, (_, i) => i + 1).map((n) => (
+                  <option key={n} value={String(n)}>
+                    {n} {n === 1 ? (isEn ? "Pass" : "Pase") : (isEn ? "Passes" : "Pases")}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {manualError && (
+              <div className="p-3 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs text-left space-y-1">
+                <p className="font-bold flex items-center gap-1.5">
+                  <span>⚠️</span>
+                  <span>{isEn ? "Notice" : "Atención"}</span>
+                </p>
+                <p className="text-[11px] leading-relaxed">{manualError}</p>
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={isSubmittingManual}
+              className="w-full mt-2 py-3 rounded-full text-white font-bold text-xs tracking-wider uppercase shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95 disabled:opacity-50"
+              style={{ backgroundColor: primaryColor }}
+            >
+              {isSubmittingManual ? (
+                <>
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  <span>{isEn ? "CONFIRMING..." : "CONFIRMANDO..."}</span>
+                </>
+              ) : (
+                <>
+                  <Send className="w-3.5 h-3.5" />
+                  <span>{isEn ? "CONFIRM ATTENDANCE" : "CONFIRMAR ASISTENCIA"}</span>
+                </>
+              )}
+            </button>
+          </form>
         </div>
       )}
     </div>

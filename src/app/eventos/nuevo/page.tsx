@@ -22,6 +22,9 @@ import {
   Edit3,
   Volume2,
   VolumeX,
+  Lock,
+  Globe,
+  Users,
 } from "lucide-react";
 import { TEMPLATES, TemplateId } from "@/lib/templates";
 import { InvitationData } from "@/components/invitation/InvitationMobileView";
@@ -102,6 +105,7 @@ function NuevoEventoContent() {
       mensaje: "Tu presencia es nuestro mayor regalo. Disponemos de un cofre en la recepción.",
     },
     configPlantilla: {},
+    modalidadRsvp: "HIBRIDO",
     idiomaDefault: "es",
   });
 
@@ -1486,6 +1490,116 @@ function NuevoEventoContent() {
                       });
                     }}
                   />
+                </div>
+
+                {/* Modalidad de Confirmación RSVP (Paso 4 Admin) */}
+                <div className="p-4 bg-white border border-stone-200 rounded-2xl space-y-3 shadow-xs">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="text-base">📋</span>
+                      <div>
+                        <h3 className="text-xs font-bold text-stone-900 uppercase tracking-wide">
+                          Modalidad de Confirmación de Asistencia (RSVP)
+                        </h3>
+                        <p className="text-[11px] text-stone-500">
+                          Selecciona cómo interactuarán los invitados al ingresar al módulo de confirmación.
+                        </p>
+                      </div>
+                    </div>
+                    <span className="text-[10px] font-semibold px-2.5 py-0.5 rounded-full bg-stone-100 text-stone-700">
+                      {formData.modalidadRsvp === "ESTRICTO"
+                        ? "🔒 Modo Estricto"
+                        : formData.modalidadRsvp === "ABIERTO"
+                        ? "🌐 Modo Abierto"
+                        : "⚡ Modo Híbrido"}
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
+                    {/* Modo Híbrido (Recomendado) */}
+                    <button
+                      type="button"
+                      onClick={() => updateField("modalidadRsvp", "HIBRIDO")}
+                      className={`p-3.5 rounded-xl border text-left transition relative cursor-pointer flex flex-col justify-between ${
+                        formData.modalidadRsvp === "HIBRIDO" || !formData.modalidadRsvp
+                          ? "border-amber-500 bg-amber-50/60 ring-2 ring-amber-400/40"
+                          : "border-stone-200 bg-stone-50/70 hover:bg-white"
+                      }`}
+                    >
+                      <div className="space-y-1.5">
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-bold text-stone-900 flex items-center gap-1.5">
+                            ⚡ Modo Híbrido
+                          </span>
+                          <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-amber-100 text-amber-800 uppercase tracking-wide">
+                            Recomendado
+                          </span>
+                        </div>
+                        <p className="text-[11px] font-semibold text-stone-800">
+                          Lista oficial + Auto-registro con aforo
+                        </p>
+                        <p className="text-[10px] text-stone-500 leading-relaxed">
+                          El invitado busca su nombre. Si no aparece, puede registrarse al instante hasta agotar el aforo configurado (Modelo The Knot / Zola).
+                        </p>
+                      </div>
+                    </button>
+
+                    {/* Modo Estricto */}
+                    <button
+                      type="button"
+                      onClick={() => updateField("modalidadRsvp", "ESTRICTO")}
+                      className={`p-3.5 rounded-xl border text-left transition relative cursor-pointer flex flex-col justify-between ${
+                        formData.modalidadRsvp === "ESTRICTO"
+                          ? "border-amber-500 bg-amber-50/60 ring-2 ring-amber-400/40"
+                          : "border-stone-200 bg-stone-50/70 hover:bg-white"
+                      }`}
+                    >
+                      <div className="space-y-1.5">
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-bold text-stone-900 flex items-center gap-1.5">
+                            🔒 Modo Estricto
+                          </span>
+                          <span className="text-[9px] font-medium px-1.5 py-0.5 rounded-full bg-stone-200 text-stone-700">
+                            Solo Lista
+                          </span>
+                        </div>
+                        <p className="text-[11px] font-semibold text-stone-800">
+                          Solo lista oficial previa
+                        </p>
+                        <p className="text-[10px] text-stone-500 leading-relaxed">
+                          Solo pueden confirmar las personas añadidas previamente por los anfitriones. Nadie fuera de la lista puede registrarse.
+                        </p>
+                      </div>
+                    </button>
+
+                    {/* Modo Abierto */}
+                    <button
+                      type="button"
+                      onClick={() => updateField("modalidadRsvp", "ABIERTO")}
+                      className={`p-3.5 rounded-xl border text-left transition relative cursor-pointer flex flex-col justify-between ${
+                        formData.modalidadRsvp === "ABIERTO"
+                          ? "border-amber-500 bg-amber-50/60 ring-2 ring-amber-400/40"
+                          : "border-stone-200 bg-stone-50/70 hover:bg-white"
+                      }`}
+                    >
+                      <div className="space-y-1.5">
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-bold text-stone-900 flex items-center gap-1.5">
+                            🌐 Modo Abierto
+                          </span>
+                          <span className="text-[9px] font-medium px-1.5 py-0.5 rounded-full bg-blue-100 text-blue-700">
+                            Libre
+                          </span>
+                        </div>
+                        <p className="text-[11px] font-semibold text-stone-800">
+                          Registro libre por aforo
+                        </p>
+                        <p className="text-[10px] text-stone-500 leading-relaxed">
+                          Oculta el buscador de nombres. Muestra directamente el formulario simple con deduplicación por teléfono o email hasta el tope de aforo.
+                        </p>
+                      </div>
+                    </button>
+                  </div>
                 </div>
 
                 {/* Confirmaciones y Notificaciones */}

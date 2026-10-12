@@ -105,6 +105,7 @@ export async function POST(req: NextRequest) {
       transporteJson,
       historiaHitosJson,
       configPlantilla,
+      modalidadRsvp,
     } = body;
 
     if (!titulo || !slug || !fechaEvento || !fotoPortadaUrl || !telefonoWhatsappRsvp || !recepcionNombre || !recepcionMapUrl) {
@@ -200,6 +201,7 @@ export async function POST(req: NextRequest) {
         transporteJson: transporteJson || null,
         historiaHitosJson: historiaHitosJson || null,
         configPlantilla: configPlantilla || {},
+        modalidadRsvp: modalidadRsvp || "HIBRIDO",
         activo: true,
       },
     });
@@ -290,6 +292,7 @@ export async function PUT(req: NextRequest) {
         transporteJson: body.transporteJson ?? null,
         historiaHitosJson: body.historiaHitosJson ?? null,
         configPlantilla: body.configPlantilla ?? undefined,
+        modalidadRsvp: body.modalidadRsvp !== undefined ? body.modalidadRsvp : undefined,
       },
     });
 
