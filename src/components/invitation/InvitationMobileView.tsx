@@ -77,11 +77,23 @@ export interface InvitationData {
   itinerario?: any[];
   itinerarioJson?: TimelineItem[] | any;
   corteHonorJson?: {
+    showQuinceanera?: boolean;
+    quinceanera?: string;
+    showMiniQuinceanera?: boolean;
+    miniQuinceanera?: string;
+    showChambelan?: boolean;
     chambelan?: string;
-    chambelanes?: string[];
+    showMiniChambelan?: boolean;
+    miniChambelan?: string;
+    showDamas?: boolean;
     damas?: string[];
+    showDamitasHojitas?: boolean;
+    damitasHojitas?: string[];
+    showParents?: boolean;
     parents?: string;
+    showPadrinos?: boolean;
     padrinos?: string[];
+    chambelanes?: string[];
     mensajeGratitud?: string;
   } | any;
   mesaRegalosJson?: {

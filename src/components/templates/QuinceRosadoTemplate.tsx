@@ -1019,100 +1019,214 @@ export default function QuinceRosadoTemplate({
         {/* ══════════════════════════════════════════════════════════════
             SECCIÓN 5: LA CORTE DE HONOR & AGRADECIMIENTO
         ══════════════════════════════════════════════════════════════ */}
-        <section className="relative w-full py-12 px-5 bg-gradient-to-b from-white to-pink-50/60 text-center">
-          <div className="max-w-[360px] mx-auto">
-            {/* Título Corte */}
-            <div className="flex items-center justify-center gap-2 mb-6">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={QUINCE_ROSADO_ASSETS.crownIcon}
-                alt="Corona"
-                className="w-6 h-6 object-contain"
-              />
-              <h2 className="font-['Cinzel',serif] text-xl tracking-[0.2em] uppercase text-[#7A002A] font-bold">
-                {isEn ? "THE COURT OF HONOR" : "LA CORTE DE HONOR"}
-              </h2>
-            </div>
+        {(() => {
+          const corte = data.corteHonorJson || {};
 
-            {/* Integrantes de la Corte */}
-            <div className="space-y-4 text-xs text-[#7A002A] mb-8">
-              <div className="grid grid-cols-2 gap-3 bg-white p-4 rounded-2xl shadow-sm border border-pink-100">
-                <div>
-                  <p className="font-bold uppercase tracking-wider text-[10px] text-[#B74F5F]">
-                    {isEn ? "Quinceañera" : "Quinceañera"}
+          const isRoleShown = (showFlag: any, val: any) => {
+            if (showFlag === false) return false;
+            if (showFlag === true) return true;
+            if (Array.isArray(val)) return val.length > 0;
+            return Boolean(val);
+          };
+
+          const quinceaneraName = corte.quinceanera || data.titulo || "Magdalena";
+          const showQuinceanera = corte.showQuinceanera !== false;
+          const miniQuinceaneraName = corte.miniQuinceanera || "";
+          const showMiniQuinceanera = isRoleShown(corte.showMiniQuinceanera, miniQuinceaneraName) && Boolean(miniQuinceaneraName);
+
+          const chambelanName = corte.chambelan || "";
+          const showChambelan = isRoleShown(corte.showChambelan, chambelanName) && Boolean(chambelanName);
+          const miniChambelanName = corte.miniChambelan || "";
+          const showMiniChambelan = isRoleShown(corte.showMiniChambelan, miniChambelanName) && Boolean(miniChambelanName);
+
+          const damasArr: string[] = Array.isArray(corte.damas)
+            ? corte.damas
+            : typeof corte.damas === "string"
+            ? corte.damas.split(/[,•]+/).map((s: string) => s.trim()).filter(Boolean)
+            : [];
+          const showDamas = isRoleShown(corte.showDamas, damasArr) && damasArr.length > 0;
+
+          const damitasArr: string[] = Array.isArray(corte.damitasHojitas)
+            ? corte.damitasHojitas
+            : typeof corte.damitasHojitas === "string"
+            ? corte.damitasHojitas.split(/[,•]+/).map((s: string) => s.trim()).filter(Boolean)
+            : [];
+          const showDamitasHojitas = isRoleShown(corte.showDamitasHojitas, damitasArr) && damitasArr.length > 0;
+
+          const parentsName = corte.parents || "";
+          const showParents = isRoleShown(corte.showParents, parentsName) && Boolean(parentsName);
+
+          const padrinosArr: string[] = Array.isArray(corte.padrinos)
+            ? corte.padrinos
+            : typeof corte.padrinos === "string"
+            ? corte.padrinos.split(/[,•]+/).map((s: string) => s.trim()).filter(Boolean)
+            : [];
+          const showPadrinos = isRoleShown(corte.showPadrinos, padrinosArr) && padrinosArr.length > 0;
+
+          const hasAnyCorteCards =
+            showQuinceanera ||
+            showMiniQuinceanera ||
+            showChambelan ||
+            showMiniChambelan ||
+            showDamas ||
+            showDamitasHojitas ||
+            showParents ||
+            showPadrinos;
+
+          return (
+            <section className="relative w-full py-12 px-5 bg-gradient-to-b from-white to-pink-50/60 text-center">
+              <div className="max-w-[360px] mx-auto">
+                {hasAnyCorteCards && (
+                  <>
+                    {/* Título Corte */}
+                    <div className="flex items-center justify-center gap-2 mb-6">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={QUINCE_ROSADO_ASSETS.crownIcon}
+                        alt="Corona"
+                        className="w-6 h-6 object-contain"
+                      />
+                      <h2 className="font-['Cinzel',serif] text-xl tracking-[0.2em] uppercase text-[#7A002A] font-bold">
+                        {isEn ? "THE COURT OF HONOR" : "LA CORTE DE HONOR"}
+                      </h2>
+                    </div>
+
+                    {/* Integrantes de la Corte */}
+                    <div className="space-y-4 text-xs text-[#7A002A] mb-8">
+                      {/* 1. Quinceañera y/o Mini Quinceañera */}
+                      {showQuinceanera && showMiniQuinceanera ? (
+                        <div className="grid grid-cols-2 gap-3 bg-white p-4 rounded-2xl shadow-sm border border-pink-100 text-center">
+                          <div>
+                            <p className="font-bold uppercase tracking-wider text-[10px] text-[#B74F5F]">
+                              {isEn ? "Quinceañera" : "Quinceañera"}
+                            </p>
+                            <p className="font-medium mt-0.5">{quinceaneraName}</p>
+                          </div>
+                          <div>
+                            <p className="font-bold uppercase tracking-wider text-[10px] text-[#B74F5F]">
+                              {isEn ? "Junior Quinceañera" : "Mini Quinceañera"}
+                            </p>
+                            <p className="font-medium mt-0.5">{miniQuinceaneraName}</p>
+                          </div>
+                        </div>
+                      ) : showQuinceanera ? (
+                        <div className="bg-white p-4 rounded-2xl shadow-sm border border-pink-100 text-center">
+                          <p className="font-bold uppercase tracking-wider text-[10px] text-[#B74F5F]">
+                            {isEn ? "Quinceañera" : "Quinceañera"}
+                          </p>
+                          <p className="font-medium mt-0.5">{quinceaneraName}</p>
+                        </div>
+                      ) : showMiniQuinceanera ? (
+                        <div className="bg-white p-4 rounded-2xl shadow-sm border border-pink-100 text-center">
+                          <p className="font-bold uppercase tracking-wider text-[10px] text-[#B74F5F]">
+                            {isEn ? "Junior Quinceañera" : "Mini Quinceañera"}
+                          </p>
+                          <p className="font-medium mt-0.5">{miniQuinceaneraName}</p>
+                        </div>
+                      ) : null}
+
+                      {/* 2. Chambelán Principal y/o Mini Chambelán */}
+                      {showChambelan && showMiniChambelan ? (
+                        <div className="grid grid-cols-2 gap-3 bg-white p-4 rounded-2xl shadow-sm border border-pink-100 text-center">
+                          <div>
+                            <p className="font-bold uppercase tracking-wider text-[10px] text-[#B74F5F]">
+                              {isEn ? "Main Escort" : "Chambelán Principal"}
+                            </p>
+                            <p className="font-medium mt-0.5">{chambelanName}</p>
+                          </div>
+                          <div>
+                            <p className="font-bold uppercase tracking-wider text-[10px] text-[#B74F5F]">
+                              {isEn ? "Junior Escort" : "Mini Chambelán"}
+                            </p>
+                            <p className="font-medium mt-0.5">{miniChambelanName}</p>
+                          </div>
+                        </div>
+                      ) : showChambelan ? (
+                        <div className="bg-white p-4 rounded-2xl shadow-sm border border-pink-100 text-center">
+                          <p className="font-bold uppercase tracking-wider text-[10px] text-[#B74F5F]">
+                            {isEn ? "Main Escort" : "Chambelán Principal"}
+                          </p>
+                          <p className="font-medium mt-0.5">{chambelanName}</p>
+                        </div>
+                      ) : showMiniChambelan ? (
+                        <div className="bg-white p-4 rounded-2xl shadow-sm border border-pink-100 text-center">
+                          <p className="font-bold uppercase tracking-wider text-[10px] text-[#B74F5F]">
+                            {isEn ? "Junior Escort" : "Mini Chambelán"}
+                          </p>
+                          <p className="font-medium mt-0.5">{miniChambelanName}</p>
+                        </div>
+                      ) : null}
+
+                      {/* 3. Damiselas de Honor */}
+                      {showDamas && (
+                        <div className="bg-white p-4 rounded-2xl shadow-sm border border-pink-100 text-center">
+                          <p className="font-bold uppercase tracking-wider text-[10px] text-[#B74F5F] mb-1">
+                            {isEn ? "Maids of Honor" : "Damiselas de Honor"}
+                          </p>
+                          <p className="font-medium leading-relaxed">
+                            {damasArr.join(" • ")}
+                          </p>
+                        </div>
+                      )}
+
+                      {/* 4. Damitas de Hojitas */}
+                      {showDamitasHojitas && (
+                        <div className="bg-white p-4 rounded-2xl shadow-sm border border-pink-100 text-center">
+                          <p className="font-bold uppercase tracking-wider text-[10px] text-[#B74F5F] mb-1">
+                            {isEn ? "Flower Girls" : "Damitas de Hojitas"}
+                          </p>
+                          <p className="font-medium leading-relaxed">
+                            {damitasArr.join(" • ")}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Padres y Padrinos */}
+                    {(showParents || showPadrinos) && (
+                      <div className="bg-white p-5 rounded-2xl shadow-md border border-pink-100 text-center mb-8">
+                        {showParents && (
+                          <div className={showPadrinos ? "mb-3" : ""}>
+                            <p className="font-bold uppercase tracking-wider text-[10px] text-[#B74F5F]">
+                              {isEn ? "My Parents" : "Mis Padres"}
+                            </p>
+                            <p className="text-sm font-semibold text-[#7A002A] mt-0.5">
+                              {parentsName}
+                            </p>
+                          </div>
+                        )}
+
+                        {showPadrinos && (
+                          <div>
+                            <p className="font-bold uppercase tracking-wider text-[10px] text-[#B74F5F]">
+                              {isEn ? "Honor Godparents" : "Padrinos de Honor"}
+                            </p>
+                            <p className="text-sm font-semibold text-[#7A002A] mt-0.5">
+                              {padrinosArr.join(" & ")}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </>
+                )}
+
+                {/* Agradecimiento Especial */}
+                <div className="text-center px-3">
+                  <h3 className="font-['Great_Vibes',cursive] text-4xl text-[#7A002A] mb-2">
+                    {isEn ? "A special thank you" : "Un agradecimiento especial"}
+                  </h3>
+                  <p className="text-xs italic leading-relaxed text-[#722927]">
+                    {corte.mensajeGratitud ||
+                      (isEn
+                        ? "With endless gratitude for your love, support, and generosity in bringing this beautiful dream to life. Your presence, guidance, and kindness have made this celebration truly unforgettable."
+                        : "Con infinita gratitud por su amor, apoyo y generosidad al dar vida a este hermoso sueño. Su presencia, orientación y amabilidad han hecho que esta celebración sea verdaderamente inolvidable.")}
                   </p>
-                  <p className="font-medium mt-0.5">{data.titulo || "Magdalena"}</p>
-                </div>
-                <div>
-                  <p className="font-bold uppercase tracking-wider text-[10px] text-[#B74F5F]">
-                    {isEn ? "Junior Quinceañera" : "Mini Quinceañera"}
-                  </p>
-                  <p className="font-medium mt-0.5">Elsy</p>
                 </div>
               </div>
-
-              <div className="grid grid-cols-2 gap-3 bg-white p-4 rounded-2xl shadow-sm border border-pink-100">
-                <div>
-                  <p className="font-bold uppercase tracking-wider text-[10px] text-[#B74F5F]">
-                    {isEn ? "Main Escort" : "Chambelán Principal"}
-                  </p>
-                  <p className="font-medium mt-0.5">{data.corteHonorJson?.chambelan || "Jeremiah"}</p>
-                </div>
-                <div>
-                  <p className="font-bold uppercase tracking-wider text-[10px] text-[#B74F5F]">
-                    {isEn ? "Junior Escort" : "Mini Chambelán"}
-                  </p>
-                  <p className="font-medium mt-0.5">Jose</p>
-                </div>
-              </div>
-
-              <div className="bg-white p-4 rounded-2xl shadow-sm border border-pink-100 text-center">
-                <p className="font-bold uppercase tracking-wider text-[10px] text-[#B74F5F] mb-1">
-                  {isEn ? "Maids of Honor" : "Damiselas de Honor"}
-                </p>
-                <p className="font-medium leading-relaxed">
-                  Violeta • Zoe • Elsy Magdalena • Tania • Yani
-                </p>
-              </div>
-
-              <div className="bg-white p-4 rounded-2xl shadow-sm border border-pink-100 text-center">
-                <p className="font-bold uppercase tracking-wider text-[10px] text-[#B74F5F] mb-1">
-                  {isEn ? "Flower Girls" : "Damitas de Hojitas"}
-                </p>
-                <p className="font-medium leading-relaxed">Violet • Zoe • Green</p>
-              </div>
-            </div>
-
-            {/* Padres y Padrinos */}
-            <div className="bg-white p-5 rounded-2xl shadow-md border border-pink-100 text-center mb-8">
-              <p className="font-bold uppercase tracking-wider text-[10px] text-[#B74F5F]">
-                {isEn ? "My Parents" : "Mis Padres"}
-              </p>
-              <p className="text-sm font-semibold text-[#7A002A] mt-0.5 mb-3">
-                {data.corteHonorJson?.parents || "Magdalena & Adrian"}
-              </p>
-
-              <p className="font-bold uppercase tracking-wider text-[10px] text-[#B74F5F]">
-                {isEn ? "Honor Godparents" : "Padrinos de Honor"}
-              </p>
-              <p className="text-sm font-semibold text-[#7A002A] mt-0.5">
-                {data.corteHonorJson?.padrinos?.join(" & ") || "Tania & Carl"}
-              </p>
-            </div>
-
-            {/* Agradecimiento Especial */}
-            <div className="text-center px-3">
-              <h3 className="font-['Great_Vibes',cursive] text-4xl text-[#7A002A] mb-2">
-                {isEn ? "A special thank you" : "Un agradecimiento especial"}
-              </h3>
-              <p className="text-xs italic leading-relaxed text-[#722927]">
-                {isEn
-                  ? "With endless gratitude for your love, support, and generosity in bringing this beautiful dream to life. Your presence, guidance, and kindness have made this celebration truly unforgettable."
-                  : "Con infinita gratitud por su amor, apoyo y generosidad al dar vida a este hermoso sueño. Su presencia, orientación y amabilidad han hecho que esta celebración sea verdaderamente inolvidable."}
-              </p>
-            </div>
-          </div>
-        </section>
+            </section>
+          );
+        })()}
 
         {/* ══════════════════════════════════════════════════════════════
             SECCIÓN 6: CUENTA REGRESIVA, CALENDARIO & CIERRE

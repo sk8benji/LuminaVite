@@ -45,6 +45,11 @@ function NuevoEventoContent() {
   const [saveSuccessMsg, setSaveSuccessMsg] = useState<string | null>(null);
   const [showMobilePreview, setShowMobilePreview] = useState(false);
 
+  // Estados locales para inputs de corte de honor (evitar pérdida de comas al teclear)
+  const [damasRaw, setDamasRaw] = useState<string | null>(null);
+  const [damitasRaw, setDamitasRaw] = useState<string | null>(null);
+  const [padrinosRaw, setPadrinosRaw] = useState<string | null>(null);
+
   // Estado del formulario
   const [formData, setFormData] = useState<InvitationData>({
     slug: "mi-celebracion",
@@ -97,8 +102,22 @@ function NuevoEventoContent() {
       { hora: "8:30 PM", titulo: "Vals y Fiesta", tipoIcono: "waltz" },
     ],
     corteHonorJson: {
+      quinceanera: "Magdalena",
+      showQuinceanera: true,
+      miniQuinceanera: "Elsy",
+      showMiniQuinceanera: true,
       chambelan: "Jeremiah",
-      damas: ["Magdalena", "Violeta", "Tania"],
+      showChambelan: true,
+      miniChambelan: "Jose",
+      showMiniChambelan: true,
+      damas: ["Violeta", "Zoe", "Elsy Magdalena", "Tania", "Yani"],
+      showDamas: true,
+      damitasHojitas: ["Violet", "Zoe", "Green"],
+      showDamitasHojitas: true,
+      parents: "Magdalena & Adrian",
+      showParents: true,
+      padrinos: ["Tania", "Carl"],
+      showPadrinos: true,
     },
     mesaRegalosJson: {
       titulo: "Lluvia de Sobres",
@@ -147,9 +166,22 @@ function NuevoEventoContent() {
         { hora: "7:00 pm", titulo: "Hora de bailar", tipoIcono: "party" },
       ],
       corteHonorJson: {
+        quinceanera: "Magdalena",
+        showQuinceanera: true,
+        miniQuinceanera: "Elsy",
+        showMiniQuinceanera: true,
         chambelan: "Jeremiah",
+        showChambelan: true,
+        miniChambelan: "Jose",
+        showMiniChambelan: true,
+        damas: ["Violeta", "Zoe", "Elsy Magdalena", "Tania", "Yani"],
+        showDamas: true,
+        damitasHojitas: ["Violet", "Zoe", "Green"],
+        showDamitasHojitas: true,
         parents: "Magdalena & Adrian",
+        showParents: true,
         padrinos: ["Tania", "Carl"],
+        showPadrinos: true,
       },
     },
     BLUE_BUTTERFLY: {
@@ -492,6 +524,9 @@ function NuevoEventoContent() {
 
   // Al seleccionar plantilla, se actualizan el estilo y los datos de demo/preview preservando datos del usuario
   const handleSelectTemplate = (tempKey: TemplateId) => {
+    setDamasRaw(null);
+    setDamitasRaw(null);
+    setPadrinosRaw(null);
     const preset = TEMPLATE_PRESETS[tempKey];
     if (preset) {
       setFormData((prev) => {
@@ -1933,71 +1968,603 @@ function NuevoEventoContent() {
                   </div>
                 </div>
 
-                {/* Corte de Honor */}
-                <div className="p-4 bg-stone-50 border border-stone-200 rounded-2xl space-y-3">
-                  <span className="text-xs font-bold text-stone-800 block">Corte de Honor & Padrinos (Sección 11)</span>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {/* Corte de Honor & Padrinos */}
+                <div className="p-4 bg-stone-50 border border-stone-200 rounded-2xl space-y-4">
+                  <div className="flex items-center justify-between">
                     <div>
-                      <label className="block text-[11px] text-stone-600 mb-1">Chambelán Principal</label>
-                      <input
-                        type="text"
-                        value={formData.corteHonorJson?.chambelan || ""}
-                        onChange={(e) =>
-                          updateField("corteHonorJson", {
-                            ...formData.corteHonorJson,
-                            chambelan: e.target.value,
-                          })
-                        }
-                        placeholder="Ej. Jeremiah Smith"
-                        className="w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs"
-                      />
+                      <span className="text-xs font-bold text-stone-800 block">
+                        Corte de Honor & Padrinos (Sección 11)
+                      </span>
+                      <p className="text-[11px] text-stone-500">
+                        Personaliza los integrantes de la corte. Activa o desactiva con el interruptor según corresponda a tu evento.
+                      </p>
                     </div>
-                    <div>
-                      <label className="block text-[11px] text-stone-600 mb-1">Padres de la Quinceañera</label>
-                      <input
-                        type="text"
-                        value={formData.corteHonorJson?.parents || ""}
-                        onChange={(e) =>
-                          updateField("corteHonorJson", {
-                            ...formData.corteHonorJson,
-                            parents: e.target.value,
-                          })
-                        }
-                        placeholder="Ej. Carlos Mendoza & Patricia Solís"
-                        className="w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs"
-                      />
-                    </div>
+                    <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-pink-100 text-pink-700">
+                      Modular con On/Off
+                    </span>
                   </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                      <label className="block text-[11px] text-stone-600 mb-1">Damas de Honor (separadas por coma)</label>
-                      <input
-                        type="text"
-                        value={(formData.corteHonorJson?.damas || []).join(", ")}
-                        onChange={(e) =>
-                          updateField("corteHonorJson", {
-                            ...formData.corteHonorJson,
-                            damas: e.target.value.split(",").map((d) => d.trim()).filter(Boolean),
-                          })
-                        }
-                        placeholder="Ej. Magdalena, Violeta, Tania"
-                        className="w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs"
-                      />
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-1">
+                    {/* Chambelán Principal */}
+                    <div
+                      className={`p-3 rounded-xl border transition-colors ${
+                        formData.corteHonorJson?.showChambelan !== false &&
+                        (formData.corteHonorJson?.showChambelan === true || Boolean(formData.corteHonorJson?.chambelan))
+                          ? "bg-white border-stone-200 shadow-sm"
+                          : "bg-stone-100/70 border-stone-200/60 opacity-80"
+                      }`}
+                    >
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-xs font-bold text-stone-800">Chambelán Principal</span>
+                          {formData.corteHonorJson?.showChambelan !== false &&
+                          (formData.corteHonorJson?.showChambelan === true || Boolean(formData.corteHonorJson?.chambelan)) ? (
+                            <span className="text-[9px] font-semibold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded-full">
+                              Visible
+                            </span>
+                          ) : (
+                            <span className="text-[9px] font-medium text-stone-400 bg-stone-200/80 px-1.5 py-0.5 rounded-full">
+                              Oculto
+                            </span>
+                          )}
+                        </div>
+                        <button
+                          type="button"
+                          role="switch"
+                          aria-checked={
+                            formData.corteHonorJson?.showChambelan !== false &&
+                            (formData.corteHonorJson?.showChambelan === true || Boolean(formData.corteHonorJson?.chambelan))
+                          }
+                          onClick={() => {
+                            const current =
+                              formData.corteHonorJson?.showChambelan !== false &&
+                              (formData.corteHonorJson?.showChambelan === true || Boolean(formData.corteHonorJson?.chambelan));
+                            updateField("corteHonorJson", {
+                              ...formData.corteHonorJson,
+                              showChambelan: !current,
+                            });
+                          }}
+                          className={`relative inline-flex h-5 w-9 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                            formData.corteHonorJson?.showChambelan !== false &&
+                            (formData.corteHonorJson?.showChambelan === true || Boolean(formData.corteHonorJson?.chambelan))
+                              ? "bg-stone-900"
+                              : "bg-stone-300"
+                          }`}
+                        >
+                          <span
+                            className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                              formData.corteHonorJson?.showChambelan !== false &&
+                              (formData.corteHonorJson?.showChambelan === true || Boolean(formData.corteHonorJson?.chambelan))
+                                ? "translate-x-4"
+                                : "translate-x-0"
+                            }`}
+                          />
+                        </button>
+                      </div>
+
+                      {formData.corteHonorJson?.showChambelan !== false &&
+                      (formData.corteHonorJson?.showChambelan === true || Boolean(formData.corteHonorJson?.chambelan)) ? (
+                        <input
+                          type="text"
+                          value={formData.corteHonorJson?.chambelan || ""}
+                          onChange={(e) =>
+                            updateField("corteHonorJson", {
+                              ...formData.corteHonorJson,
+                              chambelan: e.target.value,
+                            })
+                          }
+                          placeholder="Ej. Jeremiah Smith"
+                          className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-lg text-xs"
+                        />
+                      ) : (
+                        <p className="text-[11px] text-stone-400 italic py-1">
+                          Desactivado: no aparecerá en la invitación.
+                        </p>
+                      )}
                     </div>
-                    <div>
-                      <label className="block text-[11px] text-stone-600 mb-1">Padrinos (separados por coma)</label>
-                      <input
-                        type="text"
-                        value={(formData.corteHonorJson?.padrinos || []).join(", ")}
-                        onChange={(e) =>
-                          updateField("corteHonorJson", {
-                            ...formData.corteHonorJson,
-                            padrinos: e.target.value.split(",").map((p) => p.trim()).filter(Boolean),
-                          })
-                        }
-                        placeholder="Ej. Roberto & Andrea"
-                        className="w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs"
-                      />
+
+                    {/* Mini Chambelán */}
+                    <div
+                      className={`p-3 rounded-xl border transition-colors ${
+                        formData.corteHonorJson?.showMiniChambelan !== false &&
+                        (formData.corteHonorJson?.showMiniChambelan === true || Boolean(formData.corteHonorJson?.miniChambelan))
+                          ? "bg-white border-stone-200 shadow-sm"
+                          : "bg-stone-100/70 border-stone-200/60 opacity-80"
+                      }`}
+                    >
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-xs font-bold text-stone-800">Mini Chambelán</span>
+                          {formData.corteHonorJson?.showMiniChambelan !== false &&
+                          (formData.corteHonorJson?.showMiniChambelan === true || Boolean(formData.corteHonorJson?.miniChambelan)) ? (
+                            <span className="text-[9px] font-semibold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded-full">
+                              Visible
+                            </span>
+                          ) : (
+                            <span className="text-[9px] font-medium text-stone-400 bg-stone-200/80 px-1.5 py-0.5 rounded-full">
+                              Oculto
+                            </span>
+                          )}
+                        </div>
+                        <button
+                          type="button"
+                          role="switch"
+                          aria-checked={
+                            formData.corteHonorJson?.showMiniChambelan !== false &&
+                            (formData.corteHonorJson?.showMiniChambelan === true || Boolean(formData.corteHonorJson?.miniChambelan))
+                          }
+                          onClick={() => {
+                            const current =
+                              formData.corteHonorJson?.showMiniChambelan !== false &&
+                              (formData.corteHonorJson?.showMiniChambelan === true || Boolean(formData.corteHonorJson?.miniChambelan));
+                            updateField("corteHonorJson", {
+                              ...formData.corteHonorJson,
+                              showMiniChambelan: !current,
+                            });
+                          }}
+                          className={`relative inline-flex h-5 w-9 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                            formData.corteHonorJson?.showMiniChambelan !== false &&
+                            (formData.corteHonorJson?.showMiniChambelan === true || Boolean(formData.corteHonorJson?.miniChambelan))
+                              ? "bg-stone-900"
+                              : "bg-stone-300"
+                          }`}
+                        >
+                          <span
+                            className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                              formData.corteHonorJson?.showMiniChambelan !== false &&
+                              (formData.corteHonorJson?.showMiniChambelan === true || Boolean(formData.corteHonorJson?.miniChambelan))
+                                ? "translate-x-4"
+                                : "translate-x-0"
+                            }`}
+                          />
+                        </button>
+                      </div>
+
+                      {formData.corteHonorJson?.showMiniChambelan !== false &&
+                      (formData.corteHonorJson?.showMiniChambelan === true || Boolean(formData.corteHonorJson?.miniChambelan)) ? (
+                        <input
+                          type="text"
+                          value={formData.corteHonorJson?.miniChambelan || ""}
+                          onChange={(e) =>
+                            updateField("corteHonorJson", {
+                              ...formData.corteHonorJson,
+                              miniChambelan: e.target.value,
+                            })
+                          }
+                          placeholder="Ej. Jose"
+                          className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-lg text-xs"
+                        />
+                      ) : (
+                        <p className="text-[11px] text-stone-400 italic py-1">
+                          Desactivado: no aparecerá en la invitación.
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Mini Quinceañera */}
+                    <div
+                      className={`p-3 rounded-xl border transition-colors ${
+                        formData.corteHonorJson?.showMiniQuinceanera !== false &&
+                        (formData.corteHonorJson?.showMiniQuinceanera === true || Boolean(formData.corteHonorJson?.miniQuinceanera))
+                          ? "bg-white border-stone-200 shadow-sm"
+                          : "bg-stone-100/70 border-stone-200/60 opacity-80"
+                      }`}
+                    >
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-xs font-bold text-stone-800">Mini Quinceañera</span>
+                          {formData.corteHonorJson?.showMiniQuinceanera !== false &&
+                          (formData.corteHonorJson?.showMiniQuinceanera === true || Boolean(formData.corteHonorJson?.miniQuinceanera)) ? (
+                            <span className="text-[9px] font-semibold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded-full">
+                              Visible
+                            </span>
+                          ) : (
+                            <span className="text-[9px] font-medium text-stone-400 bg-stone-200/80 px-1.5 py-0.5 rounded-full">
+                              Oculto
+                            </span>
+                          )}
+                        </div>
+                        <button
+                          type="button"
+                          role="switch"
+                          aria-checked={
+                            formData.corteHonorJson?.showMiniQuinceanera !== false &&
+                            (formData.corteHonorJson?.showMiniQuinceanera === true || Boolean(formData.corteHonorJson?.miniQuinceanera))
+                          }
+                          onClick={() => {
+                            const current =
+                              formData.corteHonorJson?.showMiniQuinceanera !== false &&
+                              (formData.corteHonorJson?.showMiniQuinceanera === true || Boolean(formData.corteHonorJson?.miniQuinceanera));
+                            updateField("corteHonorJson", {
+                              ...formData.corteHonorJson,
+                              showMiniQuinceanera: !current,
+                            });
+                          }}
+                          className={`relative inline-flex h-5 w-9 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                            formData.corteHonorJson?.showMiniQuinceanera !== false &&
+                            (formData.corteHonorJson?.showMiniQuinceanera === true || Boolean(formData.corteHonorJson?.miniQuinceanera))
+                              ? "bg-stone-900"
+                              : "bg-stone-300"
+                          }`}
+                        >
+                          <span
+                            className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                              formData.corteHonorJson?.showMiniQuinceanera !== false &&
+                              (formData.corteHonorJson?.showMiniQuinceanera === true || Boolean(formData.corteHonorJson?.miniQuinceanera))
+                                ? "translate-x-4"
+                                : "translate-x-0"
+                            }`}
+                          />
+                        </button>
+                      </div>
+
+                      {formData.corteHonorJson?.showMiniQuinceanera !== false &&
+                      (formData.corteHonorJson?.showMiniQuinceanera === true || Boolean(formData.corteHonorJson?.miniQuinceanera)) ? (
+                        <input
+                          type="text"
+                          value={formData.corteHonorJson?.miniQuinceanera || ""}
+                          onChange={(e) =>
+                            updateField("corteHonorJson", {
+                              ...formData.corteHonorJson,
+                              miniQuinceanera: e.target.value,
+                            })
+                          }
+                          placeholder="Ej. Elsy"
+                          className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-lg text-xs"
+                        />
+                      ) : (
+                        <p className="text-[11px] text-stone-400 italic py-1">
+                          Desactivado: no aparecerá en la invitación.
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Damiselas de Honor */}
+                    <div
+                      className={`p-3 rounded-xl border transition-colors ${
+                        formData.corteHonorJson?.showDamas !== false &&
+                        (formData.corteHonorJson?.showDamas === true || (formData.corteHonorJson?.damas && formData.corteHonorJson.damas.length > 0))
+                          ? "bg-white border-stone-200 shadow-sm"
+                          : "bg-stone-100/70 border-stone-200/60 opacity-80"
+                      }`}
+                    >
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-xs font-bold text-stone-800">Damiselas de Honor</span>
+                          {formData.corteHonorJson?.showDamas !== false &&
+                          (formData.corteHonorJson?.showDamas === true || (formData.corteHonorJson?.damas && formData.corteHonorJson.damas.length > 0)) ? (
+                            <span className="text-[9px] font-semibold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded-full">
+                              Visible
+                            </span>
+                          ) : (
+                            <span className="text-[9px] font-medium text-stone-400 bg-stone-200/80 px-1.5 py-0.5 rounded-full">
+                              Oculto
+                            </span>
+                          )}
+                        </div>
+                        <button
+                          type="button"
+                          role="switch"
+                          aria-checked={
+                            formData.corteHonorJson?.showDamas !== false &&
+                            (formData.corteHonorJson?.showDamas === true || (formData.corteHonorJson?.damas && formData.corteHonorJson.damas.length > 0))
+                          }
+                          onClick={() => {
+                            const current =
+                              formData.corteHonorJson?.showDamas !== false &&
+                              (formData.corteHonorJson?.showDamas === true || (formData.corteHonorJson?.damas && formData.corteHonorJson.damas.length > 0));
+                            updateField("corteHonorJson", {
+                              ...formData.corteHonorJson,
+                              showDamas: !current,
+                            });
+                          }}
+                          className={`relative inline-flex h-5 w-9 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                            formData.corteHonorJson?.showDamas !== false &&
+                            (formData.corteHonorJson?.showDamas === true || (formData.corteHonorJson?.damas && formData.corteHonorJson.damas.length > 0))
+                              ? "bg-stone-900"
+                              : "bg-stone-300"
+                          }`}
+                        >
+                          <span
+                            className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                              formData.corteHonorJson?.showDamas !== false &&
+                              (formData.corteHonorJson?.showDamas === true || (formData.corteHonorJson?.damas && formData.corteHonorJson.damas.length > 0))
+                                ? "translate-x-4"
+                                : "translate-x-0"
+                            }`}
+                          />
+                        </button>
+                      </div>
+
+                      {formData.corteHonorJson?.showDamas !== false &&
+                      (formData.corteHonorJson?.showDamas === true || (formData.corteHonorJson?.damas && formData.corteHonorJson.damas.length > 0)) ? (
+                        <>
+                          <input
+                            type="text"
+                            value={
+                              damasRaw !== null
+                                ? damasRaw
+                                : (formData.corteHonorJson?.damas || []).join(", ")
+                            }
+                            onChange={(e) => {
+                              const val = e.target.value;
+                              setDamasRaw(val);
+                              const parsed = val.split(",").map((s) => s.trim()).filter(Boolean);
+                              updateField("corteHonorJson", {
+                                ...formData.corteHonorJson,
+                                damas: parsed,
+                              });
+                            }}
+                            placeholder="Ej. Violeta, Zoe, Elsy Magdalena, Tania, Yani"
+                            className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-lg text-xs"
+                          />
+                          <p className="text-[10px] text-stone-400 mt-1">
+                            Separar los nombres con comas (,).
+                          </p>
+                        </>
+                      ) : (
+                        <p className="text-[11px] text-stone-400 italic py-1">
+                          Desactivado: no aparecerá en la invitación.
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Damitas de Hojitas */}
+                    <div
+                      className={`p-3 rounded-xl border transition-colors ${
+                        formData.corteHonorJson?.showDamitasHojitas !== false &&
+                        (formData.corteHonorJson?.showDamitasHojitas === true || (formData.corteHonorJson?.damitasHojitas && formData.corteHonorJson.damitasHojitas.length > 0))
+                          ? "bg-white border-stone-200 shadow-sm"
+                          : "bg-stone-100/70 border-stone-200/60 opacity-80"
+                      }`}
+                    >
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-xs font-bold text-stone-800">Damitas de Hojitas</span>
+                          {formData.corteHonorJson?.showDamitasHojitas !== false &&
+                          (formData.corteHonorJson?.showDamitasHojitas === true || (formData.corteHonorJson?.damitasHojitas && formData.corteHonorJson.damitasHojitas.length > 0)) ? (
+                            <span className="text-[9px] font-semibold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded-full">
+                              Visible
+                            </span>
+                          ) : (
+                            <span className="text-[9px] font-medium text-stone-400 bg-stone-200/80 px-1.5 py-0.5 rounded-full">
+                              Oculto
+                            </span>
+                          )}
+                        </div>
+                        <button
+                          type="button"
+                          role="switch"
+                          aria-checked={
+                            formData.corteHonorJson?.showDamitasHojitas !== false &&
+                            (formData.corteHonorJson?.showDamitasHojitas === true || (formData.corteHonorJson?.damitasHojitas && formData.corteHonorJson.damitasHojitas.length > 0))
+                          }
+                          onClick={() => {
+                            const current =
+                              formData.corteHonorJson?.showDamitasHojitas !== false &&
+                              (formData.corteHonorJson?.showDamitasHojitas === true || (formData.corteHonorJson?.damitasHojitas && formData.corteHonorJson.damitasHojitas.length > 0));
+                            updateField("corteHonorJson", {
+                              ...formData.corteHonorJson,
+                              showDamitasHojitas: !current,
+                            });
+                          }}
+                          className={`relative inline-flex h-5 w-9 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                            formData.corteHonorJson?.showDamitasHojitas !== false &&
+                            (formData.corteHonorJson?.showDamitasHojitas === true || (formData.corteHonorJson?.damitasHojitas && formData.corteHonorJson.damitasHojitas.length > 0))
+                              ? "bg-stone-900"
+                              : "bg-stone-300"
+                          }`}
+                        >
+                          <span
+                            className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                              formData.corteHonorJson?.showDamitasHojitas !== false &&
+                              (formData.corteHonorJson?.showDamitasHojitas === true || (formData.corteHonorJson?.damitasHojitas && formData.corteHonorJson.damitasHojitas.length > 0))
+                                ? "translate-x-4"
+                                : "translate-x-0"
+                            }`}
+                          />
+                        </button>
+                      </div>
+
+                      {formData.corteHonorJson?.showDamitasHojitas !== false &&
+                      (formData.corteHonorJson?.showDamitasHojitas === true || (formData.corteHonorJson?.damitasHojitas && formData.corteHonorJson.damitasHojitas.length > 0)) ? (
+                        <>
+                          <input
+                            type="text"
+                            value={
+                              damitasRaw !== null
+                                ? damitasRaw
+                                : (formData.corteHonorJson?.damitasHojitas || []).join(", ")
+                            }
+                            onChange={(e) => {
+                              const val = e.target.value;
+                              setDamitasRaw(val);
+                              const parsed = val.split(",").map((s) => s.trim()).filter(Boolean);
+                              updateField("corteHonorJson", {
+                                ...formData.corteHonorJson,
+                                damitasHojitas: parsed,
+                              });
+                            }}
+                            placeholder="Ej. Violet, Zoe, Green"
+                            className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-lg text-xs"
+                          />
+                          <p className="text-[10px] text-stone-400 mt-1">
+                            Separar los nombres con comas (,).
+                          </p>
+                        </>
+                      ) : (
+                        <p className="text-[11px] text-stone-400 italic py-1">
+                          Desactivado: no aparecerá en la invitación.
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Padres de la Quinceañera */}
+                    <div
+                      className={`p-3 rounded-xl border transition-colors ${
+                        formData.corteHonorJson?.showParents !== false &&
+                        (formData.corteHonorJson?.showParents === true || Boolean(formData.corteHonorJson?.parents))
+                          ? "bg-white border-stone-200 shadow-sm"
+                          : "bg-stone-100/70 border-stone-200/60 opacity-80"
+                      }`}
+                    >
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-xs font-bold text-stone-800">Padres de la Quinceañera</span>
+                          {formData.corteHonorJson?.showParents !== false &&
+                          (formData.corteHonorJson?.showParents === true || Boolean(formData.corteHonorJson?.parents)) ? (
+                            <span className="text-[9px] font-semibold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded-full">
+                              Visible
+                            </span>
+                          ) : (
+                            <span className="text-[9px] font-medium text-stone-400 bg-stone-200/80 px-1.5 py-0.5 rounded-full">
+                              Oculto
+                            </span>
+                          )}
+                        </div>
+                        <button
+                          type="button"
+                          role="switch"
+                          aria-checked={
+                            formData.corteHonorJson?.showParents !== false &&
+                            (formData.corteHonorJson?.showParents === true || Boolean(formData.corteHonorJson?.parents))
+                          }
+                          onClick={() => {
+                            const current =
+                              formData.corteHonorJson?.showParents !== false &&
+                              (formData.corteHonorJson?.showParents === true || Boolean(formData.corteHonorJson?.parents));
+                            updateField("corteHonorJson", {
+                              ...formData.corteHonorJson,
+                              showParents: !current,
+                            });
+                          }}
+                          className={`relative inline-flex h-5 w-9 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                            formData.corteHonorJson?.showParents !== false &&
+                            (formData.corteHonorJson?.showParents === true || Boolean(formData.corteHonorJson?.parents))
+                              ? "bg-stone-900"
+                              : "bg-stone-300"
+                          }`}
+                        >
+                          <span
+                            className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                              formData.corteHonorJson?.showParents !== false &&
+                              (formData.corteHonorJson?.showParents === true || Boolean(formData.corteHonorJson?.parents))
+                                ? "translate-x-4"
+                                : "translate-x-0"
+                            }`}
+                          />
+                        </button>
+                      </div>
+
+                      {formData.corteHonorJson?.showParents !== false &&
+                      (formData.corteHonorJson?.showParents === true || Boolean(formData.corteHonorJson?.parents)) ? (
+                        <input
+                          type="text"
+                          value={formData.corteHonorJson?.parents || ""}
+                          onChange={(e) =>
+                            updateField("corteHonorJson", {
+                              ...formData.corteHonorJson,
+                              parents: e.target.value,
+                            })
+                          }
+                          placeholder="Ej. Magdalena & Adrian"
+                          className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-lg text-xs"
+                        />
+                      ) : (
+                        <p className="text-[11px] text-stone-400 italic py-1">
+                          Desactivado: no aparecerá en la invitación.
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Padrinos de Honor */}
+                    <div
+                      className={`p-3 rounded-xl border transition-colors ${
+                        formData.corteHonorJson?.showPadrinos !== false &&
+                        (formData.corteHonorJson?.showPadrinos === true || (formData.corteHonorJson?.padrinos && formData.corteHonorJson.padrinos.length > 0))
+                          ? "bg-white border-stone-200 shadow-sm"
+                          : "bg-stone-100/70 border-stone-200/60 opacity-80"
+                      }`}
+                    >
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-xs font-bold text-stone-800">Padrinos de Honor</span>
+                          {formData.corteHonorJson?.showPadrinos !== false &&
+                          (formData.corteHonorJson?.showPadrinos === true || (formData.corteHonorJson?.padrinos && formData.corteHonorJson.padrinos.length > 0)) ? (
+                            <span className="text-[9px] font-semibold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded-full">
+                              Visible
+                            </span>
+                          ) : (
+                            <span className="text-[9px] font-medium text-stone-400 bg-stone-200/80 px-1.5 py-0.5 rounded-full">
+                              Oculto
+                            </span>
+                          )}
+                        </div>
+                        <button
+                          type="button"
+                          role="switch"
+                          aria-checked={
+                            formData.corteHonorJson?.showPadrinos !== false &&
+                            (formData.corteHonorJson?.showPadrinos === true || (formData.corteHonorJson?.padrinos && formData.corteHonorJson.padrinos.length > 0))
+                          }
+                          onClick={() => {
+                            const current =
+                              formData.corteHonorJson?.showPadrinos !== false &&
+                              (formData.corteHonorJson?.showPadrinos === true || (formData.corteHonorJson?.padrinos && formData.corteHonorJson.padrinos.length > 0));
+                            updateField("corteHonorJson", {
+                              ...formData.corteHonorJson,
+                              showPadrinos: !current,
+                            });
+                          }}
+                          className={`relative inline-flex h-5 w-9 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                            formData.corteHonorJson?.showPadrinos !== false &&
+                            (formData.corteHonorJson?.showPadrinos === true || (formData.corteHonorJson?.padrinos && formData.corteHonorJson.padrinos.length > 0))
+                              ? "bg-stone-900"
+                              : "bg-stone-300"
+                          }`}
+                        >
+                          <span
+                            className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                              formData.corteHonorJson?.showPadrinos !== false &&
+                              (formData.corteHonorJson?.showPadrinos === true || (formData.corteHonorJson?.padrinos && formData.corteHonorJson.padrinos.length > 0))
+                                ? "translate-x-4"
+                                : "translate-x-0"
+                            }`}
+                          />
+                        </button>
+                      </div>
+
+                      {formData.corteHonorJson?.showPadrinos !== false &&
+                      (formData.corteHonorJson?.showPadrinos === true || (formData.corteHonorJson?.padrinos && formData.corteHonorJson.padrinos.length > 0)) ? (
+                        <>
+                          <input
+                            type="text"
+                            value={
+                              padrinosRaw !== null
+                                ? padrinosRaw
+                                : (formData.corteHonorJson?.padrinos || []).join(", ")
+                            }
+                            onChange={(e) => {
+                              const val = e.target.value;
+                              setPadrinosRaw(val);
+                              const parsed = val.split(",").map((s) => s.trim()).filter(Boolean);
+                              updateField("corteHonorJson", {
+                                ...formData.corteHonorJson,
+                                padrinos: parsed,
+                              });
+                            }}
+                            placeholder="Ej. Tania, Carl"
+                            className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-lg text-xs"
+                          />
+                          <p className="text-[10px] text-stone-400 mt-1">
+                            Separar nombres de padrinos con comas (,).
+                          </p>
+                        </>
+                      ) : (
+                        <p className="text-[11px] text-stone-400 italic py-1">
+                          Desactivado: no aparecerá en la invitación.
+                        </p>
+                      )}
                     </div>
                   </div>
                 </div>

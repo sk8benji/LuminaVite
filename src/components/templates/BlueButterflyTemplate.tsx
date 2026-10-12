@@ -1401,7 +1401,15 @@ export default function BlueButterflyTemplate({
                 {isEn ? "Court of Honor" : "Corte de Honor"}
               </h4>
               <div className="space-y-3 text-xs text-slate-700">
-                {corte.chambelan && (
+                {corte.showMiniQuinceanera !== false && corte.miniQuinceanera && (
+                  <p>
+                    <strong className="text-[#2F5A84]">
+                      {isEn ? "Junior Quinceañera:" : "Mini Quinceañera:"}
+                    </strong>{" "}
+                    {corte.miniQuinceanera}
+                  </p>
+                )}
+                {corte.showChambelan !== false && corte.chambelan && (
                   <p>
                     <strong className="text-[#2F5A84]">
                       {isEn ? "Chamberlain of Honor:" : "Chambelán de Honor:"}
@@ -1409,26 +1417,42 @@ export default function BlueButterflyTemplate({
                     {corte.chambelan}
                   </p>
                 )}
-                {corte.damas && corte.damas.length > 0 && (
+                {corte.showMiniChambelan !== false && corte.miniChambelan && (
                   <p>
                     <strong className="text-[#2F5A84]">
-                      {isEn ? "Ladies of Honor / Damas:" : "Damitas:"}
+                      {isEn ? "Junior Escort:" : "Mini Chambelán:"}
                     </strong>{" "}
-                    {corte.damas.join(", ")}
+                    {corte.miniChambelan}
                   </p>
                 )}
-                {corte.parents && (
+                {corte.showDamas !== false && ((Array.isArray(corte.damas) && corte.damas.length > 0) || (typeof corte.damas === "string" && corte.damas.trim().length > 0)) && (
+                  <p>
+                    <strong className="text-[#2F5A84]">
+                      {isEn ? "Ladies of Honor:" : "Damiselas de Honor:"}
+                    </strong>{" "}
+                    {Array.isArray(corte.damas) ? corte.damas.join(", ") : corte.damas}
+                  </p>
+                )}
+                {corte.showDamitasHojitas !== false && ((Array.isArray(corte.damitasHojitas) && corte.damitasHojitas.length > 0) || (typeof corte.damitasHojitas === "string" && corte.damitasHojitas.trim().length > 0)) && (
+                  <p>
+                    <strong className="text-[#2F5A84]">
+                      {isEn ? "Flower Girls:" : "Damitas de Hojitas:"}
+                    </strong>{" "}
+                    {Array.isArray(corte.damitasHojitas) ? corte.damitasHojitas.join(", ") : corte.damitasHojitas}
+                  </p>
+                )}
+                {corte.showParents !== false && corte.parents && (
                   <p>
                     <strong className="text-[#2F5A84]">{isEn ? "Parents:" : "Padres:"}</strong>{" "}
                     {corte.parents}
                   </p>
                 )}
-                {corte.padrinos && corte.padrinos.length > 0 && (
+                {corte.showPadrinos !== false && ((Array.isArray(corte.padrinos) && corte.padrinos.length > 0) || (typeof corte.padrinos === "string" && corte.padrinos.trim().length > 0)) && (
                   <p>
                     <strong className="text-[#2F5A84]">
                       {isEn ? "Godparents / Padrinos:" : "Padrinos:"}
                     </strong>{" "}
-                    {corte.padrinos.join(", ")}
+                    {Array.isArray(corte.padrinos) ? corte.padrinos.join(", ") : corte.padrinos}
                   </p>
                 )}
               </div>
