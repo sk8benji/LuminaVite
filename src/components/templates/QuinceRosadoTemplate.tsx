@@ -779,6 +779,8 @@ export default function QuinceRosadoTemplate({
                 accentBgColor="bg-white/95"
                 deadlineText={data.rsvpFechaLimite || (isEn ? "PLEASE CONFIRM YOUR ATTENDANCE BEFORE NOVEMBER 15." : "POR FAVOR, CONFIRMA TU ASISTENCIA ANTES DEL 20 DE OCTUBRE.")}
                 lang={currentLang}
+                permiteSms={data.permiteSms}
+                tipoPlan={data.tipoPlan}
               />
             </div>
 

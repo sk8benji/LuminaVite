@@ -1088,6 +1088,8 @@ export default function ElegantRoseTemplate({
                 accentBgColor="bg-white/95"
                 deadlineText={data.rsvpFechaLimite || data.fechaLimiteRsvp || (isEn ? "BY JUNE 20TH" : "ANTES DEL 20 DE JUNIO")}
                 lang={lang}
+                permiteSms={data.permiteSms}
+                tipoPlan={data.tipoPlan}
               />
             </div>
           </WavyColumn>

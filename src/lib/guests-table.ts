@@ -20,6 +20,7 @@ export async function ensureGuestsTable(): Promise<void> {
             event_id TEXT NOT NULL,
             name VARCHAR(255) NOT NULL,
             phone VARCHAR(50),
+            email VARCHAR(255),
             max_pax INT NOT NULL DEFAULT 1,
             confirmed_pax INT DEFAULT 0,
             status VARCHAR(20) NOT NULL DEFAULT 'pending',
@@ -27,6 +28,7 @@ export async function ensureGuestsTable(): Promise<void> {
             created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
         );
+        ALTER TABLE guests ADD COLUMN IF NOT EXISTS email VARCHAR(255);
       `);
 
       // 2. Clave foránea hacia "Evento"(id) si aún no existe

@@ -133,8 +133,9 @@ export async function ensurePostgresTables(): Promise<boolean> {
       );`,
       `ALTER TABLE "Evento" ADD COLUMN IF NOT EXISTS "reproducirMusicaAlAbrir" BOOLEAN DEFAULT true;`,
       `ALTER TABLE "Evento" ADD COLUMN IF NOT EXISTS "fotoZapato1Url" TEXT;`,
-      `ALTER TABLE "Evento" ADD COLUMN IF NOT EXISTS "fotoZapato2Url" TEXT;`,
       `ALTER TABLE "Evento" ADD COLUMN IF NOT EXISTS "configPlantilla" JSONB DEFAULT '{}'::jsonb;`,
+      `ALTER TABLE "RsvpRegistro" ADD COLUMN IF NOT EXISTS "email" TEXT;`,
+      `ALTER TABLE "guests" ADD COLUMN IF NOT EXISTS "email" VARCHAR(255);`,
 
       `DO $$ BEGIN
         CREATE TYPE "EstadoPago" AS ENUM ('PENDIENTE', 'PAGADO', 'FALLIDO', 'REEMBOLSADO');

@@ -34,6 +34,8 @@ interface DynamicRsvpFormProps {
   accentBgColor?: string;
   deadlineText?: string;
   lang?: "es" | "en";
+  permiteSms?: boolean;
+  tipoPlan?: string | null;
 }
 
 export default function DynamicRsvpForm({
@@ -46,8 +48,11 @@ export default function DynamicRsvpForm({
   accentBgColor = "bg-white",
   deadlineText = "Favor de confirmar antes de la fecha límite",
   lang = "es",
+  permiteSms,
+  tipoPlan,
 }: DynamicRsvpFormProps) {
   const isEn = lang === "en";
+  const isSmsEnabled = permiteSms ?? (!tipoPlan || !tipoPlan.toLowerCase().includes("basic"));
   const searchParams = useSearchParams();
   const directGuestId = searchParams?.get("guest") || searchParams?.get("guest_id") || searchParams?.get("id");
 
@@ -176,11 +181,13 @@ export default function DynamicRsvpForm({
     setSubmitError("");
 
     try {
+      const contactVal = phone.trim();
       const payload = {
         guest_id: selectedGuest.id,
         status: asistencia === "SI" ? "attending" : "declined",
         confirmed_pax: asistencia === "SI" ? confirmedPax : 0,
-        phone: phone.trim() || undefined,
+        phone: isSmsEnabled ? contactVal || undefined : undefined,
+        email: !isSmsEnabled ? contactVal || undefined : undefined,
         notes: notes.trim() || undefined,
       };
 
@@ -457,19 +464,35 @@ export default function DynamicRsvpForm({
 
               <div>
                 <label className="block text-[10px] font-bold tracking-wider uppercase text-stone-600 mb-1">
-                  {isEn ? "MOBILE NUMBER TO RECEIVE YOUR PASSES VIA SMS:" : "MÓVIL PARA RECIBIR TUS PASES POR SMS:"}
+                  {isSmsEnabled
+                    ? isEn
+                      ? "MOBILE NUMBER TO RECEIVE YOUR PASSES VIA SMS:"
+                      : "MÓVIL PARA RECIBIR TUS PASES POR SMS:"
+                    : isEn
+                    ? "EMAIL TO RECEIVE YOUR PASSES:"
+                    : "CORREO ELECTRÓNICO PARA RECIBIR TUS PASES:"}
                 </label>
                 <input
-                  type="tel"
+                  type={isSmsEnabled ? "tel" : "email"}
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  placeholder={isEn ? "e.g. +1 (818) 555-0123" : "Ej. +1 (818) 555-0123"}
+                  placeholder={
+                    isSmsEnabled
+                      ? "(818) 555-0123"
+                      : isEn
+                      ? "name@example.com"
+                      : "nombre@ejemplo.com"
+                  }
                   className="w-full bg-stone-50 border border-stone-200 rounded-xl px-3 py-2 text-xs text-stone-800 focus:outline-none focus:ring-2 focus:ring-stone-400"
                 />
                 <p className="text-xs text-neutral-500 mt-1 text-left">
-                  {isEn
-                    ? "We'll send your access details and location via text message."
-                    : "Te enviaremos los detalles de tu acceso y ubicación por mensaje de texto."}
+                  {isSmsEnabled
+                    ? isEn
+                      ? "We'll send your access details and location via text message."
+                      : "Te enviaremos los detalles de tu acceso y ubicación por mensaje de texto."
+                    : isEn
+                    ? "We'll send your access details and location via email."
+                    : "Te enviaremos los detalles de tu acceso y ubicación por email."}
                 </p>
               </div>
             </div>

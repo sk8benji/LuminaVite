@@ -175,6 +175,7 @@ model Guest {
   evento       Evento    @relation(fields: [eventId], references: [id], onDelete: Cascade)
   name         String    @db.VarChar(255)
   phone        String?   @db.VarChar(50)
+  email        String?   @db.VarChar(255)
   maxPax       Int       @default(1) @map("max_pax")
   confirmedPax Int       @default(0) @map("confirmed_pax")
   status       String    @default("pending") @db.VarChar(20) // 'pending', 'attending', 'declined'
@@ -192,6 +193,7 @@ model RsvpRegistro {
   evento         Evento   @relation(fields: [eventoId], references: [id], onDelete: Cascade)
   nombreInvitado String
   telefono       String?  // Número de teléfono normalizado para control de duplicados
+  email          String?  // Correo electrónico del invitado para notificaciones SES
   asistira       Boolean
   pases          Int      @default(1)
   acompanantes   String?

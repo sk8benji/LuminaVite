@@ -380,6 +380,10 @@ async function getEventoData(rawSlug: string): Promise<InvitationData | null> {
       transporteJson: dbEvento.transporteJson,
       historiaHitosJson: dbEvento.historiaHitosJson,
       configPlantilla: (dbEvento as any).configPlantilla ?? {},
+      tipoPlan: (dbEvento as any).ordenesCompra?.[0]?.paqueteId?.toLowerCase() || "signature",
+      permiteSms:
+        !(dbEvento as any).ordenesCompra?.length ||
+        (!((dbEvento as any).ordenesCompra?.[0]?.paqueteId?.toLowerCase() || "").includes("basic")),
     };
   }
 

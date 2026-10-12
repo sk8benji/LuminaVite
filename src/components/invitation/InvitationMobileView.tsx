@@ -99,6 +99,7 @@ export interface InvitationData {
   configPlantilla?: Record<string, any> | null;
   idiomaDefault?: string;
   tipoPlan?: string | null;
+  permiteSms?: boolean;
 }
 
 export default function InvitationMobileView({

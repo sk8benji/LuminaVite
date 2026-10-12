@@ -3,6 +3,7 @@ import prisma from "@/lib/db";
 import { normalizeSlug } from "@/lib/events";
 import {
   sendGuestConfirmationSms,
+  sendGuestConfirmationEmail,
   sendHostNotificationEmail,
 } from "@/lib/notifications";
 
@@ -17,6 +18,7 @@ export async function POST(req: NextRequest) {
       slug,
       nombreInvitado,
       telefono,
+      email,
       asistira = true,
       pases = 1,
       acompanantes,
@@ -31,6 +33,7 @@ export async function POST(req: NextRequest) {
 
     const cleanIdentifier = normalizeSlug(slug || eventoId || "").replace(/^slug-/, "");
     const normalizedPhone = telefono ? String(telefono).replace(/[^0-9]/g, "") : null;
+    const cleanEmail = email ? String(email).trim().toLowerCase() : null;
     const isAttending = Boolean(asistira);
     const requestedPasses = isAttending ? Math.max(1, Number(pases) || 1) : 0;
 
@@ -122,6 +125,7 @@ export async function POST(req: NextRequest) {
           data: {
             nombreInvitado: String(nombreInvitado).trim(),
             telefono: normalizedPhone || rsvpExistente.telefono,
+            email: cleanEmail || rsvpExistente.email,
             asistira: isAttending,
             pases: requestedPasses,
             acompanantes: acompanantes ?? rsvpExistente.acompanantes,
@@ -133,6 +137,7 @@ export async function POST(req: NextRequest) {
             eventoId: evento.id,
             nombreInvitado: String(nombreInvitado).trim(),
             telefono: normalizedPhone,
+            email: cleanEmail,
             asistira: isAttending,
             pases: requestedPasses,
             acompanantes: acompanantes ?? null,
@@ -166,7 +171,7 @@ export async function POST(req: NextRequest) {
 
     // 7. Disparar notificaciones en segundo plano (no bloqueantes)
     const paquete = ((evento as any).ordenesCompra?.[0]?.paqueteId || "").toLowerCase();
-    const planConSms = !(evento as any).ordenesCompra?.length || !paquete || !paquete.includes("basic");
+    const planConSms = !(evento as any).ordenesCompra?.length || !paquete || (!paquete.includes("basic") && !paquete.includes("digital_basic"));
 
     if (planConSms && normalizedPhone && isAttending) {
       sendGuestConfirmationSms({
@@ -177,6 +182,19 @@ export async function POST(req: NextRequest) {
         recepcionNombre: evento.recepcionNombre,
         recepcionMapUrl: evento.recepcionMapUrl,
       }).catch((err) => console.error("Error SMS Twilio en segundo plano:", err));
+    } else if (!planConSms && cleanEmail && isAttending) {
+      const siteUrl = req.headers.get("origin") || process.env.NEXT_PUBLIC_SITE_URL || "https://clickandlove.app";
+      sendGuestConfirmationEmail({
+        guestEmail: cleanEmail,
+        nombreInvitado: rsvp.nombreInvitado,
+        pases: requestedPasses,
+        eventoTitulo: evento.titulo,
+        slug: evento.slug,
+        recepcionNombre: evento.recepcionNombre || undefined,
+        recepcionDireccion: evento.recepcionDireccion || undefined,
+        recepcionMapUrl: evento.recepcionMapUrl || undefined,
+        siteUrl,
+      }).catch((err) => console.error("Error Email SES Invitado en segundo plano:", err));
     }
 
     const hostEmail =
@@ -194,6 +212,7 @@ export async function POST(req: NextRequest) {
         panelToken: evento.panelToken,
         nombreInvitado: rsvp.nombreInvitado,
         telefono: normalizedPhone,
+        email: cleanEmail || rsvp.email || undefined,
         pases: requestedPasses,
         totalPasesConfirmados,
         aforoTotal: evento.aforoTotal || 200,

@@ -16,6 +16,7 @@ export interface HostEmailParams {
   panelToken?: string | null;
   nombreInvitado: string;
   telefono?: string | null;
+  email?: string | null;
   pases: number;
   totalPasesConfirmados: number;
   aforoTotal: number;
@@ -31,6 +32,18 @@ export interface GuestSmsParams {
   recepcionMapUrl?: string;
 }
 
+export interface GuestEmailParams {
+  guestEmail: string;
+  nombreInvitado: string;
+  pases: number;
+  eventoTitulo: string;
+  slug: string;
+  recepcionNombre?: string;
+  recepcionDireccion?: string;
+  recepcionMapUrl?: string;
+  siteUrl?: string;
+}
+
 /**
  * Enviar correo al anfitrión (Mamá / Organizador) con AWS SES
  * cada vez que un invitado confirma asistencia.
@@ -43,6 +56,7 @@ export async function sendHostNotificationEmail(params: HostEmailParams): Promis
     panelToken,
     nombreInvitado,
     telefono,
+    email,
     pases,
     totalPasesConfirmados,
     aforoTotal,
@@ -104,10 +118,20 @@ export async function sendHostNotificationEmail(params: HostEmailParams): Promis
           <div class="label">Pases Confirmados</div>
           <div class="value" style="color: #047857; font-size: 18px;">${pases} ${pases === 1 ? "pase" : "pases"}</div>
         </div>
+        ${email ? `
+        <div class="field">
+          <div class="label">Correo Electrónico</div>
+          <div class="value" style="font-size: 14px; font-family: monospace;">${email}</div>
+        </div>` : ""}
+        ${telefono ? `
         <div class="field">
           <div class="label">Teléfono Móvil</div>
-          <div class="value" style="font-size: 14px; font-family: monospace;">${telefono || "No especificado"}</div>
-        </div>
+          <div class="value" style="font-size: 14px; font-family: monospace;">${telefono}</div>
+        </div>` : !email ? `
+        <div class="field">
+          <div class="label">Contacto</div>
+          <div class="value" style="font-size: 14px; font-family: monospace;">No especificado</div>
+        </div>` : ""}
       </div>
 
       <div class="progress-box">
@@ -261,3 +285,150 @@ export async function sendGuestConfirmationSms(params: GuestSmsParams): Promise<
     return { success: false, error: err?.message };
   }
 }
+
+/**
+ * Enviar correo de confirmación de pases al invitado con AWS SES
+ * (Costo prácticamente nulo: ~$0.0001 USD por envío para plan Digital Basic)
+ */
+export async function sendGuestConfirmationEmail(
+  params: GuestEmailParams
+): Promise<{ success: boolean; simulated?: boolean; error?: string }> {
+  const {
+    guestEmail,
+    nombreInvitado,
+    pases,
+    eventoTitulo,
+    slug,
+    recepcionNombre,
+    recepcionDireccion,
+    recepcionMapUrl,
+    siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://clickandlove.app",
+  } = params;
+
+  if (!guestEmail || !guestEmail.includes("@")) {
+    return { success: false, error: "Correo electrónico no válido." };
+  }
+
+  const cleanEmail = guestEmail.trim().toLowerCase();
+  const eventLink = `${siteUrl}/${slug}`;
+  const subject = `¡Tus pases para ${eventoTitulo}! • ${pases} ${pases === 1 ? "pase confirmado" : "pases confirmados"}`;
+
+  const htmlBody = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>${subject}</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f8fafc; margin: 0; padding: 20px; color: #1e293b; }
+    .container { max-width: 580px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,0.06); border: 1px solid #e2e8f0; }
+    .header { background: linear-gradient(135deg, #0f172a 0%, #334155 100%); padding: 36px 24px; text-align: center; color: white; }
+    .header h1 { margin: 8px 0 0; font-size: 22px; font-weight: 700; letter-spacing: 0.3px; }
+    .header p { margin: 6px 0 0; font-size: 14px; color: #cbd5e1; }
+    .content { padding: 32px 24px; }
+    .card { background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; margin-bottom: 24px; }
+    .field { margin-bottom: 12px; }
+    .field:last-child { margin-bottom: 0; }
+    .label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; font-weight: 600; }
+    .value { font-size: 16px; color: #0f172a; font-weight: 600; margin-top: 2px; }
+    .badge { display: inline-block; background-color: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; padding: 6px 14px; border-radius: 9999px; font-weight: 700; font-size: 15px; }
+    .btn-container { text-align: center; margin: 28px 0 16px; }
+    .btn { display: inline-block; background-color: #0f172a; color: #ffffff !important; text-decoration: none; padding: 14px 28px; font-size: 14px; font-weight: 700; border-radius: 10px; }
+    .btn-map { display: inline-block; background-color: #ffffff; color: #0f172a !important; text-decoration: none; padding: 10px 20px; font-size: 13px; font-weight: 600; border-radius: 8px; border: 1px solid #cbd5e1; margin-top: 8px; }
+    .footer { text-align: center; font-size: 12px; color: #94a3b8; padding: 20px 24px; border-top: 1px solid #f1f5f9; background: #fafafa; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div style="font-size: 32px; margin-bottom: 4px;">🎉 ✨</div>
+      <h1>¡Tu Asistencia está Confirmada!</h1>
+      <p>${eventoTitulo}</p>
+    </div>
+
+    <div class="content">
+      <p style="font-size: 15px; line-height: 1.6; margin-top: 0;">
+        ¡Hola <strong>${nombreInvitado}</strong>! Hemos registrado exitosamente tu confirmación. Aquí tienes los detalles de tu acceso para el evento:
+      </p>
+
+      <div class="card">
+        <div class="field">
+          <div class="label">Pases Confirmados</div>
+          <div style="margin-top: 6px;">
+            <span class="badge">${pases} ${pases === 1 ? "Pase Confirmado" : "Pases Confirmados"}</span>
+          </div>
+        </div>
+
+        ${recepcionNombre ? `
+        <div class="field" style="margin-top: 16px;">
+          <div class="label">Lugar de Recepción</div>
+          <div class="value">${recepcionNombre}</div>
+          ${recepcionDireccion ? `<div style="font-size: 13px; color: #64748b; margin-top: 2px;">${recepcionDireccion}</div>` : ""}
+          ${recepcionMapUrl ? `
+          <div style="margin-top: 8px;">
+            <a href="${recepcionMapUrl}" class="btn-map" target="_blank">📍 Abrir en Google Maps</a>
+          </div>` : ""}
+        </div>
+        ` : ""}
+      </div>
+
+      <div class="btn-container">
+        <a href="${eventLink}" class="btn" target="_blank">
+          Ver Invitación Digital & Detalles
+        </a>
+      </div>
+      <p style="text-align: center; font-size: 12px; color: #64748b; margin-top: 8px;">
+        Guarda este correo para presentarlo o consultar el itinerario en cualquier momento.
+      </p>
+    </div>
+
+    <div class="footer">
+      LuminaVite • Plataforma de Invitaciones Digitales Interactivas
+    </div>
+  </div>
+</body>
+</html>
+`;
+
+  const hasCredentials = !!(process.env.AWS_ACCESS_SES_KEY || process.env.AWS_ACCESS_KEY_ID);
+  if (!hasCredentials || !cleanEmail) {
+    console.log(
+      `[AWS SES SIMULACIÓN] Email de invitado enviado a "${cleanEmail}": "${subject}". Evento: ${eventLink}`
+    );
+    return { success: true, simulated: true };
+  }
+
+  try {
+    const fromEmail = process.env.AWS_SES_FROM_EMAIL || "notificaciones@luminavite.com";
+    const command = new SendEmailCommand({
+      Source: fromEmail,
+      Destination: {
+        ToAddresses: [cleanEmail],
+      },
+      Message: {
+        Subject: {
+          Data: subject,
+          Charset: "UTF-8",
+        },
+        Body: {
+          Html: {
+            Data: htmlBody,
+            Charset: "UTF-8",
+          },
+          Text: {
+            Data: `¡Hola ${nombreInvitado}! Tu confirmación para ${pases} ${pases === 1 ? "pase" : "pases"} a "${eventoTitulo}" ha sido registrada exitosamente.\nAccede a la invitación completa aquí: ${eventLink}`,
+            Charset: "UTF-8",
+          },
+        },
+      },
+    });
+
+    await sesClient.send(command);
+    console.log(`[AWS SES] Correo de invitado enviado con éxito a ${cleanEmail}`);
+    return { success: true };
+  } catch (err: any) {
+    console.error("[AWS SES Error Invitado]:", err?.message || err);
+    return { success: false, error: err?.message };
+  }
+}
+

@@ -57,6 +57,9 @@ export default function BlueButterflyTemplate({
     data.idiomaDefault === "en" ? "en" : "es"
   );
   const isEn = currentLang === "en";
+  const isSmsEnabled =
+    data.permiteSms ??
+    (!data.tipoPlan || !data.tipoPlan.toLowerCase().includes("basic"));
 
   // Apertura del sobre 3D con selección de idioma
   const handleOpenEnvelope = (chosenLang?: "es" | "en") => {
@@ -140,6 +143,7 @@ export default function BlueButterflyTemplate({
     setRsvpFeedback(null);
 
     const seatCount = Number(selectedSeats) || 1;
+    const contactVal = guestPhone.trim();
 
     try {
       const res = await fetch("/api/rsvp", {
@@ -149,7 +153,8 @@ export default function BlueButterflyTemplate({
           eventoId: data.id || `slug-${data.slug}`,
           slug: data.slug,
           nombreInvitado: guestName.trim(),
-          telefono: guestPhone.trim() || undefined,
+          telefono: isSmsEnabled ? contactVal || undefined : undefined,
+          email: !isSmsEnabled ? contactVal || undefined : undefined,
           asistira: true,
           pases: seatCount,
         }),
@@ -170,10 +175,16 @@ export default function BlueButterflyTemplate({
       const successMsg =
         resJson.message ||
         (isEn
-          ? `Thank you, ${guestName}! Your RSVP for ${seatCount} guest(s) has been successfully confirmed. Details have been sent via SMS.`
-          : `¡Gracias, ${guestName}! Tu confirmación para ${seatCount} ${
-              seatCount === 1 ? "pase" : "pases"
-            } ha sido registrada exitosamente. Te enviamos los detalles por SMS.`);
+          ? isSmsEnabled
+            ? `Thank you, ${guestName}! Your RSVP for ${seatCount} guest(s) has been successfully confirmed. Details have been sent via SMS.`
+            : `Thank you, ${guestName}! Your RSVP for ${seatCount} guest(s) has been successfully confirmed. Details have been sent via email.`
+          : isSmsEnabled
+            ? `¡Gracias, ${guestName}! Tu confirmación para ${seatCount} ${
+                seatCount === 1 ? "pase" : "pases"
+              } ha sido registrada exitosamente. Te enviamos los detalles por SMS.`
+            : `¡Gracias, ${guestName}! Tu confirmación para ${seatCount} ${
+                seatCount === 1 ? "pase" : "pases"
+              } ha sido registrada exitosamente. Te enviamos los detalles por correo.`);
 
       setRsvpSuccessData({
         guestName: guestName.trim(),
@@ -1305,19 +1316,35 @@ export default function BlueButterflyTemplate({
 
                 <div>
                   <label className="block text-[11px] font-semibold text-slate-600 uppercase tracking-wider mb-1 font-serif-roman">
-                    {isEn ? "MOBILE NUMBER TO RECEIVE YOUR PASSES VIA SMS:" : "MÓVIL PARA RECIBIR TUS PASES POR SMS:"}
+                    {isSmsEnabled
+                      ? isEn
+                        ? "MOBILE NUMBER TO RECEIVE YOUR PASSES VIA SMS:"
+                        : "MÓVIL PARA RECIBIR TUS PASES POR SMS:"
+                      : isEn
+                      ? "EMAIL TO RECEIVE YOUR PASSES:"
+                      : "CORREO ELECTRÓNICO PARA RECIBIR TUS PASES:"}
                   </label>
                   <input
-                    type="tel"
+                    type={isSmsEnabled ? "tel" : "email"}
                     value={guestPhone}
                     onChange={(e) => setGuestPhone(e.target.value)}
                     className="w-full bg-[#F4F9FD] border border-blue-100 rounded-xl px-3.5 py-2.5 text-xs text-slate-800 focus:outline-none focus:border-[#2F5A84]"
-                    placeholder={isEn ? "e.g. +1 (818) 555-0123" : "Ej. +1 (818) 555-0123"}
+                    placeholder={
+                      isSmsEnabled
+                        ? "(818) 555-0123"
+                        : isEn
+                        ? "name@example.com"
+                        : "nombre@ejemplo.com"
+                    }
                   />
                   <p className="text-xs text-neutral-500 mt-1 text-left">
-                    {isEn
-                      ? "We'll send your access details and location via text message."
-                      : "Te enviaremos los detalles de tu acceso y ubicación por mensaje de texto."}
+                    {isSmsEnabled
+                      ? isEn
+                        ? "We'll send your access details and location via text message."
+                        : "Te enviaremos los detalles de tu acceso y ubicación por mensaje de texto."
+                      : isEn
+                      ? "We'll send your access details and location via email."
+                      : "Te enviaremos los detalles de tu acceso y ubicación por email."}
                   </p>
                 </div>
 

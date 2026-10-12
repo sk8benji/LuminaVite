@@ -2,7 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/db";
 import { normalizeSlug } from "@/lib/events";
 import { ensureGuestsTable } from "@/lib/guests-table";
-import { sendHostNotificationEmail } from "@/lib/notifications";
+import {
+  sendHostNotificationEmail,
+  sendGuestConfirmationEmail,
+} from "@/lib/notifications";
 import twilio from "twilio";
 
 export const dynamic = "force-dynamic";
@@ -60,6 +63,7 @@ export async function POST(req: NextRequest, context: RouteContext) {
       status,
       confirmed_pax = 0,
       phone,
+      email,
       notes,
     } = body;
 
@@ -128,6 +132,7 @@ export async function POST(req: NextRequest, context: RouteContext) {
     }
 
     const cleanPhone = phone ? String(phone).trim() : guest.phone;
+    const cleanEmail = email ? String(email).trim().toLowerCase() : guest.email;
     const cleanNotes = notes !== undefined ? (notes ? String(notes).trim() : null) : guest.notes;
 
     // Actualizar invitado en PostgreSQL
@@ -137,6 +142,7 @@ export async function POST(req: NextRequest, context: RouteContext) {
         status,
         confirmedPax: finalConfirmedPax,
         phone: cleanPhone,
+        email: cleanEmail,
         notes: cleanNotes,
         updatedAt: new Date(),
       },
@@ -164,6 +170,7 @@ export async function POST(req: NextRequest, context: RouteContext) {
             asistira: isAttending,
             pases: isAttending ? finalConfirmedPax : 0,
             telefono: cleanPhoneDigits || existingRsvp.telefono,
+            email: cleanEmail || existingRsvp.email,
             acompanantes: cleanNotes || existingRsvp.acompanantes,
           },
         });
@@ -175,6 +182,7 @@ export async function POST(req: NextRequest, context: RouteContext) {
             asistira: isAttending,
             pases: isAttending ? finalConfirmedPax : 0,
             telefono: cleanPhoneDigits,
+            email: cleanEmail,
             acompanantes: cleanNotes,
           },
         });
@@ -199,6 +207,7 @@ export async function POST(req: NextRequest, context: RouteContext) {
         panelToken: evento.panelToken,
         nombreInvitado: updatedGuest.name,
         telefono: cleanPhone,
+        email: cleanEmail,
         pases: finalConfirmedPax,
         totalPasesConfirmados: finalConfirmedPax,
         aforoTotal: evento.aforoTotal || 200,
@@ -206,9 +215,9 @@ export async function POST(req: NextRequest, context: RouteContext) {
       }).catch((err) => console.error("Error Email SES en segundo plano:", err));
     }
 
-    // 2. Notificación por Twilio SMS condicionada al plan (Planes VIP/Custom)
+    // 2. Notificación al invitado: SMS Twilio (Planes VIP/Custom) vs Email AWS SES (Plan Básico / Digital Basic)
     const paquete = (evento.ordenesCompra?.[0]?.paqueteId || "").toLowerCase();
-    const planConSms = !evento.ordenesCompra?.length || !paquete || !paquete.includes("basic");
+    const planConSms = !evento.ordenesCompra?.length || !paquete || (!paquete.includes("basic") && !paquete.includes("digital_basic"));
 
     if (planConSms && status === "attending" && cleanPhone) {
       try {
@@ -235,6 +244,19 @@ export async function POST(req: NextRequest, context: RouteContext) {
       } catch (twilioErr) {
         console.warn("Aviso: No se pudo enviar SMS de confirmación con Twilio:", twilioErr);
       }
+    } else if (!planConSms && status === "attending" && cleanEmail) {
+      const siteUrl = req.headers.get("origin") || process.env.NEXT_PUBLIC_SITE_URL || "https://clickandlove.app";
+      sendGuestConfirmationEmail({
+        guestEmail: cleanEmail,
+        nombreInvitado: updatedGuest.name,
+        pases: finalConfirmedPax,
+        eventoTitulo: evento.titulo,
+        slug: cleanSlug,
+        recepcionNombre: evento.recepcionNombre || undefined,
+        recepcionDireccion: evento.recepcionDireccion || undefined,
+        recepcionMapUrl: evento.recepcionMapUrl || undefined,
+        siteUrl,
+      }).catch((err) => console.error("Error Email SES Invitado en segundo plano:", err));
     }
 
     return NextResponse.json({
@@ -243,6 +265,7 @@ export async function POST(req: NextRequest, context: RouteContext) {
         id: updatedGuest.id,
         name: updatedGuest.name,
         phone: updatedGuest.phone,
+        email: updatedGuest.email,
         max_pax: updatedGuest.maxPax,
         confirmed_pax: updatedGuest.confirmedPax,
         status: updatedGuest.status,
