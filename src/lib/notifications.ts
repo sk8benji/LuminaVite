@@ -1,4 +1,5 @@
 import { SESClient, SendEmailCommand } from "@aws-sdk/client-ses";
+import { validateAndFormatPhone } from "@/lib/phoneValidator";
 
 // Configuración de AWS SES
 const sesClient = new SESClient({
@@ -228,9 +229,19 @@ export async function sendGuestConfirmationSms(params: GuestSmsParams): Promise<
     return { success: false, error: "No se proporcionó número telefónico." };
   }
 
-  const cleanPhone = telefono.replace(/[^0-9+]/g, "");
-  // Formatear si no tiene prefijo internacional
-  const toPhone = cleanPhone.startsWith("+") ? cleanPhone : `+${cleanPhone}`;
+  const phoneValidation = validateAndFormatPhone(telefono);
+  if (!phoneValidation.isValid || !phoneValidation.e164Phone) {
+    console.warn(
+      `[TWILIO SMS] Número telefónico descartado por formato inválido (${telefono}):`,
+      phoneValidation.error
+    );
+    return {
+      success: false,
+      error: phoneValidation.error || "Formato de teléfono inválido para E.164.",
+    };
+  }
+
+  const toPhone = phoneValidation.e164Phone;
 
   let body = `¡Hola ${nombreInvitado}! Tu confirmación para ${pases} ${pases === 1 ? "pase" : "pases"} a "${eventoTitulo}" ha sido registrada exitosamente.`;
   if (recepcionNombre) {

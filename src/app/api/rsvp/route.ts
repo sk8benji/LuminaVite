@@ -6,6 +6,7 @@ import {
   sendGuestConfirmationEmail,
   sendHostNotificationEmail,
 } from "@/lib/notifications";
+import { formatE164 } from "@/lib/phoneValidator";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -32,7 +33,7 @@ export async function POST(req: NextRequest) {
     }
 
     const cleanIdentifier = normalizeSlug(slug || eventoId || "").replace(/^slug-/, "");
-    const normalizedPhone = telefono ? String(telefono).replace(/[^0-9]/g, "") : null;
+    const normalizedPhone = telefono ? (formatE164(String(telefono)) || String(telefono).replace(/[^0-9]/g, "")) : null;
     const cleanEmail = email ? String(email).trim().toLowerCase() : null;
     const isAttending = Boolean(asistira);
     const requestedPasses = isAttending ? Math.max(1, Number(pases) || 1) : 0;

@@ -13,7 +13,7 @@ export async function ensureGuestsTable(): Promise<void> {
 
   ensuringPromise = (async () => {
     try {
-      // 1. Crear tabla guests con las columnas requeridas
+      // 1. Crear tabla guests con las columnas requeridas (sentencias separadas para evitar error 42601 en prepared statements)
       await prisma.$executeRawUnsafe(`
         CREATE TABLE IF NOT EXISTS guests (
             id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -28,7 +28,13 @@ export async function ensureGuestsTable(): Promise<void> {
             created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
         );
+      `);
+
+      await prisma.$executeRawUnsafe(`
         ALTER TABLE guests ADD COLUMN IF NOT EXISTS email VARCHAR(255);
+      `);
+
+      await prisma.$executeRawUnsafe(`
         ALTER TABLE guests ALTER COLUMN status TYPE VARCHAR(50);
       `);
 

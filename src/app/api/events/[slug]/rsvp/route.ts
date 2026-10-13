@@ -11,23 +11,7 @@ import twilio from "twilio";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-function formatE164(phone: string): string | null {
-  const trimmed = phone.trim();
-  if (!trimmed) return null;
-  if (trimmed.startsWith("+")) {
-    const clean = "+" + trimmed.slice(1).replace(/\D/g, "");
-    return clean.length >= 8 ? clean : null;
-  }
-  const digitsOnly = trimmed.replace(/\D/g, "");
-  if (digitsOnly.length === 10) {
-    return `+1${digitsOnly}`;
-  } else if (digitsOnly.length === 11 && digitsOnly.startsWith("1")) {
-    return `+${digitsOnly}`;
-  } else if (digitsOnly.length >= 10) {
-    return `+${digitsOnly}`;
-  }
-  return null;
-}
+import { formatE164 } from "@/lib/phoneValidator";
 
 interface RouteContext {
   params: Promise<{ slug: string }> | { slug: string };
