@@ -96,6 +96,22 @@ export async function POST(req: NextRequest, context: RouteContext) {
       );
     }
 
+    // Regla de deduplicación: Prevenir reenvío de SMS si ya tiene confirmación activa
+    if (guest.status === "attending" && status === "attending") {
+      const pases = guest.confirmedPax || guest.maxPax || 1;
+      return NextResponse.json(
+        {
+          error: `Esta invitación ya fue confirmada previamente (${pases} ${
+            pases === 1 ? "pase" : "pases"
+          }) a nombre de ${guest.name}. Para realizar modificaciones, contacta al anfitrión.`,
+          alreadyConfirmed: true,
+          confirmedName: guest.name,
+          confirmedPax: pases,
+        },
+        { status: 409 }
+      );
+    }
+
     let finalConfirmedPax = 0;
 
     if (status === "attending") {

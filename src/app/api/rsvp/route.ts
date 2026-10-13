@@ -70,10 +70,23 @@ export async function POST(req: NextRequest) {
       // 3. Buscar confirmación previa existente por teléfono o email
       let rsvpExistente = null;
       if (normalizedPhone) {
+        const cleanDigits = normalizedPhone.replace(/\D/g, "");
+        const possiblePhones = Array.from(
+          new Set(
+            [
+              normalizedPhone,
+              cleanDigits,
+              cleanDigits.length === 10 ? `+1${cleanDigits}` : null,
+              cleanDigits.length === 11 && cleanDigits.startsWith("1") ? `+${cleanDigits}` : null,
+              cleanDigits.length === 11 && cleanDigits.startsWith("1") ? cleanDigits.slice(1) : null,
+            ].filter(Boolean) as string[]
+          )
+        );
+
         rsvpExistente = await tx.rsvpRegistro.findFirst({
           where: {
             eventoId: evento.id,
-            telefono: normalizedPhone,
+            telefono: { in: possiblePhones },
           },
         });
       }

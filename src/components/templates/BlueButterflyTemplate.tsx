@@ -46,6 +46,7 @@ export default function BlueButterflyTemplate({
   const [rsvpFeedback, setRsvpFeedback] = useState<{
     msg: string;
     isUpdate: boolean;
+    isError?: boolean;
   } | null>(null);
 
   // Destinatario general de cortesía
@@ -161,6 +162,19 @@ export default function BlueButterflyTemplate({
       });
 
       const resJson = await res.json();
+
+      if (!res.ok) {
+        setRsvpFeedback({
+          msg:
+            resJson.error ||
+            (isEn
+              ? "This invitation has already been confirmed or could not be processed."
+              : "Esta invitación ya fue confirmada previamente o no se pudo procesar."),
+          isUpdate: false,
+          isError: true,
+        });
+        return;
+      }
 
       // Efecto festivo de confeti
       try {
@@ -1254,7 +1268,9 @@ export default function BlueButterflyTemplate({
             {rsvpFeedback && (
               <div
                 className={`mb-4 p-3 rounded-xl text-xs font-serif-roman border text-center transition ${
-                  rsvpFeedback.isUpdate
+                  rsvpFeedback.isError
+                    ? "bg-rose-50 text-rose-800 border-rose-300 shadow-sm"
+                    : rsvpFeedback.isUpdate
                     ? "bg-amber-50 text-amber-900 border-amber-200"
                     : "bg-emerald-50 text-emerald-900 border-emerald-200"
                 }`}
