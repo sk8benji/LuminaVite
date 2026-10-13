@@ -317,6 +317,7 @@ export const EVENT_MAYDELIN_MENDEZ: InvitationData = {
   dressCodeNota: "Agradecemos reservar los tonos rosa para la quinceañera.",
   coloresReservados: ["#F3C5D0", "#7A002A"],
   idiomaDefault: "bilingual",
+  permitirConfirmacionTelefono: true,
 };
 
 async function getEventoData(rawSlug: string): Promise<InvitationData | null> {
@@ -396,6 +397,7 @@ async function getEventoData(rawSlug: string): Promise<InvitationData | null> {
         !(dbEvento as any).ordenesCompra?.length ||
         (!((dbEvento as any).ordenesCompra?.[0]?.paqueteId?.toLowerCase() || "").includes("basic")),
       modalidadRsvp: (dbEvento as any).modalidadRsvp || "HIBRIDO",
+      permitirConfirmacionTelefono: (dbEvento as any).permitirConfirmacionTelefono !== false,
     };
   }
 

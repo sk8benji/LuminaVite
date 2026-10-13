@@ -106,6 +106,7 @@ export async function POST(req: NextRequest) {
       historiaHitosJson,
       configPlantilla,
       modalidadRsvp,
+      permitirConfirmacionTelefono,
     } = body;
 
     if (!titulo || !slug || !fechaEvento || !fotoPortadaUrl || !telefonoWhatsappRsvp || !recepcionNombre || !recepcionMapUrl) {
@@ -202,6 +203,7 @@ export async function POST(req: NextRequest) {
         historiaHitosJson: historiaHitosJson || null,
         configPlantilla: configPlantilla || {},
         modalidadRsvp: modalidadRsvp || "HIBRIDO",
+        permitirConfirmacionTelefono: permitirConfirmacionTelefono !== false,
         activo: true,
       },
     });
@@ -293,6 +295,7 @@ export async function PUT(req: NextRequest) {
         historiaHitosJson: body.historiaHitosJson ?? null,
         configPlantilla: body.configPlantilla ?? undefined,
         modalidadRsvp: body.modalidadRsvp !== undefined ? body.modalidadRsvp : undefined,
+        permitirConfirmacionTelefono: body.permitirConfirmacionTelefono !== undefined ? Boolean(body.permitirConfirmacionTelefono) : undefined,
       },
     });
 

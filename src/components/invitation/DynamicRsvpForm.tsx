@@ -15,6 +15,7 @@ import {
   ChevronRight,
   ArrowLeft,
   Sparkles,
+  Phone,
 } from "lucide-react";
 
 export interface GuestSearchResult {
@@ -38,6 +39,7 @@ interface DynamicRsvpFormProps {
   tipoPlan?: string | null;
   modalidadRsvp?: "ESTRICTO" | "HIBRIDO" | "ABIERTO" | string;
   maxPasesPorInvitado?: number;
+  permitirConfirmacionTelefono?: boolean;
 }
 
 export default function DynamicRsvpForm({
@@ -54,10 +56,33 @@ export default function DynamicRsvpForm({
   tipoPlan,
   modalidadRsvp = "HIBRIDO",
   maxPasesPorInvitado = 4,
+  permitirConfirmacionTelefono = true,
 }: DynamicRsvpFormProps) {
   const isEn = lang === "en";
   const isSmsEnabled = permiteSms ?? (!tipoPlan || !tipoPlan.toLowerCase().includes("basic"));
   const searchParams = useSearchParams();
+
+  const formatDisplayPhone = (phone?: string | null) => {
+    if (!phone) return "";
+    const digits = phone.replace(/\D/g, "");
+    if (digits.length === 11 && digits.startsWith("1")) {
+      return `+1 (${digits.slice(1, 4)}) ${digits.slice(4, 7)}-${digits.slice(7)}`;
+    }
+    if (digits.length === 10) {
+      return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
+    }
+    return phone;
+  };
+
+  const cleanDigits = (telefonoWhatsapp || "").replace(/\D/g, "");
+  const dialPhone = cleanDigits
+    ? cleanDigits.length === 10
+      ? `+1${cleanDigits}`
+      : cleanDigits.length === 11 && cleanDigits.startsWith("1")
+      ? `+${cleanDigits}`
+      : cleanDigits
+    : "";
+  const formattedPhone = formatDisplayPhone(telefonoWhatsapp);
   const directGuestId =
     searchParams?.get("inv") ||
     searchParams?.get("guest") ||
@@ -452,6 +477,23 @@ export default function DynamicRsvpForm({
               ) : null}
             </div>
           )}
+
+          {/* Mini sección de confirmación telefónica directa */}
+          {permitirConfirmacionTelefono && Boolean(telefonoWhatsapp) && (
+            <div className="pt-3.5 mt-2 border-t border-pink-100/90 text-center animate-fade-in">
+              <p className="text-[10px] uppercase font-bold tracking-wider text-stone-400 mb-1.5 flex items-center justify-center gap-1.5">
+                <Phone className="w-3 h-3 text-[#B74F5F]" />
+                <span>{isEn ? "¿Prefer to RSVP by phone?" : "¿Prefieres confirmar por teléfono?"}</span>
+              </p>
+              <a
+                href={`tel:${dialPhone}`}
+                className="inline-flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-full bg-pink-50 hover:bg-pink-100/90 text-[#7A002A] text-xs font-semibold border border-pink-200/80 transition shadow-xs active:scale-95"
+              >
+                <span>{isEn ? "Call Host:" : "Llamar a la anfitriona:"}</span>
+                <span className="font-bold underline underline-offset-2">{formattedPhone}</span>
+              </a>
+            </div>
+          )}
         </div>
       )}
 
@@ -842,6 +884,23 @@ export default function DynamicRsvpForm({
               )}
             </button>
           </form>
+
+          {/* Mini sección de confirmación telefónica directa */}
+          {permitirConfirmacionTelefono && Boolean(telefonoWhatsapp) && (
+            <div className="pt-3 mt-1 border-t border-pink-100/90 text-center animate-fade-in">
+              <p className="text-[10px] uppercase font-bold tracking-wider text-stone-400 mb-1.5 flex items-center justify-center gap-1.5">
+                <Phone className="w-3 h-3 text-[#B74F5F]" />
+                <span>{isEn ? "¿Prefer to RSVP by phone?" : "¿Prefieres confirmar por teléfono?"}</span>
+              </p>
+              <a
+                href={`tel:${dialPhone}`}
+                className="inline-flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-full bg-pink-50 hover:bg-pink-100/90 text-[#7A002A] text-xs font-semibold border border-pink-200/80 transition shadow-xs active:scale-95"
+              >
+                <span>{isEn ? "Call Host:" : "Llamar a la anfitriona:"}</span>
+                <span className="font-bold underline underline-offset-2">{formattedPhone}</span>
+              </a>
+            </div>
+          )}
         </div>
       )}
     </div>

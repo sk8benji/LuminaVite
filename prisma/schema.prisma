@@ -111,6 +111,7 @@ model Evento {
   aforoTotal         Int?            @default(200) // Balance total de pases estimados
   fechaLimiteRsvp    DateTime?
   maxPasesPorInvitado Int            @default(4)
+  permitirConfirmacionTelefono Boolean? @default(true) // Switch para permitir confirmar por teléfono/llamada directa
 
   // Ubicación Ceremonia (Opcional)
   ceremoniaNombre    String?

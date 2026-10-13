@@ -113,6 +113,7 @@ export interface InvitationData {
   tipoPlan?: string | null;
   permiteSms?: boolean;
   modalidadRsvp?: "ESTRICTO" | "HIBRIDO" | "ABIERTO" | string | null;
+  permitirConfirmacionTelefono?: boolean;
 }
 
 export default function InvitationMobileView({

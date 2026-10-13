@@ -25,6 +25,7 @@ import {
   Lock,
   Globe,
   Users,
+  PhoneCall,
 } from "lucide-react";
 import { TEMPLATES, TemplateId } from "@/lib/templates";
 import { InvitationData } from "@/components/invitation/InvitationMobileView";
@@ -125,6 +126,7 @@ function NuevoEventoContent() {
     },
     configPlantilla: {},
     modalidadRsvp: "HIBRIDO",
+    permitirConfirmacionTelefono: true,
     idiomaDefault: "es",
   });
 
@@ -134,6 +136,7 @@ function NuevoEventoContent() {
       estiloPlantilla: "QUINCE_ROSADO",
       tipoEvento: "QUINCEANERA",
       idiomaDefault: "es",
+      permitirConfirmacionTelefono: true,
       titulo: "Magdalena",
       subtitulo: "La Quinceañera",
       frasePersonalizada:
@@ -188,6 +191,7 @@ function NuevoEventoContent() {
       estiloPlantilla: "BLUE_BUTTERFLY",
       tipoEvento: "QUINCEANERA",
       idiomaDefault: "bilingual",
+      permitirConfirmacionTelefono: true,
       titulo: "Valeria Sofía",
       subtitulo: "My Quinceañera",
       frasePersonalizada:
@@ -236,6 +240,7 @@ function NuevoEventoContent() {
       estiloPlantilla: "ELEGANT_ROSE",
       tipoEvento: "QUINCEANERA",
       idiomaDefault: "bilingual",
+      permitirConfirmacionTelefono: true,
       titulo: "Isabella",
       subtitulo: "My Sweet Fifteen",
       frasePersonalizada:
@@ -1798,6 +1803,30 @@ function NuevoEventoContent() {
                         Se muestra en la barra de progreso del correo: ej. "Llevas 142 de 200 pases".
                       </p>
                     </div>
+                  </div>
+
+                  {/* Confirmación por Llamada / Teléfono */}
+                  <div className="pt-3 border-t border-stone-200/80 flex items-center justify-between p-3 bg-white rounded-xl border border-stone-200">
+                    <div className="space-y-0.5 pr-4">
+                      <div className="flex items-center gap-2">
+                        <PhoneCall className="w-4 h-4 text-emerald-600" />
+                        <span className="text-xs font-bold text-stone-900">
+                          Permitir confirmación por llamada / teléfono
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-stone-500">
+                        Muestra en la tarjeta RSVP de la invitación el botón "¿Prefieres confirmar por teléfono? Llamar a la anfitriona" con llamada directa al número guardado.
+                      </p>
+                    </div>
+                    <label className="relative inline-flex items-center cursor-pointer shrink-0">
+                      <input
+                        type="checkbox"
+                        checked={formData.permitirConfirmacionTelefono !== false}
+                        onChange={(e) => updateField("permitirConfirmacionTelefono", e.target.checked)}
+                        className="sr-only peer"
+                      />
+                      <div className="w-11 h-6 bg-stone-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-stone-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600"></div>
+                    </label>
                   </div>
                 </div>
 

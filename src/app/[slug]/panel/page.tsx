@@ -127,6 +127,8 @@ export default async function ClientMagicLinkPanelPage({
       recepcionNombre: serializedEvento.recepcionNombre,
       maxPasesPorInvitado: serializedEvento.maxPasesPorInvitado,
       modalidadRsvp: serializedEvento.modalidadRsvp || "HIBRIDO",
+      permitirConfirmacionTelefono: serializedEvento.permitirConfirmacionTelefono !== false,
+      telefonoWhatsappRsvp: serializedEvento.telefonoWhatsappRsvp || "",
     },
     estadisticas: {
       totalInvitadosConfirmados: confirmados.length,

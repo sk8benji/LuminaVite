@@ -1092,6 +1092,7 @@ export default function ElegantRoseTemplate({
                 tipoPlan={data.tipoPlan}
                 modalidadRsvp={data.modalidadRsvp || undefined}
                 maxPasesPorInvitado={data.maxPasesPorInvitado}
+                permitirConfirmacionTelefono={data.permitirConfirmacionTelefono !== false}
               />
             </div>
           </WavyColumn>

@@ -71,6 +71,8 @@ export async function GET(
         recepcionNombre: evento.recepcionNombre,
         maxPasesPorInvitado: evento.maxPasesPorInvitado,
         modalidadRsvp: (evento as any).modalidadRsvp || "HIBRIDO",
+        permitirConfirmacionTelefono: (evento as any).permitirConfirmacionTelefono !== false,
+        telefonoWhatsappRsvp: evento.telefonoWhatsappRsvp || "",
       },
       estadisticas: {
         totalInvitadosConfirmados: confirmados.length,
@@ -142,12 +144,32 @@ export async function PATCH(
     }
 
     const body = await req.json();
-    const { modalidadRsvp } = body;
+    const { modalidadRsvp, permitirConfirmacionTelefono, telefonoWhatsappRsvp } = body;
 
     const validModalities = ["ESTRICTO", "HIBRIDO", "ABIERTO"];
-    if (!modalidadRsvp || !validModalities.includes(modalidadRsvp)) {
+    const updateData: any = {};
+
+    if (modalidadRsvp !== undefined) {
+      if (!validModalities.includes(modalidadRsvp)) {
+        return NextResponse.json(
+          { error: "Modalidad inválida. Debe ser ESTRICTO, HIBRIDO o ABIERTO." },
+          { status: 400 }
+        );
+      }
+      updateData.modalidadRsvp = modalidadRsvp;
+    }
+
+    if (permitirConfirmacionTelefono !== undefined) {
+      updateData.permitirConfirmacionTelefono = Boolean(permitirConfirmacionTelefono);
+    }
+
+    if (telefonoWhatsappRsvp !== undefined) {
+      updateData.telefonoWhatsappRsvp = String(telefonoWhatsappRsvp).trim();
+    }
+
+    if (Object.keys(updateData).length === 0) {
       return NextResponse.json(
-        { error: "Modalidad inválida. Debe ser ESTRICTO, HIBRIDO o ABIERTO." },
+        { error: "No se enviaron datos para actualizar." },
         { status: 400 }
       );
     }
@@ -155,13 +177,15 @@ export async function PATCH(
     const prismaClient = (await import("@/lib/db")).default;
     const updated = await prismaClient.evento.update({
       where: { id: evento.id },
-      data: { modalidadRsvp },
+      data: updateData,
     });
 
     return NextResponse.json({
       success: true,
       modalidadRsvp: updated.modalidadRsvp,
-      message: "Modalidad de RSVP actualizada correctamente.",
+      permitirConfirmacionTelefono: (updated as any).permitirConfirmacionTelefono !== false,
+      telefonoWhatsappRsvp: updated.telefonoWhatsappRsvp,
+      message: "Configuración de RSVP actualizada correctamente.",
     });
   } catch (error: any) {
     console.error("Error al actualizar modalidad de RSVP en el panel:", error);

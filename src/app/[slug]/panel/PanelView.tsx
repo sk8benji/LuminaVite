@@ -25,6 +25,8 @@ import {
   Globe,
   Zap,
   Shield,
+  Phone,
+  PhoneCall,
 } from "lucide-react";
 
 export interface GuestItem {
@@ -48,6 +50,8 @@ export interface PanelData {
     recepcionNombre?: string;
     maxPasesPorInvitado?: number;
     modalidadRsvp?: "ESTRICTO" | "HIBRIDO" | "ABIERTO" | string;
+    permitirConfirmacionTelefono?: boolean;
+    telefonoWhatsappRsvp?: string;
   };
   estadisticas: {
     totalInvitadosConfirmados: number;
@@ -130,6 +134,42 @@ export default function PanelView({
       setModalidadRsvp(prev);
     } finally {
       setIsUpdatingModalidad(false);
+    }
+  };
+
+  const [permitirConfirmacionTelefono, setPermitirConfirmacionTelefono] = useState<boolean>(
+    initialData?.evento?.permitirConfirmacionTelefono !== false
+  );
+  const [telefonoAnfitriona] = useState<string>(
+    initialData?.evento?.telefonoWhatsappRsvp || ""
+  );
+  const [isUpdatingPhoneSettings, setIsUpdatingPhoneSettings] = useState(false);
+  const [phoneSettingsSuccess, setPhoneSettingsSuccess] = useState(false);
+
+  const handleToggleConfirmacionTelefono = async () => {
+    if (isUpdatingPhoneSettings) return;
+    const nextVal = !permitirConfirmacionTelefono;
+    setPermitirConfirmacionTelefono(nextVal);
+    setIsUpdatingPhoneSettings(true);
+
+    try {
+      const res = await fetch(`/api/eventos/${encodeURIComponent(slug)}/panel?key=${encodeURIComponent(panelKey)}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ permitirConfirmacionTelefono: nextVal }),
+      });
+
+      if (!res.ok) {
+        throw new Error("No se pudo actualizar la opción de teléfono");
+      }
+
+      setPhoneSettingsSuccess(true);
+      setTimeout(() => setPhoneSettingsSuccess(false), 2500);
+    } catch (err) {
+      console.error("Error al actualizar confirmación por teléfono:", err);
+      setPermitirConfirmacionTelefono(!nextVal);
+    } finally {
+      setIsUpdatingPhoneSettings(false);
     }
   };
 
@@ -461,75 +501,133 @@ export default function PanelView({
         {/* ============================================================== */}
         {/* SELECTOR DE MODALIDAD RSVP EN VIVO */}
         {/* ============================================================== */}
-        <div className="bg-white rounded-2xl border border-[#E8E3D9] p-4 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-3">
-          <div className="space-y-0.5">
-            <div className="flex items-center gap-2">
-              <span className="text-sm">⚙️</span>
-              <h3 className="text-xs font-bold text-[#2C1F1B] uppercase tracking-wider">
-                Modalidad de RSVP Activa
-              </h3>
-              {isUpdatingModalidad && (
-                <span className="inline-flex items-center gap-1 text-[10px] text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full font-medium">
-                  <Loader2 className="w-3 h-3 animate-spin" /> Guardando...
-                </span>
-              )}
-              {modalidadSuccess && (
-                <span className="inline-flex items-center gap-1 text-[10px] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full font-bold animate-fade-in">
-                  <Check className="w-3 h-3" /> Guardado en vivo
-                </span>
-              )}
+        {/* ============================================================== */}
+        {/* CONFIGURACIÓN DE RSVP DE LA ANFITRIONA (MODALIDAD + TELÉFONO)  */}
+        {/* ============================================================== */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
+          {/* Modalidad de RSVP */}
+          <div className="lg:col-span-2 bg-white rounded-2xl border border-[#E8E3D9] p-4 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-3">
+            <div className="space-y-0.5">
+              <div className="flex items-center gap-2">
+                <span className="text-sm">⚙️</span>
+                <h3 className="text-xs font-bold text-[#2C1F1B] uppercase tracking-wider">
+                  Modalidad de RSVP Activa
+                </h3>
+                {isUpdatingModalidad && (
+                  <span className="inline-flex items-center gap-1 text-[10px] text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full font-medium">
+                    <Loader2 className="w-3 h-3 animate-spin" /> Guardando...
+                  </span>
+                )}
+                {modalidadSuccess && (
+                  <span className="inline-flex items-center gap-1 text-[10px] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full font-bold animate-fade-in">
+                    <Check className="w-3 h-3" /> Guardado en vivo
+                  </span>
+                )}
+              </div>
+              <p className="text-[11px] text-[#8C8077]">
+                {modalidadRsvp === "ESTRICTO"
+                  ? "🔒 Modo Estricto: Solo pueden confirmar los invitados de tu lista oficial. Nadie fuera de la lista puede registrarse."
+                  : modalidadRsvp === "ABIERTO"
+                  ? `🌐 Modo Abierto: Formulario abierto sin buscador. Cualquier persona puede registrarse hasta agotar ${data.estadisticas.aforoTotal || 200} pases.`
+                  : `⚡ Modo Híbrido: Buscan su nombre; si no lo encuentran, se registran y confirman al instante con tope de aforo (${data.estadisticas.aforoTotal || 200} pases).`}
+              </p>
             </div>
-            <p className="text-[11px] text-[#8C8077]">
-              {modalidadRsvp === "ESTRICTO"
-                ? "🔒 Modo Estricto: Solo pueden confirmar los invitados de tu lista oficial. Nadie fuera de la lista puede registrarse."
-                : modalidadRsvp === "ABIERTO"
-                ? `🌐 Modo Abierto: Formulario abierto sin buscador. Cualquier persona puede registrarse hasta agotar ${data.estadisticas.aforoTotal || 200} pases.`
-                : `⚡ Modo Híbrido: Buscan su nombre; si no lo encuentran, se registran y confirman al instante con tope de aforo (${data.estadisticas.aforoTotal || 200} pases).`}
-            </p>
+
+            <div className="inline-flex items-center bg-[#FAF8F5] p-1 rounded-xl border border-[#E8E3D9] self-start md:self-auto shrink-0">
+              <button
+                type="button"
+                onClick={() => handleUpdateModalidad("ESTRICTO")}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
+                  modalidadRsvp === "ESTRICTO"
+                    ? "bg-[#2C1F1B] text-white shadow-xs"
+                    : "text-[#8C8077] hover:text-[#2C1F1B]"
+                }`}
+              >
+                <Shield className="w-3.5 h-3.5" />
+                <span>Estricto</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => handleUpdateModalidad("HIBRIDO")}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
+                  modalidadRsvp === "HIBRIDO"
+                    ? "bg-[#C5A059] text-[#2C1F1B] shadow-xs"
+                    : "text-[#8C8077] hover:text-[#2C1F1B]"
+                }`}
+              >
+                <Zap className="w-3.5 h-3.5" />
+                <span>Híbrido</span>
+                <span className="text-[8px] uppercase tracking-wide bg-amber-900/10 px-1 rounded font-extrabold hidden sm:inline">
+                  Top
+                </span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => handleUpdateModalidad("ABIERTO")}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
+                  modalidadRsvp === "ABIERTO"
+                    ? "bg-stone-800 text-white shadow-xs"
+                    : "text-[#8C8077] hover:text-[#2C1F1B]"
+                }`}
+              >
+                <Globe className="w-3.5 h-3.5" />
+                <span>Abierto</span>
+              </button>
+            </div>
           </div>
 
-          <div className="inline-flex items-center bg-[#FAF8F5] p-1 rounded-xl border border-[#E8E3D9] self-start md:self-auto shrink-0">
-            <button
-              type="button"
-              onClick={() => handleUpdateModalidad("ESTRICTO")}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
-                modalidadRsvp === "ESTRICTO"
-                  ? "bg-[#2C1F1B] text-white shadow-xs"
-                  : "text-[#8C8077] hover:text-[#2C1F1B]"
-              }`}
-            >
-              <Shield className="w-3.5 h-3.5" />
-              <span>Estricto</span>
-            </button>
+          {/* Switch: Confirmación por Teléfono de la Anfitriona */}
+          <div className="bg-white rounded-2xl border border-[#E8E3D9] p-4 shadow-xs flex flex-col justify-between gap-2.5">
+            <div>
+              <div className="flex items-center justify-between mb-1">
+                <div className="flex items-center gap-1.5">
+                  <PhoneCall className="w-3.5 h-3.5 text-[#C5A059]" />
+                  <h3 className="text-xs font-bold text-[#2C1F1B] uppercase tracking-wider">
+                    Confirmar por Teléfono
+                  </h3>
+                </div>
+                {isUpdatingPhoneSettings && (
+                  <span className="inline-flex items-center gap-1 text-[10px] text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded-full font-medium">
+                    <Loader2 className="w-2.5 h-2.5 animate-spin" /> Guardando...
+                  </span>
+                )}
+                {phoneSettingsSuccess && (
+                  <span className="inline-flex items-center gap-1 text-[10px] text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded-full font-bold animate-fade-in">
+                    <Check className="w-2.5 h-2.5" /> En vivo
+                  </span>
+                )}
+              </div>
+              <p className="text-[11px] text-[#8C8077] leading-snug">
+                {permitirConfirmacionTelefono
+                  ? "Muestra el botón para que los invitados llamen directamente a la anfitriona."
+                  : "Oculta el botón de llamada en la tarjeta de confirmación."}
+              </p>
+            </div>
 
-            <button
-              type="button"
-              onClick={() => handleUpdateModalidad("HIBRIDO")}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
-                modalidadRsvp === "HIBRIDO"
-                  ? "bg-[#C5A059] text-[#2C1F1B] shadow-xs"
-                  : "text-[#8C8077] hover:text-[#2C1F1B]"
-              }`}
-            >
-              <Zap className="w-3.5 h-3.5" />
-              <span>Híbrido</span>
-              <span className="text-[8px] uppercase tracking-wide bg-amber-900/10 px-1 rounded font-extrabold hidden sm:inline">
-                Top
+            <div className="flex items-center justify-between pt-2 border-t border-[#F2ECE4]">
+              <span className="text-[10px] font-semibold text-[#8C8077] truncate max-w-[170px]">
+                {telefonoAnfitriona ? `Tel: ${telefonoAnfitriona}` : "Sin teléfono"}
               </span>
-            </button>
 
-            <button
-              type="button"
-              onClick={() => handleUpdateModalidad("ABIERTO")}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
-                modalidadRsvp === "ABIERTO"
-                  ? "bg-stone-800 text-white shadow-xs"
-                  : "text-[#8C8077] hover:text-[#2C1F1B]"
-              }`}
-            >
-              <Globe className="w-3.5 h-3.5" />
-              <span>Abierto</span>
-            </button>
+              <button
+                type="button"
+                role="switch"
+                aria-checked={permitirConfirmacionTelefono}
+                onClick={handleToggleConfirmacionTelefono}
+                disabled={isUpdatingPhoneSettings}
+                className={`relative inline-flex h-5 w-10 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                  permitirConfirmacionTelefono ? "bg-[#2C1F1B]" : "bg-stone-300"
+                }`}
+              >
+                <span
+                  className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                    permitirConfirmacionTelefono ? "translate-x-5" : "translate-x-0"
+                  }`}
+                />
+              </button>
+            </div>
           </div>
         </div>
 
