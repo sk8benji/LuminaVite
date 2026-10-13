@@ -141,10 +141,13 @@ function NuevoEventoContent() {
       permitirConfirmacionTelefono: true,
       mostrarMesaRegalos: true,
       mostrarDressCode: true,
+      mostrarFrasePersonalizada: true,
       titulo: "Magdalena",
       subtitulo: "La Quinceañera",
       frasePersonalizada:
-        "Desde que era una niña, Magdalena ha soñado con este mismo momento: un día lleno de amor, belleza y recuerdos inolvidables. Hoy, ese sueño se hace realidad mientras celebra su quinceañera, marcando la hermosa transición de una niña a una señorita elegante. Rodeada de familia, tradición y aquellos que la han guiado a lo largo del camino, este día representa no solo una celebración, sino un hito de crecimiento, fuerza y nuevos comienzos.",
+        "Hoy comienzo a escribir un nuevo capítulo al dejar atrás mi niñez para convertirme en mujer. En este día tan especial, rodeada del cariño de quienes más quiero, sería un honor contar con tu presencia para celebrar un momento que guardaré por siempre en mi corazón.",
+      frasePersonalizadaEn:
+        "Today I begin to write a new chapter as I leave childhood behind to become a young woman. On this special day, surrounded by the love of those I cherish most, it would be an honor to have your presence to celebrate a moment I will keep in my heart forever.",
       fechaTextoPersonalizada: "SÁBADO 15 DE MAYO, 2027 • 4:00 PM",
       fechaPlacaMes: "MAYO",
       fechaPlacaHora: "A las 4:00 PM 2027",
@@ -1175,12 +1178,41 @@ function NuevoEventoContent() {
                   </div>
                 </div>
 
-                {/* Bloque Emocional: 2 fotos */}
+                {/* Bloque Emocional: 2 fotos & Frase */}
                 <div className="p-4 bg-stone-50 border border-stone-200 rounded-2xl space-y-3">
-                  <label className="block text-xs font-bold text-stone-800">
-                    Bloque Emocional: De Niña a Señorita / Ayer y Hoy
-                  </label>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <label className="block text-xs font-bold text-stone-800">
+                        Bloque Emocional: De Niña a Señorita / Dedicatoria
+                      </label>
+                      <p className="text-[11px] text-stone-500">
+                        Personaliza las fotos del crecimiento y la dedicatoria en español e inglés.
+                      </p>
+                    </div>
+                    {/* Switch On/Off */}
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] font-semibold text-stone-600">
+                        {formData.mostrarFrasePersonalizada !== false ? "Visible" : "Oculta"}
+                      </span>
+                      <button
+                        type="button"
+                        role="switch"
+                        aria-checked={formData.mostrarFrasePersonalizada !== false}
+                        onClick={() => updateField("mostrarFrasePersonalizada", formData.mostrarFrasePersonalizada === false)}
+                        className={`relative inline-flex h-5 w-10 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                          formData.mostrarFrasePersonalizada !== false ? "bg-stone-900" : "bg-stone-300"
+                        }`}
+                      >
+                        <span
+                          className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                            formData.mostrarFrasePersonalizada !== false ? "translate-x-5" : "translate-x-0"
+                          }`}
+                        />
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
                     <div>
                       <span className="text-[11px] font-semibold text-stone-700 block mb-1">Foto de Infancia (Ayer)</span>
                       <div className="flex gap-2">
@@ -1227,28 +1259,61 @@ function NuevoEventoContent() {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                      <span className="text-[11px] text-stone-600 block mb-1">Frase Emocional / Bendición</span>
-                      <textarea
-                        rows={2}
-                        value={formData.frasePersonalizada || ""}
-                        onChange={(e) => updateField("frasePersonalizada", e.target.value)}
-                        placeholder="Mensaje de agradecimiento o bendición..."
-                        className="w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs resize-none"
-                      />
-                    </div>
-                    <div>
-                      <span className="text-[11px] text-stone-600 block mb-1">Firma / Autor de la Bendición</span>
-                      <input
-                        type="text"
-                        value={formData.autorBendicion || ""}
-                        onChange={(e) => updateField("autorBendicion", e.target.value)}
-                        placeholder="Ej. Con amor, tus padres o Mis Quince Años"
-                        className="w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs"
-                      />
-                    </div>
-                  </div>
+                  {formData.mostrarFrasePersonalizada !== false && (
+                    <>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                        <div>
+                          <span className="text-[11px] text-stone-600 block mb-1">
+                            🇲🇽 Dedicatoria / Frase Emocional (Español)
+                          </span>
+                          <textarea
+                            rows={3}
+                            value={formData.frasePersonalizada || ""}
+                            onChange={(e) => updateField("frasePersonalizada", e.target.value)}
+                            placeholder="Hoy comienzo a escribir un nuevo capítulo al dejar atrás mi niñez..."
+                            className="w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs resize-none"
+                          />
+                        </div>
+                        <div>
+                          <div className="flex items-center justify-between mb-1">
+                            <span className="text-[11px] text-stone-600">
+                              🇺🇸 Dedication / Heartfelt Message (Inglés)
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                updateField(
+                                  "frasePersonalizadaEn",
+                                  "Today I begin to write a new chapter as I leave childhood behind to become a young woman. On this special day, surrounded by the love of those I cherish most, it would be an honor to have your presence to celebrate a moment I will keep in my heart forever."
+                                );
+                              }}
+                              className="text-[10px] text-pink-600 hover:text-pink-700 font-semibold"
+                            >
+                              Sugerir EN
+                            </button>
+                          </div>
+                          <textarea
+                            rows={3}
+                            value={formData.frasePersonalizadaEn || ""}
+                            onChange={(e) => updateField("frasePersonalizadaEn", e.target.value)}
+                            placeholder="Today I begin to write a new chapter as I leave childhood behind..."
+                            className="w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs resize-none"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="pt-1">
+                        <span className="text-[11px] text-stone-600 block mb-1">Firma / Autor de la Bendición (Opcional)</span>
+                        <input
+                          type="text"
+                          value={formData.autorBendicion || ""}
+                          onChange={(e) => updateField("autorBendicion", e.target.value)}
+                          placeholder="Ej. Con amor, tus padres o Mis Quince Años"
+                          className="w-full max-w-sm px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs"
+                        />
+                      </div>
+                    </>
+                  )}
                 </div>
 
                 {/* Música MP3 & Texto del Disco */}

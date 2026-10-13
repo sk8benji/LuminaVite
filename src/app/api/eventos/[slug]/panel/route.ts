@@ -74,6 +74,7 @@ export async function GET(
         permitirConfirmacionTelefono: (evento as any).permitirConfirmacionTelefono !== false,
         mostrarMesaRegalos: (evento as any).mostrarMesaRegalos !== false,
         mostrarDressCode: (evento as any).mostrarDressCode !== false,
+        mostrarFrasePersonalizada: (evento as any).mostrarFrasePersonalizada !== false,
         telefonoWhatsappRsvp: evento.telefonoWhatsappRsvp || "",
       },
       estadisticas: {
@@ -146,7 +147,7 @@ export async function PATCH(
     }
 
     const body = await req.json();
-    const { modalidadRsvp, permitirConfirmacionTelefono, telefonoWhatsappRsvp, mostrarMesaRegalos, mostrarDressCode } = body;
+    const { modalidadRsvp, permitirConfirmacionTelefono, telefonoWhatsappRsvp, mostrarMesaRegalos, mostrarDressCode, mostrarFrasePersonalizada } = body;
 
     const validModalities = ["ESTRICTO", "HIBRIDO", "ABIERTO"];
     const updateData: any = {};
@@ -173,6 +174,10 @@ export async function PATCH(
       updateData.mostrarDressCode = Boolean(mostrarDressCode);
     }
 
+    if (mostrarFrasePersonalizada !== undefined) {
+      updateData.mostrarFrasePersonalizada = Boolean(mostrarFrasePersonalizada);
+    }
+
     if (telefonoWhatsappRsvp !== undefined) {
       updateData.telefonoWhatsappRsvp = String(telefonoWhatsappRsvp).trim();
     }
@@ -196,6 +201,7 @@ export async function PATCH(
       permitirConfirmacionTelefono: (updated as any).permitirConfirmacionTelefono !== false,
       mostrarMesaRegalos: (updated as any).mostrarMesaRegalos !== false,
       mostrarDressCode: (updated as any).mostrarDressCode !== false,
+      mostrarFrasePersonalizada: (updated as any).mostrarFrasePersonalizada !== false,
       telefonoWhatsappRsvp: updated.telefonoWhatsappRsvp,
       message: "Configuración actualizada correctamente.",
     });

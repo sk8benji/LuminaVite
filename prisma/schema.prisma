@@ -89,7 +89,9 @@ model Evento {
   // Textos y Nombres
   titulo             String          // Ej: "Mis XV Años Elsy" o "Emma & Lucas"
   subtitulo          String?         // Ej: "An Unforgettable Celebration Awaits"
+  mostrarFrasePersonalizada Boolean? @default(true) // Switch para mostrar/ocultar sección dedicatoria / frase emotiva
   frasePersonalizada String?         // Reflexión emocional ("From Girl to Señorita")
+  frasePersonalizadaEn String?       // Reflexión emocional en inglés
   fechaEvento        DateTime        // Fecha y hora del evento
   fechaTextoPersonalizada String?    // Ej: "DECEMBER 05, 2026 AT 2 PM"
 

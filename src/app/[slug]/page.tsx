@@ -295,8 +295,11 @@ export const EVENT_MAYDELIN_MENDEZ: InvitationData = {
   estiloPlantilla: "QUINCE_ROSADO",
   titulo: "Maydelin Mendez",
   subtitulo: "Mis Quinceaños",
+  mostrarFrasePersonalizada: true,
   frasePersonalizada:
-    "Con la bendición de Dios y el amor de mi familia, tengo el honor de invitarte a celebrar este día tan esperado.",
+    "Hoy comienzo a escribir un nuevo capítulo al dejar atrás mi niñez para convertirme en mujer. En este día tan especial, rodeada del cariño de quienes más quiero, sería un honor contar con tu presencia para celebrar un momento que guardaré por siempre en mi corazón.",
+  frasePersonalizadaEn:
+    "Today I begin to write a new chapter as I leave childhood behind to become a young woman. On this special day, surrounded by the love of those I cherish most, it would be an honor to have your presence to celebrate a moment I will keep in my heart forever.",
   fechaEvento: new Date("2026-12-05T22:38:00Z"),
   fechaTextoPersonalizada: "SÁBADO 5 DE DICIEMBRE, 2026",
   fotoPortadaUrl: "/assets/template-quince-rosado/90043c428c5ec72c7adb26dce69dedd2.png",
@@ -367,7 +370,9 @@ async function getEventoData(rawSlug: string): Promise<InvitationData | null> {
       estiloPlantilla: dbEvento.estiloPlantilla as any,
       titulo: dbEvento.titulo,
       subtitulo: dbEvento.subtitulo,
+      mostrarFrasePersonalizada: (dbEvento as any).mostrarFrasePersonalizada !== false,
       frasePersonalizada: dbEvento.frasePersonalizada,
+      frasePersonalizadaEn: (dbEvento as any).frasePersonalizadaEn ?? null,
       fechaEvento: new Date(dbEvento.fechaEvento),
       fechaTextoPersonalizada: dbEvento.fechaTextoPersonalizada,
       fotoPortadaUrl: dbEvento.fotoPortadaUrl,

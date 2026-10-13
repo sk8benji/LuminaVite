@@ -742,10 +742,27 @@ export default function QuinceRosadoTemplate({
 
           <div className="relative z-10 max-w-[350px] mx-auto">
             {/* Texto emotivo de la niña */}
-            <p className="font-['Lora',serif] text-xs sm:text-[13px] leading-relaxed text-[#722927] italic text-justify px-2 mb-10">
-              {data.frasePersonalizada ||
-                "Desde que era una niña, Magdalena ha soñado con este mismo momento: un día lleno de amor, belleza y recuerdos inolvidables. Hoy, ese sueño se hace realidad mientras celebra su quinceañera, marcando la hermosa transición de una niña a una señorita elegante. Rodeada de familia, tradición y aquellos que la han guiado a lo largo del camino, este día representa no solo una celebración, sino un hito de crecimiento, fuerza y nuevos comienzos. Con un corazón lleno de gratitud y emoción por el futuro, Magdalena te invita a ser parte de este momento único en la vida mientras entra en un nuevo capítulo de su vida."}
-            </p>
+            {data.mostrarFrasePersonalizada !== false && (
+              <p className="font-['Lora',serif] text-xs sm:text-[13px] leading-relaxed text-[#722927] italic text-justify px-2 mb-10">
+                {(() => {
+                  if (isEn) {
+                    if (data.frasePersonalizadaEn) return data.frasePersonalizadaEn;
+                    const frase = (data.frasePersonalizada || "").toLowerCase();
+                    if (frase.includes("hoy comienzo a escribir") || frase.includes("nuevo capítulo") || frase.includes("convertirme en mujer")) {
+                      return "Today I begin to write a new chapter as I leave childhood behind to become a young woman. On this special day, surrounded by the love of those I cherish most, it would be an honor to have your presence to celebrate a moment I will keep in my heart forever.";
+                    }
+                    if (frase.includes("desde que era una niña") || frase.includes("magdalena")) {
+                      return "Ever since she was a little girl, Magdalena has dreamed of this very moment: a day filled with love, beauty, and unforgettable memories. Today, that dream comes true as she celebrates her quinceañera, marking the beautiful transition from a young girl to an elegant young lady. Surrounded by family, tradition, and all who have guided her along the way, this milestone represents growth, faith, and new beginnings. With a heart full of gratitude, Magdalena invites you to be part of this once-in-a-lifetime celebration.";
+                    }
+                    if (frase.includes("bendición de dios") || frase.includes("honor de invitarte")) {
+                      return "With God's blessing and the love of my family, I have the honor of inviting you to celebrate this long-awaited day with us.";
+                    }
+                    return data.frasePersonalizada || "Today I begin to write a new chapter as I leave childhood behind to become a young woman. On this special day, surrounded by the love of those I cherish most, it would be an honor to have your presence to celebrate a moment I will keep in my heart forever.";
+                  }
+                  return data.frasePersonalizada || "Hoy comienzo a escribir un nuevo capítulo al dejar atrás mi niñez para convertirme en mujer. En este día tan especial, rodeada del cariño de quienes más quiero, sería un honor contar con tu presencia para celebrar un momento que guardaré por siempre en mi corazón.";
+                })()}
+              </p>
+            )}
 
             {/* Polaroid 1: "De niña" */}
             <div className="relative w-[210px] mx-auto bg-white p-2.5 pb-6 shadow-2xl rounded-sm transform -rotate-6 border border-pink-100 mb-10">

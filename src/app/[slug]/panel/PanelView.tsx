@@ -29,6 +29,7 @@ import {
   PhoneCall,
   Gift,
   Sparkles,
+  Quote,
 } from "lucide-react";
 
 export interface GuestItem {
@@ -55,6 +56,7 @@ export interface PanelData {
     permitirConfirmacionTelefono?: boolean;
     mostrarMesaRegalos?: boolean;
     mostrarDressCode?: boolean;
+    mostrarFrasePersonalizada?: boolean;
     telefonoWhatsappRsvp?: string;
   };
   estadisticas: {
@@ -240,6 +242,39 @@ export default function PanelView({
       setMostrarDressCode(!nextVal);
     } finally {
       setIsUpdatingDressCodeSettings(false);
+    }
+  };
+
+  const [mostrarFrasePersonalizada, setMostrarFrasePersonalizada] = useState<boolean>(
+    initialData?.evento?.mostrarFrasePersonalizada !== false
+  );
+  const [isUpdatingFraseSettings, setIsUpdatingFraseSettings] = useState(false);
+  const [fraseSettingsSuccess, setFraseSettingsSuccess] = useState(false);
+
+  const handleToggleFrasePersonalizada = async () => {
+    if (isUpdatingFraseSettings) return;
+    const nextVal = !mostrarFrasePersonalizada;
+    setMostrarFrasePersonalizada(nextVal);
+    setIsUpdatingFraseSettings(true);
+
+    try {
+      const res = await fetch(`/api/eventos/${encodeURIComponent(slug)}/panel?key=${encodeURIComponent(panelKey)}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ mostrarFrasePersonalizada: nextVal }),
+      });
+
+      if (!res.ok) {
+        throw new Error("No se pudo actualizar la dedicatoria");
+      }
+
+      setFraseSettingsSuccess(true);
+      setTimeout(() => setFraseSettingsSuccess(false), 2500);
+    } catch (err) {
+      console.error("Error al actualizar dedicatoria:", err);
+      setMostrarFrasePersonalizada(!nextVal);
+    } finally {
+      setIsUpdatingFraseSettings(false);
     }
   };
 
@@ -798,6 +833,58 @@ export default function PanelView({
                 <span
                   className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
                     mostrarDressCode ? "translate-x-5" : "translate-x-0"
+                  }`}
+                />
+              </button>
+            </div>
+          </div>
+
+          {/* Switch para Frase / Dedicatoria Emocional */}
+          <div className="bg-white rounded-2xl border border-[#E8E3D9] p-4 shadow-xs flex flex-col justify-between gap-3">
+            <div className="space-y-1">
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex items-center gap-1.5">
+                  <Quote className="w-4 h-4 text-[#C5A059]" />
+                  <h3 className="text-xs font-bold text-[#2C1F1B] uppercase tracking-wider">
+                    Dedicatoria / Frase
+                  </h3>
+                </div>
+                {isUpdatingFraseSettings && (
+                  <span className="inline-flex items-center gap-1 text-[10px] text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded-full font-medium">
+                    <Loader2 className="w-2.5 h-2.5 animate-spin" /> Guardando...
+                  </span>
+                )}
+                {fraseSettingsSuccess && (
+                  <span className="inline-flex items-center gap-1 text-[10px] text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded-full font-bold animate-fade-in">
+                    <Check className="w-2.5 h-2.5" /> En vivo
+                  </span>
+                )}
+              </div>
+              <p className="text-[11px] text-[#8C8077] leading-snug">
+                {mostrarFrasePersonalizada
+                  ? "Párrafo de dedicatoria y reflexión visible para invitados."
+                  : "Párrafo de dedicatoria oculto en la invitación."}
+              </p>
+            </div>
+
+            <div className="flex items-center justify-between pt-2 border-t border-[#F2ECE4]">
+              <span className="text-[10px] font-semibold text-[#8C8077]">
+                {mostrarFrasePersonalizada ? "Visible" : "Oculta"}
+              </span>
+
+              <button
+                type="button"
+                role="switch"
+                aria-checked={mostrarFrasePersonalizada}
+                onClick={handleToggleFrasePersonalizada}
+                disabled={isUpdatingFraseSettings}
+                className={`relative inline-flex h-5 w-10 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                  mostrarFrasePersonalizada ? "bg-[#2C1F1B]" : "bg-stone-300"
+                }`}
+              >
+                <span
+                  className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                    mostrarFrasePersonalizada ? "translate-x-5" : "translate-x-0"
                   }`}
                 />
               </button>

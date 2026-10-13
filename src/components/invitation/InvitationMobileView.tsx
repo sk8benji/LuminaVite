@@ -24,7 +24,9 @@ export interface InvitationData {
   estiloPlantilla: TemplateId;
   titulo: string; // ej. "Elsy" o "Sofía & Alejandro"
   subtitulo?: string | null; // ej. "An Unforgettable Celebration Awaits"
+  mostrarFrasePersonalizada?: boolean;
   frasePersonalizada?: string | null;
+  frasePersonalizadaEn?: string | null;
   fechaEvento: string | Date;
   fechaTextoPersonalizada?: string | null; // ej. "DECEMBER 05, 2026 AT 2 PM"
   fotoPortadaUrl: string;
