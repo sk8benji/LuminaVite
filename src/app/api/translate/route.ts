@@ -96,6 +96,59 @@ function getDictionaryTranslation(text: string, targetLang: string): string | nu
   return null;
 }
 
+// Proveedor de Google Gemini (gemini-3.8-flash / gemini-3.5-flash-lite / gemini-flash-latest)
+async function translateWithGemini(text: string, targetLang: "en" | "es"): Promise<string | null> {
+  const geminiKey = process.env.GEMINI_API_KEY;
+  if (!geminiKey) return null;
+
+  const targetLanguageName =
+    targetLang === "es"
+      ? "Spanish (Español latinoamericano cálido y elegante)"
+      : "English (Natural, elegant invitation tone)";
+
+  const prompt = `You are a professional luxury event translator specializing in invitations (Quinceañeras, Weddings, Sweet 16).
+Translate the provided text accurately to ${targetLanguageName}.
+Maintain an elegant, emotive, and celebratory tone suitable for high-end digital invitations.
+Preserve proper names, times, hashtags, and money signs.
+Do not wrap your answer in quotes or add markdown formatting. Return ONLY the translation.
+
+Text to translate:
+${text.trim()}`;
+
+  const models = ["gemini-3.8-flash", "gemini-3.5-flash-lite", "gemini-flash-latest"];
+  for (const model of models) {
+    try {
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${geminiKey}`;
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 7000);
+
+      const res = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        signal: controller.signal,
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: {
+            temperature: 0.3,
+            maxOutputTokens: 500,
+          },
+        }),
+      });
+      clearTimeout(timeout);
+
+      if (res.ok) {
+        const data = await res.json();
+        const translated = data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+        if (translated) return translated;
+      }
+    } catch (err) {
+      console.warn(`Error calling Gemini API (${model}):`, err);
+    }
+  }
+
+  return null;
+}
+
 // Fallback gratuito mediante MyMemory API
 async function translateWithMyMemory(text: string, targetLang: "en" | "es"): Promise<string | null> {
   try {
@@ -147,7 +200,17 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    // 2. Intentar con OpenAI gpt-4o-mini si la API key está disponible
+    // 2. Intentar con Google Gemini si GEMINI_API_KEY está configurada
+    const geminiTranslation = await translateWithGemini(trimmedText, targetLang);
+    if (geminiTranslation) {
+      return NextResponse.json({
+        success: true,
+        translatedText: geminiTranslation,
+        provider: "gemini",
+      });
+    }
+
+    // 3. Intentar con OpenAI gpt-4o-mini si OPENAI_API_KEY está disponible
     const apiKey = process.env.OPENAI_API_KEY;
     if (apiKey) {
       try {
@@ -198,7 +261,7 @@ Do not wrap your answer in quotes or add markdown formatting. Return ONLY the tr
       }
     }
 
-    // 3. Fallback inteligente si OpenAI no tiene saldo o falló: MyMemory
+    // 4. Fallback automático mediante MyMemory (libre de límites)
     const memoryTranslation = await translateWithMyMemory(trimmedText, targetLang);
     if (memoryTranslation) {
       return NextResponse.json({
@@ -208,7 +271,7 @@ Do not wrap your answer in quotes or add markdown formatting. Return ONLY the tr
       });
     }
 
-    // 4. Último recurso: diccionario o texto original
+    // 5. Último recurso: diccionario o texto original
     if (dictMatch) {
       return NextResponse.json({
         success: true,
