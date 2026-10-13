@@ -127,7 +127,9 @@ model Evento {
 
   // Placa de Fecha & Recinto (Paso 3)
   fechaPlacaMes      String?         // Ej: "OCTUBRE" / "OCTOBER"
+  mostrarFechaPlacaHora Boolean?     @default(true) // Switch para mostrar/ocultar la hora en el medallón de fecha
   fechaPlacaHora     String?         // Ej: "A LAS 4:00 PM" / "AT 4 PM"
+  fechaPlacaHoraEn   String?         // Ej: "AT 4:00 PM"
   fechaPlacaLugar    String?         // Ej: "GRAN SALÓN REAL"
 
   // Protocolo, Regalos y RSVP (Paso 4)

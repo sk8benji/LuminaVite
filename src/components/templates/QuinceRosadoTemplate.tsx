@@ -78,22 +78,26 @@ const WEEKDAY_NAMES_EN = [
 
 function parseEventDate(fechaEvento?: string | Date | null) {
   if (!fechaEvento) {
-    return { year: 2027, month: 4, day: 15 }; // Mayo 15, 2027 por defecto
+    return { year: 2027, month: 4, day: 15, hours: 16, minutes: 0 }; // Mayo 15, 2027 por defecto
   }
   if (fechaEvento instanceof Date) {
     return {
       year: fechaEvento.getFullYear(),
       month: fechaEvento.getMonth(),
       day: fechaEvento.getDate(),
+      hours: fechaEvento.getHours(),
+      minutes: fechaEvento.getMinutes(),
     };
   }
   const str = String(fechaEvento);
-  const match = str.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  const match = str.match(/^(\d{4})-(\d{2})-(\d{2})(?:[T ](\d{2}):(\d{2}))?/);
   if (match) {
     return {
       year: parseInt(match[1], 10),
       month: parseInt(match[2], 10) - 1,
       day: parseInt(match[3], 10),
+      hours: match[4] ? parseInt(match[4], 10) : 16,
+      minutes: match[5] ? parseInt(match[5], 10) : 0,
     };
   }
   const d = new Date(fechaEvento);
@@ -102,9 +106,11 @@ function parseEventDate(fechaEvento?: string | Date | null) {
       year: d.getFullYear(),
       month: d.getMonth(),
       day: d.getDate(),
+      hours: d.getHours(),
+      minutes: d.getMinutes(),
     };
   }
-  return { year: 2027, month: 4, day: 15 };
+  return { year: 2027, month: 4, day: 15, hours: 16, minutes: 0 };
 }
 
 function parseVideoEmbed(rawUrl?: string | null): { type: "youtube" | "video"; src: string } | null {
@@ -713,9 +719,31 @@ export default function QuinceRosadoTemplate({
               <span className="font-['Great_Vibes',cursive] text-4xl text-[#B74F5F] leading-none my-0.5">
                 {eventDay}
               </span>
-              <span className="font-['Cinzel',serif] text-[10px] tracking-wider text-[#7A002A] font-medium">
-                {data.fechaPlacaHora || `A las 4:00 PM ${eventYear}`}
-              </span>
+              {data.mostrarFechaPlacaHora !== false && (
+                <span className="font-['Cinzel',serif] text-[10px] tracking-wider text-[#7A002A] font-medium">
+                  {(() => {
+                    if (isEn) {
+                      if (data.fechaPlacaHoraEn) return data.fechaPlacaHoraEn;
+                      if (data.fechaPlacaHora) {
+                        return data.fechaPlacaHora.replace(/^[Aa]\s+las?\s+/i, "AT ").replace(/^[Aa]\s+/i, "AT ");
+                      }
+                      const h = eventDateInfo.hours;
+                      const m = eventDateInfo.minutes;
+                      const ampm = h >= 12 ? "PM" : "AM";
+                      const h12 = h % 12 || 12;
+                      const mStr = m ? `:${String(m).padStart(2, "0")}` : ":00";
+                      return `AT ${h12}${mStr} ${ampm}`;
+                    }
+                    if (data.fechaPlacaHora) return data.fechaPlacaHora;
+                    const h = eventDateInfo.hours;
+                    const m = eventDateInfo.minutes;
+                    const ampm = h >= 12 ? "PM" : "AM";
+                    const h12 = h % 12 || 12;
+                    const mStr = m ? `:${String(m).padStart(2, "0")}` : ":00";
+                    return `A las ${h12}${mStr} ${ampm}`;
+                  })()}
+                </span>
+              )}
             </div>
 
             {/* Rosa pequeña decorativa */}

@@ -131,6 +131,7 @@ export default async function ClientMagicLinkPanelPage({
       mostrarMesaRegalos: serializedEvento.mostrarMesaRegalos !== false,
       mostrarDressCode: serializedEvento.mostrarDressCode !== false,
       mostrarFrasePersonalizada: serializedEvento.mostrarFrasePersonalizada !== false,
+      mostrarFechaPlacaHora: serializedEvento.mostrarFechaPlacaHora !== false,
       telefonoWhatsappRsvp: serializedEvento.telefonoWhatsappRsvp || "",
     },
     estadisticas: {

@@ -75,6 +75,8 @@ export async function GET(
         mostrarMesaRegalos: (evento as any).mostrarMesaRegalos !== false,
         mostrarDressCode: (evento as any).mostrarDressCode !== false,
         mostrarFrasePersonalizada: (evento as any).mostrarFrasePersonalizada !== false,
+        mostrarFechaPlacaHora: (evento as any).mostrarFechaPlacaHora !== false,
+        fechaPlacaHora: (evento as any).fechaPlacaHora || "",
         telefonoWhatsappRsvp: evento.telefonoWhatsappRsvp || "",
       },
       estadisticas: {
@@ -147,7 +149,7 @@ export async function PATCH(
     }
 
     const body = await req.json();
-    const { modalidadRsvp, permitirConfirmacionTelefono, telefonoWhatsappRsvp, mostrarMesaRegalos, mostrarDressCode, mostrarFrasePersonalizada } = body;
+    const { modalidadRsvp, permitirConfirmacionTelefono, telefonoWhatsappRsvp, mostrarMesaRegalos, mostrarDressCode, mostrarFrasePersonalizada, mostrarFechaPlacaHora } = body;
 
     const validModalities = ["ESTRICTO", "HIBRIDO", "ABIERTO"];
     const updateData: any = {};
@@ -178,6 +180,10 @@ export async function PATCH(
       updateData.mostrarFrasePersonalizada = Boolean(mostrarFrasePersonalizada);
     }
 
+    if (mostrarFechaPlacaHora !== undefined) {
+      updateData.mostrarFechaPlacaHora = Boolean(mostrarFechaPlacaHora);
+    }
+
     if (telefonoWhatsappRsvp !== undefined) {
       updateData.telefonoWhatsappRsvp = String(telefonoWhatsappRsvp).trim();
     }
@@ -202,6 +208,7 @@ export async function PATCH(
       mostrarMesaRegalos: (updated as any).mostrarMesaRegalos !== false,
       mostrarDressCode: (updated as any).mostrarDressCode !== false,
       mostrarFrasePersonalizada: (updated as any).mostrarFrasePersonalizada !== false,
+      mostrarFechaPlacaHora: (updated as any).mostrarFechaPlacaHora !== false,
       telefonoWhatsappRsvp: updated.telefonoWhatsappRsvp,
       message: "Configuración actualizada correctamente.",
     });

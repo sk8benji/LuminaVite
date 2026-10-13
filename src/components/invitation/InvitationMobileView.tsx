@@ -52,7 +52,9 @@ export interface InvitationData {
 
   // Placa de Fecha & Recinto (Paso 3)
   fechaPlacaMes?: string | null;
+  mostrarFechaPlacaHora?: boolean;
   fechaPlacaHora?: string | null;
+  fechaPlacaHoraEn?: string | null;
   fechaPlacaLugar?: string | null;
 
   // Protocolo, Regalos y RSVP (Paso 4)
