@@ -26,6 +26,7 @@ import {
   Globe,
   Users,
   PhoneCall,
+  Loader2,
 } from "lucide-react";
 import { TEMPLATES, TemplateId } from "@/lib/templates";
 import { InvitationData } from "@/components/invitation/InvitationMobileView";
@@ -484,6 +485,29 @@ function NuevoEventoContent() {
     };
   };
 
+  // Estado de carga para traducciones automáticas individuales o globales
+  const [translatingField, setTranslatingField] = useState<string | null>(null);
+
+  // Helper para traducir textos usando el endpoint con OpenAI gpt-4o-mini
+  const translateTextWithAI = async (text: string, targetLang: "en" | "es" = "en"): Promise<string> => {
+    if (!text || !text.trim()) return "";
+    try {
+      const res = await fetch("/api/translate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text, targetLang }),
+      });
+      const data = await res.json();
+      if (data.success && data.translatedText) {
+        return data.translatedText;
+      }
+      return "";
+    } catch (err) {
+      console.error("Error al traducir texto:", err);
+      return "";
+    }
+  };
+
   // Helper para sugerir traducción rápida de hitos clásicos de quinceañera/boda
   const translateItinerarioTitle = (text: string): string => {
     if (!text) return "";
@@ -506,6 +530,46 @@ function NuevoEventoContent() {
     if (lower.includes("bailar") || lower.includes("baile") || lower.includes("fiesta")) return "Party Time & Open Dance";
     if (lower.includes("pastel")) return "Cake Cutting";
     return text;
+  };
+
+  // Traducir un hito del itinerario individualmente (IA con fallback)
+  const handleTranslateItinerarioItem = async (idx: number) => {
+    const items = [...((formData.itinerarioJson as any[]) || [])];
+    const item = items[idx];
+    if (!item?.titulo) return;
+
+    setTranslatingField(`itinerario-${idx}`);
+    try {
+      const aiResult = await translateTextWithAI(item.titulo, "en");
+      const finalTranslation = aiResult || translateItinerarioTitle(item.titulo);
+      items[idx] = { ...items[idx], tituloEn: finalTranslation };
+      updateField("itinerarioJson", items);
+    } finally {
+      setTranslatingField(null);
+    }
+  };
+
+  // Traducir todos los hitos del itinerario en lote con IA
+  const handleTranslateAllItinerario = async () => {
+    const items = [...((formData.itinerarioJson as any[]) || [])];
+    if (items.length === 0) return;
+
+    setTranslatingField("itinerario-all");
+    try {
+      const updated = await Promise.all(
+        items.map(async (item) => {
+          if (!item.titulo) return item;
+          const aiResult = await translateTextWithAI(item.titulo, "en");
+          return {
+            ...item,
+            tituloEn: aiResult || translateItinerarioTitle(item.titulo),
+          };
+        })
+      );
+      updateField("itinerarioJson", updated);
+    } finally {
+      setTranslatingField(null);
+    }
   };
 
   // Manejar cambio en los días de anticipación RSVP
@@ -1281,15 +1345,41 @@ function NuevoEventoContent() {
                             </span>
                             <button
                               type="button"
-                              onClick={() => {
-                                updateField(
-                                  "frasePersonalizadaEn",
-                                  "Today I begin to write a new chapter as I leave childhood behind to become a young woman. On this special day, surrounded by the love of those I cherish most, it would be an honor to have your presence to celebrate a moment I will keep in my heart forever."
-                                );
+                              disabled={translatingField === "frasePersonalizada"}
+                              onClick={async () => {
+                                const source = formData.frasePersonalizada || "";
+                                if (!source.trim()) {
+                                  updateField(
+                                    "frasePersonalizadaEn",
+                                    "Today I begin to write a new chapter as I leave childhood behind to become a young woman. On this special day, surrounded by the love of those I cherish most, it would be an honor to have your presence to celebrate a moment I will keep in my heart forever."
+                                  );
+                                  return;
+                                }
+                                setTranslatingField("frasePersonalizada");
+                                try {
+                                  const aiResult = await translateTextWithAI(source, "en");
+                                  updateField(
+                                    "frasePersonalizadaEn",
+                                    aiResult ||
+                                      "Today I begin to write a new chapter as I leave childhood behind to become a young woman. On this special day, surrounded by the love of those I cherish most, it would be an honor to have your presence to celebrate a moment I will keep in my heart forever."
+                                  );
+                                } finally {
+                                  setTranslatingField(null);
+                                }
                               }}
-                              className="text-[10px] text-pink-600 hover:text-pink-700 font-semibold"
+                              className="text-[10px] text-pink-600 hover:text-pink-700 font-semibold flex items-center gap-1 cursor-pointer disabled:opacity-50"
                             >
-                              Sugerir EN
+                              {translatingField === "frasePersonalizada" ? (
+                                <>
+                                  <Loader2 className="w-3 h-3 animate-spin" />
+                                  <span>Traduciendo...</span>
+                                </>
+                              ) : (
+                                <>
+                                  <Sparkles className="w-3 h-3" />
+                                  <span>Traducir con IA</span>
+                                </>
+                              )}
                             </button>
                           </div>
                           <textarea
@@ -1597,16 +1687,37 @@ function NuevoEventoContent() {
                           </label>
                           <button
                             type="button"
-                            onClick={() => {
+                            disabled={translatingField === "fechaPlacaHora"}
+                            onClick={async () => {
                               const raw = formData.fechaPlacaHora || "";
-                              const enVal = raw
+                              const fallbackVal = raw
                                 ? raw.replace(/^[Aa]\s+las?\s+/i, "AT ").replace(/^[Aa]\s+/i, "AT ")
                                 : "AT 4:00 PM";
-                              updateField("fechaPlacaHoraEn", enVal);
+                              if (!raw.trim()) {
+                                updateField("fechaPlacaHoraEn", fallbackVal);
+                                return;
+                              }
+                              setTranslatingField("fechaPlacaHora");
+                              try {
+                                const aiResult = await translateTextWithAI(raw, "en");
+                                updateField("fechaPlacaHoraEn", aiResult || fallbackVal);
+                              } finally {
+                                setTranslatingField(null);
+                              }
                             }}
-                            className="text-[10px] text-pink-600 hover:text-pink-700 font-semibold"
+                            className="text-[10px] text-pink-600 hover:text-pink-700 font-semibold flex items-center gap-1 cursor-pointer disabled:opacity-50"
                           >
-                            Sugerir EN
+                            {translatingField === "fechaPlacaHora" ? (
+                              <>
+                                <Loader2 className="w-3 h-3 animate-spin" />
+                                <span>Traduciendo...</span>
+                              </>
+                            ) : (
+                              <>
+                                <Sparkles className="w-3 h-3" />
+                                <span>Traducir con IA</span>
+                              </>
+                            )}
                           </button>
                         </div>
                         <input
@@ -2013,17 +2124,38 @@ function NuevoEventoContent() {
                         Añade o edita los hitos de tu evento. Si dejas la lista vacía, se cargarán los predeterminados.
                       </p>
                     </div>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const current = Array.isArray(formData.itinerarioJson) ? [...formData.itinerarioJson] : [];
-                        current.push({ hora: "6:00 PM", titulo: "Nuevo Hito", tipoIcono: "crown" });
-                        updateField("itinerarioJson", current);
-                      }}
-                      className="px-3 py-1.5 bg-stone-900 hover:bg-black text-white rounded-lg text-xs font-semibold cursor-pointer transition flex items-center gap-1"
-                    >
-                      + Añadir Hito
-                    </button>
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        disabled={translatingField === "itinerario-all"}
+                        onClick={handleTranslateAllItinerario}
+                        className="px-2.5 py-1.5 bg-pink-50 hover:bg-pink-100 text-pink-700 border border-pink-200 rounded-lg text-xs font-semibold cursor-pointer transition flex items-center gap-1.5 disabled:opacity-50"
+                        title="Traduce automáticamente todos los títulos al inglés usando Inteligencia Artificial"
+                      >
+                        {translatingField === "itinerario-all" ? (
+                          <>
+                            <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                            <span>Traduciendo Todo...</span>
+                          </>
+                        ) : (
+                          <>
+                            <Sparkles className="w-3.5 h-3.5 text-pink-500" />
+                            <span>Traducir Todo con IA</span>
+                          </>
+                        )}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const current = Array.isArray(formData.itinerarioJson) ? [...formData.itinerarioJson] : [];
+                          current.push({ hora: "6:00 PM", titulo: "Nuevo Hito", tituloEn: "New Milestone", tipoIcono: "crown" });
+                          updateField("itinerarioJson", current);
+                        }}
+                        className="px-3 py-1.5 bg-stone-900 hover:bg-black text-white rounded-lg text-xs font-semibold cursor-pointer transition flex items-center gap-1"
+                      >
+                        + Añadir Hito
+                      </button>
+                    </div>
                   </div>
 
                   <div className="space-y-2.5 pt-1">
@@ -2109,16 +2241,22 @@ function NuevoEventoContent() {
                           </div>
                           <button
                             type="button"
-                            onClick={() => {
-                              const suggestion = translateItinerarioTitle(item.titulo || "");
-                              const updated = [...(formData.itinerarioJson as any[])];
-                              updated[idx] = { ...updated[idx], tituloEn: suggestion };
-                              updateField("itinerarioJson", updated);
-                            }}
-                            className="px-2.5 py-1 bg-stone-100 hover:bg-stone-200 text-stone-700 rounded-lg text-[11px] font-semibold transition cursor-pointer flex items-center gap-1 shrink-0"
-                            title="Sugerir traducción automática al inglés"
+                            disabled={translatingField === `itinerario-${idx}`}
+                            onClick={() => handleTranslateItinerarioItem(idx)}
+                            className="px-2.5 py-1 bg-stone-100 hover:bg-stone-200 text-stone-700 rounded-lg text-[11px] font-semibold transition cursor-pointer flex items-center gap-1 shrink-0 disabled:opacity-50"
+                            title="Traducir automáticamente al inglés con IA"
                           >
-                            ✨ Traducir
+                            {translatingField === `itinerario-${idx}` ? (
+                              <>
+                                <Loader2 className="w-3 h-3 animate-spin" />
+                                <span>Traduciendo...</span>
+                              </>
+                            ) : (
+                              <>
+                                <Sparkles className="w-3 h-3 text-pink-500" />
+                                <span>Traducir con IA</span>
+                              </>
+                            )}
                           </button>
                         </div>
                       </div>
@@ -2179,12 +2317,34 @@ function NuevoEventoContent() {
                             <label className="block text-[11px] text-stone-600">🇺🇸 Attire / Dress Code (Inglés)</label>
                             <button
                               type="button"
-                              onClick={() => {
-                                updateField("dressCodeTituloEn", "Elegant & Formal");
+                              disabled={translatingField === "dressCodeTitulo"}
+                              onClick={async () => {
+                                const source = formData.dressCodeEtiqueta || formData.dressCodeTitulo || "";
+                                if (!source.trim()) {
+                                  updateField("dressCodeTituloEn", "Elegant & Formal");
+                                  return;
+                                }
+                                setTranslatingField("dressCodeTitulo");
+                                try {
+                                  const aiResult = await translateTextWithAI(source, "en");
+                                  updateField("dressCodeTituloEn", aiResult || "Elegant & Formal");
+                                } finally {
+                                  setTranslatingField(null);
+                                }
                               }}
-                              className="text-[10px] text-pink-600 hover:text-pink-700 font-semibold"
+                              className="text-[10px] text-pink-600 hover:text-pink-700 font-semibold flex items-center gap-1 cursor-pointer disabled:opacity-50"
                             >
-                              Sugerir EN
+                              {translatingField === "dressCodeTitulo" ? (
+                                <>
+                                  <Loader2 className="w-3 h-3 animate-spin" />
+                                  <span>Traduciendo...</span>
+                                </>
+                              ) : (
+                                <>
+                                  <Sparkles className="w-3 h-3" />
+                                  <span>Traducir con IA</span>
+                                </>
+                              )}
                             </button>
                           </div>
                           <input
@@ -2216,19 +2376,41 @@ function NuevoEventoContent() {
                             <label className="block text-[11px] text-stone-600">🇺🇸 Reserved Colors / Guidelines (Inglés)</label>
                             <button
                               type="button"
-                              onClick={() => {
-                                const currentNote = (formData.dressCodeColoresReservados || formData.dressCodeNota || "").toLowerCase();
+                              disabled={translatingField === "dressCodeNota"}
+                              onClick={async () => {
+                                const source = formData.dressCodeColoresReservados || formData.dressCodeNota || "";
+                                const currentNote = source.toLowerCase();
+                                let fallback = "Reserved colors for the guest of honor. Guests are encouraged to wear elegant formal attire.";
                                 if (currentNote.includes("rosa") || currentNote.includes("rosado")) {
-                                  updateField("dressCodeNotaEn", "Blush pink tones reserved exclusively for the quinceañera. Guests are encouraged to wear elegant formal attire.");
+                                  fallback = "Blush pink tones reserved exclusively for the quinceañera. Guests are encouraged to wear elegant formal attire.";
                                 } else if (currentNote.includes("azul")) {
-                                  updateField("dressCodeNotaEn", "Blue tones reserved exclusively for the quinceañera. Guests are encouraged to wear elegant formal attire.");
-                                } else {
-                                  updateField("dressCodeNotaEn", "Reserved colors for the guest of honor. Guests are encouraged to wear elegant formal attire.");
+                                  fallback = "Blue tones reserved exclusively for the quinceañera. Guests are encouraged to wear elegant formal attire.";
+                                }
+                                if (!source.trim()) {
+                                  updateField("dressCodeNotaEn", fallback);
+                                  return;
+                                }
+                                setTranslatingField("dressCodeNota");
+                                try {
+                                  const aiResult = await translateTextWithAI(source, "en");
+                                  updateField("dressCodeNotaEn", aiResult || fallback);
+                                } finally {
+                                  setTranslatingField(null);
                                 }
                               }}
-                              className="text-[10px] text-pink-600 hover:text-pink-700 font-semibold"
+                              className="text-[10px] text-pink-600 hover:text-pink-700 font-semibold flex items-center gap-1 cursor-pointer disabled:opacity-50"
                             >
-                              Sugerir EN
+                              {translatingField === "dressCodeNota" ? (
+                                <>
+                                  <Loader2 className="w-3 h-3 animate-spin" />
+                                  <span>Traduciendo...</span>
+                                </>
+                              ) : (
+                                <>
+                                  <Sparkles className="w-3 h-3" />
+                                  <span>Traducir con IA</span>
+                                </>
+                              )}
                             </button>
                           </div>
                           <input
@@ -2300,12 +2482,35 @@ function NuevoEventoContent() {
                             </label>
                             <button
                               type="button"
-                              onClick={() => {
-                                updateField("regalosMensajeEn", "Your presence is our greatest gift. A gift box will be available at the reception.");
+                              disabled={translatingField === "regalosMensaje"}
+                              onClick={async () => {
+                                const source = formData.regalosMensaje || "";
+                                const defaultFallback = "Your presence is our greatest gift. A gift box will be available at the reception.";
+                                if (!source.trim()) {
+                                  updateField("regalosMensajeEn", defaultFallback);
+                                  return;
+                                }
+                                setTranslatingField("regalosMensaje");
+                                try {
+                                  const aiResult = await translateTextWithAI(source, "en");
+                                  updateField("regalosMensajeEn", aiResult || defaultFallback);
+                                } finally {
+                                  setTranslatingField(null);
+                                }
                               }}
-                              className="text-[10px] text-stone-500 hover:text-stone-900 underline cursor-pointer"
+                              className="text-[10px] text-pink-600 hover:text-pink-700 font-semibold flex items-center gap-1 cursor-pointer disabled:opacity-50"
                             >
-                              Sugerir default
+                              {translatingField === "regalosMensaje" ? (
+                                <>
+                                  <Loader2 className="w-3 h-3 animate-spin" />
+                                  <span>Traduciendo...</span>
+                                </>
+                              ) : (
+                                <>
+                                  <Sparkles className="w-3 h-3" />
+                                  <span>Traducir con IA</span>
+                                </>
+                              )}
                             </button>
                           </div>
                           <textarea
