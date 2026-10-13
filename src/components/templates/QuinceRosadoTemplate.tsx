@@ -606,7 +606,7 @@ export default function QuinceRosadoTemplate({
         {/* ══════════════════════════════════════════════════════════════
             SECCIÓN 1: HERO PORTADA ARCO & CABALLO BLANCO (RÉPLICA CANVA)
         ══════════════════════════════════════════════════════════════ */}
-        <section className="relative w-full flex flex-col items-center pt-6 pb-10 px-4 overflow-hidden select-none">
+        <section className="relative w-full flex flex-col items-center pt-14 sm:pt-16 pb-10 px-4 overflow-hidden select-none">
           {/* Fondo de Nubes Rosadas (90043c428c5ec72c7adb26dce69dedd2.png) */}
           <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none select-none">
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -623,19 +623,19 @@ export default function QuinceRosadoTemplate({
           </div>
 
           {/* Encabezado: "CON Amor LE INVITAMOS" */}
-          <div className="relative w-full max-w-[340px] mx-auto text-center mb-2 z-10">
+          <div className="relative w-full max-w-[340px] mx-auto text-center mb-3 pt-2 z-10">
             {/* "CON" */}
             <p className="font-['Libre_Baskerville',serif] text-sm sm:text-base tracking-[0.35em] uppercase text-[#7A002A] font-bold">
               {isEn ? "WITH" : "CON"}
             </p>
 
             {/* "Amor" */}
-            <h2 className="font-['Alex_Brush',cursive] text-7xl sm:text-8xl text-[#7A002A] leading-[0.8] -mt-1 drop-shadow-sm select-none">
+            <h2 className="font-['Alex_Brush',cursive] text-7xl sm:text-8xl text-[#7A002A] leading-[0.85] my-0.5 drop-shadow-sm select-none">
               {isEn ? "Love" : "Amor"}
             </h2>
 
             {/* "LE INVITAMOS" (Alineado a la derecha debajo de "Amor") */}
-            <div className="w-full flex justify-end pr-3 sm:pr-4 -mt-1 sm:-mt-2">
+            <div className="w-full flex justify-end pr-3 sm:pr-4 pt-0.5">
               <p className="font-['Libre_Baskerville',serif] text-[11px] sm:text-xs tracking-[0.3em] uppercase text-[#7A002A] font-bold">
                 {isEn ? "YOU ARE INVITED" : "LE INVITAMOS"}
               </p>
