@@ -86,6 +86,7 @@ interface PanelViewProps {
   initialData?: PanelData | null;
   errorMessage?: string | null;
   panelKey?: string;
+  isMaster?: boolean;
 }
 
 export default function PanelView({
@@ -94,6 +95,7 @@ export default function PanelView({
   initialData,
   errorMessage,
   panelKey = "",
+  isMaster = false,
 }: PanelViewProps) {
   const [data, setData] = useState<PanelData | null>(initialData || null);
   const [guests, setGuests] = useState<GuestItem[]>(initialData?.guests || []);
@@ -639,14 +641,13 @@ export default function PanelView({
         </div>
 
         {/* ============================================================== */}
-        {/* SELECTOR DE MODALIDAD RSVP EN VIVO */}
+        {/* CONFIGURACIÓN EXCLUSIVA DE ADMINISTRADOR (MODALIDAD + SWITCHES) */}
+        {/* Solo visible cuando el administrador maestro accede al panel   */}
         {/* ============================================================== */}
-        {/* ============================================================== */}
-        {/* CONFIGURACIÓN DE RSVP DE LA ANFITRIONA (MODALIDAD + TELÉFONO)  */}
-        {/* ============================================================== */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
-          {/* Modalidad de RSVP */}
-          <div className="md:col-span-2 lg:col-span-2 bg-white rounded-2xl border border-[#E8E3D9] p-4 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-3">
+        {isMaster && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+            {/* Modalidad de RSVP */}
+            <div className="md:col-span-2 lg:col-span-2 bg-white rounded-2xl border border-[#E8E3D9] p-4 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-3">
             <div className="space-y-0.5">
               <div className="flex items-center gap-2">
                 <span className="text-sm">⚙️</span>
@@ -978,6 +979,7 @@ export default function PanelView({
             </div>
           </div>
         </div>
+      )}
 
         {/* ============================================================== */}
         {/* 1. BARRA DE RESUMEN (MÉTRICAS EXACTAS REQUERIDAS) */}

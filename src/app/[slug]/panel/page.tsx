@@ -169,6 +169,7 @@ export default async function ClientMagicLinkPanelPage({
       isAuthorized={true}
       initialData={panelData}
       panelKey={cleanKey}
+      isMaster={isMasterKey}
     />
   );
 }
