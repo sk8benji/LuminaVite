@@ -380,9 +380,9 @@ export default function QuinceRosadoTemplate({
           />
 
           {/* TÍTULO SUPERIOR INTRO */}
-          <div className="relative z-10 pt-10 text-center px-4">
-            <div className="inline-flex items-center justify-center gap-2">
-              <h1 className="font-['Great_Vibes',cursive] text-6xl sm:text-7xl text-[#7A002A] leading-none drop-shadow-sm">
+          <div className="relative z-10 pt-4 sm:pt-6 text-center px-4 shrink-0">
+            <div className="inline-flex items-center justify-center gap-1.5 max-w-full">
+              <h1 className="font-['Great_Vibes',cursive] text-4xl sm:text-5xl md:text-6xl text-[#7A002A] leading-tight whitespace-nowrap truncate drop-shadow-sm">
                 {data.titulo || "Magdalena"}
               </h1>
               {/* Rosa 3D en la cabecera */}
@@ -390,10 +390,10 @@ export default function QuinceRosadoTemplate({
               <img
                 src={QUINCE_ROSADO_ASSETS.introRoseFlower}
                 alt="Rosa"
-                className="w-14 h-14 object-contain -mt-3 drop-shadow-md"
+                className="w-8 h-8 sm:w-10 sm:h-10 object-contain -mt-1 drop-shadow-md shrink-0"
               />
             </div>
-            <p className="font-['Cinzel',serif] text-xl sm:text-2xl tracking-[0.35em] uppercase text-[#7A002A] font-bold mt-1">
+            <p className="font-['Cinzel',serif] text-sm sm:text-base tracking-[0.3em] uppercase text-[#7A002A] font-bold mt-0.5">
               QUINCE
             </p>
           </div>
@@ -401,13 +401,13 @@ export default function QuinceRosadoTemplate({
           {/* SOBRE ROSA 3D CON POLAROIDS Y LAZO (CLICABLE EN TODA EL ÁREA) */}
           <div
             onClick={() => handleOpenEnvelope()}
-            className="relative w-full max-w-[360px] mx-auto my-auto flex flex-col items-center px-2 cursor-pointer group select-none transition-transform duration-300 hover:scale-[1.02] active:scale-[0.98]"
+            className="relative w-full max-w-[320px] sm:max-w-[340px] mx-auto my-auto flex flex-col items-center px-2 cursor-pointer group select-none transition-transform duration-300 hover:scale-[1.02] active:scale-[0.98] shrink"
           >
             {/* POLAROIDS QUE SALEN DEL SOBRE */}
-            <div className="relative w-full h-52 -mb-28 z-0 pointer-events-none">
+            <div className="relative w-full h-44 sm:h-48 -mb-24 sm:-mb-26 z-0 pointer-events-none">
               {/* Polaroid Izquierda: MAYO 2027 (Rotada -14deg) */}
               <div
-                className={`absolute left-3 top-0 w-[170px] bg-white p-2 pb-5 shadow-2xl rounded-sm transform -rotate-12 transition-transform duration-700 border border-pink-100 ${
+                className={`absolute left-3 top-0 w-[145px] sm:w-[160px] bg-white p-1.5 pb-4 shadow-2xl rounded-sm transform -rotate-12 transition-transform duration-700 border border-pink-100 ${
                   animatingOpen ? "-translate-y-16 -rotate-16" : ""
                 }`}
               >
@@ -419,14 +419,14 @@ export default function QuinceRosadoTemplate({
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <p className="font-['Cinzel',serif] text-[10px] tracking-[0.25em] uppercase text-[#B74F5F] font-bold text-center mt-2.5">
+                <p className="font-['Cinzel',serif] text-[9px] sm:text-[10px] tracking-[0.2em] uppercase text-[#B74F5F] font-bold text-center mt-2">
                   {data.fechaPlacaMes || `${eventMonthName.toUpperCase()} ${eventYear}`}
                 </p>
               </div>
 
               {/* Polaroid Derecha: Dinámico (Día y Número) */}
               <div
-                className={`absolute right-3 top-2 w-[170px] bg-white p-2 pb-5 shadow-2xl rounded-sm transform rotate-8 transition-transform duration-700 border border-pink-100 ${
+                className={`absolute right-3 top-2 w-[145px] sm:w-[160px] bg-white p-1.5 pb-4 shadow-2xl rounded-sm transform rotate-8 transition-transform duration-700 border border-pink-100 ${
                   animatingOpen ? "-translate-y-16 rotate-12" : ""
                 }`}
               >
@@ -438,7 +438,7 @@ export default function QuinceRosadoTemplate({
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <p className="font-['Cinzel',serif] text-[10px] tracking-[0.25em] uppercase text-[#B74F5F] font-bold text-center mt-2.5">
+                <p className="font-['Cinzel',serif] text-[9px] sm:text-[10px] tracking-[0.2em] uppercase text-[#B74F5F] font-bold text-center mt-2">
                   {`${eventDayOfWeek} ${eventDay}`}
                 </p>
               </div>
@@ -454,7 +454,7 @@ export default function QuinceRosadoTemplate({
                   (e.target as HTMLImageElement).src = QUINCE_ROSADO_ASSETS.s3.introRosesBed;
                 }}
                 alt=""
-                className="absolute top-2 inset-x-8 w-4/5 h-20 object-cover rounded-t-full pointer-events-none opacity-90"
+                className="absolute top-2 inset-x-8 w-4/5 h-16 sm:h-20 object-cover rounded-t-full pointer-events-none opacity-90"
               />
 
               {/* Cuerpo del Sobre Rosado */}
@@ -477,14 +477,14 @@ export default function QuinceRosadoTemplate({
                     (e.target as HTMLImageElement).src = QUINCE_ROSADO_ASSETS.s3.introBowRibbon;
                   }}
                   alt="Lazo"
-                  className="w-[280px] h-auto object-contain drop-shadow-xl"
+                  className="w-[240px] sm:w-[270px] h-auto object-contain drop-shadow-xl"
                 />
               </div>
 
               {/* Sello Interactivo: Más grande y con efecto visual destacado */}
               <div
                 aria-label="Abrir invitación"
-                className="absolute top-[52%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 sm:w-22 sm:h-22 rounded-full flex items-center justify-center cursor-pointer transition-transform duration-300 group-hover:scale-110 active:scale-95 focus:outline-none z-20"
+                className="absolute top-[52%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center cursor-pointer transition-transform duration-300 group-hover:scale-110 active:scale-95 focus:outline-none z-20"
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
@@ -501,21 +501,21 @@ export default function QuinceRosadoTemplate({
 
           {/* TEXTO INFERIOR INTRO */}
           {isBilingual ? (
-            <div className="relative z-10 pb-8 text-center px-4">
-              <h2 className="font-['Great_Vibes',cursive] text-4xl sm:text-5xl text-[#7A002A] leading-tight drop-shadow-sm mb-2">
+            <div className="relative z-10 pb-5 sm:pb-7 text-center px-3 shrink-0">
+              <h2 className="font-['Great_Vibes',cursive] text-2xl sm:text-3xl md:text-4xl text-[#7A002A] leading-tight drop-shadow-sm mb-1 whitespace-nowrap">
                 ¡Estás invitado! • You’re Invited!
               </h2>
-              <p className="font-['Cinzel',serif] text-[10px] sm:text-xs tracking-[0.2em] uppercase text-[#B74F5F] font-semibold mb-4">
-                Selecciona tu idioma para abrir • Choose your language
+              <p className="font-['Cinzel',serif] text-[9.5px] sm:text-[11px] tracking-[0.15em] uppercase text-[#B74F5F] font-semibold mb-2.5 whitespace-nowrap">
+                Selecciona tu idioma - Choose Your language
               </p>
-              <div className="flex items-center justify-center gap-3 sm:gap-4">
+              <div className="flex items-center justify-center gap-2.5 sm:gap-4">
                 <button
                   type="button"
                   onClick={(e) => {
                     e.stopPropagation();
                     handleOpenEnvelope("es");
                   }}
-                  className="px-5 py-2.5 rounded-full bg-[#7A002A] text-white hover:bg-[#600021] border border-pink-200 shadow-lg font-['Cinzel',serif] text-xs tracking-[0.15em] uppercase font-bold transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-1.5"
+                  className="px-4 sm:px-5 py-2 sm:py-2.5 rounded-full bg-[#7A002A] text-white hover:bg-[#600021] border border-pink-200 shadow-lg font-['Cinzel',serif] text-[11px] sm:text-xs tracking-[0.12em] uppercase font-bold transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-1.5"
                 >
                   <span>🇲🇽</span>
                   <span>ESPAÑOL</span>
@@ -526,7 +526,7 @@ export default function QuinceRosadoTemplate({
                     e.stopPropagation();
                     handleOpenEnvelope("en");
                   }}
-                  className="px-5 py-2.5 rounded-full bg-[#7A002A] text-white hover:bg-[#600021] border border-pink-200 shadow-lg font-['Cinzel',serif] text-xs tracking-[0.15em] uppercase font-bold transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-1.5"
+                  className="px-4 sm:px-5 py-2 sm:py-2.5 rounded-full bg-[#7A002A] text-white hover:bg-[#600021] border border-pink-200 shadow-lg font-['Cinzel',serif] text-[11px] sm:text-xs tracking-[0.12em] uppercase font-bold transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-1.5"
                 >
                   <span>🇺🇸</span>
                   <span>ENGLISH</span>
