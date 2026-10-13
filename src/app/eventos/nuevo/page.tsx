@@ -32,6 +32,7 @@ import { TEMPLATES, TemplateId } from "@/lib/templates";
 import { InvitationData } from "@/components/invitation/InvitationMobileView";
 import MobileSimulator from "@/components/preview/MobileSimulator";
 import TemplateConfigDispatcher from "@/components/events/forms/TemplateConfigDispatcher";
+import TemplateSectionBuilder from "@/components/admin/TemplateSectionBuilder";
 
 function NuevoEventoContent() {
   const router = useRouter();
@@ -46,6 +47,7 @@ function NuevoEventoContent() {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [saveSuccessMsg, setSaveSuccessMsg] = useState<string | null>(null);
   const [showMobilePreview, setShowMobilePreview] = useState(false);
+  const [editorMode, setEditorMode] = useState<"sections" | "steps">("sections");
 
   // Estados locales para inputs de corte de honor (evitar pérdida de comas al teclear)
   const [damasRaw, setDamasRaw] = useState<string | null>(null);
@@ -878,7 +880,9 @@ function NuevoEventoContent() {
               )}
             </h1>
             <p className="text-xs text-stone-500">
-              {isEditMode
+              {editorMode === "sections"
+                ? `Organizador Modular de Secciones • /${formData.slug}`
+                : isEditMode
                 ? `Modificando /${formData.slug} • Paso ${step} de 4`
                 : `Paso ${step} de 4`}
             </p>
@@ -886,6 +890,19 @@ function NuevoEventoContent() {
         </div>
 
         <div className="flex items-center gap-2">
+          {/* Botón ver en vivo si existe slug */}
+          {formData.slug && (
+            <a
+              href={`/${formData.slug}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 bg-pink-50 hover:bg-pink-100 text-[#7A002A] rounded-xl text-xs font-semibold border border-pink-200 transition"
+            >
+              <Eye className="w-4 h-4" />
+              <span>Ver en Vivo</span>
+            </a>
+          )}
+
           {/* Botón ver preview en móvil */}
           <button
             type="button"
@@ -896,44 +913,46 @@ function NuevoEventoContent() {
             {showMobilePreview ? "Ocultar Vista" : "Previsualizar"}
           </button>
 
-          {/* En modo edición: botón GUARDAR CAMBIOS siempre disponible en la barra superior */}
-          {isEditMode && (
+          {/* Botón GUARDAR CAMBIOS siempre disponible en modo secciones o edición */}
+          {(isEditMode || editorMode === "sections") && (
             <button
               type="button"
               disabled={isSaving || isLoadingEdit}
               onClick={handleSave}
-              className="flex items-center gap-1.5 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-semibold shadow transition disabled:opacity-50"
+              className="flex items-center gap-1.5 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-semibold shadow transition disabled:opacity-50 cursor-pointer"
             >
-              <Check className="w-4 h-4" />
-              {isSaving ? "Guardando..." : "Guardar Cambios"}
+              {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
+              <span>{isSaving ? "Guardando..." : isEditMode ? "Guardar Cambios" : "Publicar Invitación"}</span>
             </button>
           )}
 
-          {step < 4 ? (
-            <button
-              type="button"
-              onClick={() => {
-                if (isEditMode) {
-                  handleSave();
-                }
-                setStep((s) => s + 1);
-              }}
-              className="flex items-center gap-1 px-4 py-2 bg-[#5A3E44] hover:bg-[#432d32] text-white rounded-xl text-xs font-semibold shadow transition"
-            >
-              Siguiente
-              <ChevronRight className="w-4 h-4" />
-            </button>
-          ) : !isEditMode ? (
-            <button
-              type="button"
-              disabled={isSaving || isLoadingEdit}
-              onClick={handleSave}
-              className="flex items-center gap-1 px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-semibold shadow transition disabled:opacity-50"
-            >
-              <Check className="w-4 h-4" />
-              {isSaving ? "Guardando..." : "Publicar Invitación"}
-            </button>
-          ) : null}
+          {editorMode === "steps" && (
+            step < 4 ? (
+              <button
+                type="button"
+                onClick={() => {
+                  if (isEditMode) {
+                    handleSave();
+                  }
+                  setStep((s) => s + 1);
+                }}
+                className="flex items-center gap-1 px-4 py-2 bg-[#5A3E44] hover:bg-[#432d32] text-white rounded-xl text-xs font-semibold shadow transition"
+              >
+                Siguiente
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            ) : !isEditMode ? (
+              <button
+                type="button"
+                disabled={isSaving || isLoadingEdit}
+                onClick={handleSave}
+                className="flex items-center gap-1 px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-semibold shadow transition disabled:opacity-50"
+              >
+                <Check className="w-4 h-4" />
+                {isSaving ? "Guardando..." : "Publicar Invitación"}
+              </button>
+            ) : null
+          )}
         </div>
       </header>
 
@@ -966,9 +985,50 @@ function NuevoEventoContent() {
 
       {/* Contenedor principal: Formulario a la izquierda + Live Phone Simulator a la derecha */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* Formulario Wizard (7 Columnas en escritorio) */}
+        {/* Formulario Wizard / Organizador Modular (7 Columnas en escritorio) */}
         <div className={`lg:col-span-7 ${showMobilePreview ? "hidden lg:block" : "block"}`}>
-          {/* Pasos Progress Bar */}
+          {/* Selector de Modo: Secciones vs Pasos */}
+          <div className="flex items-center justify-between bg-white p-1 rounded-2xl border border-stone-200 shadow-xs mb-6">
+            <button
+              type="button"
+              onClick={() => setEditorMode("sections")}
+              className={`flex-1 py-2 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 cursor-pointer ${
+                editorMode === "sections"
+                  ? "bg-[#7A002A] text-white shadow-xs"
+                  : "text-stone-600 hover:text-stone-900 hover:bg-stone-50"
+              }`}
+            >
+              <Sliders className="w-3.5 h-3.5" />
+              <span>Organizador por Secciones (Orden de Plantilla)</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setEditorMode("steps")}
+              className={`flex-1 py-2 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 cursor-pointer ${
+                editorMode === "steps"
+                  ? "bg-[#7A002A] text-white shadow-xs"
+                  : "text-stone-600 hover:text-stone-900 hover:bg-stone-50"
+              }`}
+            >
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>Modo Asistente por Pasos (1 al 4)</span>
+            </button>
+          </div>
+
+          {editorMode === "sections" ? (
+            <TemplateSectionBuilder
+              formData={formData}
+              updateField={updateField}
+              setFormData={setFormData}
+              handleFileUpload={handleFileUpload}
+              uploadingS3={uploadingS3}
+              uploadingField={uploadingField}
+              formatFormalDate={formatFormalDate}
+              computeRsvpPhrases={computeRsvpPhrases}
+            />
+          ) : (
+            <>
+              {/* Pasos Progress Bar */}
           <div className="grid grid-cols-4 gap-2 mb-6">
             {[
               { num: 1, label: "Datos Básicos" },
@@ -3322,7 +3382,9 @@ function NuevoEventoContent() {
               </div>
             </div>
           </div>
-        </div>
+          </>
+        )}
+      </div>
 
         {/* Live Simulator en Tiempo Real (5 Columnas en escritorio) */}
         <div className={`lg:col-span-5 ${showMobilePreview ? "block" : "hidden lg:block"}`}>
