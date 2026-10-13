@@ -59,16 +59,8 @@ export const SECCIONES_QUINCE_ROSADO: SeccionMeta[] = [
     legacyColumn: 'mostrarFrasePersonalizada',
   },
   {
-    id: 'rsvp',
-    numero: 4,
-    label: 'Confirmación de Asistencia (RSVP)',
-    descripcion: 'Formulario dinámico con búsqueda de invitados por nombre, pases asignados y confirmación telefónica.',
-    icono: 'Users',
-    defaultEnabled: true,
-  },
-  {
     id: 'fotoZapatos1',
-    numero: 5,
+    numero: 4,
     label: 'Foto Zapatillas de Cristal / Ceremonia',
     descripcion: 'Fotografía vertical de transición hacia los templos y recepciones.',
     icono: 'Image',
@@ -76,7 +68,7 @@ export const SECCIONES_QUINCE_ROSADO: SeccionMeta[] = [
   },
   {
     id: 'ubicaciones',
-    numero: 6,
+    numero: 5,
     label: 'Ubicaciones (Ceremonia y Recepción)',
     descripcion: 'Detalles de la iglesia y salón de fiesta con botones directos hacia Google Maps.',
     icono: 'MapPin',
@@ -84,7 +76,7 @@ export const SECCIONES_QUINCE_ROSADO: SeccionMeta[] = [
   },
   {
     id: 'dressCode',
-    numero: 7,
+    numero: 6,
     label: 'Código de Vestimenta (Dress Code)',
     descripcion: 'Etiqueta formal o de gala y especificación de colores reservados para la festejada.',
     icono: 'Sliders',
@@ -93,7 +85,7 @@ export const SECCIONES_QUINCE_ROSADO: SeccionMeta[] = [
   },
   {
     id: 'mesaRegalos',
-    numero: 8,
+    numero: 7,
     label: 'Mesa de Regalos / Lluvia de Sobres',
     descripcion: 'Aviso de cofre en recepción, enlaces de wishlist y cuentas Zelle, Venmo, PayPal.',
     icono: 'Gift',
@@ -102,7 +94,7 @@ export const SECCIONES_QUINCE_ROSADO: SeccionMeta[] = [
   },
   {
     id: 'itinerario',
-    numero: 9,
+    numero: 8,
     label: 'El Plan de la Fiesta (Itinerario)',
     descripcion: 'Línea de tiempo vertical con rosas decorativas e hitos de la fiesta (ES / EN).',
     icono: 'Clock',
@@ -110,7 +102,7 @@ export const SECCIONES_QUINCE_ROSADO: SeccionMeta[] = [
   },
   {
     id: 'fotoZapatos2',
-    numero: 10,
+    numero: 9,
     label: 'Foto en Cojín & Aviso "Para Nuestros Niños"',
     descripcion: 'Fotografía en cojín, mensaje de despedida y pautas para pequeños invitados.',
     icono: 'Image',
@@ -118,7 +110,7 @@ export const SECCIONES_QUINCE_ROSADO: SeccionMeta[] = [
   },
   {
     id: 'corteHonor',
-    numero: 11,
+    numero: 10,
     label: 'La Corte de Honor & Padres / Padrinos',
     descripcion: 'Quinceañera, Chambelanes, Damiselas, Damitas de Hojitas, Padres, Padrinos y Agradecimiento.',
     icono: 'Crown',
@@ -126,7 +118,7 @@ export const SECCIONES_QUINCE_ROSADO: SeccionMeta[] = [
   },
   {
     id: 'cuentaRegresiva',
-    numero: 12,
+    numero: 11,
     label: 'Cuenta Regresiva & Calendario',
     descripcion: 'Cronómetro en vivo hacia el evento y calendario mensual con lazo de seda en el día de la fiesta.',
     icono: 'Hourglass',
@@ -134,7 +126,7 @@ export const SECCIONES_QUINCE_ROSADO: SeccionMeta[] = [
   },
   {
     id: 'videoDespedida',
-    numero: 13,
+    numero: 12,
     label: 'Video Embed & Retrato de Despedida',
     descripcion: 'Reproductor de video (YouTube o MP4) y foto final arqueada de despedida.',
     icono: 'Video',
@@ -142,7 +134,7 @@ export const SECCIONES_QUINCE_ROSADO: SeccionMeta[] = [
   },
   {
     id: 'musica',
-    numero: 14,
+    numero: 13,
     label: 'Música de Fondo Ambiental',
     descripcion: 'Reproductor de audio flotante y música instrumental de fondo.',
     icono: 'Music',
