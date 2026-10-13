@@ -2099,6 +2099,106 @@ function NuevoEventoContent() {
                   </div>
                 </div>
 
+                {/* Placa de Fecha y Hora en Medallón (Sección 4 de la Plantilla) */}
+                <div className="p-4 bg-stone-50 border border-stone-200 rounded-2xl space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <span className="text-xs font-bold text-stone-800 block">
+                        Medallón de Fecha y Hora (Sección 4)
+                      </span>
+                      <p className="text-[11px] text-stone-500">
+                        Muestra u oculta la hora en el medallón de fecha (ej. "A LAS 10:38 PM") y personaliza los textos en español e inglés.
+                      </p>
+                    </div>
+                    {/* Switch On/Off Hora */}
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] font-semibold text-stone-600">
+                        Hora: {formData.mostrarFechaPlacaHora !== false ? "Visible" : "Oculta"}
+                      </span>
+                      <button
+                        type="button"
+                        role="switch"
+                        aria-checked={formData.mostrarFechaPlacaHora !== false}
+                        onClick={() => updateField("mostrarFechaPlacaHora", formData.mostrarFechaPlacaHora === false)}
+                        className={`relative inline-flex h-5 w-10 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                          formData.mostrarFechaPlacaHora !== false ? "bg-stone-900" : "bg-stone-300"
+                        }`}
+                      >
+                        <span
+                          className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                            formData.mostrarFechaPlacaHora !== false ? "translate-x-5" : "translate-x-0"
+                          }`}
+                        />
+                      </button>
+                    </div>
+                  </div>
+
+                  {formData.mostrarFechaPlacaHora !== false && (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1 border-t border-stone-200/80">
+                      <div>
+                        <label className="block text-[11px] text-stone-600 mb-1">
+                          🇲🇽 Hora en Medallón (Español)
+                        </label>
+                        <input
+                          type="text"
+                          value={formData.fechaPlacaHora || ""}
+                          onChange={(e) => updateField("fechaPlacaHora", e.target.value)}
+                          placeholder="Ej. A LAS 10:38 PM"
+                          className="w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs"
+                        />
+                      </div>
+                      <div>
+                        <div className="flex items-center justify-between mb-1">
+                          <label className="block text-[11px] text-stone-600">
+                            🇺🇸 Time in Medallion (Inglés)
+                          </label>
+                          <button
+                            type="button"
+                            disabled={translatingField === "fechaPlacaHoraP4"}
+                            onClick={async () => {
+                              const raw = formData.fechaPlacaHora || "";
+                              const fallbackVal = raw
+                                ? raw.replace(/^[Aa]\s+las?\s+/i, "AT ").replace(/^[Aa]\s+/i, "AT ")
+                                : "AT 10:38 PM";
+                              if (!raw.trim()) {
+                                updateField("fechaPlacaHoraEn", fallbackVal);
+                                return;
+                              }
+                              setTranslatingField("fechaPlacaHoraP4");
+                              try {
+                                const aiResult = await translateTextWithAI(raw, "en");
+                                updateField("fechaPlacaHoraEn", aiResult || fallbackVal);
+                              } finally {
+                                setTranslatingField(null);
+                              }
+                            }}
+                            className="text-[10px] text-pink-600 hover:text-pink-700 font-semibold flex items-center gap-1 cursor-pointer disabled:opacity-50"
+                          >
+                            {translatingField === "fechaPlacaHoraP4" ? (
+                              <>
+                                <Loader2 className="w-3 h-3 animate-spin" />
+                                <span>Traduciendo...</span>
+                              </>
+                            ) : (
+                              <>
+                                <Sparkles className="w-3 h-3" />
+                                <span>Traducir con IA</span>
+                              </>
+                            )}
+                          </button>
+                        </div>
+                        <input
+                          type="text"
+                          value={formData.fechaPlacaHoraEn || ""}
+                          onChange={(e) => updateField("fechaPlacaHoraEn", e.target.value)}
+                          placeholder="Ej. AT 10:38 PM"
+                          className="w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs"
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+
                 {/* Contador Regresivo */}
                 <div className="p-4 bg-stone-50 border border-stone-200 rounded-2xl space-y-2">
                   <label className="block text-xs font-bold text-stone-800 mb-1">
