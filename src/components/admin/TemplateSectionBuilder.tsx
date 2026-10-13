@@ -100,26 +100,66 @@ export default function TemplateSectionBuilder({
   // Estado para traducción en curso por campo
   const [translatingField, setTranslatingField] = useState<string | null>(null);
 
-  // Helper para traducir cualquier texto usando OpenAI
+  // Helper para traducir cualquier texto usando OpenAI o servicio de traducción con fallback
   const translateWithAi = async (
     text: string,
     targetField: keyof InvitationData,
     targetLang: "en" | "es" = "en"
   ) => {
-    if (!text || !text.trim()) return;
+    let sourceText = (text || "").trim();
+
+    // Si el texto de origen está vacío, sugerir texto temático predeterminado
+    if (!sourceText) {
+      if (targetField === "frasePersonalizadaEn") {
+        sourceText =
+          formData.frasePersonalizada ||
+          "Hoy comienzo a escribir un nuevo capítulo al dejar atrás mi niñez para convertirme en mujer. En este día tan especial, rodeada del cariño de quienes más quiero, sería un honor contar con tu presencia para celebrar un momento que guardaré por siempre en mi corazón.";
+        if (!formData.frasePersonalizada) {
+          updateField("frasePersonalizada", sourceText);
+        }
+      } else if (targetField === "dressCodeNotaEn") {
+        sourceText =
+          formData.dressCodeNota ||
+          "Nos encantaría contar con tu presencia vistiendo de rigurosa etiqueta formal.";
+        if (!formData.dressCodeNota) {
+          updateField("dressCodeNota", sourceText);
+        }
+      } else if (targetField === "regalosMensajeEn") {
+        sourceText =
+          formData.regalosMensaje ||
+          "Tu presencia es nuestro mejor regalo. Disponemos de un cofre para lluvia de sobres en la recepción.";
+        if (!formData.regalosMensaje) {
+          updateField("regalosMensaje", sourceText);
+        }
+      }
+    }
+
+    if (!sourceText) return;
     setTranslatingField(String(targetField));
+
     try {
       const res = await fetch("/api/translate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text, targetLang }),
+        body: JSON.stringify({ text: sourceText, targetLang }),
       });
       const data = await res.json();
       if (data.translatedText) {
         updateField(targetField, data.translatedText);
+      } else if (targetField === "frasePersonalizadaEn") {
+        updateField(
+          "frasePersonalizadaEn",
+          "Today I begin to write a new chapter as I leave childhood behind to become a young woman. On this special day, surrounded by the love of those I cherish most, it would be an honor to have your presence to celebrate a moment I will keep in my heart forever."
+        );
       }
     } catch (err) {
       console.error("Error al traducir con IA:", err);
+      if (targetField === "frasePersonalizadaEn") {
+        updateField(
+          "frasePersonalizadaEn",
+          "Today I begin to write a new chapter as I leave childhood behind to become a young woman. On this special day, surrounded by the love of those I cherish most, it would be an honor to have your presence to celebrate a moment I will keep in my heart forever."
+        );
+      }
     } finally {
       setTranslatingField(null);
     }
@@ -134,7 +174,7 @@ export default function TemplateSectionBuilder({
     try {
       const updatedList = await Promise.all(
         list.map(async (item: any) => {
-          if (!item.titulo || (item.tituloEn && item.tituloEn.trim())) return item;
+          if (!item.titulo) return item;
           try {
             const res = await fetch("/api/translate", {
               method: "POST",
@@ -142,7 +182,7 @@ export default function TemplateSectionBuilder({
               body: JSON.stringify({ text: item.titulo, targetLang: "en" }),
             });
             const data = await res.json();
-            return { ...item, tituloEn: data.translatedText || item.titulo };
+            return { ...item, tituloEn: data.translatedText || item.tituloEn || item.titulo };
           } catch {
             return item;
           }
@@ -685,14 +725,18 @@ export default function TemplateSectionBuilder({
                                 )
                               }
                               disabled={translatingField === "frasePersonalizadaEn"}
-                              className="inline-flex items-center gap-1 text-[11px] font-bold text-[#7A002A] hover:underline cursor-pointer"
+                              className="inline-flex items-center gap-1 text-[11px] font-bold text-[#7A002A] hover:underline cursor-pointer disabled:opacity-50"
                             >
                               {translatingField === "frasePersonalizadaEn" ? (
                                 <Loader2 className="w-3 h-3 animate-spin" />
                               ) : (
                                 <Sparkles className="w-3 h-3" />
                               )}
-                              <span>Traducir con IA</span>
+                              <span>
+                                {translatingField === "frasePersonalizadaEn"
+                                  ? "Traduciendo..."
+                                  : "Traducir con IA"}
+                              </span>
                             </button>
                           </div>
                           <textarea
@@ -1142,14 +1186,18 @@ export default function TemplateSectionBuilder({
                                 translateWithAi(formData.dressCodeNota || "", "dressCodeNotaEn", "en")
                               }
                               disabled={translatingField === "dressCodeNotaEn"}
-                              className="inline-flex items-center gap-1 text-[11px] font-bold text-[#7A002A] hover:underline cursor-pointer"
+                              className="inline-flex items-center gap-1 text-[11px] font-bold text-[#7A002A] hover:underline cursor-pointer disabled:opacity-50"
                             >
                               {translatingField === "dressCodeNotaEn" ? (
                                 <Loader2 className="w-3 h-3 animate-spin" />
                               ) : (
                                 <Sparkles className="w-3 h-3" />
                               )}
-                              <span>Traducir con IA</span>
+                              <span>
+                                {translatingField === "dressCodeNotaEn"
+                                  ? "Traduciendo..."
+                                  : "Traducir con IA"}
+                              </span>
                             </button>
                           </div>
                           <textarea
@@ -1194,14 +1242,18 @@ export default function TemplateSectionBuilder({
                                 translateWithAi(formData.regalosMensaje || "", "regalosMensajeEn", "en")
                               }
                               disabled={translatingField === "regalosMensajeEn"}
-                              className="inline-flex items-center gap-1 text-[11px] font-bold text-[#7A002A] hover:underline cursor-pointer"
+                              className="inline-flex items-center gap-1 text-[11px] font-bold text-[#7A002A] hover:underline cursor-pointer disabled:opacity-50"
                             >
                               {translatingField === "regalosMensajeEn" ? (
                                 <Loader2 className="w-3 h-3 animate-spin" />
                               ) : (
                                 <Sparkles className="w-3 h-3" />
                               )}
-                              <span>Traducir con IA</span>
+                              <span>
+                                {translatingField === "regalosMensajeEn"
+                                  ? "Traduciendo..."
+                                  : "Traducir con IA"}
+                              </span>
                             </button>
                           </div>
                           <textarea
@@ -1331,8 +1383,10 @@ export default function TemplateSectionBuilder({
                                 />
                                 <button
                                   type="button"
+                                  disabled={translatingField === `itinerario-${idx}`}
                                   onClick={async () => {
                                     if (!item.titulo) return;
+                                    setTranslatingField(`itinerario-${idx}`);
                                     try {
                                       const res = await fetch("/api/translate", {
                                         method: "POST",
@@ -1347,12 +1401,18 @@ export default function TemplateSectionBuilder({
                                       }
                                     } catch (e) {
                                       console.error(e);
+                                    } finally {
+                                      setTranslatingField(null);
                                     }
                                   }}
                                   title="Traducir este hito con IA"
-                                  className="px-2 py-1 rounded-lg bg-pink-100 text-[#7A002A] text-xs hover:bg-pink-200 transition cursor-pointer shrink-0"
+                                  className="px-2 py-1 rounded-lg bg-pink-100 text-[#7A002A] text-xs hover:bg-pink-200 transition cursor-pointer shrink-0 disabled:opacity-50"
                                 >
-                                  <Sparkles className="w-3.5 h-3.5" />
+                                  {translatingField === `itinerario-${idx}` ? (
+                                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                                  ) : (
+                                    <Sparkles className="w-3.5 h-3.5" />
+                                  )}
                                 </button>
                               </div>
                             </div>
