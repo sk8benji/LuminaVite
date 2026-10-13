@@ -391,23 +391,61 @@ export default function QuinceRosadoTemplate({
           />
 
           {/* TÍTULO SUPERIOR INTRO */}
-          <div className="relative z-10 pt-4 sm:pt-6 text-center px-4 shrink-0">
-            <div className="inline-flex items-center justify-center gap-1.5 max-w-full">
-              <h1 className="font-['Great_Vibes',cursive] text-4xl sm:text-5xl md:text-6xl text-[#7A002A] leading-tight whitespace-nowrap truncate drop-shadow-sm">
-                {data.titulo || "Magdalena"}
-              </h1>
-              {/* Rosa 3D en la cabecera */}
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={QUINCE_ROSADO_ASSETS.introRoseFlower}
-                alt="Rosa"
-                className="w-8 h-8 sm:w-10 sm:h-10 object-contain -mt-1 drop-shadow-md shrink-0"
-              />
-            </div>
-            <p className="font-['Cinzel',serif] text-sm sm:text-base tracking-[0.3em] uppercase text-[#7A002A] font-bold mt-0.5">
-              QUINCE
-            </p>
-          </div>
+          {(() => {
+            const rawTitle = (data.titulo || "Magdalena").trim();
+            let line1 = rawTitle;
+            let line2 = "";
+
+            if (rawTitle.includes("\n")) {
+              const parts = rawTitle.split("\n");
+              line1 = parts[0].trim();
+              line2 = parts.slice(1).join(" ").trim();
+            } else {
+              const words = rawTitle.split(/\s+/);
+              if (words.length >= 2) {
+                line1 = words[0];
+                line2 = words.slice(1).join(" ");
+              }
+            }
+
+            return (
+              <div className="relative z-10 pt-4 sm:pt-6 text-center px-4 shrink-0">
+                {line2 ? (
+                  <div className="flex flex-col items-center justify-center">
+                    <h1 className="font-['Great_Vibes',cursive] text-5xl sm:text-6xl md:text-7xl text-[#7A002A] leading-[1.05] drop-shadow-sm text-center">
+                      <span className="block">{line1}</span>
+                      <span className="inline-flex items-center justify-center gap-1.5 mt-0.5">
+                        <span>{line2}</span>
+                        {/* Rosa 3D en la cabecera */}
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={QUINCE_ROSADO_ASSETS.introRoseFlower}
+                          alt="Rosa"
+                          className="w-8 h-8 sm:w-10 sm:h-10 object-contain -mt-1 drop-shadow-md shrink-0"
+                        />
+                      </span>
+                    </h1>
+                  </div>
+                ) : (
+                  <div className="inline-flex items-center justify-center gap-1.5 max-w-full">
+                    <h1 className="font-['Great_Vibes',cursive] text-5xl sm:text-6xl md:text-7xl text-[#7A002A] leading-tight drop-shadow-sm">
+                      {line1}
+                    </h1>
+                    {/* Rosa 3D en la cabecera */}
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={QUINCE_ROSADO_ASSETS.introRoseFlower}
+                      alt="Rosa"
+                      className="w-8 h-8 sm:w-10 sm:h-10 object-contain -mt-1 drop-shadow-md shrink-0"
+                    />
+                  </div>
+                )}
+                <p className="font-['Cinzel',serif] text-sm sm:text-base tracking-[0.32em] uppercase text-[#7A002A] font-bold mt-1">
+                  QUINCE
+                </p>
+              </div>
+            );
+          })()}
 
           {/* SOBRE ROSA 3D CON POLAROIDS Y LAZO (CLICABLE EN TODA EL ÁREA) */}
           <div
