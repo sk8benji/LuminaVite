@@ -9,11 +9,17 @@ export async function createShortMapLink(targetUrl: string): Promise<string> {
   const trimmed = (targetUrl || "").trim();
   if (!trimmed) return "";
 
-  // Base URL de la app asegurando protocolo https://
-  const rawBase =
-    process.env.NEXT_PUBLIC_SITE_URL ||
+  // Base URL de la app asegurando el dominio público oficial clickandlove.app
+  // Los enlaces de mapas en SMS y admin deben apuntar a https://clickandlove.app (nunca a localhost)
+  let rawBase =
     process.env.NEXT_PUBLIC_APP_URL ||
+    process.env.NEXT_PUBLIC_SITE_URL ||
     "https://clickandlove.app";
+
+  if (!rawBase || rawBase.includes("localhost") || rawBase.includes("127.0.0.1")) {
+    rawBase = "https://clickandlove.app";
+  }
+
   const normalizedBase = rawBase.startsWith("http")
     ? rawBase.replace(/\/$/, "")
     : `https://${rawBase.replace(/\/$/, "")}`;

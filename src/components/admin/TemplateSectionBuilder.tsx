@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Sparkles,
   Calendar,
@@ -72,9 +72,54 @@ function MapShortLinkTester({
   const [shortUrl, setShortUrl] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [copied, setCopied] = useState<boolean>(false);
-  const hasIframe = Boolean(rawUrl && rawUrl.includes("<iframe"));
 
-  const handleGenerate = async () => {
+  // Auto-limpieza inmediata de iframes
+  useEffect(() => {
+    if (rawUrl && (rawUrl.includes("<iframe") || rawUrl.includes("<IFRAME")) && onAutoClean) {
+      const cleaned = extractCleanMapUrl(rawUrl, name, address);
+      if (cleaned && cleaned !== rawUrl) {
+        onAutoClean(cleaned);
+      }
+    }
+  }, [rawUrl, name, address, onAutoClean]);
+
+  // Carga automática / sincronización del enlace corto
+  useEffect(() => {
+    if (!rawUrl && !name && !address) {
+      setShortUrl("");
+      return;
+    }
+
+    let isMounted = true;
+    const timer = setTimeout(async () => {
+      try {
+        setLoading(true);
+        const res = await fetch("/api/admin/shorten", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ url: rawUrl, name, address }),
+        });
+        const data = await res.json();
+        if (isMounted && data.shortUrl) {
+          setShortUrl(data.shortUrl);
+          if (data.cleanUrl && onAutoClean && rawUrl && (rawUrl.includes("<iframe") || rawUrl.includes("<IFRAME"))) {
+            onAutoClean(data.cleanUrl);
+          }
+        }
+      } catch (err) {
+        console.warn("Aviso al auto-generar enlace corto:", err);
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    }, 400);
+
+    return () => {
+      isMounted = false;
+      clearTimeout(timer);
+    };
+  }, [rawUrl, name, address, onAutoClean]);
+
+  const handleManualRegenerate = async () => {
     if (!rawUrl && !name && !address) return;
     setLoading(true);
     try {
@@ -86,7 +131,7 @@ function MapShortLinkTester({
       const data = await res.json();
       if (data.shortUrl) {
         setShortUrl(data.shortUrl);
-        if (hasIframe && onAutoClean && data.cleanUrl) {
+        if (data.cleanUrl && onAutoClean && rawUrl && (rawUrl.includes("<iframe") || rawUrl.includes("<IFRAME"))) {
           onAutoClean(data.cleanUrl);
         }
       }
@@ -113,7 +158,7 @@ function MapShortLinkTester({
         </div>
         <button
           type="button"
-          onClick={handleGenerate}
+          onClick={handleManualRegenerate}
           disabled={loading || (!rawUrl && !name && !address)}
           className="px-2.5 py-1 rounded-lg bg-[#7A002A] hover:bg-[#600020] text-white text-xs font-semibold flex items-center gap-1.5 transition disabled:opacity-50 cursor-pointer shadow-2xs"
         >
@@ -125,27 +170,6 @@ function MapShortLinkTester({
           <span>{shortUrl ? "Regenerar Enlace" : "Generar Enlace Corto"}</span>
         </button>
       </div>
-
-      {hasIframe && (
-        <div className="text-[11px] text-amber-800 bg-amber-50/90 border border-amber-200 p-2 rounded-lg flex items-center justify-between gap-2">
-          <div className="flex items-center gap-1.5">
-            <Info className="w-4 h-4 flex-shrink-0 text-amber-600" />
-            <span>Código &lt;iframe&gt; detectado. Puedes extraer el enlace limpio directo:</span>
-          </div>
-          {onAutoClean && (
-            <button
-              type="button"
-              onClick={() => {
-                const cleaned = extractCleanMapUrl(rawUrl, name, address);
-                if (cleaned) onAutoClean(cleaned);
-              }}
-              className="px-2 py-0.5 rounded bg-amber-200 hover:bg-amber-300 text-amber-900 font-bold text-[10px] uppercase transition cursor-pointer"
-            >
-              Extraer URL Limpia
-            </button>
-          )}
-        </div>
-      )}
 
       {shortUrl ? (
         <div className="flex items-center gap-2 bg-emerald-50 border border-emerald-300/80 p-2.5 rounded-lg">
@@ -167,12 +191,14 @@ function MapShortLinkTester({
             onClick={handleCopy}
             className="px-2.5 py-1 rounded-md bg-white hover:bg-gray-100 text-gray-800 border border-gray-300 text-xs font-semibold transition flex-shrink-0 cursor-pointer shadow-2xs"
           >
-            {copied ? "Copiado!" : "Copiar"}
+            {copied ? "¡Copiado!" : "Copiar"}
           </button>
         </div>
       ) : (
         <p className="text-[11px] text-gray-500 italic">
-          Haz clic en &quot;Generar Enlace Corto&quot; para obtener y verificar el enlace que recibirán los invitados en su SMS.
+          {loading
+            ? "Generando enlace corto optimizado..."
+            : "Escribe la dirección, nombre o enlace para generar el link de mapas para SMS."}
         </p>
       )}
     </div>
@@ -223,7 +249,44 @@ export default function TemplateSectionBuilder({
     setExpandedSections(none);
   };
 
-  // Estado para traducción en curso por campo
+  // Auto-limpieza en carga de URLs de mapas si contienen código <iframe> residual
+  useEffect(() => {
+    if (
+      formData.ceremoniaMapUrl &&
+      (formData.ceremoniaMapUrl.includes("<iframe") || formData.ceremoniaMapUrl.includes("<IFRAME"))
+    ) {
+      const cleanMisa = extractCleanMapUrl(
+        formData.ceremoniaMapUrl,
+        formData.ceremoniaNombre,
+        formData.ceremoniaDireccion
+      );
+      if (cleanMisa && cleanMisa !== formData.ceremoniaMapUrl) {
+        updateField("ceremoniaMapUrl", cleanMisa);
+      }
+    }
+    if (
+      formData.recepcionMapUrl &&
+      (formData.recepcionMapUrl.includes("<iframe") || formData.recepcionMapUrl.includes("<IFRAME"))
+    ) {
+      const cleanSalon = extractCleanMapUrl(
+        formData.recepcionMapUrl,
+        formData.recepcionNombre,
+        formData.recepcionDireccion
+      );
+      if (cleanSalon && cleanSalon !== formData.recepcionMapUrl) {
+        updateField("recepcionMapUrl", cleanSalon);
+      }
+    }
+  }, [
+    formData.ceremoniaMapUrl,
+    formData.recepcionMapUrl,
+    formData.ceremoniaNombre,
+    formData.ceremoniaDireccion,
+    formData.recepcionNombre,
+    formData.recepcionDireccion,
+    updateField,
+  ]);
+
   const [translatingField, setTranslatingField] = useState<string | null>(null);
 
   // Helper para traducir cualquier texto usando OpenAI o servicio de traducción con fallback
@@ -1057,11 +1120,25 @@ export default function TemplateSectionBuilder({
                               value={formData.ceremoniaMapUrl || ""}
                               onChange={(e) => {
                                 const val = e.target.value;
-                                if (val.includes("<iframe")) {
+                                if (val.includes("<iframe") || val.includes("<IFRAME")) {
                                   const cleaned = extractCleanMapUrl(val, formData.ceremoniaNombre, formData.ceremoniaDireccion);
                                   updateField("ceremoniaMapUrl", cleaned || val);
                                 } else {
                                   updateField("ceremoniaMapUrl", val);
+                                }
+                              }}
+                              onPaste={(e) => {
+                                const text = e.clipboardData.getData("text");
+                                if (text.includes("<iframe") || text.includes("<IFRAME")) {
+                                  e.preventDefault();
+                                  const cleaned = extractCleanMapUrl(text, formData.ceremoniaNombre, formData.ceremoniaDireccion);
+                                  updateField("ceremoniaMapUrl", cleaned || text);
+                                }
+                              }}
+                              onBlur={() => {
+                                if (formData.ceremoniaMapUrl && (formData.ceremoniaMapUrl.includes("<iframe") || formData.ceremoniaMapUrl.includes("<IFRAME"))) {
+                                  const cleaned = extractCleanMapUrl(formData.ceremoniaMapUrl, formData.ceremoniaNombre, formData.ceremoniaDireccion);
+                                  if (cleaned) updateField("ceremoniaMapUrl", cleaned);
                                 }
                               }}
                               placeholder="https://maps.app.goo.gl/... o código <iframe>"
@@ -1118,11 +1195,25 @@ export default function TemplateSectionBuilder({
                               value={formData.recepcionMapUrl || ""}
                               onChange={(e) => {
                                 const val = e.target.value;
-                                if (val.includes("<iframe")) {
+                                if (val.includes("<iframe") || val.includes("<IFRAME")) {
                                   const cleaned = extractCleanMapUrl(val, formData.recepcionNombre, formData.recepcionDireccion);
                                   updateField("recepcionMapUrl", cleaned || val);
                                 } else {
                                   updateField("recepcionMapUrl", val);
+                                }
+                              }}
+                              onPaste={(e) => {
+                                const text = e.clipboardData.getData("text");
+                                if (text.includes("<iframe") || text.includes("<IFRAME")) {
+                                  e.preventDefault();
+                                  const cleaned = extractCleanMapUrl(text, formData.recepcionNombre, formData.recepcionDireccion);
+                                  updateField("recepcionMapUrl", cleaned || text);
+                                }
+                              }}
+                              onBlur={() => {
+                                if (formData.recepcionMapUrl && (formData.recepcionMapUrl.includes("<iframe") || formData.recepcionMapUrl.includes("<IFRAME"))) {
+                                  const cleaned = extractCleanMapUrl(formData.recepcionMapUrl, formData.recepcionNombre, formData.recepcionDireccion);
+                                  if (cleaned) updateField("recepcionMapUrl", cleaned);
                                 }
                               }}
                               placeholder="https://maps.app.goo.gl/... o código <iframe>"

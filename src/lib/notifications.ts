@@ -67,7 +67,7 @@ export async function sendHostNotificationEmail(params: HostEmailParams): Promis
     pases,
     totalPasesConfirmados,
     aforoTotal,
-    siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
+    siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://clickandlove.app",
   } = params;
 
   const magicLink = panelToken
