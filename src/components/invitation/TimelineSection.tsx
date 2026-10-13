@@ -16,6 +16,7 @@ import { TemplateConfig } from "@/lib/templates";
 export interface TimelineItem {
   hora: string;
   titulo: string;
+  tituloEn?: string;
   descripcion?: string;
   tipoIcono?: string;
 }

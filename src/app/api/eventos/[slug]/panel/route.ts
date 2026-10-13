@@ -72,6 +72,7 @@ export async function GET(
         maxPasesPorInvitado: evento.maxPasesPorInvitado,
         modalidadRsvp: (evento as any).modalidadRsvp || "HIBRIDO",
         permitirConfirmacionTelefono: (evento as any).permitirConfirmacionTelefono !== false,
+        mostrarMesaRegalos: (evento as any).mostrarMesaRegalos !== false,
         telefonoWhatsappRsvp: evento.telefonoWhatsappRsvp || "",
       },
       estadisticas: {
@@ -144,7 +145,7 @@ export async function PATCH(
     }
 
     const body = await req.json();
-    const { modalidadRsvp, permitirConfirmacionTelefono, telefonoWhatsappRsvp } = body;
+    const { modalidadRsvp, permitirConfirmacionTelefono, telefonoWhatsappRsvp, mostrarMesaRegalos } = body;
 
     const validModalities = ["ESTRICTO", "HIBRIDO", "ABIERTO"];
     const updateData: any = {};
@@ -161,6 +162,10 @@ export async function PATCH(
 
     if (permitirConfirmacionTelefono !== undefined) {
       updateData.permitirConfirmacionTelefono = Boolean(permitirConfirmacionTelefono);
+    }
+
+    if (mostrarMesaRegalos !== undefined) {
+      updateData.mostrarMesaRegalos = Boolean(mostrarMesaRegalos);
     }
 
     if (telefonoWhatsappRsvp !== undefined) {
@@ -184,8 +189,9 @@ export async function PATCH(
       success: true,
       modalidadRsvp: updated.modalidadRsvp,
       permitirConfirmacionTelefono: (updated as any).permitirConfirmacionTelefono !== false,
+      mostrarMesaRegalos: (updated as any).mostrarMesaRegalos !== false,
       telefonoWhatsappRsvp: updated.telefonoWhatsappRsvp,
-      message: "Configuración de RSVP actualizada correctamente.",
+      message: "Configuración actualizada correctamente.",
     });
   } catch (error: any) {
     console.error("Error al actualizar modalidad de RSVP en el panel:", error);

@@ -58,6 +58,8 @@ export interface InvitationData {
   dressCodeEtiqueta?: string | null;
   dressCodeColoresReservados?: string | null;
   regalosMensaje?: string | null;
+  regalosMensajeEn?: string | null;
+  mostrarMesaRegalos?: boolean;
   regalosZelle?: string | null;
   regalosCashApp?: string | null;
   rsvpFechaLimite?: string | null;

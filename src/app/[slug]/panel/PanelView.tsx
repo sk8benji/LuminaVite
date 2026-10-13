@@ -27,6 +27,7 @@ import {
   Shield,
   Phone,
   PhoneCall,
+  Gift,
 } from "lucide-react";
 
 export interface GuestItem {
@@ -51,6 +52,7 @@ export interface PanelData {
     maxPasesPorInvitado?: number;
     modalidadRsvp?: "ESTRICTO" | "HIBRIDO" | "ABIERTO" | string;
     permitirConfirmacionTelefono?: boolean;
+    mostrarMesaRegalos?: boolean;
     telefonoWhatsappRsvp?: string;
   };
   estadisticas: {
@@ -170,6 +172,39 @@ export default function PanelView({
       setPermitirConfirmacionTelefono(!nextVal);
     } finally {
       setIsUpdatingPhoneSettings(false);
+    }
+  };
+
+  const [mostrarMesaRegalos, setMostrarMesaRegalos] = useState<boolean>(
+    initialData?.evento?.mostrarMesaRegalos !== false
+  );
+  const [isUpdatingGiftSettings, setIsUpdatingGiftSettings] = useState(false);
+  const [giftSettingsSuccess, setGiftSettingsSuccess] = useState(false);
+
+  const handleToggleMesaRegalos = async () => {
+    if (isUpdatingGiftSettings) return;
+    const nextVal = !mostrarMesaRegalos;
+    setMostrarMesaRegalos(nextVal);
+    setIsUpdatingGiftSettings(true);
+
+    try {
+      const res = await fetch(`/api/eventos/${encodeURIComponent(slug)}/panel?key=${encodeURIComponent(panelKey)}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ mostrarMesaRegalos: nextVal }),
+      });
+
+      if (!res.ok) {
+        throw new Error("No se pudo actualizar la opción de mesa de regalos");
+      }
+
+      setGiftSettingsSuccess(true);
+      setTimeout(() => setGiftSettingsSuccess(false), 2500);
+    } catch (err) {
+      console.error("Error al actualizar mesa de regalos:", err);
+      setMostrarMesaRegalos(!nextVal);
+    } finally {
+      setIsUpdatingGiftSettings(false);
     }
   };
 
@@ -504,9 +539,9 @@ export default function PanelView({
         {/* ============================================================== */}
         {/* CONFIGURACIÓN DE RSVP DE LA ANFITRIONA (MODALIDAD + TELÉFONO)  */}
         {/* ============================================================== */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
           {/* Modalidad de RSVP */}
-          <div className="lg:col-span-2 bg-white rounded-2xl border border-[#E8E3D9] p-4 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-3">
+          <div className="md:col-span-2 lg:col-span-2 bg-white rounded-2xl border border-[#E8E3D9] p-4 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-3">
             <div className="space-y-0.5">
               <div className="flex items-center gap-2">
                 <span className="text-sm">⚙️</span>
@@ -624,6 +659,58 @@ export default function PanelView({
                 <span
                   className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
                     permitirConfirmacionTelefono ? "translate-x-5" : "translate-x-0"
+                  }`}
+                />
+              </button>
+            </div>
+          </div>
+
+          {/* Switch: Mesa de Regalos / Lluvia de Sobres */}
+          <div className="bg-white rounded-2xl border border-[#E8E3D9] p-4 shadow-xs flex flex-col justify-between gap-2.5">
+            <div>
+              <div className="flex items-center justify-between mb-1">
+                <div className="flex items-center gap-1.5">
+                  <Gift className="w-3.5 h-3.5 text-[#C5A059]" />
+                  <h3 className="text-xs font-bold text-[#2C1F1B] uppercase tracking-wider">
+                    Mesa de Regalos
+                  </h3>
+                </div>
+                {isUpdatingGiftSettings && (
+                  <span className="inline-flex items-center gap-1 text-[10px] text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded-full font-medium">
+                    <Loader2 className="w-2.5 h-2.5 animate-spin" /> Guardando...
+                  </span>
+                )}
+                {giftSettingsSuccess && (
+                  <span className="inline-flex items-center gap-1 text-[10px] text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded-full font-bold animate-fade-in">
+                    <Check className="w-2.5 h-2.5" /> En vivo
+                  </span>
+                )}
+              </div>
+              <p className="text-[11px] text-[#8C8077] leading-snug">
+                {mostrarMesaRegalos
+                  ? "Tarjeta de regalos, cofre y pagos digitales visible en la invitación."
+                  : "Tarjeta de mesa de regalos oculta para los invitados."}
+              </p>
+            </div>
+
+            <div className="flex items-center justify-between pt-2 border-t border-[#F2ECE4]">
+              <span className="text-[10px] font-semibold text-[#8C8077]">
+                {mostrarMesaRegalos ? "Visible" : "Oculta"}
+              </span>
+
+              <button
+                type="button"
+                role="switch"
+                aria-checked={mostrarMesaRegalos}
+                onClick={handleToggleMesaRegalos}
+                disabled={isUpdatingGiftSettings}
+                className={`relative inline-flex h-5 w-10 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                  mostrarMesaRegalos ? "bg-[#2C1F1B]" : "bg-stone-300"
+                }`}
+              >
+                <span
+                  className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                    mostrarMesaRegalos ? "translate-x-5" : "translate-x-0"
                   }`}
                 />
               </button>

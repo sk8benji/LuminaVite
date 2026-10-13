@@ -127,6 +127,8 @@ function NuevoEventoContent() {
     configPlantilla: {},
     modalidadRsvp: "HIBRIDO",
     permitirConfirmacionTelefono: true,
+    mostrarMesaRegalos: true,
+    regalosMensajeEn: "",
     idiomaDefault: "es",
   });
 
@@ -137,6 +139,7 @@ function NuevoEventoContent() {
       tipoEvento: "QUINCEANERA",
       idiomaDefault: "es",
       permitirConfirmacionTelefono: true,
+      mostrarMesaRegalos: true,
       titulo: "Magdalena",
       subtitulo: "La Quinceañera",
       frasePersonalizada:
@@ -192,6 +195,7 @@ function NuevoEventoContent() {
       tipoEvento: "QUINCEANERA",
       idiomaDefault: "bilingual",
       permitirConfirmacionTelefono: true,
+      mostrarMesaRegalos: true,
       titulo: "Valeria Sofía",
       subtitulo: "My Quinceañera",
       frasePersonalizada:
@@ -241,6 +245,7 @@ function NuevoEventoContent() {
       tipoEvento: "QUINCEANERA",
       idiomaDefault: "bilingual",
       permitirConfirmacionTelefono: true,
+      mostrarMesaRegalos: true,
       titulo: "Isabella",
       subtitulo: "My Sweet Fifteen",
       frasePersonalizada:
@@ -468,6 +473,30 @@ function NuevoEventoContent() {
       fraseEn: `Please confirm before ${monthEn} ${deadlineDay}`,
       fechaLimiteRsvp: `${deadlineDay} de ${monthEs.toLowerCase()}`,
     };
+  };
+
+  // Helper para sugerir traducción rápida de hitos clásicos de quinceañera/boda
+  const translateItinerarioTitle = (text: string): string => {
+    if (!text) return "";
+    const lower = text.toLowerCase().trim();
+    if (lower.includes("ceremonia") || lower.includes("iglesia") || lower.includes("misa")) {
+      if (lower.includes("san josé") || lower.includes("san jose")) {
+        return "Religious Ceremony at St. Joseph the Worker Church";
+      }
+      return "Religious Ceremony";
+    }
+    if (lower.includes("llegada") && lower.includes("invitados")) return "Guest Arrival";
+    if (lower.includes("llegada") && lower.includes("salón")) return "Arrival at Banquet Hall";
+    if (lower.includes("llegada") && lower.includes("carruaje")) return "Carriage Arrival";
+    if (lower.includes("cena") && lower.includes("brindis")) return "Dinner & Toast";
+    if (lower.includes("cena") || lower.includes("comida")) return "Dinner Service";
+    if (lower.includes("vals") && (lower.includes("fiesta") || lower.includes("baile"))) return "Waltz & Celebration";
+    if (lower.includes("vals") && lower.includes("padre")) return "Father & Daughter Waltz";
+    if (lower.includes("vals")) return "The Waltz";
+    if (lower.includes("padrinos")) return "Court of Honor Presentation";
+    if (lower.includes("bailar") || lower.includes("baile") || lower.includes("fiesta")) return "Party Time & Open Dance";
+    if (lower.includes("pastel")) return "Cake Cutting";
+    return text;
   };
 
   // Manejar cambio en los días de anticipación RSVP
@@ -1872,56 +1901,97 @@ function NuevoEventoContent() {
                     {((formData.itinerarioJson as any[]) || []).map((item, idx) => (
                       <div
                         key={idx}
-                        className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 p-2.5 bg-white border border-stone-200 rounded-xl text-xs"
+                        className="p-3 bg-white border border-stone-200 rounded-xl space-y-2 text-xs"
                       >
-                        <input
-                          type="text"
-                          value={item.hora || ""}
-                          onChange={(e) => {
-                            const updated = [...(formData.itinerarioJson as any[])];
-                            updated[idx] = { ...updated[idx], hora: e.target.value };
-                            updateField("itinerarioJson", updated);
-                          }}
-                          placeholder="Hora (ej. 4:30 PM)"
-                          className="w-full sm:w-36 px-2.5 py-1.5 border border-stone-200 rounded-lg text-xs"
-                        />
-                        <input
-                          type="text"
-                          value={item.titulo || ""}
-                          onChange={(e) => {
-                            const updated = [...(formData.itinerarioJson as any[])];
-                            updated[idx] = { ...updated[idx], titulo: e.target.value };
-                            updateField("itinerarioJson", updated);
-                          }}
-                          placeholder="Título del hito (ej. Grand entrance)"
-                          className="flex-1 px-2.5 py-1.5 border border-stone-200 rounded-lg text-xs"
-                        />
-                        <select
-                          value={item.tipoIcono || "welcome"}
-                          onChange={(e) => {
-                            const updated = [...(formData.itinerarioJson as any[])];
-                            updated[idx] = { ...updated[idx], tipoIcono: e.target.value };
-                            updateField("itinerarioJson", updated);
-                          }}
-                          className="px-2.5 py-1.5 border border-stone-200 rounded-lg text-xs bg-stone-50"
-                        >
-                          <option value="welcome">Bienvenida</option>
-                          <option value="entrance">Entrada</option>
-                          <option value="dinner">Cena</option>
-                          <option value="waltz">Vals</option>
-                          <option value="disco">Baile</option>
-                          <option value="cake">Pastel</option>
-                        </select>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            const updated = (formData.itinerarioJson as any[]).filter((_, i) => i !== idx);
-                            updateField("itinerarioJson", updated);
-                          }}
-                          className="px-2.5 py-1.5 text-rose-600 hover:bg-rose-50 rounded-lg font-bold transition text-xs text-center"
-                        >
-                          ✕
-                        </button>
+                        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                          <input
+                            type="text"
+                            value={item.hora || ""}
+                            onChange={(e) => {
+                              const updated = [...(formData.itinerarioJson as any[])];
+                              updated[idx] = { ...updated[idx], hora: e.target.value };
+                              updateField("itinerarioJson", updated);
+                            }}
+                            placeholder="Hora (ej. 4:30 PM)"
+                            className="w-full sm:w-32 px-2.5 py-1.5 border border-stone-200 rounded-lg text-xs"
+                          />
+                          <div className="relative flex-1">
+                            <input
+                              type="text"
+                              value={item.titulo || ""}
+                              onChange={(e) => {
+                                const updated = [...(formData.itinerarioJson as any[])];
+                                updated[idx] = { ...updated[idx], titulo: e.target.value };
+                                updateField("itinerarioJson", updated);
+                              }}
+                              placeholder="Título en español (ej. Llegada De Los Invitados)"
+                              className="w-full pl-8 pr-2.5 py-1.5 border border-stone-200 rounded-lg text-xs"
+                            />
+                            <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-xs pointer-events-none">
+                              🇲🇽
+                            </span>
+                          </div>
+                          <select
+                            value={item.tipoIcono || "welcome"}
+                            onChange={(e) => {
+                              const updated = [...(formData.itinerarioJson as any[])];
+                              updated[idx] = { ...updated[idx], tipoIcono: e.target.value };
+                              updateField("itinerarioJson", updated);
+                            }}
+                            className="px-2.5 py-1.5 border border-stone-200 rounded-lg text-xs bg-stone-50"
+                          >
+                            <option value="welcome">Bienvenida</option>
+                            <option value="entrance">Entrada</option>
+                            <option value="dinner">Cena</option>
+                            <option value="waltz">Vals</option>
+                            <option value="disco">Baile</option>
+                            <option value="cake">Pastel</option>
+                          </select>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const updated = (formData.itinerarioJson as any[]).filter((_, i) => i !== idx);
+                              updateField("itinerarioJson", updated);
+                            }}
+                            className="px-2.5 py-1.5 text-rose-600 hover:bg-rose-50 rounded-lg font-bold transition text-xs text-center cursor-pointer"
+                            title="Eliminar hito"
+                          >
+                            ✕
+                          </button>
+                        </div>
+
+                        {/* Campo de traducción al inglés con botón de auto-traducción */}
+                        <div className="flex items-center gap-2 pt-1 border-t border-stone-100">
+                          <div className="relative flex-1">
+                            <input
+                              type="text"
+                              value={item.tituloEn || ""}
+                              onChange={(e) => {
+                                const updated = [...(formData.itinerarioJson as any[])];
+                                updated[idx] = { ...updated[idx], tituloEn: e.target.value };
+                                updateField("itinerarioJson", updated);
+                              }}
+                              placeholder="Título en inglés (ej. Guest Arrival)"
+                              className="w-full pl-8 pr-2.5 py-1 bg-stone-50/70 border border-stone-200 rounded-lg text-xs"
+                            />
+                            <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-xs pointer-events-none">
+                              🇺🇸
+                            </span>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const suggestion = translateItinerarioTitle(item.titulo || "");
+                              const updated = [...(formData.itinerarioJson as any[])];
+                              updated[idx] = { ...updated[idx], tituloEn: suggestion };
+                              updateField("itinerarioJson", updated);
+                            }}
+                            className="px-2.5 py-1 bg-stone-100 hover:bg-stone-200 text-stone-700 rounded-lg text-[11px] font-semibold transition cursor-pointer flex items-center gap-1 shrink-0"
+                            title="Sugerir traducción automática al inglés"
+                          >
+                            ✨ Traducir
+                          </button>
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -1962,39 +2032,102 @@ function NuevoEventoContent() {
 
                 {/* Lluvia de Sobres & Cuentas Digitales */}
                 <div className="p-4 bg-stone-50 border border-stone-200 rounded-2xl space-y-3">
-                  <span className="text-xs font-bold text-stone-800 block">Lluvia de Sobres & Cuentas Digitales (Sección 9)</span>
-                  <div>
-                    <label className="block text-[11px] text-stone-600 mb-1">Mensaje del Cofre / Regalos</label>
-                    <textarea
-                      rows={2}
-                      value={formData.regalosMensaje || ""}
-                      onChange={(e) => updateField("regalosMensaje", e.target.value)}
-                      placeholder="Tu presencia es nuestro mayor regalo. Disponemos de un cofre en la recepción..."
-                      className="w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs resize-none"
-                    />
-                  </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="flex items-center justify-between">
                     <div>
-                      <label className="block text-[11px] text-stone-600 mb-1">Cuenta o Teléfono Zelle (Opcional)</label>
-                      <input
-                        type="text"
-                        value={formData.regalosZelle || ""}
-                        onChange={(e) => updateField("regalosZelle", e.target.value)}
-                        placeholder="Ej. 18181234567 o valeria.xv@example.com"
-                        className="w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs"
-                      />
+                      <span className="text-xs font-bold text-stone-800 block">
+                        Lluvia de Sobres & Cuentas Digitales (Sección 9)
+                      </span>
+                      <p className="text-[11px] text-stone-500">
+                        Configura la tarjeta de mesa de regalos, cofre y métodos de pago digital.
+                      </p>
                     </div>
-                    <div>
-                      <label className="block text-[11px] text-stone-600 mb-1">Cash App / Cashtag (Opcional)</label>
-                      <input
-                        type="text"
-                        value={formData.regalosCashApp || ""}
-                        onChange={(e) => updateField("regalosCashApp", e.target.value)}
-                        placeholder="Ej. $ValeriaXV"
-                        className="w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs"
-                      />
+                    {/* Switch On/Off */}
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] font-semibold text-stone-600">
+                        {formData.mostrarMesaRegalos !== false ? "Visible" : "Oculta"}
+                      </span>
+                      <button
+                        type="button"
+                        role="switch"
+                        aria-checked={formData.mostrarMesaRegalos !== false}
+                        onClick={() => updateField("mostrarMesaRegalos", formData.mostrarMesaRegalos === false)}
+                        className={`relative inline-flex h-5 w-10 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                          formData.mostrarMesaRegalos !== false ? "bg-stone-900" : "bg-stone-300"
+                        }`}
+                      >
+                        <span
+                          className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                            formData.mostrarMesaRegalos !== false ? "translate-x-5" : "translate-x-0"
+                          }`}
+                        />
+                      </button>
                     </div>
                   </div>
+
+                  {formData.mostrarMesaRegalos !== false && (
+                    <>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                          <label className="block text-[11px] text-stone-600 mb-1">
+                            🇲🇽 Mensaje del Cofre / Regalos (Español)
+                          </label>
+                          <textarea
+                            rows={2}
+                            value={formData.regalosMensaje || ""}
+                            onChange={(e) => updateField("regalosMensaje", e.target.value)}
+                            placeholder="Tu presencia es nuestro mayor regalo. Disponemos de un cofre en la recepción..."
+                            className="w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs resize-none"
+                          />
+                        </div>
+                        <div>
+                          <div className="flex items-center justify-between mb-1">
+                            <label className="block text-[11px] text-stone-600">
+                              🇺🇸 Mensaje en Inglés (English)
+                            </label>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                updateField("regalosMensajeEn", "Your presence is our greatest gift. A gift box will be available at the reception.");
+                              }}
+                              className="text-[10px] text-stone-500 hover:text-stone-900 underline cursor-pointer"
+                            >
+                              Sugerir default
+                            </button>
+                          </div>
+                          <textarea
+                            rows={2}
+                            value={formData.regalosMensajeEn || ""}
+                            onChange={(e) => updateField("regalosMensajeEn", e.target.value)}
+                            placeholder="Your presence is our greatest gift. A gift box will be available at the reception..."
+                            className="w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs resize-none"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                          <label className="block text-[11px] text-stone-600 mb-1">Cuenta o Teléfono Zelle (Opcional)</label>
+                          <input
+                            type="text"
+                            value={formData.regalosZelle || ""}
+                            onChange={(e) => updateField("regalosZelle", e.target.value)}
+                            placeholder="Ej. 18181234567 o valeria.xv@example.com"
+                            className="w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-[11px] text-stone-600 mb-1">Cash App / Cashtag (Opcional)</label>
+                          <input
+                            type="text"
+                            value={formData.regalosCashApp || ""}
+                            onChange={(e) => updateField("regalosCashApp", e.target.value)}
+                            placeholder="Ej. $ValeriaXV"
+                            className="w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs"
+                          />
+                        </div>
+                      </div>
+                    </>
+                  )}
                 </div>
 
                 {/* Corte de Honor & Padrinos */}

@@ -329,14 +329,14 @@ export default function QuinceRosadoTemplate({
     data.itinerarioJson && data.itinerarioJson.length > 0
       ? data.itinerarioJson
       : [
-          { hora: "11:00 am", titulo: "Ceremonia de la iglesia", tipoIcono: "church" },
-          { hora: "12:00 am", titulo: "Llegada en carruaje", tipoIcono: "carriage" },
-          { hora: "1:00 pm", titulo: "Llegada al salón", tipoIcono: "hall" },
-          { hora: "3:00 pm", titulo: "Se servira la comida", tipoIcono: "dinner" },
-          { hora: "4:00 pm", titulo: "Vals, Baile Sorpresa", tipoIcono: "waltz" },
-          { hora: "5:00 pm", titulo: "Vals de padre e hija", tipoIcono: "father_dance" },
-          { hora: "6:00 pm", titulo: "Padrinos de honor", tipoIcono: "crown" },
-          { hora: "7:00 pm", titulo: "Hora de bailar", tipoIcono: "party" },
+          { hora: "11:00 am", titulo: "Ceremonia de la iglesia", tituloEn: "Church Ceremony", tipoIcono: "church" },
+          { hora: "12:00 am", titulo: "Llegada en carruaje", tituloEn: "Carriage Arrival", tipoIcono: "carriage" },
+          { hora: "1:00 pm", titulo: "Llegada al salón", tituloEn: "Banquet Hall Arrival", tipoIcono: "hall" },
+          { hora: "3:00 pm", titulo: "Se servira la comida", tituloEn: "Dinner Service", tipoIcono: "dinner" },
+          { hora: "4:00 pm", titulo: "Vals, Baile Sorpresa", tituloEn: "Waltz & Surprise Dance", tipoIcono: "waltz" },
+          { hora: "5:00 pm", titulo: "Vals de padre e hija", tituloEn: "Father & Daughter Waltz", tipoIcono: "father_dance" },
+          { hora: "6:00 pm", titulo: "Padrinos de honor", tituloEn: "Court of Honor Presentation", tipoIcono: "crown" },
+          { hora: "7:00 pm", titulo: "Hora de bailar", tituloEn: "Party Time & Open Dance", tipoIcono: "party" },
         ];
 
   return (
@@ -898,46 +898,59 @@ export default function QuinceRosadoTemplate({
             </div>
 
             {/* Mesa de Regalos */}
-            <div className="bg-white p-6 rounded-3xl shadow-xl border border-pink-100 text-center">
-              <h3 className="font-['Great_Vibes',cursive] text-4xl text-[#7A002A] mb-1">
-                {isEn ? "Gift Registry" : "Lista de Regalos"}
-              </h3>
-              <p className="text-xs leading-relaxed text-[#722927] mb-4">
-                {data.regalosMensaje || (isEn
-                  ? "Celebrating with you is the greatest gift of all. For those wishing to bring a contribution or detail, it will be received with love."
-                  : "Celebrar contigo es el mejor regalo de todos. Para quienes deseen tener un detalle o traer una contribución, será recibida con mucho cariño.")}
-              </p>
+            {data.mostrarMesaRegalos !== false && (
+              <div className="bg-white p-6 rounded-3xl shadow-xl border border-pink-100 text-center">
+                <h3 className="font-['Great_Vibes',cursive] text-4xl text-[#7A002A] mb-1">
+                  {isEn ? "Gift Registry" : "Lista de Regalos"}
+                </h3>
+                <p className="text-xs leading-relaxed text-[#722927] mb-4">
+                  {(() => {
+                    if (isEn) {
+                      if (data.regalosMensajeEn) return data.regalosMensajeEn;
+                      const msg = (data.regalosMensaje || "").toLowerCase();
+                      if (msg.includes("cofre") || msg.includes("mayor regalo")) {
+                        return "Your presence is our greatest gift. A gift box will be available at the reception.";
+                      }
+                      if (msg.includes("celebrar contigo") || msg.includes("contribución")) {
+                        return "Celebrating with you is the greatest gift of all. For those wishing to bring a contribution or detail, it will be received with love.";
+                      }
+                      return data.regalosMensaje || "Your presence is our greatest gift. A gift box will be available at the reception.";
+                    }
+                    return data.regalosMensaje || "Tu presencia es nuestro mayor regalo. Disponemos de un cofre en la recepción.";
+                  })()}
+                </p>
 
-              {/* Botones de Métodos de Contribución */}
-              <div className="grid grid-cols-3 gap-2 mt-4">
-                <div className="p-2.5 rounded-xl bg-pink-50 border border-pink-200 text-center">
-                  <span className="font-['Cinzel',serif] text-[10px] font-bold text-[#7A002A]">
-                    PAYPAL
-                  </span>
+                {/* Botones de Métodos de Contribución */}
+                <div className="grid grid-cols-3 gap-2 mt-4">
+                  <div className="p-2.5 rounded-xl bg-pink-50 border border-pink-200 text-center">
+                    <span className="font-['Cinzel',serif] text-[10px] font-bold text-[#7A002A]">
+                      PAYPAL
+                    </span>
+                  </div>
+                  <div className="p-2.5 rounded-xl bg-pink-50 border border-pink-200 text-center">
+                    <span className="font-['Cinzel',serif] text-[10px] font-bold text-[#7A002A]">
+                      VENMO
+                    </span>
+                  </div>
+                  <div className="p-2.5 rounded-xl bg-pink-50 border border-pink-200 text-center">
+                    <span className="font-['Cinzel',serif] text-[10px] font-bold text-[#7A002A]">
+                      ZELLE
+                    </span>
+                  </div>
                 </div>
-                <div className="p-2.5 rounded-xl bg-pink-50 border border-pink-200 text-center">
-                  <span className="font-['Cinzel',serif] text-[10px] font-bold text-[#7A002A]">
-                    VENMO
-                  </span>
-                </div>
-                <div className="p-2.5 rounded-xl bg-pink-50 border border-pink-200 text-center">
-                  <span className="font-['Cinzel',serif] text-[10px] font-bold text-[#7A002A]">
-                    ZELLE
-                  </span>
-                </div>
+
+                {data.wishlistUrl && (
+                  <a
+                    href={data.wishlistUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-5 inline-block bg-[#7A002A] text-white px-6 py-2 rounded-full font-['Cinzel',serif] text-xs tracking-wider uppercase font-bold shadow hover:bg-[#600021] transition"
+                  >
+                    {isEn ? "VIEW FULL REGISTRY" : "VER LISTA COMPLETA"}
+                  </a>
+                )}
               </div>
-
-              {data.wishlistUrl && (
-                <a
-                  href={data.wishlistUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-5 inline-block bg-[#7A002A] text-white px-6 py-2 rounded-full font-['Cinzel',serif] text-xs tracking-wider uppercase font-bold shadow hover:bg-[#600021] transition"
-                >
-                  {isEn ? "VIEW FULL REGISTRY" : "VER LISTA COMPLETA"}
-                </a>
-              )}
-            </div>
+            )}
           </div>
         </section>
 
@@ -958,7 +971,7 @@ export default function QuinceRosadoTemplate({
 
             {/* Línea de Tiempo Vertical con Rosas */}
             <div className="relative border-l-2 border-pink-200 ml-6 pl-6 space-y-7 text-left">
-              {itinerario.map((item: { hora: string; titulo: string }, idx: number) => (
+              {itinerario.map((item: { hora: string; titulo: string; tituloEn?: string }, idx: number) => (
                 <div key={idx} className="relative group">
                   {/* Rosa en cada hito */}
                   <div className="absolute -left-[35px] top-0 w-5 h-5 flex items-center justify-center">
@@ -974,7 +987,28 @@ export default function QuinceRosadoTemplate({
                     {item.hora}
                   </span>
                   <p className="font-['Libre_Baskerville',serif] text-sm text-[#7A002A] font-bold mt-0.5">
-                    {item.titulo}
+                    {(() => {
+                      if (!isEn) return item.titulo;
+                      if (item.tituloEn) return item.tituloEn;
+                      const lower = (item.titulo || "").toLowerCase().trim();
+                      if (lower.includes("ceremonia") || lower.includes("iglesia") || lower.includes("misa")) {
+                        if (lower.includes("san josé") || lower.includes("san jose")) {
+                          return "Religious Ceremony at St. Joseph the Worker Church";
+                        }
+                        return "Religious Ceremony";
+                      }
+                      if (lower.includes("llegada") && lower.includes("invitados")) return "Guest Arrival";
+                      if (lower.includes("llegada") && lower.includes("salón")) return "Arrival at Banquet Hall";
+                      if (lower.includes("llegada") && lower.includes("carruaje")) return "Carriage Arrival";
+                      if (lower.includes("cena") && lower.includes("brindis")) return "Dinner & Toast";
+                      if (lower.includes("cena") || lower.includes("comida")) return "Dinner Service";
+                      if (lower.includes("vals") && (lower.includes("fiesta") || lower.includes("baile"))) return "Waltz & Celebration";
+                      if (lower.includes("vals") && lower.includes("padre")) return "Father & Daughter Waltz";
+                      if (lower.includes("vals")) return "The Waltz";
+                      if (lower.includes("padrinos")) return "Court of Honor Presentation";
+                      if (lower.includes("bailar") || lower.includes("baile") || lower.includes("fiesta")) return "Party Time & Open Dance";
+                      return item.titulo;
+                    })()}
                   </p>
                 </div>
               ))}

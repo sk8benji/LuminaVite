@@ -318,6 +318,35 @@ export const EVENT_MAYDELIN_MENDEZ: InvitationData = {
   coloresReservados: ["#F3C5D0", "#7A002A"],
   idiomaDefault: "bilingual",
   permitirConfirmacionTelefono: true,
+  mostrarMesaRegalos: true,
+  regalosMensaje: "Tu presencia es nuestro mayor regalo. Disponemos de un cofre en la recepción.",
+  regalosMensajeEn: "Your presence is our greatest gift. A gift box will be available at the reception.",
+  itinerarioJson: [
+    {
+      hora: "2:00 PM",
+      titulo: "Ceremonia Religiosa en La Iglesia de San José Obrero",
+      tituloEn: "Religious Ceremony at St. Joseph the Worker Church",
+      tipoIcono: "church",
+    },
+    {
+      hora: "5:00 PM",
+      titulo: "Llegada De Los Invitados",
+      tituloEn: "Guest Arrival",
+      tipoIcono: "welcome",
+    },
+    {
+      hora: "6:00 PM",
+      titulo: "Cena y Brindis",
+      tituloEn: "Dinner & Toast",
+      tipoIcono: "dinner",
+    },
+    {
+      hora: "8:00 PM",
+      titulo: "Vals y Fiesta",
+      tituloEn: "Waltz & Celebration",
+      tipoIcono: "waltz",
+    },
+  ],
 };
 
 async function getEventoData(rawSlug: string): Promise<InvitationData | null> {
@@ -368,6 +397,8 @@ async function getEventoData(rawSlug: string): Promise<InvitationData | null> {
       dressCodeEtiqueta: (dbEvento as any).dressCodeEtiqueta,
       dressCodeColoresReservados: (dbEvento as any).dressCodeColoresReservados,
       regalosMensaje: (dbEvento as any).regalosMensaje,
+      regalosMensajeEn: (dbEvento as any).regalosMensajeEn,
+      mostrarMesaRegalos: (dbEvento as any).mostrarMesaRegalos !== false,
       regalosZelle: (dbEvento as any).regalosZelle,
       regalosCashApp: (dbEvento as any).regalosCashApp,
       rsvpFechaLimite: (dbEvento as any).rsvpFechaLimite,
