@@ -289,7 +289,10 @@ export default function DynamicRsvpForm({
     let text = `Confirmación de asistencia para ${eventTitle}:\n`;
     text += `Invitado: ${confirmedDetails.name}\n`;
     if (confirmedDetails.status === "attending") {
-      text += `Pases Confirmados: ${confirmedDetails.confirmed_pax} de ${confirmedDetails.max_pax}`;
+      text +=
+        confirmedDetails.confirmed_pax === confirmedDetails.max_pax
+          ? `Pases Confirmados: ${confirmedDetails.confirmed_pax}`
+          : `Confirmó ${confirmedDetails.confirmed_pax} de ${confirmedDetails.max_pax} pases`;
     } else {
       text += `Estado: No podré asistir`;
       if (notes) text += `\nMensaje: ${notes}`;
@@ -673,11 +676,17 @@ export default function DynamicRsvpForm({
           </div>
 
           {confirmedDetails.status === "attending" ? (
-            <div className="p-3.5 rounded-2xl bg-emerald-50/80 border border-emerald-200 text-emerald-900 text-xs">
-              <p className="font-bold">
-                {isEn ? `Confirmed Passes: ${confirmedDetails.confirmed_pax} of ${confirmedDetails.max_pax}` : `Pases confirmados: ${confirmedDetails.confirmed_pax} de ${confirmedDetails.max_pax}`}
+            <div className="rounded-2xl bg-emerald-50/90 border border-emerald-200 p-3.5 text-center text-emerald-900">
+              <p className="font-semibold text-sm">
+                {isEn
+                  ? confirmedDetails.confirmed_pax === confirmedDetails.max_pax
+                    ? `Confirmed passes: ${confirmedDetails.confirmed_pax}`
+                    : `You confirmed ${confirmedDetails.confirmed_pax} of your ${confirmedDetails.max_pax} passes`
+                  : confirmedDetails.confirmed_pax === confirmedDetails.max_pax
+                    ? `Pases confirmados: ${confirmedDetails.confirmed_pax}`
+                    : `Confirmaste ${confirmedDetails.confirmed_pax} de tus ${confirmedDetails.max_pax} pases`}
               </p>
-              <p className="text-[11px] text-emerald-700 mt-0.5">
+              <p className="text-xs text-emerald-600 mt-0.5">
                 {isEn ? "We can't wait to celebrate with you!" : "¡Te esperamos con muchísima emoción!"}
               </p>
             </div>
