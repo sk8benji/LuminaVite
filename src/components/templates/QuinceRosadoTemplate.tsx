@@ -883,19 +883,34 @@ export default function QuinceRosadoTemplate({
             </div>
 
             {/* Código de Vestimenta */}
-            <div className="bg-white p-6 rounded-3xl shadow-xl border border-pink-100 text-center mb-8">
-              <h3 className="font-['Cinzel',serif] text-sm tracking-[0.25em] uppercase text-[#7A002A] font-bold mb-2">
-                {isEn ? "DRESS CODE" : "CÓDIGO DE VESTIMENTA"}
-              </h3>
-              <h4 className="font-['Cinzel',serif] text-xs tracking-widest uppercase text-[#B74F5F] font-bold mb-3">
-                {data.dressCodeTitulo || (isEn ? "ELEGANT & FORMAL" : "ELEGANTE Y FORMAL")}
-              </h4>
-              <p className="text-xs leading-relaxed text-[#722927]">
-                {data.dressCodeNota || (isEn
-                  ? "Join us in this wonderful celebration dressed in your best attire. Guests are encouraged to wear elegant formal clothes. Please NO pink or white attire, keeping the celebration timeless and reserved for the quinceañera."
-                  : "Acompáñanos en esta hermosa celebración y luce tu mejor atuendo para impresionar a la quinceañera. Se invita a los invitados a vestir elegantemente. Por favor, NO usar atuendos ROSADOS ni BLANCOS, creando así una celebración tan hermosa y atemporal como este día tan especial.")}
-              </p>
-            </div>
+            {data.mostrarDressCode !== false && (
+              <div className="bg-white p-6 rounded-3xl shadow-xl border border-pink-100 text-center mb-8">
+                <h3 className="font-['Cinzel',serif] text-sm tracking-[0.25em] uppercase text-[#7A002A] font-bold mb-2">
+                  {isEn ? "DRESS CODE" : "CÓDIGO DE VESTIMENTA"}
+                </h3>
+                <h4 className="font-['Cinzel',serif] text-xs tracking-widest uppercase text-[#B74F5F] font-bold mb-3">
+                  {isEn
+                    ? (data.dressCodeTituloEn || (data.dressCodeTitulo === "ELEGANTE Y FORMAL" || !data.dressCodeTitulo ? "ELEGANT & FORMAL" : data.dressCodeTitulo))
+                    : (data.dressCodeTitulo || "ELEGANTE Y FORMAL")}
+                </h4>
+                <p className="text-xs leading-relaxed text-[#722927]">
+                  {(() => {
+                    if (isEn) {
+                      if (data.dressCodeNotaEn) return data.dressCodeNotaEn;
+                      const note = (data.dressCodeNota || "").toLowerCase();
+                      if (note.includes("rosa") || note.includes("rosado") || note.includes("quinceañera")) {
+                        return "Blush pink tones reserved exclusively for the quinceañera. Guests are encouraged to wear elegant formal attire.";
+                      }
+                      if (note.includes("azul")) {
+                        return "Blue tones reserved exclusively for the quinceañera. Guests are encouraged to wear elegant formal attire.";
+                      }
+                      return data.dressCodeNota || "Join us in this wonderful celebration dressed in your best attire. Guests are encouraged to wear elegant formal clothes.";
+                    }
+                    return data.dressCodeNota || "Acompáñanos en esta hermosa celebración y luce tu mejor atuendo para impresionar a la quinceañera. Se invita a los invitados a vestir elegantemente. Por favor, NO usar atuendos ROSADOS ni BLANCOS, creando así una celebración tan hermosa y atemporal como este día tan especial.";
+                  })()}
+                </p>
+              </div>
+            )}
 
             {/* Mesa de Regalos */}
             {data.mostrarMesaRegalos !== false && (

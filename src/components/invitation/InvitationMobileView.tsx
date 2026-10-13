@@ -67,8 +67,11 @@ export interface InvitationData {
   emailOrganizador?: string | null;
   aforoTotal?: number;
 
+  mostrarDressCode?: boolean;
   dressCodeTitulo?: string | null;
+  dressCodeTituloEn?: string | null;
   dressCodeNota?: string | null;
+  dressCodeNotaEn?: string | null;
   coloresReservados?: string[];
 
   celebrationGuideline?: string | null;

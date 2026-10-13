@@ -140,6 +140,7 @@ function NuevoEventoContent() {
       idiomaDefault: "es",
       permitirConfirmacionTelefono: true,
       mostrarMesaRegalos: true,
+      mostrarDressCode: true,
       titulo: "Magdalena",
       subtitulo: "La Quinceañera",
       frasePersonalizada:
@@ -153,7 +154,9 @@ function NuevoEventoContent() {
       fotoCierreUrl: "/assets/template-quince-rosado/4046b1a7e943f6186c4bd79419897578.png",
       musicaUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
       dressCodeTitulo: "Elegante y Formal",
+      dressCodeTituloEn: "Elegant & Formal",
       dressCodeNota: "Se invita a los invitados a vestir elegantemente. Por favor, NO usar atuendos ROSADOS ni BLANCOS.",
+      dressCodeNotaEn: "Blush pink tones reserved exclusively for the quinceañera. Guests are encouraged to wear elegant formal attire.",
       ceremoniaNombre: "St. Mary's Church",
       ceremoniaDireccion: "Any City, Any Street, AZ 12345",
       ceremoniaMapUrl: "https://maps.google.com/?q=St.+Mary's+Church",
@@ -196,6 +199,7 @@ function NuevoEventoContent() {
       idiomaDefault: "bilingual",
       permitirConfirmacionTelefono: true,
       mostrarMesaRegalos: true,
+      mostrarDressCode: true,
       titulo: "Valeria Sofía",
       subtitulo: "My Quinceañera",
       frasePersonalizada:
@@ -208,7 +212,9 @@ function NuevoEventoContent() {
       musicaUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
       textoDisco: "Click to Play Music",
       dressCodeTitulo: "Formal Elegante",
+      dressCodeTituloEn: "Elegant & Formal",
       dressCodeNota: "Agradecemos reservar los tonos azul celeste y blanco para la quinceañera.",
+      dressCodeNotaEn: "Blue and white tones reserved exclusively for the quinceañera.",
       dressCodeEtiqueta: "Formal & Rigurosa Etiqueta",
       dressCodeColoresReservados: "Tonos azul celeste y blanco reservados exclusivamente para la quinceañera",
       countdownEncabezado: "Faltan sólo...",
@@ -1999,35 +2005,120 @@ function NuevoEventoContent() {
 
                 {/* Dress Code */}
                 <div className="p-4 bg-stone-50 border border-stone-200 rounded-2xl space-y-3">
-                  <span className="text-xs font-bold text-stone-800 block">Código de Vestimenta (Sección 7)</span>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="flex items-center justify-between">
                     <div>
-                      <label className="block text-[11px] text-stone-600 mb-1">Etiqueta Formal</label>
-                      <input
-                        type="text"
-                        value={formData.dressCodeEtiqueta || formData.dressCodeTitulo || ""}
-                        onChange={(e) => {
-                          updateField("dressCodeEtiqueta", e.target.value);
-                          updateField("dressCodeTitulo", e.target.value);
-                        }}
-                        placeholder="Ej. Formal & Rigurosa Etiqueta"
-                        className="w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs"
-                      />
+                      <span className="text-xs font-bold text-stone-800 block">Código de Vestimenta (Sección 7)</span>
+                      <p className="text-[11px] text-stone-500">
+                        Indica la etiqueta y colores reservados en español e inglés. Puedes ocultar la sección si no la necesitas.
+                      </p>
                     </div>
-                    <div>
-                      <label className="block text-[11px] text-stone-600 mb-1">Colores Reservados / Pautas</label>
-                      <input
-                        type="text"
-                        value={formData.dressCodeColoresReservados || formData.dressCodeNota || ""}
-                        onChange={(e) => {
-                          updateField("dressCodeColoresReservados", e.target.value);
-                          updateField("dressCodeNota", e.target.value);
-                        }}
-                        placeholder="Ej. Tonos azul celeste y blanco reservados para la quinceañera"
-                        className="w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs"
-                      />
+                    {/* Switch On/Off */}
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] font-semibold text-stone-600">
+                        {formData.mostrarDressCode !== false ? "Visible" : "Oculta"}
+                      </span>
+                      <button
+                        type="button"
+                        role="switch"
+                        aria-checked={formData.mostrarDressCode !== false}
+                        onClick={() => updateField("mostrarDressCode", formData.mostrarDressCode === false)}
+                        className={`relative inline-flex h-5 w-10 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                          formData.mostrarDressCode !== false ? "bg-stone-900" : "bg-stone-300"
+                        }`}
+                      >
+                        <span
+                          className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                            formData.mostrarDressCode !== false ? "translate-x-5" : "translate-x-0"
+                          }`}
+                        />
+                      </button>
                     </div>
                   </div>
+
+                  {formData.mostrarDressCode !== false && (
+                    <>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                          <label className="block text-[11px] text-stone-600 mb-1">🇲🇽 Etiqueta Formal (Español)</label>
+                          <input
+                            type="text"
+                            value={formData.dressCodeEtiqueta || formData.dressCodeTitulo || ""}
+                            onChange={(e) => {
+                              updateField("dressCodeEtiqueta", e.target.value);
+                              updateField("dressCodeTitulo", e.target.value);
+                            }}
+                            placeholder="Ej. Formal & Rigurosa Etiqueta"
+                            className="w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs"
+                          />
+                        </div>
+                        <div>
+                          <div className="flex items-center justify-between mb-1">
+                            <label className="block text-[11px] text-stone-600">🇺🇸 Attire / Dress Code (Inglés)</label>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                updateField("dressCodeTituloEn", "Elegant & Formal");
+                              }}
+                              className="text-[10px] text-pink-600 hover:text-pink-700 font-semibold"
+                            >
+                              Sugerir EN
+                            </button>
+                          </div>
+                          <input
+                            type="text"
+                            value={formData.dressCodeTituloEn || ""}
+                            onChange={(e) => updateField("dressCodeTituloEn", e.target.value)}
+                            placeholder="Ej. Elegant & Formal"
+                            className="w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                        <div>
+                          <label className="block text-[11px] text-stone-600 mb-1">🇲🇽 Colores Reservados / Pautas (Español)</label>
+                          <input
+                            type="text"
+                            value={formData.dressCodeColoresReservados || formData.dressCodeNota || ""}
+                            onChange={(e) => {
+                              updateField("dressCodeColoresReservados", e.target.value);
+                              updateField("dressCodeNota", e.target.value);
+                            }}
+                            placeholder="Ej. Tonos rosa reservados exclusivamente para la quinceañera"
+                            className="w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs"
+                          />
+                        </div>
+                        <div>
+                          <div className="flex items-center justify-between mb-1">
+                            <label className="block text-[11px] text-stone-600">🇺🇸 Reserved Colors / Guidelines (Inglés)</label>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const currentNote = (formData.dressCodeColoresReservados || formData.dressCodeNota || "").toLowerCase();
+                                if (currentNote.includes("rosa") || currentNote.includes("rosado")) {
+                                  updateField("dressCodeNotaEn", "Blush pink tones reserved exclusively for the quinceañera. Guests are encouraged to wear elegant formal attire.");
+                                } else if (currentNote.includes("azul")) {
+                                  updateField("dressCodeNotaEn", "Blue tones reserved exclusively for the quinceañera. Guests are encouraged to wear elegant formal attire.");
+                                } else {
+                                  updateField("dressCodeNotaEn", "Reserved colors for the guest of honor. Guests are encouraged to wear elegant formal attire.");
+                                }
+                              }}
+                              className="text-[10px] text-pink-600 hover:text-pink-700 font-semibold"
+                            >
+                              Sugerir EN
+                            </button>
+                          </div>
+                          <input
+                            type="text"
+                            value={formData.dressCodeNotaEn || ""}
+                            onChange={(e) => updateField("dressCodeNotaEn", e.target.value)}
+                            placeholder="Ej. Blush pink tones reserved exclusively for the quinceañera"
+                            className="w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs"
+                          />
+                        </div>
+                      </div>
+                    </>
+                  )}
                 </div>
 
                 {/* Lluvia de Sobres & Cuentas Digitales */}

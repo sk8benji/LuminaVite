@@ -144,8 +144,11 @@ model Evento {
   mensajeDespedida   String?         // Mensaje final o pie de página
 
   // Código de Vestimenta & Pautas
+  mostrarDressCode   Boolean?        @default(true) // Switch para mostrar/ocultar sección código de vestimenta
   dressCodeTitulo    String?         // Ej: "BRING YOUR DANCING SHOES - DRESS CODE: Elegant & Formal"
+  dressCodeTituloEn  String?         // Ej: "Formal & Elegant Attire"
   dressCodeNota      String?         // Ej: "Guests are encouraged to wear shades of white/formal"
+  dressCodeNotaEn    String?         // Ej: "Blush pink tones reserved exclusively for the quinceañera"
   coloresReservados  String[]        @default([]) // Hex codes: ["#FFD1DC", "#FFFFFF"]
   celebrationGuideline String?       // Pautas (ej: niños/asientos en vals)
 
