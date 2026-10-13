@@ -29,6 +29,7 @@ interface DynamicRsvpFormProps {
   slug: string;
   eventTitle: string;
   eventDate?: string | Date;
+  ceremoniaMapUrl?: string | null;
   recepcionMapUrl?: string | null;
   telefonoWhatsapp?: string | null;
   primaryColor?: string; // Ej: "#7A002A" para rosa o "#C5A059" para dorado
@@ -46,6 +47,7 @@ export default function DynamicRsvpForm({
   slug,
   eventTitle,
   eventDate,
+  ceremoniaMapUrl,
   recepcionMapUrl,
   telefonoWhatsapp,
   primaryColor = "#7A002A",
@@ -703,7 +705,28 @@ export default function DynamicRsvpForm({
 
           {/* Botones directos requeridos por la auditoría */}
           <div className="space-y-2 pt-2">
-            {recepcionMapUrl && (
+            {ceremoniaMapUrl && recepcionMapUrl ? (
+              <>
+                <a
+                  href={ceremoniaMapUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full py-2.5 px-3 rounded-xl bg-stone-50 hover:bg-stone-100 border border-stone-200 text-stone-800 text-xs font-semibold flex items-center justify-center gap-2 transition"
+                >
+                  <MapPin className="w-3.5 h-3.5 text-stone-600" />
+                  <span>{isEn ? "⛪ Church / Ceremony Directions" : "⛪ Cómo llegar a la Misa"}</span>
+                </a>
+                <a
+                  href={recepcionMapUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full py-2.5 px-3 rounded-xl bg-stone-50 hover:bg-stone-100 border border-stone-200 text-stone-800 text-xs font-semibold flex items-center justify-center gap-2 transition"
+                >
+                  <MapPin className="w-3.5 h-3.5 text-stone-600" />
+                  <span>{isEn ? "🏰 Reception / Hall Directions" : "🏰 Cómo llegar al Salón"}</span>
+                </a>
+              </>
+            ) : recepcionMapUrl ? (
               <a
                 href={recepcionMapUrl}
                 target="_blank"
@@ -713,7 +736,17 @@ export default function DynamicRsvpForm({
                 <MapPin className="w-3.5 h-3.5 text-stone-600" />
                 <span>{isEn ? "Directions (Google Maps / Waze)" : "Cómo llegar (Google Maps / Waze)"}</span>
               </a>
-            )}
+            ) : ceremoniaMapUrl ? (
+              <a
+                href={ceremoniaMapUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full py-2.5 px-3 rounded-xl bg-stone-50 hover:bg-stone-100 border border-stone-200 text-stone-800 text-xs font-semibold flex items-center justify-center gap-2 transition"
+              >
+                <MapPin className="w-3.5 h-3.5 text-stone-600" />
+                <span>{isEn ? "Ceremony Directions (Google Maps)" : "Cómo llegar a la Ceremonia"}</span>
+              </a>
+            ) : null}
 
             <a
               href={getGoogleCalendarUrl()}

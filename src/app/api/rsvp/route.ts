@@ -249,8 +249,12 @@ export async function POST(req: NextRequest) {
         nombreInvitado: rsvp.nombreInvitado,
         pases: requestedPasses,
         eventoTitulo: evento.titulo,
-        recepcionNombre: evento.recepcionNombre,
-        recepcionMapUrl: evento.recepcionMapUrl,
+        ceremoniaNombre: (evento as any).ceremoniaNombre || undefined,
+        ceremoniaDireccion: (evento as any).ceremoniaDireccion || undefined,
+        ceremoniaMapUrl: (evento as any).ceremoniaMapUrl || undefined,
+        recepcionNombre: evento.recepcionNombre || undefined,
+        recepcionDireccion: (evento as any).recepcionDireccion || undefined,
+        recepcionMapUrl: evento.recepcionMapUrl || undefined,
       }).catch((err) => console.error("Error SMS Twilio en segundo plano:", err));
     } else if (!planConSms && cleanEmail && isAttending) {
       const siteUrl = req.headers.get("origin") || process.env.NEXT_PUBLIC_SITE_URL || "https://clickandlove.app";

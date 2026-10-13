@@ -180,7 +180,16 @@ export async function ensurePostgresTables(): Promise<boolean> {
           "eventoId" TEXT REFERENCES "Evento"("id") ON DELETE SET NULL,
           "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
           "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
-      );`
+      );`,
+
+      `CREATE TABLE IF NOT EXISTS "ShortLink" (
+          "id" TEXT NOT NULL PRIMARY KEY,
+          "code" TEXT UNIQUE NOT NULL,
+          "url" TEXT NOT NULL,
+          "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
+      );`,
+
+      `CREATE INDEX IF NOT EXISTS "ShortLink_code_idx" ON "ShortLink"("code");`
     ];
 
     for (const sql of sqlStatements) {

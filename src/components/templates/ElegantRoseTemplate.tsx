@@ -1082,6 +1082,7 @@ export default function ElegantRoseTemplate({
                 slug={data.slug || "isabella-xv"}
                 eventTitle={data.titulo}
                 eventDate={data.fechaEvento}
+                ceremoniaMapUrl={data.ceremoniaMapUrl}
                 recepcionMapUrl={data.recepcionMapUrl}
                 telefonoWhatsapp={data.telefonoWhatsappRsvp}
                 primaryColor="#8B4513"

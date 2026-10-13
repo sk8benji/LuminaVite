@@ -27,7 +27,10 @@ import {
   Eye,
   EyeOff,
   Image as ImageIcon,
+  ExternalLink,
+  Link2,
 } from "lucide-react";
+import { extractCleanMapUrl } from "@/lib/mapsUrlCleaner";
 import { InvitationData } from "@/components/invitation/InvitationMobileView";
 import { SECCIONES_QUINCE_ROSADO, SeccionId, isSectionEnabledInEvent } from "@/config/templateSections";
 
@@ -51,6 +54,129 @@ interface TemplateSectionBuilderProps {
   uploadingField: string | null;
   formatFormalDate: (dateInput: string | Date, lang?: string) => any;
   computeRsvpPhrases: (eventDateInput: string | Date, dias: number) => any;
+}
+
+function MapShortLinkTester({
+  rawUrl,
+  name,
+  address,
+  label,
+  onAutoClean,
+}: {
+  rawUrl?: string | null;
+  name?: string | null;
+  address?: string | null;
+  label: string;
+  onAutoClean?: (cleaned: string) => void;
+}) {
+  const [shortUrl, setShortUrl] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+  const [copied, setCopied] = useState<boolean>(false);
+  const hasIframe = Boolean(rawUrl && rawUrl.includes("<iframe"));
+
+  const handleGenerate = async () => {
+    if (!rawUrl && !name && !address) return;
+    setLoading(true);
+    try {
+      const res = await fetch("/api/admin/shorten", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url: rawUrl, name, address }),
+      });
+      const data = await res.json();
+      if (data.shortUrl) {
+        setShortUrl(data.shortUrl);
+        if (hasIframe && onAutoClean && data.cleanUrl) {
+          onAutoClean(data.cleanUrl);
+        }
+      }
+    } catch (err) {
+      console.error("Error al generar short link:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCopy = () => {
+    if (!shortUrl) return;
+    navigator.clipboard.writeText(shortUrl);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <div className="mt-3 p-3 rounded-xl bg-white/95 border border-pink-200/90 shadow-2xs space-y-2.5">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <div className="flex items-center gap-1.5 text-xs font-bold text-[#7A002A]">
+          <Link2 className="w-3.5 h-3.5 text-[#C5A059]" />
+          <span>Enlace Corto para SMS ({label})</span>
+        </div>
+        <button
+          type="button"
+          onClick={handleGenerate}
+          disabled={loading || (!rawUrl && !name && !address)}
+          className="px-2.5 py-1 rounded-lg bg-[#7A002A] hover:bg-[#600020] text-white text-xs font-semibold flex items-center gap-1.5 transition disabled:opacity-50 cursor-pointer shadow-2xs"
+        >
+          {loading ? (
+            <Loader2 className="w-3.5 h-3.5 animate-spin" />
+          ) : (
+            <Sparkles className="w-3.5 h-3.5 text-amber-200" />
+          )}
+          <span>{shortUrl ? "Regenerar Enlace" : "Generar Enlace Corto"}</span>
+        </button>
+      </div>
+
+      {hasIframe && (
+        <div className="text-[11px] text-amber-800 bg-amber-50/90 border border-amber-200 p-2 rounded-lg flex items-center justify-between gap-2">
+          <div className="flex items-center gap-1.5">
+            <Info className="w-4 h-4 flex-shrink-0 text-amber-600" />
+            <span>Código &lt;iframe&gt; detectado. Puedes extraer el enlace limpio directo:</span>
+          </div>
+          {onAutoClean && (
+            <button
+              type="button"
+              onClick={() => {
+                const cleaned = extractCleanMapUrl(rawUrl, name, address);
+                if (cleaned) onAutoClean(cleaned);
+              }}
+              className="px-2 py-0.5 rounded bg-amber-200 hover:bg-amber-300 text-amber-900 font-bold text-[10px] uppercase transition cursor-pointer"
+            >
+              Extraer URL Limpia
+            </button>
+          )}
+        </div>
+      )}
+
+      {shortUrl ? (
+        <div className="flex items-center gap-2 bg-emerald-50 border border-emerald-300/80 p-2.5 rounded-lg">
+          <span className="font-mono text-emerald-900 text-xs font-medium truncate flex-1 select-all">
+            {shortUrl}
+          </span>
+          <a
+            href={shortUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-2.5 py-1 rounded-md bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold flex items-center gap-1 transition shadow-2xs flex-shrink-0"
+            title="Probar en Google Maps"
+          >
+            <span>Probar Enlace</span>
+            <ExternalLink className="w-3.5 h-3.5" />
+          </a>
+          <button
+            type="button"
+            onClick={handleCopy}
+            className="px-2.5 py-1 rounded-md bg-white hover:bg-gray-100 text-gray-800 border border-gray-300 text-xs font-semibold transition flex-shrink-0 cursor-pointer shadow-2xs"
+          >
+            {copied ? "Copiado!" : "Copiar"}
+          </button>
+        </div>
+      ) : (
+        <p className="text-[11px] text-gray-500 italic">
+          Haz clic en &quot;Generar Enlace Corto&quot; para obtener y verificar el enlace que recibirán los invitados en su SMS.
+        </p>
+      )}
+    </div>
+  );
 }
 
 export default function TemplateSectionBuilder({
@@ -922,16 +1048,31 @@ export default function TemplateSectionBuilder({
                               className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm text-gray-900"
                             />
                           </div>
-                          <div>
+                          <div className="sm:col-span-3">
                             <label className="block text-[11px] font-semibold text-gray-600 mb-1">
                               Enlace de Google Maps
                             </label>
                             <input
                               type="text"
                               value={formData.ceremoniaMapUrl || ""}
-                              onChange={(e) => updateField("ceremoniaMapUrl", e.target.value)}
-                              placeholder="https://maps.app.goo.gl/..."
+                              onChange={(e) => {
+                                const val = e.target.value;
+                                if (val.includes("<iframe")) {
+                                  const cleaned = extractCleanMapUrl(val, formData.ceremoniaNombre, formData.ceremoniaDireccion);
+                                  updateField("ceremoniaMapUrl", cleaned || val);
+                                } else {
+                                  updateField("ceremoniaMapUrl", val);
+                                }
+                              }}
+                              placeholder="https://maps.app.goo.gl/... o código <iframe>"
                               className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm text-gray-900"
+                            />
+                            <MapShortLinkTester
+                              rawUrl={formData.ceremoniaMapUrl}
+                              name={formData.ceremoniaNombre}
+                              address={formData.ceremoniaDireccion}
+                              label="Misa / Ceremonia"
+                              onAutoClean={(cleaned) => updateField("ceremoniaMapUrl", cleaned)}
                             />
                           </div>
                         </div>
@@ -943,7 +1084,7 @@ export default function TemplateSectionBuilder({
                           <MapPin className="w-4 h-4" />
                           <span>Recepción & Fiesta (Salón)</span>
                         </h4>
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                           <div>
                             <label className="block text-[11px] font-semibold text-gray-600 mb-1">
                               Nombre del Salón
@@ -968,16 +1109,31 @@ export default function TemplateSectionBuilder({
                               className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm text-gray-900"
                             />
                           </div>
-                          <div>
+                          <div className="sm:col-span-2">
                             <label className="block text-[11px] font-semibold text-gray-600 mb-1">
                               Enlace de Google Maps
                             </label>
                             <input
                               type="text"
                               value={formData.recepcionMapUrl || ""}
-                              onChange={(e) => updateField("recepcionMapUrl", e.target.value)}
-                              placeholder="https://maps.app.goo.gl/..."
+                              onChange={(e) => {
+                                const val = e.target.value;
+                                if (val.includes("<iframe")) {
+                                  const cleaned = extractCleanMapUrl(val, formData.recepcionNombre, formData.recepcionDireccion);
+                                  updateField("recepcionMapUrl", cleaned || val);
+                                } else {
+                                  updateField("recepcionMapUrl", val);
+                                }
+                              }}
+                              placeholder="https://maps.app.goo.gl/... o código <iframe>"
                               className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm text-gray-900"
+                            />
+                            <MapShortLinkTester
+                              rawUrl={formData.recepcionMapUrl}
+                              name={formData.recepcionNombre}
+                              address={formData.recepcionDireccion}
+                              label="Salón / Recepción"
+                              onAutoClean={(cleaned) => updateField("recepcionMapUrl", cleaned)}
                             />
                           </div>
                         </div>

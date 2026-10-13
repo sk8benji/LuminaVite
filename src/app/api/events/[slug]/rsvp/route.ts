@@ -5,6 +5,7 @@ import { ensureGuestsTable } from "@/lib/guests-table";
 import {
   sendHostNotificationEmail,
   sendGuestConfirmationEmail,
+  sendGuestConfirmationSms,
 } from "@/lib/notifications";
 import twilio from "twilio";
 
@@ -220,30 +221,18 @@ export async function POST(req: NextRequest, context: RouteContext) {
     const planConSms = !evento.ordenesCompra?.length || !paquete || (!paquete.includes("basic") && !paquete.includes("digital_basic"));
 
     if (planConSms && status === "attending" && cleanPhone) {
-      try {
-        const accountSid = process.env.TWILIO_ACCOUNT_SID;
-        const authToken = process.env.TWILIO_AUTH_TOKEN;
-        const fromNumber = process.env.TWILIO_PHONE_NUMBER;
-
-        if (accountSid && authToken && fromNumber) {
-          const formattedTo = formatE164(cleanPhone);
-          if (formattedTo) {
-            const client = twilio(accountSid, authToken);
-            const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://clickandlove.app";
-            const eventUrl = `${siteUrl}/${cleanSlug}`;
-            const eventTitle = evento.titulo || "el evento";
-            const bodyText = `¡Confirmación registrada! Hola ${updatedGuest.name}, tus ${finalConfirmedPax} ${finalConfirmedPax === 1 ? "pase está asegurado" : "pases están asegurados"} para ${eventTitle}. Revisa el mapa y detalles aquí: ${eventUrl}`;
-
-            await client.messages.create({
-              body: bodyText,
-              from: fromNumber,
-              to: formattedTo,
-            });
-          }
-        }
-      } catch (twilioErr) {
-        console.warn("Aviso: No se pudo enviar SMS de confirmación con Twilio:", twilioErr);
-      }
+      sendGuestConfirmationSms({
+        telefono: cleanPhone,
+        nombreInvitado: updatedGuest.name,
+        pases: finalConfirmedPax,
+        eventoTitulo: evento.titulo,
+        ceremoniaNombre: (evento as any).ceremoniaNombre || undefined,
+        ceremoniaDireccion: (evento as any).ceremoniaDireccion || undefined,
+        ceremoniaMapUrl: (evento as any).ceremoniaMapUrl || undefined,
+        recepcionNombre: evento.recepcionNombre || undefined,
+        recepcionDireccion: (evento as any).recepcionDireccion || undefined,
+        recepcionMapUrl: evento.recepcionMapUrl || undefined,
+      }).catch((err) => console.error("Error SMS Twilio en segundo plano:", err));
     } else if (!planConSms && status === "attending" && cleanEmail) {
       const siteUrl = req.headers.get("origin") || process.env.NEXT_PUBLIC_SITE_URL || "https://clickandlove.app";
       sendGuestConfirmationEmail({

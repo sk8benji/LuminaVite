@@ -1,5 +1,7 @@
 import { SESClient, SendEmailCommand } from "@aws-sdk/client-ses";
 import { validateAndFormatPhone } from "@/lib/phoneValidator";
+import { extractCleanMapUrl } from "@/lib/mapsUrlCleaner";
+import { createShortMapLink } from "@/lib/shortener";
 
 // Configuración de AWS SES
 const sesClient = new SESClient({
@@ -29,8 +31,12 @@ export interface GuestSmsParams {
   nombreInvitado: string;
   pases: number;
   eventoTitulo: string;
-  recepcionNombre?: string;
-  recepcionMapUrl?: string;
+  ceremoniaNombre?: string | null;
+  ceremoniaDireccion?: string | null;
+  ceremoniaMapUrl?: string | null;
+  recepcionNombre?: string | null;
+  recepcionDireccion?: string | null;
+  recepcionMapUrl?: string | null;
 }
 
 export interface GuestEmailParams {
@@ -213,6 +219,79 @@ export async function sendHostNotificationEmail(params: HostEmailParams): Promis
 }
 
 /**
+ * Sanitiza texto al juego de caracteres estándar GSM-7.
+ * Remueve tildes y caracteres no ASCII para asegurar que Twilio
+ * envíe el SMS en un único segmento económico (hasta 160 caracteres).
+ */
+export function sanitizeGsmText(text: string): string {
+  if (!text) return "";
+  return text
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "") // Elimina acentos: á->a, é->e, etc.
+    .replace(/[¡¿]/g, "")           // Elimina signos de exclamación/interrogación invertidos
+    .replace(/[^\x20-\x7E\n]/g, "") // Filtra caracteres fuera del rango ASCII imprimible
+    .trim();
+}
+
+/**
+ * Construye el cuerpo del SMS de confirmación optimizado y acortado con links limpios.
+ */
+export async function buildRsvpSmsBody(params: {
+  nombreInvitado: string;
+  pases: number;
+  eventoTitulo: string;
+  ceremoniaNombre?: string | null;
+  ceremoniaDireccion?: string | null;
+  ceremoniaMapUrl?: string | null;
+  recepcionNombre?: string | null;
+  recepcionDireccion?: string | null;
+  recepcionMapUrl?: string | null;
+}): Promise<string> {
+  const {
+    nombreInvitado,
+    pases,
+    eventoTitulo,
+    ceremoniaNombre,
+    ceremoniaDireccion,
+    ceremoniaMapUrl,
+    recepcionNombre,
+    recepcionDireccion,
+    recepcionMapUrl,
+  } = params;
+
+  let urlMisaShort = "";
+  if (ceremoniaMapUrl || ceremoniaDireccion) {
+    const rawMisa = extractCleanMapUrl(ceremoniaMapUrl, ceremoniaNombre, ceremoniaDireccion);
+    if (rawMisa) {
+      urlMisaShort = await createShortMapLink(rawMisa);
+    }
+  }
+
+  let urlSalonShort = "";
+  if (recepcionMapUrl || recepcionDireccion || recepcionNombre) {
+    const rawSalon = extractCleanMapUrl(recepcionMapUrl, recepcionNombre, recepcionDireccion);
+    if (rawSalon) {
+      urlSalonShort = await createShortMapLink(rawSalon);
+    }
+  }
+
+  const pasesStr = `${pases} ${pases === 1 ? "pase" : "pases"}`;
+  let baseMsg = `Hola ${nombreInvitado}, confirmaste ${pasesStr} para ${eventoTitulo}.`;
+
+  if (urlMisaShort && urlSalonShort) {
+    baseMsg += ` Misa: ${urlMisaShort} Salon: ${urlSalonShort}`;
+  } else if (urlSalonShort) {
+    baseMsg += ` Salon: ${urlSalonShort}`;
+  } else if (urlMisaShort) {
+    baseMsg += ` Misa: ${urlMisaShort}`;
+  }
+
+  baseMsg += ` Te esperamos!`;
+
+  return sanitizeGsmText(baseMsg);
+}
+
+/**
  * Disparar SMS transaccional de confirmación al invitado con Twilio REST API
  */
 export async function sendGuestConfirmationSms(params: GuestSmsParams): Promise<{ success: boolean; simulated?: boolean; error?: string }> {
@@ -221,8 +300,6 @@ export async function sendGuestConfirmationSms(params: GuestSmsParams): Promise<
     nombreInvitado,
     pases,
     eventoTitulo,
-    recepcionNombre,
-    recepcionMapUrl,
   } = params;
 
   if (!telefono) {
@@ -243,14 +320,8 @@ export async function sendGuestConfirmationSms(params: GuestSmsParams): Promise<
 
   const toPhone = phoneValidation.e164Phone;
 
-  let body = `¡Hola ${nombreInvitado}! Tu confirmación para ${pases} ${pases === 1 ? "pase" : "pases"} a "${eventoTitulo}" ha sido registrada exitosamente.`;
-  if (recepcionNombre) {
-    body += ` Salón: ${recepcionNombre}.`;
-  }
-  if (recepcionMapUrl) {
-    body += ` Ubicación GPS: ${recepcionMapUrl}`;
-  }
-  body += ` ¡Te esperamos!`;
+  // Construir cuerpo optimizado GSM-7 con enlaces acortados
+  const body = await buildRsvpSmsBody(params);
 
   const twilioSid = process.env.TWILIO_ACCOUNT_SID;
   const twilioAuthToken = process.env.TWILIO_AUTH_TOKEN;

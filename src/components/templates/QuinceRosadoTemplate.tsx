@@ -903,6 +903,7 @@ export default function QuinceRosadoTemplate({
                   slug={data.slug || "demo"}
                   eventTitle={data.titulo}
                   eventDate={data.fechaEvento}
+                  ceremoniaMapUrl={churchMapUrl}
                   recepcionMapUrl={hallMapUrl}
                   telefonoWhatsapp={data.telefonoWhatsappRsvp}
                   primaryColor="#7A002A"

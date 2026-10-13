@@ -245,3 +245,12 @@ model OrdenCompra {
   updatedAt             DateTime        @updatedAt
 }
 
+model ShortLink {
+  id        String   @id @default(cuid())
+  code      String   @unique
+  url       String   @db.Text
+  createdAt DateTime @default(now())
+
+  @@index([code])
+}
+
