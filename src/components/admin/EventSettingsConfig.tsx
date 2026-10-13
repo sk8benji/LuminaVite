@@ -14,6 +14,7 @@ import {
   HelpCircle,
 } from "lucide-react";
 import type { InvitationData } from "@/components/invitation/InvitationMobileView";
+import OpenGraphPreview from "./OpenGraphPreview";
 
 interface EventSettingsConfigProps {
   formData: InvitationData;
@@ -243,13 +244,18 @@ export default function EventSettingsConfig({
       </div>
 
       {/* ──────────────────────────────────────────────────────────
-          TARJETA 2: CONFIRMACIÓN DE ASISTENCIA (RSVP) Y NOTIFICACIONES
+          TARJETA 2: PREVISUALIZADOR DE OPENGRAPH (WHATSAPP & FACEBOOK)
+      ────────────────────────────────────────────────────────── */}
+      <OpenGraphPreview formData={formData} />
+
+      {/* ──────────────────────────────────────────────────────────
+          TARJETA 3: CONFIRMACIÓN DE ASISTENCIA (RSVP) Y NOTIFICACIONES
       ────────────────────────────────────────────────────────── */}
       <div className="bg-white rounded-2xl p-6 border border-stone-200 shadow-xs space-y-5">
         <div className="border-b border-stone-100 pb-3 flex items-center gap-2">
           <Bell className="w-4 h-4 text-[#7A002A]" />
           <h3 className="text-xs font-bold text-stone-900 uppercase tracking-wider">
-            2. Confirmaciones RSVP y Contacto de la Anfitriona
+            3. Confirmaciones RSVP y Contacto de la Anfitriona
           </h3>
         </div>
 
