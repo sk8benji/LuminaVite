@@ -34,6 +34,7 @@ import { Language, translations } from "@/lib/home-translations";
 import InteractivePhoneMockup from "@/components/home/InteractivePhoneMockup";
 import InteractiveDemoModal from "@/components/home/InteractiveDemoModal";
 import RoiCalculator from "@/components/home/RoiCalculator";
+import FloatingWhatsApp from "@/components/home/FloatingWhatsApp";
 
 export default function HomePage() {
   const [lang, setLang] = useState<Language>("es");
@@ -978,7 +979,11 @@ export default function HomePage() {
           <p className="font-['Montserrat'] text-xs text-[#8C8077]">
             {t.pricing.venueFaqText}
             <a
-              href="https://wa.me/18181234567?text=Hola,%20me%20interesa%20conocer%20los%20paquetes%20por%20volumen%20de%20Click%20and%20Love"
+              href={`https://wa.me/18182994882?text=${encodeURIComponent(
+                lang === "en"
+                  ? "Hello! I am interested in volume packages for venues and wedding planners with Click & Love."
+                  : "Hola, me interesa conocer los paquetes por volumen para salones y wedding planners de Click & Love."
+              )}`}
               target="_blank"
               rel="noopener noreferrer"
               className="text-[#C5A059] underline hover:text-[#AA8643] transition-colors ml-1 font-bold"
@@ -1016,7 +1021,11 @@ export default function HomePage() {
               {t.footer.adminLink}
             </Link>
             <a
-              href="https://wa.me/18181234567"
+              href={`https://wa.me/18182994882?text=${encodeURIComponent(
+                lang === "en"
+                  ? "Hello! I would like to get concierge guidance regarding Click & Love digital invitations."
+                  : "¡Hola! Me gustaría recibir asesoría personalizada sobre las invitaciones digitales de Click & Love."
+              )}`}
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-[#C5A059] transition font-semibold"
@@ -1051,7 +1060,12 @@ export default function HomePage() {
       </footer>
 
       {/* ============================================================== */}
-      {/* 10. MODAL INTERACTIVO DE DEMOSTRACIÓN EN VIVO */}
+      {/* 10. BOTÓN FLOTANTE OFICIAL DE WHATSAPP CON ASESORÍA CONCIERGE */}
+      {/* ============================================================== */}
+      <FloatingWhatsApp lang={lang} phone="18182994882" />
+
+      {/* ============================================================== */}
+      {/* 11. MODAL INTERACTIVO DE DEMOSTRACIÓN EN VIVO */}
       {/* ============================================================== */}
       <InteractiveDemoModal
         isOpen={isDemoModalOpen}

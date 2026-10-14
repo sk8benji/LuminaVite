@@ -164,7 +164,7 @@ export default function RoiCalculator({ lang }: RoiCalculatorProps) {
             </div>
 
             <a
-              href="https://wa.me/18181234567?text=Hola,%20me%20interesa%20conocer%20los%20paquetes%20para%20salones%20de%20Click%20and%20Love"
+              href="https://wa.me/18182994882?text=Hola,%20me%20interesa%20conocer%20los%20paquetes%20para%20salones%20de%20Click%20and%20Love"
               target="_blank"
               rel="noopener noreferrer"
               className="font-['Cinzel'] text-[11px] tracking-wider uppercase text-[#C5A059] hover:text-[#AA8643] transition underline whitespace-nowrap font-bold"
