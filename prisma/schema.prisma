@@ -254,3 +254,38 @@ model ShortLink {
   @@index([code])
 }
 
+model MasterTemplate {
+  id                 String          @id @default(uuid())
+  slug               String          @unique // ej: "mariposas-xv", "isabella-xv", "emma-and-lucas"
+  nombre             String          // Nombre comercial en el catálogo
+  categoria          TipoEvento      @default(QUINCEANERA)
+  estiloPlantilla    EstiloPlantilla @default(BLUE_BUTTERFLY)
+
+  // Textos Base
+  titulo             String          // ej: "Valeria Morales"
+  subtitulo          String?         // ej: "My Quinceañera"
+  frasePersonalizada String?
+  tipoLetra          String?         @default("Cinzel")
+
+  // Multimedia & Audio
+  musicaUrl          String?
+  musicaTitulo       String?
+  fotoPortadaUrl     String
+  fotoInfanciaUrl    String?
+  fotoActualUrl      String?
+  fotoCierreUrl      String?
+
+  // Sobre 3D
+  colorSobre         String?         @default("#E8D5C4")
+  colorSello         String?         @default("#C5A059")
+
+  // Configuración adicional
+  configExtra        Json?           @default("{}")
+  activo             Boolean         @default(true)
+  orden              Int             @default(0)
+
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
+}
+
+

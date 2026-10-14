@@ -348,5 +348,34 @@ export const ALL_SYSTEM_DEMOS: Record<string, InvitationData> = {
 export function getSystemDemo(slug: string): InvitationData | null {
   if (!slug) return null;
   const clean = decodeURIComponent(slug).toLowerCase().trim().replace(/^\/demo\//, "");
-  return ALL_SYSTEM_DEMOS[clean] || null;
+  const base = ALL_SYSTEM_DEMOS[clean];
+  if (!base) return null;
+
+  try {
+    const fs = require("fs");
+    const path = require("path");
+    const overridesPath = path.join(process.cwd(), "src", "lib", "templates-overrides.json");
+    if (fs.existsSync(overridesPath)) {
+      const overrides = JSON.parse(fs.readFileSync(overridesPath, "utf-8"));
+      const match = overrides[clean] || overrides[base.slug];
+      if (match) {
+        return {
+          ...base,
+          ...(match.titulo ? { titulo: match.titulo } : {}),
+          ...(match.subtitulo ? { subtitulo: match.subtitulo } : {}),
+          ...(match.frasePersonalizada ? { frasePersonalizada: match.frasePersonalizada } : {}),
+          ...(match.musicaUrl ? { musicaUrl: match.musicaUrl } : {}),
+          ...(match.musicaTitulo ? { musicaTitulo: match.musicaTitulo } : {}),
+          ...(match.fotoPortadaUrl ? { fotoPortadaUrl: match.fotoPortadaUrl } : {}),
+          ...(match.fotoInfanciaUrl ? { fotoInfanciaUrl: match.fotoInfanciaUrl } : {}),
+          ...(match.fotoActualUrl ? { fotoActualUrl: match.fotoActualUrl } : {}),
+          ...(match.fotoCierreUrl ? { fotoCierreUrl: match.fotoCierreUrl } : {}),
+        };
+      }
+    }
+  } catch {
+    // Si falla o estamos en entorno sin fs directo, devolver datos base
+  }
+
+  return base;
 }

@@ -26,8 +26,10 @@ import {
   AlertCircle,
   RefreshCw,
   Search,
+  Palette,
 } from "lucide-react";
 import { OrderData } from "@/lib/order-store";
+import TemplatesManager from "@/components/dashboard/TemplatesManager";
 
 interface EventoItem {
   id: string;
@@ -45,7 +47,7 @@ interface EventoItem {
 }
 
 export default function DashboardPage() {
-  const [activeTab, setActiveTab] = useState<"eventos" | "ordenes">("ordenes");
+  const [activeTab, setActiveTab] = useState<"eventos" | "ordenes" | "templates">("ordenes");
   const [eventos, setEventos] = useState<EventoItem[]>([]);
   const [ordenes, setOrdenes] = useState<OrderData[]>([]);
   const [loading, setLoading] = useState(true);
@@ -233,7 +235,7 @@ export default function DashboardPage() {
 
           <button
             onClick={() => setActiveTab("eventos")}
-            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg transition ${
+            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg transition cursor-pointer ${
               activeTab === "eventos"
                 ? "bg-white text-stone-900 shadow-xs font-bold"
                 : "text-stone-600 hover:text-stone-900"
@@ -241,6 +243,18 @@ export default function DashboardPage() {
           >
             <Sparkles className="w-3.5 h-3.5" />
             <span>Invitaciones ({eventos.length})</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab("templates")}
+            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg transition cursor-pointer ${
+              activeTab === "templates"
+                ? "bg-white text-amber-900 shadow-xs font-bold"
+                : "text-stone-600 hover:text-stone-900"
+            }`}
+          >
+            <Palette className="w-3.5 h-3.5 text-[#C5A059]" />
+            <span>🎨 Templates</span>
           </button>
         </div>
 
@@ -738,6 +752,11 @@ export default function DashboardPage() {
             </div>
           </div>
         )}
+
+        {/* ============================================================== */}
+        {/* VISTA 3: PLANTILLAS MAESTRAS DEL CATÁLOGO (TEMPLATES) */}
+        {/* ============================================================== */}
+        {activeTab === "templates" && <TemplatesManager />}
       </main>
     </div>
   );
