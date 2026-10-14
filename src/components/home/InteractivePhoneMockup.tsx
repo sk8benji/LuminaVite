@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
-import { Sparkles, CheckCircle2, ExternalLink, Volume2 } from "lucide-react";
+import React, { useState, useRef } from "react";
+import { CheckCircle2, ExternalLink, Volume2, VolumeX, Play } from "lucide-react";
 import { Language } from "@/lib/home-translations";
 
 interface InteractivePhoneMockupProps {
@@ -14,6 +14,27 @@ export default function InteractivePhoneMockup({
   onOpenModal,
 }: InteractivePhoneMockupProps) {
   const [activeTab, setActiveTab] = useState<"butterfly" | "rose" | "chateau">("butterfly");
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [isMuted, setIsMuted] = useState(true);
+
+  const handleVideoToggle = () => {
+    if (!videoRef.current) return;
+    if (videoRef.current.paused) {
+      videoRef.current.play().then(() => setIsPlaying(true)).catch(() => {});
+    } else {
+      videoRef.current.pause();
+      setIsPlaying(false);
+    }
+  };
+
+  const toggleSound = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!videoRef.current) return;
+    const newMutedState = !videoRef.current.muted;
+    videoRef.current.muted = newMutedState;
+    setIsMuted(newMutedState);
+  };
 
   const currentSlug =
     activeTab === "butterfly"
@@ -97,45 +118,49 @@ export default function InteractivePhoneMockup({
           </div>
         </div>
 
-        {/* Pantalla Interna: Video Real de Demostración en Loop Automático */}
+        {/* Pantalla Interna: Video Real de Demostración */}
         <div
-          onClick={() => onOpenModal(currentSlug)}
-          className="relative w-full h-full bg-black rounded-[42px] overflow-hidden flex items-center justify-center cursor-pointer group"
+          onClick={handleVideoToggle}
+          className="relative w-full h-full bg-black rounded-[42px] overflow-hidden flex items-center justify-center cursor-pointer group select-none"
         >
           <video
+            ref={videoRef}
             src="https://luminavite-storage.s3.us-east-1.amazonaws.com/video/WhatsApp+Video+2026-10-14+at+9.50.53+AM.mp4"
             autoPlay
             loop
-            muted
+            muted={isMuted}
             playsInline
-            className="w-full h-full object-cover select-none pointer-events-none"
+            onPlay={() => setIsPlaying(true)}
+            onPause={() => setIsPlaying(false)}
+            className="w-full h-full object-cover"
           />
 
-          {/* Overlay interactivo con badges de gala al pasar el cursor o tocar */}
-          <div className="absolute inset-0 bg-black/10 group-hover:bg-black/30 transition-all flex flex-col items-center justify-between p-4 pointer-events-none">
-            {/* Badge superior dentro del video */}
-            <div className="w-full flex justify-end">
-              <span className="px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-md border border-[#C5A059]/50 text-[#EED3A1] text-[9px] font-['Cinzel'] tracking-wider uppercase font-bold flex items-center gap-1.5 shadow-md">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                <span>Demo en Vivo</span>
-              </span>
-            </div>
+          {/* Botón discreto de audio (Mute/Unmute) en la esquina superior */}
+          <button
+            type="button"
+            onClick={toggleSound}
+            aria-label={isMuted ? "Activar sonido" : "Silenciar"}
+            className="absolute top-7 right-3.5 z-30 p-2 rounded-full bg-black/60 hover:bg-black/85 backdrop-blur-md border border-[#C5A059]/40 text-[#EED3A1] transition-transform active:scale-95 shadow-md cursor-pointer"
+          >
+            {isMuted ? (
+              <VolumeX className="w-3.5 h-3.5 text-zinc-300" />
+            ) : (
+              <Volume2 className="w-3.5 h-3.5 text-[#EED3A1]" />
+            )}
+          </button>
 
-            {/* Llamado a la acción central al pasar el mouse o tocar */}
-            <div className="transform translate-y-1 group-hover:translate-y-0 opacity-90 group-hover:opacity-100 transition-all duration-300">
-              <div className="px-4 py-2 rounded-full bg-gradient-to-r from-[#C5A059] via-[#EED3A1] to-[#C5A059] text-[#2C1F1B] font-['Cinzel'] text-[10px] tracking-wider uppercase font-extrabold shadow-[0_8px_25px_rgba(197,160,89,0.5)] flex items-center gap-2">
-                <Sparkles className="w-3.5 h-3.5 text-[#2C1F1B] animate-pulse" />
-                <span>{lang === "es" ? "Toca para Probar en Vivo" : "Tap to Test Live Demo"}</span>
+          {/* Indicador de Play si el video está pausado */}
+          {!isPlaying && (
+            <div className="absolute inset-0 bg-black/35 backdrop-blur-[1px] flex items-center justify-center pointer-events-none transition-all">
+              <div className="w-14 h-14 rounded-full bg-gradient-to-r from-[#C5A059] to-[#EED3A1] text-[#2C1F1B] flex items-center justify-center shadow-[0_4px_20px_rgba(0,0,0,0.5)] transform scale-100 hover:scale-105 transition-transform">
+                <Play className="w-7 h-7 ml-1 fill-current" />
               </div>
             </div>
-
-            {/* Espaciador inferior */}
-            <div />
-          </div>
+          )}
         </div>
 
         {/* Barra de inicio inferior de iOS */}
-        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-28 h-1 bg-white/20 rounded-full" />
+        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-28 h-1 bg-white/20 rounded-full pointer-events-none" />
       </div>
 
       {/* Botón debajo del teléfono para probar a pantalla completa */}
