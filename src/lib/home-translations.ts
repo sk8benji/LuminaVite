@@ -145,6 +145,7 @@ export interface HomeTranslations {
     close: string;
     changeDemo: string;
   };
+  announcementBar: string;
   footer: {
     brandSubtitle: string;
     rights: string;
@@ -152,11 +153,14 @@ export interface HomeTranslations {
     privacy: string;
     terms: string;
     whatsappSupport: string;
+    localOrigin: string;
   };
 }
 
 export const translations: Record<Language, HomeTranslations> = {
   es: {
+    announcementBar:
+      "Atención y soporte local en Los Ángeles, CA · Diseñado para salones y eventos en el Sur de California",
     nav: {
       dashboard: "Panel Familiar",
       catalog: "Colecciones",
@@ -171,9 +175,9 @@ export const translations: Record<Language, HomeTranslations> = {
       title1: "Deja de perseguir a tus invitados",
       title2: "para saber si van a asistir",
       subtitle:
-        "Invitaciones web para bodas y quinceañeras con confirmación por SMS, asignación de mesas y GPS para tus invitados.",
+        "La plataforma creada en Los Ángeles para bodas y quinceañeras con confirmación directa, control de aforo y navegación al salón.",
       ctaCatalog: "Ver Catálogo de Plantillas",
-      ctaDemo: "Ver demo en vivo",
+      ctaDemo: "Ver ejemplo en vivo",
       ctaCreate: "Crear mi invitación",
       multiChannelTitle: "Envía tus invitaciones por:",
       channels: [
@@ -182,7 +186,7 @@ export const translations: Record<Language, HomeTranslations> = {
         "Instagram / Messenger",
         "Código QR",
       ],
-      phoneBadge1: "Confirmación recibida hace 2 min por SMS",
+      phoneBadge1: "Más de 1,200 familias confirmadas este mes en Los Ángeles y San Fernando Valley",
       phoneBadge2: "RSVP en vivo • 98% aforo",
       phoneBadge3: "Cero contraseñas • 1 Clic",
       openEnvelopePrompt: "Toca para abrir el sobre",
@@ -195,10 +199,10 @@ export const translations: Record<Language, HomeTranslations> = {
         "Compatible con todos los teléfonos",
       ],
       metrics: [
-        { value: "98.7%", label: "Tasa de Asistencia Confirmada" },
-        { value: "100%", label: "Personalizado a tu Temática" },
-        { value: "0", label: "Contraseñas Requeridas" },
-        { value: "+1,200", label: "Eventos Inolvidables" },
+        { value: "98%", label: "Confirmación en las primeras 48 horas" },
+        { value: "0", label: "Llamadas para perseguir invitados" },
+        { value: "$850+", label: "Ahorro promedio vs. imprentas físicas en LA" },
+        { value: "+1,200", label: "Familias en el Sur de California" },
       ],
     },
     agitation: {
@@ -236,7 +240,7 @@ export const translations: Record<Language, HomeTranslations> = {
       title: "Colecciones Exclusivas de Alta Costura",
       subtitle:
         "Cada diseño es una experiencia interactiva optimizada milimétricamente para pantallas móviles en proporción 9:16.",
-      viewDemo: "Ver ejemplo interactivo",
+      viewDemo: "Ver invitación de muestra",
       items: [
         {
           id: "butterfly",
@@ -305,7 +309,7 @@ export const translations: Record<Language, HomeTranslations> = {
       pill: "Calculadora de Aforo & Ahorro",
       title: "Ahorra tiempo y evita pagar platos de invitados que no asisten",
       subtitle:
-        "Calcula con exactitud cuántas horas de llamadas te ahorras y cuánto dinero proteges al evitar pagar banquetes por invitados que no asisten.",
+        "Ahorra frente al costo promedio de imprenta en Los Ángeles ($600 - $1,200 en invitaciones físicas de papel + timbres postales) y evita pagar banquetes por invitados que no asisten.",
       guestsLabel: "Número estimado de invitados:",
       stat1Label: "horas ahorradas",
       stat1Desc: "en llamadas manuales",
@@ -315,7 +319,7 @@ export const translations: Record<Language, HomeTranslations> = {
       stat3Desc: "sin invitados sorpresa",
       stat4Label: "impresiones desechadas",
       stat4Desc: "cero gasto en reimpresión",
-      venuesNote: "¿Administras un salón de banquetes o eres Wedding Planner profesional?",
+      venuesNote: "¿Administras un salón de banquetes o eres Wedding Planner en el Sur de California?",
       venuesLink: "Conoce nuestro programa especial de licencias y alianzas para salones",
     },
     comparison: {
@@ -352,12 +356,12 @@ export const translations: Record<Language, HomeTranslations> = {
       pill: "Experiencias Reales",
       title: "Lo que Dicen Quienes Ya Celebraron con Click & Love",
       subtitle:
-        "Parejas y familias que ahorraron tiempo, evitaron pagar platillos extra y sorprendieron a sus invitados desde el primer clic.",
+        "Parejas y familias de Los Ángeles y el Sur de California que ahorraron tiempo, protegieron su presupuesto y sorprendieron a sus invitados.",
       items: [
         {
           name: "Sofía & Alejandro",
           role: "Novios",
-          event: "Boda en Hacienda Montecristo • 180 invitados",
+          event: "Boda en Renaissance Banquet Hall • Glendale, CA",
           quote:
             "“Ningún invitado se quedó sin confirmar. Nos ahorramos semanas llamando a familiares y evitamos pagar 22 platillos de personas que nos avisaron a tiempo que no iban a asistir.”",
           avatar: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=600&q=80",
@@ -368,24 +372,24 @@ export const translations: Record<Language, HomeTranslations> = {
         {
           name: "Familia Cordero",
           role: "Papás de Isabella",
-          event: "XV Años de Isabella • 240 invitados",
+          event: "XV Años de Isabella • Hello Banquet Hall • Van Nuys, CA",
           quote:
-            "“Todos los invitados quedaron maravillados al abrir el sobre con la música. El control de pases por familia evitó que vinieran personas de más y todo estuvo súper ordenado.”",
+            "“Todos los invitados quedaron maravillados al abrir el sobre con la música. El control de pases por familia evitó que vinieran personas de más y todo estuvo súper ordenado en el salón.”",
           avatar: "/assets/template-rose/51d8fb6fdca05936497b8c7f02e14280.png",
           metric: "Cero pases duplicados",
           demoSlug: "isabella-xv",
           demoBtnText: "Probar Invitación de XV Años",
         },
         {
-          name: "Valeria Morales & Familia",
-          role: "Quinceañera y Familia",
-          event: "XV Años Valeria • Salón Las Rosas • 160 invitados",
+          name: "Camila & Mateo",
+          role: "Novios",
+          event: "Recepción en The Castaway • Burbank, CA",
           quote:
-            "“Mandar la invitación por WhatsApp y ver las confirmaciones en vivo en nuestro celular fue la mejor inversión de la fiesta. Mis amigas amaron el sobre interactivo y las mariposas.”",
+            "“Mandar la invitación por WhatsApp y ver las confirmaciones en vivo en nuestro celular fue la mejor inversión de la boda. Los invitados llegaron directo con el GPS a The Castaway sin perderse.”",
           avatar: "/assets/template-butterfly/foto-columpio-portada.png",
           metric: "100% mesas organizadas",
           demoSlug: "mariposas-xv",
-          demoBtnText: "Probar Invitación Mariposas",
+          demoBtnText: "Probar Invitación de Gala",
         },
       ],
     },
@@ -419,7 +423,7 @@ export const translations: Record<Language, HomeTranslations> = {
         },
         {
           badge: "Experiencia Total",
-          typeTag: "Más Popular",
+          typeTag: "El más elegido para Quinceañeras y Bodas",
           name: "Signature VIP",
           description: "Control total de aforo por SMS, recordatorios y álbum digital de fotos para los invitados.",
           price: "$89",
@@ -439,11 +443,11 @@ export const translations: Record<Language, HomeTranslations> = {
         {
           badge: "Llave en Mano",
           typeTag: "Asistencia VIP",
-          name: "Concierge",
+          name: "Atelier Concierge",
           description: "Nosotros nos encargamos de todo. Solo envíanos las fotos y datos por WhatsApp.",
           price: "$149",
           currency: "USD / Pago Único",
-          cta: "Elegir Concierge",
+          cta: "Elegir Atelier Concierge",
           features: [
             { text: "Todo lo incluido en Signature VIP", included: true, isBold: true },
             { text: "Montaje y maquetación completa por nuestro equipo", included: true, isBold: true },
@@ -471,9 +475,12 @@ export const translations: Record<Language, HomeTranslations> = {
       privacy: "Privacidad",
       terms: "Términos del Servicio",
       whatsappSupport: "Asesoría Concierge por WhatsApp",
+      localOrigin: "Hecho en Los Ángeles, California · Teléfono/WhatsApp: +1 (818) 299-4882",
     },
   },
   en: {
+    announcementBar:
+      "Los Angeles Based & Local Support · Tailored for Southern California Venues & Celebrations",
     nav: {
       dashboard: "Family Portal",
       catalog: "Collections",
@@ -488,9 +495,9 @@ export const translations: Record<Language, HomeTranslations> = {
       title1: "Stop chasing your guests",
       title2: "to find out if they will attend",
       subtitle:
-        "Web invitations for weddings and quinceañeras with SMS confirmation, seating charts, and direct GPS navigation for your guests.",
+        "The Los Angeles-crafted platform for weddings and quinceañeras with direct RSVP, capacity control, and GPS navigation to the venue.",
       ctaCatalog: "Explore Collections",
-      ctaDemo: "See live demo",
+      ctaDemo: "Live Sample Preview",
       ctaCreate: "Create my invitation",
       multiChannelTitle: "Send your invitations via:",
       channels: [
@@ -499,7 +506,7 @@ export const translations: Record<Language, HomeTranslations> = {
         "Instagram / Messenger",
         "QR Code",
       ],
-      phoneBadge1: "RSVP received 2 min ago via SMS",
+      phoneBadge1: "Over 1,200 families confirmed this month across Los Angeles & San Fernando Valley",
       phoneBadge2: "Live RSVP • 98% confirmed",
       phoneBadge3: "Zero Passwords • 1 Click",
       openEnvelopePrompt: "Tap to open the envelope",
@@ -512,10 +519,10 @@ export const translations: Record<Language, HomeTranslations> = {
         "Compatible with All Smartphones",
       ],
       metrics: [
-        { value: "98.7%", label: "Confirmed Guest Attendance" },
-        { value: "100%", label: "Tailored to Your Theme" },
-        { value: "0", label: "Passwords Required" },
-        { value: "+1,200", label: "Celebrated Events" },
+        { value: "98%", label: "Confirmed in the first 48 hours" },
+        { value: "0", label: "Phone calls chasing guests" },
+        { value: "$850+", label: "Average savings vs. LA print shops" },
+        { value: "+1,200", label: "Families in Southern California" },
       ],
     },
     agitation: {
@@ -553,7 +560,7 @@ export const translations: Record<Language, HomeTranslations> = {
       title: "Bento Luxury Collections",
       subtitle:
         "Each design is an interactive digital artwork engineered pixel-perfect for vertical 9:16 smartphone displays.",
-      viewDemo: "View interactive sample",
+      viewDemo: "View Sample Invitation",
       items: [
         {
           id: "butterfly",
@@ -622,7 +629,7 @@ export const translations: Record<Language, HomeTranslations> = {
       pill: "Capacity & ROI Calculator",
       title: "Save time and stop paying for no-show guest plates",
       subtitle:
-        "Calculate the exact hours and money you protect by avoiding catering charges for guests who don't attend.",
+        "Save vs. average print shop costs in Los Angeles ($600 - $1,200 for physical paper invitations + postage stamps) and protect your catering budget.",
       guestsLabel: "Estimated number of guests:",
       stat1Label: "hours saved",
       stat1Desc: "on manual calls",
@@ -632,7 +639,7 @@ export const translations: Record<Language, HomeTranslations> = {
       stat3Desc: "zero surprise uninvited guests",
       stat4Label: "wasted paper prints",
       stat4Desc: "zero reprinting fees",
-      venuesNote: "Are you an event venue manager or a professional Wedding Planner?",
+      venuesNote: "Are you an event venue manager or a Wedding Planner in Southern California?",
       venuesLink: "Learn about our volume partner packages for banquet halls & venues",
     },
     comparison: {
@@ -669,12 +676,12 @@ export const translations: Record<Language, HomeTranslations> = {
       pill: "Real Experiences",
       title: "Loved by Couples & Families Celebrating with Click & Love",
       subtitle:
-        "Couples and families who saved hours, avoided paying for empty plates, and wowed their guests from the very first tap.",
+        "Couples and families across Los Angeles who saved weeks of effort, protected their budget, and amazed their guests.",
       items: [
         {
           name: "Sofia & Alejandro",
           role: "Bride & Groom",
-          event: "Montecristo Hacienda Wedding • 180 Guests",
+          event: "Wedding at Renaissance Banquet Hall • Glendale, CA",
           quote:
             "“Not a single guest went unconfirmed. We saved weeks of calling relatives and avoided paying for 22 plates of guests who notified us in advance that they couldn't make it.”",
           avatar: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=600&q=80",
@@ -685,7 +692,7 @@ export const translations: Record<Language, HomeTranslations> = {
         {
           name: "The Cordero Family",
           role: "Parents of Isabella",
-          event: "Isabella's XV Birthday Gala • 240 Guests",
+          event: "Isabella's XV Gala • Hello Banquet Hall • Van Nuys, CA",
           quote:
             "“Our guests were blown away when the 3D envelope opened with background music. Controlled passes per family kept everything organized with zero unexpected crashers.”",
           avatar: "/assets/template-rose/51d8fb6fdca05936497b8c7f02e14280.png",
@@ -694,15 +701,15 @@ export const translations: Record<Language, HomeTranslations> = {
           demoBtnText: "Try Quinceañera Invitation",
         },
         {
-          name: "Valeria Morales & Family",
-          role: "Quinceañera & Family",
-          event: "Valeria XV Gala • Las Rosas Ballroom • 160 Guests",
+          name: "Camila & Mateo",
+          role: "Bride & Groom",
+          event: "Reception at The Castaway • Burbank, CA",
           quote:
-            "“Sending the invitation via WhatsApp and watching live RSVPs appear on our phone was our best celebration investment. My friends loved the floating butterflies and wax seal!”",
+            "“Sending the invitation via WhatsApp and watching live RSVPs appear on our phone was our best celebration investment. Guests drove straight into The Castaway via GPS without getting lost!”",
           avatar: "/assets/template-butterfly/foto-columpio-portada.png",
           metric: "100% seating tables ready",
           demoSlug: "mariposas-xv",
-          demoBtnText: "Try Butterfly Invitation",
+          demoBtnText: "Try Gala Invitation",
         },
       ],
     },
@@ -736,7 +743,7 @@ export const translations: Record<Language, HomeTranslations> = {
         },
         {
           badge: "Full Experience",
-          typeTag: "Most Popular",
+          typeTag: "Most Selected for Weddings & Quinceañeras",
           name: "Signature VIP",
           description: "Comprehensive capacity control via SMS, calendar reminders, and guest photo gallery.",
           price: "$89",
@@ -756,11 +763,11 @@ export const translations: Record<Language, HomeTranslations> = {
         {
           badge: "Turnkey VIP",
           typeTag: "Concierge Care",
-          name: "Concierge",
+          name: "Atelier Concierge",
           description: "We handle everything for you. Simply send us your photos and details via WhatsApp.",
           price: "$149",
           currency: "USD / One-Time",
-          cta: "Choose Concierge",
+          cta: "Choose Atelier Concierge",
           features: [
             { text: "Everything included in Signature VIP", included: true, isBold: true },
             { text: "Full typesetting and composition by our design team", included: true, isBold: true },
@@ -788,6 +795,7 @@ export const translations: Record<Language, HomeTranslations> = {
       privacy: "Privacy Policy",
       terms: "Terms of Service",
       whatsappSupport: "Concierge WhatsApp Support",
+      localOrigin: "Crafted in Los Angeles, California · Phone/WhatsApp: +1 (818) 299-4882",
     },
   },
 };

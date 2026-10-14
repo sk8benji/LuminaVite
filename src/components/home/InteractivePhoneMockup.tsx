@@ -48,10 +48,12 @@ export default function InteractivePhoneMockup({
       <div className="absolute inset-0 bg-gradient-to-tr from-[#C5A059]/25 via-[#EED3A1]/15 to-transparent rounded-full blur-[100px] pointer-events-none -z-10" />
 
       {/* Floating Badges Superiores (Modo Claro de Lujo) */}
-      <div className="hidden sm:flex absolute -top-5 -left-12 z-20 items-center gap-2 px-4 py-2 rounded-full bg-white/95 border border-[#E8E3D9] shadow-[0_10px_25px_rgba(44,31,27,0.08)] backdrop-blur-md animate-bounce [animation-duration:4s]">
+      <div className="hidden sm:flex absolute -top-5 -left-12 z-20 items-center gap-2 px-4 py-2 rounded-full bg-white/95 border border-[#C5A059]/40 shadow-[0_10px_25px_rgba(44,31,27,0.08)] backdrop-blur-md animate-bounce [animation-duration:4s]">
         <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
         <span className="font-['Montserrat'] text-[11px] font-semibold text-[#2C1F1B]">
-          {lang === "es" ? "Confirmación recibida hace 2 min por SMS" : "RSVP received 2 min ago via SMS"}
+          {lang === "es"
+            ? "Más de 1,200 familias confirmadas este mes en Los Ángeles y San Fernando Valley"
+            : "Over 1,200 families confirmed this month across Los Angeles & San Fernando Valley"}
         </span>
       </div>
 
@@ -264,27 +266,41 @@ export default function InteractivePhoneMockup({
                   </div>
                 </div>
 
-                {/* Botones de acción directa: WhatsApp y Mapa */}
+                {/* Salón y Dirección Real de Los Ángeles */}
+                <div className="w-full text-left p-2.5 rounded-xl bg-white/5 border border-[#C5A059]/30 space-y-1">
+                  <div className="flex items-center justify-between text-[9px] font-['Cinzel'] tracking-wider text-[#EED3A1] uppercase font-bold">
+                    <span>📍 {lang === "es" ? "Recinto & Salón de Gala" : "Venue & Reception"}</span>
+                    <span className="text-emerald-400 font-sans normal-case text-[9px]">Los Ángeles, CA</span>
+                  </div>
+                  <div className="text-xs font-['Montserrat'] font-semibold text-white">
+                    Hello Banquet Hall & Events
+                  </div>
+                  <div className="text-[10px] font-['Montserrat'] text-neutral-300">
+                    6555 Van Nuys Blvd, Van Nuys, CA 91401
+                  </div>
+                </div>
+
+                {/* Botones de acción directa: WhatsApp y Waze/Maps */}
                 <div className="w-full grid grid-cols-2 gap-2 pt-1">
                   <a
-                    href="https://maps.google.com"
+                    href="https://maps.google.com/?q=6555+Van+Nuys+Blvd,+Van+Nuys,+CA+91401"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="py-2 px-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-white text-[10px] font-['Montserrat'] font-semibold flex items-center justify-center gap-1.5 border border-white/10 transition"
+                    className="py-2 px-2 rounded-xl bg-white/10 hover:bg-white/15 text-white text-[10px] font-['Montserrat'] font-semibold flex items-center justify-center gap-1.5 border border-white/10 transition"
                   >
-                    <span>📍 Ver en Mapa</span>
+                    <span>📍 Waze / Maps</span>
                   </a>
                   <a
-                    href="https://wa.me/18181234567"
+                    href="https://wa.me/18182994882"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="py-2 px-2.5 rounded-xl bg-emerald-600/30 hover:bg-emerald-600/40 text-emerald-300 text-[10px] font-['Montserrat'] font-semibold flex items-center justify-center gap-1.5 border border-emerald-500/30 transition"
+                    className="py-2 px-2 rounded-xl bg-emerald-600/30 hover:bg-emerald-600/40 text-emerald-300 text-[10px] font-['Montserrat'] font-semibold flex items-center justify-center gap-1.5 border border-emerald-500/30 transition"
                   >
                     <span>💬 WhatsApp</span>
                   </a>
                 </div>
 
-                {/* Botón RSVP simulado */}
+                {/* Botón RSVP simulado con familia auténtica */}
                 <div className="w-full pt-1">
                   <button
                     onClick={() => onOpenModal(currentSlug)}
@@ -292,8 +308,8 @@ export default function InteractivePhoneMockup({
                   >
                     <span>
                       {lang === "es"
-                        ? "Confirmar asistencia (2 pases asignados)"
-                        : "Confirm attendance (2 passes assigned)"}
+                        ? "Familia Rodríguez · Confirmar 3 Pases"
+                        : "The Rodriguez Family · Confirm 3 Passes"}
                     </span>
                     <ArrowRight className="w-3.5 h-3.5 flex-shrink-0" />
                   </button>

@@ -74,6 +74,14 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-[#FAF8F5] text-[#2C1F1B] selection:bg-[#C5A059]/25 selection:text-[#2C1F1B] font-['Montserrat'] overflow-x-hidden relative">
       {/* ============================================================== */}
+      {/* 0. ANNOUNCEMENT BAR SUPERIOR: VENTAJA LOCAL LOS ÁNGELES */}
+      {/* ============================================================== */}
+      <div className="bg-stone-900 text-stone-100 py-2 px-4 text-xs font-medium text-center tracking-wide border-b border-stone-800 flex items-center justify-center gap-2 select-none">
+        <span className="w-1.5 h-1.5 rounded-full bg-[#EED3A1] animate-pulse" />
+        <span>{t.announcementBar}</span>
+      </div>
+
+      {/* ============================================================== */}
       {/* BARRA DE NAVEGACIÓN EDITORIAL LUMINOSA (PEARL ALABASTER) */}
       {/* ============================================================== */}
       <header className="sticky top-0 z-40 bg-[#FAF8F5]/90 backdrop-blur-md border-b border-[#E8E3D9]">
@@ -207,12 +215,13 @@ export default function HomePage() {
               <ArrowRight className="w-4 h-4 text-[#2C1F1B] group-hover:translate-x-1 transition-transform" />
             </a>
 
-            {/* Botón Secundario: Exploración de Demo en Vivo */}
+            {/* Enlace Secundario: Exploración de Ejemplo en Vivo con Icono de Flecha */}
             <button
               onClick={() => handleOpenDemo("mariposas-xv")}
-              className="w-full sm:w-auto px-8 sm:px-9 py-4 rounded-2xl bg-white/95 border-2 border-[#C5A059]/70 text-[#2C1F1B] font-['Cinzel'] text-xs sm:text-sm tracking-[0.15em] uppercase font-bold hover:bg-[#F5EFE4] hover:border-[#C5A059] active:scale-95 transition-all shadow-[0_4px_18px_rgba(44,31,27,0.06)] flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full sm:w-auto px-6 py-3.5 text-[#2C1F1B] hover:text-[#8C6D2D] font-['Cinzel'] text-xs sm:text-sm tracking-[0.15em] uppercase font-bold transition-all flex items-center justify-center gap-2 cursor-pointer group"
             >
-              <span>{t.hero.ctaDemo}</span>
+              <span className="underline decoration-[#C5A059] decoration-2 underline-offset-4">{t.hero.ctaDemo}</span>
+              <ExternalLink className="w-4 h-4 text-[#C5A059] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
             </button>
           </div>
 
@@ -543,11 +552,12 @@ export default function HomePage() {
       </section>
 
       {/* ============================================================== */}
-      {/* 5. RESALTAR LA AUTOMATIZACIÓN TÉCNICA (3 PILARES LUMINOSOS) */}
+      {/* 5. RESALTAR LA AUTOMATIZACIÓN TÉCNICA (ESTRUCTURA EDITORIAL ASIMÉTRICA) */}
       {/* ============================================================== */}
       <section id="automatizacion" className="relative py-24 px-4 bg-[#F5EFE4] select-none border-t border-[#E8E3D9]">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center max-w-3xl mx-auto mb-16">
+          {/* Encabezado Asimétrico Alineado a la Izquierda para Romper la Monotonía */}
+          <div className="text-left max-w-3xl mb-16">
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[#C5A059]/40 bg-white mb-3 backdrop-blur-md">
               <span className="font-['Cinzel'] text-[10px] tracking-[0.3em] uppercase text-[#2C1F1B] font-bold">
                 {t.techAutomation.pill}
@@ -558,7 +568,7 @@ export default function HomePage() {
               {t.techAutomation.title}
             </h2>
 
-            <p className="font-['Montserrat'] text-sm text-[#2B2B2B] leading-relaxed">
+            <p className="font-['Montserrat'] text-sm sm:text-base text-[#2B2B2B] leading-relaxed">
               {t.techAutomation.subtitle}
             </p>
           </div>
@@ -567,14 +577,14 @@ export default function HomePage() {
             {t.techAutomation.pillars.map((pillar, idx) => (
               <div
                 key={idx}
-                className="relative rounded-3xl bg-white border border-[#E8E3D9] p-8 flex flex-col justify-between hover:border-[#C5A059]/60 shadow-[0_10px_30px_rgba(44,31,27,0.05)] transition-all duration-300"
+                className="relative rounded-3xl bg-white border border-[#E8E3D9] p-7 sm:p-8 flex flex-col justify-between hover:border-[#C5A059]/60 shadow-[0_10px_30px_rgba(44,31,27,0.05)] transition-all duration-300 group"
               >
                 <div>
                   <div className="flex justify-between items-center mb-6">
-                    <span className="w-12 h-12 rounded-2xl bg-[#F5EFE4] border border-[#C5A059]/30 text-[#C5A059] flex items-center justify-center font-serif-roman text-lg font-bold">
+                    <span className="w-12 h-12 rounded-2xl bg-[#FAF8F5] border border-[#C5A059]/30 text-[#8C6D2D] flex items-center justify-center font-serif-roman text-lg font-bold shadow-xs">
                       {idx === 0 ? "01" : idx === 1 ? "02" : "03"}
                     </span>
-                    <span className="text-[10px] font-['Montserrat'] uppercase tracking-wider text-[#2C1F1B] font-semibold bg-[#F5EFE4] border border-[#C5A059]/30 px-3 py-1 rounded-full">
+                    <span className="text-[10px] font-['Montserrat'] uppercase tracking-wider text-[#2C1F1B] font-bold bg-[#F5EFE4] border border-[#C5A059]/30 px-3 py-1 rounded-full">
                       {pillar.badge}
                     </span>
                   </div>
@@ -583,12 +593,58 @@ export default function HomePage() {
                     {pillar.title}
                   </h3>
 
-                  <p className="font-['Montserrat'] text-xs sm:text-sm text-[#2B2B2B] leading-relaxed mb-6 font-normal">
+                  <p className="font-['Montserrat'] text-xs sm:text-sm text-[#2B2B2B] leading-relaxed mb-5 font-normal">
                     {pillar.description}
                   </p>
+
+                  {/* Micro-Capturas de Interfaz Real (Reemplazo de iconos genéricos de IA) */}
+                  {idx === 0 && (
+                    <div className="mb-6 p-3 rounded-2xl bg-[#FAF8F5] border border-[#E8E3D9] space-y-1.5 shadow-xs">
+                      <div className="flex items-center justify-between text-[10px] text-stone-500 font-medium">
+                        <span className="flex items-center gap-1 font-semibold text-stone-700">
+                          <MessageSquare className="w-3 h-3 text-emerald-600" />
+                          <span>SMS Automático (Twilio)</span>
+                        </span>
+                        <span>Ahora</span>
+                      </div>
+                      <div className="p-2 rounded-xl bg-white border border-stone-200 text-[11px] font-['Montserrat'] text-stone-800 leading-snug">
+                        &ldquo;¡Hola Familia Rodríguez! Tienen 3 pases reservados. Confirmen aquí: <span className="text-[#C5A059] underline font-semibold">lumina.to/v/valeria</span>&rdquo;
+                      </div>
+                    </div>
+                  )}
+
+                  {idx === 1 && (
+                    <div className="mb-6 p-3 rounded-2xl bg-[#FAF8F5] border border-[#E8E3D9] space-y-2 shadow-xs">
+                      <div className="flex items-center justify-between text-[10px] text-stone-700 font-semibold">
+                        <span>📍 Hello Banquet Hall</span>
+                        <span className="text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">En ruta directa</span>
+                      </div>
+                      <div className="grid grid-cols-2 gap-1.5 text-center text-[10px] font-['Montserrat'] font-bold">
+                        <div className="py-1.5 px-2 bg-white rounded-lg border border-stone-200 text-sky-700">
+                          ✦ Abrir en Waze
+                        </div>
+                        <div className="py-1.5 px-2 bg-white rounded-lg border border-stone-200 text-emerald-700">
+                          ✦ Google Maps
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {idx === 2 && (
+                    <div className="mb-6 p-3 rounded-2xl bg-[#FAF8F5] border border-[#E8E3D9] space-y-1.5 shadow-xs">
+                      <div className="flex items-center justify-between text-[10px] text-stone-700 font-bold">
+                        <span>Panel Anfitrión en Vivo</span>
+                        <span className="text-[#8C6D2D] font-mono">148 / 150 Asientos</span>
+                      </div>
+                      <div className="flex items-center justify-between p-2 rounded-xl bg-white border border-stone-200 text-[10px] font-['Montserrat']">
+                        <span className="font-semibold text-stone-800">Mesa 4 · Familia Rodríguez</span>
+                        <span className="text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded-full">✓ 3 Confirmados</span>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
-                <div className="p-4 rounded-2xl bg-[#F5EFE4] border border-[#C5A059]/20 font-['Montserrat'] text-xs text-[#2C1F1B] flex items-start gap-2.5 font-medium">
+                <div className="p-4 rounded-2xl bg-[#FAF8F5] border border-[#C5A059]/30 font-['Montserrat'] text-xs text-[#2C1F1B] flex items-start gap-2.5 font-semibold">
                   <CheckCircle2 className="w-4 h-4 text-[#C5A059] flex-shrink-0 mt-0.5" />
                   <span>{pillar.highlight}</span>
                 </div>
@@ -625,41 +681,188 @@ export default function HomePage() {
           </p>
         </div>
 
-        {/* Tabla Comparativa en Modo Claro de Lujo */}
-        <div className="rounded-3xl bg-white border border-[#E8E3D9] overflow-hidden shadow-[0_15px_45px_rgba(44,31,27,0.06)]">
-          <div className="grid grid-cols-1 md:grid-cols-12 bg-[#F5EFE4] border-b border-[#E8E3D9] p-5 text-xs font-['Cinzel'] uppercase tracking-wider font-bold">
-            <div className="md:col-span-4 text-[#1F2937]">
-              {lang === "es" ? "Criterio Clave" : "Key Criteria"}
+        {/* Comparativa Visual Directa: Papel Tradicional vs Click & Love */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
+          {/* Tarjeta Izquierda: Papel Tradicional (El Problema) */}
+          <div className="rounded-3xl bg-[#F6F2EC] border border-[#DDD6CC] p-6 sm:p-8 flex flex-col justify-between shadow-xs relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-stone-300/20 rounded-full blur-2xl pointer-events-none" />
+            
+            <div>
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-stone-200 text-stone-700 text-[10px] font-['Cinzel'] tracking-wider uppercase font-bold mb-4">
+                <span>✕</span>
+                <span>{lang === "es" ? "El Método Tradicional" : "Outdated Method"}</span>
+              </div>
+
+              <h3 className="font-serif-roman text-2xl sm:text-3xl font-bold text-stone-800 mb-2">
+                {t.comparison.colCompetitors}
+              </h3>
+              <p className="font-['Montserrat'] text-xs text-stone-600 mb-6 leading-relaxed">
+                {lang === "es"
+                  ? "Altos costos en imprentas locales, semanas enteras persiguiendo confirmaciones por teléfono y cero control real del banquete."
+                  : "High print shop costs, weeks spent chasing RSVPs over the phone, and zero control over catering guest counts."}
+              </p>
+
+              <div className="space-y-4 pt-2 border-t border-stone-300/60">
+                <div className="flex items-start gap-3">
+                  <span className="w-5 h-5 rounded-full bg-rose-100 text-rose-700 font-bold flex items-center justify-center text-xs shrink-0 mt-0.5">✕</span>
+                  <div>
+                    <h4 className="font-['Montserrat'] text-xs font-bold text-stone-800">
+                      {lang === "es" ? "Costo desproporcionado ($600 - $1,200)" : "Excessive print cost ($600 - $1,200)"}
+                    </h4>
+                    <p className="text-[11px] text-stone-600 mt-0.5">
+                      {lang === "es"
+                        ? "Gasto elevado en imprentas de Los Ángeles más el costo de sobres y timbres postales USPS."
+                        : "Hefty print shop bills in Southern California plus postage stamps and custom calligraphy."}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <span className="w-5 h-5 rounded-full bg-rose-100 text-rose-700 font-bold flex items-center justify-center text-xs shrink-0 mt-0.5">✕</span>
+                  <div>
+                    <h4 className="font-['Montserrat'] text-xs font-bold text-stone-800">
+                      {lang === "es" ? "Semanas llamando a tías y primos" : "Weeks of manual calling"}
+                    </h4>
+                    <p className="text-[11px] text-stone-600 mt-0.5">
+                      {lang === "es"
+                        ? "Llamadas incómodas una por una; el 30% nunca confirma a tiempo o no responde."
+                        : "Chasing guests one-by-one with awkward phone calls; 30% never respond in time."}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <span className="w-5 h-5 rounded-full bg-rose-100 text-rose-700 font-bold flex items-center justify-center text-xs shrink-0 mt-0.5">✕</span>
+                  <div>
+                    <h4 className="font-['Montserrat'] text-xs font-bold text-stone-800">
+                      {lang === "es" ? "Pérdida de dinero en el salón ($45-$85/plato)" : "Wasted catering budget ($45-$85/plate)"}
+                    </h4>
+                    <p className="text-[11px] text-stone-600 mt-0.5">
+                      {lang === "es"
+                        ? "Pagas banquetes de personas que prometieron ir pero cancelaron el mero día."
+                        : "You pay banquet fees for verbal promises that end up no-showing on party day."}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <span className="w-5 h-5 rounded-full bg-rose-100 text-rose-700 font-bold flex items-center justify-center text-xs shrink-0 mt-0.5">✕</span>
+                  <div>
+                    <h4 className="font-['Montserrat'] text-xs font-bold text-stone-800">
+                      {lang === "es" ? "Invitados perdidos en el tráfico de LA" : "Lost guests in LA traffic"}
+                    </h4>
+                    <p className="text-[11px] text-stone-600 mt-0.5">
+                      {lang === "es"
+                        ? "Dirección estática en papel sin GPS; invitados llamando a la familia en plena misa."
+                        : "Static paper address with no GPS navigation; frantic phone calls during the ceremony."}
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div className="md:col-span-4 text-[#4B5563] mt-2 md:mt-0">
-              {t.comparison.colCompetitors}
-            </div>
-            <div className="md:col-span-4 text-[#9C7736] font-bold mt-2 md:mt-0 flex items-center gap-1.5">
-              <span>✦</span>
-              <span>{t.comparison.colClickAndLove}</span>
+
+            <div className="mt-6 pt-4 border-t border-stone-300 text-[11px] text-stone-500 italic text-center">
+              {lang === "es"
+                ? "Cualquier error de horario o salón requiere mandar a reimprimir y pagar de nuevo."
+                : "Any last-minute schedule change requires expensive reprinting from scratch."}
             </div>
           </div>
 
-          <div className="divide-y divide-[#E8E3D9]">
-            {t.comparison.rows.map((row, rIdx) => (
-              <div
-                key={rIdx}
-                className="grid grid-cols-1 md:grid-cols-12 p-5 text-xs font-['Montserrat'] items-center hover:bg-[#FAF8F5] transition"
-              >
-                <div className="md:col-span-4 font-['Montserrat'] text-sm sm:text-base font-bold text-[#1F2937] mb-2 md:mb-0">
-                  {row.feature}
+          {/* Tarjeta Derecha: Click & Love (La Solución) */}
+          <div className="rounded-3xl bg-white border-2 border-[#C5A059] p-6 sm:p-8 flex flex-col justify-between shadow-[0_20px_50px_rgba(197,160,89,0.18)] relative overflow-hidden ring-1 ring-[#C5A059]/30">
+            <div className="absolute top-0 right-0 w-44 h-44 bg-[#C5A059]/10 rounded-full blur-3xl pointer-events-none" />
+
+            <div>
+              <div className="flex items-center justify-between gap-2 mb-4">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-[#C5A059] to-[#EED3A1] text-[#2C1F1B] text-[10px] font-['Cinzel'] tracking-wider uppercase font-extrabold shadow-xs">
+                  <span>✦</span>
+                  <span>{lang === "es" ? "Alta Costura Digital" : "Haute Couture Digital"}</span>
+                </span>
+                <span className="text-[10px] font-['Montserrat'] font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full">
+                  {lang === "es" ? "Soporte Local Los Ángeles" : "LA Local Support"}
+                </span>
+              </div>
+
+              <h3 className="font-serif-roman text-2xl sm:text-3xl font-bold text-[#2C1F1B] mb-2">
+                Click & Love Experience
+              </h3>
+              <p className="font-['Montserrat'] text-xs text-[#2B2B2B] mb-6 leading-relaxed">
+                {lang === "es"
+                  ? "Invitaciones web interactivas de gala con sobre virtual 3D, confirmación en 1 clic y navegación GPS directa al salón."
+                  : "Interactive digital gala invitations with 3D envelope, 1-click SMS RSVPs, and turn-by-turn venue GPS."}
+              </p>
+
+              <div className="space-y-4 pt-2 border-t border-[#E8E3D9]">
+                <div className="flex items-start gap-3">
+                  <span className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-800 font-bold flex items-center justify-center text-xs shrink-0 mt-0.5">✓</span>
+                  <div>
+                    <h4 className="font-['Montserrat'] text-xs font-bold text-[#2C1F1B]">
+                      {lang === "es" ? "Ahorra hasta un 80% (Desde $49 pago único)" : "Save up to 80% (From $49 one-time)"}
+                    </h4>
+                    <p className="text-[11px] text-[#554942] mt-0.5">
+                      {lang === "es"
+                        ? "Sin costos de imprenta ni correo postal. Invita a toda tu lista sin pagar por cada papel adicional."
+                        : "Zero printing or postal costs. Invite your entire guest list without per-card charges."}
+                    </p>
+                  </div>
                 </div>
-                <div className="md:col-span-4 text-[#4B5563] font-medium pr-4 line-through opacity-90 mb-2 md:mb-0">
-                  ✕ {row.competitors}
+
+                <div className="flex items-start gap-3">
+                  <span className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-800 font-bold flex items-center justify-center text-xs shrink-0 mt-0.5">✓</span>
+                  <div>
+                    <h4 className="font-['Montserrat'] text-xs font-bold text-[#2C1F1B]">
+                      {lang === "es" ? "98% de confirmación en las primeras 48 hrs" : "98% RSVP confirmation within 48 hrs"}
+                    </h4>
+                    <p className="text-[11px] text-[#554942] mt-0.5">
+                      {lang === "es"
+                        ? "Envío directo por WhatsApp o SMS. El invitado confirma en 1 segundo sin contraseñas."
+                        : "Direct WhatsApp and SMS delivery. Guests confirm in 1 tap with zero logins."}
+                    </p>
+                  </div>
                 </div>
-                <div className="md:col-span-4 text-[#111827] font-semibold flex items-start gap-2">
-                  <span className="w-4 h-4 rounded-full bg-[#C5A059] text-white flex items-center justify-center text-[10px] font-bold flex-shrink-0 mt-0.5">
-                    ✓
-                  </span>
-                  <span>{row.clickAndLove}</span>
+
+                <div className="flex items-start gap-3">
+                  <span className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-800 font-bold flex items-center justify-center text-xs shrink-0 mt-0.5">✓</span>
+                  <div>
+                    <h4 className="font-['Montserrat'] text-xs font-bold text-[#2C1F1B]">
+                      {lang === "es" ? "Control de aforo blindado (Cero colados)" : "Strict pass control (Zero uninvited crashers)"}
+                    </h4>
+                    <p className="text-[11px] text-[#554942] mt-0.5">
+                      {lang === "es"
+                        ? "Pases asignados exactamente por familia. Sabes con certeza cuántos adultos y niños asistirán."
+                        : "Exact seats reserved per family. Protect your tables from unauthorized plus-ones."}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <span className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-800 font-bold flex items-center justify-center text-xs shrink-0 mt-0.5">✓</span>
+                  <div>
+                    <h4 className="font-['Montserrat'] text-xs font-bold text-[#2C1F1B]">
+                      {lang === "es" ? "Navegación GPS a Waze y Google Maps" : "1-Tap GPS to Waze & Google Maps"}
+                    </h4>
+                    <p className="text-[11px] text-[#554942] mt-0.5">
+                      {lang === "es"
+                        ? "Tus invitados abren la ruta en su teléfono y llegan a tiempo a la iglesia y al salón."
+                        : "Turn-by-turn guidance straight to the parking lot of your banquet hall or church."}
+                    </p>
+                  </div>
                 </div>
               </div>
-            ))}
+            </div>
+
+            <div className="mt-6 pt-4 border-t border-[#E8E3D9] flex items-center justify-between">
+              <span className="text-[11px] font-['Montserrat'] font-semibold text-[#8C6D2D]">
+                {lang === "es" ? "Lista en tiempo real exportable a Excel" : "Real-time list exportable to Excel"}
+              </span>
+              <a
+                href="#precios"
+                className="text-xs font-['Cinzel'] tracking-wider uppercase font-bold text-[#2C1F1B] hover:text-[#C5A059] underline flex items-center gap-1"
+              >
+                <span>{lang === "es" ? "Ver Paquetes" : "View Packages"}</span>
+                <span>→</span>
+              </a>
+            </div>
           </div>
         </div>
       </section>
@@ -1012,6 +1215,10 @@ export default function HomePage() {
             </div>
             <p className="font-['Montserrat'] text-xs text-[#2B2B2B] mt-2 max-w-sm">
               {t.footer.brandSubtitle}
+            </p>
+            <p className="font-['Montserrat'] text-[11px] text-[#8C6D2D] font-semibold mt-2 flex items-center gap-1.5 justify-center md:justify-start">
+              <span>📍</span>
+              <span>{t.footer.localOrigin}</span>
             </p>
           </div>
 
