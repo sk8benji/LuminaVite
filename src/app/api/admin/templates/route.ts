@@ -52,21 +52,7 @@ export async function GET() {
 
       return {
         ...item,
-        ...(dbMatch ? {
-          nombre: dbMatch.nombre || item.nombre,
-          titulo: dbMatch.titulo || item.titulo,
-          subtitulo: dbMatch.subtitulo || item.subtitulo,
-          frasePersonalizada: dbMatch.frasePersonalizada || item.frasePersonalizada,
-          tipoLetra: dbMatch.tipoLetra || item.tipoLetra,
-          musicaUrl: dbMatch.musicaUrl || item.musicaUrl,
-          musicaTitulo: dbMatch.musicaTitulo || item.musicaTitulo,
-          colorSobre: dbMatch.colorSobre || item.colorSobre,
-          colorSello: dbMatch.colorSello || item.colorSello,
-          fotoPortadaUrl: dbMatch.fotoPortadaUrl || item.fotoPortadaUrl,
-          fotoInfanciaUrl: dbMatch.fotoInfanciaUrl || item.fotoInfanciaUrl,
-          fotoActualUrl: dbMatch.fotoActualUrl || item.fotoActualUrl,
-          fotoCierreUrl: dbMatch.fotoCierreUrl || item.fotoCierreUrl,
-        } : {}),
+        ...(dbMatch || {}),
         ...(localMatch || {}),
       };
     });
@@ -89,7 +75,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "El slug de la plantilla es requerido." }, { status: 400 });
     }
 
-    // 1. Guardar localmente para disponibilidad inmediata
+    // 1. Guardar localmente para disponibilidad inmediata y fallback offline
     saveLocalOverride(slug, updates);
 
     // 2. Intentar guardar en PostgreSQL via Prisma si está disponible
@@ -110,6 +96,7 @@ export async function POST(req: NextRequest) {
           fotoInfanciaUrl: updates.fotoInfanciaUrl,
           fotoActualUrl: updates.fotoActualUrl,
           fotoCierreUrl: updates.fotoCierreUrl,
+          configExtra: updates,
         },
         create: {
           slug,
@@ -126,6 +113,7 @@ export async function POST(req: NextRequest) {
           fotoInfanciaUrl: updates.fotoInfanciaUrl,
           fotoActualUrl: updates.fotoActualUrl,
           fotoCierreUrl: updates.fotoCierreUrl,
+          configExtra: updates,
         },
       });
     } catch (dbErr) {

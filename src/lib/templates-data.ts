@@ -16,6 +16,46 @@ export interface MasterTemplateItem {
   fotoInfanciaUrl?: string;
   fotoActualUrl?: string;
   fotoCierreUrl?: string;
+  videoUrl?: string;
+  
+  // Fecha y Medallón
+  fechaTextoPersonalizada?: string;
+  fechaPlacaMes?: string;
+  fechaPlacaHora?: string;
+  fechaPlacaLugar?: string;
+  countdownEncabezado?: string;
+
+  // Lugares
+  recepcionNombre?: string;
+  recepcionDireccion?: string;
+  recepcionMapUrl?: string;
+  ceremoniaNombre?: string;
+  ceremoniaDireccion?: string;
+  ceremoniaMapUrl?: string;
+
+  // Protocolo y Código de Vestimenta
+  dressCodeTitulo?: string;
+  dressCodeEtiqueta?: string;
+  dressCodeNota?: string;
+  dressCodeColoresReservados?: string;
+
+  // Regalos & RSVP
+  regalosMensaje?: string;
+  regalosZelle?: string;
+  regalosCashApp?: string;
+  telefonoWhatsappRsvp?: string;
+  rsvpFechaLimite?: string;
+  maxPasesPorInvitado?: number;
+
+  // Cierre y Extras
+  mensajeDespedida?: string;
+  autorBendicion?: string;
+  textoDisco?: string;
+
+  // Protocolos JSON
+  corteHonorJson?: any;
+  itinerarioJson?: any;
+
   activo: boolean;
   orden: number;
 }

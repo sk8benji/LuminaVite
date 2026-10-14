@@ -361,15 +361,7 @@ export function getSystemDemo(slug: string): InvitationData | null {
       if (match) {
         return {
           ...base,
-          ...(match.titulo ? { titulo: match.titulo } : {}),
-          ...(match.subtitulo ? { subtitulo: match.subtitulo } : {}),
-          ...(match.frasePersonalizada ? { frasePersonalizada: match.frasePersonalizada } : {}),
-          ...(match.musicaUrl ? { musicaUrl: match.musicaUrl } : {}),
-          ...(match.musicaTitulo ? { musicaTitulo: match.musicaTitulo } : {}),
-          ...(match.fotoPortadaUrl ? { fotoPortadaUrl: match.fotoPortadaUrl } : {}),
-          ...(match.fotoInfanciaUrl ? { fotoInfanciaUrl: match.fotoInfanciaUrl } : {}),
-          ...(match.fotoActualUrl ? { fotoActualUrl: match.fotoActualUrl } : {}),
-          ...(match.fotoCierreUrl ? { fotoCierreUrl: match.fotoCierreUrl } : {}),
+          ...match,
         };
       }
     }
