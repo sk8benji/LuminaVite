@@ -188,8 +188,8 @@ export const translations: Record<Language, HomeTranslations> = {
       subtitle:
         "Invitaciones interactivas armadas por nuestro equipo en Los Ángeles con confirmación por SMS, control de mesas y panel en vivo para tu celular.",
       ctaCatalog: "Ver Catálogo de Plantillas",
-      ctaDemo: "Ver Ejemplo Interactivo",
-      ctaCreate: "Ver Diseños y Precios",
+      ctaDemo: "Ver Ejemplo en Vivo",
+      ctaCreate: "Ver Precios",
       multiChannelTitle: "Envía tus invitaciones por:",
       channels: [
         "WhatsApp",
@@ -512,8 +512,8 @@ export const translations: Record<Language, HomeTranslations> = {
       subtitle:
         "Interactive invitations custom-built by our Los Angeles team with SMS RSVPs, guest capacity control, and live phone dashboard.",
       ctaCatalog: "Explore Collections",
-      ctaDemo: "See Interactive Demo",
-      ctaCreate: "View Designs & Pricing",
+      ctaDemo: "View Live Demo",
+      ctaCreate: "View Pricing",
       multiChannelTitle: "Send your invitations via:",
       channels: [
         "WhatsApp",
