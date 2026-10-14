@@ -567,207 +567,288 @@ export default function HomePage() {
 
 
       {/* ============================================================== */}
-      {/* 7. COMPARATIVA VISUAL (MÉTODO TRADICIONAL VS CLICK & LOVE) */}
       {/* ============================================================== */}
-      <section id="comparativa" className="relative py-24 px-4 max-w-6xl mx-auto select-none">
+      {/* 5. SECCIÓN DE CONTRASTE: CANVA VS CLICK & LOVE ASISTIDO */}
+      {/* ============================================================== */}
+      <section id="comparativa" className="relative py-24 px-4 max-w-7xl mx-auto select-none">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[#C5A059]/40 bg-[#F5EFE4] mb-3 backdrop-blur-md">
+            <span className="w-2 h-2 rounded-full bg-[#C5A059] animate-pulse" />
             <span className="font-['Cinzel'] text-[10px] tracking-[0.3em] uppercase text-[#2C1F1B] font-bold">
               {t.comparison.pill}
             </span>
           </div>
 
-          <h2 className="font-serif-roman text-3xl sm:text-5xl font-bold tracking-tight text-[#2C1F1B] mb-3">
+          <h2 className="font-serif-roman text-3xl sm:text-5xl font-bold tracking-tight text-[#2C1F1B] mb-4 leading-tight">
             {t.comparison.title}
           </h2>
 
-          <p className="font-['Montserrat'] text-sm text-[#2B2B2B] leading-relaxed">
+          <p className="font-['Montserrat'] text-sm sm:text-base text-[#374151] max-w-2xl mx-auto leading-relaxed">
             {t.comparison.subtitle}
           </p>
         </div>
 
-        {/* Comparativa Visual Directa: Papel Tradicional vs Click & Love */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
-          {/* Tarjeta Izquierda: Papel Tradicional (El Problema) */}
-          <div className="rounded-3xl bg-[#F6F2EC] border border-[#DDD6CC] p-6 sm:p-8 flex flex-col justify-between shadow-xs relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-stone-300/20 rounded-full blur-2xl pointer-events-none" />
+        {/* 3 TARJETAS VISUALES DE CONTRASTE CON MICRO-CAPTURAS */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
+          {/* TARJETA 1: CERO TRABAJO PARA TI / NOSOTROS LA ARMAMOS */}
+          <div className="rounded-3xl bg-white border border-[#E8E3D9] p-6 sm:p-7 flex flex-col justify-between shadow-[0_10px_30px_rgba(44,31,27,0.06)] hover:shadow-[0_15px_40px_rgba(197,160,89,0.15)] transition-all relative overflow-hidden group">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-[#C5A059]/10 rounded-full blur-2xl pointer-events-none" />
             
             <div>
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-stone-200 text-stone-700 text-[10px] font-['Cinzel'] tracking-wider uppercase font-bold mb-4">
-                <span>✕</span>
-                <span>{lang === "es" ? "El Método Tradicional" : "Outdated Method"}</span>
+              {/* Badge superior */}
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#F5EFE4] border border-[#C5A059]/30 text-[#8C6D2D] text-[10px] font-['Cinzel'] tracking-wider uppercase font-bold mb-4">
+                <span>✦</span>
+                <span>{t.comparison.cards[0].tag}</span>
               </div>
 
-              <h3 className="font-serif-roman text-2xl sm:text-3xl font-bold text-stone-800 mb-2">
-                {t.comparison.colCompetitors}
+              <h3 className="font-serif-roman text-2xl font-bold text-[#2C1F1B] mb-2 leading-snug">
+                {t.comparison.cards[0].title}
               </h3>
-              <p className="font-['Montserrat'] text-xs text-stone-600 mb-6 leading-relaxed">
-                {lang === "es"
-                  ? "Altos costos en imprentas locales, semanas enteras persiguiendo confirmaciones por teléfono y cero control real del banquete."
-                  : "High print shop costs, weeks spent chasing RSVPs over the phone, and zero control over catering guest counts."}
-              </p>
 
-              <div className="space-y-4 pt-2 border-t border-stone-300/60">
-                <div className="flex items-start gap-3">
-                  <span className="w-5 h-5 rounded-full bg-rose-100 text-rose-700 font-bold flex items-center justify-center text-xs shrink-0 mt-0.5">✕</span>
-                  <div>
-                    <h4 className="font-['Montserrat'] text-xs font-bold text-stone-800">
-                      {lang === "es" ? "Costo desproporcionado ($600 - $1,200)" : "Excessive print cost ($600 - $1,200)"}
-                    </h4>
-                    <p className="text-[11px] text-stone-600 mt-0.5">
-                      {lang === "es"
-                        ? "Gasto elevado en imprentas de Los Ángeles más el costo de sobres y timbres postales USPS."
-                        : "Hefty print shop bills in Southern California plus postage stamps and custom calligraphy."}
-                    </p>
+              {/* Contraste: Canva vs Click & Love */}
+              <div className="space-y-3 mt-4 mb-6">
+                <div className="p-3.5 rounded-2xl bg-rose-50/70 border border-rose-200/80">
+                  <div className="flex items-center gap-1.5 text-[11px] font-['Montserrat'] font-bold text-rose-800 mb-1">
+                    <span className="w-4 h-4 rounded-full bg-rose-200 text-rose-800 flex items-center justify-center text-[10px]">✕</span>
+                    <span>{t.comparison.cards[0].canvaProblemLabel}</span>
                   </div>
+                  <p className="text-xs text-stone-600 font-['Montserrat'] leading-relaxed pl-5">
+                    {t.comparison.cards[0].canvaProblem}
+                  </p>
                 </div>
 
-                <div className="flex items-start gap-3">
-                  <span className="w-5 h-5 rounded-full bg-rose-100 text-rose-700 font-bold flex items-center justify-center text-xs shrink-0 mt-0.5">✕</span>
-                  <div>
-                    <h4 className="font-['Montserrat'] text-xs font-bold text-stone-800">
-                      {lang === "es" ? "Semanas llamando a tías y primos" : "Weeks of manual calling"}
-                    </h4>
-                    <p className="text-[11px] text-stone-600 mt-0.5">
-                      {lang === "es"
-                        ? "Llamadas incómodas una por una; el 30% nunca confirma a tiempo o no responde."
-                        : "Chasing guests one-by-one with awkward phone calls; 30% never respond in time."}
-                    </p>
+                <div className="p-3.5 rounded-2xl bg-[#FBF9F5] border border-[#C5A059]/40">
+                  <div className="flex items-center gap-1.5 text-[11px] font-['Montserrat'] font-bold text-[#8C6D2D] mb-1">
+                    <span className="w-4 h-4 rounded-full bg-[#C5A059] text-white flex items-center justify-center text-[10px]">✓</span>
+                    <span>{t.comparison.cards[0].solutionLabel}</span>
                   </div>
-                </div>
-
-                <div className="flex items-start gap-3">
-                  <span className="w-5 h-5 rounded-full bg-rose-100 text-rose-700 font-bold flex items-center justify-center text-xs shrink-0 mt-0.5">✕</span>
-                  <div>
-                    <h4 className="font-['Montserrat'] text-xs font-bold text-stone-800">
-                      {lang === "es" ? "Pérdida de dinero en el salón ($45-$85/plato)" : "Wasted catering budget ($45-$85/plate)"}
-                    </h4>
-                    <p className="text-[11px] text-stone-600 mt-0.5">
-                      {lang === "es"
-                        ? "Pagas banquetes de personas que prometieron ir pero cancelaron el mero día."
-                        : "You pay banquet fees for verbal promises that end up no-showing on party day."}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3">
-                  <span className="w-5 h-5 rounded-full bg-rose-100 text-rose-700 font-bold flex items-center justify-center text-xs shrink-0 mt-0.5">✕</span>
-                  <div>
-                    <h4 className="font-['Montserrat'] text-xs font-bold text-stone-800">
-                      {lang === "es" ? "Invitados perdidos en el tráfico de LA" : "Lost guests in LA traffic"}
-                    </h4>
-                    <p className="text-[11px] text-stone-600 mt-0.5">
-                      {lang === "es"
-                        ? "Dirección estática en papel sin GPS; invitados llamando a la familia en plena misa."
-                        : "Static paper address with no GPS navigation; frantic phone calls during the ceremony."}
-                    </p>
-                  </div>
+                  <p className="text-xs text-[#2C1F1B] font-['Montserrat'] font-medium leading-relaxed pl-5">
+                    {t.comparison.cards[0].solution}
+                  </p>
                 </div>
               </div>
             </div>
 
-            <div className="mt-6 pt-4 border-t border-stone-300 text-[11px] text-stone-500 italic text-center">
-              {lang === "es"
-                ? "Cualquier error de horario o salón requiere mandar a reimprimir y pagar de nuevo."
-                : "Any last-minute schedule change requires expensive reprinting from scratch."}
+            {/* Micro-UI: Chat de WhatsApp con el diseñador en LA */}
+            <div className="mt-2 pt-4 border-t border-[#E8E3D9]">
+              <div className="text-[10px] font-['Montserrat'] font-bold uppercase tracking-wider text-stone-600 mb-2.5 flex items-center justify-between">
+                <span>{lang === "es" ? "Micro-vista real" : "Live Preview"}</span>
+                <span className="text-emerald-800 flex items-center gap-1">
+                  <span className="w-2 h-2 rounded-full bg-emerald-700 animate-pulse" />
+                  WhatsApp LA
+                </span>
+              </div>
+              <div className="rounded-2xl bg-[#EFEAE2] p-3 border border-[#DDD6CC] space-y-2 text-[11px] font-['Montserrat'] shadow-inner">
+                {/* Mensaje cliente */}
+                <div className="bg-white rounded-xl rounded-tr-xs p-2.5 shadow-xs max-w-[88%] ml-auto text-stone-800 border border-stone-200/60">
+                  <p className="leading-snug">
+                    {lang === "es" 
+                      ? "¡Hola! Te mando las fotos de los XV y los datos de Hello Banquet Hall 📸👗" 
+                      : "Hi! Sending the XV photos and venue details for Hello Banquet Hall 📸"}
+                  </p>
+                  <span className="text-[9px] text-stone-600 block text-right mt-1">11:42 AM</span>
+                </div>
+                {/* Mensaje diseñador */}
+                <div className="bg-[#DCF8C6] rounded-xl rounded-tl-xs p-2.5 shadow-xs max-w-[88%] text-stone-900 border border-emerald-200">
+                  <p className="leading-snug font-medium">
+                    {lang === "es"
+                      ? "¡Perfecto! Nuestro diseñador en LA ya armó tu sobre interactivo con música. Aquí tienes el enlace de prueba ✦"
+                      : "Got it! Our LA designer built your 3D musical envelope. Here is your preview link ✦"}
+                  </p>
+                  <span className="text-[9px] text-emerald-800 block text-right mt-1 font-semibold">12:05 PM ✓✓</span>
+                </div>
+              </div>
             </div>
           </div>
 
-          {/* Tarjeta Derecha: Click & Love (La Solución) */}
-          <div className="rounded-3xl bg-white border-2 border-[#C5A059] p-6 sm:p-8 flex flex-col justify-between shadow-[0_20px_50px_rgba(197,160,89,0.18)] relative overflow-hidden ring-1 ring-[#C5A059]/30">
-            <div className="absolute top-0 right-0 w-44 h-44 bg-[#C5A059]/10 rounded-full blur-3xl pointer-events-none" />
+          {/* TARJETA 2: PANEL PRIVADO CON CONFIRMADOS EN VIVO */}
+          <div className="rounded-3xl bg-white border-2 border-[#C5A059] p-6 sm:p-7 flex flex-col justify-between shadow-[0_15px_40px_rgba(197,160,89,0.18)] relative overflow-hidden group ring-1 ring-[#C5A059]/30">
+            <div className="absolute top-0 right-0 w-40 h-40 bg-[#C5A059]/15 rounded-full blur-3xl pointer-events-none" />
 
             <div>
-              <div className="flex items-center justify-between gap-2 mb-4">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-[#C5A059] to-[#EED3A1] text-[#2C1F1B] text-[10px] font-['Cinzel'] tracking-wider uppercase font-extrabold shadow-xs">
-                  <span>✦</span>
-                  <span>{lang === "es" ? "Alta Costura Digital" : "Haute Couture Digital"}</span>
-                </span>
-                <span className="text-[10px] font-['Montserrat'] font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full">
-                  {lang === "es" ? "Soporte Local Los Ángeles" : "LA Local Support"}
-                </span>
+              {/* Badge superior */}
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-[#C5A059] to-[#EED3A1] text-[#2C1F1B] text-[10px] font-['Cinzel'] tracking-wider uppercase font-extrabold mb-4 shadow-xs">
+                <span>✦</span>
+                <span>{t.comparison.cards[1].tag}</span>
               </div>
 
-              <h3 className="font-serif-roman text-2xl sm:text-3xl font-bold text-[#2C1F1B] mb-2">
-                Click & Love Experience
+              <h3 className="font-serif-roman text-2xl font-bold text-[#2C1F1B] mb-2 leading-snug">
+                {t.comparison.cards[1].title}
               </h3>
-              <p className="font-['Montserrat'] text-xs text-[#2B2B2B] mb-6 leading-relaxed">
-                {lang === "es"
-                  ? "Invitaciones web interactivas de gala con sobre virtual 3D, confirmación en 1 clic y navegación GPS directa al salón."
-                  : "Interactive digital gala invitations with 3D envelope, 1-click SMS RSVPs, and turn-by-turn venue GPS."}
-              </p>
 
-              <div className="space-y-4 pt-2 border-t border-[#E8E3D9]">
-                <div className="flex items-start gap-3">
-                  <span className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-800 font-bold flex items-center justify-center text-xs shrink-0 mt-0.5">✓</span>
-                  <div>
-                    <h4 className="font-['Montserrat'] text-xs font-bold text-[#2C1F1B]">
-                      {lang === "es" ? "Ahorra hasta un 80% (Desde $99 pago único)" : "Save up to 80% (From $99 one-time)"}
-                    </h4>
-                    <p className="text-[11px] text-[#554942] mt-0.5">
-                      {lang === "es"
-                        ? "Sin costos de imprenta ni correo postal. Invita a toda tu lista sin pagar por cada papel adicional."
-                        : "Zero printing or postal costs. Invite your entire guest list without per-card charges."}
-                    </p>
+              {/* Contraste: Canva vs Click & Love */}
+              <div className="space-y-3 mt-4 mb-6">
+                <div className="p-3.5 rounded-2xl bg-rose-50/70 border border-rose-200/80">
+                  <div className="flex items-center gap-1.5 text-[11px] font-['Montserrat'] font-bold text-rose-800 mb-1">
+                    <span className="w-4 h-4 rounded-full bg-rose-200 text-rose-800 flex items-center justify-center text-[10px]">✕</span>
+                    <span>{t.comparison.cards[1].canvaProblemLabel}</span>
                   </div>
+                  <p className="text-xs text-stone-600 font-['Montserrat'] leading-relaxed pl-5">
+                    {t.comparison.cards[1].canvaProblem}
+                  </p>
                 </div>
 
-                <div className="flex items-start gap-3">
-                  <span className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-800 font-bold flex items-center justify-center text-xs shrink-0 mt-0.5">✓</span>
-                  <div>
-                    <h4 className="font-['Montserrat'] text-xs font-bold text-[#2C1F1B]">
-                      {lang === "es" ? "98% de confirmación en las primeras 48 hrs" : "98% RSVP confirmation within 48 hrs"}
-                    </h4>
-                    <p className="text-[11px] text-[#554942] mt-0.5">
-                      {lang === "es"
-                        ? "Envío directo por WhatsApp o SMS. El invitado confirma en 1 segundo sin contraseñas."
-                        : "Direct WhatsApp and SMS delivery. Guests confirm in 1 tap with zero logins."}
-                    </p>
+                <div className="p-3.5 rounded-2xl bg-[#FBF9F5] border border-[#C5A059]/50">
+                  <div className="flex items-center gap-1.5 text-[11px] font-['Montserrat'] font-bold text-[#8C6D2D] mb-1">
+                    <span className="w-4 h-4 rounded-full bg-[#C5A059] text-white flex items-center justify-center text-[10px]">✓</span>
+                    <span>{t.comparison.cards[1].solutionLabel}</span>
                   </div>
-                </div>
-
-                <div className="flex items-start gap-3">
-                  <span className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-800 font-bold flex items-center justify-center text-xs shrink-0 mt-0.5">✓</span>
-                  <div>
-                    <h4 className="font-['Montserrat'] text-xs font-bold text-[#2C1F1B]">
-                      {lang === "es" ? "Control de aforo blindado (Cero colados)" : "Strict pass control (Zero uninvited crashers)"}
-                    </h4>
-                    <p className="text-[11px] text-[#554942] mt-0.5">
-                      {lang === "es"
-                        ? "Pases asignados exactamente por familia. Sabes con certeza cuántos adultos y niños asistirán."
-                        : "Exact seats reserved per family. Protect your tables from unauthorized plus-ones."}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3">
-                  <span className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-800 font-bold flex items-center justify-center text-xs shrink-0 mt-0.5">✓</span>
-                  <div>
-                    <h4 className="font-['Montserrat'] text-xs font-bold text-[#2C1F1B]">
-                      {lang === "es" ? "Navegación GPS a Waze y Google Maps" : "1-Tap GPS to Waze & Google Maps"}
-                    </h4>
-                    <p className="text-[11px] text-[#554942] mt-0.5">
-                      {lang === "es"
-                        ? "Tus invitados abren la ruta en su teléfono y llegan a tiempo a la iglesia y al salón."
-                        : "Turn-by-turn guidance straight to the parking lot of your banquet hall or church."}
-                    </p>
-                  </div>
+                  <p className="text-xs text-[#2C1F1B] font-['Montserrat'] font-medium leading-relaxed pl-5">
+                    {t.comparison.cards[1].solution}
+                  </p>
                 </div>
               </div>
             </div>
 
-            <div className="mt-6 pt-4 border-t border-[#E8E3D9] flex items-center justify-between">
-              <span className="text-[11px] font-['Montserrat'] font-semibold text-[#8C6D2D]">
-                {lang === "es" ? "Lista en tiempo real exportable a Excel" : "Real-time list exportable to Excel"}
-              </span>
-              <a
-                href="#precios"
-                className="text-xs font-['Cinzel'] tracking-wider uppercase font-bold text-[#2C1F1B] hover:text-[#C5A059] underline flex items-center gap-1"
-              >
-                <span>{lang === "es" ? "Ver Paquetes" : "View Packages"}</span>
-                <span>→</span>
-              </a>
+            {/* Micro-UI: Dashboard de Anfitrión en Vivo */}
+            <div className="mt-2 pt-4 border-t border-[#E8E3D9]">
+              <div className="text-[10px] font-['Montserrat'] font-bold uppercase tracking-wider text-stone-600 mb-2.5 flex items-center justify-between">
+                <span>{lang === "es" ? "Panel en tu celular" : "Host Mobile Roster"}</span>
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800 font-bold border border-emerald-200 text-[10px]">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-700 animate-ping" />
+                  {lang === "es" ? "En vivo" : "Live Sync"}
+                </span>
+              </div>
+              <div className="rounded-2xl bg-[#2C1F1B] text-white p-3.5 space-y-2.5 text-[11px] font-['Montserrat'] shadow-lg border border-[#C5A059]/40">
+                {/* Contador rápido */}
+                <div className="grid grid-cols-3 gap-1.5 pb-2 border-b border-stone-700/60 text-center">
+                  <div className="bg-stone-800/80 rounded-lg p-1.5">
+                    <span className="block text-[10px] text-stone-400 uppercase tracking-wider">{lang === "es" ? "Confirmados" : "Confirmed"}</span>
+                    <span className="text-sm font-bold text-emerald-400">142</span>
+                  </div>
+                  <div className="bg-stone-800/80 rounded-lg p-1.5">
+                    <span className="block text-[10px] text-stone-400 uppercase tracking-wider">{lang === "es" ? "Cancelados" : "Declined"}</span>
+                    <span className="text-sm font-bold text-rose-400">8</span>
+                  </div>
+                  <div className="bg-stone-800/80 rounded-lg p-1.5">
+                    <span className="block text-[10px] text-stone-400 uppercase tracking-wider">{lang === "es" ? "Pendientes" : "Pending"}</span>
+                    <span className="text-sm font-bold text-[#EED3A1]">15</span>
+                  </div>
+                </div>
+                {/* Filas de invitados */}
+                <div className="space-y-1.5 pt-0.5">
+                  <div className="flex items-center justify-between bg-stone-800/50 rounded-lg px-2.5 py-1.5">
+                    <div>
+                      <p className="font-bold text-stone-100 text-xs">Familia Morales</p>
+                      <span className="text-[10px] text-stone-400">4 pases asignados · Mesa 7</span>
+                    </div>
+                    <span className="px-2 py-0.5 rounded-md bg-emerald-950 text-emerald-300 font-bold text-[10px] border border-emerald-700/50">
+                      ✓ Asistirán (4)
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between bg-stone-800/50 rounded-lg px-2.5 py-1.5">
+                    <div>
+                      <p className="font-bold text-stone-100 text-xs">Carlos & Diana Mendoza</p>
+                      <span className="text-[10px] text-stone-400">2 pases asignados</span>
+                    </div>
+                    <span className="px-2 py-0.5 rounded-md bg-rose-950 text-rose-300 font-bold text-[10px] border border-rose-700/50">
+                      ✕ No asisten
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
+          </div>
+
+          {/* TARJETA 3: MENSAJES SMS DIRECTOS AL TELÉFONO CON GPS */}
+          <div className="rounded-3xl bg-white border border-[#E8E3D9] p-6 sm:p-7 flex flex-col justify-between shadow-[0_10px_30px_rgba(44,31,27,0.06)] hover:shadow-[0_15px_40px_rgba(197,160,89,0.15)] transition-all relative overflow-hidden group">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-[#C5A059]/10 rounded-full blur-2xl pointer-events-none" />
+
+            <div>
+              {/* Badge superior */}
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#F5EFE4] border border-[#C5A059]/30 text-[#8C6D2D] text-[10px] font-['Cinzel'] tracking-wider uppercase font-bold mb-4">
+                <span>✦</span>
+                <span>{t.comparison.cards[2].tag}</span>
+              </div>
+
+              <h3 className="font-serif-roman text-2xl font-bold text-[#2C1F1B] mb-2 leading-snug">
+                {t.comparison.cards[2].title}
+              </h3>
+
+              {/* Contraste: Canva vs Click & Love */}
+              <div className="space-y-3 mt-4 mb-6">
+                <div className="p-3.5 rounded-2xl bg-rose-50/70 border border-rose-200/80">
+                  <div className="flex items-center gap-1.5 text-[11px] font-['Montserrat'] font-bold text-rose-800 mb-1">
+                    <span className="w-4 h-4 rounded-full bg-rose-200 text-rose-800 flex items-center justify-center text-[10px]">✕</span>
+                    <span>{t.comparison.cards[2].canvaProblemLabel}</span>
+                  </div>
+                  <p className="text-xs text-stone-600 font-['Montserrat'] leading-relaxed pl-5">
+                    {t.comparison.cards[2].canvaProblem}
+                  </p>
+                </div>
+
+                <div className="p-3.5 rounded-2xl bg-[#FBF9F5] border border-[#C5A059]/40">
+                  <div className="flex items-center gap-1.5 text-[11px] font-['Montserrat'] font-bold text-[#8C6D2D] mb-1">
+                    <span className="w-4 h-4 rounded-full bg-[#C5A059] text-white flex items-center justify-center text-[10px]">✓</span>
+                    <span>{t.comparison.cards[2].solutionLabel}</span>
+                  </div>
+                  <p className="text-xs text-[#2C1F1B] font-['Montserrat'] font-medium leading-relaxed pl-5">
+                    {t.comparison.cards[2].solution}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Micro-UI: Globo SMS en Teléfono con GPS Waze/Maps */}
+            <div className="mt-2 pt-4 border-t border-[#E8E3D9]">
+              <div className="text-[10px] font-['Montserrat'] font-bold uppercase tracking-wider text-stone-600 mb-2.5 flex items-center justify-between">
+                <span>{lang === "es" ? "SMS recibido por invitado" : "Guest SMS Notification"}</span>
+                <span className="text-blue-700 flex items-center gap-1">
+                  <span>💬</span>
+                  SMS Text
+                </span>
+              </div>
+              <div className="rounded-2xl bg-stone-100 p-3 border border-stone-200 space-y-2 text-[11px] font-['Montserrat'] shadow-inner">
+                {/* Burbuja SMS iOS/Android */}
+                <div className="bg-white rounded-2xl rounded-tl-xs p-3 shadow-xs border border-stone-200 text-stone-800">
+                  <div className="flex items-center justify-between text-[9px] text-stone-600 mb-1 pb-1 border-b border-stone-100 font-semibold">
+                    <span>Click & Love · Sofia & Mateo</span>
+                    <span>SMS · Ahora</span>
+                  </div>
+                  <p className="leading-snug text-xs text-stone-800">
+                    {lang === "es"
+                      ? "¡Hola Familia Ramos! Confirmaron 3 pases para la Boda. Mesa #7 asignada. Tu pase y ruta GPS:"
+                      : "Hi Ramos Family! 3 passes confirmed for the Wedding. Table #7 reserved. Your pass & GPS route:"}
+                  </p>
+                  {/* Micro botón interactivo GPS */}
+                  <div className="mt-2.5 pt-2 border-t border-stone-100 flex items-center gap-2">
+                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-blue-600 text-white font-bold text-[10px] shadow-xs">
+                      🚗 Waze
+                    </span>
+                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-emerald-600 text-white font-bold text-[10px] shadow-xs">
+                      📍 Google Maps
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* BANNER CTA INFERIOR DE LA COMPARATIVA */}
+        <div className="mt-12 rounded-3xl bg-gradient-to-br from-[#2C1F1B] via-[#3a2924] to-[#2C1F1B] border border-[#C5A059]/40 p-8 sm:p-10 shadow-2xl relative overflow-hidden text-center sm:text-left flex flex-col sm:flex-row items-center justify-between gap-6">
+          <div className="absolute top-0 right-0 w-80 h-80 bg-[#C5A059]/15 rounded-full blur-3xl pointer-events-none" />
+          
+          <div className="relative z-10 max-w-2xl">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#C5A059]/20 border border-[#C5A059]/40 text-[#EED3A1] text-[10px] font-['Cinzel'] tracking-wider uppercase font-bold mb-3">
+              <span>✦</span>
+              <span>{lang === "es" ? "Soporte Local en Los Ángeles" : "Local LA Concierge"}</span>
+            </div>
+            <h3 className="font-serif-roman text-2xl sm:text-3xl font-bold text-white mb-2 leading-tight">
+              {t.comparison.ctaBox.title}
+            </h3>
+            <p className="font-['Montserrat'] text-xs sm:text-sm text-stone-300 leading-relaxed">
+              {t.comparison.ctaBox.desc}
+            </p>
+          </div>
+
+          <div className="relative z-10 shrink-0">
+            <a
+              href="#precios"
+              className="inline-flex items-center justify-center px-7 py-3.5 rounded-full bg-gradient-to-r from-[#C5A059] to-[#EED3A1] text-[#2C1F1B] font-['Cinzel'] text-xs tracking-wider uppercase font-bold hover:brightness-105 shadow-[0_10px_25px_rgba(197,160,89,0.35)] transition-all transform hover:-translate-y-0.5 active:translate-y-0"
+            >
+              {t.comparison.ctaBox.btn}
+            </a>
           </div>
         </div>
       </section>

@@ -94,13 +94,19 @@ export interface HomeTranslations {
     pill: string;
     title: string;
     subtitle: string;
-    colCompetitors: string;
-    colClickAndLove: string;
-    rows: {
-      feature: string;
-      competitors: string;
-      clickAndLove: string;
+    cards: {
+      tag: string;
+      title: string;
+      canvaProblemLabel: string;
+      canvaProblem: string;
+      solutionLabel: string;
+      solution: string;
     }[];
+    ctaBox: {
+      title: string;
+      desc: string;
+      btn: string;
+    };
   };
   testimonials: {
     pill: string;
@@ -180,10 +186,10 @@ export const translations: Record<Language, HomeTranslations> = {
       title1: "Deja de perseguir a tus invitados",
       title2: "para saber si van a asistir",
       subtitle:
-        "La plataforma creada en Los Ángeles para bodas y quinceañeras con confirmación directa, control de aforo y navegación al salón.",
+        "Invitaciones interactivas armadas por nuestro equipo en Los Ángeles con confirmación por SMS, control de mesas y panel en vivo para tu celular.",
       ctaCatalog: "Ver Catálogo de Plantillas",
-      ctaDemo: "Ver ejemplo en vivo",
-      ctaCreate: "Crear mi invitación",
+      ctaDemo: "Ver Ejemplo Interactivo",
+      ctaCreate: "Ver Diseños y Precios",
       multiChannelTitle: "Envía tus invitaciones por:",
       channels: [
         "WhatsApp",
@@ -328,34 +334,47 @@ export const translations: Record<Language, HomeTranslations> = {
       venuesLink: "Conoce nuestro programa especial de licencias y alianzas para salones",
     },
     comparison: {
-      pill: "Comparativa Directa",
-      title: "Método Tradicional vs. Click & Love",
+      pill: "No es una plantilla de Canva",
+      title: "No es una plantilla de Canva. Es un servicio completo con panel real.",
       subtitle:
-        "Compara la experiencia y el control que ofrece nuestra plataforma frente a los métodos convencionales.",
-      colCompetitors: "Invitación en Papel Tradicional",
-      colClickAndLove: "Click & Love",
-      rows: [
+        "Mucho más que una simple imagen: así funciona tu evento sin estrés ni descontrol.",
+      cards: [
         {
-          feature: "Confirmación de asistencia",
-          competitors: "Manual por llamada o mensaje",
-          clickAndLove: "Automática en tiempo real",
+          tag: "Cero Trabajo Para Ti",
+          title: "Nosotros la armamos completa",
+          canvaProblemLabel: "En Canva o imagen estática:",
+          canvaProblem:
+            "En Canva te entregan una plantilla vacía y tú tienes que aprender a editar textos, acomodar fotos y pelear con el diseño.",
+          solutionLabel: "Lo que tú resuelves con Click & Love:",
+          solution:
+            "Tú no tocas ninguna computadora. Nos mandas las fotos y los datos del evento por WhatsApp y nuestro equipo en Los Ángeles te entrega la invitación lista para enviar.",
         },
         {
-          feature: "Pases y acompañantes",
-          competitors: "Difícil de limitar",
-          clickAndLove: "Control exacto por familia",
+          tag: "Control de Aforo Blindado",
+          title: "Panel privado con confirmados en vivo",
+          canvaProblemLabel: "En Canva o imagen estática:",
+          canvaProblem:
+            "Una imagen de Canva no te dice quién va a ir; terminas anotando respuestas en servilletas o chats sueltos y persiguiendo invitados.",
+          solutionLabel: "Lo que tú resuelves con Click & Love:",
+          solution:
+            "Cada invitado busca su nombre y confirma sus pases exactos. Tú entras a tu propio panel desde el celular y ves al instante cuántos adultos y niños confirmaron y quiénes cancelaron.",
         },
         {
-          feature: "Ubicación y llegada",
-          competitors: "Dirección escrita estática",
-          clickAndLove: "Ruta directa con Waze y Google Maps",
-        },
-        {
-          feature: "Cambios de horario o salón",
-          competitors: "Requiere reimpresión",
-          clickAndLove: "Actualización instantánea en el enlace",
+          tag: "Llegada Directa al Salón",
+          title: "Mensajes SMS directos al celular",
+          canvaProblemLabel: "En Canva o imagen estática:",
+          canvaProblem:
+            "Los enlaces y fotos sueltas se pierden en los chats familiares y los invitados terminan llamando perdidos en el tráfico de LA.",
+          solutionLabel: "Lo que tú resuelves con Click & Love:",
+          solution:
+            "Tus invitados reciben confirmación y recordatorio automático por mensaje de texto SMS con el mapa para llegar con un solo toque en Waze o Google Maps.",
         },
       ],
+      ctaBox: {
+        title: "¿Quieres tu invitación lista sin tocar una computadora?",
+        desc: "Envíanos tus fotos y textos por WhatsApp. Nuestro equipo en Los Ángeles te entrega tu invitación interactiva y panel en tiempo récord.",
+        btn: "✦ Ver Diseños y Precios ($99 / $199) ✦",
+      },
     },
     testimonials: {
       pill: "Experiencias Reales",
@@ -491,10 +510,10 @@ export const translations: Record<Language, HomeTranslations> = {
       title1: "Stop chasing your guests",
       title2: "to find out if they will attend",
       subtitle:
-        "The Los Angeles-crafted platform for weddings and quinceañeras with direct RSVP, capacity control, and GPS navigation to the venue.",
+        "Interactive invitations custom-built by our Los Angeles team with SMS RSVPs, guest capacity control, and live phone dashboard.",
       ctaCatalog: "Explore Collections",
-      ctaDemo: "Live Sample Preview",
-      ctaCreate: "Create my invitation",
+      ctaDemo: "See Interactive Demo",
+      ctaCreate: "View Designs & Pricing",
       multiChannelTitle: "Send your invitations via:",
       channels: [
         "WhatsApp",
@@ -639,34 +658,47 @@ export const translations: Record<Language, HomeTranslations> = {
       venuesLink: "Learn about our volume partner packages for banquet halls & venues",
     },
     comparison: {
-      pill: "Head-to-Head Comparison",
-      title: "Traditional Method vs. Click & Love",
+      pill: "Not a Canva Template",
+      title: "Not a Canva template. A complete service with a live dashboard.",
       subtitle:
-        "Contrast the outdated workflow of standard solutions with the bespoke luxury of our digital platform.",
-      colCompetitors: "Traditional Paper Invitation",
-      colClickAndLove: "Click & Love",
-      rows: [
+        "Far more than a simple image: this is how your celebration stays effortless and organized.",
+      cards: [
         {
-          feature: "Attendance confirmation",
-          competitors: "Manual via calls or texts",
-          clickAndLove: "Automatic in real-time",
+          tag: "Zero Work For You",
+          title: "We build everything from scratch",
+          canvaProblemLabel: "With Canva or static images:",
+          canvaProblem:
+            "In Canva you receive an empty template and you have to learn editing tools, crop photos, and fight with fonts and formatting.",
+          solutionLabel: "What you get with Click & Love:",
+          solution:
+            "You don't touch any computer. Send us your photos and event details via WhatsApp and our Los Angeles team delivers your invitation ready to share.",
         },
         {
-          feature: "Passes & plus-ones",
-          competitors: "Hard to limit",
-          clickAndLove: "Exact control per family",
+          tag: "Ironclad Capacity Control",
+          title: "Private dashboard with live RSVPs",
+          canvaProblemLabel: "With Canva or static images:",
+          canvaProblem:
+            "A Canva image doesn't tell you who is attending; you end up writing names on napkins or chasing scattered family group chats.",
+          solutionLabel: "What you get with Click & Love:",
+          solution:
+            "Each guest looks up their name and confirms exact reserved seats. Access your dashboard from your phone and instantly see adult/child counts and cancellations.",
         },
         {
-          feature: "Location & directions",
-          competitors: "Static printed address",
-          clickAndLove: "Direct route with Waze and Google Maps",
-        },
-        {
-          feature: "Time or venue changes",
-          competitors: "Requires reprinting",
-          clickAndLove: "Instant link update with zero cost",
+          tag: "Turn-by-Turn Arrival",
+          title: "Direct SMS text messages to guest phones",
+          canvaProblemLabel: "With Canva or static images:",
+          canvaProblem:
+            "Loose links and images get buried deep in group chats and guests end up calling lost in Southern California traffic.",
+          solutionLabel: "What you get with Click & Love:",
+          solution:
+            "Your guests receive automated SMS confirmations and reminders with a 1-tap route map straight to the venue on Waze or Google Maps.",
         },
       ],
+      ctaBox: {
+        title: "Want your invitation ready without touching a computer?",
+        desc: "Send us your photos and text via WhatsApp. Our Los Angeles design team delivers your interactive invitation and host roster in record time.",
+        btn: "✦ View Designs & Pricing ($99 / $199) ✦",
+      },
     },
     testimonials: {
       pill: "Real Experiences",
