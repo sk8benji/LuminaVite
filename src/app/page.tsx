@@ -22,6 +22,7 @@ import {
   Star,
   ChevronRight,
   Sliders,
+  CreditCard,
   Loader2,
   MessageCircle,
   Send,
@@ -49,7 +50,7 @@ export default function HomePage() {
     setIsDemoModalOpen(true);
   };
 
-  const handleCheckout = async (plan: "basic" | "signature" | "atelier") => {
+  const handleCheckout = async (plan: "assisted" | "vip" | "basic" | "signature" | "atelier" | string) => {
     setCheckoutLoading(plan);
     try {
       const res = await fetch("/api/checkout", {
@@ -1039,17 +1040,40 @@ export default function HomePage() {
               </ul>
             </div>
 
-            <a
-              href={`https://wa.me/18182994882?text=${encodeURIComponent(
-                t.pricing.plans[0].whatsappMessage || ""
-              )}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-8 w-full py-4 px-4 rounded-xl border-2 border-[#2C1F1B] text-[#2C1F1B] font-['Cinzel'] text-xs tracking-[0.18em] uppercase font-bold hover:bg-[#2C1F1B] hover:text-[#FAF8F5] active:scale-95 transition-all text-center flex items-center justify-center gap-2.5 shadow-sm group"
-            >
-              <MessageCircle className="w-4 h-4 text-[#25D366] group-hover:text-white transition-colors" />
-              <span>{t.pricing.plans[0].cta}</span>
-            </a>
+            {/* DOBLE VÍA DE COMPRA: CHECKOUT DIRECTO + ZELLE/WHATSAPP */}
+            <div className="mt-8 flex flex-col items-center w-full">
+              <button
+                onClick={() => handleCheckout("assisted")}
+                disabled={checkoutLoading !== null}
+                className="w-full py-4 px-4 rounded-xl bg-[#2C1F1B] hover:bg-[#1A1311] text-[#FAF8F5] font-['Cinzel'] text-xs tracking-[0.16em] uppercase font-bold active:scale-95 transition-all text-center flex items-center justify-center gap-2.5 shadow-md disabled:opacity-50 group cursor-pointer"
+              >
+                {checkoutLoading === "assisted" ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin text-[#C5A059]" />
+                    <span>Procesando pago seguro...</span>
+                  </>
+                ) : (
+                  <>
+                    <CreditCard className="w-4 h-4 text-[#C5A059]" />
+                    <span>{t.pricing.plans[0].cta}</span>
+                  </>
+                )}
+              </button>
+
+              <a
+                href={`https://wa.me/18182994882?text=${encodeURIComponent(
+                  t.pricing.plans[0].secondaryActionMessage
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-3 text-center text-xs text-[#2B2B2B] hover:text-[#25D366] transition-colors flex items-center justify-center gap-1.5 font-medium py-1 group/link"
+              >
+                <MessageCircle className="w-3.5 h-3.5 text-[#25D366] flex-shrink-0" />
+                <span className="underline decoration-[#25D366]/40 underline-offset-4 group-hover/link:decoration-[#25D366]">
+                  {t.pricing.plans[0].secondaryActionText}
+                </span>
+              </a>
+            </div>
           </div>
 
           {/* 2. PLAN SERVICIO VIP LOS ÁNGELES ($199) - DESTACADO */}
@@ -1110,19 +1134,75 @@ export default function HomePage() {
               </ul>
             </div>
 
-            {/* BOTÓN DESTACADO: WhatsApp de Alto Impacto */}
-            <a
-              href={`https://wa.me/18182994882?text=${encodeURIComponent(
-                t.pricing.plans[1].whatsappMessage || ""
-              )}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-8 w-full py-4 px-4 rounded-xl bg-gradient-to-r from-[#C5A059] via-[#E2C37E] to-[#B38D40] hover:brightness-105 text-[#1A1A1A] font-['Cinzel'] text-xs tracking-[0.18em] uppercase font-extrabold active:scale-95 transition-all shadow-[0_10px_25px_rgba(197,160,89,0.45)] text-center flex items-center justify-center gap-2.5 group hover:shadow-[0_12px_30px_rgba(197,160,89,0.6)]"
-            >
-              <MessageCircle className="w-4 h-4 text-[#1A1A1A] fill-[#1A1A1A]" />
-              <span>{t.pricing.plans[1].cta}</span>
-              <span className="text-[#1A1A1A]">✦</span>
-            </a>
+            {/* DOBLE VÍA DE COMPRA: CHECKOUT DIRECTO + ZELLE/WHATSAPP */}
+            <div className="mt-8 flex flex-col items-center w-full">
+              <button
+                onClick={() => handleCheckout("vip")}
+                disabled={checkoutLoading !== null}
+                className="w-full py-4 px-4 rounded-xl bg-gradient-to-r from-[#C5A059] via-[#E2C37E] to-[#B38D40] hover:brightness-105 text-[#1A1A1A] font-['Cinzel'] text-xs tracking-[0.16em] uppercase font-extrabold active:scale-95 transition-all shadow-[0_10px_25px_rgba(197,160,89,0.45)] text-center flex items-center justify-center gap-2 group hover:shadow-[0_12px_30px_rgba(197,160,89,0.6)] disabled:opacity-50 cursor-pointer"
+              >
+                {checkoutLoading === "vip" ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin text-[#1A1A1A]" />
+                    <span>Procesando pago seguro...</span>
+                  </>
+                ) : (
+                  <>
+                    <CreditCard className="w-4 h-4 text-[#1A1A1A]" />
+                    <span>{t.pricing.plans[1].cta}</span>
+                  </>
+                )}
+              </button>
+
+              <a
+                href={`https://wa.me/18182994882?text=${encodeURIComponent(
+                  t.pricing.plans[1].secondaryActionMessage
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-3 text-center text-xs text-[#2B2B2B] hover:text-[#25D366] transition-colors flex items-center justify-center gap-1.5 font-medium py-1 group/link"
+              >
+                <MessageCircle className="w-3.5 h-3.5 text-[#25D366] flex-shrink-0" />
+                <span className="underline decoration-[#25D366]/40 underline-offset-4 group-hover/link:decoration-[#25D366]">
+                  {t.pricing.plans[1].secondaryActionText}
+                </span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        {/* FRANJA DE CONFIANZA Y MÉTODOS DE PAGO */}
+        <div className="mt-12 max-w-2xl mx-auto text-center flex flex-col items-center justify-center">
+          <p className="flex items-center justify-center gap-2 text-xs font-semibold text-[#2C1F1B] mb-3">
+            <ShieldCheck className="w-4 h-4 text-[#C5A059] flex-shrink-0" />
+            <span>{t.pricing.trustBadgesText}</span>
+          </p>
+
+          <div className="flex flex-wrap items-center justify-center gap-2 text-xs">
+            <span className="px-2.5 py-1 rounded bg-white border border-[#E8E3D9] text-[10px] font-extrabold tracking-wider text-[#1A1F71] shadow-2xs">
+              VISA
+            </span>
+            <span className="px-2.5 py-1 rounded bg-white border border-[#E8E3D9] text-[10px] font-bold text-[#2C1F1B] shadow-2xs flex items-center gap-1">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#EB001B] inline-block -mr-1.5 opacity-90" />
+              <span className="w-2.5 h-2.5 rounded-full bg-[#F79E1B] inline-block opacity-90" />
+              <span>Mastercard</span>
+            </span>
+            <span className="px-2.5 py-1 rounded bg-white border border-[#E8E3D9] text-[10px] font-extrabold text-[#006FCF] shadow-2xs">
+              AMEX
+            </span>
+            <span className="px-2.5 py-1 rounded bg-white border border-[#E8E3D9] text-[10px] font-semibold text-[#2C1F1B] shadow-2xs flex items-center gap-0.5">
+              <span>Pay</span>
+            </span>
+            <span className="px-2.5 py-1 rounded bg-white border border-[#E8E3D9] text-[10px] font-semibold text-[#2C1F1B] shadow-2xs flex items-center gap-0.5">
+              <span>G Pay</span>
+            </span>
+            <span className="px-2.5 py-1 rounded bg-[#7414CA]/10 border border-[#7414CA]/30 text-[10px] font-bold text-[#7414CA] shadow-2xs flex items-center gap-1">
+              <span className="font-extrabold">zelle</span>
+            </span>
+            <span className="px-2.5 py-1 rounded bg-[#F5EFE4] border border-[#C5A059]/40 text-[9px] uppercase tracking-wider font-semibold text-[#2C1F1B] shadow-2xs flex items-center gap-1">
+              <Lock className="w-2.5 h-2.5 text-[#C5A059]" />
+              <span>SSL 256-Bit</span>
+            </span>
           </div>
         </div>
 

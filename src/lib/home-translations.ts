@@ -125,6 +125,7 @@ export interface HomeTranslations {
     recommended: string;
     choosePlan: string;
     plans: {
+      planKey: "assisted" | "vip";
       badge: string;
       typeTag: string;
       name: string;
@@ -135,7 +136,10 @@ export interface HomeTranslations {
       cta: string;
       highlighted?: boolean;
       whatsappMessage?: string;
+      secondaryActionText: string;
+      secondaryActionMessage: string;
     }[];
+    trustBadgesText: string;
     venueFaqText: string;
     venueFaqLink: string;
   };
@@ -404,14 +408,17 @@ export const translations: Record<Language, HomeTranslations> = {
       choosePlan: "Elegir",
       plans: [
         {
+          planKey: "assisted",
           badge: "El Estándar",
           typeTag: "Listo para Compartir",
           name: "Digital Asistido",
           description: "Tú nos mandas la información por WhatsApp y nosotros la dejamos lista.",
           price: "$99",
           currency: "USD / Pago Único",
-          cta: "Comenzar por WhatsApp",
+          cta: "Pagar y Comenzar ($99)",
           whatsappMessage: "Hola, quiero ordenar el paquete Digital Asistido ($99) para mi evento en Los Ángeles.",
+          secondaryActionText: "¿Prefieres pagar con Zelle o por WhatsApp? Toca aquí",
+          secondaryActionMessage: "Hola, quiero pagar el paquete Asistido de $99 por Zelle o necesito ayuda.",
           features: [
             { text: "Sin usar computadora: envíanos los detalles por WhatsApp y nosotros armamos todo", included: true, isBold: true },
             { text: "Configuración completa por nuestro equipo", included: true, isBold: true },
@@ -424,6 +431,7 @@ export const translations: Record<Language, HomeTranslations> = {
           ],
         },
         {
+          planKey: "vip",
           badge: "Recomendado",
           typeTag: "El más elegido para Quinceañeras y Bodas",
           name: "Servicio VIP Los Ángeles",
@@ -431,8 +439,10 @@ export const translations: Record<Language, HomeTranslations> = {
           price: "$199",
           currency: "USD / Pago Único",
           highlighted: true,
-          cta: "Ordenar mi Invitación VIP",
-          whatsappMessage: "Hola, quiero ordenar el paquete VIP Los Ángeles ($199) para una quinceañera/boda en Los Ángeles.",
+          cta: "✦ Ordenar Servicio VIP ($199) ✦",
+          whatsappMessage: "Hola, me interesa el paquete VIP de $199 para mi evento en Los Ángeles. ¿Me pueden dar detalles?",
+          secondaryActionText: "¿Preguntas o pago con Zelle? Escríbenos por WhatsApp",
+          secondaryActionMessage: "Hola, me interesa el paquete VIP de $199 para mi evento en Los Ángeles. ¿Me pueden dar detalles?",
           features: [
             { text: "Sin usar computadora: envíanos los detalles por WhatsApp y nosotros armamos todo", included: true, isBold: true },
             { text: "Todo lo del Digital Asistido", included: true, isBold: true },
@@ -443,6 +453,7 @@ export const translations: Record<Language, HomeTranslations> = {
           ],
         },
       ],
+      trustBadgesText: "Pago 100% seguro con tarjeta de crédito/débito, Apple Pay, Google Pay o Zelle",
       venueFaqText: "¿Tienes un salón de eventos o eres wedding planner?",
       venueFaqLink: "Conoce nuestros paquetes por volumen para salones",
     },
@@ -708,14 +719,17 @@ export const translations: Record<Language, HomeTranslations> = {
       choosePlan: "Choose",
       plans: [
         {
+          planKey: "assisted",
           badge: "The Standard",
           typeTag: "Ready to Share",
           name: "Assisted Digital",
           description: "Send us your event information via WhatsApp and we'll leave it ready to impress.",
           price: "$99",
           currency: "USD / One-Time",
-          cta: "Start via WhatsApp",
+          cta: "Pay & Get Started ($99)",
           whatsappMessage: "Hi, I'd like to order the Assisted Digital package ($99) for my event in Los Angeles.",
+          secondaryActionText: "Prefer to pay with Zelle or via WhatsApp? Tap here",
+          secondaryActionMessage: "Hi, I'd like to pay the $99 Assisted package via Zelle or need assistance.",
           features: [
             { text: "No computer needed: send us your details via WhatsApp and we set up everything", included: true, isBold: true },
             { text: "Full setup by our team", included: true, isBold: true },
@@ -728,6 +742,7 @@ export const translations: Record<Language, HomeTranslations> = {
           ],
         },
         {
+          planKey: "vip",
           badge: "Recommended",
           typeTag: "Top Choice for Weddings & Quinceañeras",
           name: "Los Angeles VIP Service",
@@ -735,8 +750,10 @@ export const translations: Record<Language, HomeTranslations> = {
           price: "$199",
           currency: "USD / One-Time",
           highlighted: true,
-          cta: "Order VIP Invitation",
-          whatsappMessage: "Hi, I'd like to order the Los Angeles VIP Service package ($199) for our celebration.",
+          cta: "✦ Order VIP Service ($199) ✦",
+          whatsappMessage: "Hi, I'm interested in the $199 VIP package for my event in Los Angeles. Could you share more details?",
+          secondaryActionText: "Questions or Zelle payment? Chat on WhatsApp",
+          secondaryActionMessage: "Hi, I'm interested in the $199 VIP package for my event in Los Angeles. Could you share more details?",
           features: [
             { text: "No computer needed: send us your details via WhatsApp and we set up everything", included: true, isBold: true },
             { text: "Everything included in the Assisted Digital plan", included: true, isBold: true },
@@ -747,6 +764,7 @@ export const translations: Record<Language, HomeTranslations> = {
           ],
         },
       ],
+      trustBadgesText: "100% Secure Checkout with Credit/Debit Card, Apple Pay, Google Pay or Zelle",
       venueFaqText: "Do you own an event hall or work as a wedding planner?",
       venueFaqLink: "Discover our volume packages for venues and planners",
     },

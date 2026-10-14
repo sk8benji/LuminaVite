@@ -1,7 +1,7 @@
 import Stripe from "stripe";
 
 export interface PackagePlan {
-  id: "basic" | "signature" | "atelier";
+  id: string;
   name: string;
   price: number; // en dólares
   currency: string;
@@ -11,52 +11,65 @@ export interface PackagePlan {
 }
 
 export const PACKAGES: Record<string, PackagePlan> = {
-  basic: {
-    id: "basic",
-    name: "Digital Basic",
-    price: 49,
+  assisted: {
+    id: "assisted",
+    name: "Digital Asistido",
+    price: 99,
     currency: "usd",
-    description: "Ideal para eventos íntimos con elegancia esencial y confirmaciones directas.",
-    badge: "Esencial & Directo",
+    description: "Configuración completa por nuestro equipo, 200 SMS interactivos, GPS Waze/Maps y sobre virtual con música.",
+    badge: "El Estándar • Listo para Compartir",
     features: [
-      "Plantilla editorial responsiva",
-      "Música de fondo en alta fidelidad",
-      "RSVP directo a WhatsApp",
-      "Cuenta regresiva en vivo",
-      "Ubicaciones con Google Maps & Waze",
+      "Configuración completa por nuestro equipo",
+      "200 SMS interactivos incluidos",
+      "Ubicación GPS con botón a Waze / Maps",
+      "Sobre virtual interactivo con música",
+      "Enlace familiar con panel en tiempo real",
+      "Guardado en calendario del teléfono",
+      "1 ronda de cambios incluida",
     ],
+  },
+  vip: {
+    id: "vip",
+    name: "Servicio VIP Los Ángeles",
+    price: 199,
+    currency: "usd",
+    description: "Cero complicaciones. Todo lo del Digital Asistido, retoque fotográfico, 350 SMS, diseño de QR y soporte prioritario.",
+    badge: "Recomendado • Quinceañeras & Bodas",
+    features: [
+      "Todo lo del Digital Asistido",
+      "Retoque fotográfico para portada y galería",
+      "350 SMS de confirmación incluidos",
+      "Diseño de código QR listo para imprimir en mesas",
+      "Soporte prioritario con cambios ilimitados hasta el evento",
+    ],
+  },
+  // Retrocompatibilidad con nombres previos
+  basic: {
+    id: "assisted",
+    name: "Digital Asistido",
+    price: 99,
+    currency: "usd",
+    description: "Configuración completa por nuestro equipo, 200 SMS interactivos, GPS Waze/Maps y sobre virtual con música.",
+    badge: "El Estándar • Listo para Compartir",
+    features: [],
   },
   signature: {
-    id: "signature",
-    name: "Signature VIP",
-    price: 89,
+    id: "vip",
+    name: "Servicio VIP Los Ángeles",
+    price: 199,
     currency: "usd",
-    description: "Nuestra experiencia insignia recomendada. Interactividad total, pase de invitados y efectos de lujo.",
-    badge: "Recomendado • Alta Gama",
-    features: [
-      "Todo lo del plan Digital Basic",
-      "Apertura de sobre interactiva con sello de cera",
-      "Formulario RSVP con pases asignados",
-      "Confirmación automática por Email",
-      "Mesa de regalos (Zelle, CashApp, Enlaces)",
-      "Código de vestimenta con paleta de colores",
-    ],
+    description: "Cero complicaciones. Todo lo del Digital Asistido, retoque fotográfico, 350 SMS, diseño de QR y soporte prioritario.",
+    badge: "Recomendado • Quinceañeras & Bodas",
+    features: [],
   },
   atelier: {
-    id: "atelier",
-    name: "Atelier Custom",
-    price: 149,
+    id: "vip",
+    name: "Servicio VIP Los Ángeles",
+    price: 199,
     currency: "usd",
-    description: "Diseño a medida con asesoría concierge personalizada y personalizaciones avanzadas.",
-    badge: "A Medida • Experiencia Total",
-    features: [
-      "Todo lo del plan Signature VIP",
-      "Diseño y paleta 100% personalizada por diseñador",
-      "Timeline / Itinerario por fases con iconos",
-      "Corte de honor y damas / chambelanes completo",
-      "Galería interactiva de fotos y recuerdos",
-      "Soporte prioritario Concierge por WhatsApp",
-    ],
+    description: "Cero complicaciones. Todo lo del Digital Asistido, retoque fotográfico, 350 SMS, diseño de QR y soporte prioritario.",
+    badge: "Recomendado • Quinceañeras & Bodas",
+    features: [],
   },
 };
 
