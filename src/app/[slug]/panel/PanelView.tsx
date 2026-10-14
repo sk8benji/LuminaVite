@@ -675,8 +675,17 @@ export default function PanelView({
         {/* ============================================================== */}
         <div className="space-y-3">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            {/* Pases Asignados */}
-            <div className="bg-white p-4 sm:p-5 rounded-2xl border border-[#E8E3D9] shadow-xs text-center transition hover:border-[#D4AF37]/50">
+            {/* Pases Asignados (Ver Todos) */}
+            <div
+              onClick={() => setStatusFilter("all")}
+              role="button"
+              title="Click para ver todos los invitados"
+              className={`p-4 sm:p-5 rounded-2xl border shadow-xs text-center transition cursor-pointer select-none ${
+                statusFilter === "all"
+                  ? "bg-[#FAF6F0] border-[#C5A059] ring-2 ring-[#C5A059]/40"
+                  : "bg-white border-[#E8E3D9] hover:border-[#D4AF37]/50"
+              }`}
+            >
               <div className="w-9 h-9 rounded-full bg-[#F7F3EB] border border-[#EADBBD] text-[#8C6D2D] flex items-center justify-center mx-auto mb-2.5">
                 <Users className="w-4 h-4" />
               </div>
@@ -687,8 +696,17 @@ export default function PanelView({
               <span className="text-[10px] text-stone-500 mt-0.5 block">{guests.length} familias/invitados</span>
             </div>
 
-            {/* Pases Confirmados */}
-            <div className="bg-white p-4 sm:p-5 rounded-2xl border border-[#E8E3D9] shadow-xs text-center transition hover:border-emerald-300">
+            {/* Pases Confirmados (Filtrar Confirmados) */}
+            <div
+              onClick={() => setStatusFilter(statusFilter === "attending" ? "all" : "attending")}
+              role="button"
+              title="Click para filtrar solo confirmados"
+              className={`p-4 sm:p-5 rounded-2xl border shadow-xs text-center transition cursor-pointer select-none ${
+                statusFilter === "attending"
+                  ? "bg-emerald-50/70 border-emerald-500 ring-2 ring-emerald-500/40"
+                  : "bg-white border-[#E8E3D9] hover:border-emerald-300"
+              }`}
+            >
               <div className="w-9 h-9 rounded-full bg-emerald-50 border border-emerald-200/60 text-[#1B5E20] flex items-center justify-center mx-auto mb-2.5">
                 <CheckCircle2 className="w-4 h-4" />
               </div>
@@ -701,8 +719,17 @@ export default function PanelView({
               </span>
             </div>
 
-            {/* Declinados */}
-            <div className="bg-white p-4 sm:p-5 rounded-2xl border border-[#E8E3D9] shadow-xs text-center transition hover:border-rose-300">
+            {/* Declinados (Filtrar Declinados) */}
+            <div
+              onClick={() => setStatusFilter(statusFilter === "declined" ? "all" : "declined")}
+              role="button"
+              title="Click para filtrar declinados"
+              className={`p-4 sm:p-5 rounded-2xl border shadow-xs text-center transition cursor-pointer select-none ${
+                statusFilter === "declined"
+                  ? "bg-rose-50/70 border-rose-500 ring-2 ring-rose-500/40"
+                  : "bg-white border-[#E8E3D9] hover:border-rose-300"
+              }`}
+            >
               <div className="w-9 h-9 rounded-full bg-[#FBF0F1] border border-[#F2D5D9] text-[#8B2635] flex items-center justify-center mx-auto mb-2.5">
                 <XCircle className="w-4 h-4" />
               </div>
@@ -713,8 +740,17 @@ export default function PanelView({
               <span className="text-[10px] text-[#8B2635] font-semibold mt-0.5 block">No podrán asistir</span>
             </div>
 
-            {/* Pendientes */}
-            <div className="bg-white p-4 sm:p-5 rounded-2xl border border-[#E8E3D9] shadow-xs text-center transition hover:border-amber-300">
+            {/* Pendientes (Filtrar Pendientes) */}
+            <div
+              onClick={() => setStatusFilter(statusFilter === "pending" ? "all" : "pending")}
+              role="button"
+              title="Click para filtrar pendientes"
+              className={`p-4 sm:p-5 rounded-2xl border shadow-xs text-center transition cursor-pointer select-none ${
+                statusFilter === "pending"
+                  ? "bg-amber-50/70 border-amber-500 ring-2 ring-amber-500/40"
+                  : "bg-white border-[#E8E3D9] hover:border-amber-300"
+              }`}
+            >
               <div className="w-9 h-9 rounded-full bg-amber-50 border border-amber-200/60 text-[#B8860B] flex items-center justify-center mx-auto mb-2.5">
                 <Clock className="w-4 h-4" />
               </div>
@@ -833,89 +869,65 @@ export default function PanelView({
           </form>
         </div>
 
-        {/* Barra de Búsqueda, Filtros Rápidos y Botón de Exportación */}
-        <div className="bg-white p-4 rounded-2xl border border-[#E8E3D9] shadow-xs space-y-3">
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-            <div className="relative flex-1">
-              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-[#8C6D2D]" />
-              <input
-                type="text"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Buscar invitado por nombre o teléfono..."
-                className="w-full pl-9 pr-3.5 py-2.5 bg-[#FAF8F5] border border-[#E8E3D9] rounded-xl text-xs text-[#2C1F1B] placeholder-[#8C8077] focus:outline-none focus:ring-2 focus:ring-[#C5A059]"
-              />
-            </div>
-
-            <a
-              href={`/api/eventos/${slug}/panel/export`}
-              download
-              className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-[#FAF6F0] hover:bg-[#F3ECE2] text-[#2C1F1B] border border-[#E5D9C5] text-xs font-medium rounded-xl shadow-xs transition cursor-pointer shrink-0"
-            >
-              <Download className="w-3.5 h-3.5 text-emerald-700" />
-              <span>Descargar lista (CSV)</span>
-            </a>
-          </div>
-
-          {/* Filtros rápidos: Todos, Confirmados, Pendientes, Declinados */}
-          <div className="flex flex-wrap items-center gap-1.5 pt-2 border-t border-[#F0ECE1]">
-            <span className="text-[11px] font-medium text-stone-500 mr-1 hidden sm:inline">Filtrar:</span>
-            <button
-              type="button"
-              onClick={() => setStatusFilter("all")}
-              className={`px-3 py-1.5 rounded-xl text-xs font-medium transition cursor-pointer ${
-                statusFilter === "all"
-                  ? "bg-[#2C1F1B] text-white shadow-xs"
-                  : "bg-[#FAF8F5] text-stone-600 hover:text-[#2C1F1B] border border-[#E8E3D9] hover:bg-[#F5EFE4]"
-              }`}
-            >
-              Todos ({guests.length})
-            </button>
-            <button
-              type="button"
-              onClick={() => setStatusFilter("attending")}
-              className={`px-3 py-1.5 rounded-xl text-xs font-medium transition cursor-pointer ${
-                statusFilter === "attending"
-                  ? "bg-[#1B5E20] text-white shadow-xs"
-                  : "bg-emerald-50 text-emerald-800 hover:bg-emerald-100/70 border border-emerald-200/70"
-              }`}
-            >
-              Confirmados ({totalConfirmedCount})
-            </button>
-            <button
-              type="button"
-              onClick={() => setStatusFilter("pending")}
-              className={`px-3 py-1.5 rounded-xl text-xs font-medium transition cursor-pointer ${
-                statusFilter === "pending"
-                  ? "bg-[#B8860B] text-white shadow-xs"
-                  : "bg-amber-50 text-amber-800 hover:bg-amber-100/70 border border-amber-200/70"
-              }`}
-            >
-              Pendientes ({totalPendingCount})
-            </button>
-            <button
-              type="button"
-              onClick={() => setStatusFilter("declined")}
-              className={`px-3 py-1.5 rounded-xl text-xs font-medium transition cursor-pointer ${
-                statusFilter === "declined"
-                  ? "bg-[#8B2635] text-white shadow-xs"
-                  : "bg-rose-50 text-[#8B2635] hover:bg-rose-100/70 border border-rose-200/70"
-              }`}
-            >
-              Declinados ({totalDeclinedCount})
-            </button>
-          </div>
-        </div>
-
         {/* Tabla de Invitados Oficial */}
         <div className="bg-white rounded-2xl border border-[#E8E3D9] shadow-xs overflow-hidden">
-          <div className="px-5 py-3.5 border-b border-[#E8E3D9] flex items-center justify-between bg-[#FAF8F5]/80">
-            <h3 className="text-xs font-bold text-[#2C1F1B] font-serif">
-              Lista de Invitados ({filteredGuests.length})
-            </h3>
-            <div className="flex items-center gap-1.5 text-xs text-stone-500 font-medium">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span>Actualizado automáticamente</span>
+          <div className="px-4 sm:px-5 py-3 border-b border-[#E8E3D9] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 bg-[#FAF8F5]/80">
+            {/* Izquierda: Título de la tabla con el total */}
+            <div className="flex items-center gap-2.5 flex-wrap">
+              <h3 className="text-sm font-bold text-[#2C1F1B] font-serif">
+                Lista de Invitados ({filteredGuests.length})
+              </h3>
+              {statusFilter !== "all" ? (
+                <div className="inline-flex items-center gap-1.5 text-[11px] font-medium">
+                  <span className={`px-2 py-0.5 rounded-full text-white ${
+                    statusFilter === "attending"
+                      ? "bg-emerald-700"
+                      : statusFilter === "declined"
+                      ? "bg-[#8B2635]"
+                      : "bg-[#B8860B]"
+                  }`}>
+                    {statusFilter === "attending"
+                      ? "Confirmados"
+                      : statusFilter === "declined"
+                      ? "Declinados"
+                      : "Pendientes"}
+                  </span>
+                  <button
+                    onClick={() => setStatusFilter("all")}
+                    className="text-stone-500 hover:text-stone-800 underline cursor-pointer text-[10px]"
+                  >
+                    Ver todos
+                  </button>
+                </div>
+              ) : (
+                <div className="hidden sm:flex items-center gap-1.5 text-xs text-stone-500 font-medium">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                  <span className="text-[11px]">Actualizado automáticamente</span>
+                </div>
+              )}
+            </div>
+
+            {/* Derecha (agrupados en fila): Buscador compacto y Botón CSV discreto */}
+            <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+              <div className="relative flex-1 sm:flex-initial">
+                <Search className="w-4 h-4 absolute left-2.5 top-1/2 -translate-y-1/2 text-stone-400" />
+                <input
+                  type="text"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  placeholder="Buscar..."
+                  className="w-full sm:w-52 h-9 rounded-lg border border-stone-200 text-xs pl-8 pr-3 bg-white text-[#2C1F1B] placeholder-[#8C8077] focus:outline-none focus:ring-1 focus:ring-[#C5A059] shadow-2xs"
+                />
+              </div>
+
+              <a
+                href={`/api/eventos/${slug}/panel/export`}
+                download
+                title="Exportar CSV"
+                className="w-9 h-9 p-2 rounded-lg border border-stone-200 text-stone-500 hover:text-stone-800 hover:bg-stone-50 transition cursor-pointer flex items-center justify-center bg-white shrink-0 shadow-2xs"
+              >
+                <Download className="w-4 h-4 text-emerald-700" />
+              </a>
             </div>
           </div>
 
