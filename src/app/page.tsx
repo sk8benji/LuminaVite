@@ -27,14 +27,10 @@ import {
   MessageCircle,
   Send,
   QrCode,
-  AlertCircle,
-  PhoneCall,
-  Clock,
 } from "lucide-react";
 import { Language, translations } from "@/lib/home-translations";
 import InteractivePhoneMockup from "@/components/home/InteractivePhoneMockup";
 import InteractiveDemoModal from "@/components/home/InteractiveDemoModal";
-import RoiCalculator from "@/components/home/RoiCalculator";
 import FloatingWhatsApp from "@/components/home/FloatingWhatsApp";
 
 export default function HomePage() {
@@ -107,12 +103,6 @@ export default function HomePage() {
               className="text-xs font-['Cinzel'] tracking-widest uppercase text-[#2B2B2B] hover:text-[#C5A059] transition font-semibold"
             >
               {t.nav.features}
-            </a>
-            <a
-              href="#calculadora"
-              className="text-xs font-['Cinzel'] tracking-widest uppercase text-[#2B2B2B] hover:text-[#C5A059] transition font-semibold"
-            >
-              {lang === "es" ? "Calculadora" : "Calculator"}
             </a>
             <a
               href="#comparativa"
@@ -281,86 +271,6 @@ export default function HomePage() {
                   </div>
                 </div>
               ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ============================================================== */}
-      {/* 2.5 SECCIÓN DE AGITACIÓN (EL COSTO DEL MÉTODO TRADICIONAL - FÓRMULA PAS) */}
-      {/* ============================================================== */}
-      <section className="relative py-20 px-4 bg-[#FAF8F5] border-t border-[#E8E3D9] select-none">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center max-w-3xl mx-auto mb-14">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-red-200 bg-red-50 mb-3 backdrop-blur-md">
-              <AlertCircle className="w-3.5 h-3.5 text-red-600" />
-              <span className="font-['Cinzel'] text-[10px] tracking-[0.2em] uppercase text-red-900 font-bold">
-                {t.agitation.pill}
-              </span>
-            </div>
-
-            <h2 className="font-serif-roman text-3xl sm:text-5xl font-bold tracking-tight text-[#2C1F1B] mb-3">
-              {t.agitation.title}
-            </h2>
-
-            <p className="font-['Montserrat'] text-sm sm:text-base text-[#374151] max-w-2xl mx-auto leading-relaxed">
-              {t.agitation.subtitle}
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
-            {/* Card 1: Dinero perdido en el banquete */}
-            <div className="relative rounded-3xl bg-white border border-red-200/80 p-8 flex flex-col justify-between shadow-[0_10px_30px_rgba(239,68,68,0.06)] hover:border-red-300 transition-all duration-300 group">
-              <div>
-                <div className="w-12 h-12 rounded-2xl bg-red-50 border border-red-200 text-red-600 flex items-center justify-center mb-6 group-hover:scale-105 transition-transform">
-                  <AlertCircle className="w-6 h-6" />
-                </div>
-                <h3 className="font-serif-roman text-xl sm:text-2xl font-bold text-[#1F2937] mb-3 leading-snug">
-                  {t.agitation.cards[0].title}
-                </h3>
-                <p className="font-['Montserrat'] text-xs sm:text-sm text-[#374151] leading-relaxed font-normal">
-                  {t.agitation.cards[0].text}
-                </p>
-              </div>
-              <div className="mt-6 pt-4 border-t border-red-100 flex items-center gap-2 text-[11px] font-['Montserrat'] font-bold text-red-700">
-                <span>✕ Desperdicio de presupuesto en platos vacíos</span>
-              </div>
-            </div>
-
-            {/* Card 2: Semanas perdiendo tiempo */}
-            <div className="relative rounded-3xl bg-white border border-amber-200/80 p-8 flex flex-col justify-between shadow-[0_10px_30px_rgba(245,158,11,0.06)] hover:border-amber-300 transition-all duration-300 group">
-              <div>
-                <div className="w-12 h-12 rounded-2xl bg-amber-50 border border-amber-200 text-amber-700 flex items-center justify-center mb-6 group-hover:scale-105 transition-transform">
-                  <Clock className="w-6 h-6" />
-                </div>
-                <h3 className="font-serif-roman text-xl sm:text-2xl font-bold text-[#1F2937] mb-3 leading-snug">
-                  {t.agitation.cards[1].title}
-                </h3>
-                <p className="font-['Montserrat'] text-xs sm:text-sm text-[#374151] leading-relaxed font-normal">
-                  {t.agitation.cards[1].text}
-                </p>
-              </div>
-              <div className="mt-6 pt-4 border-t border-amber-100 flex items-center gap-2 text-[11px] font-['Montserrat'] font-bold text-amber-800">
-                <span>✕ Semanas agotadoras llamando a invitados</span>
-              </div>
-            </div>
-
-            {/* Card 3: Cambios de última hora imposibles */}
-            <div className="relative rounded-3xl bg-white border border-[#E8E3D9] p-8 flex flex-col justify-between shadow-[0_10px_30px_rgba(44,31,27,0.05)] hover:border-[#C5A059]/60 transition-all duration-300 group">
-              <div>
-                <div className="w-12 h-12 rounded-2xl bg-[#F5EFE4] border border-[#C5A059]/30 text-[#C5A059] flex items-center justify-center mb-6 group-hover:scale-105 transition-transform">
-                  <PhoneCall className="w-6 h-6" />
-                </div>
-                <h3 className="font-serif-roman text-xl sm:text-2xl font-bold text-[#1F2937] mb-3 leading-snug">
-                  {t.agitation.cards[2].title}
-                </h3>
-                <p className="font-['Montserrat'] text-xs sm:text-sm text-[#374151] leading-relaxed font-normal">
-                  {t.agitation.cards[2].text}
-                </p>
-              </div>
-              <div className="mt-6 pt-4 border-t border-[#E8E3D9] flex items-center gap-2 text-[11px] font-['Montserrat'] font-bold text-[#4B5563]">
-                <span>✕ Papel obsoleto si cambia hora o salón</span>
-              </div>
             </div>
           </div>
         </div>
@@ -655,12 +565,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ============================================================== */}
-      {/* 6. CALCULADORA DE AFORO O RETORNO PARA SALONES & ORGANIZADORES */}
-      {/* ============================================================== */}
-      <div id="calculadora">
-        <RoiCalculator lang={lang} />
-      </div>
 
       {/* ============================================================== */}
       {/* 7. COMPARATIVA VISUAL (MÉTODO TRADICIONAL VS CLICK & LOVE) */}
