@@ -1,8 +1,22 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { CheckCircle2, ExternalLink, Volume2, VolumeX, Play } from "lucide-react";
 import { Language } from "@/lib/home-translations";
+
+type EventTab = "quince" | "boda" | "cumple";
+
+const VIDEOS: Record<EventTab, string> = {
+  quince: "https://luminavite-storage.s3.us-east-1.amazonaws.com/video/WhatsApp+Video+2026-10-14+at+9.50.53+AM.mp4",
+  boda: "https://luminavite-storage.s3.us-east-1.amazonaws.com/video/WhatsApp+Video+2026-10-14+at+10.25.57+AM.mp4",
+  cumple: "https://luminavite-storage.s3.us-east-1.amazonaws.com/video/WhatsApp+Video+2026-10-14+at+10.26.04+AM.mp4",
+};
+
+const SLUGS: Record<EventTab, string> = {
+  quince: "mariposas-xv",
+  boda: "emma-and-lucas",
+  cumple: "isabella-xv",
+};
 
 interface InteractivePhoneMockupProps {
   lang: Language;
@@ -13,10 +27,18 @@ export default function InteractivePhoneMockup({
   lang,
   onOpenModal,
 }: InteractivePhoneMockupProps) {
-  const [activeTab, setActiveTab] = useState<"butterfly" | "rose" | "chateau">("butterfly");
+  const [activeTab, setActiveTab] = useState<EventTab>("quince");
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(true);
+
+  // Al cambiar de categoría, reiniciar y reproducir automáticamente el video correspondiente
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.load();
+      videoRef.current.play().then(() => setIsPlaying(true)).catch(() => {});
+    }
+  }, [activeTab]);
 
   const handleVideoToggle = () => {
     if (!videoRef.current) return;
@@ -36,19 +58,14 @@ export default function InteractivePhoneMockup({
     setIsMuted(newMutedState);
   };
 
-  const currentSlug =
-    activeTab === "butterfly"
-      ? "mariposas-xv"
-      : activeTab === "rose"
-      ? "isabella-xv"
-      : "emma-and-lucas";
+  const currentSlug = SLUGS[activeTab];
 
   return (
     <div className="relative flex flex-col items-center select-none w-full max-w-[440px] mx-auto">
       {/* Resplandor ambiental cálido detrás del mockup */}
       <div className="absolute inset-0 bg-gradient-to-tr from-[#C5A059]/25 via-[#EED3A1]/15 to-transparent rounded-full blur-[100px] pointer-events-none -z-10" />
 
-      {/* Badge de Prueba Social Local (En el flujo normal con espaciado limpio, sin sobreponerse en PC ni móviles) */}
+      {/* Badge de Prueba Social Local */}
       <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/95 border border-[#C5A059]/40 shadow-[0_4px_16px_rgba(44,31,27,0.06)] backdrop-blur-md mb-4 text-center max-w-full">
         <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping flex-shrink-0" />
         <span className="font-['Montserrat'] text-[11px] font-semibold text-[#2C1F1B]">
@@ -58,7 +75,7 @@ export default function InteractivePhoneMockup({
         </span>
       </div>
 
-      {/* Floating Badges Laterales (Solo en pantallas grandes para evitar solapamiento) */}
+      {/* Floating Badges Laterales (Solo en pantallas grandes) */}
       <div className="hidden lg:flex absolute top-1/3 -right-20 z-20 items-center gap-2 px-4 py-2 rounded-full bg-white/95 border border-[#E8E3D9] shadow-[0_10px_25px_rgba(44,31,27,0.08)] backdrop-blur-md">
         <CheckCircle2 className="w-3.5 h-3.5 text-[#C5A059]" />
         <span className="font-['Montserrat'] text-[11px] font-semibold text-[#2C1F1B]">
@@ -73,41 +90,41 @@ export default function InteractivePhoneMockup({
         </span>
       </div>
 
-      {/* Selector de Colección Rápido en Mockup (Accesible y Visible en el Pliegue) */}
+      {/* Selector de Colección Rápido en Mockup: XV Quinceaños | Boda | Cumpleaños */}
       <div className="flex items-center gap-1.5 p-1.5 bg-white border border-[#E8E3D9] rounded-full mb-3 shadow-[0_4px_20px_rgba(44,31,27,0.06)] backdrop-blur-md">
         <button
-          onClick={() => setActiveTab("butterfly")}
+          onClick={() => setActiveTab("quince")}
           className={`px-3 sm:px-4 py-1.5 rounded-full text-[10px] sm:text-[11px] font-['Cinzel'] tracking-wider uppercase transition-all cursor-pointer ${
-            activeTab === "butterfly"
+            activeTab === "quince"
               ? "bg-gradient-to-r from-[#C5A059] to-[#EED3A1] text-[#2C1F1B] font-bold shadow-sm"
               : "text-[#5E534C] hover:text-[#2C1F1B]"
           }`}
         >
-          Butterfly XV
+          {lang === "es" ? "XV Quinceaños" : "XV Quinceaños"}
         </button>
         <button
-          onClick={() => setActiveTab("rose")}
+          onClick={() => setActiveTab("boda")}
           className={`px-3 sm:px-4 py-1.5 rounded-full text-[10px] sm:text-[11px] font-['Cinzel'] tracking-wider uppercase transition-all cursor-pointer ${
-            activeTab === "rose"
+            activeTab === "boda"
               ? "bg-gradient-to-r from-[#C5A059] to-[#EED3A1] text-[#2C1F1B] font-bold shadow-sm"
               : "text-[#5E534C] hover:text-[#2C1F1B]"
           }`}
         >
-          Blush Rose
+          {lang === "es" ? "Boda" : "Wedding"}
         </button>
         <button
-          onClick={() => setActiveTab("chateau")}
+          onClick={() => setActiveTab("cumple")}
           className={`px-3 sm:px-4 py-1.5 rounded-full text-[10px] sm:text-[11px] font-['Cinzel'] tracking-wider uppercase transition-all cursor-pointer ${
-            activeTab === "chateau"
+            activeTab === "cumple"
               ? "bg-gradient-to-r from-[#C5A059] to-[#EED3A1] text-[#2C1F1B] font-bold shadow-sm"
               : "text-[#5E534C] hover:text-[#2C1F1B]"
           }`}
         >
-          Ivory Boda
+          {lang === "es" ? "Cumpleaños" : "Birthday"}
         </button>
       </div>
 
-      {/* Marco de Smartphone Físico 9:16 con bisel de gala (Ajustado para pliegue óptimo) */}
+      {/* Marco de Smartphone Físico 9:16 con bisel de gala */}
       <div className="relative w-[300px] sm:w-[330px] h-[580px] sm:h-[630px] bg-[#0E0D12] rounded-[48px] p-2.5 sm:p-3 shadow-[0_25px_80px_rgba(44,31,27,0.2),0_0_35px_rgba(197,160,89,0.3)] border-[4px] sm:border-[5px] border-[#25212A] ring-2 ring-[#C5A059]/40 flex flex-col">
         {/* Dynamic Island */}
         <div className="absolute top-4 left-1/2 -translate-x-1/2 w-28 h-5 bg-black rounded-full z-40 flex items-center justify-between px-3">
@@ -125,7 +142,8 @@ export default function InteractivePhoneMockup({
         >
           <video
             ref={videoRef}
-            src="https://luminavite-storage.s3.us-east-1.amazonaws.com/video/WhatsApp+Video+2026-10-14+at+9.50.53+AM.mp4"
+            key={activeTab}
+            src={VIDEOS[activeTab]}
             autoPlay
             loop
             muted={isMuted}
@@ -171,8 +189,8 @@ export default function InteractivePhoneMockup({
         <ExternalLink className="w-3.5 h-3.5" />
         <span>
           {lang === "es"
-            ? `Probar ${activeTab === "butterfly" ? "Valeria (Butterfly)" : activeTab === "rose" ? "Isabella" : "Emma & Lucas"} en Vivo`
-            : `Test ${activeTab === "butterfly" ? "Valeria (Butterfly)" : activeTab === "rose" ? "Isabella" : "Emma & Lucas"} Live`}
+            ? `Probar Invitación de ${activeTab === "quince" ? "XV Quinceaños" : activeTab === "boda" ? "Boda" : "Cumpleaños"} en Vivo`
+            : `Test ${activeTab === "quince" ? "XV Quinceaños" : activeTab === "boda" ? "Wedding" : "Birthday"} Live Demo`}
         </span>
       </button>
     </div>
