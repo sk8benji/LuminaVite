@@ -43,5 +43,9 @@ export default async function DemoPage(props: PageProps) {
     notFound();
   }
 
-  return <TemplateDispatcher data={data} />;
+  return (
+    <div className="no-scrollbar overflow-x-hidden min-h-screen">
+      <TemplateDispatcher data={data} />
+    </div>
+  );
 }

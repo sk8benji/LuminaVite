@@ -98,3 +98,22 @@ body {
   -webkit-clip-path: url(#canvaGalaClip);
 }
 
+/* Ocultar barra de scroll en iframes, simuladores móviles y elementos interactivos */
+.no-scrollbar,
+.no-scrollbar *,
+iframe,
+[data-hide-scrollbar] {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+}
+
+.no-scrollbar::-webkit-scrollbar,
+.no-scrollbar *::-webkit-scrollbar,
+iframe::-webkit-scrollbar,
+[data-hide-scrollbar]::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+
