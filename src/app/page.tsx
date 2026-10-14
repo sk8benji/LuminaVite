@@ -798,7 +798,7 @@ export default function HomePage() {
                   <span className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-800 font-bold flex items-center justify-center text-xs shrink-0 mt-0.5">✓</span>
                   <div>
                     <h4 className="font-['Montserrat'] text-xs font-bold text-[#2C1F1B]">
-                      {lang === "es" ? "Ahorra hasta un 80% (Desde $49 pago único)" : "Save up to 80% (From $49 one-time)"}
+                      {lang === "es" ? "Ahorra hasta un 80% (Desde $99 pago único)" : "Save up to 80% (From $99 one-time)"}
                     </h4>
                     <p className="text-[11px] text-[#554942] mt-0.5">
                       {lang === "es"
