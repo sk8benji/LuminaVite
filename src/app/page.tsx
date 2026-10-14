@@ -252,7 +252,7 @@ export default function HomePage() {
           </div>
 
           {/* Visual Central: Mockup Interactivo del Teléfono con Sobre y Confeti sobre fondo claro */}
-          <div className="w-full mt-14">
+          <div className="w-full mt-10">
             <InteractivePhoneMockup lang={lang} onOpenModal={handleOpenDemo} />
           </div>
 

@@ -47,9 +47,9 @@ export default function InteractivePhoneMockup({
       {/* Resplandor ambiental cálido detrás del mockup */}
       <div className="absolute inset-0 bg-gradient-to-tr from-[#C5A059]/25 via-[#EED3A1]/15 to-transparent rounded-full blur-[100px] pointer-events-none -z-10" />
 
-      {/* Floating Badges Superiores (Modo Claro de Lujo) */}
-      <div className="hidden sm:flex absolute -top-5 -left-12 z-20 items-center gap-2 px-4 py-2 rounded-full bg-white/95 border border-[#C5A059]/40 shadow-[0_10px_25px_rgba(44,31,27,0.08)] backdrop-blur-md animate-bounce [animation-duration:4s]">
-        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
+      {/* Badge de Prueba Social Local (En el flujo normal con espaciado limpio, sin sobreponerse en PC ni móviles) */}
+      <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/95 border border-[#C5A059]/40 shadow-[0_4px_16px_rgba(44,31,27,0.06)] backdrop-blur-md mb-4 text-center max-w-full">
+        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping flex-shrink-0" />
         <span className="font-['Montserrat'] text-[11px] font-semibold text-[#2C1F1B]">
           {lang === "es"
             ? "Más de 1,200 familias confirmadas este mes en Los Ángeles y San Fernando Valley"
@@ -57,14 +57,15 @@ export default function InteractivePhoneMockup({
         </span>
       </div>
 
-      <div className="hidden sm:flex absolute top-1/3 -right-14 z-20 items-center gap-2 px-4 py-2 rounded-full bg-white/95 border border-[#E8E3D9] shadow-[0_10px_25px_rgba(44,31,27,0.08)] backdrop-blur-md">
+      {/* Floating Badges Laterales (Solo en pantallas grandes para evitar solapamiento) */}
+      <div className="hidden lg:flex absolute top-1/3 -right-20 z-20 items-center gap-2 px-4 py-2 rounded-full bg-white/95 border border-[#E8E3D9] shadow-[0_10px_25px_rgba(44,31,27,0.08)] backdrop-blur-md">
         <CheckCircle2 className="w-3.5 h-3.5 text-[#C5A059]" />
         <span className="font-['Montserrat'] text-[11px] font-semibold text-[#2C1F1B]">
           {lang === "es" ? "RSVP 98% aforo en vivo" : "Live RSVP • 98% capacity"}
         </span>
       </div>
 
-      <div className="hidden sm:flex absolute bottom-12 -left-10 z-20 items-center gap-2 px-4 py-2 rounded-full bg-white/95 border border-[#E8E3D9] shadow-[0_10px_25px_rgba(44,31,27,0.08)] backdrop-blur-md">
+      <div className="hidden lg:flex absolute bottom-16 -left-16 z-20 items-center gap-2 px-4 py-2 rounded-full bg-white/95 border border-[#E8E3D9] shadow-[0_10px_25px_rgba(44,31,27,0.08)] backdrop-blur-md">
         <span className="text-[#C5A059] text-xs">🔒</span>
         <span className="font-['Montserrat'] text-[11px] font-semibold text-[#2C1F1B]">
           {lang === "es" ? "Cero contraseñas • 1 Clic" : "Zero passwords • 1 Click"}
