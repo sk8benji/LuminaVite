@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import {
   Users,
@@ -57,6 +57,197 @@ export interface GuestItem {
   created_at?: string;
   updated_at?: string;
 }
+
+export const panelTranslations = {
+  es: {
+    titleSuffix: "Panel del Anfitrión",
+    subtitle: "Gestión de lista de invitados y aforo en tiempo real",
+    viewInvitation: "Ver Invitación",
+    copyLink: "Copiar Link",
+    copied: "¡Copiado!",
+    bannerTag: "Panel de Control del Evento",
+    bannerDesc: "Administra el acceso de tus familias invitadas y supervisa las confirmaciones en tiempo real.",
+    assignedPax: "Pases asignados",
+    familiesCount: "familias/invitados",
+    clickAll: "Click para ver todos los invitados",
+    confirmedPax: "Pases confirmados",
+    confirmedSubtitle: "confirmaron asistencia",
+    clickConfirmed: "Click para filtrar solo confirmados",
+    declined: "Declinados",
+    declinedSubtitle: "No podrán asistir",
+    clickDeclined: "Click para filtrar declinados",
+    pending: "Pendientes",
+    pendingSubtitle: "Por responder",
+    clickPending: "Click para filtrar pendientes",
+    capacityConfirmed: "Capacidad confirmada:",
+    passes: "pases",
+    pass: "pase",
+    assignedSingular: "pase asignado",
+    assignedPlural: "pases asignados",
+    ofCapacity: "del cupo",
+    estimatedPasses: "pases estimados",
+    confirmedShort: "confirmados",
+    addGuestTitle: "Agregar nuevo invitado a la lista",
+    nameLabel: "Nombre o familia",
+    namePlaceholder: "Ej. Familia Rodríguez o Sofía Méndez",
+    paxLabel: "Pases",
+    phoneLabel: "Teléfono móvil",
+    addGuestBtn: "+ Agregar Invitado",
+    guestListTitle: "Lista de Invitados",
+    filterAttending: "Confirmados",
+    filterDeclined: "Declinados",
+    filterPending: "Pendientes",
+    viewAll: "Ver todos",
+    autoUpdated: "Actualizado automáticamente",
+    searchPlaceholder: "Buscar...",
+    exportCsv: "Exportar CSV",
+    emptyFilterTitle: "No hay invitados que coincidan con la búsqueda o filtro.",
+    emptyFilterDesc: "Intenta cambiando el filtro o agrega un nuevo invitado arriba.",
+    emptyListTitle: "No hay invitados en la lista todavía.",
+    emptyListDesc: "Usa el formulario de arriba para agregar a los primeros invitados o familias.",
+    thName: "Nombre / Familia",
+    thAssigned: "Pases Asignados",
+    thConfirmed: "Confirmados",
+    thStatus: "Estado",
+    thPhoneNotes: "Teléfono / Notas",
+    thActions: "Acciones",
+    statusAttending: "Confirmado",
+    statusDeclined: "Declinado",
+    statusManual: "Solicitud Manual",
+    statusPending: "Pendiente",
+    copyGuestLinkTitle: "Copiar enlace personalizado del invitado",
+    viewActivityTitle: "Ver mensaje, detalles y registro de actividad",
+    editGuestTitle: "Editar invitado",
+    deleteGuestTitle: "Eliminar de la lista",
+    activityModalTag: "Registro & Actividad",
+    confirmationStatus: "Estado de confirmación:",
+    contactPhone: "Teléfono de contacto:",
+    lastUpdate: "Última actualización:",
+    notesLabel: "Mensaje o dedicatoria:",
+    noNotes: "No hay notas o comentarios especiales registrados aún.",
+    sendSmsBtn: "Enviar SMS con enlace",
+    copyLinkBtn: "Copiar Enlace",
+    editModalTitle: "Editar Invitado",
+    fullNameLabel: "Nombre Completo o Familia *",
+    assignedPaxLabel: "Pases Asignados",
+    statusLabel: "Estado",
+    statusPendingOpt: "Pendiente",
+    statusManualOpt: "Solicitud Manual (Por Aprobar)",
+    statusAttendingOpt: "Confirmado",
+    statusDeclinedOpt: "Cancelado",
+    realConfirmedPaxLabel: "Pases Confirmados Reales",
+    phoneInputLabel: "Teléfono",
+    cancelBtn: "Cancelar",
+    saveChangesBtn: "Guardar Cambios",
+    deleteConfirm: (name: string) => `¿Estás seguro de que deseas eliminar a "${name}" de la lista?`,
+    errorMinName: "Por favor ingresa un nombre o familia válido de al menos 3 caracteres.",
+    errorAddGuest: "Error al agregar invitado.",
+    loginTitle: "Panel del Anfitrión",
+    loginDesc: "Ingresa tu clave de acceso para gestionar los invitados de este evento.",
+    loginKeyLabel: "Clave de Anfitrión",
+    loginKeyPlaceholder: "Ingresa tu clave de anfitrión...",
+    loginSubmitBtn: "Acceder a mi Panel",
+    loginSubmitting: "Verificando...",
+    loginViewInvitation: "Ver Invitación Digital",
+    loginSmsHelp: "Ayuda por SMS",
+    smsInviteText: (name: string, pax: number, link: string) =>
+      `¡Hola ${name}! Queremos compartir este momento contigo. Tienes ${pax} pases reservados para nuestro evento. Confirma tu asistencia aquí: ${link}`,
+  },
+  en: {
+    titleSuffix: "Host Panel",
+    subtitle: "Guest list and real-time attendance management",
+    viewInvitation: "View Invitation",
+    copyLink: "Copy Link",
+    copied: "Copied!",
+    bannerTag: "Event Control Panel",
+    bannerDesc: "Manage your invited families and monitor confirmations in real time.",
+    assignedPax: "Assigned passes",
+    familiesCount: "families/guests",
+    clickAll: "Click to view all guests",
+    confirmedPax: "Confirmed passes",
+    confirmedSubtitle: "confirmed attendance",
+    clickConfirmed: "Click to filter confirmed only",
+    declined: "Declined",
+    declinedSubtitle: "Unable to attend",
+    clickDeclined: "Click to filter declined",
+    pending: "Pending",
+    pendingSubtitle: "Awaiting response",
+    clickPending: "Click to filter pending",
+    capacityConfirmed: "Confirmed capacity:",
+    passes: "passes",
+    pass: "pass",
+    assignedSingular: "assigned pass",
+    assignedPlural: "assigned passes",
+    ofCapacity: "of capacity",
+    estimatedPasses: "estimated passes",
+    confirmedShort: "confirmed",
+    addGuestTitle: "Add new guest to the list",
+    nameLabel: "Name or family",
+    namePlaceholder: "E.g. Rodriguez Family or Sophia Mendez",
+    paxLabel: "Passes",
+    phoneLabel: "Mobile phone",
+    addGuestBtn: "+ Add Guest",
+    guestListTitle: "Guest List",
+    filterAttending: "Confirmed",
+    filterDeclined: "Declined",
+    filterPending: "Pending",
+    viewAll: "View all",
+    autoUpdated: "Automatically updated",
+    searchPlaceholder: "Search...",
+    exportCsv: "Export CSV",
+    emptyFilterTitle: "No guests match your search or filter.",
+    emptyFilterDesc: "Try changing the filter or add a new guest above.",
+    emptyListTitle: "No guests in the list yet.",
+    emptyListDesc: "Use the form above to add your first guests or families.",
+    thName: "Name / Family",
+    thAssigned: "Assigned Passes",
+    thConfirmed: "Confirmed",
+    thStatus: "Status",
+    thPhoneNotes: "Phone / Notes",
+    thActions: "Actions",
+    statusAttending: "Confirmed",
+    statusDeclined: "Declined",
+    statusManual: "Manual Request",
+    statusPending: "Pending",
+    copyGuestLinkTitle: "Copy guest's personalized link",
+    viewActivityTitle: "View message, details and activity log",
+    editGuestTitle: "Edit guest",
+    deleteGuestTitle: "Remove from list",
+    activityModalTag: "Activity & Log",
+    confirmationStatus: "Confirmation status:",
+    contactPhone: "Contact phone:",
+    lastUpdate: "Last update:",
+    notesLabel: "Message or dedication:",
+    noNotes: "No special notes or comments recorded yet.",
+    sendSmsBtn: "Send SMS with link",
+    copyLinkBtn: "Copy Link",
+    editModalTitle: "Edit Guest",
+    fullNameLabel: "Full Name or Family *",
+    assignedPaxLabel: "Assigned Passes",
+    statusLabel: "Status",
+    statusPendingOpt: "Pending",
+    statusManualOpt: "Manual Request (Pending Approval)",
+    statusAttendingOpt: "Confirmed",
+    statusDeclinedOpt: "Declined",
+    realConfirmedPaxLabel: "Actual Confirmed Passes",
+    phoneInputLabel: "Phone",
+    cancelBtn: "Cancel",
+    saveChangesBtn: "Save Changes",
+    deleteConfirm: (name: string) => `Are you sure you want to remove "${name}" from the list?`,
+    errorMinName: "Please enter a valid name or family with at least 3 characters.",
+    errorAddGuest: "Error adding guest.",
+    loginTitle: "Host Panel",
+    loginDesc: "Enter your access key to manage guests for this event.",
+    loginKeyLabel: "Host Access Key",
+    loginKeyPlaceholder: "Enter your host key...",
+    loginSubmitBtn: "Access My Panel",
+    loginSubmitting: "Verifying...",
+    loginViewInvitation: "View Digital Invitation",
+    loginSmsHelp: "Help via SMS",
+    smsInviteText: (name: string, pax: number, link: string) =>
+      `Hi ${name}! We would love to celebrate with you. You have ${pax} seats reserved for our event. Please RSVP here: ${link}`,
+  },
+};
 
 export interface PanelData {
   evento: {
@@ -115,6 +306,25 @@ export default function PanelView({
   const [guests, setGuests] = useState<GuestItem[]>(initialData?.guests || []);
   const [statusFilter, setStatusFilter] = useState<"all" | "attending" | "pending" | "declined">("all");
   const [activityGuest, setActivityGuest] = useState<GuestItem | null>(null);
+  const [lang, setLang] = useState<"es" | "en">("es");
+
+  useEffect(() => {
+    try {
+      const savedLang = localStorage.getItem("panel_lang");
+      if (savedLang === "en" || savedLang === "es") {
+        setLang(savedLang);
+      }
+    } catch {}
+  }, []);
+
+  const toggleLang = (newLang: "es" | "en") => {
+    setLang(newLang);
+    try {
+      localStorage.setItem("panel_lang", newLang);
+    } catch {}
+  };
+
+  const t = panelTranslations[lang];
 
   const [copiedLink, setCopiedLink] = useState(false);
   const [copiedGuestId, setCopiedGuestId] = useState<string | null>(null);
@@ -123,9 +333,9 @@ export default function PanelView({
   const [submittingKey, setSubmittingKey] = useState(false);
   const [keyError, setKeyError] = useState(
     errorMessage === "clave_incorrecta"
-      ? "La clave ingresada no es válida para este evento."
+      ? (lang === "en" ? "The access key entered is invalid for this event." : "La clave ingresada no es válida para este evento.")
       : errorMessage === "clave_requerida"
-      ? "Por favor introduce tu clave de anfitrión."
+      ? (lang === "en" ? "Please enter your host access key." : "Por favor introduce tu clave de anfitrión.")
       : ""
   );
 
@@ -344,7 +554,7 @@ export default function PanelView({
     const origin = typeof window !== "undefined" ? window.location.origin : "https://clickandlove.app";
     const guestLink = `${origin}/${slug}?guest=${guest.id}`;
     const text = encodeURIComponent(
-      `¡Hola ${guest.name}! Queremos compartir este momento contigo. Tienes ${guest.max_pax} pases reservados para nuestro evento. Confirma tu asistencia aquí: ${guestLink}`
+      t.smsInviteText(guest.name, guest.max_pax, guestLink)
     );
     const cleanPhone = guest.phone ? guest.phone.replace(/[^0-9]/g, "") : "";
     const smsUrl = cleanPhone
@@ -385,7 +595,7 @@ export default function PanelView({
   const handleManualKeySubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!manualKeyInput.trim()) {
-      setKeyError("Por favor ingresa tu clave de anfitrión.");
+      setKeyError(t.loginDesc);
       return;
     }
     setSubmittingKey(true);
@@ -411,7 +621,7 @@ export default function PanelView({
     e.preventDefault();
     const cleanName = newGuestName.trim().replace(/\s+/g, " ");
     if (!cleanName || cleanName.length < 3) {
-      setAddGuestError("Por favor ingresa un nombre o familia válido de al menos 3 caracteres.");
+      setAddGuestError(t.errorMinName);
       return;
     }
 
@@ -431,7 +641,7 @@ export default function PanelView({
 
       const resData = await res.json();
       if (!res.ok) {
-        throw new Error(resData.error || "No se pudo agregar el invitado.");
+        throw new Error(resData.error || t.errorAddGuest);
       }
 
       if (resData.guest) {
@@ -441,7 +651,7 @@ export default function PanelView({
         setNewGuestPax("2");
       }
     } catch (err: any) {
-      setAddGuestError(err.message || "Error al agregar invitado.");
+      setAddGuestError(err.message || t.errorAddGuest);
     } finally {
       setIsAddingGuest(false);
     }
@@ -449,7 +659,7 @@ export default function PanelView({
 
   // Eliminar invitado
   const handleDeleteGuest = async (id: string, name: string) => {
-    if (!window.confirm(`¿Estás seguro de que deseas eliminar a "${name}" de la lista?`)) {
+    if (!window.confirm(t.deleteConfirm(name))) {
       return;
     }
 
@@ -526,7 +736,35 @@ export default function PanelView({
   // Si no está autorizado
   if (!isAuthorized || !data) {
     return (
-      <div className="min-h-screen bg-[#FAF8F5] flex items-center justify-center p-4 font-['Montserrat']">
+      <div className="min-h-screen bg-[#FAF8F5] flex items-center justify-center p-4 font-['Montserrat'] relative">
+        {/* Selector de idioma */}
+        <div className="absolute top-4 right-4">
+          <div className="flex items-center bg-white border border-[#E8E3D9] rounded-xl p-0.5 text-xs font-semibold shadow-xs">
+            <button
+              type="button"
+              onClick={() => toggleLang("es")}
+              className={`px-2.5 py-1 rounded-lg transition-colors cursor-pointer ${
+                lang === "es"
+                  ? "bg-[#2C1F1B] text-white shadow-2xs font-bold"
+                  : "text-[#8C8077] hover:text-[#2C1F1B]"
+              }`}
+            >
+              ES
+            </button>
+            <button
+              type="button"
+              onClick={() => toggleLang("en")}
+              className={`px-2.5 py-1 rounded-lg transition-colors cursor-pointer ${
+                lang === "en"
+                  ? "bg-[#2C1F1B] text-white shadow-2xs font-bold"
+                  : "text-[#8C8077] hover:text-[#2C1F1B]"
+              }`}
+            >
+              EN
+            </button>
+          </div>
+        </div>
+
         <div className="bg-white max-w-md w-full p-8 rounded-3xl border border-[#E8E3D9] text-center shadow-[0_15px_40px_rgba(44,31,27,0.06)] space-y-5">
           <div className="w-16 h-16 mx-auto rounded-full bg-[#F5EFE4] text-[#C5A059] flex items-center justify-center border border-[#C5A059]/40 shadow-xs text-2xl font-serif font-bold">
             ✦
@@ -534,24 +772,24 @@ export default function PanelView({
 
           <div className="space-y-2">
             <h2 className="font-serif text-xl sm:text-2xl font-bold text-[#2C1F1B] tracking-tight">
-              Panel de Gestión de Invitados
+              {t.loginTitle}
             </h2>
             <p className="text-xs text-[#2B2B2B] leading-relaxed">
-              Introduce tu clave de anfitrión para administrar la lista oficial de invitados y controlar el aforo en tiempo real.
+              {t.loginDesc}
             </p>
           </div>
 
           <form onSubmit={handleManualKeySubmit} className="space-y-3 pt-2">
             <div className="text-left">
               <label className="block text-[10px] font-bold uppercase tracking-wider text-[#8C8077] mb-1.5">
-                Clave de Acceso Familiar
+                {t.loginKeyLabel}
               </label>
               <div className="relative">
                 <input
                   type="password"
                   value={manualKeyInput}
                   onChange={(e) => setManualKeyInput(e.target.value)}
-                  placeholder="Ingresa tu clave de anfitrión..."
+                  placeholder={t.loginKeyPlaceholder}
                   className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-[#E8E3D9] bg-[#FAF8F5] text-xs text-[#2C1F1B] placeholder-[#8C8077] focus:outline-none focus:ring-2 focus:ring-[#C5A059] focus:bg-white transition"
                 />
                 <Lock className="w-4 h-4 text-[#8C8077] absolute left-3 top-1/2 -translate-y-1/2" />
@@ -569,7 +807,7 @@ export default function PanelView({
               disabled={submittingKey}
               className="w-full py-3 px-4 bg-gradient-to-r from-[#C5A059] via-[#EED3A1] to-[#C5A059] hover:brightness-105 active:scale-95 text-[#2C1F1B] text-xs font-bold tracking-wider uppercase rounded-xl transition shadow-sm cursor-pointer"
             >
-              {submittingKey ? "Verificando..." : "Acceder a mi Panel"}
+              {submittingKey ? t.loginSubmitting : t.loginSubmitBtn}
             </button>
           </form>
 
@@ -578,13 +816,13 @@ export default function PanelView({
               href={`/${slug}`}
               className="flex-1 py-2.5 px-4 bg-[#FAF8F5] hover:bg-[#F5EFE4] text-[#2C1F1B] border border-[#E8E3D9] rounded-xl text-xs font-semibold transition text-center"
             >
-              Ver Invitación Digital
+              {t.loginViewInvitation}
             </Link>
             <a
-              href={`sms:18181234567?&body=${encodeURIComponent(`Hola, necesito acceder a mi panel del evento ${slug}`)}`}
+              href={`sms:18181234567?&body=${encodeURIComponent(lang === "en" ? `Hello, I need help accessing my host panel for event ${slug}` : `Hola, necesito acceder a mi panel del evento ${slug}`)}`}
               className="flex-1 py-2.5 px-4 bg-stone-900 hover:bg-black text-white rounded-xl text-xs font-semibold transition flex items-center justify-center gap-1.5 shadow-xs"
             >
-              <span>Ayuda por SMS</span>
+              <span>{t.loginSmsHelp}</span>
             </a>
           </div>
         </div>
@@ -608,29 +846,86 @@ export default function PanelView({
   });
 
   return (
-    <div className="min-h-screen bg-[#FAF8F5] text-[#2C1F1B] font-['Montserrat'] pb-16">
+    <div className="min-h-screen bg-[#FAF8F5] text-[#2C1F1B] font-['Montserrat'] pb-16 relative">
+      {/* Botón flotante lateral de traducción (Barra lateral) */}
+      <aside
+        aria-label="Selector de idioma lateral"
+        className="fixed top-24 right-3 z-40 bg-white/95 backdrop-blur-md border border-[#D4AF37]/60 rounded-full shadow-md p-1 hidden lg:flex items-center gap-1 text-[11px] font-semibold"
+      >
+        <Globe className="w-3.5 h-3.5 text-[#C5A059] ml-1" />
+        <button
+          type="button"
+          onClick={() => toggleLang("es")}
+          className={`px-2 py-0.5 rounded-full transition cursor-pointer ${
+            lang === "es"
+              ? "bg-[#2C1F1B] text-white"
+              : "text-stone-500 hover:text-stone-800"
+          }`}
+        >
+          ES
+        </button>
+        <span className="text-stone-300 select-none">|</span>
+        <button
+          type="button"
+          onClick={() => toggleLang("en")}
+          className={`px-2 py-0.5 rounded-full transition cursor-pointer ${
+            lang === "en"
+              ? "bg-[#2C1F1B] text-white"
+              : "text-stone-500 hover:text-stone-800"
+          }`}
+        >
+          EN
+        </button>
+      </aside>
+
       {/* Barra Superior */}
       <header className="bg-white/95 backdrop-blur-md border-b border-[#E8E3D9] sticky top-0 z-30 px-4 sm:px-8 py-3.5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div className="flex items-center gap-3">
           <span className="text-xl">✨</span>
           <div>
             <h1 className="text-sm font-bold text-[#2C1F1B] font-serif">
-              {data.evento.titulo} • Panel del Anfitrión
+              {data.evento.titulo} • {t.titleSuffix}
             </h1>
             <p className="text-[11px] text-[#8C8077]">
-              Gestión de lista de invitados y aforo en tiempo real
+              {t.subtitle}
             </p>
           </div>
         </div>
 
         <div className="flex items-center gap-2 self-end sm:self-auto">
+          {/* Selector de Idioma compacto en barra lateral/superior */}
+          <div className="flex items-center bg-[#FAF8F5] border border-[#E8E3D9] rounded-xl p-0.5 text-xs font-semibold shadow-xs">
+            <button
+              type="button"
+              onClick={() => toggleLang("es")}
+              className={`px-2 py-1 rounded-lg transition-colors cursor-pointer ${
+                lang === "es"
+                  ? "bg-white text-[#2C1F1B] shadow-2xs font-bold"
+                  : "text-[#8C8077] hover:text-[#2C1F1B]"
+              }`}
+            >
+              ES
+            </button>
+            <button
+              type="button"
+              onClick={() => toggleLang("en")}
+              className={`px-2 py-1 rounded-lg transition-colors cursor-pointer ${
+                lang === "en"
+                  ? "bg-white text-[#2C1F1B] shadow-2xs font-bold"
+                  : "text-[#8C8077] hover:text-[#2C1F1B]"
+              }`}
+            >
+              EN
+            </button>
+          </div>
+
           {/* Botón Ver Invitación con flecha externa diagonal */}
           <Link
             href={`/${slug}`}
             target="_blank"
             className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-[#FAF8F5] hover:bg-[#F5EFE4] rounded-xl text-xs font-semibold text-[#2C1F1B] border border-[#E8E3D9] transition shadow-xs"
           >
-            <span>Ver Invitación</span>
+            <span>{t.viewInvitation}</span>
             <ExternalLink className="w-3.5 h-3.5 text-[#8C8077]" />
           </Link>
 
@@ -648,7 +943,7 @@ export default function PanelView({
             ) : (
               <Link2 className="w-3.5 h-3.5 text-[#C5A059]" />
             )}
-            <span>{copiedLink ? "¡Copiado!" : "Copiar Link"}</span>
+            <span>{copiedLink ? t.copied : t.copyLink}</span>
           </button>
         </div>
       </header>
@@ -659,13 +954,13 @@ export default function PanelView({
           <div className="relative z-10 space-y-2">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/90 border border-[#D4AF37]/50 text-[#6B4E1B] text-[10px] sm:text-[11px] font-bold tracking-wider uppercase font-serif shadow-xs">
               <span>✦</span>
-              <span>Panel de Control del Evento</span>
+              <span>{t.bannerTag}</span>
             </div>
             <h2 className="text-2xl sm:text-3xl font-bold tracking-tight font-serif text-[#2C1F1B]">
               {data.evento.titulo}
             </h2>
             <p className="text-xs sm:text-sm text-[#5E534C] max-w-2xl leading-relaxed">
-              Administra el acceso de tus familias invitadas y supervisa las confirmaciones en tiempo real.
+              {t.bannerDesc}
             </p>
           </div>
         </div>
@@ -679,7 +974,7 @@ export default function PanelView({
             <div
               onClick={() => setStatusFilter("all")}
               role="button"
-              title="Click para ver todos los invitados"
+              title={t.clickAll}
               className={`p-4 sm:p-5 rounded-2xl border shadow-xs text-center transition cursor-pointer select-none ${
                 statusFilter === "all"
                   ? "bg-[#FAF6F0] border-[#C5A059] ring-2 ring-[#C5A059]/40"
@@ -689,18 +984,18 @@ export default function PanelView({
               <div className="w-9 h-9 rounded-full bg-[#F7F3EB] border border-[#EADBBD] text-[#8C6D2D] flex items-center justify-center mx-auto mb-2.5">
                 <Users className="w-4 h-4" />
               </div>
-              <p className="text-xs text-[#5E534C] font-medium">Pases asignados</p>
+              <p className="text-xs text-[#5E534C] font-medium">{t.assignedPax}</p>
               <h3 className="text-3xl font-serif font-bold text-[#2C1F1B] mt-1">
                 {totalAssignedPax}
               </h3>
-              <span className="text-[10px] text-stone-500 mt-0.5 block">{guests.length} familias/invitados</span>
+              <span className="text-[10px] text-stone-500 mt-0.5 block">{guests.length} {t.familiesCount}</span>
             </div>
 
             {/* Pases Confirmados (Filtrar Confirmados) */}
             <div
               onClick={() => setStatusFilter(statusFilter === "attending" ? "all" : "attending")}
               role="button"
-              title="Click para filtrar solo confirmados"
+              title={t.clickConfirmed}
               className={`p-4 sm:p-5 rounded-2xl border shadow-xs text-center transition cursor-pointer select-none ${
                 statusFilter === "attending"
                   ? "bg-emerald-50/70 border-emerald-500 ring-2 ring-emerald-500/40"
@@ -710,12 +1005,12 @@ export default function PanelView({
               <div className="w-9 h-9 rounded-full bg-emerald-50 border border-emerald-200/60 text-[#1B5E20] flex items-center justify-center mx-auto mb-2.5">
                 <CheckCircle2 className="w-4 h-4" />
               </div>
-              <p className="text-xs text-[#5E534C] font-medium">Pases confirmados</p>
+              <p className="text-xs text-[#5E534C] font-medium">{t.confirmedPax}</p>
               <h3 className="text-3xl font-serif font-bold text-[#1B5E20] mt-1">
                 {totalConfirmedPax}
               </h3>
               <span className="text-[10px] text-emerald-700 font-semibold mt-0.5 block">
-                {guests.filter((g) => g.status === "attending").length} confirmaron asistencia
+                {guests.filter((g) => g.status === "attending").length} {t.confirmedSubtitle}
               </span>
             </div>
 
@@ -723,7 +1018,7 @@ export default function PanelView({
             <div
               onClick={() => setStatusFilter(statusFilter === "declined" ? "all" : "declined")}
               role="button"
-              title="Click para filtrar declinados"
+              title={t.clickDeclined}
               className={`p-4 sm:p-5 rounded-2xl border shadow-xs text-center transition cursor-pointer select-none ${
                 statusFilter === "declined"
                   ? "bg-rose-50/70 border-rose-500 ring-2 ring-rose-500/40"
@@ -733,18 +1028,18 @@ export default function PanelView({
               <div className="w-9 h-9 rounded-full bg-[#FBF0F1] border border-[#F2D5D9] text-[#8B2635] flex items-center justify-center mx-auto mb-2.5">
                 <XCircle className="w-4 h-4" />
               </div>
-              <p className="text-xs text-[#5E534C] font-medium">Declinados</p>
+              <p className="text-xs text-[#5E534C] font-medium">{t.declined}</p>
               <h3 className="text-3xl font-serif font-bold text-[#8B2635] mt-1">
                 {totalDeclinedCount}
               </h3>
-              <span className="text-[10px] text-[#8B2635] font-semibold mt-0.5 block">No podrán asistir</span>
+              <span className="text-[10px] text-[#8B2635] font-semibold mt-0.5 block">{t.declinedSubtitle}</span>
             </div>
 
             {/* Pendientes (Filtrar Pendientes) */}
             <div
               onClick={() => setStatusFilter(statusFilter === "pending" ? "all" : "pending")}
               role="button"
-              title="Click para filtrar pendientes"
+              title={t.clickPending}
               className={`p-4 sm:p-5 rounded-2xl border shadow-xs text-center transition cursor-pointer select-none ${
                 statusFilter === "pending"
                   ? "bg-amber-50/70 border-amber-500 ring-2 ring-amber-500/40"
@@ -754,11 +1049,11 @@ export default function PanelView({
               <div className="w-9 h-9 rounded-full bg-amber-50 border border-amber-200/60 text-[#B8860B] flex items-center justify-center mx-auto mb-2.5">
                 <Clock className="w-4 h-4" />
               </div>
-              <p className="text-xs text-[#5E534C] font-medium">Pendientes</p>
+              <p className="text-xs text-[#5E534C] font-medium">{t.pending}</p>
               <h3 className="text-3xl font-serif font-bold text-[#B8860B] mt-1">
                 {totalPendingCount}
               </h3>
-              <span className="text-[10px] text-[#B8860B] font-semibold mt-0.5 block">Por responder</span>
+              <span className="text-[10px] text-[#B8860B] font-semibold mt-0.5 block">{t.pendingSubtitle}</span>
             </div>
           </div>
 
@@ -767,12 +1062,12 @@ export default function PanelView({
             <div className="flex items-center justify-between text-xs text-[#5E534C]">
               <span className="font-medium flex items-center gap-2">
                 <span className="w-2.5 h-2.5 rounded-full bg-[#1B5E20]"></span>
-                <span>Capacidad confirmada: <strong className="text-[#1B5E20] font-semibold">{totalConfirmedPax} pases</strong></span>
+                <span>{t.capacityConfirmed} <strong className="text-[#1B5E20] font-semibold">{totalConfirmedPax} {t.passes}</strong></span>
               </span>
               <span className="text-[11px] font-semibold text-stone-600">
                 {data.estadisticas.aforoTotal > 0
-                  ? `${Math.round((totalConfirmedPax / data.estadisticas.aforoTotal) * 100)}% del cupo (${data.estadisticas.aforoTotal} pases estimados)`
-                  : `${totalConfirmedPax} confirmados`}
+                  ? `${Math.round((totalConfirmedPax / data.estadisticas.aforoTotal) * 100)}% ${t.ofCapacity} (${data.estadisticas.aforoTotal} ${t.estimatedPasses})`
+                  : `${totalConfirmedPax} ${t.confirmedShort}`}
               </span>
             </div>
             <div className="w-full h-2.5 bg-[#FAF6F0] rounded-full overflow-hidden border border-[#E8E3D9] flex">
@@ -798,27 +1093,27 @@ export default function PanelView({
         <div className="mt-4 bg-white p-5 sm:p-6 rounded-2xl border border-[#E8E3D9] shadow-xs">
           <h3 className="text-xs font-bold uppercase tracking-wider text-[#2C1F1B] mb-3.5 font-serif flex items-center gap-2">
             <UserPlus className="w-4 h-4 text-[#C5A059]" />
-            <span>Agregar nuevo invitado a la lista</span>
+            <span>{t.addGuestTitle}</span>
           </h3>
 
           <form onSubmit={handleAddGuest} className="grid grid-cols-1 sm:grid-cols-12 gap-3.5 items-end">
             <div className="sm:col-span-5">
               <label className="block text-xs font-medium uppercase tracking-wider text-stone-600 mb-1.5">
-                Nombre o familia
+                {t.nameLabel}
               </label>
               <input
                 type="text"
                 required
                 value={newGuestName}
                 onChange={(e) => setNewGuestName(e.target.value)}
-                placeholder="Ej. Familia Rodríguez o Sofía Méndez"
+                placeholder={t.namePlaceholder}
                 className="w-full px-3.5 py-2.5 bg-[#FAF8F5] border border-[#E8E3D9] rounded-xl text-xs text-[#2C1F1B] placeholder-[#8C8077] focus:outline-none focus:ring-2 focus:ring-[#C5A059] shadow-2xs"
               />
             </div>
 
             <div className="sm:col-span-3">
               <label className="block text-xs font-medium uppercase tracking-wider text-stone-600 mb-1.5">
-                Pases
+                {t.paxLabel}
               </label>
               <select
                 value={newGuestPax}
@@ -827,7 +1122,7 @@ export default function PanelView({
               >
                 {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
                   <option key={n} value={n}>
-                    {n} {n === 1 ? "Pase" : "Pases"}
+                    {n} {n === 1 ? t.pass : t.passes}
                   </option>
                 ))}
               </select>
@@ -835,7 +1130,7 @@ export default function PanelView({
 
             <div className="sm:col-span-4">
               <label className="block text-xs font-medium uppercase tracking-wider text-stone-600 mb-1.5">
-                Teléfono móvil
+                {t.phoneLabel}
               </label>
               <input
                 type="tel"
@@ -863,7 +1158,7 @@ export default function PanelView({
                 ) : (
                   <UserPlus className="w-3.5 h-3.5 text-[#EED3A1]" />
                 )}
-                <span>+ Agregar Invitado</span>
+                <span>{t.addGuestBtn}</span>
               </button>
             </div>
           </form>
@@ -875,7 +1170,7 @@ export default function PanelView({
             {/* Izquierda: Título de la tabla con el total */}
             <div className="flex items-center gap-2.5 flex-wrap">
               <h3 className="text-sm font-bold text-[#2C1F1B] font-serif">
-                Lista de Invitados ({filteredGuests.length})
+                {t.guestListTitle} ({filteredGuests.length})
               </h3>
               {statusFilter !== "all" ? (
                 <div className="inline-flex items-center gap-1.5 text-[11px] font-medium">
@@ -887,22 +1182,22 @@ export default function PanelView({
                       : "bg-[#B8860B]"
                   }`}>
                     {statusFilter === "attending"
-                      ? "Confirmados"
+                      ? t.filterAttending
                       : statusFilter === "declined"
-                      ? "Declinados"
-                      : "Pendientes"}
+                      ? t.filterDeclined
+                      : t.filterPending}
                   </span>
                   <button
                     onClick={() => setStatusFilter("all")}
                     className="text-stone-500 hover:text-stone-800 underline cursor-pointer text-[10px]"
                   >
-                    Ver todos
+                    {t.viewAll}
                   </button>
                 </div>
               ) : (
                 <div className="hidden sm:flex items-center gap-1.5 text-xs text-stone-500 font-medium">
                   <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                  <span className="text-[11px]">Actualizado automáticamente</span>
+                  <span className="text-[11px]">{t.autoUpdated}</span>
                 </div>
               )}
             </div>
@@ -915,7 +1210,7 @@ export default function PanelView({
                   type="text"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  placeholder="Buscar..."
+                  placeholder={t.searchPlaceholder}
                   className="w-full sm:w-52 h-9 rounded-lg border border-stone-200 text-xs pl-8 pr-3 bg-white text-[#2C1F1B] placeholder-[#8C8077] focus:outline-none focus:ring-1 focus:ring-[#C5A059] shadow-2xs"
                 />
               </div>
@@ -923,7 +1218,7 @@ export default function PanelView({
               <a
                 href={`/api/eventos/${slug}/panel/export`}
                 download
-                title="Exportar CSV"
+                title={t.exportCsv}
                 className="w-9 h-9 p-2 rounded-lg border border-stone-200 text-stone-500 hover:text-stone-800 hover:bg-stone-50 transition cursor-pointer flex items-center justify-center bg-white shrink-0 shadow-2xs"
               >
                 <Download className="w-4 h-4 text-emerald-700" />
@@ -934,20 +1229,20 @@ export default function PanelView({
           {filteredGuests.length === 0 ? (
             <div className="p-10 text-center text-[#8C8077] text-xs space-y-2">
               <Users className="w-8 h-8 text-[#C5A059]/50 mx-auto" />
-              <p className="font-semibold text-[#2C1F1B]">No hay invitados que coincidan con la búsqueda o filtro.</p>
-              <p className="text-[11px]">Intenta cambiando el filtro o agrega un nuevo invitado arriba.</p>
+              <p className="font-semibold text-[#2C1F1B]">{t.emptyFilterTitle}</p>
+              <p className="text-[11px]">{t.emptyFilterDesc}</p>
             </div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse text-xs">
                 <thead>
                   <tr className="bg-stone-100/60 text-stone-600 font-semibold text-xs border-b border-[#E8E3D9]">
-                    <th className="py-3 px-4">Nombre / Familia</th>
-                    <th className="py-3 px-4 text-center">Pases Asignados</th>
-                    <th className="py-3 px-4 text-center">Confirmados</th>
-                    <th className="py-3 px-4 text-center">Estado</th>
-                    <th className="py-3 px-4">Teléfono / Notas</th>
-                    <th className="py-3 px-4 text-right">Acciones</th>
+                    <th className="py-3 px-4">{t.thName}</th>
+                    <th className="py-3 px-4 text-center">{t.thAssigned}</th>
+                    <th className="py-3 px-4 text-center">{t.thConfirmed}</th>
+                    <th className="py-3 px-4 text-center">{t.thStatus}</th>
+                    <th className="py-3 px-4">{t.thPhoneNotes}</th>
+                    <th className="py-3 px-4 text-right">{t.thActions}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#E8E3D9]">
@@ -965,19 +1260,19 @@ export default function PanelView({
                       <td className="py-3.5 px-4 text-center">
                         {guest.status === "attending" ? (
                           <span className="inline-flex items-center gap-1 text-xs py-0.5 px-2.5 rounded-full font-medium text-emerald-700 bg-emerald-50 border border-emerald-200/60">
-                            <CheckCircle2 className="w-3 h-3" /> Confirmado
+                            <CheckCircle2 className="w-3 h-3" /> {t.statusAttending}
                           </span>
                         ) : guest.status === "declined" ? (
                           <span className="inline-flex items-center gap-1 text-xs py-0.5 px-2.5 rounded-full font-medium text-[#8B2635] bg-[#FBF0F1] border border-[#F2D5D9]">
-                            <XCircle className="w-3 h-3" /> Declinado
+                            <XCircle className="w-3 h-3" /> {t.statusDeclined}
                           </span>
                         ) : guest.status === "PENDIENTE_APROBACION" || guest.status === "pending_approval" ? (
                           <span className="inline-flex items-center gap-1 text-xs py-0.5 px-2.5 rounded-full font-medium text-amber-800 bg-amber-50 border border-amber-300">
-                            <AlertCircle className="w-3 h-3 text-amber-600" /> Solicitud Manual
+                            <AlertCircle className="w-3 h-3 text-amber-600" /> {t.statusManual}
                           </span>
                         ) : (
                           <span className="inline-flex items-center gap-1 text-xs py-0.5 px-2.5 rounded-full font-medium text-stone-600 bg-stone-100 border border-stone-200">
-                            <Clock className="w-3 h-3" /> Pendiente
+                            <Clock className="w-3 h-3" /> {t.statusPending}
                           </span>
                         )}
                       </td>
@@ -995,7 +1290,7 @@ export default function PanelView({
                           <div className="flex items-center gap-1 bg-[#FAF6F0] p-0.5 rounded-xl border border-[#E8E3D9]">
                             <button
                               onClick={() => copyGuestLink(guest.id)}
-                              title="Copiar enlace personalizado del invitado"
+                              title={t.copyGuestLinkTitle}
                               className={`w-8 h-8 flex items-center justify-center rounded-lg transition-colors cursor-pointer ${
                                 copiedGuestId === guest.id
                                   ? "text-emerald-700 bg-emerald-50 border border-emerald-200"
@@ -1010,7 +1305,7 @@ export default function PanelView({
                             </button>
                             <button
                               onClick={() => setActivityGuest(guest)}
-                              title="Ver mensaje, detalles y registro de actividad"
+                              title={t.viewActivityTitle}
                               className="w-8 h-8 flex items-center justify-center text-blue-700 hover:text-blue-900 hover:bg-white rounded-lg transition-colors cursor-pointer relative"
                             >
                               <MessageSquare className="w-3.5 h-3.5" />
@@ -1024,7 +1319,7 @@ export default function PanelView({
                           <div className="flex items-center gap-0.5">
                             <button
                               onClick={() => handleStartEdit(guest)}
-                              title="Editar invitado"
+                              title={t.editGuestTitle}
                               className="w-8 h-8 flex items-center justify-center text-stone-500 hover:text-[#2C1F1B] hover:bg-stone-100 rounded-lg transition-colors cursor-pointer"
                             >
                               <Edit2 className="w-3.5 h-3.5" />
@@ -1032,7 +1327,7 @@ export default function PanelView({
                             <button
                               onClick={() => handleDeleteGuest(guest.id, guest.name)}
                               disabled={deletingId === guest.id}
-                              title="Eliminar de la lista"
+                              title={t.deleteGuestTitle}
                               className="w-8 h-8 flex items-center justify-center text-stone-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer disabled:opacity-50"
                             >
                               {deletingId === guest.id ? (
@@ -1061,7 +1356,7 @@ export default function PanelView({
               <div className="flex items-start justify-between">
                 <div>
                   <span className="text-[10px] font-bold uppercase tracking-wider text-[#8C6D2D] font-serif">
-                    Registro & Actividad
+                    {t.activityModalTag}
                   </span>
                   <h3 className="font-serif text-lg font-bold text-[#2C1F1B] capitalize">
                     {activityGuest.name}
@@ -1077,24 +1372,24 @@ export default function PanelView({
 
               <div className="space-y-3 bg-[#FAF8F5] p-4 rounded-2xl border border-[#E8E3D9] text-xs">
                 <div className="flex items-center justify-between">
-                  <span className="text-[#8C8077]">Estado de confirmación:</span>
+                  <span className="text-[#8C8077]">{t.confirmationStatus}</span>
                   {activityGuest.status === "attending" ? (
                     <span className="inline-flex items-center gap-1 font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
-                      <CheckCircle2 className="w-3 h-3" /> Confirmado ({activityGuest.confirmed_pax} {activityGuest.confirmed_pax === 1 ? "pase" : "pases"})
+                      <CheckCircle2 className="w-3 h-3" /> {t.statusAttending} ({activityGuest.confirmed_pax} {activityGuest.confirmed_pax === 1 ? t.pass : t.passes})
                     </span>
                   ) : activityGuest.status === "declined" ? (
                     <span className="inline-flex items-center gap-1 font-semibold text-[#8B2635] bg-[#FBF0F1] px-2.5 py-0.5 rounded-full border border-[#F2D5D9]">
-                      <XCircle className="w-3 h-3" /> Declinado
+                      <XCircle className="w-3 h-3" /> {t.statusDeclined}
                     </span>
                   ) : (
                     <span className="inline-flex items-center gap-1 font-semibold text-stone-600 bg-stone-100 px-2.5 py-0.5 rounded-full border border-stone-200">
-                      <Clock className="w-3 h-3" /> Pendiente ({activityGuest.max_pax} {activityGuest.max_pax === 1 ? "pase asignado" : "pases asignados"})
+                      <Clock className="w-3 h-3" /> {t.statusPending} ({activityGuest.max_pax} {activityGuest.max_pax === 1 ? t.assignedSingular : t.assignedPlural})
                     </span>
                   )}
                 </div>
 
                 <div className="flex items-center justify-between">
-                  <span className="text-[#8C8077]">Teléfono de contacto:</span>
+                  <span className="text-[#8C8077]">{t.contactPhone}</span>
                   <span className="font-mono font-medium text-[#2C1F1B]">
                     {formatPhoneDisplay(activityGuest.phone)}
                   </span>
@@ -1102,9 +1397,9 @@ export default function PanelView({
 
                 {activityGuest.updated_at && (
                   <div className="flex items-center justify-between">
-                    <span className="text-[#8C8077]">Última actualización:</span>
+                    <span className="text-[#8C8077]">{t.lastUpdate}</span>
                     <span className="text-stone-600">
-                      {new Date(activityGuest.updated_at).toLocaleDateString("es-ES", {
+                      {new Date(activityGuest.updated_at).toLocaleDateString(lang === "en" ? "en-US" : "es-ES", {
                         day: "numeric",
                         month: "short",
                         year: "numeric",
@@ -1117,7 +1412,7 @@ export default function PanelView({
 
                 <div className="pt-2 border-t border-[#E8E3D9]">
                   <span className="text-[#8C8077] block mb-1 font-medium">
-                    Mensaje o dedicatoria:
+                    {t.notesLabel}
                   </span>
                   {activityGuest.notes ? (
                     <div className="p-3 bg-white rounded-xl border border-[#E8E3D9] text-[#2C1F1B] italic flex items-start gap-2">
@@ -1126,7 +1421,7 @@ export default function PanelView({
                     </div>
                   ) : (
                     <p className="text-stone-400 italic text-[11px]">
-                      No hay notas o comentarios especiales registrados aún.
+                      {t.noNotes}
                     </p>
                   )}
                 </div>
@@ -1139,7 +1434,7 @@ export default function PanelView({
                   className="flex-1 py-2 px-3 bg-[#38271F] hover:bg-[#251A14] text-white rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer"
                 >
                   <MessageSquare className="w-3.5 h-3.5 text-[#EED3A1]" />
-                  <span>Enviar SMS con enlace</span>
+                  <span>{t.sendSmsBtn}</span>
                 </button>
                 <button
                   type="button"
@@ -1151,7 +1446,7 @@ export default function PanelView({
                   ) : (
                     <Link2 className="w-3.5 h-3.5 text-[#8C6D2D]" />
                   )}
-                  <span>{copiedGuestId === activityGuest.id ? "¡Copiado!" : "Copiar Enlace"}</span>
+                  <span>{copiedGuestId === activityGuest.id ? t.copied : t.copyLinkBtn}</span>
                 </button>
               </div>
             </div>
@@ -1165,13 +1460,13 @@ export default function PanelView({
           <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
             <div className="bg-white w-full max-w-md rounded-3xl p-6 shadow-xl border border-[#E8E3D9] space-y-4">
               <h3 className="font-serif text-lg font-bold text-[#2C1F1B]">
-                Editar Invitado
+                {t.editModalTitle}
               </h3>
 
               <form onSubmit={handleSaveEdit} className="space-y-3">
                 <div>
                   <label className="block text-[10px] font-bold uppercase tracking-wider text-[#8C8077] mb-1">
-                    Nombre Completo o Familia *
+                    {t.fullNameLabel}
                   </label>
                   <input
                     type="text"
@@ -1185,7 +1480,7 @@ export default function PanelView({
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label className="block text-[10px] font-bold uppercase tracking-wider text-[#8C8077] mb-1">
-                      Pases Asignados
+                      {t.assignedPaxLabel}
                     </label>
                     <input
                       type="number"
@@ -1199,17 +1494,17 @@ export default function PanelView({
 
                   <div>
                     <label className="block text-[10px] font-bold uppercase tracking-wider text-[#8C8077] mb-1">
-                      Estado
+                      {t.statusLabel}
                     </label>
                     <select
                       value={editStatus}
                       onChange={(e) => setEditStatus(e.target.value)}
                       className="w-full px-3 py-2 bg-[#FAF8F5] border border-[#E8E3D9] rounded-xl text-xs text-[#2C1F1B] focus:outline-none focus:ring-2 focus:ring-[#C5A059]"
                     >
-                      <option value="pending">Pendiente</option>
-                      <option value="PENDIENTE_APROBACION">Solicitud Manual (Por Aprobar)</option>
-                      <option value="attending">Confirmado</option>
-                      <option value="declined">Cancelado</option>
+                      <option value="pending">{t.statusPendingOpt}</option>
+                      <option value="PENDIENTE_APROBACION">{t.statusManualOpt}</option>
+                      <option value="attending">{t.statusAttendingOpt}</option>
+                      <option value="declined">{t.statusDeclinedOpt}</option>
                     </select>
                   </div>
                 </div>
@@ -1217,7 +1512,7 @@ export default function PanelView({
                 {editStatus === "attending" && (
                   <div>
                     <label className="block text-[10px] font-bold uppercase tracking-wider text-[#8C8077] mb-1">
-                      Pases Confirmados Reales
+                      {t.realConfirmedPaxLabel}
                     </label>
                     <input
                       type="number"
@@ -1232,7 +1527,7 @@ export default function PanelView({
 
                 <div>
                   <label className="block text-[10px] font-bold uppercase tracking-wider text-[#8C8077] mb-1">
-                    Teléfono
+                    {t.phoneInputLabel}
                   </label>
                   <input
                     type="tel"
@@ -1249,7 +1544,7 @@ export default function PanelView({
                     onClick={() => setEditingGuest(null)}
                     className="px-4 py-2 bg-[#FAF8F5] text-stone-600 rounded-xl text-xs font-semibold hover:bg-stone-100 transition cursor-pointer"
                   >
-                    Cancelar
+                    {t.cancelBtn}
                   </button>
                   <button
                     type="submit"
@@ -1261,7 +1556,7 @@ export default function PanelView({
                     ) : (
                       <Check className="w-3.5 h-3.5 text-[#EED3A1]" />
                     )}
-                    <span>Guardar Cambios</span>
+                    <span>{t.saveChangesBtn}</span>
                   </button>
                 </div>
               </form>
