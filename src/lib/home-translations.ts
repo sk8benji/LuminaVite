@@ -236,40 +236,40 @@ export const translations: Record<Language, HomeTranslations> = {
       title: "Colecciones Exclusivas de Alta Costura",
       subtitle:
         "Cada diseño es una experiencia interactiva optimizada milimétricamente para pantallas móviles en proporción 9:16.",
-      viewDemo: "Ver Demo en Vivo",
+      viewDemo: "Ver ejemplo interactivo",
       items: [
         {
           id: "butterfly",
-          title: "Blue Butterfly Collection",
+          title: "Jardín de Mariposas Celestes",
           subtitle: "Acuarela celeste, destellos de oro y mariposas etéreas",
           tag: "XV Años & Gala",
           description:
-            "Nuestra colección más icónica. Mariposas interactivas, sobre con sello de cera, música orquestal y confirmación por WhatsApp en tiempo real.",
+            "Efecto de mariposas 3D, sobre virtual con sello lacrado y tonos celestes con detalles dorados.",
           slug: "mariposas-xv",
           image: "/assets/template-butterfly/foto-columpio-portada.png",
-          features: ["Sobre 3D con sello de cera", "Música de fondo", "RSVP por WhatsApp y SMS"],
+          features: ["Efecto de mariposas 3D", "Sobre virtual con sello lacrado", "RSVP por WhatsApp y SMS"],
         },
         {
           id: "rose",
-          title: "Blush Rose Filmstrip",
+          title: "Romance Vintage en Película",
           subtitle: "Gala romántica y efectos de celuloide cinematográfico",
           tag: "Alta Costura XV",
           description:
-            "Estética editorial rosa empolvada y oro champán. Tira fotográfica interactiva de infancia a señorita, itinerario detallado y dress code.",
+            "Galería interactiva estilo tira de fotos, tonos rosa empolvado y cronograma detallado del evento.",
           slug: "isabella-xv",
           image: "/assets/template-rose/51d8fb6fdca05936497b8c7f02e14280.png",
-          features: ["Tira de película interactiva", "Itinerario por fases", "Dress code con paleta"],
+          features: ["Galería interactiva tira de fotos", "Cronograma por fases", "Dress code con paleta"],
         },
         {
           id: "ivory",
-          title: "Elegant Ivory & Château",
+          title: "Castillo de Cuento de Hadas",
           subtitle: "Bodas de gala, minimalismo romano y tipografía editorial",
           tag: "Bodas Exclusivas",
           description:
-            "La máxima expresión de sofisticación nupcial. Acabados marfil perla, monogramas entrelazados, mapa satelital interactivo y mesa de regalos.",
+            "Monogramas personalizados para los novios, tonos marfil perla y diseño para bodas de etiqueta.",
           slug: "emma-and-lucas",
           image: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80",
-          features: ["Monograma personalizado", "Mesa de regalos Zelle/Amazon", "Google Maps en 1 clic"],
+          features: ["Monogramas personalizados", "Mesa de regalos Zelle/Amazon", "Google Maps en 1 clic"],
         },
       ],
     },
@@ -553,7 +553,7 @@ export const translations: Record<Language, HomeTranslations> = {
       title: "Bento Luxury Collections",
       subtitle:
         "Each design is an interactive digital artwork engineered pixel-perfect for vertical 9:16 smartphone displays.",
-      viewDemo: "View Live Demo",
+      viewDemo: "View interactive sample",
       items: [
         {
           id: "butterfly",
