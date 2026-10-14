@@ -93,34 +93,28 @@ export default function HomePage() {
           {/* Menú de Enlaces */}
           <nav className="hidden md:flex items-center gap-7">
             <a
-              href="#colecciones"
-              className="text-xs font-['Cinzel'] tracking-widest uppercase text-[#2B2B2B] hover:text-[#C5A059] transition font-semibold"
-            >
-              {t.nav.catalog}
-            </a>
-            <a
-              href="#automatizacion"
-              className="text-xs font-['Cinzel'] tracking-widest uppercase text-[#2B2B2B] hover:text-[#C5A059] transition font-semibold"
-            >
-              {t.nav.features}
-            </a>
-            <a
               href="#comparativa"
               className="text-xs font-['Cinzel'] tracking-widest uppercase text-[#2B2B2B] hover:text-[#C5A059] transition font-semibold"
             >
               {t.nav.compare}
             </a>
             <a
-              href="#testimonios"
+              href="#colecciones"
               className="text-xs font-['Cinzel'] tracking-widest uppercase text-[#2B2B2B] hover:text-[#C5A059] transition font-semibold"
             >
-              {lang === "es" ? "Testimonios" : "Reviews"}
+              {t.nav.catalog}
             </a>
             <a
               href="#precios"
               className="text-xs font-['Cinzel'] tracking-widest uppercase text-[#2B2B2B] hover:text-[#C5A059] transition font-semibold"
             >
               {t.nav.pricing}
+            </a>
+            <a
+              href="#testimonios"
+              className="text-xs font-['Cinzel'] tracking-widest uppercase text-[#2B2B2B] hover:text-[#C5A059] transition font-semibold"
+            >
+              {lang === "es" ? "Testimonios" : "Reviews"}
             </a>
           </nav>
 
@@ -246,328 +240,10 @@ export default function HomePage() {
             <InteractivePhoneMockup lang={lang} onOpenModal={handleOpenDemo} />
           </div>
 
-          {/* Barra de Métricas & Confianza (Tarjetas Pearl Alabaster) */}
-          <div className="w-full max-w-5xl mt-16 pt-8 border-t border-[#E8E3D9]">
-            <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 font-['Cinzel'] text-xs tracking-[0.2em] uppercase text-[#2C1F1B] font-semibold mb-8">
-              {t.hero.trustBar.map((item, i) => (
-                <div key={i} className="flex items-center gap-2">
-                  <span className="text-[#C5A059]">✦</span>
-                  <span>{item}</span>
-                </div>
-              ))}
-            </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
-              {t.hero.metrics.map((m, idx) => (
-                <div
-                  key={idx}
-                  className="p-5 rounded-2xl bg-white border border-[#E8E3D9] shadow-[0_4px_20px_rgba(44,31,27,0.04)] text-center"
-                >
-                  <div className="font-['Montserrat'] text-2xl sm:text-3xl font-bold text-[#2C1F1B] tracking-tight">
-                    {m.value}
-                  </div>
-                  <div className="font-['Montserrat'] text-[11px] text-[#374151] mt-1 font-semibold">
-                    {m.label}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
         </div>
       </section>
 
-      {/* ============================================================== */}
-      {/* 3. SECCIÓN "INTERACTIVE DEMO" (PRUEBA EN VIVO EN 1 CLIC) */}
-      {/* ============================================================== */}
-      <section className="relative py-16 px-4 bg-[#F5EFE4] border-y border-[#E8E3D9] select-none">
-        <div className="max-w-5xl mx-auto rounded-3xl p-8 sm:p-12 bg-white border-2 border-[#C5A059]/40 shadow-[0_15px_45px_rgba(44,31,27,0.06)] flex flex-col md:flex-row items-center justify-between gap-8">
-          <div className="max-w-xl text-center md:text-left">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[#C5A059]/40 bg-[#F5EFE4] mb-3">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
-              <span className="font-['Cinzel'] text-[10px] tracking-[0.25em] uppercase text-[#2C1F1B] font-bold">
-                {t.interactiveDemoBanner.pill}
-              </span>
-            </div>
-
-            <h3 className="font-serif-roman text-2xl sm:text-4xl font-bold text-[#2C1F1B] tracking-tight mb-3">
-              {t.interactiveDemoBanner.title}
-            </h3>
-
-            <p className="font-['Montserrat'] text-xs sm:text-sm text-[#2B2B2B] leading-relaxed mb-6 font-normal">
-              {t.interactiveDemoBanner.description}
-            </p>
-
-            <div className="flex flex-wrap gap-4 text-xs font-['Montserrat'] text-[#2C1F1B] font-medium">
-              <span className="flex items-center gap-1.5">
-                <Check className="w-4 h-4 text-[#C5A059]" />
-                {t.interactiveDemoBanner.feature1}
-              </span>
-              <span className="flex items-center gap-1.5">
-                <Check className="w-4 h-4 text-[#C5A059]" />
-                {t.interactiveDemoBanner.feature2}
-              </span>
-              <span className="flex items-center gap-1.5">
-                <Check className="w-4 h-4 text-[#C5A059]" />
-                {t.interactiveDemoBanner.feature3}
-              </span>
-            </div>
-          </div>
-
-          <div className="flex-shrink-0">
-            <button
-              onClick={() => handleOpenDemo("mariposas-xv")}
-              className="py-4 px-8 rounded-2xl bg-gradient-to-r from-[#C5A059] via-[#EED3A1] to-[#C5A059] text-[#2C1F1B] font-['Cinzel'] text-xs tracking-[0.25em] uppercase font-bold hover:brightness-105 active:scale-95 transition shadow-[0_8px_25px_rgba(197,160,89,0.35)] flex items-center gap-3"
-            >
-              <Smartphone className="w-4 h-4 text-[#2C1F1B]" />
-              <span>{t.interactiveDemoBanner.ctaBtn}</span>
-            </button>
-          </div>
-        </div>
-      </section>
-
-      {/* ============================================================== */}
-      {/* 4. GALERÍA DE COLECCIONES (BENTO LUXURY GRID) */}
-      {/* ============================================================== */}
-      <section id="colecciones" className="relative py-24 px-4 max-w-7xl mx-auto select-none">
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[#C5A059]/40 bg-[#F5EFE4] mb-3 backdrop-blur-md">
-            <span className="font-['Cinzel'] text-[10px] tracking-[0.3em] uppercase text-[#2C1F1B] font-bold">
-              {t.collections.pill}
-            </span>
-          </div>
-
-          <h2 className="font-serif-roman text-3xl sm:text-5xl font-bold tracking-tight text-[#2C1F1B] mb-3">
-            {t.collections.title}
-          </h2>
-
-          <p className="font-['Montserrat'] text-sm text-[#2B2B2B] leading-relaxed">
-            {t.collections.subtitle}
-          </p>
-        </div>
-
-        {/* Bento Grid con Bloques de Color Marfil Suave y Elementos Interactivos Reales */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {t.collections.items.map((item, idx) => (
-            <div
-              key={item.id}
-              className={`group relative rounded-3xl bg-white border ${
-                idx === 1
-                  ? "border-[#C5A059] ring-2 ring-[#C5A059]/20 shadow-[0_15px_40px_rgba(197,160,89,0.2)]"
-                  : "border-[#E8E3D9] hover:border-[#C5A059] shadow-[0_10px_30px_rgba(44,31,27,0.06)]"
-              } overflow-hidden flex flex-col justify-between transition-all duration-300 hover:shadow-[0_20px_40px_rgba(44,31,27,0.1)]`}
-            >
-              {/* Imagen con Relieve Luminosa */}
-              <div className="relative h-72 sm:h-80 w-full overflow-hidden bg-stone-100">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={item.image}
-                  alt={item.title}
-                  className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-
-                <div className="absolute top-4 left-4">
-                  <span className="px-3.5 py-1 rounded-full text-[10px] font-['Cinzel'] uppercase tracking-wider bg-white/95 border border-[#E8E3D9] text-[#2C1F1B] backdrop-blur-md font-bold shadow-sm">
-                    {item.tag}
-                  </span>
-                </div>
-
-                {/* Si es la tarjeta del medio (Bento Luxury), mostrar badge interactivo de música y cuenta regresiva */}
-                {idx === 1 && (
-                  <div className="absolute bottom-3 left-3 right-3 p-3 rounded-2xl bg-white/95 backdrop-blur-md border border-[#C5A059]/40 shadow-lg flex flex-col gap-2">
-                    <div className="flex items-center justify-between text-[11px] font-['Montserrat'] font-bold text-[#2C1F1B]">
-                      <span className="flex items-center gap-1.5 text-[#C5A059]">
-                        <Music className="w-3.5 h-3.5 animate-bounce" />
-                        <span>Música de Fondo Activa</span>
-                      </span>
-                      <span className="px-2 py-0.5 rounded-full bg-[#F5EFE4] text-[9px] uppercase tracking-wider text-[#2C1F1B]">
-                        En Vivo
-                      </span>
-                    </div>
-                    {/* Contador regresivo animado real en la tarjeta */}
-                    <div className="grid grid-cols-3 gap-1 text-center font-['Montserrat']">
-                      <div className="bg-[#FAF8F5] py-1 rounded border border-[#E8E3D9]">
-                        <span className="block text-xs font-bold text-[#2C1F1B]">142</span>
-                        <span className="text-[8px] text-[#2B2B2B] uppercase">Días</span>
-                      </div>
-                      <div className="bg-[#FAF8F5] py-1 rounded border border-[#E8E3D9]">
-                        <span className="block text-xs font-bold text-[#2C1F1B]">18</span>
-                        <span className="text-[8px] text-[#2B2B2B] uppercase">Horas</span>
-                      </div>
-                      <div className="bg-[#FAF8F5] py-1 rounded border border-[#E8E3D9]">
-                        <span className="block text-xs font-bold text-[#2C1F1B]">35</span>
-                        <span className="text-[8px] text-[#2B2B2B] uppercase">Min</span>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Contenido Editorial en Tonos Chocolate y Café con tipografía robusta */}
-              <div className="p-6 flex-1 flex flex-col justify-between">
-                <div>
-                  <h3 className="font-serif-roman text-2xl font-bold text-[#2C1F1B] mb-1">
-                    {item.title}
-                  </h3>
-                  <div className="font-['Montserrat'] text-xs text-[#C5A059] mb-3 font-semibold">
-                    {item.subtitle}
-                  </div>
-                  <p className="font-['Montserrat'] text-xs text-[#2B2B2B] leading-relaxed mb-6 font-normal">
-                    {item.description}
-                  </p>
-
-                  <ul className="space-y-2 mb-6 text-xs font-['Montserrat'] text-[#2C1F1B]">
-                    {item.features.map((f, fi) => (
-                      <li key={fi} className="flex items-center gap-2">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#C5A059]" />
-                        <span className="font-medium">{f}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                <div className="flex items-center gap-3 pt-4 border-t border-[#E8E3D9]">
-                  <button
-                    onClick={() => handleOpenDemo(item.slug)}
-                    className="flex-1 py-3 px-4 rounded-xl bg-gradient-to-r from-[#C5A059] to-[#EED3A1] text-[#2C1F1B] font-['Cinzel'] text-[11px] tracking-wider uppercase font-bold hover:brightness-105 active:scale-95 transition shadow-sm flex items-center justify-center gap-2"
-                  >
-                    <span>{t.collections.viewDemo}</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </button>
-
-                  <a
-                    href={`/demo/${item.slug}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-3 rounded-xl border border-[#E8E3D9] text-[#2B2B2B] hover:text-[#2C1F1B] hover:bg-[#F5EFE4] transition"
-                    title={lang === "es" ? "Abrir en nueva pestaña" : "Open in new tab"}
-                  >
-                    <ExternalLink className="w-4 h-4 text-[#8C8077]" />
-                  </a>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Botón para ver el catálogo completo de 8+ demos */}
-        <div className="mt-12 text-center">
-          <Link
-            href="/demo"
-            className="inline-flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-white border-2 border-[#C5A059]/40 hover:border-[#C5A059] text-[#2C1F1B] font-['Cinzel'] text-xs tracking-[0.2em] uppercase font-bold shadow-[0_4px_15px_rgba(44,31,27,0.06)] hover:bg-[#F5EFE4] transition-all group"
-          >
-            <span>{lang === "es" ? "Explorar las 8+ Colecciones en el Catálogo Completo" : "Explore all 8+ Collections in Full Catalog"}</span>
-            <ArrowRight className="w-4 h-4 text-[#C5A059] group-hover:translate-x-1 transition-transform" />
-          </Link>
-        </div>
-      </section>
-
-      {/* ============================================================== */}
-      {/* 5. RESALTAR LA AUTOMATIZACIÓN TÉCNICA (ESTRUCTURA EDITORIAL ASIMÉTRICA) */}
-      {/* ============================================================== */}
-      <section id="automatizacion" className="relative py-24 px-4 bg-[#F5EFE4] select-none border-t border-[#E8E3D9]">
-        <div className="max-w-7xl mx-auto">
-          {/* Encabezado Asimétrico Alineado a la Izquierda para Romper la Monotonía */}
-          <div className="text-left max-w-3xl mb-16">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[#C5A059]/40 bg-white mb-3 backdrop-blur-md">
-              <span className="font-['Cinzel'] text-[10px] tracking-[0.3em] uppercase text-[#2C1F1B] font-bold">
-                {t.techAutomation.pill}
-              </span>
-            </div>
-
-            <h2 className="font-serif-roman text-3xl sm:text-5xl font-bold tracking-tight text-[#2C1F1B] mb-3">
-              {t.techAutomation.title}
-            </h2>
-
-            <p className="font-['Montserrat'] text-sm sm:text-base text-[#2B2B2B] leading-relaxed">
-              {t.techAutomation.subtitle}
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {t.techAutomation.pillars.map((pillar, idx) => (
-              <div
-                key={idx}
-                className="relative rounded-3xl bg-white border border-[#E8E3D9] p-7 sm:p-8 flex flex-col justify-between hover:border-[#C5A059]/60 shadow-[0_10px_30px_rgba(44,31,27,0.05)] transition-all duration-300 group"
-              >
-                <div>
-                  <div className="flex justify-between items-center mb-6">
-                    <span className="w-12 h-12 rounded-2xl bg-[#FAF8F5] border border-[#C5A059]/30 text-[#8C6D2D] flex items-center justify-center font-serif-roman text-lg font-bold shadow-xs">
-                      {idx === 0 ? "01" : idx === 1 ? "02" : "03"}
-                    </span>
-                    <span className="text-[10px] font-['Montserrat'] uppercase tracking-wider text-[#2C1F1B] font-bold bg-[#F5EFE4] border border-[#C5A059]/30 px-3 py-1 rounded-full">
-                      {pillar.badge}
-                    </span>
-                  </div>
-
-                  <h3 className="font-serif-roman text-2xl font-bold text-[#2C1F1B] mb-3 leading-snug">
-                    {pillar.title}
-                  </h3>
-
-                  <p className="font-['Montserrat'] text-xs sm:text-sm text-[#2B2B2B] leading-relaxed mb-5 font-normal">
-                    {pillar.description}
-                  </p>
-
-                  {/* Micro-Capturas de Interfaz Real (Reemplazo de iconos genéricos de IA) */}
-                  {idx === 0 && (
-                    <div className="mb-6 p-3 rounded-2xl bg-[#FAF8F5] border border-[#E8E3D9] space-y-1.5 shadow-xs">
-                      <div className="flex items-center justify-between text-[10px] text-stone-500 font-medium">
-                        <span className="flex items-center gap-1 font-semibold text-stone-700">
-                          <MessageSquare className="w-3 h-3 text-emerald-600" />
-                          <span>SMS Automático (Twilio)</span>
-                        </span>
-                        <span>Ahora</span>
-                      </div>
-                      <div className="p-2 rounded-xl bg-white border border-stone-200 text-[11px] font-['Montserrat'] text-stone-800 leading-snug">
-                        &ldquo;¡Hola Familia Rodríguez! Tienen 3 pases reservados. Confirmen aquí: <span className="text-[#C5A059] underline font-semibold">lumina.to/v/valeria</span>&rdquo;
-                      </div>
-                    </div>
-                  )}
-
-                  {idx === 1 && (
-                    <div className="mb-6 p-3 rounded-2xl bg-[#FAF8F5] border border-[#E8E3D9] space-y-2 shadow-xs">
-                      <div className="flex items-center justify-between text-[10px] text-stone-700 font-semibold">
-                        <span>📍 Hello Banquet Hall</span>
-                        <span className="text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">En ruta directa</span>
-                      </div>
-                      <div className="grid grid-cols-2 gap-1.5 text-center text-[10px] font-['Montserrat'] font-bold">
-                        <div className="py-1.5 px-2 bg-white rounded-lg border border-stone-200 text-sky-700">
-                          ✦ Abrir en Waze
-                        </div>
-                        <div className="py-1.5 px-2 bg-white rounded-lg border border-stone-200 text-emerald-700">
-                          ✦ Google Maps
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {idx === 2 && (
-                    <div className="mb-6 p-3 rounded-2xl bg-[#FAF8F5] border border-[#E8E3D9] space-y-1.5 shadow-xs">
-                      <div className="flex items-center justify-between text-[10px] text-stone-700 font-bold">
-                        <span>Panel Anfitrión en Vivo</span>
-                        <span className="text-[#8C6D2D] font-mono">148 / 150 Asientos</span>
-                      </div>
-                      <div className="flex items-center justify-between p-2 rounded-xl bg-white border border-stone-200 text-[10px] font-['Montserrat']">
-                        <span className="font-semibold text-stone-800">Mesa 4 · Familia Rodríguez</span>
-                        <span className="text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded-full">✓ 3 Confirmados</span>
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                <div className="p-4 rounded-2xl bg-[#FAF8F5] border border-[#C5A059]/30 font-['Montserrat'] text-xs text-[#2C1F1B] flex items-start gap-2.5 font-semibold">
-                  <CheckCircle2 className="w-4 h-4 text-[#C5A059] flex-shrink-0 mt-0.5" />
-                  <span>{pillar.highlight}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-
-      {/* ============================================================== */}
-      {/* ============================================================== */}
+{/* ============================================================== */}
       {/* 5. SECCIÓN DE CONTRASTE: CANVA VS CLICK & LOVE ASISTIDO */}
       {/* ============================================================== */}
       <section id="comparativa" className="relative py-24 px-4 max-w-7xl mx-auto select-none">
@@ -824,126 +500,149 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-
-        {/* BANNER CTA INFERIOR DE LA COMPARATIVA */}
-        <div className="mt-12 rounded-3xl bg-gradient-to-br from-[#2C1F1B] via-[#3a2924] to-[#2C1F1B] border border-[#C5A059]/40 p-8 sm:p-10 shadow-2xl relative overflow-hidden text-center sm:text-left flex flex-col sm:flex-row items-center justify-between gap-6">
-          <div className="absolute top-0 right-0 w-80 h-80 bg-[#C5A059]/15 rounded-full blur-3xl pointer-events-none" />
-          
-          <div className="relative z-10 max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#C5A059]/20 border border-[#C5A059]/40 text-[#EED3A1] text-[10px] font-['Cinzel'] tracking-wider uppercase font-bold mb-3">
-              <span>✦</span>
-              <span>{lang === "es" ? "Soporte Local en Los Ángeles" : "Local LA Concierge"}</span>
-            </div>
-            <h3 className="font-serif-roman text-2xl sm:text-3xl font-bold text-white mb-2 leading-tight">
-              {t.comparison.ctaBox.title}
-            </h3>
-            <p className="font-['Montserrat'] text-xs sm:text-sm text-stone-300 leading-relaxed">
-              {t.comparison.ctaBox.desc}
-            </p>
-          </div>
-
-          <div className="relative z-10 shrink-0">
-            <a
-              href="#precios"
-              className="inline-flex items-center justify-center px-7 py-3.5 rounded-full bg-gradient-to-r from-[#C5A059] to-[#EED3A1] text-[#2C1F1B] font-['Cinzel'] text-xs tracking-wider uppercase font-bold hover:brightness-105 shadow-[0_10px_25px_rgba(197,160,89,0.35)] transition-all transform hover:-translate-y-0.5 active:translate-y-0"
-            >
-              {t.comparison.ctaBox.btn}
-            </a>
-          </div>
-        </div>
       </section>
 
+{/* ============================================================== */}
+      {/* 4. GALERÍA DE COLECCIONES (BENTO LUXURY GRID) */}
       {/* ============================================================== */}
-      {/* 8. SECCIÓN TESTIMONIOS REALES & ENLACES DE MUESTRA AL TELÉFONO */}
-      {/* ============================================================== */}
-      <section id="testimonios" className="relative py-24 px-4 bg-[#F5EFE4] select-none border-t border-[#E8E3D9]">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[#C5A059]/40 bg-white mb-3 backdrop-blur-md">
-              <span className="font-['Cinzel'] text-[10px] tracking-[0.3em] uppercase text-[#2C1F1B] font-bold">
-                {t.testimonials.pill}
-              </span>
-            </div>
-
-            <h2 className="font-serif-roman text-3xl sm:text-5xl font-bold tracking-tight text-[#2C1F1B] mb-3">
-              {t.testimonials.title}
-            </h2>
-
-            <p className="font-['Montserrat'] text-sm text-[#2B2B2B] leading-relaxed">
-              {t.testimonials.subtitle}
-            </p>
+      <section id="colecciones" className="relative py-24 px-4 max-w-7xl mx-auto select-none">
+        <div className="text-center max-w-3xl mx-auto mb-16">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[#C5A059]/40 bg-[#F5EFE4] mb-3 backdrop-blur-md">
+            <span className="font-['Cinzel'] text-[10px] tracking-[0.3em] uppercase text-[#2C1F1B] font-bold">
+              {t.collections.pill}
+            </span>
           </div>
 
-          {/* Grid de 3 Testimonios Reales con Enlace para Probar la Invitación */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {t.testimonials.items.map((item, idx) => (
-              <div
-                key={idx}
-                className="relative rounded-3xl bg-white border border-[#E8E3D9] p-8 flex flex-col justify-between shadow-[0_10px_30px_rgba(44,31,27,0.05)] hover:border-[#C5A059] transition-all duration-300 group"
-              >
-                <div>
-                  {/* Calificación 5 Estrellas */}
-                  <div className="flex items-center gap-1 mb-4 text-[#C5A059]">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="w-4 h-4 fill-[#C5A059]" />
-                    ))}
-                    <span className="ml-2 font-['Montserrat'] text-[11px] font-bold text-[#2C1F1B] bg-[#F5EFE4] px-2 py-0.5 rounded-full">
-                      5.0
-                    </span>
-                  </div>
+          <h2 className="font-serif-roman text-3xl sm:text-5xl font-bold tracking-tight text-[#2C1F1B] mb-3">
+            {t.collections.title}
+          </h2>
 
-                  {/* Cita */}
-                  <p className="font-['Montserrat'] text-xs sm:text-sm text-[#2B2B2B] leading-relaxed italic mb-6">
-                    {item.quote}
-                  </p>
+          <p className="font-['Montserrat'] text-sm text-[#2B2B2B] leading-relaxed">
+            {t.collections.subtitle}
+          </p>
+        </div>
+
+        {/* Bento Grid con Bloques de Color Marfil Suave y Elementos Interactivos Reales */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {t.collections.items.map((item, idx) => (
+            <div
+              key={item.id}
+              className={`group relative rounded-3xl bg-white border ${
+                idx === 1
+                  ? "border-[#C5A059] ring-2 ring-[#C5A059]/20 shadow-[0_15px_40px_rgba(197,160,89,0.2)]"
+                  : "border-[#E8E3D9] hover:border-[#C5A059] shadow-[0_10px_30px_rgba(44,31,27,0.06)]"
+              } overflow-hidden flex flex-col justify-between transition-all duration-300 hover:shadow-[0_20px_40px_rgba(44,31,27,0.1)]`}
+            >
+              {/* Imagen con Relieve Luminosa */}
+              <div className="relative h-72 sm:h-80 w-full overflow-hidden bg-stone-100">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={item.image}
+                  alt={item.title}
+                  className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+
+                <div className="absolute top-4 left-4">
+                  <span className="px-3.5 py-1 rounded-full text-[10px] font-['Cinzel'] uppercase tracking-wider bg-white/95 border border-[#E8E3D9] text-[#2C1F1B] backdrop-blur-md font-bold shadow-sm">
+                    {item.tag}
+                  </span>
                 </div>
 
-                <div className="pt-6 border-t border-[#E8E3D9]">
-                  {/* Perfil & Foto */}
-                  <div className="flex items-center gap-4 mb-5">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={item.avatar}
-                      alt={item.name}
-                      className="w-14 h-14 rounded-full object-cover object-center border-2 border-[#C5A059] shadow-sm flex-shrink-0"
-                    />
-                    <div>
-                      <h4 className="font-serif-roman text-lg font-bold text-[#2C1F1B] leading-tight">
-                        {item.name}
-                      </h4>
-                      <p className="font-['Montserrat'] text-[11px] text-[#C5A059] font-semibold">
-                        {item.role}
-                      </p>
-                      <p className="font-['Montserrat'] text-[10px] text-[#2B2B2B]/75 leading-tight mt-0.5">
-                        {item.event}
-                      </p>
+                {/* Si es la tarjeta del medio (Bento Luxury), mostrar badge interactivo de música y cuenta regresiva */}
+                {idx === 1 && (
+                  <div className="absolute bottom-3 left-3 right-3 p-3 rounded-2xl bg-white/95 backdrop-blur-md border border-[#C5A059]/40 shadow-lg flex flex-col gap-2">
+                    <div className="flex items-center justify-between text-[11px] font-['Montserrat'] font-bold text-[#2C1F1B]">
+                      <span className="flex items-center gap-1.5 text-[#C5A059]">
+                        <Music className="w-3.5 h-3.5 animate-bounce" />
+                        <span>Música de Fondo Activa</span>
+                      </span>
+                      <span className="px-2 py-0.5 rounded-full bg-[#F5EFE4] text-[9px] uppercase tracking-wider text-[#2C1F1B]">
+                        En Vivo
+                      </span>
+                    </div>
+                    {/* Contador regresivo animado real en la tarjeta */}
+                    <div className="grid grid-cols-3 gap-1 text-center font-['Montserrat']">
+                      <div className="bg-[#FAF8F5] py-1 rounded border border-[#E8E3D9]">
+                        <span className="block text-xs font-bold text-[#2C1F1B]">142</span>
+                        <span className="text-[8px] text-[#2B2B2B] uppercase">Días</span>
+                      </div>
+                      <div className="bg-[#FAF8F5] py-1 rounded border border-[#E8E3D9]">
+                        <span className="block text-xs font-bold text-[#2C1F1B]">18</span>
+                        <span className="text-[8px] text-[#2B2B2B] uppercase">Horas</span>
+                      </div>
+                      <div className="bg-[#FAF8F5] py-1 rounded border border-[#E8E3D9]">
+                        <span className="block text-xs font-bold text-[#2C1F1B]">35</span>
+                        <span className="text-[8px] text-[#2B2B2B] uppercase">Min</span>
+                      </div>
                     </div>
                   </div>
+                )}
+              </div>
 
-                  {/* Métrica de Éxito & Botón de Probar Invitación */}
-                  <div className="flex items-center justify-between gap-2 p-3 rounded-2xl bg-[#F5EFE4] mb-4 text-[11px] font-['Montserrat'] font-semibold text-[#2C1F1B]">
-                    <span className="flex items-center gap-1.5 text-[#C5A059]">
-                      <CheckCircle2 className="w-4 h-4" />
-                      <span>{item.metric}</span>
-                    </span>
-                    <span className="text-[10px] uppercase tracking-wider text-[#8C8077]">Verificado</span>
+              {/* Contenido Editorial en Tonos Chocolate y Café con tipografía robusta */}
+              <div className="p-6 flex-1 flex flex-col justify-between">
+                <div>
+                  <h3 className="font-serif-roman text-2xl font-bold text-[#2C1F1B] mb-1">
+                    {item.title}
+                  </h3>
+                  <div className="font-['Montserrat'] text-xs text-[#C5A059] mb-3 font-semibold">
+                    {item.subtitle}
                   </div>
+                  <p className="font-['Montserrat'] text-xs text-[#2B2B2B] leading-relaxed mb-6 font-normal">
+                    {item.description}
+                  </p>
 
+                  <ul className="space-y-2 mb-6 text-xs font-['Montserrat'] text-[#2C1F1B]">
+                    {item.features.map((f, fi) => (
+                      <li key={fi} className="flex items-center gap-2">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#C5A059]" />
+                        <span className="font-medium">{f}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className="flex items-center gap-3 pt-4 border-t border-[#E8E3D9]">
                   <button
-                    onClick={() => handleOpenDemo(item.demoSlug)}
-                    className="w-full py-3 px-4 rounded-xl bg-white border-2 border-[#C5A059]/60 hover:bg-[#F5EFE4] text-[#2C1F1B] font-['Cinzel'] text-[11px] tracking-wider uppercase font-bold transition flex items-center justify-center gap-2 group-hover:border-[#C5A059] shadow-sm"
+                    onClick={() => handleOpenDemo(item.slug)}
+                    className="flex-1 py-3 px-4 rounded-xl bg-gradient-to-r from-[#C5A059] to-[#EED3A1] text-[#2C1F1B] font-['Cinzel'] text-[11px] tracking-wider uppercase font-bold hover:brightness-105 active:scale-95 transition shadow-sm flex items-center justify-center gap-2"
                   >
-                    <Smartphone className="w-3.5 h-3.5 text-[#C5A059]" />
-                    <span>{item.demoBtnText}</span>
+                    <span>{t.collections.viewDemo}</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
                   </button>
+
+                  <a
+                    href={`/demo/${item.slug}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-3 rounded-xl border border-[#E8E3D9] text-[#2B2B2B] hover:text-[#2C1F1B] hover:bg-[#F5EFE4] transition"
+                    title={lang === "es" ? "Abrir en nueva pestaña" : "Open in new tab"}
+                  >
+                    <ExternalLink className="w-4 h-4 text-[#8C8077]" />
+                  </a>
                 </div>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Botón para ver el catálogo completo de 8+ demos */}
+        <div className="mt-12 text-center">
+          <Link
+            href="/demo"
+            className="inline-flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-white border-2 border-[#C5A059]/40 hover:border-[#C5A059] text-[#2C1F1B] font-['Cinzel'] text-xs tracking-[0.2em] uppercase font-bold shadow-[0_4px_15px_rgba(44,31,27,0.06)] hover:bg-[#F5EFE4] transition-all group"
+          >
+            <span>{lang === "es" ? "Explorar las 8+ Colecciones en el Catálogo Completo" : "Explore all 8+ Collections in Full Catalog"}</span>
+            <ArrowRight className="w-4 h-4 text-[#C5A059] group-hover:translate-x-1 transition-transform" />
+          </Link>
         </div>
       </section>
 
+
       {/* ============================================================== */}
+
+{/* ============================================================== */}
       {/* 9. SECCIÓN PRECIOS CLICK & LOVE (MODO CLARO DE LUJO) */}
       {/* ============================================================== */}
       <section id="precios" className="relative py-24 px-4 bg-[#FAF8F5] text-[#2C1F1B] overflow-hidden select-none border-t border-[#E8E3D9]">
@@ -1212,10 +911,127 @@ export default function HomePage() {
         </div>
       </section>
 
+{/* ============================================================== */}
+      {/* 8. SECCIÓN TESTIMONIOS REALES & ENLACES DE MUESTRA AL TELÉFONO */}
       {/* ============================================================== */}
+      <section id="testimonios" className="relative py-24 px-4 bg-[#F5EFE4] select-none border-t border-[#E8E3D9]">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[#C5A059]/40 bg-white mb-3 backdrop-blur-md">
+              <span className="font-['Cinzel'] text-[10px] tracking-[0.3em] uppercase text-[#2C1F1B] font-bold">
+                {t.testimonials.pill}
+              </span>
+            </div>
+
+            <h2 className="font-serif-roman text-3xl sm:text-5xl font-bold tracking-tight text-[#2C1F1B] mb-3">
+              {t.testimonials.title}
+            </h2>
+
+            <p className="font-['Montserrat'] text-sm text-[#2B2B2B] leading-relaxed">
+              {t.testimonials.subtitle}
+            </p>
+          </div>
+
+          {/* Grid de 3 Testimonios Reales con Enlace para Probar la Invitación */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {t.testimonials.items.map((item, idx) => (
+              <div
+                key={idx}
+                className="relative rounded-3xl bg-white border border-[#E8E3D9] p-8 flex flex-col justify-between shadow-[0_10px_30px_rgba(44,31,27,0.05)] hover:border-[#C5A059] transition-all duration-300 group"
+              >
+                <div>
+                  {/* Calificación 5 Estrellas */}
+                  <div className="flex items-center gap-1 mb-4 text-[#C5A059]">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="w-4 h-4 fill-[#C5A059]" />
+                    ))}
+                    <span className="ml-2 font-['Montserrat'] text-[11px] font-bold text-[#2C1F1B] bg-[#F5EFE4] px-2 py-0.5 rounded-full">
+                      5.0
+                    </span>
+                  </div>
+
+                  {/* Cita */}
+                  <p className="font-['Montserrat'] text-xs sm:text-sm text-[#2B2B2B] leading-relaxed italic mb-6">
+                    {item.quote}
+                  </p>
+                </div>
+
+                <div className="pt-6 border-t border-[#E8E3D9]">
+                  {/* Perfil & Foto */}
+                  <div className="flex items-center gap-4 mb-5">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={item.avatar}
+                      alt={item.name}
+                      className="w-14 h-14 rounded-full object-cover object-center border-2 border-[#C5A059] shadow-sm flex-shrink-0"
+                    />
+                    <div>
+                      <h4 className="font-serif-roman text-lg font-bold text-[#2C1F1B] leading-tight">
+                        {item.name}
+                      </h4>
+                      <p className="font-['Montserrat'] text-[11px] text-[#C5A059] font-semibold">
+                        {item.role}
+                      </p>
+                      <p className="font-['Montserrat'] text-[10px] text-[#2B2B2B]/75 leading-tight mt-0.5">
+                        {item.event}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Métrica de Éxito & Botón de Probar Invitación */}
+                  <div className="flex items-center justify-between gap-2 p-3 rounded-2xl bg-[#F5EFE4] mb-4 text-[11px] font-['Montserrat'] font-semibold text-[#2C1F1B]">
+                    <span className="flex items-center gap-1.5 text-[#C5A059]">
+                      <CheckCircle2 className="w-4 h-4" />
+                      <span>{item.metric}</span>
+                    </span>
+                    <span className="text-[10px] uppercase tracking-wider text-[#8C8077]">Verificado</span>
+                  </div>
+
+                  <button
+                    onClick={() => handleOpenDemo(item.demoSlug)}
+                    className="w-full py-3 px-4 rounded-xl bg-white border-2 border-[#C5A059]/60 hover:bg-[#F5EFE4] text-[#2C1F1B] font-['Cinzel'] text-[11px] tracking-wider uppercase font-bold transition flex items-center justify-center gap-2 group-hover:border-[#C5A059] shadow-sm"
+                  >
+                    <Smartphone className="w-3.5 h-3.5 text-[#C5A059]" />
+                    <span>{item.demoBtnText}</span>
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+{/* ============================================================== */}
       {/* 9. FOOTER EDITORIAL EN PEARL ALABASTER */}
       {/* ============================================================== */}
       <footer className="py-14 px-4 bg-[#F5EFE4] border-t border-[#E8E3D9] select-none">
+
+        {/* Enlace sutil para anfitriones que no quieren usar computadora */}
+        <div className="max-w-7xl mx-auto mb-10 pb-8 border-b border-[#E8E3D9] flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+          <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 text-xs font-['Montserrat'] text-[#2C1F1B]">
+            <span className="text-[#C5A059] font-bold">✦</span>
+            <span className="font-semibold">
+              {lang === "es"
+                ? "¿Prefieres que nosotros preparemos todo sin que uses una computadora?"
+                : "Prefer us to set up everything without you opening a computer?"}
+            </span>
+            <span className="text-stone-500 hidden md:inline">
+              {lang === "es"
+                ? "Envíanos tus fotos por WhatsApp y te entregamos tu invitación lista hoy mismo."
+                : "Send your photos via WhatsApp and we deliver your ready-to-share invitation today."}
+            </span>
+          </div>
+          <a
+            href="https://wa.me/18182994882?text=Hola,%20quiero%20mi%20invitaci%C3%B3n%20lista%20sin%20usar%20computadora.%20%C2%BFMe%20pueden%20ayudar?"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs font-['Montserrat'] font-bold text-emerald-800 hover:text-emerald-900 underline flex items-center gap-1 shrink-0"
+          >
+            <span>{lang === "es" ? "Escríbenos por WhatsApp (+1 818 299-4882)" : "Chat on WhatsApp (+1 818 299-4882)"}</span>
+            <span>→</span>
+          </a>
+        </div>
+
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8 text-center md:text-left">
           {/* Marca */}
           <div>
