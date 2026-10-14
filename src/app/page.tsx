@@ -981,28 +981,28 @@ export default function HomePage() {
           </p>
         </div>
 
-        {/* CONTENEDOR DE TARJETAS (BENTO LUXURY GRID) */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-6xl mx-auto items-stretch">
-          {/* 1. PLAN DIGITAL BASIC ($49) */}
-          <div className="relative rounded-3xl bg-white border border-[#E8E3D9] p-8 flex flex-col justify-between shadow-[0_10px_30px_rgba(44,31,27,0.05)] hover:border-[#C5A059]/50 transition-all duration-300">
+        {/* CONTENEDOR DE TARJETAS (2 PLANES ASISTIDOS & VIP) */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto items-stretch pt-4">
+          {/* 1. PLAN DIGITAL ASISTIDO ($99) */}
+          <div className="relative rounded-3xl bg-white border border-[#E8E3D9] p-8 sm:p-10 flex flex-col justify-between shadow-[0_10px_30px_rgba(44,31,27,0.05)] hover:border-[#C5A059]/50 transition-all duration-300">
             <div>
               <div className="flex justify-between items-center mb-4">
                 <span className="font-['Cinzel'] text-xs tracking-[0.25em] uppercase text-[#8C8077] font-bold">
                   {t.pricing.plans[0].badge}
                 </span>
-                <span className="text-[10px] uppercase font-['Montserrat'] text-[#2C1F1B] bg-[#F5EFE4] px-2.5 py-1 rounded-full border border-[#E8E3D9] font-semibold">
+                <span className="text-[10px] uppercase font-['Montserrat'] text-[#2C1F1B] bg-[#F5EFE4] px-3 py-1 rounded-full border border-[#E8E3D9] font-semibold">
                   {t.pricing.plans[0].typeTag}
                 </span>
               </div>
 
-              <h3 className="font-serif-roman text-2xl font-bold text-[#2C1F1B] mb-2">
+              <h3 className="font-serif-roman text-2xl sm:text-3xl font-bold text-[#2C1F1B] mb-2">
                 {t.pricing.plans[0].name}
               </h3>
-              <p className="font-['Montserrat'] text-xs text-[#2B2B2B] mb-6 leading-relaxed font-normal">
+              <p className="font-['Montserrat'] text-xs sm:text-sm text-[#2B2B2B] mb-6 leading-relaxed font-normal">
                 {t.pricing.plans[0].description}
               </p>
 
-              <div className="flex items-baseline gap-1 mb-8 pb-6 border-b border-[#E8E3D9]">
+              <div className="flex items-baseline gap-2 mb-6 pb-6 border-b border-[#E8E3D9]">
                 <span className="font-serif-roman text-5xl font-bold text-[#2C1F1B]">
                   {t.pricing.plans[0].price}
                 </span>
@@ -1011,49 +1011,51 @@ export default function HomePage() {
                 </span>
               </div>
 
+              {/* Viñeta dorada destacada: Sin usar computadora */}
+              {t.pricing.plans[0].features.length > 0 && (
+                <div className="mb-6 p-4 rounded-2xl bg-[#FAF6F0] border border-[#C5A059]/40 flex items-start gap-3 shadow-sm">
+                  <span className="text-[#C5A059] text-base leading-none mt-0.5">✦</span>
+                  <p className="font-['Montserrat'] text-xs font-bold text-[#2C1F1B] leading-snug">
+                    {t.pricing.plans[0].features[0].text}
+                  </p>
+                </div>
+              )}
+
+              {/* Lista de características restantes */}
               <ul className="space-y-3.5 text-xs font-['Montserrat'] text-[#2C1F1B]">
-                {t.pricing.plans[0].features.map((feat, fIdx) => (
+                {t.pricing.plans[0].features.slice(1).map((feat, fIdx) => (
                   <li
                     key={fIdx}
-                    className={`flex items-center gap-3 ${
-                      !feat.included ? "opacity-35 line-through text-[#8C8077]" : ""
-                    }`}
+                    className="flex items-start gap-3"
                   >
-                    {feat.included ? (
-                      <span className="w-4 h-4 rounded-full bg-[#F5EFE4] text-[#C5A059] flex items-center justify-center text-[10px] font-bold">
-                        ✓
-                      </span>
-                    ) : (
-                      <span className="w-4 h-4 rounded-full border border-[#E8E3D9] flex items-center justify-center text-[9px] text-[#8C8077]">
-                        ✕
-                      </span>
-                    )}
-                    <span>{feat.text}</span>
+                    <span className="w-4 h-4 rounded-full bg-[#F5EFE4] text-[#C5A059] flex items-center justify-center text-[10px] font-bold flex-shrink-0 mt-0.5">
+                      ✓
+                    </span>
+                    <span className={feat.isBold ? "font-bold text-[#2C1F1B]" : "text-[#2C1F1B]/90"}>
+                      {feat.text}
+                    </span>
                   </li>
                 ))}
               </ul>
             </div>
 
-            <button
-              onClick={() => handleCheckout("basic")}
-              disabled={checkoutLoading !== null}
-              className="mt-8 w-full py-3.5 px-4 rounded-xl border border-[#2C1F1B] text-[#2C1F1B] font-['Cinzel'] text-[11px] tracking-[0.2em] uppercase font-bold hover:bg-[#F5EFE4] active:scale-95 transition-all text-center flex items-center justify-center gap-2 disabled:opacity-50"
+            <a
+              href={`https://wa.me/18182994882?text=${encodeURIComponent(
+                t.pricing.plans[0].whatsappMessage || ""
+              )}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-8 w-full py-4 px-4 rounded-xl border-2 border-[#2C1F1B] text-[#2C1F1B] font-['Cinzel'] text-xs tracking-[0.18em] uppercase font-bold hover:bg-[#2C1F1B] hover:text-[#FAF8F5] active:scale-95 transition-all text-center flex items-center justify-center gap-2.5 shadow-sm group"
             >
-              {checkoutLoading === "basic" ? (
-                <>
-                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                  <span>Procesando...</span>
-                </>
-              ) : (
-                t.pricing.plans[0].cta
-              )}
-            </button>
+              <MessageCircle className="w-4 h-4 text-[#25D366] group-hover:text-white transition-colors" />
+              <span>{t.pricing.plans[0].cta}</span>
+            </a>
           </div>
 
-          {/* 2. PLAN SIGNATURE VIP ($89) - TARJETA DESTACADA CON BOTÓN DE MÁXIMO CONTRASTE */}
-          <div className="relative rounded-3xl bg-white border-2 border-[#C5A059] p-8 flex flex-col justify-between shadow-[0_20px_50px_rgba(197,160,89,0.25)] lg:-translate-y-4">
+          {/* 2. PLAN SERVICIO VIP LOS ÁNGELES ($199) - DESTACADO */}
+          <div className="relative rounded-3xl bg-white border-2 border-[#C5A059] p-8 sm:p-10 flex flex-col justify-between shadow-[0_20px_50px_rgba(197,160,89,0.25)] md:-translate-y-3">
             {/* Cinta superior distintiva */}
-            <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-[#C5A059] via-[#EED3A1] to-[#9C7736] text-[#2C1F1B] font-['Cinzel'] text-[9px] font-bold tracking-[0.3em] uppercase py-1 px-5 rounded-full shadow-md">
+            <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-[#C5A059] via-[#EED3A1] to-[#9C7736] text-[#2C1F1B] font-['Cinzel'] text-[9px] font-bold tracking-[0.3em] uppercase py-1 px-5 rounded-full shadow-md whitespace-nowrap">
               {t.pricing.recommended}
             </div>
 
@@ -1062,19 +1064,19 @@ export default function HomePage() {
                 <span className="font-['Cinzel'] text-xs tracking-[0.25em] uppercase text-[#C5A059] font-bold">
                   {t.pricing.plans[1].badge}
                 </span>
-                <span className="text-[10px] uppercase font-['Montserrat'] text-[#2C1F1B] bg-[#F5EFE4] border border-[#C5A059]/40 px-2.5 py-1 rounded-full font-bold">
+                <span className="text-[10px] uppercase font-['Montserrat'] text-[#2C1F1B] bg-[#F5EFE4] border border-[#C5A059]/40 px-3 py-1 rounded-full font-bold">
                   {t.pricing.plans[1].typeTag}
                 </span>
               </div>
 
-              <h3 className="font-serif-roman text-2xl font-bold text-[#2C1F1B] mb-2">
+              <h3 className="font-serif-roman text-2xl sm:text-3xl font-bold text-[#2C1F1B] mb-2">
                 {t.pricing.plans[1].name}
               </h3>
-              <p className="font-['Montserrat'] text-xs text-[#2B2B2B] mb-6 leading-relaxed font-normal">
+              <p className="font-['Montserrat'] text-xs sm:text-sm text-[#2B2B2B] mb-6 leading-relaxed font-normal">
                 {t.pricing.plans[1].description}
               </p>
 
-              <div className="flex items-baseline gap-1 mb-8 pb-6 border-b border-[#C5A059]/30">
+              <div className="flex items-baseline gap-2 mb-6 pb-6 border-b border-[#C5A059]/30">
                 <span className="font-serif-roman text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#9C7736] via-[#C5A059] to-[#2C1F1B]">
                   {t.pricing.plans[1].price}
                 </span>
@@ -1083,13 +1085,24 @@ export default function HomePage() {
                 </span>
               </div>
 
+              {/* Viñeta dorada destacada: Sin usar computadora */}
+              {t.pricing.plans[1].features.length > 0 && (
+                <div className="mb-6 p-4 rounded-2xl bg-gradient-to-r from-[#F5EFE4] to-[#FAF6F0] border-2 border-[#C5A059]/60 flex items-start gap-3 shadow-sm">
+                  <span className="text-[#C5A059] text-base leading-none mt-0.5">✦</span>
+                  <p className="font-['Montserrat'] text-xs font-extrabold text-[#2C1F1B] leading-snug">
+                    {t.pricing.plans[1].features[0].text}
+                  </p>
+                </div>
+              )}
+
+              {/* Lista de características restantes */}
               <ul className="space-y-3.5 text-xs font-['Montserrat'] text-[#2C1F1B]">
-                {t.pricing.plans[1].features.map((feat, fIdx) => (
-                  <li key={fIdx} className="flex items-center gap-3">
-                    <span className="w-4 h-4 rounded-full bg-[#C5A059] text-white flex items-center justify-center text-[10px] font-bold">
+                {t.pricing.plans[1].features.slice(1).map((feat, fIdx) => (
+                  <li key={fIdx} className="flex items-start gap-3">
+                    <span className="w-4 h-4 rounded-full bg-[#C5A059] text-white flex items-center justify-center text-[10px] font-bold flex-shrink-0 mt-0.5 shadow-xs">
                       ✓
                     </span>
-                    <span className={feat.isBold ? "font-bold text-[#2C1F1B]" : ""}>
+                    <span className={feat.isBold ? "font-bold text-[#2C1F1B]" : "text-[#2C1F1B]/90"}>
                       {feat.text}
                     </span>
                   </li>
@@ -1097,83 +1110,19 @@ export default function HomePage() {
               </ul>
             </div>
 
-            {/* BOTÓN DESTACADO: FONDO DORADO SÓLIDO #C5A880 CON TEXTO OSCURO #1A1A1A PARA MÁXIMO CONTRASTE */}
-            <button
-              onClick={() => handleCheckout("signature")}
-              disabled={checkoutLoading !== null}
-              className="mt-8 w-full py-4 px-4 rounded-xl bg-[#C5A880] hover:bg-[#B39366] text-[#1A1A1A] font-['Cinzel'] text-xs tracking-[0.2em] uppercase font-extrabold active:scale-95 transition-all shadow-[0_10px_25px_rgba(197,168,128,0.45)] text-center flex items-center justify-center gap-2 disabled:opacity-50 group hover:shadow-[0_12px_30px_rgba(197,168,128,0.6)]"
+            {/* BOTÓN DESTACADO: WhatsApp de Alto Impacto */}
+            <a
+              href={`https://wa.me/18182994882?text=${encodeURIComponent(
+                t.pricing.plans[1].whatsappMessage || ""
+              )}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-8 w-full py-4 px-4 rounded-xl bg-gradient-to-r from-[#C5A059] via-[#E2C37E] to-[#B38D40] hover:brightness-105 text-[#1A1A1A] font-['Cinzel'] text-xs tracking-[0.18em] uppercase font-extrabold active:scale-95 transition-all shadow-[0_10px_25px_rgba(197,160,89,0.45)] text-center flex items-center justify-center gap-2.5 group hover:shadow-[0_12px_30px_rgba(197,160,89,0.6)]"
             >
-              {checkoutLoading === "signature" ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin text-[#1A1A1A]" />
-                  <span>Procesando Reserva...</span>
-                </>
-              ) : (
-                <>
-                  <span className="text-[#1A1A1A]">✦</span>
-                  <span>{t.pricing.plans[1].cta}</span>
-                  <span className="text-[#1A1A1A]">✦</span>
-                </>
-              )}
-            </button>
-          </div>
-
-          {/* 3. PLAN CONCIERGE ($149) */}
-          <div className="relative rounded-3xl bg-white border border-[#E8E3D9] p-8 flex flex-col justify-between shadow-[0_10px_30px_rgba(44,31,27,0.05)] hover:border-[#C5A059]/50 transition-all duration-300">
-            <div>
-              <div className="flex justify-between items-center mb-4">
-                <span className="font-['Cinzel'] text-xs tracking-[0.25em] uppercase text-[#8C8077] font-bold">
-                  {t.pricing.plans[2].badge}
-                </span>
-                <span className="text-[10px] uppercase font-['Montserrat'] text-[#2C1F1B] bg-[#F5EFE4] px-2.5 py-1 rounded-full border border-[#E8E3D9] font-semibold">
-                  {t.pricing.plans[2].typeTag}
-                </span>
-              </div>
-
-              <h3 className="font-serif-roman text-2xl font-bold text-[#2C1F1B] mb-2">
-                {t.pricing.plans[2].name}
-              </h3>
-              <p className="font-['Montserrat'] text-xs text-[#2B2B2B] mb-6 leading-relaxed font-normal">
-                {t.pricing.plans[2].description}
-              </p>
-
-              <div className="flex items-baseline gap-1 mb-8 pb-6 border-b border-[#E8E3D9]">
-                <span className="font-serif-roman text-5xl font-bold text-[#2C1F1B]">
-                  {t.pricing.plans[2].price}
-                </span>
-                <span className="font-['Montserrat'] text-xs text-[#8C8077] uppercase tracking-wider font-medium">
-                  {t.pricing.plans[2].currency}
-                </span>
-              </div>
-
-              <ul className="space-y-3.5 text-xs font-['Montserrat'] text-[#2C1F1B]">
-                {t.pricing.plans[2].features.map((feat, fIdx) => (
-                  <li key={fIdx} className="flex items-center gap-3">
-                    <span className="w-4 h-4 rounded-full bg-[#F5EFE4] text-[#C5A059] flex items-center justify-center text-[10px] font-bold">
-                      ✓
-                    </span>
-                    <span className={feat.isBold ? "font-bold text-[#2C1F1B]" : ""}>
-                      {feat.text}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <button
-              onClick={() => handleCheckout("atelier")}
-              disabled={checkoutLoading !== null}
-              className="mt-8 w-full py-3.5 px-4 rounded-xl border border-[#2C1F1B] text-[#2C1F1B] font-['Cinzel'] text-[11px] tracking-[0.2em] uppercase font-bold hover:bg-[#F5EFE4] active:scale-95 transition-all text-center flex items-center justify-center gap-2 disabled:opacity-50"
-            >
-              {checkoutLoading === "atelier" ? (
-                <>
-                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                  <span>Procesando...</span>
-                </>
-              ) : (
-                t.pricing.plans[2].cta
-              )}
-            </button>
+              <MessageCircle className="w-4 h-4 text-[#1A1A1A] fill-[#1A1A1A]" />
+              <span>{t.pricing.plans[1].cta}</span>
+              <span className="text-[#1A1A1A]">✦</span>
+            </a>
           </div>
         </div>
 
