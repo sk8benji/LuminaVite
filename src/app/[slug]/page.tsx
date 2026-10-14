@@ -528,6 +528,16 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
     title,
     description,
     metadataBase: new URL(baseUrl),
+    robots: {
+      index: false,
+      follow: false,
+      nocache: true,
+      googleBot: {
+        index: false,
+        follow: false,
+        noimageindex: true,
+      },
+    },
     alternates: {
       canonical: eventUrl,
     },

@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import prisma from "@/lib/db";
 import { ensureGuestsTable } from "@/lib/guests-table";
@@ -5,6 +6,14 @@ import PanelView, { PanelData } from "./PanelView";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
+
+export const metadata: Metadata = {
+  robots: {
+    index: false,
+    follow: false,
+    nocache: true,
+  },
+};
 
 interface PageProps {
   params: Promise<{ slug: string }> | { slug: string };
