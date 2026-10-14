@@ -8,8 +8,8 @@ type EventTab = "quince" | "boda" | "cumple";
 
 const VIDEOS: Record<EventTab, string> = {
   quince: "https://luminavite-storage.s3.us-east-1.amazonaws.com/video/WhatsApp+Video+2026-10-14+at+9.50.53+AM.mp4",
-  boda: "https://luminavite-storage.s3.us-east-1.amazonaws.com/video/WhatsApp+Video+2026-10-14+at+10.25.57+AM.mp4",
-  cumple: "https://luminavite-storage.s3.us-east-1.amazonaws.com/video/WhatsApp+Video+2026-10-14+at+10.26.04+AM.mp4",
+  boda: "https://luminavite-storage.s3.us-east-1.amazonaws.com/video/WhatsApp+Video+2026-10-14+at+10.26.04+AM.mp4",
+  cumple: "https://luminavite-storage.s3.us-east-1.amazonaws.com/video/WhatsApp+Video+2026-10-14+at+10.25.57+AM.mp4",
 };
 
 const SLUGS: Record<EventTab, string> = {
