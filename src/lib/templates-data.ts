@@ -55,6 +55,7 @@ export interface MasterTemplateItem {
   // Protocolos JSON
   corteHonorJson?: any;
   itinerarioJson?: any;
+  configExtra?: any;
 
   activo: boolean;
   orden: number;
