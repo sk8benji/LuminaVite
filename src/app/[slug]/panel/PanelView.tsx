@@ -113,7 +113,8 @@ export default function PanelView({
 }: PanelViewProps) {
   const [data, setData] = useState<PanelData | null>(initialData || null);
   const [guests, setGuests] = useState<GuestItem[]>(initialData?.guests || []);
-  const [activeTab, setActiveTab] = useState<"guests" | "rsvps">("guests");
+  const [statusFilter, setStatusFilter] = useState<"all" | "attending" | "pending" | "declined">("all");
+  const [activityGuest, setActivityGuest] = useState<GuestItem | null>(null);
 
   const [copiedLink, setCopiedLink] = useState(false);
   const [copiedGuestId, setCopiedGuestId] = useState<string | null>(null);
@@ -376,8 +377,9 @@ export default function PanelView({
   const totalConfirmedPax = guests
     .filter((g) => g.status === "attending")
     .reduce((sum, g) => sum + (g.confirmed_pax || 0), 0);
+  const totalConfirmedCount = guests.filter((g) => g.status === "attending").length;
   const totalDeclinedCount = guests.filter((g) => g.status === "declined").length;
-  const totalPendingCount = guests.filter((g) => g.status === "pending" || !g.status).length;
+  const totalPendingCount = guests.filter((g) => g.status !== "attending" && g.status !== "declined").length;
 
   // Acceso manual con clave
   const handleManualKeySubmit = async (e: React.FormEvent) => {
@@ -590,16 +592,20 @@ export default function PanelView({
     );
   }
 
-  // Filtrado de invitados por búsqueda
-  const filteredGuests = guests.filter((g) =>
-    g.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (g.phone && g.phone.includes(searchTerm))
-  );
+  // Filtrado de invitados por búsqueda y filtro de estado rápido
+  const filteredGuests = guests.filter((g) => {
+    const matchesSearch =
+      g.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (g.phone && g.phone.includes(searchTerm));
+    if (!matchesSearch) return false;
 
-  // Filtrado de RSVPs
-  const filteredRsvps = (data.rsvps || []).filter((r) =>
-    r.nombreInvitado.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+    if (statusFilter === "attending") return g.status === "attending";
+    if (statusFilter === "declined") return g.status === "declined";
+    if (statusFilter === "pending") {
+      return g.status !== "attending" && g.status !== "declined";
+    }
+    return true;
+  });
 
   return (
     <div className="min-h-screen bg-[#FAF8F5] text-[#2C1F1B] font-['Montserrat'] pb-16">
@@ -751,330 +757,392 @@ export default function PanelView({
         </div>
 
         {/* ============================================================== */}
-        {/* 2. SELECTOR DE PESTAÑAS (PASTILLA MODERNA SEGMENTADA) */}
+        {/* FORMULARIO AGREGAR NUEVO INVITADO (PEGADO A LA SECCIÓN DE AFORO) */}
         {/* ============================================================== */}
-        <div className="inline-flex p-1 bg-[#F0ECE1] rounded-2xl border border-[#E3DDD1] shadow-2xs">
-          <button
-            onClick={() => setActiveTab("guests")}
-            className={`px-4 py-2 rounded-xl text-xs font-semibold transition cursor-pointer ${
-              activeTab === "guests"
-                ? "bg-white text-[#2C1F1B] shadow-xs"
-                : "text-stone-600 hover:text-[#2C1F1B]"
-            }`}
-          >
-            Lista de Invitados ({guests.length})
-          </button>
-          <button
-            onClick={() => setActiveTab("rsvps")}
-            className={`px-4 py-2 rounded-xl text-xs font-semibold transition cursor-pointer ${
-              activeTab === "rsvps"
-                ? "bg-white text-[#2C1F1B] shadow-xs"
-                : "text-stone-600 hover:text-[#2C1F1B]"
-            }`}
-          >
-            Historial de Respuestas ({data.rsvps.length})
-          </button>
+        <div className="mt-4 bg-white p-5 sm:p-6 rounded-2xl border border-[#E8E3D9] shadow-xs">
+          <h3 className="text-xs font-bold uppercase tracking-wider text-[#2C1F1B] mb-3.5 font-serif flex items-center gap-2">
+            <UserPlus className="w-4 h-4 text-[#C5A059]" />
+            <span>Agregar nuevo invitado a la lista</span>
+          </h3>
+
+          <form onSubmit={handleAddGuest} className="grid grid-cols-1 sm:grid-cols-12 gap-3.5 items-end">
+            <div className="sm:col-span-5">
+              <label className="block text-xs font-medium uppercase tracking-wider text-stone-600 mb-1.5">
+                Nombre o familia
+              </label>
+              <input
+                type="text"
+                required
+                value={newGuestName}
+                onChange={(e) => setNewGuestName(e.target.value)}
+                placeholder="Ej. Familia Rodríguez o Sofía Méndez"
+                className="w-full px-3.5 py-2.5 bg-[#FAF8F5] border border-[#E8E3D9] rounded-xl text-xs text-[#2C1F1B] placeholder-[#8C8077] focus:outline-none focus:ring-2 focus:ring-[#C5A059] shadow-2xs"
+              />
+            </div>
+
+            <div className="sm:col-span-3">
+              <label className="block text-xs font-medium uppercase tracking-wider text-stone-600 mb-1.5">
+                Pases
+              </label>
+              <select
+                value={newGuestPax}
+                onChange={(e) => setNewGuestPax(e.target.value)}
+                className="w-full px-3.5 py-2.5 bg-[#FAF8F5] border border-[#E8E3D9] rounded-xl text-xs text-[#2C1F1B] focus:outline-none focus:ring-2 focus:ring-[#C5A059] font-medium shadow-2xs"
+              >
+                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
+                  <option key={n} value={n}>
+                    {n} {n === 1 ? "Pase" : "Pases"}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="sm:col-span-4">
+              <label className="block text-xs font-medium uppercase tracking-wider text-stone-600 mb-1.5">
+                Teléfono móvil
+              </label>
+              <input
+                type="tel"
+                value={newGuestPhone}
+                onChange={(e) => setNewGuestPhone(e.target.value)}
+                placeholder="+1 (818) 555-0123"
+                className="w-full px-3.5 py-2.5 bg-[#FAF8F5] border border-[#E8E3D9] rounded-xl text-xs text-[#2C1F1B] placeholder-[#8C8077] focus:outline-none focus:ring-2 focus:ring-[#C5A059] shadow-2xs"
+              />
+            </div>
+
+            {addGuestError && (
+              <p className="sm:col-span-12 text-xs text-rose-600 font-medium">
+                {addGuestError}
+              </p>
+            )}
+
+            <div className="sm:col-span-12 flex justify-end pt-1">
+              <button
+                type="submit"
+                disabled={isAddingGuest}
+                className="w-full sm:w-auto px-5 py-2.5 bg-[#38271F] hover:bg-[#251A14] active:scale-95 text-white text-xs font-bold tracking-wider rounded-xl transition shadow-xs flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+              >
+                {isAddingGuest ? (
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                ) : (
+                  <UserPlus className="w-3.5 h-3.5 text-[#EED3A1]" />
+                )}
+                <span>+ Agregar Invitado</span>
+              </button>
+            </div>
+          </form>
+        </div>
+
+        {/* Barra de Búsqueda, Filtros Rápidos y Botón de Exportación */}
+        <div className="bg-white p-4 rounded-2xl border border-[#E8E3D9] shadow-xs space-y-3">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+            <div className="relative flex-1">
+              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-[#8C6D2D]" />
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Buscar invitado por nombre o teléfono..."
+                className="w-full pl-9 pr-3.5 py-2.5 bg-[#FAF8F5] border border-[#E8E3D9] rounded-xl text-xs text-[#2C1F1B] placeholder-[#8C8077] focus:outline-none focus:ring-2 focus:ring-[#C5A059]"
+              />
+            </div>
+
+            <a
+              href={`/api/eventos/${slug}/panel/export`}
+              download
+              className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-[#FAF6F0] hover:bg-[#F3ECE2] text-[#2C1F1B] border border-[#E5D9C5] text-xs font-medium rounded-xl shadow-xs transition cursor-pointer shrink-0"
+            >
+              <Download className="w-3.5 h-3.5 text-emerald-700" />
+              <span>Descargar lista (CSV)</span>
+            </a>
+          </div>
+
+          {/* Filtros rápidos: Todos, Confirmados, Pendientes, Declinados */}
+          <div className="flex flex-wrap items-center gap-1.5 pt-2 border-t border-[#F0ECE1]">
+            <span className="text-[11px] font-medium text-stone-500 mr-1 hidden sm:inline">Filtrar:</span>
+            <button
+              type="button"
+              onClick={() => setStatusFilter("all")}
+              className={`px-3 py-1.5 rounded-xl text-xs font-medium transition cursor-pointer ${
+                statusFilter === "all"
+                  ? "bg-[#2C1F1B] text-white shadow-xs"
+                  : "bg-[#FAF8F5] text-stone-600 hover:text-[#2C1F1B] border border-[#E8E3D9] hover:bg-[#F5EFE4]"
+              }`}
+            >
+              Todos ({guests.length})
+            </button>
+            <button
+              type="button"
+              onClick={() => setStatusFilter("attending")}
+              className={`px-3 py-1.5 rounded-xl text-xs font-medium transition cursor-pointer ${
+                statusFilter === "attending"
+                  ? "bg-[#1B5E20] text-white shadow-xs"
+                  : "bg-emerald-50 text-emerald-800 hover:bg-emerald-100/70 border border-emerald-200/70"
+              }`}
+            >
+              Confirmados ({totalConfirmedCount})
+            </button>
+            <button
+              type="button"
+              onClick={() => setStatusFilter("pending")}
+              className={`px-3 py-1.5 rounded-xl text-xs font-medium transition cursor-pointer ${
+                statusFilter === "pending"
+                  ? "bg-[#B8860B] text-white shadow-xs"
+                  : "bg-amber-50 text-amber-800 hover:bg-amber-100/70 border border-amber-200/70"
+              }`}
+            >
+              Pendientes ({totalPendingCount})
+            </button>
+            <button
+              type="button"
+              onClick={() => setStatusFilter("declined")}
+              className={`px-3 py-1.5 rounded-xl text-xs font-medium transition cursor-pointer ${
+                statusFilter === "declined"
+                  ? "bg-[#8B2635] text-white shadow-xs"
+                  : "bg-rose-50 text-[#8B2635] hover:bg-rose-100/70 border border-rose-200/70"
+              }`}
+            >
+              Declinados ({totalDeclinedCount})
+            </button>
+          </div>
+        </div>
+
+        {/* Tabla de Invitados Oficial */}
+        <div className="bg-white rounded-2xl border border-[#E8E3D9] shadow-xs overflow-hidden">
+          <div className="px-5 py-3.5 border-b border-[#E8E3D9] flex items-center justify-between bg-[#FAF8F5]/80">
+            <h3 className="text-xs font-bold text-[#2C1F1B] font-serif">
+              Lista de Invitados ({filteredGuests.length})
+            </h3>
+            <div className="flex items-center gap-1.5 text-xs text-stone-500 font-medium">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span>Actualizado automáticamente</span>
+            </div>
+          </div>
+
+          {filteredGuests.length === 0 ? (
+            <div className="p-10 text-center text-[#8C8077] text-xs space-y-2">
+              <Users className="w-8 h-8 text-[#C5A059]/50 mx-auto" />
+              <p className="font-semibold text-[#2C1F1B]">No hay invitados que coincidan con la búsqueda o filtro.</p>
+              <p className="text-[11px]">Intenta cambiando el filtro o agrega un nuevo invitado arriba.</p>
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse text-xs">
+                <thead>
+                  <tr className="bg-stone-100/60 text-stone-600 font-semibold text-xs border-b border-[#E8E3D9]">
+                    <th className="py-3 px-4">Nombre / Familia</th>
+                    <th className="py-3 px-4 text-center">Pases Asignados</th>
+                    <th className="py-3 px-4 text-center">Confirmados</th>
+                    <th className="py-3 px-4 text-center">Estado</th>
+                    <th className="py-3 px-4">Teléfono / Notas</th>
+                    <th className="py-3 px-4 text-right">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-[#E8E3D9]">
+                  {filteredGuests.map((guest) => (
+                    <tr key={guest.id} className="hover:bg-[#FAF8F5] transition">
+                      <td className="py-3.5 px-4 font-semibold text-[#2C1F1B] capitalize">
+                        {guest.name}
+                      </td>
+                      <td className="py-3.5 px-4 text-center font-bold text-[#2C1F1B]">
+                        {guest.max_pax}
+                      </td>
+                      <td className="py-3.5 px-4 text-center font-bold text-[#1B5E20]">
+                        {guest.status === "attending" ? guest.confirmed_pax : "—"}
+                      </td>
+                      <td className="py-3.5 px-4 text-center">
+                        {guest.status === "attending" ? (
+                          <span className="inline-flex items-center gap-1 text-xs py-0.5 px-2.5 rounded-full font-medium text-emerald-700 bg-emerald-50 border border-emerald-200/60">
+                            <CheckCircle2 className="w-3 h-3" /> Confirmado
+                          </span>
+                        ) : guest.status === "declined" ? (
+                          <span className="inline-flex items-center gap-1 text-xs py-0.5 px-2.5 rounded-full font-medium text-[#8B2635] bg-[#FBF0F1] border border-[#F2D5D9]">
+                            <XCircle className="w-3 h-3" /> Declinado
+                          </span>
+                        ) : guest.status === "PENDIENTE_APROBACION" || guest.status === "pending_approval" ? (
+                          <span className="inline-flex items-center gap-1 text-xs py-0.5 px-2.5 rounded-full font-medium text-amber-800 bg-amber-50 border border-amber-300">
+                            <AlertCircle className="w-3 h-3 text-amber-600" /> Solicitud Manual
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1 text-xs py-0.5 px-2.5 rounded-full font-medium text-stone-600 bg-stone-100 border border-stone-200">
+                            <Clock className="w-3 h-3" /> Pendiente
+                          </span>
+                        )}
+                      </td>
+                      <td className="py-3.5 px-4 text-[#2B2B2B]">
+                        <div className="font-mono text-xs text-[#2C1F1B]">
+                          {formatPhoneDisplay(guest.phone)}
+                        </div>
+                        {guest.notes && (
+                          <div className="text-[11px] text-[#8C8077] italic line-clamp-1">{guest.notes}</div>
+                        )}
+                      </td>
+                      <td className="py-3.5 px-4 text-right">
+                        <div className="flex items-center justify-end gap-1.5">
+                          {/* Acciones directas (enlace y mensaje / registro) */}
+                          <div className="flex items-center gap-1 bg-[#FAF6F0] p-0.5 rounded-xl border border-[#E8E3D9]">
+                            <button
+                              onClick={() => copyGuestLink(guest.id)}
+                              title="Copiar enlace personalizado del invitado"
+                              className={`w-8 h-8 flex items-center justify-center rounded-lg transition-colors cursor-pointer ${
+                                copiedGuestId === guest.id
+                                  ? "text-emerald-700 bg-emerald-50 border border-emerald-200"
+                                  : "text-stone-600 hover:text-[#2C1F1B] hover:bg-white"
+                              }`}
+                            >
+                              {copiedGuestId === guest.id ? (
+                                <Check className="w-3.5 h-3.5" />
+                              ) : (
+                                <Link2 className="w-3.5 h-3.5 text-[#8C6D2D]" />
+                              )}
+                            </button>
+                            <button
+                              onClick={() => setActivityGuest(guest)}
+                              title="Ver mensaje, detalles y registro de actividad"
+                              className="w-8 h-8 flex items-center justify-center text-blue-700 hover:text-blue-900 hover:bg-white rounded-lg transition-colors cursor-pointer relative"
+                            >
+                              <MessageSquare className="w-3.5 h-3.5" />
+                              {guest.notes && (
+                                <span className="w-1.5 h-1.5 rounded-full bg-amber-500 absolute top-1.5 right-1.5 ring-1 ring-white" />
+                              )}
+                            </button>
+                          </div>
+
+                          {/* Acciones de gestión (editar y eliminar) */}
+                          <div className="flex items-center gap-0.5">
+                            <button
+                              onClick={() => handleStartEdit(guest)}
+                              title="Editar invitado"
+                              className="w-8 h-8 flex items-center justify-center text-stone-500 hover:text-[#2C1F1B] hover:bg-stone-100 rounded-lg transition-colors cursor-pointer"
+                            >
+                              <Edit2 className="w-3.5 h-3.5" />
+                            </button>
+                            <button
+                              onClick={() => handleDeleteGuest(guest.id, guest.name)}
+                              disabled={deletingId === guest.id}
+                              title="Eliminar de la lista"
+                              className="w-8 h-8 flex items-center justify-center text-stone-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer disabled:opacity-50"
+                            >
+                              {deletingId === guest.id ? (
+                                <Loader2 className="w-3.5 h-3.5 animate-spin text-rose-600" />
+                              ) : (
+                                <Trash2 className="w-3.5 h-3.5" />
+                              )}
+                            </button>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
 
         {/* ============================================================== */}
-        {/* SECCIÓN PESTAÑA A: GESTIÓN DE INVITADOS */}
+        {/* MODAL PARA DETALLES DE ACTIVIDAD Y MENSAJE DEL INVITADO */}
         {/* ============================================================== */}
-        {activeTab === "guests" && (
-          <div className="space-y-6">
-            {/* Formulario rápido de inserción */}
-            <div className="bg-white p-5 sm:p-6 rounded-2xl border border-[#E8E3D9] shadow-xs">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-[#2C1F1B] mb-3.5 font-serif flex items-center gap-2">
-                <UserPlus className="w-4 h-4 text-[#C5A059]" />
-                <span>Agregar nuevo invitado a la lista</span>
-              </h3>
+        {activityGuest && (
+          <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
+            <div className="bg-white w-full max-w-md rounded-3xl p-6 shadow-xl border border-[#E8E3D9] space-y-4">
+              <div className="flex items-start justify-between">
+                <div>
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#8C6D2D] font-serif">
+                    Registro & Actividad
+                  </span>
+                  <h3 className="font-serif text-lg font-bold text-[#2C1F1B] capitalize">
+                    {activityGuest.name}
+                  </h3>
+                </div>
+                <button
+                  onClick={() => setActivityGuest(null)}
+                  className="text-stone-400 hover:text-stone-700 p-1 rounded-lg transition"
+                >
+                  <XCircle className="w-5 h-5" />
+                </button>
+              </div>
 
-              <form onSubmit={handleAddGuest} className="grid grid-cols-1 sm:grid-cols-12 gap-3.5 items-end">
-                <div className="sm:col-span-5">
-                  <label className="block text-xs font-medium uppercase tracking-wider text-stone-600 mb-1.5">
-                    Nombre o familia
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={newGuestName}
-                    onChange={(e) => setNewGuestName(e.target.value)}
-                    placeholder="Ej. Familia Rodríguez o Sofía Méndez"
-                    className="w-full px-3.5 py-2.5 bg-[#FAF8F5] border border-[#E8E3D9] rounded-xl text-xs text-[#2C1F1B] placeholder-[#8C8077] focus:outline-none focus:ring-2 focus:ring-[#C5A059] shadow-2xs"
-                  />
+              <div className="space-y-3 bg-[#FAF8F5] p-4 rounded-2xl border border-[#E8E3D9] text-xs">
+                <div className="flex items-center justify-between">
+                  <span className="text-[#8C8077]">Estado de confirmación:</span>
+                  {activityGuest.status === "attending" ? (
+                    <span className="inline-flex items-center gap-1 font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
+                      <CheckCircle2 className="w-3 h-3" /> Confirmado ({activityGuest.confirmed_pax} {activityGuest.confirmed_pax === 1 ? "pase" : "pases"})
+                    </span>
+                  ) : activityGuest.status === "declined" ? (
+                    <span className="inline-flex items-center gap-1 font-semibold text-[#8B2635] bg-[#FBF0F1] px-2.5 py-0.5 rounded-full border border-[#F2D5D9]">
+                      <XCircle className="w-3 h-3" /> Declinado
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center gap-1 font-semibold text-stone-600 bg-stone-100 px-2.5 py-0.5 rounded-full border border-stone-200">
+                      <Clock className="w-3 h-3" /> Pendiente ({activityGuest.max_pax} {activityGuest.max_pax === 1 ? "pase asignado" : "pases asignados"})
+                    </span>
+                  )}
                 </div>
 
-                <div className="sm:col-span-3">
-                  <label className="block text-xs font-medium uppercase tracking-wider text-stone-600 mb-1.5">
-                    Pases
-                  </label>
-                  <select
-                    value={newGuestPax}
-                    onChange={(e) => setNewGuestPax(e.target.value)}
-                    className="w-full px-3.5 py-2.5 bg-[#FAF8F5] border border-[#E8E3D9] rounded-xl text-xs text-[#2C1F1B] focus:outline-none focus:ring-2 focus:ring-[#C5A059] font-medium shadow-2xs"
-                  >
-                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
-                      <option key={n} value={n}>
-                        {n} {n === 1 ? "Pase" : "Pases"}
-                      </option>
-                    ))}
-                  </select>
+                <div className="flex items-center justify-between">
+                  <span className="text-[#8C8077]">Teléfono de contacto:</span>
+                  <span className="font-mono font-medium text-[#2C1F1B]">
+                    {formatPhoneDisplay(activityGuest.phone)}
+                  </span>
                 </div>
 
-                <div className="sm:col-span-4">
-                  <label className="block text-xs font-medium uppercase tracking-wider text-stone-600 mb-1.5">
-                    Teléfono móvil
-                  </label>
-                  <input
-                    type="tel"
-                    value={newGuestPhone}
-                    onChange={(e) => setNewGuestPhone(e.target.value)}
-                    placeholder="+1 (818) 555-0123"
-                    className="w-full px-3.5 py-2.5 bg-[#FAF8F5] border border-[#E8E3D9] rounded-xl text-xs text-[#2C1F1B] placeholder-[#8C8077] focus:outline-none focus:ring-2 focus:ring-[#C5A059] shadow-2xs"
-                  />
-                </div>
-
-                {addGuestError && (
-                  <p className="sm:col-span-12 text-xs text-rose-600 font-medium">
-                    {addGuestError}
-                  </p>
+                {activityGuest.updated_at && (
+                  <div className="flex items-center justify-between">
+                    <span className="text-[#8C8077]">Última actualización:</span>
+                    <span className="text-stone-600">
+                      {new Date(activityGuest.updated_at).toLocaleDateString("es-ES", {
+                        day: "numeric",
+                        month: "short",
+                        year: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </span>
+                  </div>
                 )}
 
-                <div className="sm:col-span-12 flex justify-end pt-1">
-                  <button
-                    type="submit"
-                    disabled={isAddingGuest}
-                    className="w-full sm:w-auto px-5 py-2.5 bg-[#38271F] hover:bg-[#251A14] active:scale-95 text-white text-xs font-bold tracking-wider rounded-xl transition shadow-xs flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
-                  >
-                    {isAddingGuest ? (
-                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                    ) : (
-                      <UserPlus className="w-3.5 h-3.5 text-[#EED3A1]" />
-                    )}
-                    <span>+ Agregar Invitado</span>
-                  </button>
-                </div>
-              </form>
-            </div>
-
-            {/* Barra de Búsqueda y Botón de Exportación */}
-            <div className="bg-white p-3.5 sm:p-4 rounded-2xl border border-[#E8E3D9] shadow-xs flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-              <div className="relative flex-1 sm:max-w-[65%]">
-                <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-[#8C6D2D]" />
-                <input
-                  type="text"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  placeholder="Buscar invitado por nombre o teléfono..."
-                  className="w-full pl-9 pr-3.5 py-2 bg-[#FAF8F5] border border-[#E8E3D9] rounded-xl text-xs text-[#2C1F1B] placeholder-[#8C8077] focus:outline-none focus:ring-2 focus:ring-[#C5A059]"
-                />
-              </div>
-
-              <a
-                href={`/api/eventos/${slug}/panel/export`}
-                download
-                className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-[#FAF6F0] hover:bg-[#F3ECE2] text-[#2C1F1B] border border-[#E5D9C5] text-xs font-medium rounded-xl shadow-xs transition cursor-pointer"
-              >
-                <Download className="w-3.5 h-3.5 text-emerald-700" />
-                <span>Descargar lista (CSV)</span>
-              </a>
-            </div>
-
-            {/* Tabla de Invitados Oficial */}
-            <div className="bg-white rounded-2xl border border-[#E8E3D9] shadow-xs overflow-hidden">
-              <div className="px-5 py-3.5 border-b border-[#E8E3D9] flex items-center justify-between bg-[#FAF8F5]/80">
-                <h3 className="text-xs font-bold text-[#2C1F1B] font-serif">
-                  Lista de Invitados ({filteredGuests.length})
-                </h3>
-                <div className="flex items-center gap-1.5 text-xs text-stone-500 font-medium">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                  <span>Actualizado automáticamente</span>
+                <div className="pt-2 border-t border-[#E8E3D9]">
+                  <span className="text-[#8C8077] block mb-1 font-medium">
+                    Mensaje o dedicatoria:
+                  </span>
+                  {activityGuest.notes ? (
+                    <div className="p-3 bg-white rounded-xl border border-[#E8E3D9] text-[#2C1F1B] italic flex items-start gap-2">
+                      <Quote className="w-3.5 h-3.5 text-[#C5A059] shrink-0 mt-0.5" />
+                      <span>&ldquo;{activityGuest.notes}&rdquo;</span>
+                    </div>
+                  ) : (
+                    <p className="text-stone-400 italic text-[11px]">
+                      No hay notas o comentarios especiales registrados aún.
+                    </p>
+                  )}
                 </div>
               </div>
 
-              {filteredGuests.length === 0 ? (
-                <div className="p-10 text-center text-[#8C8077] text-xs space-y-2">
-                  <Users className="w-8 h-8 text-[#C5A059]/50 mx-auto" />
-                  <p className="font-semibold text-[#2C1F1B]">No hay invitados en la lista todavía.</p>
-                  <p className="text-[11px]">Usa el formulario de arriba para agregar a los primeros invitados o familias.</p>
-                </div>
-              ) : (
-                <div className="overflow-x-auto">
-                  <table className="w-full text-left border-collapse text-xs">
-                    <thead>
-                      <tr className="bg-stone-100/60 text-stone-600 font-semibold text-xs border-b border-[#E8E3D9]">
-                        <th className="py-3 px-4">Nombre / Familia</th>
-                        <th className="py-3 px-4 text-center">Pases Asignados</th>
-                        <th className="py-3 px-4 text-center">Confirmados</th>
-                        <th className="py-3 px-4 text-center">Estado</th>
-                        <th className="py-3 px-4">Teléfono / Notas</th>
-                        <th className="py-3 px-4 text-right">Acciones</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-[#E8E3D9]">
-                      {filteredGuests.map((guest) => (
-                        <tr key={guest.id} className="hover:bg-[#FAF8F5] transition">
-                          <td className="py-3.5 px-4 font-semibold text-[#2C1F1B] capitalize">
-                            {guest.name}
-                          </td>
-                          <td className="py-3.5 px-4 text-center font-bold text-[#2C1F1B]">
-                            {guest.max_pax}
-                          </td>
-                          <td className="py-3.5 px-4 text-center font-bold text-[#1B5E20]">
-                            {guest.status === "attending" ? guest.confirmed_pax : "—"}
-                          </td>
-                          <td className="py-3.5 px-4 text-center">
-                            {guest.status === "attending" ? (
-                              <span className="inline-flex items-center gap-1 text-xs py-0.5 px-2.5 rounded-full font-medium text-emerald-700 bg-emerald-50 border border-emerald-200/60">
-                                <CheckCircle2 className="w-3 h-3" /> Confirmado
-                              </span>
-                            ) : guest.status === "declined" ? (
-                              <span className="inline-flex items-center gap-1 text-xs py-0.5 px-2.5 rounded-full font-medium text-[#8B2635] bg-[#FBF0F1] border border-[#F2D5D9]">
-                                <XCircle className="w-3 h-3" /> Declinado
-                              </span>
-                            ) : guest.status === "PENDIENTE_APROBACION" || guest.status === "pending_approval" ? (
-                              <span className="inline-flex items-center gap-1 text-xs py-0.5 px-2.5 rounded-full font-medium text-amber-800 bg-amber-50 border border-amber-300">
-                                <AlertCircle className="w-3 h-3 text-amber-600" /> Solicitud Manual
-                              </span>
-                            ) : (
-                              <span className="inline-flex items-center gap-1 text-xs py-0.5 px-2.5 rounded-full font-medium text-stone-600 bg-stone-100 border border-stone-200">
-                                <Clock className="w-3 h-3" /> Pendiente
-                              </span>
-                            )}
-                          </td>
-                          <td className="py-3.5 px-4 text-[#2B2B2B]">
-                            <div className="font-mono text-xs text-[#2C1F1B]">
-                              {formatPhoneDisplay(guest.phone)}
-                            </div>
-                            {guest.notes && (
-                              <div className="text-[11px] text-[#8C8077] italic line-clamp-1">{guest.notes}</div>
-                            )}
-                          </td>
-                          <td className="py-3.5 px-4 text-right">
-                            <div className="flex items-center justify-end gap-1.5">
-                              {/* Acciones directas (enlace y mensaje) */}
-                              <div className="flex items-center gap-1 bg-[#FAF6F0] p-0.5 rounded-xl border border-[#E8E3D9]">
-                                <button
-                                  onClick={() => copyGuestLink(guest.id)}
-                                  title="Copiar enlace personalizado del invitado"
-                                  className={`w-8 h-8 flex items-center justify-center rounded-lg transition-colors cursor-pointer ${
-                                    copiedGuestId === guest.id
-                                      ? "text-emerald-700 bg-emerald-50 border border-emerald-200"
-                                      : "text-stone-600 hover:text-[#2C1F1B] hover:bg-white"
-                                  }`}
-                                >
-                                  {copiedGuestId === guest.id ? (
-                                    <Check className="w-3.5 h-3.5" />
-                                  ) : (
-                                    <Link2 className="w-3.5 h-3.5 text-[#8C6D2D]" />
-                                  )}
-                                </button>
-                                <button
-                                  onClick={() => sendGuestSms(guest)}
-                                  title="Enviar invitación personalizada por SMS / WhatsApp"
-                                  className="w-8 h-8 flex items-center justify-center text-blue-700 hover:text-blue-900 hover:bg-white rounded-lg transition-colors cursor-pointer"
-                                >
-                                  <MessageSquare className="w-3.5 h-3.5" />
-                                </button>
-                              </div>
-
-                              {/* Acciones de gestión (editar y eliminar) */}
-                              <div className="flex items-center gap-0.5">
-                                <button
-                                  onClick={() => handleStartEdit(guest)}
-                                  title="Editar invitado"
-                                  className="w-8 h-8 flex items-center justify-center text-stone-500 hover:text-[#2C1F1B] hover:bg-stone-100 rounded-lg transition-colors cursor-pointer"
-                                >
-                                  <Edit2 className="w-3.5 h-3.5" />
-                                </button>
-                                <button
-                                  onClick={() => handleDeleteGuest(guest.id, guest.name)}
-                                  disabled={deletingId === guest.id}
-                                  title="Eliminar de la lista"
-                                  className="w-8 h-8 flex items-center justify-center text-stone-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer disabled:opacity-50"
-                                >
-                                  {deletingId === guest.id ? (
-                                    <Loader2 className="w-3.5 h-3.5 animate-spin text-rose-600" />
-                                  ) : (
-                                    <Trash2 className="w-3.5 h-3.5" />
-                                  )}
-                                </button>
-                              </div>
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* ============================================================== */}
-        {/* SECCIÓN PESTAÑA B: HISTORIAL DE RESPUESTAS (RSVPS) */}
-        {/* ============================================================== */}
-        {activeTab === "rsvps" && (
-          <div className="bg-white rounded-2xl border border-[#E8E3D9] shadow-xs overflow-hidden">
-            <div className="px-5 py-3.5 border-b border-[#E8E3D9] flex items-center justify-between bg-[#FAF8F5]/60">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-[#2C1F1B] font-serif">
-                Confirmaciones Registradas ({filteredRsvps.length})
-              </h3>
-            </div>
-
-            {filteredRsvps.length === 0 ? (
-              <div className="p-8 text-center text-[#8C8077] text-xs">
-                No hay respuestas de invitados registradas aún.
+              <div className="flex flex-col sm:flex-row gap-2 pt-1">
+                <button
+                  type="button"
+                  onClick={() => sendGuestSms(activityGuest)}
+                  className="flex-1 py-2 px-3 bg-[#38271F] hover:bg-[#251A14] text-white rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer"
+                >
+                  <MessageSquare className="w-3.5 h-3.5 text-[#EED3A1]" />
+                  <span>Enviar SMS con enlace</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => copyGuestLink(activityGuest.id)}
+                  className="py-2 px-3 bg-white hover:bg-[#FAF8F5] text-[#2C1F1B] border border-[#E8E3D9] rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer"
+                >
+                  {copiedGuestId === activityGuest.id ? (
+                    <Check className="w-3.5 h-3.5 text-emerald-600" />
+                  ) : (
+                    <Link2 className="w-3.5 h-3.5 text-[#8C6D2D]" />
+                  )}
+                  <span>{copiedGuestId === activityGuest.id ? "¡Copiado!" : "Copiar Enlace"}</span>
+                </button>
               </div>
-            ) : (
-              <div className="divide-y divide-[#E8E3D9] overflow-x-auto">
-                <table className="w-full text-left border-collapse text-xs">
-                  <thead>
-                    <tr className="bg-[#FAF8F5] text-[#8C8077] font-semibold text-[11px]">
-                      <th className="py-2.5 px-4">Invitado / Familia</th>
-                      <th className="py-2.5 px-4">Teléfono</th>
-                      <th className="py-2.5 px-4">Estado</th>
-                      <th className="py-2.5 px-4">Pases</th>
-                      <th className="py-2.5 px-4 text-right">Fecha de Registro</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-[#E8E3D9]">
-                    {filteredRsvps.map((rsvp) => (
-                      <tr key={rsvp.id} className="hover:bg-[#F5EFE4]/30 transition">
-                        <td className="py-3 px-4 font-semibold text-[#2C1F1B]">
-                          {rsvp.nombreInvitado}
-                        </td>
-                        <td className="py-3 px-4 font-mono text-[#2B2B2B]">
-                          {rsvp.telefono || "—"}
-                        </td>
-                        <td className="py-3 px-4">
-                          {rsvp.asistira ? (
-                            <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
-                              <CheckCircle2 className="w-3 h-3" /> Asiste
-                            </span>
-                          ) : (
-                            <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-rose-600 bg-rose-50 px-2.5 py-0.5 rounded-full border border-rose-200">
-                              <XCircle className="w-3 h-3" /> Declinó
-                            </span>
-                          )}
-                        </td>
-                        <td className="py-3 px-4 font-bold text-[#2C1F1B]">
-                          {rsvp.asistira ? `${rsvp.pases} pases` : "0"}
-                        </td>
-                        <td className="py-3 px-4 text-[#8C8077] text-[11px] text-right">
-                          {new Date(rsvp.createdAt).toLocaleDateString("es-ES", {
-                            day: "numeric",
-                            month: "short",
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
+            </div>
           </div>
         )}
 
