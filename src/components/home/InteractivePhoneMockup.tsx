@@ -1,8 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import confetti from "canvas-confetti";
-import { Sparkles, Volume2, CheckCircle2, ExternalLink, ArrowRight, Music, Heart } from "lucide-react";
+import { Sparkles, CheckCircle2, ExternalLink, Volume2 } from "lucide-react";
 import { Language } from "@/lib/home-translations";
 
 interface InteractivePhoneMockupProps {
@@ -15,25 +14,6 @@ export default function InteractivePhoneMockup({
   onOpenModal,
 }: InteractivePhoneMockupProps) {
   const [activeTab, setActiveTab] = useState<"butterfly" | "rose" | "chateau">("butterfly");
-  const [isEnvelopeOpen, setIsEnvelopeOpen] = useState(true);
-  const [isPlayingAudio, setIsPlayingAudio] = useState(true);
-
-  const handleOpenEnvelope = () => {
-    if (isEnvelopeOpen) return;
-    setIsEnvelopeOpen(true);
-    setIsPlayingAudio(true);
-
-    try {
-      confetti({
-        particleCount: 70,
-        spread: 60,
-        origin: { y: 0.5 },
-        colors: ["#C5A059", "#EED3A1", "#FFFFFF", "#7FA2C6"],
-      });
-    } catch {
-      // fallback
-    }
-  };
 
   const currentSlug =
     activeTab === "butterfly"
@@ -75,10 +55,7 @@ export default function InteractivePhoneMockup({
       {/* Selector de Colección Rápido en Mockup (Accesible y Visible en el Pliegue) */}
       <div className="flex items-center gap-1.5 p-1.5 bg-white border border-[#E8E3D9] rounded-full mb-3 shadow-[0_4px_20px_rgba(44,31,27,0.06)] backdrop-blur-md">
         <button
-          onClick={() => {
-            setActiveTab("butterfly");
-            setIsEnvelopeOpen(true);
-          }}
+          onClick={() => setActiveTab("butterfly")}
           className={`px-3 sm:px-4 py-1.5 rounded-full text-[10px] sm:text-[11px] font-['Cinzel'] tracking-wider uppercase transition-all cursor-pointer ${
             activeTab === "butterfly"
               ? "bg-gradient-to-r from-[#C5A059] to-[#EED3A1] text-[#2C1F1B] font-bold shadow-sm"
@@ -88,10 +65,7 @@ export default function InteractivePhoneMockup({
           Butterfly XV
         </button>
         <button
-          onClick={() => {
-            setActiveTab("rose");
-            setIsEnvelopeOpen(true);
-          }}
+          onClick={() => setActiveTab("rose")}
           className={`px-3 sm:px-4 py-1.5 rounded-full text-[10px] sm:text-[11px] font-['Cinzel'] tracking-wider uppercase transition-all cursor-pointer ${
             activeTab === "rose"
               ? "bg-gradient-to-r from-[#C5A059] to-[#EED3A1] text-[#2C1F1B] font-bold shadow-sm"
@@ -101,10 +75,7 @@ export default function InteractivePhoneMockup({
           Blush Rose
         </button>
         <button
-          onClick={() => {
-            setActiveTab("chateau");
-            setIsEnvelopeOpen(true);
-          }}
+          onClick={() => setActiveTab("chateau")}
           className={`px-3 sm:px-4 py-1.5 rounded-full text-[10px] sm:text-[11px] font-['Cinzel'] tracking-wider uppercase transition-all cursor-pointer ${
             activeTab === "chateau"
               ? "bg-gradient-to-r from-[#C5A059] to-[#EED3A1] text-[#2C1F1B] font-bold shadow-sm"
@@ -126,198 +97,41 @@ export default function InteractivePhoneMockup({
           </div>
         </div>
 
-        {/* Pantalla Interna Interactiva */}
-        <div className="relative w-full h-full bg-[#0F0E11] rounded-[42px] overflow-hidden flex flex-col justify-between">
-          {!isEnvelopeOpen ? (
-            /* Vista del Sobre Virtual 3D sin abrir */
-            <div className="relative w-full h-full flex flex-col items-center justify-between p-6 text-center bg-gradient-to-b from-[#1C1824] via-[#120F16] to-[#0A090D]">
-              {/* Resplandor superior */}
-              <div className="w-32 h-32 bg-[#C5A059]/20 rounded-full blur-2xl absolute top-6 pointer-events-none" />
+        {/* Pantalla Interna: Video Real de Demostración en Loop Automático */}
+        <div
+          onClick={() => onOpenModal(currentSlug)}
+          className="relative w-full h-full bg-black rounded-[42px] overflow-hidden flex items-center justify-center cursor-pointer group"
+        >
+          <video
+            src="https://luminavite-storage.s3.us-east-1.amazonaws.com/video/WhatsApp+Video+2026-10-14+at+9.50.53+AM.mp4"
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-full h-full object-cover select-none pointer-events-none"
+          />
 
-              <div className="mt-8 flex flex-col items-center">
-                <span className="font-['Cinzel'] text-[10px] tracking-[0.25em] uppercase text-[#EED3A1]">
-                  Click & Love Luxury
-                </span>
-                <span className="text-[9px] font-['Montserrat'] text-[#A89F91] mt-1">
-                  {lang === "es" ? "Para: Familia & Amigos" : "To: Family & Friends"}
-                </span>
-              </div>
+          {/* Overlay interactivo con badges de gala al pasar el cursor o tocar */}
+          <div className="absolute inset-0 bg-black/10 group-hover:bg-black/30 transition-all flex flex-col items-center justify-between p-4 pointer-events-none">
+            {/* Badge superior dentro del video */}
+            <div className="w-full flex justify-end">
+              <span className="px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-md border border-[#C5A059]/50 text-[#EED3A1] text-[9px] font-['Cinzel'] tracking-wider uppercase font-bold flex items-center gap-1.5 shadow-md">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                <span>Demo en Vivo</span>
+              </span>
+            </div>
 
-              {/* El Sobre Físico con Sello de Cera */}
-              <div
-                onClick={handleOpenEnvelope}
-                className="group relative cursor-pointer my-auto flex flex-col items-center transform transition-transform hover:scale-105 active:scale-95"
-              >
-                {/* Ilustración de Sobre de Gala */}
-                <div className="relative w-56 h-40 bg-gradient-to-b from-[#2A2433] to-[#18141F] rounded-2xl border border-[#C5A059]/40 shadow-2xl flex items-center justify-center overflow-hidden">
-                  {/* Patrón de líneas y textura */}
-                  <div className="absolute inset-0 opacity-15 bg-[radial-gradient(#C5A059_1px,transparent_1px)] [background-size:12px_12px]" />
-
-                  {/* Solapa triangular */}
-                  <div className="absolute top-0 inset-x-0 h-20 bg-gradient-to-b from-[#342D3F] to-[#201B27] border-b border-[#C5A059]/30 [clip-path:polygon(0_0,100%_0,50%_100%)] shadow-md" />
-
-                  {/* Sello de cera dorado */}
-                  <div className="relative z-10 w-14 h-14 rounded-full bg-gradient-to-br from-[#EED3A1] via-[#C5A059] to-[#92702E] shadow-[0_4px_15px_rgba(197,160,89,0.5)] flex items-center justify-center border-2 border-[#FFF0D0] group-hover:rotate-6 transition-transform">
-                    <span className="font-['Cinzel'] text-xs font-bold text-[#2A1F0D]">
-                      {activeTab === "butterfly" ? "VM" : activeTab === "rose" ? "IR" : "E&L"}
-                    </span>
-                  </div>
-
-                  {/* Cinta dorada inferior */}
-                  <div className="absolute bottom-2 inset-x-4 flex justify-between items-center text-[8px] font-['Cinzel'] tracking-widest text-[#EED3A1]/70">
-                    <span>★ EXCLUSIVO</span>
-                    <span>9:16 VERTICAL ★</span>
-                  </div>
-                </div>
-
-                {/* Llamado a la acción con brillo */}
-                <div className="mt-5 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-[#C5A059] to-[#EED3A1] text-[#2C1F1B] font-['Cinzel'] text-[10px] tracking-[0.2em] uppercase font-bold shadow-[0_0_20px_rgba(197,160,89,0.4)] hover:brightness-110 transition-all">
-                  <Sparkles className="w-3.5 h-3.5" />
-                  <span>{lang === "es" ? "Toca para abrir el sobre" : "Tap to open envelope"}</span>
-                </div>
-              </div>
-
-              {/* Indicador de audio */}
-              <div className="mb-2 flex items-center gap-1.5 text-[10px] font-['Montserrat'] text-[#8C8479]">
-                <Music className="w-3 h-3 text-[#C5A059]" />
-                <span>{lang === "es" ? "Incluye música ambiental & confeti" : "Includes ambient music & confetti"}</span>
+            {/* Llamado a la acción central al pasar el mouse o tocar */}
+            <div className="transform translate-y-1 group-hover:translate-y-0 opacity-90 group-hover:opacity-100 transition-all duration-300">
+              <div className="px-4 py-2 rounded-full bg-gradient-to-r from-[#C5A059] via-[#EED3A1] to-[#C5A059] text-[#2C1F1B] font-['Cinzel'] text-[10px] tracking-wider uppercase font-extrabold shadow-[0_8px_25px_rgba(197,160,89,0.5)] flex items-center gap-2">
+                <Sparkles className="w-3.5 h-3.5 text-[#2C1F1B] animate-pulse" />
+                <span>{lang === "es" ? "Toca para Probar en Vivo" : "Tap to Test Live Demo"}</span>
               </div>
             </div>
-          ) : (
-            /* Vista de la Invitación abierta con scroll interno */
-            <div className="relative w-full h-full flex flex-col justify-between bg-[#120F16] text-white overflow-y-auto scrollbar-none animate-fadeIn">
-              {/* Barra superior de reproducción */}
-              <div className="sticky top-0 z-30 px-4 py-2.5 bg-[#120F16]/90 backdrop-blur-md border-b border-white/10 flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                  <span className="font-['Cinzel'] text-[9px] tracking-widest uppercase text-[#EED3A1]">
-                    {isPlayingAudio ? (lang === "es" ? "Música Reproduciéndose" : "Playing Music") : "Audio"}
-                  </span>
-                </div>
-                <button
-                  onClick={() => setIsEnvelopeOpen(false)}
-                  className="text-[9px] font-['Montserrat'] text-[#A89F91] hover:text-white underline"
-                >
-                  {lang === "es" ? "Cerrar sobre" : "Close envelope"}
-                </button>
-              </div>
 
-              {/* Contenido Editorial con fotos reales */}
-              <div className="p-4 flex flex-col items-center text-center space-y-4">
-                <div className="w-full relative h-48 rounded-2xl overflow-hidden border border-[#C5A059]/30 shadow-lg">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={
-                      activeTab === "butterfly"
-                        ? "/assets/template-butterfly/foto-columpio-portada.png"
-                        : activeTab === "rose"
-                        ? "/assets/template-rose/51d8fb6fdca05936497b8c7f02e14280.png"
-                        : "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=600&q=80"
-                    }
-                    alt="Portada demo"
-                    className="w-full h-full object-cover object-center"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30" />
-                  <div className="absolute bottom-3 inset-x-3 text-center">
-                    <span className="font-['Cinzel'] text-[10px] tracking-[0.3em] uppercase text-[#EED3A1]">
-                      {activeTab === "butterfly"
-                        ? "Mis Quince Años"
-                        : activeTab === "rose"
-                        ? "Fifteen Years of Magic"
-                        : "Nuestra Boda"}
-                    </span>
-                    <h4 className="font-['Cinzel'] text-xl font-bold text-white tracking-wide">
-                      {activeTab === "butterfly"
-                        ? "Valeria Morales"
-                        : activeTab === "rose"
-                        ? "Isabella Cordero"
-                        : "Emma & Lucas"}
-                    </h4>
-                  </div>
-                </div>
-
-                {/* Fecha y Contador */}
-                <div className="w-full py-2.5 px-3 rounded-xl bg-white/5 border border-white/10 flex items-center justify-around">
-                  <div className="text-center">
-                    <div className="font-['Cinzel'] text-sm font-bold text-[#EED3A1]">18</div>
-                    <div className="text-[8px] font-['Montserrat'] text-neutral-400 uppercase">Días</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="font-['Cinzel'] text-sm font-bold text-[#EED3A1]">04</div>
-                    <div className="text-[8px] font-['Montserrat'] text-neutral-400 uppercase">Horas</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="font-['Cinzel'] text-sm font-bold text-[#EED3A1]">22</div>
-                    <div className="text-[8px] font-['Montserrat'] text-neutral-400 uppercase">Minutos</div>
-                  </div>
-                </div>
-
-                {/* Itinerario Rápido */}
-                <div className="w-full text-left space-y-2 py-1">
-                  <div className="text-[9px] font-['Cinzel'] tracking-widest text-[#EED3A1] uppercase font-semibold">
-                    {lang === "es" ? "Itinerario Oficial" : "Official Itinerary"}
-                  </div>
-                  <div className="flex items-center gap-2.5 text-xs text-neutral-300">
-                    <span className="text-[10px] font-['Cinzel'] text-[#C5A059]">04:00 PM</span>
-                    <span className="text-[11px] font-['Montserrat']">Ceremonia Religiosa</span>
-                  </div>
-                  <div className="flex items-center gap-2.5 text-xs text-neutral-300">
-                    <span className="text-[10px] font-['Cinzel'] text-[#C5A059]">07:00 PM</span>
-                    <span className="text-[11px] font-['Montserrat']">Recepción & Vals de Gala</span>
-                  </div>
-                </div>
-
-                {/* Salón y Dirección Real de Los Ángeles */}
-                <div className="w-full text-left p-2.5 rounded-xl bg-white/5 border border-[#C5A059]/30 space-y-1">
-                  <div className="flex items-center justify-between text-[9px] font-['Cinzel'] tracking-wider text-[#EED3A1] uppercase font-bold">
-                    <span>📍 {lang === "es" ? "Recinto & Salón de Gala" : "Venue & Reception"}</span>
-                    <span className="text-emerald-400 font-sans normal-case text-[9px]">Los Ángeles, CA</span>
-                  </div>
-                  <div className="text-xs font-['Montserrat'] font-semibold text-white">
-                    Hello Banquet Hall & Events
-                  </div>
-                  <div className="text-[10px] font-['Montserrat'] text-neutral-300">
-                    6555 Van Nuys Blvd, Van Nuys, CA 91401
-                  </div>
-                </div>
-
-                {/* Botones de acción directa: WhatsApp y Waze/Maps */}
-                <div className="w-full grid grid-cols-2 gap-2 pt-1">
-                  <a
-                    href="https://maps.google.com/?q=6555+Van+Nuys+Blvd,+Van+Nuys,+CA+91401"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="py-2 px-2 rounded-xl bg-white/10 hover:bg-white/15 text-white text-[10px] font-['Montserrat'] font-semibold flex items-center justify-center gap-1.5 border border-white/10 transition"
-                  >
-                    <span>📍 Waze / Maps</span>
-                  </a>
-                  <a
-                    href="https://wa.me/18182994882"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="py-2 px-2 rounded-xl bg-emerald-600/30 hover:bg-emerald-600/40 text-emerald-300 text-[10px] font-['Montserrat'] font-semibold flex items-center justify-center gap-1.5 border border-emerald-500/30 transition"
-                  >
-                    <span>💬 WhatsApp</span>
-                  </a>
-                </div>
-
-                {/* Botón RSVP simulado con familia auténtica */}
-                <div className="w-full pt-1">
-                  <button
-                    onClick={() => onOpenModal(currentSlug)}
-                    className="w-full py-3 px-2 rounded-xl bg-gradient-to-r from-[#C5A059] via-[#EED3A1] to-[#C5A059] text-[#2C1F1B] font-['Cinzel'] text-[10px] sm:text-[11px] tracking-wider uppercase font-bold shadow-lg flex items-center justify-center gap-1.5 hover:brightness-110 active:scale-95 transition"
-                  >
-                    <span>
-                      {lang === "es"
-                        ? "Familia Rodríguez · Confirmar 3 Pases"
-                        : "The Rodriguez Family · Confirm 3 Passes"}
-                    </span>
-                    <ArrowRight className="w-3.5 h-3.5 flex-shrink-0" />
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
+            {/* Espaciador inferior */}
+            <div />
+          </div>
         </div>
 
         {/* Barra de inicio inferior de iOS */}
