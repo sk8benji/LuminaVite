@@ -73,37 +73,6 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-[#FAF8F5] text-[#2C1F1B] selection:bg-[#C5A059]/25 selection:text-[#2C1F1B] font-['Montserrat'] overflow-x-hidden relative">
       {/* ============================================================== */}
-      {/* 1. SELECTOR FLOTANTE DE IDIOMA EN LA ESQUINA (ES 🇪🇸 / EN 🇺🇸) */}
-      {/* ============================================================== */}
-      <div className="fixed top-4 right-4 z-50 flex items-center gap-1.5 p-1 bg-white/95 border border-[#E8E3D9] rounded-full shadow-[0_10px_30px_rgba(44,31,27,0.12)] backdrop-blur-xl">
-        <button
-          onClick={() => setLang("es")}
-          className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold transition-all ${
-            lang === "es"
-              ? "bg-gradient-to-r from-[#C5A059] to-[#EED3A1] text-[#2C1F1B] shadow-sm font-bold"
-              : "text-[#2B2B2B] hover:text-black"
-          }`}
-          aria-label="Cambiar a Español"
-        >
-          <span className="text-sm">🇪🇸</span>
-          <span className="font-['Cinzel'] tracking-wider text-[11px]">ES</span>
-        </button>
-
-        <button
-          onClick={() => setLang("en")}
-          className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold transition-all ${
-            lang === "en"
-              ? "bg-gradient-to-r from-[#C5A059] to-[#EED3A1] text-[#2C1F1B] shadow-sm font-bold"
-              : "text-[#2B2B2B] hover:text-black"
-          }`}
-          aria-label="Switch to English"
-        >
-          <span className="text-sm">🇺🇸</span>
-          <span className="font-['Cinzel'] tracking-wider text-[11px]">EN</span>
-        </button>
-      </div>
-
-      {/* ============================================================== */}
       {/* BARRA DE NAVEGACIÓN EDITORIAL LUMINOSA (PEARL ALABASTER) */}
       {/* ============================================================== */}
       <header className="sticky top-0 z-40 bg-[#FAF8F5]/90 backdrop-blur-md border-b border-[#E8E3D9]">
@@ -127,7 +96,7 @@ export default function HomePage() {
               href="#automatizacion"
               className="text-xs font-['Cinzel'] tracking-widest uppercase text-[#2B2B2B] hover:text-[#C5A059] transition font-semibold"
             >
-              {lang === "es" ? "Tecnología" : "Technology"}
+              {t.nav.features}
             </a>
             <a
               href="#calculadora"
@@ -149,20 +118,47 @@ export default function HomePage() {
             </a>
             <a
               href="#precios"
-              className="text-xs font-['Cinzel'] tracking-widest uppercase text-[#C5A059] hover:text-[#9C7736] transition font-bold"
+              className="text-xs font-['Cinzel'] tracking-widest uppercase text-[#2B2B2B] hover:text-[#C5A059] transition font-semibold"
             >
               {t.nav.pricing}
             </a>
           </nav>
 
-          {/* Acción Principal: Botón Llamativo de Precios */}
-          <div className="flex items-center gap-3 pr-20 sm:pr-24">
+          {/* Selector de Idioma Simple (ES | EN) y Acción Principal Directa */}
+          <div className="flex items-center gap-3.5">
+            {/* Selector de Idioma Minimalista de Texto Simple */}
+            <div className="flex items-center gap-1 text-[11px] font-semibold text-[#5A4D45] tracking-widest font-['Cinzel'] border-r border-[#E8E3D9] pr-3 mr-0.5">
+              <button
+                onClick={() => setLang("es")}
+                className={`px-1.5 py-0.5 rounded transition ${
+                  lang === "es"
+                    ? "font-bold text-[#2C1F1B] border-b-2 border-[#C5A059]"
+                    : "text-[#8C7E74] hover:text-[#2C1F1B]"
+                }`}
+                aria-label="Cambiar a Español"
+              >
+                ES
+              </button>
+              <span className="text-[#C5A059]/40 select-none">|</span>
+              <button
+                onClick={() => setLang("en")}
+                className={`px-1.5 py-0.5 rounded transition ${
+                  lang === "en"
+                    ? "font-bold text-[#2C1F1B] border-b-2 border-[#C5A059]"
+                    : "text-[#8C7E74] hover:text-[#2C1F1B]"
+                }`}
+                aria-label="Switch to English"
+              >
+                EN
+              </button>
+            </div>
+
             <a
               href="#precios"
               className="px-5 sm:px-6 py-2.5 bg-gradient-to-r from-[#C5A059] via-[#EED3A1] to-[#C5A059] hover:brightness-105 text-[#2C1F1B] rounded-full text-xs font-['Cinzel'] tracking-[0.2em] uppercase font-bold shadow-[0_4px_18px_rgba(197,160,89,0.35)] hover:shadow-[0_6px_22px_rgba(197,160,89,0.5)] transition-all duration-300 active:scale-95 flex items-center gap-2 border border-[#EED3A1]/70"
             >
               <Sparkles className="w-3.5 h-3.5 text-[#2C1F1B] animate-pulse" />
-              <span>{t.nav.pricing}</span>
+              <span>{t.nav.createBtn}</span>
             </a>
           </div>
         </div>
@@ -177,10 +173,10 @@ export default function HomePage() {
         <div className="absolute top-1/3 left-10 w-[350px] h-[350px] bg-[#C2847A]/10 rounded-full blur-[120px] pointer-events-none -z-10" />
 
         <div className="max-w-7xl mx-auto flex flex-col items-center text-center">
-          {/* Pill superior de exclusividad */}
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#C5A059]/40 bg-[#F5EFE4] mb-6 backdrop-blur-md">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#C5A059] animate-pulse" />
-            <span className="font-['Cinzel'] text-[10px] sm:text-[11px] tracking-[0.2em] uppercase text-[#2C1F1B] font-bold">
+          {/* Pill superior de exclusividad con alto contraste */}
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#8C5F2B]/40 bg-white shadow-xs mb-6 backdrop-blur-md">
+            <span className="w-2 h-2 rounded-full bg-[#8C5F2B] animate-pulse" />
+            <span className="font-['Cinzel'] text-[11px] sm:text-xs tracking-[0.2em] uppercase text-[#3A220C] font-extrabold">
               {t.hero.pill}
             </span>
           </div>
@@ -188,55 +184,57 @@ export default function HomePage() {
           {/* Encabezado Principal en Cormorant Garamond / Playfair Display de Alto Peso */}
           <h1 className="font-serif-roman text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-[#2C1F1B] max-w-5xl leading-[1.2]">
             {t.hero.title1}{" "}
-            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-[#9C7736] via-[#C5A059] to-[#2C1F1B] mt-2">
+            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-[#5A330E] via-[#7B4916] to-[#361E0A] mt-2 drop-shadow-xs font-serif-roman">
               {t.hero.title2}
             </span>
           </h1>
 
           {/* Subtítulo enfocado en dolor y beneficios en Alto Contraste */}
-          <p className="font-['Montserrat'] text-sm sm:text-base text-[#1F2937] max-w-3xl mt-6 leading-relaxed font-normal">
+          <p className="font-['Montserrat'] text-sm sm:text-base text-[#2B2B2B] max-w-3xl mt-6 leading-relaxed font-medium">
             {t.hero.subtitle}
           </p>
 
-          {/* Botones de Acción (CTAs) */}
+          {/* Botones de Acción (CTAs): Jerarquía CRO Invertida */}
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4 w-full max-w-xl">
-            <button
-              onClick={() => handleOpenDemo("mariposas-xv")}
-              className="w-full sm:w-auto px-8 sm:px-9 py-4 rounded-2xl bg-gradient-to-r from-[#C5A059] via-[#EED3A1] to-[#C5A059] text-[#2C1F1B] font-['Cinzel'] text-xs sm:text-sm tracking-[0.15em] uppercase font-bold hover:brightness-105 active:scale-95 transition-all shadow-[0_8px_30px_rgba(197,160,89,0.35)] hover:shadow-[0_12px_40px_rgba(197,160,89,0.5)] flex items-center justify-center gap-2.5 border border-[#EED3A1] group"
-            >
-              <Sparkles className="w-4 h-4 text-[#2C1F1B] animate-pulse" />
-              <span>{t.hero.ctaDemo}</span>
-              <ArrowRight className="w-4 h-4 text-[#2C1F1B] group-hover:translate-x-1 transition-transform" />
-            </button>
-
+            {/* Botón Principal: Conversión Directa (Crear mi Invitación) */}
             <a
               href="#precios"
-              className="w-full sm:w-auto px-8 sm:px-9 py-4 rounded-2xl bg-white border-2 border-[#C5A059] text-[#2C1F1B] font-['Cinzel'] text-xs sm:text-sm tracking-[0.15em] uppercase font-bold hover:bg-[#F5EFE4] active:scale-95 transition-all shadow-[0_4px_18px_rgba(44,31,27,0.06)] flex items-center justify-center gap-2"
+              className="w-full sm:w-auto px-8 sm:px-10 py-4 rounded-2xl bg-gradient-to-r from-[#C5A059] via-[#EED3A1] to-[#C5A059] text-[#2C1F1B] font-['Cinzel'] text-xs sm:text-sm tracking-[0.15em] uppercase font-bold hover:brightness-105 active:scale-95 transition-all shadow-[0_8px_30px_rgba(197,160,89,0.4)] hover:shadow-[0_12px_40px_rgba(197,160,89,0.55)] flex items-center justify-center gap-2.5 border border-[#EED3A1] group"
             >
+              <Sparkles className="w-4 h-4 text-[#2C1F1B] animate-pulse" />
               <span>{t.hero.ctaCreate}</span>
+              <ArrowRight className="w-4 h-4 text-[#2C1F1B] group-hover:translate-x-1 transition-transform" />
             </a>
+
+            {/* Botón Secundario: Exploración de Demo en Vivo */}
+            <button
+              onClick={() => handleOpenDemo("mariposas-xv")}
+              className="w-full sm:w-auto px-8 sm:px-9 py-4 rounded-2xl bg-white/95 border-2 border-[#C5A059]/70 text-[#2C1F1B] font-['Cinzel'] text-xs sm:text-sm tracking-[0.15em] uppercase font-bold hover:bg-[#F5EFE4] hover:border-[#C5A059] active:scale-95 transition-all shadow-[0_4px_18px_rgba(44,31,27,0.06)] flex items-center justify-center gap-2 cursor-pointer"
+            >
+              <span>{t.hero.ctaDemo}</span>
+            </button>
           </div>
 
-          {/* Fila Multicanal (Envío por cualquier medio) */}
-          <div className="mt-7 flex flex-col items-center gap-2.5">
-            <span className="font-['Montserrat'] text-xs font-semibold text-[#374151]">
+          {/* Fila Multicanal (Envío por cualquier medio con paleta sobria y hover de acento) */}
+          <div className="mt-8 flex flex-col items-center gap-3">
+            <span className="font-['Montserrat'] text-xs font-semibold text-[#574B43]">
               {t.hero.multiChannelTitle}
             </span>
             <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-2.5">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-['Montserrat'] font-semibold shadow-sm">
-                <MessageCircle className="w-3.5 h-3.5 text-emerald-600" />
+              <div className="group inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/90 border border-[#E8E3D9] text-[#4A3D36] text-xs font-['Montserrat'] font-semibold shadow-xs hover:border-emerald-300 hover:bg-emerald-50/60 hover:text-emerald-900 transition-all duration-200">
+                <MessageCircle className="w-3.5 h-3.5 text-[#8C7A6B] group-hover:text-emerald-600 transition-colors" />
                 <span>{t.hero.channels[0]}</span>
               </div>
-              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-blue-50 border border-blue-200 text-blue-800 text-xs font-['Montserrat'] font-semibold shadow-sm">
-                <Smartphone className="w-3.5 h-3.5 text-blue-600" />
+              <div className="group inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/90 border border-[#E8E3D9] text-[#4A3D36] text-xs font-['Montserrat'] font-semibold shadow-xs hover:border-blue-300 hover:bg-blue-50/60 hover:text-blue-900 transition-all duration-200">
+                <Smartphone className="w-3.5 h-3.5 text-[#8C7A6B] group-hover:text-blue-600 transition-colors" />
                 <span>{t.hero.channels[1]}</span>
               </div>
-              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-pink-50 border border-pink-200 text-pink-800 text-xs font-['Montserrat'] font-semibold shadow-sm">
-                <Send className="w-3.5 h-3.5 text-pink-600" />
+              <div className="group inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/90 border border-[#E8E3D9] text-[#4A3D36] text-xs font-['Montserrat'] font-semibold shadow-xs hover:border-pink-300 hover:bg-pink-50/60 hover:text-pink-900 transition-all duration-200">
+                <Send className="w-3.5 h-3.5 text-[#8C7A6B] group-hover:text-pink-600 transition-colors" />
                 <span>{t.hero.channels[2]}</span>
               </div>
-              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-50 border border-amber-200 text-amber-900 text-xs font-['Montserrat'] font-semibold shadow-sm">
-                <QrCode className="w-3.5 h-3.5 text-amber-700" />
+              <div className="group inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/90 border border-[#E8E3D9] text-[#4A3D36] text-xs font-['Montserrat'] font-semibold shadow-xs hover:border-amber-400 hover:bg-amber-50/60 hover:text-amber-900 transition-all duration-200">
+                <QrCode className="w-3.5 h-3.5 text-[#8C7A6B] group-hover:text-amber-700 transition-colors" />
                 <span>{t.hero.channels[3]}</span>
               </div>
             </div>

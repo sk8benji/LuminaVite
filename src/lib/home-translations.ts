@@ -4,6 +4,8 @@ export interface HomeTranslations {
   nav: {
     dashboard: string;
     catalog: string;
+    features: string;
+    howItWorks: string;
     compare: string;
     pricing: string;
     createBtn: string;
@@ -158,6 +160,8 @@ export const translations: Record<Language, HomeTranslations> = {
     nav: {
       dashboard: "Panel Familiar",
       catalog: "Colecciones",
+      features: "Funciones",
+      howItWorks: "Cómo funciona",
       compare: "Comparativa",
       pricing: "Precios",
       createBtn: "Crear Invitación",
@@ -167,18 +171,18 @@ export const translations: Record<Language, HomeTranslations> = {
       title1: "Deja de perseguir a tus invitados",
       title2: "para saber si van a asistir",
       subtitle:
-        "La plataforma para bodas y quinceañeras con confirmación instantánea, control de mesas y navegación directa al evento.",
+        "Invitaciones web para bodas y quinceañeras con confirmación por SMS, asignación de mesas y GPS para tus invitados.",
       ctaCatalog: "Ver Catálogo de Plantillas",
       ctaDemo: "Ver demo en vivo",
       ctaCreate: "Crear mi invitación",
-      multiChannelTitle: "Comparte tu enlace por el medio que prefieras:",
+      multiChannelTitle: "Envía tus invitaciones por:",
       channels: [
         "WhatsApp",
         "Mensaje de Texto (SMS)",
         "Instagram / Messenger",
         "Código QR",
       ],
-      phoneBadge1: "SMS Twilio • Confirmado",
+      phoneBadge1: "Confirmación recibida hace 2 min por SMS",
       phoneBadge2: "RSVP en vivo • 98% aforo",
       phoneBadge3: "Cero contraseñas • 1 Clic",
       openEnvelopePrompt: "Toca para abrir el sobre",
@@ -473,6 +477,8 @@ export const translations: Record<Language, HomeTranslations> = {
     nav: {
       dashboard: "Family Portal",
       catalog: "Collections",
+      features: "Features",
+      howItWorks: "How it works",
       compare: "Comparison",
       pricing: "Pricing",
       createBtn: "Create Invitation",
@@ -482,18 +488,18 @@ export const translations: Record<Language, HomeTranslations> = {
       title1: "Stop chasing your guests",
       title2: "to find out if they will attend",
       subtitle:
-        "The platform for weddings and quinceañeras with instant confirmation, table management, and direct GPS navigation.",
+        "Web invitations for weddings and quinceañeras with SMS confirmation, seating charts, and direct GPS navigation for your guests.",
       ctaCatalog: "Explore Collections",
       ctaDemo: "See live demo",
       ctaCreate: "Create my invitation",
-      multiChannelTitle: "Share your link through whichever channel you prefer:",
+      multiChannelTitle: "Send your invitations via:",
       channels: [
         "WhatsApp",
         "Text Message (SMS)",
         "Instagram / Messenger",
         "QR Code",
       ],
-      phoneBadge1: "Twilio SMS • Confirmed",
+      phoneBadge1: "RSVP received 2 min ago via SMS",
       phoneBadge2: "Live RSVP • 98% confirmed",
       phoneBadge3: "Zero Passwords • 1 Click",
       openEnvelopePrompt: "Tap to open the envelope",

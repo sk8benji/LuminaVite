@@ -51,7 +51,7 @@ export default function InteractivePhoneMockup({
       <div className="hidden sm:flex absolute -top-5 -left-12 z-20 items-center gap-2 px-4 py-2 rounded-full bg-white/95 border border-[#E8E3D9] shadow-[0_10px_25px_rgba(44,31,27,0.08)] backdrop-blur-md animate-bounce [animation-duration:4s]">
         <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
         <span className="font-['Montserrat'] text-[11px] font-semibold text-[#2C1F1B]">
-          {lang === "es" ? "⚡ SMS vía Twilio • Confirmado" : "⚡ Twilio SMS • Confirmed"}
+          {lang === "es" ? "Confirmación recibida hace 2 min por SMS" : "RSVP received 2 min ago via SMS"}
         </span>
       </div>
 
@@ -69,14 +69,14 @@ export default function InteractivePhoneMockup({
         </span>
       </div>
 
-      {/* Selector de Colección Rápido en Mockup */}
-      <div className="flex items-center gap-1.5 p-1.5 bg-white border border-[#E8E3D9] rounded-full mb-4 shadow-[0_4px_20px_rgba(44,31,27,0.06)] backdrop-blur-md">
+      {/* Selector de Colección Rápido en Mockup (Accesible y Visible en el Pliegue) */}
+      <div className="flex items-center gap-1.5 p-1.5 bg-white border border-[#E8E3D9] rounded-full mb-3 shadow-[0_4px_20px_rgba(44,31,27,0.06)] backdrop-blur-md">
         <button
           onClick={() => {
             setActiveTab("butterfly");
             setIsEnvelopeOpen(true);
           }}
-          className={`px-3.5 py-1.5 rounded-full text-[10px] font-['Cinzel'] tracking-wider uppercase transition-all ${
+          className={`px-3 sm:px-4 py-1.5 rounded-full text-[10px] sm:text-[11px] font-['Cinzel'] tracking-wider uppercase transition-all cursor-pointer ${
             activeTab === "butterfly"
               ? "bg-gradient-to-r from-[#C5A059] to-[#EED3A1] text-[#2C1F1B] font-bold shadow-sm"
               : "text-[#5E534C] hover:text-[#2C1F1B]"
@@ -89,7 +89,7 @@ export default function InteractivePhoneMockup({
             setActiveTab("rose");
             setIsEnvelopeOpen(true);
           }}
-          className={`px-3.5 py-1.5 rounded-full text-[10px] font-['Cinzel'] tracking-wider uppercase transition-all ${
+          className={`px-3 sm:px-4 py-1.5 rounded-full text-[10px] sm:text-[11px] font-['Cinzel'] tracking-wider uppercase transition-all cursor-pointer ${
             activeTab === "rose"
               ? "bg-gradient-to-r from-[#C5A059] to-[#EED3A1] text-[#2C1F1B] font-bold shadow-sm"
               : "text-[#5E534C] hover:text-[#2C1F1B]"
@@ -102,7 +102,7 @@ export default function InteractivePhoneMockup({
             setActiveTab("chateau");
             setIsEnvelopeOpen(true);
           }}
-          className={`px-3.5 py-1.5 rounded-full text-[10px] font-['Cinzel'] tracking-wider uppercase transition-all ${
+          className={`px-3 sm:px-4 py-1.5 rounded-full text-[10px] sm:text-[11px] font-['Cinzel'] tracking-wider uppercase transition-all cursor-pointer ${
             activeTab === "chateau"
               ? "bg-gradient-to-r from-[#C5A059] to-[#EED3A1] text-[#2C1F1B] font-bold shadow-sm"
               : "text-[#5E534C] hover:text-[#2C1F1B]"
@@ -112,8 +112,8 @@ export default function InteractivePhoneMockup({
         </button>
       </div>
 
-      {/* Marco de Smartphone Físico 9:16 con bisel de gala */}
-      <div className="relative w-[310px] sm:w-[340px] h-[620px] sm:h-[680px] bg-[#0E0D12] rounded-[52px] p-3 shadow-[0_30px_90px_rgba(44,31,27,0.22),0_0_40px_rgba(197,160,89,0.35)] border-[5px] border-[#25212A] ring-2 ring-[#C5A059]/40 flex flex-col">
+      {/* Marco de Smartphone Físico 9:16 con bisel de gala (Ajustado para pliegue óptimo) */}
+      <div className="relative w-[300px] sm:w-[330px] h-[580px] sm:h-[630px] bg-[#0E0D12] rounded-[48px] p-2.5 sm:p-3 shadow-[0_25px_80px_rgba(44,31,27,0.2),0_0_35px_rgba(197,160,89,0.3)] border-[4px] sm:border-[5px] border-[#25212A] ring-2 ring-[#C5A059]/40 flex flex-col">
         {/* Dynamic Island */}
         <div className="absolute top-4 left-1/2 -translate-x-1/2 w-28 h-5 bg-black rounded-full z-40 flex items-center justify-between px-3">
           <div className="w-2.5 h-2.5 rounded-full bg-[#1A1820]" />
