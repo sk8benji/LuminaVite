@@ -267,7 +267,9 @@ export default function EnvelopeIntro({
 
         {/* Capa 2: Tarjeta interior de gala (ancho generoso 92%, subida fluida) */}
         <div
-          className={`absolute left-[4%] right-[4%] top-[18px] sm:top-[22px] h-[245px] sm:h-[265px] rounded-xl px-5 py-5 flex flex-col items-center justify-start text-center border border-[#E5C158]/50 ${
+          className={`absolute left-[4%] right-[4%] top-[14px] sm:top-[16px] h-[215px] sm:h-[235px] rounded-xl px-5 py-4 flex flex-col items-center justify-start text-center border border-[#E5C158]/50 ${
+            isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+          } ${
             isLetterOut
               ? "-translate-y-36 sm:-translate-y-40 shadow-2xl"
               : "translate-y-0 shadow-md"
@@ -275,7 +277,7 @@ export default function EnvelopeIntro({
           style={{
             zIndex: 10,
             backgroundColor: "#FFFDFB",
-            transition: "transform 0.95s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.95s ease",
+            transition: "transform 0.95s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.95s ease, opacity 0.3s ease-in 0.1s",
             boxShadow: isLetterOut
               ? "0 25px 50px -10px rgba(0, 0, 0, 0.45), 0 0 25px rgba(229, 193, 88, 0.25)"
               : "0 4px 15px rgba(0, 0, 0, 0.18)",
