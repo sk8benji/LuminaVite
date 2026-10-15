@@ -58,29 +58,29 @@ export default function EnvelopeIntro({
       onOpen(chosenLang);
     }
 
-    // 2. Extraer la carta tras 350ms (cuando la solapa haya rotado en 3D)
+    // 2. Extraer la carta tras 380ms (cuando la solapa haya abierto más del 50%)
     setTimeout(() => {
       setIsLetterOut(true);
 
-      // Disparar confeti suave
+      // Disparar confeti dorado y blanco expandido
       try {
         confetti({
-          particleCount: 75,
-          spread: 70,
-          origin: { y: 0.55 },
-          colors: [template.accentColor, "#E5C158", "#FFFFFF", "#FCECEE", "#8EB3CF"],
+          particleCount: 90,
+          spread: 85,
+          origin: { y: 0.5 },
+          colors: ["#E5C158", "#FDF6E2", "#FFFFFF", "#F5D6D8", "#D4AF37"],
         });
       } catch {}
-    }, 350);
+    }, 380);
 
-    // 3. Fundido (fade-out) tras 2.2s para apreciar la carta
+    // 3. Fundido (fade-out) tras 2.6s para apreciar la carta con elegancia
     setTimeout(() => {
       setIsFading(true);
       // 4. Remover completamente del DOM tras la transición
       setTimeout(() => {
         setIsRemoved(true);
-      }, 800);
-    }, 2200);
+      }, 750);
+    }, 2600);
   };
 
   if (isRemoved) return null;
@@ -229,8 +229,8 @@ export default function EnvelopeIntro({
         backgroundImage: "radial-gradient(ellipse at center, #2C171E 0%, #100609 100%)",
       }}
     >
-      {/* Texto superior: Destinatario */}
-      <div className={`text-center mb-6 px-4 transition-all duration-500 ${isOpen ? "opacity-0 -translate-y-4" : "opacity-100"}`}>
+      {/* Texto superior: Destinatario (se desvanece de inmediato al tocar) */}
+      <div className={`text-center mb-6 px-4 transition-all duration-300 ${isOpen ? "opacity-0 -translate-y-4 pointer-events-none" : "opacity-100"}`}>
         <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-white/10 border border-pink-200/20 text-[10px] tracking-widest uppercase text-pink-200 mb-2 font-serif shadow-sm">
           <Sparkles className="w-3 h-3 text-pink-300" />
           <span>Tienes una invitación especial</span>
@@ -251,69 +251,88 @@ export default function EnvelopeIntro({
           perspective: "1200px",
         }}
       >
-        {/* Capa 1: Fondo / Interior del sobre con textura de papel y profundidad */}
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/assets/sobre-rosa/fondo-interior.png"
-          alt="Interior del sobre"
-          className="absolute inset-0 w-full h-full object-fill rounded-xl shadow-2xl"
+        {/* Capa 1: Fondo interior con sombra de profundidad natural en degradado */}
+        <div
+          className="absolute inset-0 rounded-xl"
           style={{
             zIndex: 1,
-            filter: "brightness(0.92) contrast(1.05)",
+            background: "linear-gradient(180deg, #5C453C 0%, #E8A8A2 40%, #E29B95 100%)",
+            boxShadow: "inset 0 10px 25px rgba(0,0,0,0.35), 0 20px 40px rgba(0,0,0,0.5)",
           }}
         />
 
-        {/* Capa 2: Tarjeta interior de gala que se desliza suavemente en 3D */}
+        {/* Capa 2: Tarjeta interior de gala (ancho generoso 92%, subida fluida) */}
         <div
-          className={`absolute left-4 right-4 top-3.5 bottom-3.5 rounded-xl px-5 py-4 shadow-xl flex flex-col items-center justify-center text-center transition-all duration-800 ease-out border border-[#E8D0CB] ${
+          className={`absolute left-[4%] right-[4%] top-[18px] sm:top-[22px] h-[245px] sm:h-[265px] rounded-xl px-5 py-5 flex flex-col items-center justify-start text-center border border-[#E5C158]/50 ${
             isLetterOut
-              ? "-translate-y-28 sm:-translate-y-32 scale-102 shadow-2xl z-25"
-              : "z-10"
+              ? "-translate-y-36 sm:-translate-y-40 shadow-2xl"
+              : "translate-y-0 shadow-md"
           }`}
           style={{
-            backgroundColor: "#FFFDF9",
+            zIndex: 10,
+            backgroundColor: "#FFFDFB",
+            transition: "transform 0.95s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.95s ease",
             boxShadow: isLetterOut
-              ? "0 25px 50px -12px rgba(0, 0, 0, 0.45), 0 0 20px rgba(229, 193, 88, 0.2)"
-              : "0 4px 12px rgba(0, 0, 0, 0.15)",
+              ? "0 25px 50px -10px rgba(0, 0, 0, 0.45), 0 0 25px rgba(229, 193, 88, 0.25)"
+              : "0 4px 15px rgba(0, 0, 0, 0.18)",
           }}
         >
-          {/* Filete dorado perimetral */}
-          <div className="absolute inset-1.5 border border-[#E5C158]/40 rounded-lg pointer-events-none" />
+          {/* Filete perimetral dorado interno */}
+          <div className="absolute inset-2 border border-[#E5C158]/35 rounded-lg pointer-events-none" />
 
+          {/* Guirnalda floral dorada superior */}
+          <svg viewBox="0 0 240 38" className="w-40 sm:w-48 h-auto text-[#D4AF37] mb-1.5 mt-0.5">
+            <path d="M 20 26 Q 70 8 120 18 Q 170 8 220 26" fill="none" stroke="currentColor" strokeWidth="1.2" />
+            <circle cx="120" cy="18" r="3" fill="currentColor" />
+            <circle cx="100" cy="16" r="2" fill="currentColor" opacity="0.8" />
+            <circle cx="140" cy="16" r="2" fill="currentColor" opacity="0.8" />
+            <circle cx="75" cy="19" r="1.8" fill="currentColor" opacity="0.7" />
+            <circle cx="165" cy="19" r="1.8" fill="currentColor" opacity="0.7" />
+            <circle cx="50" cy="23" r="1.5" fill="currentColor" opacity="0.6" />
+            <circle cx="190" cy="23" r="1.5" fill="currentColor" opacity="0.6" />
+          </svg>
+
+          {/* Encabezado cursivo "Save the Date" o tipo de evento */}
           <p
-            className="text-[9px] tracking-[0.25em] uppercase font-bold opacity-80 mb-1"
-            style={{ fontFamily: template.fontSubheading, color: template.textSecondary }}
+            className="text-2xl sm:text-3xl text-[#9E7D42] mb-1 leading-none select-none italic"
+            style={{ fontFamily: "'Great Vibes', cursive, 'Playfair Display', serif" }}
           >
             {tipoEvento === "QUINCEANERA"
               ? "Mis XV Años"
               : tipoEvento === "BODA"
-              ? "Nuestra Boda"
-              : "Invitación de Gala"}
+              ? "Save the Date"
+              : "Invitación Especial"}
           </p>
 
+          {/* Nombres principales */}
           <h3
-            className="text-2xl sm:text-3xl my-1 tracking-wide font-normal"
+            className="text-2xl sm:text-3xl my-1 tracking-wide font-normal select-none"
             style={{
               fontFamily: template.fontHeading,
-              color: template.textPrimary,
+              color: "#4A3528",
             }}
           >
             {titulo}
           </h3>
 
-          <div className="flex items-center gap-2 mt-1.5">
-            <span className="h-[1px] w-6 bg-[#E5C158]/50" />
+          {/* Fecha y hora */}
+          <div className="flex items-center gap-2 mt-2">
+            <span className="h-[1px] w-5 bg-[#E5C158]/60" />
             <p
-              className="text-[10px] font-medium tracking-widest uppercase"
-              style={{ fontFamily: template.fontSubheading, color: template.textPrimary }}
+              className="text-[9.5px] sm:text-[10px] font-semibold tracking-[0.2em] uppercase select-none"
+              style={{ fontFamily: template.fontSubheading, color: "#7A665C" }}
             >
               {fechaTexto}
             </p>
-            <span className="h-[1px] w-6 bg-[#E5C158]/50" />
+            <span className="h-[1px] w-5 bg-[#E5C158]/60" />
           </div>
+
+          <p className="text-[8px] sm:text-[8.5px] tracking-[0.2em] uppercase text-[#A88448] mt-3 font-semibold select-none opacity-80">
+            {tipoEvento === "BODA" ? "Château de l'Amour • Los Angeles" : "Celebración Exclusiva"}
+          </p>
         </div>
 
-        {/* Capa 3: Bolsillo Frontal aislado con bordes florales dorados y textura */}
+        {/* Capa 3: Bolsillo Frontal continuo en V con bordes florales dorados estáticos */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="/assets/sobre-rosa/bolsillo-frontal.png"
@@ -325,47 +344,77 @@ export default function EnvelopeIntro({
           }}
         />
 
-        {/* Capa 4: Solapa Superior Móvil en 3D (Rota 180deg alrededor del borde superior) */}
+        {/* Capa 4: Solapa Superior Móvil en 3D (Dos caras: dorada cerrada / rosa lisa abierta) */}
         <div
           className="absolute top-0 left-0 w-full h-full pointer-events-none select-none transition-transform"
           style={{
             transformOrigin: "top center",
             transformStyle: "preserve-3d",
             transform: isOpen ? "rotateX(180deg)" : "rotateX(0deg)",
-            transition: "transform 0.82s cubic-bezier(0.4, 0, 0.2, 1)",
+            transition: "transform 0.75s cubic-bezier(0.4, 0, 0.2, 1)",
             zIndex: isOpen ? 5 : 30,
           }}
         >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/assets/sobre-rosa/solapa.png"
-            alt="Solapa del sobre"
-            className="absolute top-0 left-[1.25%] w-[97.5%] h-auto select-none"
+          {/* Cara A (Cerrada, visible antes de abrir): Solapa con bordes florales y sello azul */}
+          <div
+            className="absolute inset-0"
             style={{
-              filter: "drop-shadow(0 6px 14px rgba(0,0,0,0.22))",
-              backfaceVisibility: "visible",
+              backfaceVisibility: "hidden",
+              WebkitBackfaceVisibility: "hidden",
             }}
-          />
-        </div>
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/assets/sobre-rosa/solapa.png"
+              alt="Solapa cerrada"
+              className="absolute top-0 left-[1.25%] w-[97.5%] h-auto select-none"
+              style={{
+                filter: "drop-shadow(0 6px 14px rgba(0,0,0,0.22))",
+              }}
+            />
+            {/* Sello de cera en la punta inferior cuando está cerrado */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/assets/sobre-rosa/sello-azul.png"
+              alt="Sello de cera"
+              className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 w-14 sm:w-16 h-14 sm:h-16 select-none"
+              style={{
+                top: "92%",
+                filter: "drop-shadow(0 6px 14px rgba(0,0,0,0.35))",
+              }}
+            />
+          </div>
 
-        {/* Capa 5: Sello de Cera Azul Celeste con Mariposa en Relieve */}
-        <div
-          className={`absolute left-1/2 -translate-x-1/2 -translate-y-1/2 z-35 pointer-events-none transition-all duration-350 ease-out ${
-            isOpen ? "scale-0 opacity-0" : "scale-100 opacity-100 group-hover:scale-105"
-          }`}
-          style={{
-            top: "62%",
-            width: "66px",
-            height: "66px",
-            filter: "drop-shadow(0 6px 14px rgba(0,0,0,0.35))",
-          }}
-        >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/assets/sobre-rosa/sello-azul.png"
-            alt="Sello de cera con mariposa"
-            className="w-full h-full object-contain select-none animate-pulse"
-          />
+          {/* Cara B (Abierta, visible al rotar 180deg): Reverso liso rosa con sello azul en la punta superior */}
+          <div
+            className="absolute inset-0"
+            style={{
+              transform: "rotateY(180deg)",
+              backfaceVisibility: "hidden",
+              WebkitBackfaceVisibility: "hidden",
+            }}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/assets/sobre-rosa/solapa-interior.png"
+              alt="Solapa abierta"
+              className="absolute top-0 left-[1.25%] w-[97.5%] h-auto select-none"
+              style={{
+                filter: "drop-shadow(0 -4px 12px rgba(0,0,0,0.2))",
+              }}
+            />
+            {/* Sello de cera en la punta superior cuando está abierta */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/assets/sobre-rosa/sello-azul.png"
+              alt="Sello de cera"
+              className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 w-14 sm:w-16 h-14 sm:h-16 select-none"
+              style={{
+                top: "92%",
+                filter: "drop-shadow(0 6px 14px rgba(0,0,0,0.35))",
+              }}
+            />
+          </div>
         </div>
       </div>
 
@@ -409,7 +458,7 @@ export default function EnvelopeIntro({
           disabled={isOpen}
           className={`mt-10 px-6 py-3 rounded-full text-xs font-semibold tracking-widest uppercase transition-all duration-300 border flex items-center gap-2 ${
             isOpen
-              ? "opacity-0 scale-95"
+              ? "opacity-0 scale-95 pointer-events-none"
               : "text-pink-100 bg-white/10 hover:bg-white/20 border-pink-200/30 shadow-lg animate-pulse"
           }`}
           style={{ fontFamily: template.fontSubheading }}
@@ -419,7 +468,7 @@ export default function EnvelopeIntro({
         </button>
       )}
 
-      <p className="text-[10px] text-pink-200/40 mt-3 tracking-wider">
+      <p className={`text-[10px] text-pink-200/40 mt-3 tracking-wider transition-opacity duration-300 ${isOpen ? "opacity-0 pointer-events-none" : "opacity-100"}`}>
         {idiomaDefault === "en" ? "Audio and interactive animation" : "Audio y animación interactiva"}
       </p>
     </div>
