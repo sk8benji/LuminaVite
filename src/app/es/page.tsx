@@ -24,10 +24,11 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "https://clickandlove.app/assets/og-banner-en.jpg",
+        url: "https://clickandlove.app/assets/og-banner.png",
         width: 1200,
         height: 630,
         alt: "Click & Love Invitaciones Digitales de Lujo - Los Ángeles",
+        type: "image/png",
       },
     ],
   },
@@ -36,7 +37,7 @@ export const metadata: Metadata = {
     title: "Click & Love • Invitaciones Digitales Interactivas de Gala",
     description:
       "Invitaciones digitales armadas por nuestro equipo en Los Ángeles con sobre 3D y confirmación por SMS.",
-    images: ["https://clickandlove.app/assets/og-banner-en.jpg"],
+    images: ["https://clickandlove.app/assets/og-banner.png"],
   },
 };
 
@@ -47,7 +48,7 @@ export default function SpanishHomePage() {
     name: "Click & Love Invitaciones Digitales",
     url: "https://clickandlove.app/es/",
     logo: "https://clickandlove.app/logo.png",
-    image: "https://clickandlove.app/assets/og-banner-en.jpg",
+    image: "https://clickandlove.app/assets/og-banner.png",
     description:
       "Papelería digital interactiva para bodas y quinceañeras con confirmación SMS, navegación GPS a salones y panel de anfitrión en Los Ángeles, California.",
     priceRange: "$99 - $199",

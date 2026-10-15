@@ -24,10 +24,11 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "https://clickandlove.app/assets/og-banner-en.jpg",
+        url: "https://clickandlove.app/assets/og-banner.png",
         width: 1200,
         height: 630,
         alt: "Click & Love Luxury Digital Invitations - Los Angeles",
+        type: "image/png",
       },
     ],
   },
@@ -36,7 +37,7 @@ export const metadata: Metadata = {
     title: "Luxury Digital Invitations in Los Angeles | Click & Love",
     description:
       "Luxury digital invitations built in Los Angeles for weddings & quinceañeras. 3D music envelope, SMS RSVP, venue GPS, and live mobile guest list. Order today.",
-    images: ["https://clickandlove.app/assets/og-banner-en.jpg"],
+    images: ["https://clickandlove.app/assets/og-banner.png"],
   },
 };
 
@@ -47,7 +48,7 @@ export default function Page() {
     name: "Click & Love",
     url: "https://clickandlove.app/",
     logo: "https://clickandlove.app/logo.png",
-    image: "https://clickandlove.app/assets/og-banner-en.jpg",
+    image: "https://clickandlove.app/assets/og-banner.png",
     description:
       "Luxury interactive digital invitations custom-built in Los Angeles for weddings and quinceañeras.",
     priceRange: "$99 - $199",
