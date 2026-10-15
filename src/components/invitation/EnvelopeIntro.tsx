@@ -9,6 +9,8 @@ interface EnvelopeIntroProps {
   titulo: string;
   tipoEvento?: "QUINCEANERA" | "BODA" | "CUMPLEANOS";
   fechaTexto: string;
+  lugarTexto?: string;
+  tagline?: string;
   template: TemplateConfig;
   onOpen?: (selectedLang?: "es" | "en") => void;
   destinatarioInicial?: string;
@@ -21,6 +23,8 @@ export default function EnvelopeIntro({
   titulo,
   tipoEvento = "QUINCEANERA",
   fechaTexto,
+  lugarTexto,
+  tagline,
   template,
   onOpen,
   destinatarioInicial = "Familia & Amigos",
@@ -297,14 +301,14 @@ export default function EnvelopeIntro({
             className="text-2xl sm:text-3xl text-[#9E7D42] mb-1 leading-none select-none italic"
             style={{ fontFamily: "'Great Vibes', cursive, 'Playfair Display', serif" }}
           >
-            {tipoEvento === "QUINCEANERA"
+            {tagline || (tipoEvento === "QUINCEANERA"
               ? "Mis XV Años"
               : tipoEvento === "BODA"
               ? "Save the Date"
-              : "Invitación Especial"}
+              : "¡Estás Invitado!")}
           </p>
 
-          {/* Nombres principales */}
+          {/* Nombres principales del cliente (100% dinámicos) */}
           <h3
             className="text-2xl sm:text-3xl my-1 tracking-wide font-normal select-none"
             style={{
@@ -315,7 +319,7 @@ export default function EnvelopeIntro({
             {titulo}
           </h3>
 
-          {/* Fecha y hora */}
+          {/* Fecha y hora del evento (100% dinámicas) */}
           <div className="flex items-center gap-2 mt-2">
             <span className="h-[1px] w-5 bg-[#E5C158]/60" />
             <p
@@ -327,8 +331,9 @@ export default function EnvelopeIntro({
             <span className="h-[1px] w-5 bg-[#E5C158]/60" />
           </div>
 
+          {/* Recinto / Salón / Ubicación (100% dinámico) */}
           <p className="text-[8px] sm:text-[8.5px] tracking-[0.2em] uppercase text-[#A88448] mt-3 font-semibold select-none opacity-80">
-            {tipoEvento === "BODA" ? "Château de l'Amour • Los Angeles" : "Celebración Exclusiva"}
+            {lugarTexto || (tipoEvento === "BODA" ? "Château de l'Amour • Los Angeles" : "Celebración Exclusiva")}
           </p>
         </div>
 

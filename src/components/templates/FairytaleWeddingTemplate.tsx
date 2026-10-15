@@ -50,6 +50,8 @@ export default function FairytaleWeddingTemplate({
           titulo={data.titulo}
           tipoEvento="BODA"
           fechaTexto={data.fechaTextoPersonalizada || "SATURDAY, JULY 22 • 3:30 PM"}
+          lugarTexto={data.ceremoniaNombre || data.recepcionNombre || data.fechaPlacaLugar || "Château de l'Amour • Los Angeles"}
+          tagline={data.subtitulo || "Save the Date"}
           template={template}
           reproducirMusicaAlAbrir={data.reproducirMusicaAlAbrir}
         />

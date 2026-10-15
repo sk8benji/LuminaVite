@@ -40,6 +40,8 @@ export default function CoralineThemedTemplate({
           titulo={data.titulo}
           tipoEvento="CUMPLEANOS"
           fechaTexto={data.fechaTextoPersonalizada || "OCTOBER 31 • 6:00 PM"}
+          lugarTexto={data.recepcionNombre || data.ceremoniaNombre || "The Secret Garden"}
+          tagline={data.subtitulo || "Secret Door Invitation"}
           template={template}
           reproducirMusicaAlAbrir={data.reproducirMusicaAlAbrir}
         />

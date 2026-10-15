@@ -155,7 +155,10 @@ export default function InvitationMobileView({
           titulo={data.titulo}
           tipoEvento={data.tipoEvento}
           fechaTexto={formattedDate}
+          lugarTexto={data.recepcionNombre || data.ceremoniaNombre || data.fechaPlacaLugar || undefined}
+          tagline={data.subtitulo || undefined}
           template={template}
+          reproducirMusicaAlAbrir={data.reproducirMusicaAlAbrir}
         />
       )}
 
