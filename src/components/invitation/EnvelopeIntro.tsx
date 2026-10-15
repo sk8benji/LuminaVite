@@ -65,22 +65,22 @@ export default function EnvelopeIntro({
       // Disparar confeti suave
       try {
         confetti({
-          particleCount: 65,
-          spread: 60,
-          origin: { y: 0.6 },
-          colors: [template.accentColor, "#FFFFFF", "#FCECEE", "#E5C158"],
+          particleCount: 75,
+          spread: 70,
+          origin: { y: 0.55 },
+          colors: [template.accentColor, "#E5C158", "#FFFFFF", "#FCECEE", "#8EB3CF"],
         });
       } catch {}
     }, 350);
 
-    // 3. Fundido (fade-out) tras 1.6s
+    // 3. Fundido (fade-out) tras 2.2s para apreciar la carta
     setTimeout(() => {
       setIsFading(true);
       // 4. Remover completamente del DOM tras la transición
       setTimeout(() => {
         setIsRemoved(true);
-      }, 700);
-    }, 1600);
+      }, 800);
+    }, 2200);
   };
 
   if (isRemoved) return null;
@@ -221,69 +221,78 @@ export default function EnvelopeIntro({
 
   return (
     <div
-      className={`fixed inset-0 z-50 flex flex-col items-center justify-center p-4 transition-opacity duration-700 select-none overflow-hidden ${
-        isFading ? "opacity-0 pointer-events-none" : "opacity-100"
+      className={`fixed inset-0 z-50 flex flex-col items-center justify-center p-4 transition-all duration-700 select-none overflow-hidden ${
+        isFading ? "opacity-0 scale-105 pointer-events-none" : "opacity-100 scale-100"
       }`}
       style={{
-        backgroundColor: "#1F1215",
-        backgroundImage: "radial-gradient(ellipse at center, #351C22 0%, #150A0D 100%)",
+        backgroundColor: "#160C10",
+        backgroundImage: "radial-gradient(ellipse at center, #2C171E 0%, #100609 100%)",
       }}
     >
       {/* Texto superior: Destinatario */}
-      <div className="text-center mb-8 px-4 animate-fade-in">
-        <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-white/10 border border-pink-200/20 text-[10px] tracking-widest uppercase text-pink-200 mb-2 font-serif">
+      <div className={`text-center mb-6 px-4 transition-all duration-500 ${isOpen ? "opacity-0 -translate-y-4" : "opacity-100"}`}>
+        <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-white/10 border border-pink-200/20 text-[10px] tracking-widest uppercase text-pink-200 mb-2 font-serif shadow-sm">
           <Sparkles className="w-3 h-3 text-pink-300" />
           <span>Tienes una invitación especial</span>
         </div>
         <p
-          className="text-base sm:text-lg italic font-serif"
+          className="text-lg sm:text-xl italic font-serif tracking-wide"
           style={{ color: "#FCECEE" }}
         >
           {guestName}
         </p>
       </div>
 
-      {/* Contenedor con Perspectiva 3D */}
+      {/* Contenedor del Sobre 3D Hiperrealista */}
       <div
         onClick={() => handleOpen()}
-        className="relative w-72 sm:w-80 h-48 sm:h-52 rounded-b-2xl shadow-2xl cursor-pointer group transform transition-transform hover:scale-102"
+        className="relative w-[320px] sm:w-[350px] h-[244px] sm:h-[267px] cursor-pointer group transition-transform duration-300 hover:scale-[1.02] active:scale-[0.99]"
         style={{
           perspective: "1200px",
-          backgroundColor: "#F4D9DE",
         }}
       >
-        {/* Fondo interior del sobre */}
-        <div
-          className="absolute inset-0 rounded-b-2xl shadow-inner"
-          style={{ backgroundColor: "#E4B8C1" }}
+        {/* Capa 1: Fondo / Interior del sobre con textura de papel y profundidad */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/assets/sobre-rosa/fondo-interior.png"
+          alt="Interior del sobre"
+          className="absolute inset-0 w-full h-full object-fill rounded-xl shadow-2xl"
+          style={{
+            zIndex: 1,
+            filter: "brightness(0.92) contrast(1.05)",
+          }}
         />
 
-        {/* Tarjeta interna (Carta que se desliza en 3D) */}
+        {/* Capa 2: Tarjeta interior de gala que se desliza suavemente en 3D */}
         <div
-          className={`absolute left-3 right-3 top-3 bottom-3 rounded-xl p-4 shadow-lg flex flex-col items-center justify-center text-center transition-all duration-700 ease-out ${
+          className={`absolute left-4 right-4 top-3.5 bottom-3.5 rounded-xl px-5 py-4 shadow-xl flex flex-col items-center justify-center text-center transition-all duration-800 ease-out border border-[#E8D0CB] ${
             isLetterOut
-              ? "-translate-y-24 sm:-translate-y-28 scale-105 shadow-2xl z-25"
+              ? "-translate-y-28 sm:-translate-y-32 scale-102 shadow-2xl z-25"
               : "z-10"
           }`}
           style={{
-            backgroundColor: "#FFFFFF",
-            borderColor: template.borderSoft,
-            borderWidth: "1px",
+            backgroundColor: "#FFFDF9",
+            boxShadow: isLetterOut
+              ? "0 25px 50px -12px rgba(0, 0, 0, 0.45), 0 0 20px rgba(229, 193, 88, 0.2)"
+              : "0 4px 12px rgba(0, 0, 0, 0.15)",
           }}
         >
+          {/* Filete dorado perimetral */}
+          <div className="absolute inset-1.5 border border-[#E5C158]/40 rounded-lg pointer-events-none" />
+
           <p
-            className="text-[9px] tracking-widest uppercase font-semibold opacity-70 mb-1"
+            className="text-[9px] tracking-[0.25em] uppercase font-bold opacity-80 mb-1"
             style={{ fontFamily: template.fontSubheading, color: template.textSecondary }}
           >
             {tipoEvento === "QUINCEANERA"
               ? "Mis XV Años"
               : tipoEvento === "BODA"
               ? "Nuestra Boda"
-              : "Fiesta de Cumpleaños"}
+              : "Invitación de Gala"}
           </p>
 
           <h3
-            className="text-3xl sm:text-4xl my-0.5 tracking-wide"
+            className="text-2xl sm:text-3xl my-1 tracking-wide font-normal"
             style={{
               fontFamily: template.fontHeading,
               color: template.textPrimary,
@@ -292,59 +301,71 @@ export default function EnvelopeIntro({
             {titulo}
           </h3>
 
-          <div className="flex items-center gap-2 mt-1">
-            <span className="h-[1px] w-6 bg-pink-200" />
+          <div className="flex items-center gap-2 mt-1.5">
+            <span className="h-[1px] w-6 bg-[#E5C158]/50" />
             <p
-              className="text-[10px] font-medium tracking-wider"
+              className="text-[10px] font-medium tracking-widest uppercase"
               style={{ fontFamily: template.fontSubheading, color: template.textPrimary }}
             >
               {fechaTexto}
             </p>
-            <span className="h-[1px] w-6 bg-pink-200" />
+            <span className="h-[1px] w-6 bg-[#E5C158]/50" />
           </div>
         </div>
 
-        {/* Bolsillo Frontal y Lateral del Sobre */}
-        <div className="absolute inset-0 z-20 pointer-events-none">
-          <div
-            className="w-full h-full rounded-b-2xl"
-            style={{
-              backgroundColor: "#EBB5BF",
-              clipPath: "polygon(0% 0%, 50% 55%, 100% 0%, 100% 100%, 0% 100%)",
-              boxShadow: "0 -4px 12px rgba(0,0,0,0.08)",
-            }}
-          />
-        </div>
-
-        {/* Solapa Superior en 3D (Rota 180deg en el eje X) */}
-        <div
-          className="absolute top-0 left-0 w-full h-28 origin-top transition-transform duration-600 ease-in-out"
+        {/* Capa 3: Bolsillo Frontal aislado con bordes florales dorados y textura */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/assets/sobre-rosa/bolsillo-frontal.png"
+          alt="Bolsillo frontal del sobre"
+          className="absolute inset-0 w-full h-full object-fill pointer-events-none select-none"
           style={{
-            transform: isOpen ? "rotateX(180deg)" : "rotateX(0deg)",
+            zIndex: 20,
+            filter: "drop-shadow(0 14px 28px rgba(0,0,0,0.35))",
+          }}
+        />
+
+        {/* Capa 4: Solapa Superior Móvil en 3D (Rota 180deg alrededor del borde superior) */}
+        <div
+          className="absolute top-0 left-0 w-full h-full pointer-events-none select-none transition-transform"
+          style={{
+            transformOrigin: "top center",
             transformStyle: "preserve-3d",
+            transform: isOpen ? "rotateX(180deg)" : "rotateX(0deg)",
+            transition: "transform 0.82s cubic-bezier(0.4, 0, 0.2, 1)",
             zIndex: isOpen ? 5 : 30,
           }}
         >
-          <div
-            className="w-full h-full shadow-md"
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/assets/sobre-rosa/solapa.png"
+            alt="Solapa del sobre"
+            className="absolute top-0 left-[1.25%] w-[97.5%] h-auto select-none"
             style={{
-              backgroundColor: "#D99FA9",
-              clipPath: "polygon(0% 0%, 100% 0%, 50% 100%)",
+              filter: "drop-shadow(0 6px 14px rgba(0,0,0,0.22))",
+              backfaceVisibility: "visible",
             }}
           />
         </div>
 
-        {/* Sello de Lazo Central */}
+        {/* Capa 5: Sello de Cera Azul Celeste con Mariposa en Relieve */}
         <div
-          className={`absolute top-24 sm:top-26 left-1/2 -translate-x-1/2 -translate-y-1/2 z-40 w-11 h-11 rounded-full flex items-center justify-center shadow-xl border-2 border-pink-200 transition-all duration-300 ${
-            isOpen ? "scale-0 opacity-0 pointer-events-none" : "scale-100 opacity-100 group-hover:scale-110"
+          className={`absolute left-1/2 -translate-x-1/2 -translate-y-1/2 z-35 pointer-events-none transition-all duration-350 ease-out ${
+            isOpen ? "scale-0 opacity-0" : "scale-100 opacity-100 group-hover:scale-105"
           }`}
           style={{
-            backgroundColor: "#5A3E44",
-            color: "#FFFFFF",
+            top: "62%",
+            width: "66px",
+            height: "66px",
+            filter: "drop-shadow(0 6px 14px rgba(0,0,0,0.35))",
           }}
         >
-          <span className="text-base animate-bounce">🎀</span>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/assets/sobre-rosa/sello-azul.png"
+            alt="Sello de cera con mariposa"
+            className="w-full h-full object-contain select-none animate-pulse"
+          />
         </div>
       </div>
 
