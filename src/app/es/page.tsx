@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "https://clickandlove.app/assets/template-butterfly/foto-columpio-portada.png",
+        url: "https://clickandlove.app/assets/og-banner-en.jpg",
         width: 1200,
         height: 630,
         alt: "Click & Love Invitaciones Digitales de Lujo - Los Ángeles",
@@ -36,23 +36,20 @@ export const metadata: Metadata = {
     title: "Click & Love • Invitaciones Digitales Interactivas de Gala",
     description:
       "Invitaciones digitales armadas por nuestro equipo en Los Ángeles con sobre 3D y confirmación por SMS.",
-    images: [
-      "https://clickandlove.app/assets/template-butterfly/foto-columpio-portada.png",
-    ],
+    images: ["https://clickandlove.app/assets/og-banner-en.jpg"],
   },
 };
 
 export default function SpanishHomePage() {
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "LocalBusiness",
+    "@type": "ProfessionalService",
     name: "Click & Love Invitaciones Digitales",
-    image:
-      "https://clickandlove.app/assets/template-butterfly/foto-columpio-portada.png",
+    url: "https://clickandlove.app/es/",
+    logo: "https://clickandlove.app/logo.png",
+    image: "https://clickandlove.app/assets/og-banner-en.jpg",
     description:
       "Papelería digital interactiva para bodas y quinceañeras con confirmación SMS, navegación GPS a salones y panel de anfitrión en Los Ángeles, California.",
-    url: "https://clickandlove.app/es/",
-    telephone: "+1-818-299-4882",
     priceRange: "$99 - $199",
     address: {
       "@type": "PostalAddress",
@@ -60,19 +57,32 @@ export default function SpanishHomePage() {
       addressRegion: "CA",
       addressCountry: "US",
     },
-    geo: {
-      "@type": "GeoCoordinates",
-      latitude: 34.0522,
-      longitude: -118.2437,
-    },
     areaServed: [
-      "Condado de Los Ángeles",
-      "San Fernando Valley",
-      "Glendale",
-      "Pasadena",
-      "Burbank",
-      "Orange County",
+      { "@type": "City", "name": "Los Angeles" },
+      { "@type": "City", "name": "Glendale" },
+      { "@type": "City", "name": "Burbank" },
+      { "@type": "City", "name": "Pasadena" },
+      { "@type": "AdministrativeArea", "name": "San Fernando Valley" },
     ],
+    knowsLanguage: ["es", "en"],
+    hasOfferCatalog: {
+      "@type": "OfferCatalog",
+      name: "Servicios de Invitaciones Digitales",
+      itemListElement: [
+        {
+          "@type": "Offer",
+          name: "Paquete Digital Asistido",
+          price: "99",
+          priceCurrency: "USD",
+        },
+        {
+          "@type": "Offer",
+          name: "Servicio VIP Los Ángeles",
+          price: "199",
+          priceCurrency: "USD",
+        },
+      ],
+    },
   };
 
   return (

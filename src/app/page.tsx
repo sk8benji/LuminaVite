@@ -2,9 +2,9 @@ import { Metadata } from "next";
 import HomeView from "@/components/home/HomeView";
 
 export const metadata: Metadata = {
-  title: "Click & Love • Luxury Interactive Digital Invitations in Los Angeles",
+  title: "Luxury Digital Invitations in Los Angeles | Click & Love",
   description:
-    "Couture digital invitations custom-built in Los Angeles for weddings and quinceañeras. Features 3D musical envelope, SMS RSVPs, venue GPS navigation, and live host mobile roster.",
+    "Luxury digital invitations built in Los Angeles for weddings & quinceañeras. 3D music envelope, SMS RSVP, venue GPS, and live mobile guest list. Order today.",
   metadataBase: new URL("https://clickandlove.app"),
   alternates: {
     canonical: "https://clickandlove.app/",
@@ -15,16 +15,16 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "Click & Love • Luxury Interactive Digital Invitations in Los Angeles",
+    title: "Luxury Digital Invitations in Los Angeles | Click & Love",
     description:
-      "Interactive digital invitations with 3D envelope, SMS RSVPs, and turn-by-turn venue GPS. Designed for Southern California venues & celebrations.",
+      "Luxury digital invitations built in Los Angeles for weddings & quinceañeras. 3D music envelope, SMS RSVP, venue GPS, and live mobile guest list. Order today.",
     url: "https://clickandlove.app/",
     siteName: "Click & Love",
     locale: "en_US",
     type: "website",
     images: [
       {
-        url: "https://clickandlove.app/assets/template-butterfly/foto-columpio-portada.png",
+        url: "https://clickandlove.app/assets/og-banner-en.jpg",
         width: 1200,
         height: 630,
         alt: "Click & Love Luxury Digital Invitations - Los Angeles",
@@ -33,26 +33,23 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Click & Love • Luxury Interactive Digital Invitations",
+    title: "Luxury Digital Invitations in Los Angeles | Click & Love",
     description:
-      "Couture invitations built by our Los Angeles team with 3D envelope and SMS RSVPs.",
-    images: [
-      "https://clickandlove.app/assets/template-butterfly/foto-columpio-portada.png",
-    ],
+      "Luxury digital invitations built in Los Angeles for weddings & quinceañeras. 3D music envelope, SMS RSVP, venue GPS, and live mobile guest list. Order today.",
+    images: ["https://clickandlove.app/assets/og-banner-en.jpg"],
   },
 };
 
 export default function Page() {
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "LocalBusiness",
-    name: "Click & Love Digital Invitations",
-    image:
-      "https://clickandlove.app/assets/template-butterfly/foto-columpio-portada.png",
+    "@type": "ProfessionalService",
+    name: "Click & Love",
+    url: "https://clickandlove.app/",
+    logo: "https://clickandlove.app/logo.png",
+    image: "https://clickandlove.app/assets/og-banner-en.jpg",
     description:
-      "Interactive gala digital invitations with SMS RSVPs, venue GPS navigation, and live host dashboard based in Los Angeles, California.",
-    url: "https://clickandlove.app",
-    telephone: "+1-818-299-4882",
+      "Luxury interactive digital invitations custom-built in Los Angeles for weddings and quinceañeras.",
     priceRange: "$99 - $199",
     address: {
       "@type": "PostalAddress",
@@ -60,19 +57,32 @@ export default function Page() {
       addressRegion: "CA",
       addressCountry: "US",
     },
-    geo: {
-      "@type": "GeoCoordinates",
-      latitude: 34.0522,
-      longitude: -118.2437,
-    },
     areaServed: [
-      "Los Angeles County",
-      "San Fernando Valley",
-      "Glendale",
-      "Pasadena",
-      "Burbank",
-      "Orange County",
+      { "@type": "City", "name": "Los Angeles" },
+      { "@type": "City", "name": "Glendale" },
+      { "@type": "City", "name": "Burbank" },
+      { "@type": "City", "name": "Pasadena" },
+      { "@type": "AdministrativeArea", "name": "San Fernando Valley" },
     ],
+    knowsLanguage: ["en", "es"],
+    hasOfferCatalog: {
+      "@type": "OfferCatalog",
+      name: "Digital Invitation Services",
+      itemListElement: [
+        {
+          "@type": "Offer",
+          name: "Digital Asistido Package",
+          price: "99",
+          priceCurrency: "USD",
+        },
+        {
+          "@type": "Offer",
+          name: "Servicio VIP Los Angeles",
+          price: "199",
+          priceCurrency: "USD",
+        },
+      ],
+    },
   };
 
   return (
