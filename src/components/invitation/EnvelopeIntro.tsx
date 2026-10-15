@@ -353,7 +353,7 @@ export default function EnvelopeIntro({
 
         {/* Capa 4: Solapa Superior Móvil en 3D (Dos caras: dorada cerrada / rosa lisa abierta) */}
         <div
-          className="absolute top-0 left-0 w-full h-full pointer-events-none select-none transition-transform"
+          className="absolute top-0 left-0 w-full h-[158px] sm:h-[172px] pointer-events-none select-none transition-transform"
           style={{
             transformOrigin: "top center",
             transformStyle: "preserve-3d",
@@ -374,7 +374,7 @@ export default function EnvelopeIntro({
             <img
               src="/assets/sobre-rosa/solapa.png"
               alt="Solapa cerrada"
-              className="absolute top-0 left-[1.25%] w-[97.5%] h-auto select-none"
+              className="absolute top-0 left-[1.25%] w-[97.5%] h-full object-fill select-none"
               style={{
                 filter: "drop-shadow(0 6px 14px rgba(0,0,0,0.22))",
               }}
@@ -386,7 +386,7 @@ export default function EnvelopeIntro({
               alt="Sello de cera"
               className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 w-14 sm:w-16 h-14 sm:h-16 select-none"
               style={{
-                top: "92%",
+                top: "100%",
                 filter: "drop-shadow(0 6px 14px rgba(0,0,0,0.35))",
               }}
             />
@@ -405,7 +405,7 @@ export default function EnvelopeIntro({
             <img
               src="/assets/sobre-rosa/solapa-interior.png"
               alt="Solapa abierta"
-              className="absolute top-0 left-[1.25%] w-[97.5%] h-auto select-none"
+              className="absolute top-0 left-[1.25%] w-[97.5%] h-full object-fill select-none"
               style={{
                 filter: "drop-shadow(0 -4px 12px rgba(0,0,0,0.2))",
               }}
@@ -417,7 +417,7 @@ export default function EnvelopeIntro({
               alt="Sello de cera"
               className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 w-14 sm:w-16 h-14 sm:h-16 select-none"
               style={{
-                top: "92%",
+                top: "100%",
                 filter: "drop-shadow(0 6px 14px rgba(0,0,0,0.35))",
               }}
             />
