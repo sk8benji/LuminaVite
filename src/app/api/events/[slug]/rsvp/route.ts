@@ -13,6 +13,8 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 import { formatE164 } from "@/lib/phoneValidator";
+import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
+import { getSiteUrl } from "@/lib/url-safety";
 
 interface RouteContext {
   params: Promise<{ slug: string }> | { slug: string };
@@ -32,6 +34,9 @@ interface RouteContext {
  * }
  */
 export async function POST(req: NextRequest, context: RouteContext) {
+  const limited = checkRateLimit(req, "rsvp-slug", RATE_LIMITS.rsvp);
+  if (limited) return limited;
+
   try {
     const { slug } = await context.params;
     const cleanSlug = normalizeSlug(decodeURIComponent(slug || "").toLowerCase().trim()).replace(/^slug-/, "");
@@ -200,7 +205,7 @@ export async function POST(req: NextRequest, context: RouteContext) {
       process.env.ADMIN_EMAIL;
 
     if (hostEmail && status === "attending") {
-      const siteUrl = req.headers.get("origin") || process.env.NEXT_PUBLIC_SITE_URL || "https://clickandlove.app";
+      const siteUrl = getSiteUrl();
       sendHostNotificationEmail({
         hostEmail,
         eventoTitulo: evento.titulo,
@@ -218,9 +223,16 @@ export async function POST(req: NextRequest, context: RouteContext) {
 
     // 2. Notificación al invitado: SMS Twilio (Planes VIP/Custom) vs Email AWS SES (Plan Básico / Digital Basic)
     const paquete = (evento.ordenesCompra?.[0]?.paqueteId || "").toLowerCase();
-    const planConSms = !evento.ordenesCompra?.length || !paquete || (!paquete.includes("basic") && !paquete.includes("digital_basic"));
+    // B1+H2: SMS solo con orden pagada de un plan que lo incluye (IDs reales de PACKAGES).
+    // Sin orden no hay SMS gratis (antes el default era true).
+    // Además: no reenviar SMS si el invitado ya estaba confirmado (evita abuso).
+    const PLANES_CON_SMS = ["assisted", "vip"];
+    const planConSms =
+      Boolean(evento.ordenesCompra?.length) &&
+      PLANES_CON_SMS.includes(paquete);
+    const yaEstabaConfirmado = guest.status === "attending";
 
-    if (planConSms && status === "attending" && cleanPhone) {
+    if (planConSms && status === "attending" && cleanPhone && !yaEstabaConfirmado) {
       sendGuestConfirmationSms({
         telefono: cleanPhone,
         nombreInvitado: updatedGuest.name,
@@ -234,7 +246,7 @@ export async function POST(req: NextRequest, context: RouteContext) {
         recepcionMapUrl: evento.recepcionMapUrl || undefined,
       }).catch((err) => console.error("Error SMS Twilio en segundo plano:", err));
     } else if (!planConSms && status === "attending" && cleanEmail) {
-      const siteUrl = req.headers.get("origin") || process.env.NEXT_PUBLIC_SITE_URL || "https://clickandlove.app";
+      const siteUrl = getSiteUrl();
       sendGuestConfirmationEmail({
         guestEmail: cleanEmail,
         nombreInvitado: updatedGuest.name,

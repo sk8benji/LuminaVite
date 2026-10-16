@@ -75,22 +75,35 @@ export async function getEventBySlug(rawSlug: string): Promise<EventWithRsvps | 
 /**
  * Verifica si una clave provista por el anfitrión coincide con el panelToken del evento.
  * Comparación determinista e insensible a mayúsculas/minúsculas.
+ *
+ * SECURITY: ya no existen llaves maestras hardcodeadas. Si se configura la
+ * variable de entorno MASTER_PANEL_KEY, esa llave abre todos los paneles
+ * (solo Abraham). Sin la variable, no hay llave maestra.
  */
 export function validateEventKey(providedKey: string | null | undefined, eventPanelToken: string | null | undefined): boolean {
   const cleanProvided = normalizeKey(providedKey);
+  if (!cleanProvided) return false;
   const cleanExpected = normalizeKey(eventPanelToken);
 
-  const match = (
-    cleanProvided === "clickandlove2026!" ||
-    cleanProvided === "admin" ||
-    (Boolean(cleanExpected) && cleanProvided === cleanExpected)
+  // Llave maestra opcional solo vía variable de entorno (nunca hardcodeada)
+  const masterKey = normalizeKey(
+    typeof process !== "undefined" ? process.env.MASTER_PANEL_KEY : undefined
   );
+  if (masterKey && cleanProvided === masterKey) {
+    return true;
+  }
 
-  console.log("[AUTH DEBUG]", {
-    providedKey: cleanProvided,
-    dbToken: cleanExpected,
-    match,
-  });
+  return Boolean(cleanExpected) && cleanProvided === cleanExpected;
+}
 
-  return match;
+/**
+ * Devuelve una copia del evento sin campos sensibles para respuestas API.
+ * JAMÁS exponer passwordHash ni datos internos del usuario en JSON público.
+ */
+export function stripSensitiveEventFields<T extends Record<string, any>>(
+  evento: T
+): Omit<T, "usuario"> {
+  const { usuario, ...rest } = evento as any;
+  void usuario;
+  return rest;
 }

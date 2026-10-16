@@ -3,6 +3,8 @@ import prisma from "@/lib/db";
 import { normalizeSlug } from "@/lib/events";
 import { ensureGuestsTable } from "@/lib/guests-table";
 import { sendHostManualRequestEmail } from "@/lib/notifications";
+import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
+import { getSiteUrl } from "@/lib/url-safety";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -23,6 +25,9 @@ interface RouteContext {
  * 4. Responde con mensaje de confirmación para el usuario.
  */
 export async function POST(req: NextRequest, context: RouteContext) {
+  const limited = checkRateLimit(req, "manual-request", RATE_LIMITS.manualRequest);
+  if (limited) return limited;
+
   try {
     const { slug } = await context.params;
     const cleanSlug = normalizeSlug(decodeURIComponent(slug || "").toLowerCase().trim()).replace(/^slug-/, "");
@@ -143,7 +148,7 @@ export async function POST(req: NextRequest, context: RouteContext) {
       process.env.ADMIN_EMAIL;
 
     if (hostEmail) {
-      const siteUrl = req.headers.get("origin") || process.env.NEXT_PUBLIC_SITE_URL || "https://clickandlove.app";
+      const siteUrl = getSiteUrl();
       sendHostManualRequestEmail({
         hostEmail,
         eventoTitulo: evento.titulo,

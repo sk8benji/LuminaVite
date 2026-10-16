@@ -2,6 +2,8 @@
  * Utilidades para procesar enlaces y códigos embebidos (iframe) de Google Maps / Waze.
  */
 
+import { isSafeHttpUrl } from "@/lib/url-safety";
+
 export function getMapEmbedUrl(
   mapUrlOrIframe?: string | null,
   fallbackAddress?: string | null
@@ -11,7 +13,7 @@ export function getMapEmbedUrl(
   // 1. Si el usuario pegó el código HTML del <iframe> completo de Google Maps
   if (raw.toLowerCase().includes("<iframe")) {
     const srcMatch = raw.match(/src=["']([^"']+)["']/i);
-    if (srcMatch && srcMatch[1]) {
+    if (srcMatch && srcMatch[1] && isSafeHttpUrl(srcMatch[1])) {
       return srcMatch[1];
     }
   }
@@ -61,7 +63,8 @@ export function getMapDirectionsUrl(
       if (fallbackAddress && fallbackAddress.trim()) {
         return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(fallbackAddress.trim())}`;
       }
-      return srcMatch[1];
+      // C6: nunca devolver javascript:/data: como href
+      return isSafeHttpUrl(srcMatch[1]) ? srcMatch[1] : "#";
     }
   }
 
@@ -71,7 +74,8 @@ export function getMapDirectionsUrl(
     if (raw.includes("/maps/embed") && fallbackAddress && fallbackAddress.trim()) {
       return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(fallbackAddress.trim())}`;
     }
-    return raw;
+    // C6: solo http(s) válido
+    return isSafeHttpUrl(raw) ? raw : "#";
   }
 
   const query = (fallbackAddress || raw || "").trim();

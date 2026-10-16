@@ -1,9 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminToken, getAdminPassword, ADMIN_COOKIE_NAME } from "@/lib/auth";
+import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
 
 export async function POST(req: NextRequest) {
+  const limited = checkRateLimit(req, "admin-login", RATE_LIMITS.login);
+  if (limited) return limited;
+
   try {
     const body = await req.json();
     const { password } = body;

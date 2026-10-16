@@ -12,13 +12,6 @@ if (dbUrl) {
   }
 
   try {
-    console.log("⚡ Sincronizando evento y clave de anfitrión maydelin-mendez...");
-    execSync("npx tsx scripts/sync-maydelin-key.ts", { stdio: "inherit" });
-  } catch (err) {
-    console.warn("⚠️ Aviso al sincronizar clave de anfitrión:", err.message);
-  }
-
-  try {
     console.log("⚡ Asegurando tabla de invitados 'guests'...");
     execSync("npx tsx scripts/sync-guests-table.ts", { stdio: "inherit" });
   } catch (err) {

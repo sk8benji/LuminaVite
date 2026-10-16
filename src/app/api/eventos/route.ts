@@ -1,12 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
 import { randomBytes } from "crypto";
 import prisma from "@/lib/db";
-import { normalizeSlug, getEventBySlug } from "@/lib/events";
+import { normalizeSlug, getEventBySlug, stripSensitiveEventFields } from "@/lib/events";
+import { requireAdmin } from "@/lib/auth";
+import { sanitizeEventUrls } from "@/lib/url-safety";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
+// Validación de modalidad RSVP (igual que el PATCH del panel)
+const VALID_MODALIDADES_RSVP = ["ESTRICTO", "HIBRIDO", "ABIERTO"];
+
 export async function GET(req: NextRequest) {
+  const unauthorized = await requireAdmin(req);
+  if (unauthorized) return unauthorized;
+
   const { searchParams } = new URL(req.url);
   const slug = searchParams.get("slug");
 
@@ -20,7 +28,8 @@ export async function GET(req: NextRequest) {
         return NextResponse.json({ error: "Evento no encontrado." }, { status: 404 });
       }
 
-      return NextResponse.json({ evento });
+      // Nunca exponer passwordHash ni datos internos en JSON
+      return NextResponse.json({ evento: stripSensitiveEventFields(evento) });
     }
 
     // 2. Listado general de eventos para el dashboard administrativo
@@ -44,8 +53,14 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
+  const unauthorized = await requireAdmin(req);
+  if (unauthorized) return unauthorized;
+
   try {
     const body = await req.json();
+
+    // C6: sanitizar URLs — solo http(s), rechaza javascript:/data:
+    sanitizeEventUrls(body);
 
     const {
       titulo,
@@ -163,7 +178,8 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    const secretPanelKey = randomBytes(4).toString("hex");
+    // Panel token de 32 bytes aleatorios (64 hex) — fuerza bruta inviable
+    const secretPanelKey = randomBytes(32).toString("hex");
 
     const nuevoEvento = await prisma.evento.create({
       data: {
@@ -249,6 +265,9 @@ export async function POST(req: NextRequest) {
 }
 
 export async function PUT(req: NextRequest) {
+  const unauthorized = await requireAdmin(req);
+  if (unauthorized) return unauthorized;
+
   try {
     const body = await req.json();
     const { slug } = body;
@@ -259,6 +278,20 @@ export async function PUT(req: NextRequest) {
         { status: 400 }
       );
     }
+
+    // B3: validar modalidadRsvp igual que el PATCH del panel
+    if (
+      body.modalidadRsvp !== undefined &&
+      !VALID_MODALIDADES_RSVP.includes(body.modalidadRsvp)
+    ) {
+      return NextResponse.json(
+        { error: "Modalidad inválida. Debe ser ESTRICTO, HIBRIDO o ABIERTO." },
+        { status: 400 }
+      );
+    }
+
+    // C6: sanitizar URLs — solo http(s), rechaza javascript:/data:
+    sanitizeEventUrls(body);
 
     const cleanSlug = slug.toLowerCase().trim();
 

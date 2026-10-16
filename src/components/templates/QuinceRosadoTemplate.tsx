@@ -21,6 +21,7 @@ import { InvitationData } from "../invitation/InvitationMobileView";
 import DynamicRsvpForm from "../invitation/DynamicRsvpForm";
 import { parseTemplateConfig, QuinceRosadoConfig } from "@/types/templateConfigs";
 import { isSectionEnabledInEvent, SeccionId } from "@/config/templateSections";
+import { sanitizeUrl } from "@/lib/url-safety";
 
 interface QuinceRosadoTemplateProps {
   data: InvitationData;
@@ -1059,9 +1060,9 @@ export default function QuinceRosadoTemplate({
                   </div>
                 </div>
 
-                {data.wishlistUrl && (
+                {sanitizeUrl(data.wishlistUrl) && (
                   <a
-                    href={data.wishlistUrl}
+                    href={sanitizeUrl(data.wishlistUrl) as string}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="mt-5 inline-block bg-[#7A002A] text-white px-6 py-2 rounded-full font-['Cinzel',serif] text-xs tracking-wider uppercase font-bold shadow hover:bg-[#600021] transition"
@@ -1562,6 +1563,8 @@ export default function QuinceRosadoTemplate({
                           <iframe
                             src={videoEmbed.src}
                             title="Quinceañera Video"
+                            // Sandbox restrictivo: el iframe no puede navegar el top ni abrir popups
+                            sandbox="allow-scripts allow-same-origin allow-presentation"
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                             allowFullScreen
                             className="w-full h-full"

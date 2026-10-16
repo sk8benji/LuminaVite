@@ -27,6 +27,7 @@ export async function uploadClientFile(
       filename: file.name,
       contentType: resolvedType,
       folder,
+      fileSize: file.size,
     }),
   });
 

@@ -24,6 +24,7 @@ import RsvpSection from "../invitation/RsvpSection";
 import AddToCalendarButton from "../invitation/AddToCalendarButton";
 import EnvelopeIntro from "../invitation/EnvelopeIntro";
 import { InvitationData } from "../invitation/InvitationMobileView";
+import { sanitizeUrl } from "@/lib/url-safety";
 
 export default function FairytaleWeddingTemplate({
   data,
@@ -132,6 +133,7 @@ export default function FairytaleWeddingTemplate({
                     className="w-full h-full border-0"
                     loading="lazy"
                     referrerPolicy="no-referrer-when-downgrade"
+                    sandbox="allow-scripts allow-same-origin"
                     allowFullScreen
                   />
                 </div>
@@ -274,9 +276,9 @@ export default function FairytaleWeddingTemplate({
             <p className="text-xs text-stone-600 mt-1.5 leading-relaxed font-light">
               Your presence is the greatest gift of all. Should you wish to honor us with a present, you can find our wedding registry below.
             </p>
-            {data.wishlistUrl && (
+            {sanitizeUrl(data.wishlistUrl) && (
               <a
-                href={data.wishlistUrl}
+                href={sanitizeUrl(data.wishlistUrl) as string}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="mt-3 inline-block px-5 py-2.5 rounded-xl text-xs font-semibold uppercase tracking-wider bg-[#FBF5EB] text-[#19223D] border border-[#EFD2A6] hover:bg-[#efd2a6]/40 transition"

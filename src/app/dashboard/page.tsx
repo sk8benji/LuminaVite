@@ -56,6 +56,10 @@ export default function DashboardPage() {
   const [filtroEstado, setFiltroEstado] = useState<string>("TODOS");
   const [busquedaOrdenes, setBusquedaOrdenes] = useState<string>("");
   const [actualizandoId, setActualizandoId] = useState<string | null>(null);
+  // Rotación de panel key
+  const [rotatingSlug, setRotatingSlug] = useState<string | null>(null);
+  const [rotatedKey, setRotatedKey] = useState<{ slug: string; titulo: string; key: string } | null>(null);
+  const [copiedKey, setCopiedKey] = useState(false);
 
   const getPublicEventUrl = (path: string) => {
     if (typeof window !== "undefined" && window.location.host.startsWith("admin.")) {
@@ -63,6 +67,50 @@ export default function DashboardPage() {
       return `${window.location.protocol}//${publicHost}/${path.replace(/^\//, "")}`;
     }
     return `/${path.replace(/^\//, "")}`;
+  };
+
+  const getPanelUrl = (slug: string, key: string) => {
+    let origin = typeof window !== "undefined" ? window.location.origin : "";
+    if (typeof window !== "undefined" && window.location.host.startsWith("admin.")) {
+      const publicHost = window.location.host.replace(/^admin\./, "");
+      origin = `${window.location.protocol}//${publicHost}`;
+    }
+    return `${origin}/${slug}/panel?key=${key}`;
+  };
+
+  const handleRotateKey = async (slug: string, titulo: string) => {
+    const ok = window.confirm(
+      `¿Rotar la clave del panel de "${titulo}"?\n\nLa URL anterior dejará de funcionar de inmediato. ` +
+        `Tendrás que enviarle la nueva URL al cliente.`
+    );
+    if (!ok) return;
+
+    setRotatingSlug(slug);
+    try {
+      const res = await fetch(`/api/admin/eventos/${encodeURIComponent(slug)}/rotate-key`, {
+        method: "POST",
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Error al rotar la clave");
+
+      // Actualizar el token en la lista local para que el Magic Link se actualice
+      setEventos((prev) =>
+        prev.map((ev) => (ev.slug === slug ? { ...ev, panelToken: data.panelToken } : ev))
+      );
+      setRotatedKey({ slug, titulo, key: data.panelToken });
+      setCopiedKey(false);
+    } catch (err: any) {
+      alert(err.message || "No se pudo rotar la clave");
+    } finally {
+      setRotatingSlug(null);
+    }
+  };
+
+  const handleCopyNewKey = () => {
+    if (!rotatedKey) return;
+    navigator.clipboard.writeText(getPanelUrl(rotatedKey.slug, rotatedKey.key));
+    setCopiedKey(true);
+    setTimeout(() => setCopiedKey(false), 2000);
   };
 
   const handleLogout = async () => {
@@ -743,6 +791,16 @@ export default function DashboardPage() {
                             <Sparkles className="w-3.5 h-3.5 text-amber-600" />
                             Magic Link (Panel de la Mamá)
                           </Link>
+
+                          <button
+                            onClick={() => handleRotateKey(ev.slug, ev.titulo)}
+                            disabled={rotatingSlug === ev.slug}
+                            className="w-full flex items-center justify-center gap-1.5 py-2 px-3 bg-red-50 hover:bg-red-100 border border-red-200 text-red-900 rounded-xl text-xs font-semibold transition cursor-pointer disabled:opacity-50"
+                            title="Genera una clave nueva para el panel. La URL anterior deja de funcionar."
+                          >
+                            <RefreshCw className={`w-3.5 h-3.5 ${rotatingSlug === ev.slug ? "animate-spin" : ""}`} />
+                            {rotatingSlug === ev.slug ? "Rotando..." : "Rotar key del panel"}
+                          </button>
                         </div>
                       </div>
                     </div>
@@ -757,6 +815,50 @@ export default function DashboardPage() {
         {/* VISTA 3: PLANTILLAS MAESTRAS DEL CATÁLOGO (TEMPLATES) */}
         {/* ============================================================== */}
         {activeTab === "templates" && <TemplatesManager />}
+
+        {/* Modal: nueva key rotada, lista para copiar y enviar al cliente */}
+        {rotatedKey && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+            <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-6">
+              <h3 className="text-lg font-bold text-stone-900 mb-1">
+                Clave rotada: {rotatedKey.titulo}
+              </h3>
+              <p className="text-sm text-stone-600 mb-4">
+                La URL anterior ya no funciona. Copia la nueva y envíasela al cliente
+                por WhatsApp.
+              </p>
+              <div className="bg-stone-100 rounded-xl p-3 mb-4 break-all">
+                <code className="text-xs text-stone-800">
+                  {getPanelUrl(rotatedKey.slug, rotatedKey.key)}
+                </code>
+              </div>
+              <div className="flex gap-2">
+                <button
+                  onClick={handleCopyNewKey}
+                  className="flex-1 flex items-center justify-center gap-1.5 py-2.5 px-4 bg-[#7A002A] hover:bg-[#5e0020] text-white rounded-xl text-sm font-semibold transition cursor-pointer"
+                >
+                  {copiedKey ? (
+                    <>
+                      <Check className="w-4 h-4" />
+                      ¡Copiada!
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-4 h-4" />
+                      Copiar URL
+                    </>
+                  )}
+                </button>
+                <button
+                  onClick={() => setRotatedKey(null)}
+                  className="py-2.5 px-4 bg-stone-100 hover:bg-stone-200 text-stone-800 rounded-xl text-sm font-semibold transition cursor-pointer"
+                >
+                  Cerrar
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </main>
     </div>
   );

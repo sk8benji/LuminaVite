@@ -2,6 +2,8 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import prisma from "@/lib/db";
 import { ensureGuestsTable } from "@/lib/guests-table";
+import { normalizeKey, validateEventKey } from "@/lib/events";
+import { getMasterPanelKey } from "@/lib/auth";
 import PanelView, { PanelData } from "./PanelView";
 
 export const dynamic = "force-dynamic";
@@ -40,79 +42,53 @@ export default async function ClientMagicLinkPanelPage({
   // Asegurar que la tabla guests existe en PostgreSQL (evita error P2021 en producción)
   await ensureGuestsTable();
 
-  // 3. Consulta directa a PostgreSQL con Prisma (sin cookies ni S3)
-  const isMasterKey = cleanKey === "clickandlove2026!" || cleanKey === "admin";
+  // 3. Consulta directa a PostgreSQL con Prisma (sin cookies ni S3).
+  // La autorización usa validateEventKey: panelToken del evento o
+  // MASTER_PANEL_KEY (variable de entorno, nunca hardcodeada).
+  const includeFull = {
+    rsvps: { orderBy: { createdAt: "desc" } },
+    guests: { orderBy: [{ status: "asc" }, { name: "asc" }] },
+    usuario: true,
+  } as const;
+
+  async function fetchAuthorizedEvento(withGuests: boolean): Promise<any> {
+    const include: any = withGuests
+      ? includeFull
+      : { rsvps: { orderBy: { createdAt: "desc" } }, usuario: true };
+    const found = await prisma.evento.findUnique({
+      where: { slug: cleanSlug },
+      include,
+    });
+    if (!found) return null;
+    if (!validateEventKey(cleanKey, (found as any).panelToken)) return null;
+    if (!withGuests) (found as any).guests = [];
+    return found;
+  }
 
   let evento: any = null;
 
   try {
-    if (isMasterKey) {
-      evento = await prisma.evento.findUnique({
-        where: { slug: cleanSlug },
-        include: {
-          rsvps: { orderBy: { createdAt: "desc" } },
-          guests: { orderBy: [{ status: "asc" }, { name: "asc" }] },
-          usuario: true,
-        },
-      });
-    } else {
-      evento = await prisma.evento.findFirst({
-        where: {
-          slug: cleanSlug,
-          panelToken: { equals: cleanKey, mode: "insensitive" },
-        },
-        include: {
-          rsvps: { orderBy: { createdAt: "desc" } },
-          guests: { orderBy: [{ status: "asc" }, { name: "asc" }] },
-          usuario: true,
-        },
-      });
-    }
+    evento = await fetchAuthorizedEvento(true);
   } catch (dbErr: any) {
     // Si la tabla no existía aún en Railway, forzar creación DDL y reintentar
     if (dbErr?.code === "P2021" || String(dbErr).includes("guests")) {
       await ensureGuestsTable();
       try {
-        if (isMasterKey) {
-          evento = await prisma.evento.findUnique({
-            where: { slug: cleanSlug },
-            include: {
-              rsvps: { orderBy: { createdAt: "desc" } },
-              guests: { orderBy: [{ status: "asc" }, { name: "asc" }] },
-              usuario: true,
-            },
-          });
-        } else {
-          evento = await prisma.evento.findFirst({
-            where: {
-              slug: cleanSlug,
-              panelToken: { equals: cleanKey, mode: "insensitive" },
-            },
-            include: {
-              rsvps: { orderBy: { createdAt: "desc" } },
-              guests: { orderBy: [{ status: "asc" }, { name: "asc" }] },
-              usuario: true,
-            },
-          });
-        }
+        evento = await fetchAuthorizedEvento(true);
       } catch (retryErr) {
         console.error("Fallo tras reintento de ensureGuestsTable:", retryErr);
         // Fallback: consultar sin relación guests para no romper la carga de la página
-        evento = await prisma.evento.findFirst({
-          where: isMasterKey
-            ? { slug: cleanSlug }
-            : { slug: cleanSlug, panelToken: { equals: cleanKey, mode: "insensitive" } },
-          include: {
-            rsvps: { orderBy: { createdAt: "desc" } },
-            usuario: true,
-          },
-        });
-        if (evento) evento.guests = [];
+        evento = await fetchAuthorizedEvento(false);
       }
     } else {
       throw dbErr;
     }
   }
+
+  const masterKey = getMasterPanelKey();
+  const isMaster = Boolean(
+    masterKey && normalizeKey(cleanKey) === normalizeKey(masterKey)
+  );
 
   // 4. Si evento es null, rechazo 404 inmediato
   if (!evento) {
@@ -178,7 +154,7 @@ export default async function ClientMagicLinkPanelPage({
       isAuthorized={true}
       initialData={panelData}
       panelKey={cleanKey}
-      isMaster={isMasterKey}
+      isMaster={isMaster}
     />
   );
 }

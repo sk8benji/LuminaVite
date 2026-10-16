@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
 
 // Diccionario de frases y títulos clásicos de eventos (Quinceañeras / Bodas)
 const EVENT_DICTIONARY_ES_TO_EN: Record<string, string> = {
@@ -181,6 +182,9 @@ async function translateWithMyMemory(text: string, targetLang: "en" | "es"): Pro
 }
 
 export async function POST(req: NextRequest) {
+  const limited = checkRateLimit(req, "translate", RATE_LIMITS.translate);
+  if (limited) return limited;
+
   try {
     const { text, targetLang = "en" } = await req.json();
 

@@ -735,6 +735,7 @@ function NuevoEventoContent() {
           filename: file.name,
           contentType: resolvedType,
           folder: clientFolder,
+          fileSize: file.size,
         }),
       });
 

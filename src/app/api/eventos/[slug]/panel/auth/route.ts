@@ -6,6 +6,8 @@ import {
   getPanelCookieOptions,
 } from "@/lib/panel-auth";
 import { normalizeSlug, validateEventKey } from "@/lib/events";
+import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
+import { getSiteUrl } from "@/lib/url-safety";
 
 export async function GET(
   req: NextRequest,
@@ -25,9 +27,8 @@ export async function GET(
   const { searchParams } = new URL(req.url);
   const key = searchParams.get("key")?.trim();
 
-  const forwardedProto = req.headers.get("x-forwarded-proto") || "https";
-  const forwardedHost = req.headers.get("x-forwarded-host") || req.headers.get("host") || "clickandlove.app";
-  const baseUrl = `${forwardedProto}://${forwardedHost}`;
+  // H3: base fija, nunca headers del request (evita host injection)
+  const baseUrl = getSiteUrl();
   const panelRedirectUrl = new URL(`/${cleanSlug}/panel`, baseUrl);
 
   if (!key) {
@@ -67,6 +68,9 @@ export async function POST(
   req: NextRequest,
   context: { params: Promise<{ slug: string }> | { slug: string } }
 ) {
+  const limited = checkRateLimit(req, "panel-auth", RATE_LIMITS.panelAuth);
+  if (limited) return limited;
+
   const resolvedParams = context?.params ? await context.params : null;
   let slug = resolvedParams?.slug;
   if (!slug) {

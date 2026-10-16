@@ -1,8 +1,14 @@
 import crypto from "crypto";
 import prisma from "@/lib/db";
 import { normalizeSlug, normalizeKey, validateEventKey } from "@/lib/events";
+import { getAdminSecret } from "@/lib/auth";
 
-const SECRET = process.env.ADMIN_SECRET || process.env.PANEL_SECRET || "clickandlove-luxury-panel-salt-2026";
+// SECURITY: sin valor por defecto. getAdminSecret() lanza error claro si
+// falta ADMIN_SECRET en las variables de entorno. Se evalúa de forma perezosa
+// para no romper el build.
+function getSecret(): string {
+  return process.env.PANEL_SECRET || getAdminSecret();
+}
 
 export function getPanelCookieName(slug: string): string {
   const cleanSlug = normalizeSlug(slug).replace(/[^a-z0-9]/g, "_");
@@ -27,7 +33,7 @@ export function generatePanelToken(slug: string, panelToken: string): string {
   const cleanSlug = normalizeSlug(slug);
   const cleanToken = normalizeKey(panelToken);
   const payload = `${cleanSlug}:${cleanToken}`;
-  const hmac = crypto.createHmac("sha256", SECRET).update(payload).digest("hex");
+  const hmac = crypto.createHmac("sha256", getSecret()).update(payload).digest("hex");
   return `${Buffer.from(payload).toString("base64url")}.${hmac}`;
 }
 
@@ -65,7 +71,7 @@ export async function verifyPanelAuth(slug: string, rawToken: string | undefined
       const [tokenSlug, tokenKey] = decodedPayload.split(":");
 
       if (tokenSlug === cleanSlug && tokenKey === expectedPanelToken) {
-        const expectedHmac = crypto.createHmac("sha256", SECRET).update(decodedPayload).digest("hex");
+        const expectedHmac = crypto.createHmac("sha256", getSecret()).update(decodedPayload).digest("hex");
         const a = Buffer.from(receivedHmac, "hex");
         const b = Buffer.from(expectedHmac, "hex");
         if (a.length === b.length && crypto.timingSafeEqual(a, b)) {

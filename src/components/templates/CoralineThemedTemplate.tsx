@@ -150,6 +150,7 @@ export default function CoralineThemedTemplate({
                     className="w-full h-full border-0"
                     loading="lazy"
                     referrerPolicy="no-referrer-when-downgrade"
+                    sandbox="allow-scripts allow-same-origin"
                     allowFullScreen
                   />
                 </div>

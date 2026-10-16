@@ -3,6 +3,7 @@ import fs from "fs";
 import path from "path";
 import prisma from "@/lib/db";
 import { INITIAL_MASTER_TEMPLATES, MasterTemplateItem } from "@/lib/templates-data";
+import { requireAdmin } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -31,7 +32,9 @@ function saveLocalOverride(slug: string, updates: Partial<MasterTemplateItem>) {
   }
 }
 
-export async function GET() {
+export async function GET(req: NextRequest) {
+  const unauthorized = await requireAdmin(req);
+  if (unauthorized) return unauthorized;
   try {
     // 1. Intentar cargar desde Prisma
     let dbTemplates: any[] = [];
@@ -67,6 +70,8 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
+  const unauthorized = await requireAdmin(req);
+  if (unauthorized) return unauthorized;
   try {
     const body = await req.json();
     const { slug, ...updates } = body;

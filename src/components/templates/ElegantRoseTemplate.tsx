@@ -16,6 +16,7 @@ import { ELEGANT_ROSE_ASSETS } from "@/lib/templates/elegantRoseAssets";
 import EnvelopeIntro from "../invitation/EnvelopeIntro";
 import { InvitationData } from "../invitation/InvitationMobileView";
 import DynamicRsvpForm from "../invitation/DynamicRsvpForm";
+import { sanitizeUrl } from "@/lib/url-safety";
 
 function WavyColumn({
   children,
@@ -1021,9 +1022,9 @@ export default function ElegantRoseTemplate({
               <p className="text-xs sm:text-[13px] text-white font-medium max-w-[280px] mx-auto leading-relaxed drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
                 Your presence is the greatest gift we could ask for. If you’d like to celebrate with a gift, we invite you to browse our wishlist below.
               </p>
-              {data.wishlistUrl && (
+              {sanitizeUrl(data.wishlistUrl) && (
                 <a
-                  href={data.wishlistUrl}
+                  href={sanitizeUrl(data.wishlistUrl) as string}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-block mt-3.5 bg-white/25 border border-white/60 text-white font-['Cinzel'] text-[10px] sm:text-xs tracking-[0.2em] uppercase py-2 px-6 rounded-full hover:bg-white/40 transition font-semibold shadow-md backdrop-blur-sm drop-shadow"

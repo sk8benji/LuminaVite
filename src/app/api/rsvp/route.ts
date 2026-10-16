@@ -7,11 +7,16 @@ import {
   sendHostNotificationEmail,
 } from "@/lib/notifications";
 import { formatE164 } from "@/lib/phoneValidator";
+import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
+import { getSiteUrl } from "@/lib/url-safety";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 export async function POST(req: NextRequest) {
+  const limited = checkRateLimit(req, "rsvp", RATE_LIMITS.rsvp);
+  if (limited) return limited;
+
   try {
     const body = await req.json();
     const {
@@ -241,9 +246,16 @@ export async function POST(req: NextRequest) {
 
     // 7. Disparar notificaciones en segundo plano (no bloqueantes)
     const paquete = ((evento as any).ordenesCompra?.[0]?.paqueteId || "").toLowerCase();
-    const planConSms = !(evento as any).ordenesCompra?.length || !paquete || (!paquete.includes("basic") && !paquete.includes("digital_basic"));
+    // B1+H2: SMS solo con orden pagada de un plan que lo incluye (IDs reales de PACKAGES).
+    // Sin orden no hay SMS gratis (antes el default era true).
+    const PLANES_CON_SMS = ["assisted", "vip"];
+    const planConSms =
+      Boolean((evento as any).ordenesCompra?.length) &&
+      PLANES_CON_SMS.includes(paquete);
 
-    if (planConSms && normalizedPhone && isAttending) {
+    // H2: no reenviar SMS en actualizaciones (permitirActualizacion no debe
+    // poder disparar SMS repetidos a números arbitrarios)
+    if (planConSms && normalizedPhone && isAttending && !isUpdate) {
       sendGuestConfirmationSms({
         telefono: normalizedPhone,
         nombreInvitado: rsvp.nombreInvitado,
@@ -257,7 +269,7 @@ export async function POST(req: NextRequest) {
         recepcionMapUrl: evento.recepcionMapUrl || undefined,
       }).catch((err) => console.error("Error SMS Twilio en segundo plano:", err));
     } else if (!planConSms && cleanEmail && isAttending) {
-      const siteUrl = req.headers.get("origin") || process.env.NEXT_PUBLIC_SITE_URL || "https://clickandlove.app";
+      const siteUrl = getSiteUrl();
       sendGuestConfirmationEmail({
         guestEmail: cleanEmail,
         nombreInvitado: rsvp.nombreInvitado,
@@ -278,7 +290,7 @@ export async function POST(req: NextRequest) {
       process.env.ADMIN_EMAIL;
 
     if (hostEmail && isAttending) {
-      const siteUrl = req.headers.get("origin") || process.env.NEXT_PUBLIC_SITE_URL || "https://clickandlove.app";
+      const siteUrl = getSiteUrl();
       sendHostNotificationEmail({
         hostEmail,
         eventoTitulo: evento.titulo,

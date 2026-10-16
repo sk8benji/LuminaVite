@@ -1,10 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { updateOrderStatus } from "@/lib/order-store";
+import { requireAdmin } from "@/lib/auth";
 
 export async function PATCH(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const unauthorized = await requireAdmin(req);
+  if (unauthorized) return unauthorized;
   try {
     const { id } = await params;
     const body = await req.json();

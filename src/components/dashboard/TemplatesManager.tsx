@@ -142,6 +142,7 @@ export default function TemplatesManager() {
           filename: file.name,
           contentType: resolvedType,
           folder,
+          fileSize: file.size,
         }),
       });
 

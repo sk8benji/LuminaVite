@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getStripe, PACKAGES } from "@/lib/stripe";
 import { saveOrder } from "@/lib/order-store";
+import { getSiteUrl } from "@/lib/url-safety";
 
 export async function POST(req: NextRequest) {
   try {
@@ -8,10 +9,8 @@ export async function POST(req: NextRequest) {
     const { plan = "signature" } = body;
 
     const pkg = PACKAGES[plan] || PACKAGES.signature;
-    const host = req.headers.get("x-forwarded-host") || req.headers.get("host") || "";
-    const proto = req.headers.get("x-forwarded-proto") || "https";
-    const publicHost = host.replace(/^admin\./, "");
-    const origin = publicHost ? `${proto}://${publicHost}` : (process.env.NEXT_PUBLIC_SITE_URL || "https://clickandlove.app");
+    // H3: URL canónica fija para Stripe, nunca headers del request
+    const origin = getSiteUrl();
 
     const stripe = getStripe();
 

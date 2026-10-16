@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/db";
-import { normalizeSlug } from "@/lib/events";
+import { normalizeSlug, validateEventKey } from "@/lib/events";
 import { ensureGuestsTable } from "@/lib/guests-table";
 
 export const dynamic = "force-dynamic";
@@ -10,29 +10,18 @@ interface RouteContext {
   params: Promise<{ slug: string }> | { slug: string };
 }
 
-// Función auxiliar para verificar autorización por panelToken o master keys
+// Autorización por panelToken del evento (o MASTER_PANEL_KEY vía env, nunca hardcodeada)
 async function verifyAuthorization(cleanSlug: string, keyParam?: string | null) {
   const cleanKey = (keyParam || "").trim();
   if (!cleanKey) return null;
 
-  const isMasterKey = cleanKey === "clickandlove2026!" || cleanKey === "admin";
-
-  if (isMasterKey) {
-    const evento = await prisma.evento.findUnique({
-      where: { slug: cleanSlug },
-      select: { id: true, slug: true, titulo: true, panelToken: true },
-    });
-    return evento;
-  }
-
-  const evento = await prisma.evento.findFirst({
-    where: {
-      slug: cleanSlug,
-      panelToken: { equals: cleanKey, mode: "insensitive" },
-    },
+  const evento = await prisma.evento.findUnique({
+    where: { slug: cleanSlug },
     select: { id: true, slug: true, titulo: true, panelToken: true },
   });
 
+  if (!evento) return null;
+  if (!validateEventKey(cleanKey, evento.panelToken)) return null;
   return evento;
 }
 

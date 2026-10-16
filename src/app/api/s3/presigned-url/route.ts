@@ -1,10 +1,23 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getPresignedUploadUrl } from "@/lib/s3";
+import { requireAdmin } from "@/lib/auth";
+import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
+
+// Límites de tamaño (bytes)
+const MAX_IMAGE_BYTES = 15 * 1024 * 1024; // 15 MB
+const MAX_AUDIO_BYTES = 50 * 1024 * 1024; // 50 MB
 
 export async function POST(req: NextRequest) {
+  const limited = checkRateLimit(req, "presigned-url", RATE_LIMITS.presignedUrl);
+  if (limited) return limited;
+
+  // C5: solo administradores pueden generar URLs de subida
+  const unauthorized = await requireAdmin(req);
+  if (unauthorized) return unauthorized;
+
   try {
     const body = await req.json();
-    let { filename, contentType, folder } = body;
+    let { filename, contentType, folder, fileSize } = body;
 
     if (!filename) {
       return NextResponse.json(
@@ -32,13 +45,13 @@ export async function POST(req: NextRequest) {
       ["mp3", "wav", "m4a", "aac", "ogg", "flac"].includes(ext) ||
       (typeof folder === "string" && folder.includes("audio"));
 
+    // C5: SVG bloqueado — un SVG con JS embebido servido desde tu dominio es XSS almacenado
     const allowedImages = [
       "image/jpeg",
       "image/png",
       "image/webp",
       "image/heic",
       "image/heif",
-      "image/svg+xml",
       "image/gif",
     ];
 
@@ -78,18 +91,34 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Carpeta destino saneada: templates/*, clientes/* o carpeta por defecto
-    const targetFolder =
-      typeof folder === "string" && folder.trim().length > 0
-        ? folder.trim()
-        : isAudio
+    // C5: límite de tamaño declarado por el cliente
+    const maxBytes = isAudio ? MAX_AUDIO_BYTES : MAX_IMAGE_BYTES;
+    const declaredSize = Number(fileSize);
+    if (!Number.isFinite(declaredSize) || declaredSize <= 0) {
+      return NextResponse.json(
+        { error: "Debes indicar el tamaño del archivo (fileSize)." },
+        { status: 400 }
+      );
+    }
+    if (declaredSize > maxBytes) {
+      return NextResponse.json(
+        { error: `Archivo demasiado grande. Máximo ${Math.round(maxBytes / 1024 / 1024)} MB.` },
+        { status: 400 }
+      );
+    }
+
+    // C5: carpeta destino restringida a un patrón seguro
+    const rawFolder = typeof folder === "string" ? folder.trim() : "";
+    const safeFolder = /^[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*$/.test(rawFolder)
+      ? rawFolder
+      : isAudio
         ? "audio"
         : "images";
 
     const presignedData = await getPresignedUploadUrl(
       filename,
       contentType,
-      targetFolder
+      safeFolder
     );
 
     return NextResponse.json(presignedData);
