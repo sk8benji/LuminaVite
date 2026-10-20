@@ -254,6 +254,35 @@ model ShortLink {
   @@index([code])
 }
 
+// Campañas de códigos QR dinámicos con tracking de escaneos (marketing).
+// El QR impreso apunta a https://clickandlove.app/q/[code]; esa ruta registra
+// el escaneo y redirige a targetUrl, que se puede cambiar sin reimprimir.
+model QrCampaign {
+  id        String   @id @default(cuid())
+  name      String
+  code      String   @unique
+  targetUrl String   @db.Text
+  active    Boolean  @default(true)
+  scans     QrScan[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([code])
+}
+
+model QrScan {
+  id          String     @id @default(cuid())
+  campaignId  String
+  campaign    QrCampaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  // Hash sha256 de IP + User-Agent: aproxima visitantes únicos SIN guardar la IP cruda.
+  visitorHash String?
+  userAgent   String?
+  createdAt   DateTime   @default(now())
+
+  @@index([campaignId])
+  @@index([createdAt])
+}
+
 model MasterTemplate {
   id                 String          @id @default(uuid())
   slug               String          @unique // ej: "mariposas-xv", "isabella-xv", "emma-and-lucas"
