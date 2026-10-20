@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import prisma from "@/lib/db";
+import { ensureQrTables } from "@/lib/qr-table";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -23,6 +24,7 @@ export async function GET(
   }
 
   try {
+    await ensureQrTables();
     const campaign = await prisma.qrCampaign.findUnique({
       where: { code },
     });

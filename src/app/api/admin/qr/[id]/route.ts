@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/db";
 import { requireAdmin } from "@/lib/auth";
 import { isSafeHttpUrl } from "@/lib/url-safety";
+import { ensureQrTables } from "@/lib/qr-table";
 
 export const dynamic = "force-dynamic";
 
@@ -18,6 +19,7 @@ export async function PATCH(
   const unauthorized = await requireAdmin(req);
   if (unauthorized) return unauthorized;
   try {
+    await ensureQrTables();
     const { id } = await params;
     const body = await req.json();
 
@@ -87,6 +89,7 @@ export async function DELETE(
   const unauthorized = await requireAdmin(req);
   if (unauthorized) return unauthorized;
   try {
+    await ensureQrTables();
     const { id } = await params;
 
     const existing = await prisma.qrCampaign.findUnique({ where: { id } });

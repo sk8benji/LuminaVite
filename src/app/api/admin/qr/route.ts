@@ -8,6 +8,7 @@ import {
   listQrCampaignsWithStats,
   serializeQrCampaign,
 } from "@/lib/qr";
+import { ensureQrTables } from "@/lib/qr-table";
 
 export const dynamic = "force-dynamic";
 
@@ -20,6 +21,7 @@ export async function GET(req: NextRequest) {
   const unauthorized = await requireAdmin(req);
   if (unauthorized) return unauthorized;
   try {
+    await ensureQrTables();
     const campaigns = await listQrCampaignsWithStats();
     return NextResponse.json({ campaigns });
   } catch (err: any) {
@@ -40,6 +42,7 @@ export async function POST(req: NextRequest) {
   const unauthorized = await requireAdmin(req);
   if (unauthorized) return unauthorized;
   try {
+    await ensureQrTables();
     const body = await req.json();
     const name = typeof body?.name === "string" ? body.name.trim() : "";
     const targetUrl = typeof body?.targetUrl === "string" ? body.targetUrl.trim() : "";

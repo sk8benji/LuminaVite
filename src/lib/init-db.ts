@@ -189,7 +189,29 @@ export async function ensurePostgresTables(): Promise<boolean> {
           "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
       );`,
 
-      `CREATE INDEX IF NOT EXISTS "ShortLink_code_idx" ON "ShortLink"("code");`
+      `CREATE INDEX IF NOT EXISTS "ShortLink_code_idx" ON "ShortLink"("code");`,
+
+      `CREATE TABLE IF NOT EXISTS "QrCampaign" (
+          "id" TEXT NOT NULL PRIMARY KEY,
+          "name" TEXT NOT NULL,
+          "code" TEXT UNIQUE NOT NULL,
+          "targetUrl" TEXT NOT NULL,
+          "active" BOOLEAN NOT NULL DEFAULT true,
+          "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
+      );`,
+
+      `CREATE TABLE IF NOT EXISTS "QrScan" (
+          "id" TEXT NOT NULL PRIMARY KEY,
+          "campaignId" TEXT NOT NULL REFERENCES "QrCampaign"("id") ON DELETE CASCADE,
+          "visitorHash" TEXT,
+          "userAgent" TEXT,
+          "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
+      );`,
+
+      `CREATE INDEX IF NOT EXISTS "QrCampaign_code_idx" ON "QrCampaign"("code");`,
+      `CREATE INDEX IF NOT EXISTS "QrScan_campaignId_idx" ON "QrScan"("campaignId");`,
+      `CREATE INDEX IF NOT EXISTS "QrScan_createdAt_idx" ON "QrScan"("createdAt");`
     ];
 
     for (const sql of sqlStatements) {
