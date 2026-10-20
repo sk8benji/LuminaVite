@@ -5,6 +5,7 @@ import confetti from "canvas-confetti";
 import { Send, CheckCircle2, XCircle, Phone } from "lucide-react";
 import { TemplateConfig } from "@/lib/templates";
 import { generateWhatsAppRsvpUrl } from "@/lib/whatsapp";
+import { formatFechaLimiteRsvp } from "@/lib/fecha-limite";
 
 interface RsvpSectionProps {
   eventoId?: string;
@@ -26,6 +27,8 @@ export default function RsvpSection({
   template,
   permitirConfirmacionTelefono = true,
 }: RsvpSectionProps) {
+  // La fecha límite puede llegar como ISO (guardado nuevo): se muestra legible, nunca cruda.
+  const fechaLimiteLegible = formatFechaLimiteRsvp(fechaLimite, "en");
   const [nombre, setNombre] = useState("");
   const [asistencia, setAsistencia] = useState<"SI" | "NO">("SI");
   const [pases, setPases] = useState(1);
@@ -113,7 +116,7 @@ export default function RsvpSection({
           Save Your Seat for the Celebration!
         </p>
 
-        {fechaLimite && (
+        {fechaLimiteLegible && (
           <p
             className="text-[11px] mb-5 opacity-75 font-medium"
             style={{
@@ -122,7 +125,7 @@ export default function RsvpSection({
             }}
           >
             Please confirm your seat before{" "}
-            <span className="font-semibold text-[#9E2A4B]">{fechaLimite}</span>
+            <span className="font-semibold text-[#9E2A4B]">{fechaLimiteLegible}</span>
           </p>
         )}
 

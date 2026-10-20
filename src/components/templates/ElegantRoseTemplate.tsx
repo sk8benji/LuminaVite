@@ -18,6 +18,7 @@ import { InvitationData } from "../invitation/InvitationMobileView";
 import DynamicRsvpForm from "../invitation/DynamicRsvpForm";
 import { sanitizeUrl } from "@/lib/url-safety";
 import { isSectionEnabledInEvent, type SeccionId } from "@/config/templateSections";
+import { formatFechaLimiteRsvp } from "@/lib/fecha-limite";
 
 function WavyColumn({
   children,
@@ -1102,7 +1103,7 @@ export default function ElegantRoseTemplate({
             </h2>
 
             <p className="font-['Cinzel'] text-xs sm:text-[13px] tracking-widest uppercase text-rose-100 mb-6 font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
-              {data.rsvpFechaLimite || data.fechaLimiteRsvp || (isEn ? "BY JUNE 20TH" : "ANTES DEL 20 DE JUNIO")}
+              {data.rsvpFechaLimite || formatFechaLimiteRsvp(data.fechaLimiteRsvp, isEn ? "en" : "es") || (isEn ? "BY JUNE 20TH" : "ANTES DEL 20 DE JUNIO")}
             </p>
 
             <div className="w-full max-w-[320px]">
@@ -1115,7 +1116,7 @@ export default function ElegantRoseTemplate({
                 telefonoWhatsapp={data.telefonoWhatsappRsvp}
                 primaryColor="#8B4513"
                 accentBgColor="bg-white/95"
-                deadlineText={data.rsvpFechaLimite || data.fechaLimiteRsvp || (isEn ? "BY JUNE 20TH" : "ANTES DEL 20 DE JUNIO")}
+                deadlineText={data.rsvpFechaLimite || formatFechaLimiteRsvp(data.fechaLimiteRsvp, isEn ? "en" : "es") || (isEn ? "BY JUNE 20TH" : "ANTES DEL 20 DE JUNIO")}
                 lang={lang}
                 permiteSms={data.permiteSms}
                 tipoPlan={data.tipoPlan}

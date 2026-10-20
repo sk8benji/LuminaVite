@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { InvitationData } from "@/components/invitation/InvitationMobileView";
 import TemplateDispatcher from "@/components/templates/TemplateDispatcher";
 import { normalizeSlug, getEventBySlug } from "@/lib/events";
+import { formatFechaLimiteRsvp } from "@/lib/fecha-limite";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -389,11 +390,13 @@ async function getEventoData(rawSlug: string): Promise<InvitationData | null> {
       videoUrl: dbEvento.videoUrl,
       galeriaFotosUrls: dbEvento.galeriaFotosUrls,
       telefonoWhatsappRsvp: dbEvento.telefonoWhatsappRsvp,
-      fechaLimiteRsvp: dbEvento.fechaLimiteRsvp
-        ? dbEvento.fechaLimiteRsvp instanceof Date
-          ? dbEvento.fechaLimiteRsvp.toLocaleDateString()
-          : String(dbEvento.fechaLimiteRsvp)
-        : null,
+      // Nunca exponer el ISO crudo: la fecha límite se formatea legible
+      // (la frase completa, si existe, vive en rsvpFechaLimite y las
+      // plantillas la prefieren sobre esta fecha).
+      fechaLimiteRsvp: formatFechaLimiteRsvp(
+        dbEvento.fechaLimiteRsvp,
+        dbEvento.idiomaDefault === "en" ? "en" : "es"
+      ),
       maxPasesPorInvitado: dbEvento.maxPasesPorInvitado,
       ceremoniaNombre: dbEvento.ceremoniaNombre,
       ceremoniaDireccion: dbEvento.ceremoniaDireccion,
