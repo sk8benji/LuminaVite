@@ -121,7 +121,7 @@ export const INITIAL_MASTER_TEMPLATES: MasterTemplateItem[] = [
     musicaTitulo: "A Thousand Years - Christina Perri",
     colorSobre: "#1E2B24",
     colorSello: "#D4AF37",
-    fotoPortadaUrl: "/assets/template-chateau/castle-facade.jpg",
+    fotoPortadaUrl: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80",
     fotoInfanciaUrl: "/assets/template-chateau/oheka-castle.png",
     fotoActualUrl: "/assets/template-chateau/reception-hall.jpg",
     fotoCierreUrl: "/assets/template-chateau/castle-gardens.jpg",

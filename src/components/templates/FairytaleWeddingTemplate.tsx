@@ -25,6 +25,7 @@ import AddToCalendarButton from "../invitation/AddToCalendarButton";
 import EnvelopeIntro from "../invitation/EnvelopeIntro";
 import { InvitationData } from "../invitation/InvitationMobileView";
 import { sanitizeUrl } from "@/lib/url-safety";
+import { isSectionEnabledInEvent, type SeccionId } from "@/config/templateSections";
 
 export default function FairytaleWeddingTemplate({
   data,
@@ -34,6 +35,17 @@ export default function FairytaleWeddingTemplate({
   skipIntro?: boolean;
 }) {
   const template = getTemplate("FAIRYTALE_CHATEAU");
+
+  // Hallazgo 10: respetar configPlantilla.secciones igual que Quince Rosado
+  // (sección ausente en la config = visible)
+  const isSectionActive = (sectionId: SeccionId) =>
+    isSectionEnabledInEvent(sectionId, data.configPlantilla, {
+      mostrarFrasePersonalizada: data.mostrarFrasePersonalizada,
+      mostrarFechaPlacaHora: data.mostrarFechaPlacaHora,
+      mostrarDressCode: data.mostrarDressCode,
+      mostrarMesaRegalos: data.mostrarMesaRegalos,
+      permitirConfirmacionTelefono: data.permitirConfirmacionTelefono,
+    });
 
   const weddingItinerary = [
     { time: "3:30 PM", title: "Wedding Ceremony", icon: "church" },
@@ -60,9 +72,12 @@ export default function FairytaleWeddingTemplate({
 
       <main className="w-full max-w-[440px] min-h-screen shadow-2xl relative overflow-hidden flex flex-col pb-16 bg-[#FBF5EB] text-[#19223D]">
         {/* Audio flotante */}
-        <AudioPlayer audioUrl={data.musicaUrl} template={template} />
+        {isSectionActive("musica") && (
+          <AudioPlayer audioUrl={data.musicaUrl} template={template} />
+        )}
 
         {/* 1. Portada Monograma & Invitación de Boda */}
+        {isSectionActive("portada") && (
         <section className="px-6 pt-12 pb-8 text-center flex flex-col items-center relative">
           <span className="text-3xl mb-2">🕊️</span>
           <p className="text-[11px] tracking-widest uppercase text-[#AF936A] font-serif font-bold">
@@ -99,15 +114,19 @@ export default function FairytaleWeddingTemplate({
             {data.recepcionDireccion || "8221 Sunset Blvd, West Hollywood"}
           </p>
         </section>
+        )}
 
         {/* 2. Cuenta Regresiva "Countdown to Forever" */}
-        <CountdownTimer
-          targetDate={data.fechaEvento}
-          template={template}
-          titulo="THE COUNTDOWN TO FOREVER HAS BEGUN..."
-        />
+        {isSectionActive("cuentaRegresiva") && (
+          <CountdownTimer
+            targetDate={data.fechaEvento}
+            template={template}
+            titulo="THE COUNTDOWN TO FOREVER HAS BEGUN..."
+          />
+        )}
 
         {/* 3. The Venue (El Castillo / Château) */}
+        {isSectionActive("ubicaciones") && (
         <section className="px-6 py-6 text-center">
           <div className="bg-white p-6 rounded-3xl border border-[#EFD2A6] shadow-sm">
             <span className="text-2xl">🏰</span>
@@ -154,6 +173,7 @@ export default function FairytaleWeddingTemplate({
             </a>
           </div>
         </section>
+        )}
 
         {/* 4. Hotel Accommodation Card (Canva Template 2 feature) */}
         <section className="px-6 py-4">
@@ -205,6 +225,7 @@ export default function FairytaleWeddingTemplate({
         </section>
 
         {/* 6. Itinerario de Boda */}
+        {isSectionActive("itinerario") && (
         <section className="px-6 py-8">
           <div className="text-center mb-6">
             <span className="text-2xl">💍</span>
@@ -244,8 +265,10 @@ export default function FairytaleWeddingTemplate({
             ))}
           </div>
         </section>
+        )}
 
         {/* 7. Dress Code Semi-Formal */}
+        {isSectionActive("dressCode") && (
         <section className="px-6 py-4">
           <div className="bg-white p-6 rounded-3xl border border-[#EFD2A6] shadow-sm text-center">
             <h3 className="text-xs uppercase tracking-widest font-bold text-[#AF936A] font-serif">
@@ -265,8 +288,10 @@ export default function FairytaleWeddingTemplate({
             </div>
           </div>
         </section>
+        )}
 
         {/* 8. Wedding Registry */}
+        {isSectionActive("mesaRegalos") && (
         <section className="px-6 py-4">
           <div className="bg-white p-6 rounded-3xl border border-[#EFD2A6] shadow-sm text-center">
             <Gift className="w-6 h-6 mx-auto text-[#AF936A]" />
@@ -288,8 +313,10 @@ export default function FairytaleWeddingTemplate({
             )}
           </div>
         </section>
+        )}
 
         {/* 9. Formulario RSVP con WhatsApp */}
+        {isSectionActive("rsvp") && (
         <RsvpSection
           eventoId={data.id}
           eventoTitulo={data.titulo}
@@ -297,7 +324,9 @@ export default function FairytaleWeddingTemplate({
           maxPases={data.maxPasesPorInvitado || 2}
           fechaLimite={data.fechaLimiteRsvp || "July 15"}
           template={template}
+          permitirConfirmacionTelefono={data.permitirConfirmacionTelefono !== false}
         />
+        )}
 
         {/* 10. Despedida y Agendar */}
         <footer className="px-6 pt-6 pb-12 text-center">

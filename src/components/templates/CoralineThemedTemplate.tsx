@@ -21,6 +21,7 @@ import TimelineSection from "../invitation/TimelineSection";
 import AddToCalendarButton from "../invitation/AddToCalendarButton";
 import EnvelopeIntro from "../invitation/EnvelopeIntro";
 import { InvitationData } from "../invitation/InvitationMobileView";
+import { isSectionEnabledInEvent, type SeccionId } from "@/config/templateSections";
 
 export default function CoralineThemedTemplate({
   data,
@@ -31,6 +32,17 @@ export default function CoralineThemedTemplate({
 }) {
   const template = getTemplate("CORALINE_MYSTICAL");
   const [unlocked, setUnlocked] = useState(false);
+
+  // Hallazgo 10: respetar configPlantilla.secciones igual que Quince Rosado
+  // (sección ausente en la config = visible)
+  const isSectionActive = (sectionId: SeccionId) =>
+    isSectionEnabledInEvent(sectionId, data.configPlantilla, {
+      mostrarFrasePersonalizada: data.mostrarFrasePersonalizada,
+      mostrarFechaPlacaHora: data.mostrarFechaPlacaHora,
+      mostrarDressCode: data.mostrarDressCode,
+      mostrarMesaRegalos: data.mostrarMesaRegalos,
+      permitirConfirmacionTelefono: data.permitirConfirmacionTelefono,
+    });
 
   return (
     <div className="min-h-screen flex justify-center bg-[#070E2C] selection:bg-yellow-400 selection:text-black antialiased relative overflow-hidden">
@@ -52,9 +64,12 @@ export default function CoralineThemedTemplate({
         <div className="absolute inset-0 pointer-events-none opacity-40 bg-[radial-gradient(#ffd700_1px,transparent_1px)] [background-size:24px_24px]" />
 
         {/* Audio flotante */}
-        <AudioPlayer audioUrl={data.musicaUrl} template={template} />
+        {isSectionActive("musica") && (
+          <AudioPlayer audioUrl={data.musicaUrl} template={template} />
+        )}
 
         {/* 1. Portada del Mundo Secreto de Coraline */}
+        {isSectionActive("portada") && (
         <section className="px-6 pt-12 pb-8 text-center flex flex-col items-center relative z-20">
           <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-purple-900/60 border border-yellow-400/40 text-[10px] uppercase tracking-widest text-[#FFD700] mb-3">
             <Key className="w-3.5 h-3.5" />
@@ -100,15 +115,19 @@ export default function CoralineThemedTemplate({
             <span className="h-[1px] w-12 bg-yellow-400/60" />
           </div>
         </section>
+        )}
 
         {/* 2. Cuenta Regresiva Mística */}
-        <CountdownTimer
-          targetDate={data.fechaEvento}
-          template={template}
-          titulo="THE CLOCK IS TICKING DOWN..."
-        />
+        {isSectionActive("cuentaRegresiva") && (
+          <CountdownTimer
+            targetDate={data.fechaEvento}
+            template={template}
+            titulo="THE CLOCK IS TICKING DOWN..."
+          />
+        )}
 
         {/* 3. El Secreto / Dinámica del Libro de Dedicatorias (Canva T4 feature) */}
+        {isSectionActive("dedicatoria") && (
         <section className="px-6 py-6 text-center z-20">
           <div className="bg-[#121A42] p-6 rounded-3xl border border-yellow-400/30 shadow-lg">
             <BookOpen className="w-8 h-8 mx-auto text-[#FFD700] mb-2" />
@@ -120,8 +139,10 @@ export default function CoralineThemedTemplate({
             </p>
           </div>
         </section>
+        )}
 
         {/* 4. Ubicación de la Puerta Secreta */}
+        {isSectionActive("ubicaciones") && (
         <section className="px-6 py-6 space-y-4 z-20">
           <div className="text-center mb-2">
             <span className="text-2xl">🚪</span>
@@ -171,11 +192,15 @@ export default function CoralineThemedTemplate({
             </a>
           </div>
         </section>
+        )}
 
         {/* 5. Itinerario Místico */}
-        <TimelineSection items={data.itinerarioJson} template={template} />
+        {isSectionActive("itinerario") && (
+          <TimelineSection items={data.itinerarioJson} template={template} />
+        )}
 
         {/* 6. Dress Code Temático (Amarillo & Azul) */}
+        {isSectionActive("dressCode") && (
         <section className="px-6 py-4 z-20">
           <div className="bg-[#121A42] p-6 rounded-3xl border border-yellow-400/30 shadow-sm text-center">
             <span className="text-2xl">🧥</span>
@@ -193,8 +218,10 @@ export default function CoralineThemedTemplate({
             </div>
           </div>
         </section>
+        )}
 
         {/* 7. Formulario RSVP con WhatsApp */}
+        {isSectionActive("rsvp") && (
         <RsvpSection
           eventoId={data.id}
           eventoTitulo={data.titulo}
@@ -202,7 +229,9 @@ export default function CoralineThemedTemplate({
           maxPases={data.maxPasesPorInvitado || 2}
           fechaLimite={data.fechaLimiteRsvp}
           template={template}
+          permitirConfirmacionTelefono={data.permitirConfirmacionTelefono !== false}
         />
+        )}
 
         {/* 8. Despedida y Agendar */}
         <footer className="px-6 pt-6 pb-12 text-center z-20">

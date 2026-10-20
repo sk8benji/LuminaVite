@@ -38,12 +38,34 @@ import TemplateSectionBuilder from "@/components/admin/TemplateSectionBuilder";
 import EventSettingsConfig from "@/components/admin/EventSettingsConfig";
 import TemplatePickerModal from "@/components/admin/TemplatePickerModal";
 
+// Valores de ejemplo con los que arranca el formulario en modo crear (hallazgo 15)
+const DEMO_INITIAL_VALUES = {
+  titulo: "Magdalena",
+  slug: "mi-celebracion",
+  telefonoWhatsappRsvp: "18181234567",
+  recepcionNombre: "Gran Salón Diamante",
+};
+
+// Una foto es "de plantilla/stock" si NO fue subida por el usuario a S3 (hallazgo 12)
+function esFotoDePreset(url?: string | null): boolean {
+  if (!url) return true;
+  return !(
+    url.includes("s3.") ||
+    url.includes("amazonaws.com") ||
+    url.includes("clientes/")
+  );
+}
+
 function NuevoEventoContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const editSlug = searchParams.get("editar") || searchParams.get("slug");
   const isEditMode = Boolean(editSlug);
   const [isLoadingEdit, setIsLoadingEdit] = useState(Boolean(editSlug));
+  // Hallazgo 1: si al guardar en modo "crear" el slug ya existía y se actualizó
+  // ese evento, el editor pasa visualmente a modo edición ("Guardar Cambios")
+  const [existingEventMode, setExistingEventMode] = useState(false);
+  const effectiveEditMode = isEditMode || existingEventMode;
   const [step, setStep] = useState(1);
   const [isSaving, setIsSaving] = useState(false);
   const [uploadingS3, setUploadingS3] = useState(false);
@@ -491,6 +513,8 @@ function NuevoEventoContent() {
       fraseEs: `Favor de confirmar antes del ${deadlineDay} de ${monthEs}`,
       fraseEn: `Please confirm before ${monthEn} ${deadlineDay}`,
       fechaLimiteRsvp: `${deadlineDay} de ${monthEs.toLowerCase()}`,
+      // Hallazgo 5: la fecha límite real como ISO (el texto va en rsvpFechaLimite)
+      fechaLimiteIso: deadlineDate.toISOString(),
     };
   };
 
@@ -588,7 +612,7 @@ function NuevoEventoContent() {
     setFormData((prev) => ({
       ...prev,
       rsvpDiasAntes: val,
-      fechaLimiteRsvp: rsvpCalc.fechaLimiteRsvp,
+      fechaLimiteRsvp: rsvpCalc.fechaLimiteIso,
       rsvpFechaLimite: prev.idiomaDefault === "en" ? rsvpCalc.fraseEn : rsvpCalc.fraseEs,
     }));
   };
@@ -604,7 +628,7 @@ function NuevoEventoContent() {
       fechaTextoPersonalizada: formatted.formalText,
       fechaPlacaMes: formatted.mes,
       fechaPlacaHora: formatted.horaPlaca,
-      fechaLimiteRsvp: rsvpCalc.fechaLimiteRsvp,
+      fechaLimiteRsvp: rsvpCalc.fechaLimiteIso,
       rsvpFechaLimite: prev.idiomaDefault === "en" ? rsvpCalc.fraseEn : rsvpCalc.fraseEs,
     }));
   };
@@ -725,6 +749,11 @@ function NuevoEventoContent() {
           fechaPlacaMes: formatted.mes || prev.fechaPlacaMes,
           fechaPlacaHora: formatted.horaPlaca || prev.fechaPlacaHora,
           fotoPortadaUrl: isUserUploadedPhoto ? prev.fotoPortadaUrl : (preset.fotoPortadaUrl || prev.fotoPortadaUrl),
+          // Hallazgo 12: mismo criterio que la portada para las demás fotos —
+          // foto de plantilla/stock se reemplaza por la del preset nuevo; subida S3 del usuario se conserva
+          fotoInfanciaUrl: esFotoDePreset(prev.fotoInfanciaUrl) ? (preset.fotoInfanciaUrl || prev.fotoInfanciaUrl) : prev.fotoInfanciaUrl,
+          fotoActualUrl: esFotoDePreset(prev.fotoActualUrl) ? (preset.fotoActualUrl || prev.fotoActualUrl) : prev.fotoActualUrl,
+          fotoCierreUrl: esFotoDePreset(prev.fotoCierreUrl) ? (preset.fotoCierreUrl || prev.fotoCierreUrl) : prev.fotoCierreUrl,
           musicaUrl: preset.musicaUrl || prev.musicaUrl,
           dressCodeTitulo: preset.dressCodeTitulo || prev.dressCodeTitulo,
           dressCodeNota: preset.dressCodeNota || prev.dressCodeNota,
@@ -850,14 +879,20 @@ function NuevoEventoContent() {
 
           const paquete = ev.ordenesCompra?.[0]?.paqueteId || ev.tipoPlan || null;
 
+          // Hallazgo 7: el input datetime-local trabaja en hora LOCAL del navegador;
+          // construir su valor con componentes locales (toISOString es UTC y corre la hora)
+          const feDate = ev.fechaEvento ? new Date(ev.fechaEvento) : null;
+          const fechaEventoLocal =
+            feDate && !isNaN(feDate.getTime())
+              ? `${feDate.getFullYear()}-${String(feDate.getMonth() + 1).padStart(2, "0")}-${String(feDate.getDate()).padStart(2, "0")}T${String(feDate.getHours()).padStart(2, "0")}:${String(feDate.getMinutes()).padStart(2, "0")}`
+              : null;
+
           setFormData((prev) => ({
             ...prev,
             ...ev,
             tipoPlan: paquete || prev.tipoPlan,
             configPlantilla: parsedConfig,
-            fechaEvento: ev.fechaEvento
-              ? new Date(ev.fechaEvento).toISOString().slice(0, 16)
-              : prev.fechaEvento,
+            fechaEvento: fechaEventoLocal ?? prev.fechaEvento,
           }));
         }
       })
@@ -868,17 +903,68 @@ function NuevoEventoContent() {
       .finally(() => setIsLoadingEdit(false));
   }, [editSlug]);
 
+  // Hallazgo 15: ¿el formulario sigue EXACTAMENTE con los datos de ejemplo iniciales?
+  const isStillDemoData = () =>
+    formData.titulo === DEMO_INITIAL_VALUES.titulo &&
+    formData.slug === DEMO_INITIAL_VALUES.slug &&
+    formData.telefonoWhatsappRsvp === DEMO_INITIAL_VALUES.telefonoWhatsappRsvp &&
+    formData.recepcionNombre === DEMO_INITIAL_VALUES.recepcionNombre;
+
   // Guardar en la base de datos (POST para crear, PUT para actualizar)
   const handleSave = async () => {
+    // Hallazgo 15: en modo crear, no publicar con los datos de ejemplo intactos
+    if (!effectiveEditMode && isStillDemoData()) {
+      setErrorMsg("⚠️ Estás usando los datos de ejemplo: personalízalos antes de publicar.");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+
     setIsSaving(true);
     setErrorMsg(null);
 
     try {
-      const method = isEditMode ? "PUT" : "POST";
+      // Hallazgo 7: el valor del input datetime-local es hora LOCAL del navegador → ISO real
+      const fechaEventoIso = formData.fechaEvento
+        ? new Date(formData.fechaEvento).toISOString()
+        : formData.fechaEvento;
+
+      // Hallazgo 5: fechaLimiteRsvp viaja como ISO real (fechaEvento − rsvpDiasAntes);
+      // el texto de la frase va en rsvpFechaLimite
+      const rsvpCalc = computeRsvpPhrases(formData.fechaEvento, Number(formData.rsvpDiasAntes) || 15);
+      const limiteParsed = formData.fechaLimiteRsvp ? new Date(formData.fechaLimiteRsvp) : null;
+      const payload = {
+        ...formData,
+        fechaEvento: fechaEventoIso,
+        fechaLimiteRsvp:
+          limiteParsed && !isNaN(limiteParsed.getTime())
+            ? limiteParsed.toISOString()
+            : rsvpCalc.fechaLimiteIso,
+        rsvpFechaLimite:
+          formData.rsvpFechaLimite ||
+          (formData.idiomaDefault === "en" ? rsvpCalc.fraseEn : rsvpCalc.fraseEs),
+      };
+
+      // Hallazgo 1: en modo crear, verificar primero si el slug ya existe;
+      // si existe, se ACTUALIZA ese evento con PUT en vez de perder el formulario en un 409
+      let method = effectiveEditMode ? "PUT" : "POST";
+      let slugAlreadyExists = false;
+      if (!effectiveEditMode && formData.slug) {
+        try {
+          const checkRes = await fetch(`/api/eventos?slug=${encodeURIComponent(formData.slug)}`);
+          if (checkRes.ok) {
+            const checkData = await checkRes.json();
+            if (checkData.evento) {
+              method = "PUT";
+              slugAlreadyExists = true;
+            }
+          }
+        } catch {}
+      }
+
       const res = await fetch("/api/eventos", {
         method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       });
 
       const result = await res.json();
@@ -887,7 +973,11 @@ function NuevoEventoContent() {
         throw new Error(result.error || "No se pudo guardar la invitación.");
       }
 
-      if (isEditMode) {
+      if (slugAlreadyExists) {
+        setExistingEventMode(true);
+        setSaveSuccessMsg("Esta invitación ya existía: se actualizaron sus datos.");
+        setTimeout(() => setSaveSuccessMsg(null), 5000);
+      } else if (isEditMode) {
         setSaveSuccessMsg("¡Cambios guardados con éxito en la invitación!");
         setTimeout(() => setSaveSuccessMsg(null), 4000);
       } else {
@@ -924,7 +1014,7 @@ function NuevoEventoContent() {
           </Link>
           <div>
             <h1 className="text-base font-bold text-stone-900 flex items-center gap-2">
-              {isEditMode ? (
+              {effectiveEditMode ? (
                 <>
                   <span className="text-amber-600">✏️</span>
                   <span>Editar Invitación: {formData.titulo}</span>
@@ -988,7 +1078,7 @@ function NuevoEventoContent() {
             className="flex items-center gap-1.5 px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-semibold shadow-md transition disabled:opacity-50 cursor-pointer"
           >
             {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
-            <span>{isSaving ? "Guardando..." : isEditMode ? "Guardar Cambios" : "Publicar Invitación"}</span>
+            <span>{isSaving ? "Guardando..." : effectiveEditMode ? "Guardar Cambios" : "Publicar Invitación"}</span>
           </button>
         </div>
       </header>
@@ -1016,6 +1106,15 @@ function NuevoEventoContent() {
             <button onClick={() => setErrorMsg(null)} className="font-bold ml-2">
               ×
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* Hallazgo 15: aviso permanente en modo crear — el formulario parte de datos de ejemplo */}
+      {!effectiveEditMode && (
+        <div className="max-w-7xl mx-auto px-6 mt-4">
+          <div className="p-3 bg-amber-50 border border-amber-200 rounded-xl text-amber-800 text-xs font-medium shadow-sm">
+            📝 Estás partiendo de datos de ejemplo: cambia el nombre, el enlace, el teléfono y el salón por los datos reales de tu evento antes de publicar.
           </div>
         </div>
       )}
@@ -1071,7 +1170,7 @@ function NuevoEventoContent() {
               setFormData={setFormData}
               computeRsvpPhrases={computeRsvpPhrases}
               handleRsvpDiasChange={handleRsvpDiasChange}
-              isEditMode={isEditMode}
+              isEditMode={effectiveEditMode}
               handleSave={handleSave}
               isSaving={isSaving}
               onSelectTemplate={handleSelectTemplate}

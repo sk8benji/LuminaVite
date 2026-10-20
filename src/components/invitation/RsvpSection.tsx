@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import confetti from "canvas-confetti";
-import { Send, CheckCircle2, XCircle } from "lucide-react";
+import { Send, CheckCircle2, XCircle, Phone } from "lucide-react";
 import { TemplateConfig } from "@/lib/templates";
 import { generateWhatsAppRsvpUrl } from "@/lib/whatsapp";
 
@@ -13,6 +13,8 @@ interface RsvpSectionProps {
   maxPases: number;
   fechaLimite?: string | null;
   template: TemplateConfig;
+  // Hallazgo 11: respeta el toggle "permitir confirmación por teléfono" del evento
+  permitirConfirmacionTelefono?: boolean;
 }
 
 export default function RsvpSection({
@@ -22,6 +24,7 @@ export default function RsvpSection({
   maxPases,
   fechaLimite,
   template,
+  permitirConfirmacionTelefono = true,
 }: RsvpSectionProps) {
   const [nombre, setNombre] = useState("");
   const [asistencia, setAsistencia] = useState<"SI" | "NO">("SI");
@@ -257,6 +260,18 @@ export default function RsvpSection({
             {isSubmitting ? "Connecting to WhatsApp..." : "Submit RSVP via WhatsApp"}
           </button>
         </form>
+
+        {/* Hallazgo 11: enlace de llamada al anfitrión, controlado por el toggle del evento */}
+        {permitirConfirmacionTelefono !== false && telefonoWhatsapp && (
+          <a
+            href={`tel:${telefonoWhatsapp.replace(/[^0-9+]/g, "")}`}
+            className="mt-4 flex items-center justify-center gap-2 w-full py-2 text-[11px] font-bold uppercase tracking-widest opacity-80 hover:opacity-100 transition"
+            style={{ color: template.textSecondary }}
+          >
+            <Phone className="w-4 h-4" />
+            Prefer to call? Call the host
+          </a>
+        )}
       </div>
     </section>
   );

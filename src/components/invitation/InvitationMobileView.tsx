@@ -374,6 +374,7 @@ export default function InvitationMobileView({
           maxPases={data.maxPasesPorInvitado || 4}
           fechaLimite={data.fechaLimiteRsvp}
           template={template}
+          permitirConfirmacionTelefono={data.permitirConfirmacionTelefono !== false}
         />
 
         {/* 7. Mesa de Regalos / Lluvia de Sobres (The Registry) */}

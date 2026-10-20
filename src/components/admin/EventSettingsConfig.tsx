@@ -98,8 +98,6 @@ export default function EventSettingsConfig({
               <option value="QUINCEANERA">Mis XV Años / Quinceañera</option>
               <option value="BODA">Boda / Matrimonio</option>
               <option value="CUMPLEANOS">Cumpleaños / Sweet 16</option>
-              <option value="BAUTIZO">Bautizo / Primera Comunión</option>
-              <option value="OTRO">Gala / Evento Privado</option>
             </select>
           </div>
 
@@ -115,6 +113,7 @@ export default function EventSettingsConfig({
               <input
                 type="text"
                 value={formData.slug}
+                readOnly={isEditMode}
                 onChange={(e) =>
                   updateField(
                     "slug",
@@ -125,12 +124,20 @@ export default function EventSettingsConfig({
                   )
                 }
                 placeholder="maydelin-mendez"
-                className="flex-1 px-3 py-2.5 text-xs text-stone-900 font-semibold bg-transparent focus:outline-none"
+                className={`flex-1 px-3 py-2.5 text-xs text-stone-900 font-semibold bg-transparent focus:outline-none ${
+                  isEditMode ? "opacity-60 cursor-not-allowed" : ""
+                }`}
               />
             </div>
-            <p className="text-[11px] text-stone-400 mt-1">
-              Solo letras minúsculas, números y guiones.
-            </p>
+            {isEditMode ? (
+              <p className="text-[11px] text-stone-400 mt-1">
+                🔒 El enlace no se puede cambiar una vez creado.
+              </p>
+            ) : (
+              <p className="text-[11px] text-stone-400 mt-1">
+                Solo letras minúsculas, números y guiones.
+              </p>
+            )}
           </div>
         </div>
 

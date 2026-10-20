@@ -17,6 +17,7 @@ import EnvelopeIntro from "../invitation/EnvelopeIntro";
 import { InvitationData } from "../invitation/InvitationMobileView";
 import DynamicRsvpForm from "../invitation/DynamicRsvpForm";
 import { sanitizeUrl } from "@/lib/url-safety";
+import { isSectionEnabledInEvent, type SeccionId } from "@/config/templateSections";
 
 function WavyColumn({
   children,
@@ -58,6 +59,17 @@ export default function ElegantRoseTemplate({
   const [lang, setLang] = useState<"en" | "es">(data.idiomaDefault === "en" ? "en" : "es");
   const template = getTemplate("ELEGANT_ROSE");
   const isEn = lang === "en";
+
+  // Hallazgo 10: respetar configPlantilla.secciones igual que Quince Rosado
+  // (sección ausente en la config = visible)
+  const isSectionActive = (sectionId: SeccionId) =>
+    isSectionEnabledInEvent(sectionId, data.configPlantilla, {
+      mostrarFrasePersonalizada: data.mostrarFrasePersonalizada,
+      mostrarFechaPlacaHora: data.mostrarFechaPlacaHora,
+      mostrarDressCode: data.mostrarDressCode,
+      mostrarMesaRegalos: data.mostrarMesaRegalos,
+      permitirConfirmacionTelefono: data.permitirConfirmacionTelefono,
+    });
 
   useEffect(() => {
     if (data.idiomaDefault === "en") setLang("en");
@@ -247,7 +259,7 @@ export default function ElegantRoseTemplate({
   return (
     <div className="min-h-screen flex justify-center bg-[#150D11] selection:bg-rose-300/30 antialiased font-['Montserrat',sans-serif]">
       {/* Audio Real */}
-      {data.musicaUrl && (
+      {data.musicaUrl && isSectionActive("musica") && (
         <audio
           ref={audioRef}
           src={data.musicaUrl}
@@ -279,6 +291,7 @@ export default function ElegantRoseTemplate({
                Silueta curva ondulada desde el borde superior absoluto (top-0),
                sin barra en el top, con resplandor blanco en la cursiva.
         ══════════════════════════════════════════════════════════ */}
+        {isSectionActive("portada") && (
         <section className="relative isolate w-full max-w-[430px] min-h-screen mx-auto overflow-hidden flex flex-col items-center justify-center text-center select-none pt-4 pb-10 px-4">
           {/* Foto de Fondo Maestra (La Quinceañera en Cuerpo Completo) */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -440,10 +453,12 @@ export default function ElegantRoseTemplate({
             </div>
           </div>
         </section>
+        )}
 
         {/* ══════════════════════════════════════════════════════════
             2. REPRODUCTOR DE MÚSICA CON FONDO DE ROSAS BLANCAS
         ══════════════════════════════════════════════════════════ */}
+        {isSectionActive("musica") && (
         <section
           className="relative w-full bg-cover bg-center overflow-hidden"
           style={{ backgroundImage: `url(${ELEGANT_ROSE_ASSETS.rosesBg})` }}
@@ -495,6 +510,7 @@ export default function ElegantRoseTemplate({
             </div>
           </WavyColumn>
         </section>
+        )}
 
         {/* ══════════════════════════════════════════════════════════
             3. GROWING UP: CASTILLO & TIRAS DE PELÍCULA NEGATIVAS
@@ -588,6 +604,7 @@ export default function ElegantRoseTemplate({
         {/* ══════════════════════════════════════════════════════════
             4. THE COUNTDOWN CON FONDO DE ROSAS BLANCAS
         ══════════════════════════════════════════════════════════ */}
+        {isSectionActive("cuentaRegresiva") && (
         <section
           className="relative w-full bg-cover bg-center overflow-hidden"
           style={{ backgroundImage: `url(${ELEGANT_ROSE_ASSETS.rosesBg})` }}
@@ -647,11 +664,13 @@ export default function ElegantRoseTemplate({
             </p>
           </WavyColumn>
         </section>
+        )}
 
         {/* ══════════════════════════════════════════════════════════
             5. THE BIG DAY / ITINERARIO SOBRE VESTIDO ROSA
                Réplica exacta de Canva (media_1791270959870.png)
         ══════════════════════════════════════════════════════════ */}
+        {isSectionActive("itinerario") && (
         <section
           className="relative w-full bg-cover bg-bottom overflow-hidden select-none"
           style={{ backgroundImage: `url(${heroPhotoUrl})` }}
@@ -917,10 +936,12 @@ export default function ElegantRoseTemplate({
             </div>
           </WavyColumn>
         </section>
+        )}
 
         {/* ══════════════════════════════════════════════════════════
             6. CORTE DE HONOR CON FONDO DE ROSAS CREMA
         ══════════════════════════════════════════════════════════ */}
+        {isSectionActive("corteHonor") && (
         <section
           className="relative w-full bg-cover bg-center overflow-hidden"
           style={{ backgroundImage: `url(${ELEGANT_ROSE_ASSETS.peachBg})` }}
@@ -970,6 +991,7 @@ export default function ElegantRoseTemplate({
             </div>
           </WavyColumn>
         </section>
+        )}
 
         {/* ══════════════════════════════════════════════════════════
             7. DETAILS CON FONDO DE BOUQUET DE ROSAS
@@ -986,6 +1008,7 @@ export default function ElegantRoseTemplate({
             <img src={ELEGANT_ROSE_ASSETS.crown} alt="Crown" className="w-7 h-auto my-1.5 opacity-90 drop-shadow" />
 
             {/* Dress Code */}
+            {isSectionActive("dressCode") && (
             <div className="mt-6 mb-6">
               <p className="font-['Cinzel'] text-xs sm:text-sm font-bold tracking-[0.25em] uppercase text-rose-200 drop-shadow-sm">
                 DRESS CODE
@@ -1005,8 +1028,10 @@ export default function ElegantRoseTemplate({
                 We invite our guests to dress in elegant formal attire as we celebrate this special occasion together.
               </p>
             </div>
+            )}
 
             {/* Gifts */}
+            {isSectionActive("mesaRegalos") && (
             <div className="my-6">
               <p className="font-['Cinzel'] text-xs sm:text-sm font-bold tracking-[0.25em] uppercase text-rose-200 drop-shadow-sm">
                 GIFTS
@@ -1033,6 +1058,7 @@ export default function ElegantRoseTemplate({
                 </a>
               )}
             </div>
+            )}
 
             {/* Accommodation */}
             <div className="my-6">
@@ -1059,6 +1085,7 @@ export default function ElegantRoseTemplate({
         {/* ══════════════════════════════════════════════════════════
             8. PLEASE RSVP CON FONDO DE PÉTALOS DE ROSA
         ══════════════════════════════════════════════════════════ */}
+        {isSectionActive("rsvp") && (
         <section
           id="rsvp"
           className="relative w-full bg-cover bg-center overflow-hidden"
@@ -1099,6 +1126,7 @@ export default function ElegantRoseTemplate({
             </div>
           </WavyColumn>
         </section>
+        )}
       </main>
     </div>
   );
