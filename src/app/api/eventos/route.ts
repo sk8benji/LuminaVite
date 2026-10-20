@@ -62,6 +62,18 @@ export async function POST(req: NextRequest) {
     // C6: sanitizar URLs — solo http(s), rechaza javascript:/data:
     sanitizeEventUrls(body);
 
+    // B3: validar modalidadRsvp igual que el PUT/PATCH del panel
+    if (
+      body.modalidadRsvp !== undefined &&
+      body.modalidadRsvp !== null &&
+      !VALID_MODALIDADES_RSVP.includes(body.modalidadRsvp)
+    ) {
+      return NextResponse.json(
+        { error: "Modalidad inválida. Debe ser ESTRICTO, HIBRIDO o ABIERTO." },
+        { status: 400 }
+      );
+    }
+
     const {
       titulo,
       slug,
@@ -224,6 +236,14 @@ export async function POST(req: NextRequest) {
         fechaPlacaHora: fechaPlacaHora || null,
         fechaPlacaHoraEn: fechaPlacaHoraEn || null,
         fechaPlacaLugar: fechaPlacaLugar || null,
+        countdownEncabezado: countdownEncabezado || null,
+        dressCodeEtiqueta: dressCodeEtiqueta || null,
+        dressCodeColoresReservados: dressCodeColoresReservados || null,
+        rsvpFechaLimite: rsvpFechaLimite || null,
+        rsvpDiasAntes: rsvpDiasAntes !== undefined && rsvpDiasAntes !== null ? Number(rsvpDiasAntes) : undefined,
+        autorBendicion: autorBendicion || null,
+        textoDisco: textoDisco || null,
+        mensajeDespedida: mensajeDespedida || null,
         mostrarDressCode: mostrarDressCode !== false,
         dressCodeTitulo: dressCodeTitulo || null,
         dressCodeTituloEn: dressCodeTituloEn || null,
@@ -348,6 +368,14 @@ export async function PUT(req: NextRequest) {
         fechaPlacaHora: body.fechaPlacaHora !== undefined ? (body.fechaPlacaHora || null) : undefined,
         fechaPlacaHoraEn: body.fechaPlacaHoraEn !== undefined ? (body.fechaPlacaHoraEn || null) : undefined,
         fechaPlacaLugar: body.fechaPlacaLugar !== undefined ? (body.fechaPlacaLugar || null) : undefined,
+        countdownEncabezado: body.countdownEncabezado !== undefined ? (body.countdownEncabezado || null) : undefined,
+        dressCodeEtiqueta: body.dressCodeEtiqueta !== undefined ? (body.dressCodeEtiqueta || null) : undefined,
+        dressCodeColoresReservados: body.dressCodeColoresReservados !== undefined ? (body.dressCodeColoresReservados || null) : undefined,
+        rsvpFechaLimite: body.rsvpFechaLimite !== undefined ? (body.rsvpFechaLimite || null) : undefined,
+        rsvpDiasAntes: body.rsvpDiasAntes !== undefined && body.rsvpDiasAntes !== null ? Number(body.rsvpDiasAntes) : undefined,
+        autorBendicion: body.autorBendicion !== undefined ? (body.autorBendicion || null) : undefined,
+        textoDisco: body.textoDisco !== undefined ? (body.textoDisco || null) : undefined,
+        mensajeDespedida: body.mensajeDespedida !== undefined ? (body.mensajeDespedida || null) : undefined,
         mostrarDressCode: body.mostrarDressCode !== undefined ? Boolean(body.mostrarDressCode) : undefined,
         dressCodeTitulo: body.dressCodeTitulo !== undefined ? (body.dressCodeTitulo || null) : undefined,
         dressCodeTituloEn: body.dressCodeTituloEn !== undefined ? (body.dressCodeTituloEn || null) : undefined,
@@ -378,6 +406,13 @@ export async function PUT(req: NextRequest) {
     });
   } catch (error: any) {
     console.error("Error al actualizar evento en PostgreSQL:", error);
+    // Slug inexistente al actualizar: 404 claro en vez del 500 genérico
+    if (error.code === "P2025") {
+      return NextResponse.json(
+        { error: "No existe una invitación con ese enlace (slug) para actualizar." },
+        { status: 404 }
+      );
+    }
     return NextResponse.json(
       { error: "Ocurrió un error al actualizar el evento en la base de datos." },
       { status: 500 }
