@@ -227,9 +227,14 @@ export async function POST(req: NextRequest, context: RouteContext) {
     // Sin orden no hay SMS gratis (antes el default era true).
     // Además: no reenviar SMS si el invitado ya estaba confirmado (evita abuso).
     const PLANES_CON_SMS = ["assisted", "vip"];
+    // Eventos propios del admin (demos internas): siempre SMS, aunque no
+    // tengan orden de compra. Un cliente nunca tiene rol ADMIN, así que
+    // esta excepción no se puede aprovechar desde cuentas de clientes.
+    const esEventoDelAdmin = (evento.usuario as any)?.rol === "ADMIN";
     const planConSms =
-      Boolean(evento.ordenesCompra?.length) &&
-      PLANES_CON_SMS.includes(paquete);
+      esEventoDelAdmin ||
+      (Boolean(evento.ordenesCompra?.length) &&
+        PLANES_CON_SMS.includes(paquete));
     const yaEstabaConfirmado = guest.status === "attending";
 
     if (planConSms && status === "attending" && cleanPhone && !yaEstabaConfirmado) {

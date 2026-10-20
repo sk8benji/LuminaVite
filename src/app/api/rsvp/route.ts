@@ -249,9 +249,14 @@ export async function POST(req: NextRequest) {
     // B1+H2: SMS solo con orden pagada de un plan que lo incluye (IDs reales de PACKAGES).
     // Sin orden no hay SMS gratis (antes el default era true).
     const PLANES_CON_SMS = ["assisted", "vip"];
+    // Eventos propios del admin (demos internas): siempre SMS, aunque no
+    // tengan orden de compra. Un cliente nunca tiene rol ADMIN, así que
+    // esta excepción no se puede aprovechar desde cuentas de clientes.
+    const esEventoDelAdmin = (evento as any).usuario?.rol === "ADMIN";
     const planConSms =
-      Boolean((evento as any).ordenesCompra?.length) &&
-      PLANES_CON_SMS.includes(paquete);
+      esEventoDelAdmin ||
+      (Boolean((evento as any).ordenesCompra?.length) &&
+        PLANES_CON_SMS.includes(paquete));
 
     // H2: no reenviar SMS en actualizaciones (permitirActualizacion no debe
     // poder disparar SMS repetidos a números arbitrarios)
