@@ -185,13 +185,13 @@ export default function TemplatePickerModal({
         {/* Cabecera del Modal */}
         <div className="p-6 bg-gradient-to-r from-stone-900 via-[#3D0A1C] to-stone-900 text-white flex items-center justify-between border-b border-white/10 shrink-0">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center text-amber-300">
+            <div className="w-10 h-10 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white">
               <Palette className="w-5 h-5" />
             </div>
             <div>
               <h2 className="text-lg font-bold font-serif tracking-tight flex items-center gap-2">
                 <span>Elige la Plantilla de tu Invitación</span>
-                <span className="text-[10px] font-sans font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-400/20 text-amber-200 border border-amber-300/30">
+                <span className="text-[10px] font-sans font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-white/10 text-white border border-white/20">
                   {TEMPLATE_CATALOG.length} Diseños
                 </span>
               </h2>
@@ -234,7 +234,7 @@ export default function TemplatePickerModal({
                   : "bg-white text-stone-600 hover:bg-stone-200/60 border border-stone-200"
               }`}
             >
-              <Crown className="w-3.5 h-3.5 text-pink-500" />
+              <Crown className="w-3.5 h-3.5" />
               <span>Mis XV Años (4)</span>
             </button>
             <button
@@ -246,7 +246,7 @@ export default function TemplatePickerModal({
                   : "bg-white text-stone-600 hover:bg-stone-200/60 border border-stone-200"
               }`}
             >
-              <Heart className="w-3.5 h-3.5 text-rose-500" />
+              <Heart className="w-3.5 h-3.5" />
               <span>Bodas & Matrimonios (2)</span>
             </button>
             <button
@@ -258,7 +258,7 @@ export default function TemplatePickerModal({
                   : "bg-white text-stone-600 hover:bg-stone-200/60 border border-stone-200"
               }`}
             >
-              <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+              <Sparkles className="w-3.5 h-3.5" />
               <span>Temáticas & Galas (4)</span>
             </button>
           </div>
@@ -279,7 +279,7 @@ export default function TemplatePickerModal({
                 className={`group rounded-2xl border-2 transition-all flex flex-col justify-between overflow-hidden bg-white ${
                   isCurrent
                     ? "border-[#7A002A] ring-2 ring-[#7A002A]/20 shadow-lg"
-                    : "border-stone-200 hover:border-pink-300 hover:shadow-md"
+                    : "border-stone-200 hover:border-stone-300 hover:shadow-md"
                 }`}
               >
                 {/* Portada / Thumbnail */}
@@ -288,6 +288,8 @@ export default function TemplatePickerModal({
                   <img
                     src={tpl.thumbnail}
                     alt={tpl.name}
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
                     onError={(e) => {
                       (e.target as HTMLImageElement).src =
@@ -313,7 +315,7 @@ export default function TemplatePickerModal({
                   </div>
 
                   {isCurrent && (
-                    <div className="absolute top-3 right-3 px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-500 text-white flex items-center gap-1 shadow-md">
+                    <div className="absolute top-3 right-3 px-2.5 py-1 rounded-full text-[10px] font-bold bg-[#7A002A] text-white flex items-center gap-1 shadow-md">
                       <Check className="w-3 h-3" />
                       <span>Activa</span>
                     </div>
@@ -321,7 +323,7 @@ export default function TemplatePickerModal({
 
                   {/* Título sobre el thumbnail */}
                   <div className="absolute bottom-3 left-3 right-3 text-white">
-                    <h3 className="font-serif font-bold text-base leading-snug drop-shadow-md">
+                    <h3 className="font-serif font-bold text-base leading-snug drop-shadow-md [text-shadow:0_1px_8px_rgba(0,0,0,0.85)]">
                       {tpl.name}
                     </h3>
                     <div className="flex items-center gap-1.5 mt-1.5">
@@ -377,7 +379,7 @@ export default function TemplatePickerModal({
                       }}
                       className={`flex-1 py-2 px-3.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer shadow-xs ${
                         isCurrent
-                          ? "bg-emerald-600 hover:bg-emerald-700 text-white"
+                          ? "bg-stone-900 hover:bg-stone-800 text-white"
                           : "bg-[#7A002A] hover:bg-[#5e0020] text-white"
                       }`}
                     >
@@ -388,7 +390,7 @@ export default function TemplatePickerModal({
                         </>
                       ) : (
                         <>
-                          <Sparkles className="w-3.5 h-3.5 text-amber-200" />
+                          <Sparkles className="w-3.5 h-3.5 text-white" />
                           <span>Elegir esta Plantilla</span>
                         </>
                       )}

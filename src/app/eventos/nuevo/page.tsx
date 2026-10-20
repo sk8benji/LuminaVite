@@ -1036,15 +1036,15 @@ function NuevoEventoContent() {
           <button
             type="button"
             onClick={() => setShowTemplatePicker(true)}
-            className="inline-flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-pink-50 via-white to-amber-50 hover:from-pink-100 hover:to-amber-100 text-[#7A002A] rounded-xl text-xs font-semibold border border-pink-200 transition shadow-2xs cursor-pointer"
+            className="inline-flex items-center gap-2 px-3 py-1.5 bg-white hover:bg-stone-50 text-[#7A002A] rounded-xl text-xs font-semibold border border-stone-200 transition shadow-2xs cursor-pointer"
             title="Cambiar la plantilla visual de la invitación"
           >
-            <Palette className="w-3.5 h-3.5 text-[#C5A059]" />
+            <Palette className="w-3.5 h-3.5 text-[#7A002A]" />
             <span className="hidden md:inline text-stone-500 font-normal">Plantilla:</span>
             <span className="font-bold max-w-[120px] sm:max-w-[180px] truncate">
               {TEMPLATES[formData.estiloPlantilla as TemplateId]?.name?.split("(")[0]?.trim() || formData.estiloPlantilla}
             </span>
-            <span className="text-[10px] text-pink-700 underline font-bold">Cambiar</span>
+            <span className="text-[10px] text-[#7A002A] underline font-bold">Cambiar</span>
           </button>
 
           {/* Botón ver en vivo si existe slug */}
@@ -1053,7 +1053,7 @@ function NuevoEventoContent() {
               href={`/${formData.slug}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 bg-pink-50 hover:bg-pink-100 text-[#7A002A] rounded-xl text-xs font-semibold border border-pink-200 transition"
+              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 bg-white hover:bg-stone-50 text-[#7A002A] rounded-xl text-xs font-semibold border border-stone-200 transition"
             >
               <Eye className="w-4 h-4" />
               <span>Ver en Vivo</span>
@@ -1226,7 +1226,7 @@ function NuevoEventoContent() {
                     <Share2 className="w-3.5 h-3.5 text-[#5A3E44]" />
                     1. URL Pública (Para Invitados vía WhatsApp)
                   </span>
-                  <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                  <span className="text-[10px] font-semibold text-stone-600 bg-stone-100 px-2 py-0.5 rounded-full border border-stone-200">
                     Sin login
                   </span>
                 </div>

@@ -12,11 +12,9 @@ import {
   Phone,
   CheckCircle,
   HelpCircle,
-  Sparkles,
 } from "lucide-react";
 import type { InvitationData } from "@/components/invitation/InvitationMobileView";
-import { TemplateId } from "@/lib/templates";
-import { TEMPLATE_CATALOG } from "@/components/admin/TemplatePickerModal";
+import { TemplateId, TEMPLATES } from "@/lib/templates";
 import OpenGraphPreview from "./OpenGraphPreview";
 
 interface EventSettingsConfigProps {
@@ -48,7 +46,6 @@ export default function EventSettingsConfig({
   isEditMode,
   handleSave,
   isSaving,
-  onSelectTemplate,
   onOpenTemplatePicker,
 }: EventSettingsConfigProps) {
   const dateStr =
@@ -152,7 +149,7 @@ export default function EventSettingsConfig({
               onClick={() => updateField("idiomaDefault", "es")}
               className={`p-3 rounded-xl border text-center transition cursor-pointer flex flex-col items-center justify-center gap-1 ${
                 formData.idiomaDefault === "es"
-                  ? "border-[#7A002A] bg-pink-50/50 text-[#7A002A] ring-1 ring-[#7A002A]"
+                  ? "border-[#7A002A] bg-stone-50 text-[#7A002A] ring-1 ring-[#7A002A]"
                   : "border-stone-200 bg-white text-stone-600 hover:bg-stone-50"
               }`}
             >
@@ -166,7 +163,7 @@ export default function EventSettingsConfig({
               onClick={() => updateField("idiomaDefault", "en")}
               className={`p-3 rounded-xl border text-center transition cursor-pointer flex flex-col items-center justify-center gap-1 ${
                 formData.idiomaDefault === "en"
-                  ? "border-[#7A002A] bg-pink-50/50 text-[#7A002A] ring-1 ring-[#7A002A]"
+                  ? "border-[#7A002A] bg-stone-50 text-[#7A002A] ring-1 ring-[#7A002A]"
                   : "border-stone-200 bg-white text-stone-600 hover:bg-stone-50"
               }`}
             >
@@ -180,7 +177,7 @@ export default function EventSettingsConfig({
               onClick={() => updateField("idiomaDefault", "bilingual")}
               className={`p-3 rounded-xl border text-center transition cursor-pointer flex flex-col items-center justify-center gap-1 ${
                 formData.idiomaDefault === "bilingual" || !formData.idiomaDefault
-                  ? "border-[#7A002A] bg-pink-50/50 text-[#7A002A] ring-1 ring-[#7A002A]"
+                  ? "border-[#7A002A] bg-stone-50 text-[#7A002A] ring-1 ring-[#7A002A]"
                   : "border-stone-200 bg-white text-stone-600 hover:bg-stone-50"
               }`}
             >
@@ -193,90 +190,28 @@ export default function EventSettingsConfig({
           </div>
         </div>
 
-        {/* Estilo Visual y Paleta de Colores */}
-        <div>
-          <div className="flex items-center justify-between mb-2">
-            <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider">
-              Plantilla y Estilo Visual
-            </label>
-            {onOpenTemplatePicker && (
-              <button
-                type="button"
-                onClick={onOpenTemplatePicker}
-                className="text-xs font-bold text-[#7A002A] hover:underline flex items-center gap-1 cursor-pointer"
-              >
-                <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-                <span>Explorar Galería Completa ({TEMPLATE_CATALOG.length})</span>
-              </button>
-            )}
+        {/* Plantilla actual — el único selector de plantillas es el modal */}
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-stone-200 bg-stone-50/50 px-4 py-3">
+          <div className="flex items-center gap-2 text-xs min-w-0">
+            <Palette className="w-4 h-4 text-[#7A002A] shrink-0" />
+            <span className="font-bold text-stone-700 uppercase tracking-wider shrink-0">
+              Plantilla actual:
+            </span>
+            <span className="font-semibold text-stone-900 truncate">
+              {TEMPLATES[formData.estiloPlantilla as TemplateId]?.name ||
+                formData.estiloPlantilla ||
+                "Quince Rosado (Magdalena)"}
+            </span>
           </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {TEMPLATE_CATALOG.slice(0, 6).map((p) => {
-              const active =
-                formData.estiloPlantilla === p.id ||
-                (!formData.estiloPlantilla && p.id === "QUINCE_ROSADO");
-              return (
-                <button
-                  key={p.id}
-                  type="button"
-                  onClick={() => {
-                    if (onSelectTemplate) {
-                      onSelectTemplate(p.id);
-                    } else {
-                      updateField("estiloPlantilla", p.id);
-                    }
-                  }}
-                  className={`p-3 rounded-xl border text-left transition cursor-pointer flex items-center justify-between ${
-                    active
-                      ? "border-[#7A002A] bg-pink-50/50 ring-1 ring-[#7A002A] shadow-xs"
-                      : "border-stone-200 bg-white hover:bg-stone-50"
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={p.thumbnail}
-                      alt={p.name}
-                      className="w-10 h-10 rounded-lg object-cover border border-stone-200 shrink-0"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src =
-                          "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=100&q=80";
-                      }}
-                    />
-                    <div>
-                      <p className="text-xs font-bold text-stone-800 leading-tight">{p.name}</p>
-                      <div className="flex items-center gap-1.5 mt-1">
-                        {p.dots.map((c, i) => (
-                          <span
-                            key={i}
-                            className="w-3 h-3 rounded-full border border-black/10 shadow-2xs"
-                            style={{ backgroundColor: c }}
-                          />
-                        ))}
-                        <span className="text-[10px] text-stone-400 font-medium ml-1">
-                          {p.badgeLabel}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  {active && <CheckCircle className="w-4 h-4 text-[#7A002A] shrink-0" />}
-                </button>
-              );
-            })}
-          </div>
-
           {onOpenTemplatePicker && (
-            <div className="mt-3 text-center">
-              <button
-                type="button"
-                onClick={onOpenTemplatePicker}
-                className="w-full py-2.5 px-4 rounded-xl border border-dashed border-[#7A002A]/40 bg-pink-50/30 hover:bg-pink-50 text-[#7A002A] text-xs font-bold transition flex items-center justify-center gap-2 cursor-pointer"
-              >
-                <Palette className="w-4 h-4 text-[#C5A059]" />
-                <span>Ver y Elegir entre las {TEMPLATE_CATALOG.length} Plantillas Disponibles</span>
-              </button>
-            </div>
+            <button
+              type="button"
+              onClick={onOpenTemplatePicker}
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#7A002A] hover:bg-[#600021] text-white text-xs font-bold transition cursor-pointer shrink-0"
+            >
+              <Palette className="w-3.5 h-3.5" />
+              <span>Cambiar Plantilla</span>
+            </button>
           )}
         </div>
       </div>
@@ -308,7 +243,7 @@ export default function EventSettingsConfig({
               onClick={() => updateField("modalidadRsvp", "HIBRIDO")}
               className={`p-3.5 rounded-xl border text-left transition cursor-pointer ${
                 formData.modalidadRsvp === "HIBRIDO" || !formData.modalidadRsvp
-                  ? "border-[#7A002A] bg-pink-50/50 ring-1 ring-[#7A002A]"
+                  ? "border-[#7A002A] bg-stone-50 ring-1 ring-[#7A002A]"
                   : "border-stone-200 bg-white hover:bg-stone-50"
               }`}
             >
@@ -323,7 +258,7 @@ export default function EventSettingsConfig({
               onClick={() => updateField("modalidadRsvp", "ESTRICTO")}
               className={`p-3.5 rounded-xl border text-left transition cursor-pointer ${
                 formData.modalidadRsvp === "ESTRICTO"
-                  ? "border-[#7A002A] bg-pink-50/50 ring-1 ring-[#7A002A]"
+                  ? "border-[#7A002A] bg-stone-50 ring-1 ring-[#7A002A]"
                   : "border-stone-200 bg-white hover:bg-stone-50"
               }`}
             >
@@ -338,7 +273,7 @@ export default function EventSettingsConfig({
               onClick={() => updateField("modalidadRsvp", "ABIERTO")}
               className={`p-3.5 rounded-xl border text-left transition cursor-pointer ${
                 formData.modalidadRsvp === "ABIERTO"
-                  ? "border-[#7A002A] bg-pink-50/50 ring-1 ring-[#7A002A]"
+                  ? "border-[#7A002A] bg-stone-50 ring-1 ring-[#7A002A]"
                   : "border-stone-200 bg-white hover:bg-stone-50"
               }`}
             >
@@ -443,7 +378,7 @@ export default function EventSettingsConfig({
                 Define cuántos días antes de la fiesta se cierra la recepción de confirmaciones.
               </p>
             </div>
-            <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-pink-100 text-[#7A002A]">
+            <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-stone-100 text-stone-700">
               {formData.rsvpDiasAntes || 15} días antes
             </span>
           </div>
@@ -478,7 +413,7 @@ export default function EventSettingsConfig({
           </div>
 
           {/* Tarjeta de Fecha Calculada */}
-          <div className="bg-white border border-pink-100 rounded-xl p-3 space-y-1">
+          <div className="bg-white border border-stone-200 rounded-xl p-3 space-y-1">
             <p className="text-[10px] font-bold text-stone-400 uppercase tracking-wider">
               Fecha Límite Calculada en la Invitación:
             </p>
