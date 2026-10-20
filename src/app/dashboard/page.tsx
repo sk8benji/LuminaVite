@@ -27,9 +27,11 @@ import {
   RefreshCw,
   Search,
   Palette,
+  QrCode,
 } from "lucide-react";
 import { OrderData } from "@/lib/order-store";
 import TemplatesManager from "@/components/dashboard/TemplatesManager";
+import QrManager from "@/components/dashboard/QrManager";
 
 interface EventoItem {
   id: string;
@@ -47,7 +49,7 @@ interface EventoItem {
 }
 
 export default function DashboardPage() {
-  const [activeTab, setActiveTab] = useState<"eventos" | "ordenes" | "templates">("ordenes");
+  const [activeTab, setActiveTab] = useState<"eventos" | "ordenes" | "templates" | "qr">("ordenes");
   const [eventos, setEventos] = useState<EventoItem[]>([]);
   const [ordenes, setOrdenes] = useState<OrderData[]>([]);
   const [loading, setLoading] = useState(true);
@@ -303,6 +305,18 @@ export default function DashboardPage() {
           >
             <Palette className="w-3.5 h-3.5 text-[#C5A059]" />
             <span>🎨 Templates</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab("qr")}
+            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg transition cursor-pointer ${
+              activeTab === "qr"
+                ? "bg-white text-[#7A002A] shadow-xs font-bold"
+                : "text-stone-600 hover:text-stone-900"
+            }`}
+          >
+            <QrCode className="w-3.5 h-3.5" />
+            <span>Códigos QR</span>
           </button>
         </div>
 
@@ -815,6 +829,11 @@ export default function DashboardPage() {
         {/* VISTA 3: PLANTILLAS MAESTRAS DEL CATÁLOGO (TEMPLATES) */}
         {/* ============================================================== */}
         {activeTab === "templates" && <TemplatesManager />}
+
+        {/* ============================================================== */}
+        {/* VISTA 4: CÓDIGOS QR CON TRACKING DE ESCANEOS */}
+        {/* ============================================================== */}
+        {activeTab === "qr" && <QrManager />}
 
         {/* Modal: nueva key rotada, lista para copiar y enviar al cliente */}
         {rotatedKey && (
