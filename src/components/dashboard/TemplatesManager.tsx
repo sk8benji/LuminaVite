@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import Link from "next/link";
 import {
   Palette,
   Music,
@@ -1293,24 +1294,34 @@ export default function TemplatesManager() {
                 </div>
 
                 {/* Acciones */}
-                <div className="pt-2 border-t border-stone-100 flex items-center gap-2">
-                  <a
-                    href={`/demo/${tpl.slug}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-semibold text-stone-700 bg-stone-100 hover:bg-stone-200 rounded-xl transition"
-                  >
-                    <span>Ver Demo</span>
-                    <ExternalLink className="w-3 h-3" />
-                  </a>
+                <div className="pt-2 border-t border-stone-100 space-y-2">
+                  <div className="flex items-center gap-2">
+                    <a
+                      href={`/demo/${tpl.slug}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-semibold text-stone-700 bg-stone-100 hover:bg-stone-200 rounded-xl transition"
+                    >
+                      <span>Ver Demo</span>
+                      <ExternalLink className="w-3 h-3" />
+                    </a>
 
-                  <button
-                    onClick={() => handleOpenEdit(tpl)}
-                    className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-bold text-[#2C1F1B] bg-gradient-to-r from-[#C5A059] via-[#EED3A1] to-[#C5A059] hover:opacity-95 rounded-xl shadow-xs transition cursor-pointer"
+                    <button
+                      onClick={() => handleOpenEdit(tpl)}
+                      className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-bold text-[#2C1F1B] bg-gradient-to-r from-[#C5A059] via-[#EED3A1] to-[#C5A059] hover:opacity-95 rounded-xl shadow-xs transition cursor-pointer"
+                    >
+                      <Edit3 className="w-3.5 h-3.5" />
+                      <span>Editar Plantilla</span>
+                    </button>
+                  </div>
+
+                  <Link
+                    href={`/eventos/nuevo?plantilla=${tpl.estiloPlantilla}`}
+                    className="w-full inline-flex items-center justify-center gap-1.5 py-2 px-3 bg-[#7A002A] hover:bg-[#5e0020] text-white rounded-xl text-xs font-bold shadow-xs transition"
                   >
-                    <Edit3 className="w-3.5 h-3.5" />
-                    <span>Editar Plantilla</span>
-                  </button>
+                    <Sparkles className="w-3.5 h-3.5 text-amber-200" />
+                    <span>Crear Invitación con este Diseño</span>
+                  </Link>
                 </div>
               </div>
             </div>

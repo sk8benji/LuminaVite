@@ -29,10 +29,12 @@ import {
   Image as ImageIcon,
   ExternalLink,
   Link2,
+  Palette,
 } from "lucide-react";
 import { extractCleanMapUrl } from "@/lib/mapsUrlCleaner";
 import { InvitationData } from "@/components/invitation/InvitationMobileView";
 import { SECCIONES_QUINCE_ROSADO, SeccionId, isSectionEnabledInEvent } from "@/config/templateSections";
+import { TEMPLATES, TemplateId } from "@/lib/templates";
 
 interface TemplateSectionBuilderProps {
   formData: InvitationData;
@@ -54,6 +56,7 @@ interface TemplateSectionBuilderProps {
   uploadingField: string | null;
   formatFormalDate: (dateInput: string | Date, lang?: string) => any;
   computeRsvpPhrases: (eventDateInput: string | Date, dias: number) => any;
+  onOpenTemplatePicker?: () => void;
 }
 
 function MapShortLinkTester({
@@ -214,6 +217,7 @@ export default function TemplateSectionBuilder({
   uploadingField,
   formatFormalDate,
   computeRsvpPhrases,
+  onOpenTemplatePicker,
 }: TemplateSectionBuilderProps) {
   // Estado para acordeones expandidos/colapsados (todos expandidos por defecto para acceso rápido)
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
@@ -472,6 +476,39 @@ export default function TemplateSectionBuilder({
 
   return (
     <div className="space-y-6">
+      {/* ── BANNER DE PLANTILLA ACTIVA Y SELECTOR VISUAL ── */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3.5 p-4 rounded-2xl bg-gradient-to-r from-pink-50/90 via-white to-amber-50/80 border border-pink-200/90 shadow-2xs">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-2xl bg-[#7A002A] text-white flex items-center justify-center shadow-xs shrink-0">
+            <Palette className="w-5 h-5 text-amber-200" />
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-stone-500">
+                Diseño / Plantilla en Edición
+              </span>
+              <span className="text-[10px] font-bold px-2 py-0.2 rounded-full bg-pink-100 text-[#7A002A] border border-pink-200">
+                {formData.estiloPlantilla || "QUINCE_ROSADO"}
+              </span>
+            </div>
+            <p className="text-sm font-bold text-stone-900 mt-0.5">
+              {TEMPLATES[formData.estiloPlantilla as TemplateId]?.name || formData.estiloPlantilla}
+            </p>
+          </div>
+        </div>
+
+        {onOpenTemplatePicker && (
+          <button
+            type="button"
+            onClick={onOpenTemplatePicker}
+            className="self-start sm:self-auto inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#7A002A] hover:bg-[#600020] text-white text-xs font-bold transition shadow-xs cursor-pointer"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-amber-200" />
+            <span>Cambiar Plantilla</span>
+          </button>
+        )}
+      </div>
+
       {/* ── BARRA SUPERIOR DE NAVEGACIÓN Y ACCIONES RÁPIDAS ── */}
       <div className="bg-white p-4 sm:p-5 rounded-2xl border border-pink-100 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>

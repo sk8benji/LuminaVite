@@ -12,8 +12,11 @@ import {
   Phone,
   CheckCircle,
   HelpCircle,
+  Sparkles,
 } from "lucide-react";
 import type { InvitationData } from "@/components/invitation/InvitationMobileView";
+import { TemplateId } from "@/lib/templates";
+import { TEMPLATE_CATALOG } from "@/components/admin/TemplatePickerModal";
 import OpenGraphPreview from "./OpenGraphPreview";
 
 interface EventSettingsConfigProps {
@@ -33,6 +36,8 @@ interface EventSettingsConfigProps {
   isEditMode: boolean;
   handleSave: () => void;
   isSaving: boolean;
+  onSelectTemplate?: (tempKey: TemplateId) => void;
+  onOpenTemplatePicker?: () => void;
 }
 
 export default function EventSettingsConfig({
@@ -43,6 +48,8 @@ export default function EventSettingsConfig({
   isEditMode,
   handleSave,
   isSaving,
+  onSelectTemplate,
+  onOpenTemplatePicker,
 }: EventSettingsConfigProps) {
   const dateStr =
     typeof formData.fechaEvento === "string"
@@ -181,32 +188,24 @@ export default function EventSettingsConfig({
 
         {/* Estilo Visual y Paleta de Colores */}
         <div>
-          <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-2">
-            Paleta de Colores y Estilo Visual
-          </label>
+          <div className="flex items-center justify-between mb-2">
+            <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider">
+              Plantilla y Estilo Visual
+            </label>
+            {onOpenTemplatePicker && (
+              <button
+                type="button"
+                onClick={onOpenTemplatePicker}
+                className="text-xs font-bold text-[#7A002A] hover:underline flex items-center gap-1 cursor-pointer"
+              >
+                <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                <span>Explorar Galería Completa ({TEMPLATE_CATALOG.length})</span>
+              </button>
+            )}
+          </div>
+
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {[
-              {
-                id: "QUINCE_ROSADO",
-                name: "Quince Rosado (Canva Réplica)",
-                dots: ["#FFF9F9", "#E8A598", "#7A002A"],
-              },
-              {
-                id: "ELEGANT_ROSE",
-                name: "Elegant Rose (Isabella - T1)",
-                dots: ["#FAF5F5", "#DDA7A5", "#4A3E3D"],
-              },
-              {
-                id: "FAIRYTALE_CHATEAU",
-                name: "Fairytale Château (Emma & Lucas - T2)",
-                dots: ["#FFFFFF", "#D4AF37", "#2C3E50"],
-              },
-              {
-                id: "BLUE_BUTTERFLY",
-                name: "Blue Butterfly Garden (Canva T3)",
-                dots: ["#F0F8FF", "#87CEEB", "#104E8B"],
-              },
-            ].map((p) => {
+            {TEMPLATE_CATALOG.slice(0, 6).map((p) => {
               const active =
                 formData.estiloPlantilla === p.id ||
                 (!formData.estiloPlantilla && p.id === "QUINCE_ROSADO");
@@ -215,31 +214,63 @@ export default function EventSettingsConfig({
                   key={p.id}
                   type="button"
                   onClick={() => {
-                    updateField("estiloPlantilla", p.id);
+                    if (onSelectTemplate) {
+                      onSelectTemplate(p.id);
+                    } else {
+                      updateField("estiloPlantilla", p.id);
+                    }
                   }}
                   className={`p-3 rounded-xl border text-left transition cursor-pointer flex items-center justify-between ${
                     active
-                      ? "border-[#7A002A] bg-pink-50/50 ring-1 ring-[#7A002A]"
+                      ? "border-[#7A002A] bg-pink-50/50 ring-1 ring-[#7A002A] shadow-xs"
                       : "border-stone-200 bg-white hover:bg-stone-50"
                   }`}
                 >
-                  <div>
-                    <p className="text-xs font-bold text-stone-800">{p.name}</p>
-                    <div className="flex items-center gap-1.5 mt-1.5">
-                      {p.dots.map((c, i) => (
-                        <span
-                          key={i}
-                          className="w-3.5 h-3.5 rounded-full border border-black/10 shadow-2xs"
-                          style={{ backgroundColor: c }}
-                        />
-                      ))}
+                  <div className="flex items-center gap-3">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={p.thumbnail}
+                      alt={p.name}
+                      className="w-10 h-10 rounded-lg object-cover border border-stone-200 shrink-0"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src =
+                          "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=100&q=80";
+                      }}
+                    />
+                    <div>
+                      <p className="text-xs font-bold text-stone-800 leading-tight">{p.name}</p>
+                      <div className="flex items-center gap-1.5 mt-1">
+                        {p.dots.map((c, i) => (
+                          <span
+                            key={i}
+                            className="w-3 h-3 rounded-full border border-black/10 shadow-2xs"
+                            style={{ backgroundColor: c }}
+                          />
+                        ))}
+                        <span className="text-[10px] text-stone-400 font-medium ml-1">
+                          {p.badgeLabel}
+                        </span>
+                      </div>
                     </div>
                   </div>
-                  {active && <CheckCircle className="w-4 h-4 text-[#7A002A]" />}
+                  {active && <CheckCircle className="w-4 h-4 text-[#7A002A] shrink-0" />}
                 </button>
               );
             })}
           </div>
+
+          {onOpenTemplatePicker && (
+            <div className="mt-3 text-center">
+              <button
+                type="button"
+                onClick={onOpenTemplatePicker}
+                className="w-full py-2.5 px-4 rounded-xl border border-dashed border-[#7A002A]/40 bg-pink-50/30 hover:bg-pink-50 text-[#7A002A] text-xs font-bold transition flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <Palette className="w-4 h-4 text-[#C5A059]" />
+                <span>Ver y Elegir entre las {TEMPLATE_CATALOG.length} Plantillas Disponibles</span>
+              </button>
+            </div>
+          )}
         </div>
       </div>
 

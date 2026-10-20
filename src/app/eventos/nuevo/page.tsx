@@ -28,6 +28,7 @@ import {
   PhoneCall,
   Loader2,
   Settings,
+  Palette,
 } from "lucide-react";
 import { TEMPLATES, TemplateId } from "@/lib/templates";
 import { InvitationData } from "@/components/invitation/InvitationMobileView";
@@ -35,6 +36,7 @@ import MobileSimulator from "@/components/preview/MobileSimulator";
 import TemplateConfigDispatcher from "@/components/events/forms/TemplateConfigDispatcher";
 import TemplateSectionBuilder from "@/components/admin/TemplateSectionBuilder";
 import EventSettingsConfig from "@/components/admin/EventSettingsConfig";
+import TemplatePickerModal from "@/components/admin/TemplatePickerModal";
 
 function NuevoEventoContent() {
   const router = useRouter();
@@ -50,6 +52,9 @@ function NuevoEventoContent() {
   const [saveSuccessMsg, setSaveSuccessMsg] = useState<string | null>(null);
   const [showMobilePreview, setShowMobilePreview] = useState(false);
   const [editorMode, setEditorMode] = useState<"sections" | "settings">("sections");
+  const [showTemplatePicker, setShowTemplatePicker] = useState(
+    !isEditMode && !searchParams.get("plantilla") && !searchParams.get("nombre")
+  );
 
   // Estados locales para inputs de corte de honor (evitar pérdida de comas al teclear)
   const [damasRaw, setDamasRaw] = useState<string | null>(null);
@@ -60,8 +65,8 @@ function NuevoEventoContent() {
   const [formData, setFormData] = useState<InvitationData>({
     slug: "mi-celebracion",
     tipoEvento: "QUINCEANERA",
-    estiloPlantilla: "PRINCESA_ROSA",
-    titulo: "Sofía",
+    estiloPlantilla: "QUINCE_ROSADO",
+    titulo: "Magdalena",
     subtitulo: "An Unforgettable Celebration Awaits",
     frasePersonalizada:
       "Hoy doy el hermoso paso de niña a señorita, rodeada de las personas que más amo en el mundo.",
@@ -633,6 +638,36 @@ function NuevoEventoContent() {
     }));
   };
 
+  // Cargar parámetros de URL si vienen desde el Dashboard o Stripe Checkout
+  useEffect(() => {
+    if (isEditMode) return;
+    const plantillaUrl = searchParams.get("plantilla") as TemplateId | null;
+    if (plantillaUrl && (plantillaUrl in TEMPLATES || (plantillaUrl in TEMPLATE_PRESETS))) {
+      handleSelectTemplate(plantillaUrl);
+    }
+    const nombreUrl = searchParams.get("nombre");
+    if (nombreUrl) {
+      updateField("titulo", nombreUrl);
+      updateField(
+        "slug",
+        nombreUrl
+          .toLowerCase()
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/^-+|-+$/g, "")
+      );
+    }
+    const tipoUrl = searchParams.get("tipo");
+    if (tipoUrl) {
+      updateField("tipoEvento", tipoUrl);
+    }
+    const telUrl = searchParams.get("telefono");
+    if (telUrl) {
+      updateField("telefonoWhatsappRsvp", telUrl);
+    }
+  }, [searchParams, isEditMode]);
+
   // Al seleccionar plantilla, se actualizan el estilo y los datos de demo/preview preservando datos del usuario
   const handleSelectTemplate = (tempKey: TemplateId) => {
     setDamasRaw(null);
@@ -642,12 +677,16 @@ function NuevoEventoContent() {
     if (preset) {
       setFormData((prev) => {
         const isCustomName =
-          prev.titulo &&
-          prev.titulo !== "Valeria Sofía" &&
-          prev.titulo !== "Isabella Rose" &&
-          prev.titulo !== "Emma & Lucas" &&
-          prev.titulo !== "Coraline Jones" &&
-          prev.titulo !== "Sofía";
+          isEditMode ||
+          (prev.titulo &&
+            prev.titulo !== "Valeria Sofía" &&
+            prev.titulo !== "Isabella" &&
+            prev.titulo !== "Isabella Rose" &&
+            prev.titulo !== "Emma & Lucas" &&
+            prev.titulo !== "Coraline Jones" &&
+            prev.titulo !== "Sofía" &&
+            prev.titulo !== "Magdalena");
+
         const formatted = formatFormalDate(
           prev.fechaEvento,
           (prev.idiomaDefault || preset.idiomaDefault || "es") as any
@@ -660,20 +699,32 @@ function NuevoEventoContent() {
             prev.fotoPortadaUrl.includes("amazonaws.com") ||
             prev.fotoPortadaUrl.includes("clientes/"));
 
+        // Si el usuario no ha puesto un nombre propio aún, adoptar completamente el preset
+        if (!isCustomName) {
+          return {
+            ...prev,
+            ...preset,
+            estiloPlantilla: tempKey,
+            fechaEvento: prev.fechaEvento,
+            fechaTextoPersonalizada: formatted.formalText || preset.fechaTextoPersonalizada || prev.fechaTextoPersonalizada,
+            fechaPlacaMes: formatted.mes || preset.fechaPlacaMes || prev.fechaPlacaMes,
+            fechaPlacaHora: formatted.horaPlaca || preset.fechaPlacaHora || prev.fechaPlacaHora,
+            fotoPortadaUrl: isUserUploadedPhoto ? prev.fotoPortadaUrl : (preset.fotoPortadaUrl || prev.fotoPortadaUrl),
+          };
+        }
+
+        // Si ya tiene datos personalizados, mantenerlos y aplicar el estilo y multimedia del template
         return {
           ...preset,
           ...prev,
           estiloPlantilla: tempKey,
-          titulo: isCustomName ? prev.titulo : (preset.titulo || prev.titulo),
-          slug: isCustomName ? prev.slug : (preset.slug || prev.slug),
+          titulo: prev.titulo,
+          slug: prev.slug,
           fechaEvento: prev.fechaEvento,
           fechaTextoPersonalizada: formatted.formalText || prev.fechaTextoPersonalizada,
           fechaPlacaMes: formatted.mes || prev.fechaPlacaMes,
           fechaPlacaHora: formatted.horaPlaca || prev.fechaPlacaHora,
           fotoPortadaUrl: isUserUploadedPhoto ? prev.fotoPortadaUrl : (preset.fotoPortadaUrl || prev.fotoPortadaUrl),
-          fotoInfanciaUrl: preset.fotoInfanciaUrl || prev.fotoInfanciaUrl,
-          fotoActualUrl: preset.fotoActualUrl || prev.fotoActualUrl,
-          fotoCierreUrl: preset.fotoCierreUrl || prev.fotoCierreUrl,
           musicaUrl: preset.musicaUrl || prev.musicaUrl,
           dressCodeTitulo: preset.dressCodeTitulo || prev.dressCodeTitulo,
           dressCodeNota: preset.dressCodeNota || prev.dressCodeNota,
@@ -891,6 +942,21 @@ function NuevoEventoContent() {
         </div>
 
         <div className="flex items-center gap-2">
+          {/* Selector y botón interactivo para cambiar plantilla */}
+          <button
+            type="button"
+            onClick={() => setShowTemplatePicker(true)}
+            className="inline-flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-pink-50 via-white to-amber-50 hover:from-pink-100 hover:to-amber-100 text-[#7A002A] rounded-xl text-xs font-semibold border border-pink-200 transition shadow-2xs cursor-pointer"
+            title="Cambiar la plantilla visual de la invitación"
+          >
+            <Palette className="w-3.5 h-3.5 text-[#C5A059]" />
+            <span className="hidden md:inline text-stone-500 font-normal">Plantilla:</span>
+            <span className="font-bold max-w-[120px] sm:max-w-[180px] truncate">
+              {TEMPLATES[formData.estiloPlantilla as TemplateId]?.name?.split("(")[0]?.trim() || formData.estiloPlantilla}
+            </span>
+            <span className="text-[10px] text-pink-700 underline font-bold">Cambiar</span>
+          </button>
+
           {/* Botón ver en vivo si existe slug */}
           {formData.slug && (
             <a
@@ -996,6 +1062,7 @@ function NuevoEventoContent() {
               uploadingField={uploadingField}
               formatFormalDate={formatFormalDate}
               computeRsvpPhrases={computeRsvpPhrases}
+              onOpenTemplatePicker={() => setShowTemplatePicker(true)}
             />
           ) : (
             <EventSettingsConfig
@@ -1007,6 +1074,8 @@ function NuevoEventoContent() {
               isEditMode={isEditMode}
               handleSave={handleSave}
               isSaving={isSaving}
+              onSelectTemplate={handleSelectTemplate}
+              onOpenTemplatePicker={() => setShowTemplatePicker(true)}
             />
           )}
       </div>
@@ -1152,6 +1221,14 @@ function NuevoEventoContent() {
           </div>
         </div>
       )}
+      {/* Modal Interactivo de Selección de Plantilla */}
+      <TemplatePickerModal
+        isOpen={showTemplatePicker}
+        onClose={() => setShowTemplatePicker(false)}
+        currentTemplateId={formData.estiloPlantilla || "QUINCE_ROSADO"}
+        onSelectTemplate={(newId) => handleSelectTemplate(newId)}
+        isInitialSelection={!isEditMode && !searchParams.get("plantilla")}
+      />
     </div>
   );
 }
