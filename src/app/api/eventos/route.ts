@@ -4,6 +4,10 @@ import prisma from "@/lib/db";
 import { normalizeSlug, getEventBySlug, stripSensitiveEventFields } from "@/lib/events";
 import { requireAdmin } from "@/lib/auth";
 import { sanitizeEventUrls } from "@/lib/url-safety";
+import {
+  ensurePanelShortCodeColumn,
+  generatePanelShortCodeForNewEvent,
+} from "@/lib/panel-link";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -19,6 +23,8 @@ export async function GET(req: NextRequest) {
   const slug = searchParams.get("slug");
 
   try {
+    // Las consultas de Evento leen todas las columnas: asegurar panelShortCode
+    await ensurePanelShortCodeColumn();
     // 1. Si se solicita un evento específico por slug
     if (slug) {
       const cleanSlug = normalizeSlug(slug);
@@ -57,6 +63,7 @@ export async function POST(req: NextRequest) {
   if (unauthorized) return unauthorized;
 
   try {
+    await ensurePanelShortCodeColumn();
     const body = await req.json();
 
     // C6: sanitizar URLs — solo http(s), rechaza javascript:/data:
@@ -193,12 +200,16 @@ export async function POST(req: NextRequest) {
     // Panel token de 32 bytes aleatorios (64 hex) — fuerza bruta inviable
     const secretPanelKey = randomBytes(32).toString("hex");
 
+    // Link corto del panel (/m/<code>) generado desde la creación del evento
+    const newPanelShortCode = await generatePanelShortCodeForNewEvent();
+
     const nuevoEvento = await prisma.evento.create({
       data: {
         usuarioId: adminUser.id,
         titulo,
         slug: cleanSlug,
         panelToken: secretPanelKey,
+        panelShortCode: newPanelShortCode,
         tipoEvento,
         estiloPlantilla,
         subtitulo: subtitulo || null,
@@ -289,6 +300,10 @@ export async function PUT(req: NextRequest) {
   if (unauthorized) return unauthorized;
 
   try {
+    // El update devuelve el evento completo: asegurar la columna nueva.
+    // OJO: panelShortCode NO va en la lista de campos editables del PUT;
+    // el link corto solo se genera/regenera desde sus endpoints de admin.
+    await ensurePanelShortCodeColumn();
     const body = await req.json();
     const { slug } = body;
 

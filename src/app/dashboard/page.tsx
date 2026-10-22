@@ -28,6 +28,7 @@ import {
   Search,
   Palette,
   QrCode,
+  Link2,
 } from "lucide-react";
 import { OrderData } from "@/lib/order-store";
 import TemplatesManager from "@/components/dashboard/TemplatesManager";
@@ -43,6 +44,7 @@ interface EventoItem {
   activo: boolean;
   telefonoWhatsappRsvp: string;
   panelToken?: string | null;
+  panelShortCode?: string | null;
   _count?: {
     rsvps: number;
   };
@@ -62,6 +64,9 @@ export default function DashboardPage() {
   const [rotatingSlug, setRotatingSlug] = useState<string | null>(null);
   const [rotatedKey, setRotatedKey] = useState<{ slug: string; titulo: string; key: string } | null>(null);
   const [copiedKey, setCopiedKey] = useState(false);
+  // Link corto del panel (/m/<code>)
+  const [shortLinkBusy, setShortLinkBusy] = useState<{ slug: string; action: "ensure" | "regenerate" } | null>(null);
+  const [copiedShortSlug, setCopiedShortSlug] = useState<string | null>(null);
 
   const getPublicEventUrl = (path: string) => {
     if (typeof window !== "undefined" && window.location.host.startsWith("admin.")) {
@@ -78,6 +83,67 @@ export default function DashboardPage() {
       origin = `${window.location.protocol}//${publicHost}`;
     }
     return `${origin}/${slug}/panel?key=${key}`;
+  };
+
+  const getPanelShortUrl = (code: string) => {
+    let origin = typeof window !== "undefined" ? window.location.origin : "";
+    if (typeof window !== "undefined" && window.location.host.startsWith("admin.")) {
+      const publicHost = window.location.host.replace(/^admin\./, "");
+      origin = `${window.location.protocol}//${publicHost}`;
+    }
+    return `${origin}/m/${code}`;
+  };
+
+  const handleCopyShortLink = (slug: string, code: string) => {
+    navigator.clipboard.writeText(getPanelShortUrl(code));
+    setCopiedShortSlug(slug);
+    setTimeout(() => setCopiedShortSlug(null), 2000);
+  };
+
+  // Genera el link corto si el evento aún no tiene (o devuelve el existente)
+  const handleEnsureShortLink = async (slug: string) => {
+    setShortLinkBusy({ slug, action: "ensure" });
+    try {
+      const res = await fetch(`/api/admin/eventos/${encodeURIComponent(slug)}/panel-link`, {
+        method: "POST",
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Error al generar el link corto");
+      setEventos((prev) =>
+        prev.map((ev) => (ev.slug === slug ? { ...ev, panelShortCode: data.panelShortCode } : ev))
+      );
+    } catch (err: any) {
+      alert(err.message || "No se pudo generar el link corto");
+    } finally {
+      setShortLinkBusy(null);
+    }
+  };
+
+  // Regenera el link corto: el anterior deja de funcionar de inmediato.
+  // No toca el panelToken: el Magic Link largo sigue válido.
+  const handleRegenerateShortLink = async (slug: string, titulo: string) => {
+    const ok = window.confirm(
+      `¿Regenerar el link corto del panel de "${titulo}"?\n\nEl link corto anterior dejará de funcionar de inmediato. ` +
+        `El Magic Link largo (con key) NO cambia. Tendrás que enviarle el nuevo link corto al cliente.`
+    );
+    if (!ok) return;
+
+    setShortLinkBusy({ slug, action: "regenerate" });
+    try {
+      const res = await fetch(
+        `/api/admin/eventos/${encodeURIComponent(slug)}/panel-link/regenerate`,
+        { method: "POST" }
+      );
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Error al regenerar el link corto");
+      setEventos((prev) =>
+        prev.map((ev) => (ev.slug === slug ? { ...ev, panelShortCode: data.panelShortCode } : ev))
+      );
+    } catch (err: any) {
+      alert(err.message || "No se pudo regenerar el link corto");
+    } finally {
+      setShortLinkBusy(null);
+    }
   };
 
   const handleRotateKey = async (slug: string, titulo: string) => {
@@ -805,6 +871,54 @@ export default function DashboardPage() {
                             <Sparkles className="w-3.5 h-3.5 text-amber-600" />
                             Magic Link (Panel de la Mamá)
                           </Link>
+
+                          {/* Link corto del panel: /m/<code> — fácil de mandar a la mamá */}
+                          {ev.panelShortCode ? (
+                            <>
+                              <div className="p-2 bg-amber-50 rounded-xl text-xs font-mono text-amber-900 truncate border border-amber-200 flex items-center justify-between">
+                                <span className="truncate flex items-center gap-1.5">
+                                  <Link2 className="w-3.5 h-3.5 shrink-0 text-amber-600" />
+                                  /m/{ev.panelShortCode}
+                                </span>
+                                <button
+                                  onClick={() => handleCopyShortLink(ev.slug, ev.panelShortCode!)}
+                                  title="Copiar link corto del panel"
+                                  className="p-1 hover:bg-amber-100 rounded-lg transition text-amber-800 ml-1 cursor-pointer"
+                                >
+                                  {copiedShortSlug === ev.slug ? (
+                                    <Check className="w-3.5 h-3.5 text-emerald-600" />
+                                  ) : (
+                                    <Copy className="w-3.5 h-3.5" />
+                                  )}
+                                </button>
+                              </div>
+                              <button
+                                onClick={() => handleRegenerateShortLink(ev.slug, ev.titulo)}
+                                disabled={shortLinkBusy?.slug === ev.slug}
+                                className="w-full flex items-center justify-center gap-1.5 py-1.5 px-3 text-amber-800 hover:text-amber-950 hover:bg-amber-50 rounded-xl text-[11px] font-semibold transition cursor-pointer disabled:opacity-50"
+                                title="Emite un link corto nuevo; el anterior deja de funcionar. El Magic Link largo no cambia."
+                              >
+                                <RefreshCw
+                                  className={`w-3 h-3 ${shortLinkBusy?.slug === ev.slug && shortLinkBusy.action === "regenerate" ? "animate-spin" : ""}`}
+                                />
+                                {shortLinkBusy?.slug === ev.slug && shortLinkBusy.action === "regenerate"
+                                  ? "Regenerando..."
+                                  : "Regenerar link corto"}
+                              </button>
+                            </>
+                          ) : (
+                            <button
+                              onClick={() => handleEnsureShortLink(ev.slug)}
+                              disabled={shortLinkBusy?.slug === ev.slug}
+                              className="w-full flex items-center justify-center gap-1.5 py-2 px-3 bg-white hover:bg-amber-50 border border-dashed border-amber-300 text-amber-900 rounded-xl text-xs font-semibold transition cursor-pointer disabled:opacity-50"
+                              title="Genera un link corto (clickandlove.app/m/...) que abre el panel de la mamá"
+                            >
+                              <Link2 className="w-3.5 h-3.5 text-amber-600" />
+                              {shortLinkBusy?.slug === ev.slug
+                                ? "Generando..."
+                                : "Generar link corto del panel"}
+                            </button>
+                          )}
 
                           <button
                             onClick={() => handleRotateKey(ev.slug, ev.titulo)}

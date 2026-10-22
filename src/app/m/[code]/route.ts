@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/db";
+import { isPanelShortCode, resolvePanelShortCode } from "@/lib/panel-link";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -13,6 +14,26 @@ export async function GET(
 
   if (!code) {
     return NextResponse.redirect(new URL("/", request.url));
+  }
+
+  // Link corto del PANEL del anfitrión (10 caracteres, alfabeto sin ambiguos):
+  // se resuelve contra el evento y redirige con el panelToken ACTUAL.
+  // Código inexistente o revocado → 404 limpio, sin filtrar información.
+  // (Los códigos de mapas de ShortLink son 5 hex y siguen su flujo de abajo.)
+  if (isPanelShortCode(code)) {
+    try {
+      const target = await resolvePanelShortCode(code);
+      if (!target) {
+        return new NextResponse("Enlace no encontrado.", { status: 404 });
+      }
+      const path = target.panelToken
+        ? `/${target.slug}/panel?key=${encodeURIComponent(target.panelToken)}`
+        : `/${target.slug}/panel`;
+      return NextResponse.redirect(new URL(path, request.url), 302);
+    } catch (err) {
+      console.warn("Error en redirección de link corto de panel:", err);
+      return new NextResponse("Enlace no encontrado.", { status: 404 });
+    }
   }
 
   try {

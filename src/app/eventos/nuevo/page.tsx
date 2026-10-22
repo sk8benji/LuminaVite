@@ -851,10 +851,12 @@ function NuevoEventoContent() {
   const [createdLinks, setCreatedLinks] = useState<{
     publicUrl: string;
     magicLink: string;
+    shortLink: string;
     titulo: string;
   } | null>(null);
   const [copiedPublic, setCopiedPublic] = useState(false);
   const [copiedMagic, setCopiedMagic] = useState(false);
+  const [copiedShort, setCopiedShort] = useState(false);
 
   // Cargar datos del evento si estamos en modo edición (?editar=slug o ?slug=slug)
   useEffect(() => {
@@ -987,9 +989,11 @@ function NuevoEventoContent() {
           origin = `${window.location.protocol}//${publicHost}`;
         }
         const panelKey = result.evento?.panelToken || result.panelToken || "";
+        const shortCode = result.evento?.panelShortCode || "";
         setCreatedLinks({
           publicUrl: `${origin}/${formData.slug}`,
           magicLink: `${origin}/${formData.slug}/panel?key=${panelKey}`,
+          shortLink: shortCode ? `${origin}/m/${shortCode}` : "",
           titulo: formData.titulo,
         });
       }
@@ -1289,6 +1293,35 @@ function NuevoEventoContent() {
                     {copiedMagic ? "¡Copiado!" : "Copiar"}
                   </button>
                 </div>
+                {createdLinks.shortLink && (
+                  <div className="mt-3 pt-3 border-t border-amber-200">
+                    <p className="text-[11px] text-amber-900/80 mb-2">
+                      <strong>Link corto (recomendado para la mamá):</strong> abre el mismo
+                      panel, pero es corto y fácil de guardar o dictar. Si algún día hay que
+                      cambiarlo, se regenera desde el Dashboard sin tocar la clave.
+                    </p>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="text"
+                        readOnly
+                        value={createdLinks.shortLink}
+                        className="flex-1 px-3 py-2 bg-white border border-amber-200 rounded-xl text-xs font-mono text-amber-900 select-all"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          navigator.clipboard.writeText(createdLinks.shortLink);
+                          setCopiedShort(true);
+                          setTimeout(() => setCopiedShort(false), 2000);
+                        }}
+                        className="px-3.5 py-2 bg-amber-700 hover:bg-amber-800 text-white rounded-xl text-xs font-semibold transition cursor-pointer flex items-center gap-1.5"
+                      >
+                        {copiedShort ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                        {copiedShort ? "¡Copiado!" : "Copiar"}
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
 
