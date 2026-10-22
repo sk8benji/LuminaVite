@@ -20,6 +20,7 @@ export default function BlueButterflyTemplate({
   const [isEnvelopeFading, setIsEnvelopeFading] = useState(false);
   const [isEnvelopeRemoved, setIsEnvelopeRemoved] = useState(false);
   const [isLetterOut, setIsLetterOut] = useState(false);
+  const [isEnvelopeExiting, setIsEnvelopeExiting] = useState(false);
 
   // Audio de fondo
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -54,8 +55,11 @@ export default function BlueButterflyTemplate({
 
   // Idioma (es | en | bilingual)
   const isBilingual = data.idiomaDefault === "bilingual";
+  // Idioma por defecto de la intro: solo los eventos en español puro nacen
+  // en español; en inglés o bilingües el defecto es inglés. Tocar el sello
+  // abre con este idioma si no se escogió uno explícito en los botones.
   const [currentLang, setCurrentLang] = useState<"es" | "en">(
-    data.idiomaDefault === "en" ? "en" : "es"
+    data.idiomaDefault === "es" ? "es" : "en"
   );
   const isEn = currentLang === "en";
   const isSmsEnabled =
@@ -78,18 +82,23 @@ export default function BlueButterflyTemplate({
         .catch(() => {});
     }
 
-    // Deslizar carta interna
+    // Deslizar carta interna (~280ms, tras el pulso y el crossfade del sobre)
     setTimeout(() => {
       setIsLetterOut(true);
     }, 280);
 
-    // Fundido y remoción del overlay
+    // Salida en cortina (~1500ms): el grupo carta+sobre sube y sale de la
+    // pantalla; solo la capa de fondo se desvanece en los últimos ~200ms
+    // (el fondo acuarela es el mismo de la invitación, que ya está detrás).
     setTimeout(() => {
-      setIsEnvelopeFading(true);
+      setIsEnvelopeExiting(true);
+      setTimeout(() => {
+        setIsEnvelopeFading(true);
+      }, 400);
       setTimeout(() => {
         setIsEnvelopeRemoved(true);
-      }, 700);
-    }, 1400);
+      }, 600);
+    }, 1500);
   };
 
   // Toggle de música
@@ -397,12 +406,36 @@ export default function BlueButterflyTemplate({
         <aside
           id="envelopeOverlay"
           onClick={() => handleOpenEnvelope()}
-          className={`fixed inset-0 z-50 flex flex-col items-center justify-center p-4 transition-opacity duration-700 select-none bg-[#EBF3FA] bg-[url('/assets/template-butterfly/fondo-cielo-acuarela.png')] bg-cover bg-center ${
-            isEnvelopeFading ? "opacity-0 pointer-events-none" : "opacity-100"
+          className={`fixed inset-0 z-50 select-none ${
+            isEnvelopeExiting ? "pointer-events-none" : ""
           }`}
         >
+          {/* Capa de fondo acuarela (la misma de la invitación): es la única
+              capa que se desvanece, al final de la salida; el overlay completo
+              ya no se funde de golpe */}
+          <div
+            aria-hidden="true"
+            className={`absolute inset-0 bg-[#EBF3FA] bg-[url('/assets/template-butterfly/fondo-cielo-acuarela.png')] bg-cover bg-center transition-opacity duration-200 ${
+              isEnvelopeFading ? "opacity-0" : "opacity-100"
+            }`}
+          />
+
+          {/* Grupo visible de la intro: al abrir y asentar la carta, todo el
+              grupo sale hacia arriba como cortina y revela la invitación */}
+          <div
+            className="relative z-10 flex h-full flex-col items-center justify-center p-4 transition-transform duration-[600ms] [transition-timing-function:cubic-bezier(0.22,1,0.36,1)]"
+            style={{
+              transform: isEnvelopeExiting
+                ? "translateY(-100vh)"
+                : "translateY(0)",
+            }}
+          >
           {/* Título Superior Cursivo */}
-          <div className="text-center mb-4 sm:mb-6">
+          <div
+            className={`text-center mb-4 sm:mb-6 transition-opacity duration-300 ${
+              isEnvelopeOpen ? "opacity-0" : "opacity-100"
+            }`}
+          >
             <h2 className="font-script text-5xl sm:text-6xl md:text-7xl text-[#6B9AC4] drop-shadow-sm font-normal">
               {isEn ? "You've been invited" : "Has sido invitado"}
             </h2>
@@ -416,16 +449,18 @@ export default function BlueButterflyTemplate({
           {/* Contenedor del Sobre Físico 3D */}
           <div
             id="envelopeContainer"
-            className="relative w-[310px] sm:w-[410px] md:w-[460px] aspect-[5/4] cursor-pointer group"
+            className={`relative w-[310px] sm:w-[410px] md:w-[460px] aspect-[5/4] cursor-pointer group ${
+              isEnvelopeOpen ? "animate-envelope-pulse" : ""
+            }`}
             style={{ perspective: "1000px" }}
           >
             {/* Tarjeta interior que sale deslizándose con borde dorado */}
             <div
               id="innerCard"
-              className={`absolute left-4 right-4 top-4 bottom-4 bg-[#FFFEFC] rounded-xl p-5 shadow-lg flex flex-col items-center justify-center text-center transform transition-transform duration-700 ease-out border border-[#D8B772]/60 ${
+              className={`absolute left-4 right-4 top-4 bottom-4 bg-[#FFFEFC] rounded-xl p-5 flex flex-col items-center justify-center text-center transform border border-[#D8B772]/60 transition-[transform,box-shadow] duration-[900ms] [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] ${
                 isLetterOut
-                  ? "-translate-y-28 sm:-translate-y-36 scale-105 z-25 shadow-2xl"
-                  : "z-10 translate-y-0"
+                  ? "-translate-y-20 sm:-translate-y-28 scale-[1.02] z-25 shadow-2xl"
+                  : "z-10 translate-y-0 shadow-lg"
               }`}
             >
               {/* Mariposa con aleteo 3D en la tarjeta */}
@@ -446,42 +481,95 @@ export default function BlueButterflyTemplate({
               </p>
             </div>
 
-            {/* Si está cerrado: Sobre beige con sello celeste y mariposa perchada aleteando */}
-            {!isEnvelopeOpen ? (
-              <div className="absolute inset-0 z-20 pointer-events-none drop-shadow-xl">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src="/assets/template-butterfly/sobre-cerrado.png"
-                  alt="Sobre Cerrado"
-                  className="w-full h-full object-contain"
-                />
-
-                {/* Mariposa aleteando en 3D perchada en la esquina inferior izquierda (como en la foto de referencia) */}
-                <div className="absolute -bottom-3 -left-4 sm:-bottom-4 sm:-left-6 z-30 pointer-events-none rotate-[22deg] drop-shadow-md">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src="/assets/template-butterfly/mariposa-perchada.png"
-                    alt="Mariposa viva"
-                    className="w-16 sm:w-20 md:w-24 h-auto object-contain animate-flutter"
-                  />
-                </div>
-              </div>
-            ) : (
-              /* Si está abierto: Solapa abierta con rosas y flores base */
-              <div className="absolute inset-0 z-20 pointer-events-none">
+            {/* Obra del sobre: bolsillo abierto y sobre cerrado superpuestos
+                con crossfade breve al abrir (sin corte seco). El conjunto
+                reacciona mientras la carta sale: baja, se encoge a 0.92, se
+                desenfoca 1px y baja a 0.9 de opacidad (profundidad) */}
+            <div
+              className={`absolute inset-0 z-20 pointer-events-none transition-transform duration-[900ms] [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] ${
+                isLetterOut ? "translate-y-2.5 scale-[0.92]" : ""
+              }`}
+            >
+              <div
+                className={`absolute inset-0 transition-[opacity,filter] duration-[900ms] [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] ${
+                  isLetterOut ? "opacity-90 blur-[1px]" : "opacity-100"
+                }`}
+              >
+                {/* Bolsillo abierto (debajo): se revela con el crossfade */}
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src="/assets/template-butterfly/sobre-carta-base.png"
                   alt="Bolsillo del sobre"
-                  className="absolute inset-0 w-full h-full object-contain z-30"
+                  className={`absolute inset-0 w-full h-full object-contain transition-opacity duration-200 ${
+                    isEnvelopeOpen ? "opacity-100" : "opacity-0"
+                  }`}
                 />
+
+                {/* Sobre cerrado con sello de cera (encima): al abrir se
+                    desvanece rápido (~200ms), escondido tras el pulso */}
+                <div
+                  className={`absolute inset-0 drop-shadow-xl transition-opacity duration-200 ${
+                    isEnvelopeOpen ? "opacity-0" : "opacity-100"
+                  }`}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src="/assets/template-butterfly/sobre-cerrado.png"
+                    alt="Sobre Cerrado"
+                    className="w-full h-full object-contain"
+                  />
+
+                  {/* Mariposa aleteando en 3D perchada en la esquina inferior izquierda (como en la foto de referencia) */}
+                  <div className="absolute -bottom-3 -left-4 sm:-bottom-4 sm:-left-6 z-30 pointer-events-none rotate-[22deg] drop-shadow-md">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src="/assets/template-butterfly/mariposa-perchada.png"
+                      alt="Mariposa viva"
+                      className="w-16 sm:w-20 md:w-24 h-auto object-contain animate-flutter"
+                    />
+                  </div>
+                </div>
               </div>
-            )}
+
+              {/* Mariposas que salen volando del bolsillo al abrirse (~1.2s) */}
+              {isEnvelopeOpen && (
+                <>
+                  <div className="absolute left-[36%] top-[54%] z-40 w-8 sm:w-10 animate-butterfly-fly-left">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src="/assets/template-butterfly/mariposa-azul.png"
+                      alt=""
+                      className="w-full h-auto object-contain animate-flutter"
+                    />
+                  </div>
+                  <div className="absolute left-[47%] top-[46%] z-40 w-7 sm:w-9 animate-butterfly-fly-up">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src="/assets/template-butterfly/mariposa-azul.png"
+                      alt=""
+                      className="w-full h-auto object-contain animate-flutter"
+                    />
+                  </div>
+                  <div className="absolute left-[58%] top-[54%] z-40 w-8 sm:w-10 animate-butterfly-fly-right">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src="/assets/template-butterfly/mariposa-azul.png"
+                      alt=""
+                      className="w-full h-auto object-contain animate-flutter"
+                    />
+                  </div>
+                </>
+              )}
+            </div>
           </div>
 
           {/* Botones de Selección de Idioma con Marco Ornamental de la Foto */}
           {isBilingual ? (
-            <div className="mt-6 sm:mt-8 flex items-center justify-center gap-3 sm:gap-5 z-30">
+            <div
+              className={`mt-6 sm:mt-8 flex items-center justify-center gap-3 sm:gap-5 z-30 transition-opacity duration-300 ${
+                isEnvelopeOpen ? "opacity-0 pointer-events-none" : "opacity-100"
+              }`}
+            >
               <button
                 type="button"
                 onClick={(e) => {
@@ -526,7 +614,9 @@ export default function BlueButterflyTemplate({
                 e.stopPropagation();
                 handleOpenEnvelope(isEn ? "en" : "es");
               }}
-              className="mt-6 sm:mt-8 flex flex-col items-center justify-center z-30 cursor-pointer group transition-transform duration-300 hover:scale-105 active:scale-95"
+              className={`mt-6 sm:mt-8 flex flex-col items-center justify-center z-30 cursor-pointer group transition-all duration-300 hover:scale-105 active:scale-95 ${
+                isEnvelopeOpen ? "opacity-0 pointer-events-none" : "opacity-100"
+              }`}
             >
               <p className="font-serif-roman text-xs sm:text-sm tracking-[0.25em] uppercase text-[#7A9BBF] font-semibold drop-shadow-sm transition-colors group-hover:text-[#4A7BB0] flex items-center gap-2">
                 <span className="inline-block animate-bounce text-sm">✨</span>
@@ -536,6 +626,7 @@ export default function BlueButterflyTemplate({
               <div className="w-16 h-0.5 bg-[#D8B772]/60 mt-1.5 transition-all duration-300 group-hover:w-28 group-hover:bg-[#D8B772]" />
             </div>
           )}
+          </div>
         </aside>
       )}
 

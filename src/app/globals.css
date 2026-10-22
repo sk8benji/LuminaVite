@@ -87,6 +87,78 @@ body {
   display: inline-block;
 }
 
+/* Pulso breve del sobre completo al abrirse (Blue Butterfly) */
+@keyframes envelope-pulse {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.04);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.animate-envelope-pulse {
+  animation: envelope-pulse 250ms ease-out;
+}
+
+/* Mariposas que salen volando del bolsillo al abrir el sobre (Blue Butterfly) */
+@keyframes butterfly-fly-left {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-96px, -160px) rotate(-20deg);
+    opacity: 0;
+  }
+}
+
+.animate-butterfly-fly-left {
+  animation: butterfly-fly-left 1.2s ease-out forwards;
+}
+
+@keyframes butterfly-fly-up {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-10px, -190px) rotate(-5deg);
+    opacity: 0;
+  }
+}
+
+.animate-butterfly-fly-up {
+  animation: butterfly-fly-up 1.2s ease-out forwards;
+}
+
+@keyframes butterfly-fly-right {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(96px, -150px) rotate(18deg);
+    opacity: 0;
+  }
+}
+
+.animate-butterfly-fly-right {
+  animation: butterfly-fly-right 1.2s ease-out forwards;
+}
+
 /* Recorte de papel rasgado oficial de Canva */
 .clip-canva-torn {
   clip-path: url(#canvaTornClip);
