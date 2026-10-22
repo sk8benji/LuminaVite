@@ -145,6 +145,11 @@ export async function ensurePostgresTables(): Promise<boolean> {
       `ALTER TABLE "Evento" ADD COLUMN IF NOT EXISTS "frasePersonalizadaEn" TEXT;`,
       `ALTER TABLE "Evento" ADD COLUMN IF NOT EXISTS "mostrarFechaPlacaHora" BOOLEAN DEFAULT true;`,
       `ALTER TABLE "Evento" ADD COLUMN IF NOT EXISTS "fechaPlacaHoraEn" TEXT;`,
+      `ALTER TABLE "Evento" ADD COLUMN IF NOT EXISTS "bannerContactoActivo" BOOLEAN DEFAULT false;`,
+      `ALTER TABLE "Evento" ADD COLUMN IF NOT EXISTS "bannerContactoTexto" TEXT;`,
+      `ALTER TABLE "Evento" ADD COLUMN IF NOT EXISTS "bannerContactoTelefono" TEXT;`,
+      `ALTER TABLE "Evento" ADD COLUMN IF NOT EXISTS "bannerContactoLlamar" BOOLEAN DEFAULT true;`,
+      `ALTER TABLE "Evento" ADD COLUMN IF NOT EXISTS "bannerContactoSms" BOOLEAN DEFAULT true;`,
       `ALTER TABLE "RsvpRegistro" ADD COLUMN IF NOT EXISTS "email" TEXT;`,
       `ALTER TABLE "guests" ADD COLUMN IF NOT EXISTS "email" VARCHAR(255);`,
 

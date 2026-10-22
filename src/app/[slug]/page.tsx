@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { InvitationData } from "@/components/invitation/InvitationMobileView";
 import TemplateDispatcher from "@/components/templates/TemplateDispatcher";
+import ContactBanner from "@/components/invitation/ContactBanner";
 import { normalizeSlug, getEventBySlug } from "@/lib/events";
 import { formatFechaLimiteRsvp } from "@/lib/fecha-limite";
 
@@ -448,6 +449,11 @@ async function getEventoData(rawSlug: string): Promise<InvitationData | null> {
         (!((dbEvento as any).ordenesCompra?.[0]?.paqueteId?.toLowerCase() || "").includes("basic")),
       modalidadRsvp: (dbEvento as any).modalidadRsvp || "HIBRIDO",
       permitirConfirmacionTelefono: (dbEvento as any).permitirConfirmacionTelefono !== false,
+      bannerContactoActivo: (dbEvento as any).bannerContactoActivo === true,
+      bannerContactoTexto: (dbEvento as any).bannerContactoTexto ?? null,
+      bannerContactoTelefono: (dbEvento as any).bannerContactoTelefono ?? null,
+      bannerContactoLlamar: (dbEvento as any).bannerContactoLlamar !== false,
+      bannerContactoSms: (dbEvento as any).bannerContactoSms !== false,
     };
   }
 
@@ -587,5 +593,11 @@ export default async function InvitationPage(props: PageProps) {
     notFound();
   }
 
-  return <TemplateDispatcher data={data} />;
+  return (
+    <>
+      <TemplateDispatcher data={data} />
+      {/* Barra fija comercial (solo si el evento la activó en Ajustes) */}
+      <ContactBanner data={data} />
+    </>
+  );
 }
