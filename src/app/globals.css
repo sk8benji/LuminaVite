@@ -51,6 +51,7 @@ body {
 
 /* Tipografías especializadas */
 .font-script { font-family: 'Alex Brush', 'Great Vibes', cursive; }
+.font-vibes { font-family: 'Great Vibes', 'Alex Brush', cursive; }
 .font-serif-roman { font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif; }
 .font-cormorant { font-family: 'Cormorant Garamond', serif; }
 .font-playfair { font-family: 'Playfair Display', Georgia, serif; }

@@ -5,12 +5,11 @@ import crypto from "crypto";
  * Genera o recupera un enlace corto interno para redirección de mapas.
  * Formato resultante: https://clickandlove.app/m/[code]
  */
-export async function createShortMapLink(targetUrl: string): Promise<string> {
-  const trimmed = (targetUrl || "").trim();
-  if (!trimmed) return "";
-
-  // Base URL de la app asegurando el dominio público oficial clickandlove.app
-  // Los enlaces de mapas en SMS y admin deben apuntar a https://clickandlove.app (nunca a localhost)
+/**
+ * Base URL pública oficial de la app (nunca localhost).
+ * Los enlaces cortos en SMS y admin deben apuntar a https://clickandlove.app.
+ */
+export function getPublicBaseUrl(): string {
   let rawBase =
     process.env.NEXT_PUBLIC_APP_URL ||
     process.env.NEXT_PUBLIC_SITE_URL ||
@@ -20,9 +19,16 @@ export async function createShortMapLink(targetUrl: string): Promise<string> {
     rawBase = "https://clickandlove.app";
   }
 
-  const normalizedBase = rawBase.startsWith("http")
+  return rawBase.startsWith("http")
     ? rawBase.replace(/\/$/, "")
     : `https://${rawBase.replace(/\/$/, "")}`;
+}
+
+export async function createShortMapLink(targetUrl: string): Promise<string> {
+  const trimmed = (targetUrl || "").trim();
+  if (!trimmed) return "";
+
+  const normalizedBase = getPublicBaseUrl();
 
   try {
     // 1. Reutilizar si ya existe un código para esta misma URL exacta

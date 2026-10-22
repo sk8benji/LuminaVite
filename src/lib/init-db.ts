@@ -56,6 +56,7 @@ export async function ensurePostgresTables(): Promise<boolean> {
           "salonId" TEXT REFERENCES "Salon"("id") ON DELETE SET NULL,
           "slug" TEXT UNIQUE NOT NULL,
           "panelToken" TEXT,
+          "panelShortCode" TEXT,
           "tipoEvento" "TipoEvento" NOT NULL DEFAULT 'QUINCEANERA',
           "estiloPlantilla" "EstiloPlantilla" NOT NULL DEFAULT 'PRINCESA_ROSA',
           "titulo" TEXT NOT NULL,
@@ -150,6 +151,8 @@ export async function ensurePostgresTables(): Promise<boolean> {
       `ALTER TABLE "Evento" ADD COLUMN IF NOT EXISTS "bannerContactoTelefono" TEXT;`,
       `ALTER TABLE "Evento" ADD COLUMN IF NOT EXISTS "bannerContactoLlamar" BOOLEAN DEFAULT true;`,
       `ALTER TABLE "Evento" ADD COLUMN IF NOT EXISTS "bannerContactoSms" BOOLEAN DEFAULT true;`,
+      `ALTER TABLE "Evento" ADD COLUMN IF NOT EXISTS "panelShortCode" TEXT;`,
+      `CREATE UNIQUE INDEX IF NOT EXISTS "Evento_panelShortCode_key" ON "Evento"("panelShortCode");`,
       `ALTER TABLE "RsvpRegistro" ADD COLUMN IF NOT EXISTS "email" TEXT;`,
       `ALTER TABLE "guests" ADD COLUMN IF NOT EXISTS "email" VARCHAR(255);`,
 
