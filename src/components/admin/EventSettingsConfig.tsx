@@ -12,6 +12,7 @@ import {
   Phone,
   CheckCircle,
   HelpCircle,
+  Megaphone,
 } from "lucide-react";
 import type { InvitationData } from "@/components/invitation/InvitationMobileView";
 import { TemplateId, TEMPLATES } from "@/lib/templates";
@@ -36,6 +37,43 @@ interface EventSettingsConfigProps {
   isSaving: boolean;
   onSelectTemplate?: (tempKey: TemplateId) => void;
   onOpenTemplatePicker?: () => void;
+}
+
+/** Switch reutilizable con el mismo estilo de "Permitir Confirmación por Teléfono". */
+function SettingsSwitch({
+  checked,
+  onToggle,
+  title,
+  desc,
+}: {
+  checked: boolean;
+  onToggle: () => void;
+  title: string;
+  desc: string;
+}) {
+  return (
+    <div className="p-4 rounded-xl border border-stone-200 bg-stone-50/50 flex items-center justify-between gap-3">
+      <div>
+        <p className="text-xs font-bold text-stone-800">{title}</p>
+        <p className="text-[11px] text-stone-500">{desc}</p>
+      </div>
+      <button
+        type="button"
+        role="switch"
+        aria-checked={checked}
+        onClick={onToggle}
+        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors cursor-pointer shrink-0 ${
+          checked ? "bg-[#7A002A]" : "bg-stone-300"
+        }`}
+      >
+        <span
+          className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+            checked ? "translate-x-6" : "translate-x-1"
+          }`}
+        />
+      </button>
+    </div>
+  );
 }
 
 export default function EventSettingsConfig({
@@ -464,6 +502,92 @@ export default function EventSettingsConfig({
             />
           </button>
         </div>
+      </div>
+
+      {/* ──────────────────────────────────────────────────────────
+          TARJETA 4: BANNER DE CONTACTO (BARRA FIJA COMERCIAL)
+      ────────────────────────────────────────────────────────── */}
+      <div className="bg-white rounded-2xl p-6 border border-stone-200 shadow-xs space-y-5">
+        <div className="border-b border-stone-100 pb-3 flex items-center gap-2">
+          <Megaphone className="w-4 h-4 text-[#7A002A]" />
+          <h3 className="text-xs font-bold text-stone-900 uppercase tracking-wider">
+            4. Banner de Contacto (Barra Fija en la Invitación)
+          </h3>
+        </div>
+
+        <p className="text-[11px] text-stone-500">
+          Barra comercial fija al pie de la invitación pública, con botones para
+          llamar o mandar texto. Úsala en invitaciones de marketing (ej. la que
+          abre el QR de las tarjetas impresas) para que quien la vea en casa
+          pueda contactarte. En invitaciones de clientes normalmente va apagada.
+        </p>
+
+        <SettingsSwitch
+          checked={formData.bannerContactoActivo === true}
+          onToggle={() =>
+            updateField("bannerContactoActivo", formData.bannerContactoActivo !== true)
+          }
+          title="Mostrar Banner de Contacto"
+          desc="Activa la barra fija borgoña al pie de la invitación pública."
+        />
+
+        {formData.bannerContactoActivo === true && (
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-1">
+                  Texto del Banner
+                </label>
+                <input
+                  type="text"
+                  value={formData.bannerContactoTexto || ""}
+                  onChange={(e) => updateField("bannerContactoTexto", e.target.value)}
+                  placeholder="¿Te gustó esta invitación? Haz la tuya"
+                  className="w-full px-3.5 py-2.5 bg-stone-50/50 border border-stone-200 rounded-xl text-xs text-stone-900 font-semibold focus:outline-none focus:border-[#7A002A]"
+                />
+                <p className="text-[11px] text-stone-400 mt-1">
+                  La frase comercial que se lee junto a los botones.
+                </p>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-1">
+                  Teléfono de Contacto (Llamar / Texto)
+                </label>
+                <input
+                  type="text"
+                  value={formData.bannerContactoTelefono || ""}
+                  onChange={(e) => updateField("bannerContactoTelefono", e.target.value)}
+                  placeholder="(818) 299-4882"
+                  className="w-full px-3.5 py-2.5 bg-stone-50/50 border border-stone-200 rounded-xl text-xs text-stone-900 font-semibold focus:outline-none focus:border-[#7A002A]"
+                />
+                <p className="text-[11px] text-stone-400 mt-1">
+                  Número comercial visible en el banner; los botones marcan y
+                  mandan SMS a este número. Si lo dejas vacío, se usa el teléfono
+                  RSVP del evento.
+                </p>
+              </div>
+            </div>
+
+            <SettingsSwitch
+              checked={formData.bannerContactoLlamar !== false}
+              onToggle={() =>
+                updateField("bannerContactoLlamar", formData.bannerContactoLlamar === false)
+              }
+              title="Botón Llamar"
+              desc="Botón dorado que abre el marcador del teléfono (tel:)."
+            />
+
+            <SettingsSwitch
+              checked={formData.bannerContactoSms !== false}
+              onToggle={() =>
+                updateField("bannerContactoSms", formData.bannerContactoSms === false)
+              }
+              title="Botón Texto (SMS)"
+              desc="Botón que abre la app de mensajes con el número listo (sms:). En EE.UU. es la vía principal — sin WhatsApp."
+            />
+          </>
+        )}
       </div>
 
       {/* Botón flotante / inferior de guardar cambios */}

@@ -123,6 +123,13 @@ export interface InvitationData {
   permiteSms?: boolean;
   modalidadRsvp?: "ESTRICTO" | "HIBRIDO" | "ABIERTO" | string | null;
   permitirConfirmacionTelefono?: boolean;
+
+  // Banner de contacto (barra fija comercial; ver ContactBanner)
+  bannerContactoActivo?: boolean;
+  bannerContactoTexto?: string | null;
+  bannerContactoTelefono?: string | null;
+  bannerContactoLlamar?: boolean;
+  bannerContactoSms?: boolean;
 }
 
 export default function InvitationMobileView({

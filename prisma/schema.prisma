@@ -170,6 +170,14 @@ model Evento {
   configPlantilla    Json?           @default("{}") // Contenedor dinámico JSONB para variables por plantilla
   modalidadRsvp      String?         @default("HIBRIDO") // "ESTRICTO" | "HIBRIDO" | "ABIERTO"
 
+  // Banner de contacto (barra fija comercial al pie de la invitación pública;
+  // pensado para invitaciones de marketing, ej. la de la tarjeta impresa)
+  bannerContactoActivo   Boolean?    @default(false) // Switch maestro del banner
+  bannerContactoTexto    String?         // Ej: "¿Te gustó esta invitación? Haz la tuya"
+  bannerContactoTelefono String?         // Número visible y de los botones, ej. "(818) 299-4882"
+  bannerContactoLlamar   Boolean?        @default(true) // Mostrar botón Llamar (tel:)
+  bannerContactoSms      Boolean?        @default(true) // Mostrar botón Texto (sms:)
+
   activo             Boolean         @default(true)
   vistasContador     Int             @default(0)
   createdAt          DateTime        @default(now())

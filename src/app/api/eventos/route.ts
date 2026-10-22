@@ -143,6 +143,11 @@ export async function POST(req: NextRequest) {
       configPlantilla,
       modalidadRsvp,
       permitirConfirmacionTelefono,
+      bannerContactoActivo,
+      bannerContactoTexto,
+      bannerContactoTelefono,
+      bannerContactoLlamar,
+      bannerContactoSms,
     } = body;
 
     if (!titulo || !slug || !fechaEvento || !fotoPortadaUrl || !telefonoWhatsappRsvp || !recepcionNombre || !recepcionMapUrl) {
@@ -264,6 +269,11 @@ export async function POST(req: NextRequest) {
         configPlantilla: configPlantilla || {},
         modalidadRsvp: modalidadRsvp || "HIBRIDO",
         permitirConfirmacionTelefono: permitirConfirmacionTelefono !== false,
+        bannerContactoActivo: bannerContactoActivo === true,
+        bannerContactoTexto: bannerContactoTexto ? String(bannerContactoTexto).trim() : null,
+        bannerContactoTelefono: bannerContactoTelefono ? String(bannerContactoTelefono).trim() : null,
+        bannerContactoLlamar: bannerContactoLlamar !== false,
+        bannerContactoSms: bannerContactoSms !== false,
         activo: true,
       },
     });
@@ -391,6 +401,11 @@ export async function PUT(req: NextRequest) {
         configPlantilla: body.configPlantilla ?? undefined,
         modalidadRsvp: body.modalidadRsvp !== undefined ? body.modalidadRsvp : undefined,
         permitirConfirmacionTelefono: body.permitirConfirmacionTelefono !== undefined ? Boolean(body.permitirConfirmacionTelefono) : undefined,
+        bannerContactoActivo: body.bannerContactoActivo !== undefined ? Boolean(body.bannerContactoActivo) : undefined,
+        bannerContactoTexto: body.bannerContactoTexto !== undefined ? (body.bannerContactoTexto ? String(body.bannerContactoTexto).trim() : null) : undefined,
+        bannerContactoTelefono: body.bannerContactoTelefono !== undefined ? (body.bannerContactoTelefono ? String(body.bannerContactoTelefono).trim() : null) : undefined,
+        bannerContactoLlamar: body.bannerContactoLlamar !== undefined ? Boolean(body.bannerContactoLlamar) : undefined,
+        bannerContactoSms: body.bannerContactoSms !== undefined ? Boolean(body.bannerContactoSms) : undefined,
         mostrarMesaRegalos: body.mostrarMesaRegalos !== undefined ? Boolean(body.mostrarMesaRegalos) : undefined,
         regalosMensaje: body.regalosMensaje !== undefined ? (body.regalosMensaje || null) : undefined,
         regalosMensajeEn: body.regalosMensajeEn !== undefined ? (body.regalosMensajeEn || null) : undefined,
