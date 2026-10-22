@@ -240,7 +240,11 @@ export async function POST(req: NextRequest) {
         emailOrganizador: emailOrganizador ? String(emailOrganizador).trim() : null,
         aforoTotal: Number(aforoTotal) || 200,
         fechaLimiteRsvp: parseSafeDate(fechaLimiteRsvp),
-        maxPasesPorInvitado: Number(maxPasesPorInvitado) || 4,
+        // 0 = SIN LÍMITE es un valor válido: solo cae al default 4 si no llega un número utilizable
+        maxPasesPorInvitado:
+          maxPasesPorInvitado !== null && maxPasesPorInvitado !== "" && Number.isFinite(Number(maxPasesPorInvitado))
+            ? Math.max(0, Math.floor(Number(maxPasesPorInvitado)))
+            : 4,
         ceremoniaNombre: ceremoniaNombre || null,
         ceremoniaDireccion: ceremoniaDireccion || null,
         ceremoniaMapUrl: ceremoniaMapUrl || null,
@@ -381,7 +385,11 @@ export async function PUT(req: NextRequest) {
         emailOrganizador: body.emailOrganizador ? String(body.emailOrganizador).trim() : null,
         aforoTotal: body.aforoTotal ? Number(body.aforoTotal) : undefined,
         fechaLimiteRsvp: parseSafeDate(body.fechaLimiteRsvp),
-        maxPasesPorInvitado: body.maxPasesPorInvitado ? Number(body.maxPasesPorInvitado) : undefined,
+        // 0 = SIN LÍMITE debe poder guardarse al editar: no usar truthy (0 es falsy)
+        maxPasesPorInvitado:
+          body.maxPasesPorInvitado !== undefined && body.maxPasesPorInvitado !== null && Number.isFinite(Number(body.maxPasesPorInvitado))
+            ? Math.max(0, Math.floor(Number(body.maxPasesPorInvitado)))
+            : undefined,
         ceremoniaNombre: body.ceremoniaNombre ?? null,
         ceremoniaDireccion: body.ceremoniaDireccion ?? null,
         ceremoniaMapUrl: body.ceremoniaMapUrl ?? null,

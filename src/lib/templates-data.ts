@@ -45,6 +45,10 @@ export interface MasterTemplateItem {
   regalosCashApp?: string;
   telefonoWhatsappRsvp?: string;
   rsvpFechaLimite?: string;
+  // Pases que un invitado puede confirmar por RSVP. CONVENCIÓN: 0 = SIN LÍMITE
+  // (el anfitrión lo elige al crear el evento); en ese caso la API solo aplica
+  // un tope de sanidad de 200 por confirmación. Nunca usar `|| N` sobre este
+  // campo: convertiría el 0 (sin límite) de vuelta en un límite.
   maxPasesPorInvitado?: number;
 
   // Cierre y Extras

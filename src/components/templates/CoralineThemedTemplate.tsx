@@ -226,7 +226,7 @@ export default function CoralineThemedTemplate({
           eventoId={data.id}
           eventoTitulo={data.titulo}
           telefonoWhatsapp={data.telefonoWhatsappRsvp}
-          maxPases={data.maxPasesPorInvitado || 2}
+          maxPases={data.maxPasesPorInvitado ?? 2}
           fechaLimite={data.fechaLimiteRsvp}
           template={template}
           permitirConfirmacionTelefono={data.permitirConfirmacionTelefono !== false}

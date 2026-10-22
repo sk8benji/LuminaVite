@@ -321,7 +321,7 @@ export default function FairytaleWeddingTemplate({
           eventoId={data.id}
           eventoTitulo={data.titulo}
           telefonoWhatsapp={data.telefonoWhatsappRsvp}
-          maxPases={data.maxPasesPorInvitado || 2}
+          maxPases={data.maxPasesPorInvitado ?? 2}
           fechaLimite={data.fechaLimiteRsvp || "July 15"}
           template={template}
           permitirConfirmacionTelefono={data.permitirConfirmacionTelefono !== false}

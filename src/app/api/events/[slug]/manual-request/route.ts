@@ -48,7 +48,7 @@ export async function POST(req: NextRequest, context: RouteContext) {
 
     const cleanName = name.trim();
     const cleanPhone = phone ? String(phone).trim() : null;
-    const requestedPax = Math.min(10, Math.max(1, Number(pax) || 1));
+    const rawPax = Math.max(1, Number(pax) || 1);
 
     // Buscar el evento
     const evento = await prisma.evento.findFirst({
@@ -66,6 +66,11 @@ export async function POST(req: NextRequest, context: RouteContext) {
     }
 
     await ensureGuestsTable();
+
+    // Tope de la solicitud según el evento: si el evento es SIN LÍMITE
+    // (maxPasesPorInvitado === 0) aplica el tope de sanidad de 200; con límite
+    // se mantiene el tope histórico de 10 (la solicitud la aprueba el anfitrión).
+    const requestedPax = Math.min(evento.maxPasesPorInvitado === 0 ? 200 : 10, rawPax);
 
     // 1. Guardar solicitud en la tabla oficial de invitados de PostgreSQL
     const existingGuest = await prisma.guest.findFirst({

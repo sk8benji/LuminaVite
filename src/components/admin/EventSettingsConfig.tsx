@@ -323,6 +323,62 @@ export default function EventSettingsConfig({
           </div>
         </div>
 
+        {/* Pases por invitado — pregunta de onboarding al crear el evento.
+            CONVENCIÓN: maxPasesPorInvitado === 0 significa SIN LÍMITE. */}
+        <div>
+          <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-2">
+            ¿Cuántas personas puede confirmar cada invitado?
+          </label>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <button
+              type="button"
+              onClick={() => updateField("maxPasesPorInvitado", 0)}
+              className={`p-3.5 rounded-xl border text-left transition cursor-pointer ${
+                formData.maxPasesPorInvitado === 0
+                  ? "border-[#7A002A] bg-stone-50 ring-1 ring-[#7A002A]"
+                  : "border-stone-200 bg-white hover:bg-stone-50"
+              }`}
+            >
+              <p className="text-xs font-bold text-[#7A002A]">Sin límite</p>
+              <p className="text-[11px] text-stone-500 mt-1">
+                Cada invitado escribe cuántas personas vienen. Ideal si tus invitados confirman por
+                familia (hay familias de 20 o más). El aforo total de tu salón sigue aplicando.
+              </p>
+            </button>
+
+            <div
+              onClick={() => {
+                if (formData.maxPasesPorInvitado === 0) updateField("maxPasesPorInvitado", 4);
+              }}
+              className={`p-3.5 rounded-xl border text-left transition cursor-pointer ${
+                formData.maxPasesPorInvitado !== 0
+                  ? "border-[#7A002A] bg-stone-50 ring-1 ring-[#7A002A]"
+                  : "border-stone-200 bg-white hover:bg-stone-50"
+              }`}
+            >
+              <p className="text-xs font-bold text-[#7A002A]">Un máximo de</p>
+              <div className="flex items-center gap-2 mt-1.5">
+                <input
+                  type="number"
+                  min={1}
+                  max={100}
+                  value={formData.maxPasesPorInvitado === 0 ? 4 : formData.maxPasesPorInvitado ?? 4}
+                  onClick={(e) => e.stopPropagation()}
+                  onChange={(e) => {
+                    const v = Math.floor(Number(e.target.value));
+                    updateField(
+                      "maxPasesPorInvitado",
+                      Number.isFinite(v) ? Math.min(100, Math.max(1, v)) : 1
+                    );
+                  }}
+                  className="w-20 px-2.5 py-1.5 bg-white border border-stone-200 rounded-lg text-xs text-stone-900 font-semibold focus:outline-none focus:border-[#7A002A]"
+                />
+                <span className="text-[11px] text-stone-500">personas por invitado</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Contacto y Notificaciones */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
           {/* Teléfono Móvil / WhatsApp */}
@@ -385,24 +441,8 @@ export default function EventSettingsConfig({
             </p>
           </div>
 
-          {/* Máximo de Pases por Invitado */}
-          <div>
-            <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-1">
-              Máximo de Pases por Invitado
-            </label>
-            <input
-              type="number"
-              min={1}
-              max={20}
-              value={formData.maxPasesPorInvitado || 4}
-              onChange={(e) => updateField("maxPasesPorInvitado", Number(e.target.value))}
-              placeholder="4"
-              className="w-full px-3.5 py-2.5 bg-stone-50/50 border border-stone-200 rounded-xl text-xs text-stone-900 font-semibold focus:outline-none focus:border-[#7A002A]"
-            />
-            <p className="text-[11px] text-stone-400 mt-1">
-              Límite sugerido por reserva individual.
-            </p>
-          </div>
+          {/* Los pases por invitado se configuran arriba, en la pregunta
+              "¿Cuántas personas puede confirmar cada invitado?" (Tarjeta 3). */}
         </div>
 
         {/* Anticipación Límite para Confirmar (RSVP) */}
