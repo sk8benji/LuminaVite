@@ -1369,24 +1369,55 @@ export default function BlueButterflyTemplate({
                   <label className="block text-[11px] font-semibold text-slate-600 uppercase tracking-wider mb-1 font-serif-roman">
                     {isEn ? "Confirmed Guests" : "Pases Confirmados"}
                   </label>
-                  <div className="flex flex-wrap gap-4 pt-1 text-xs text-slate-600">
-                    {Array.from(
-                      { length: Math.max(1, data.maxPasesPorInvitado || 4) },
-                      (_, i) => String(i + 1)
-                    ).map((seat) => (
-                      <label key={seat} className="flex items-center gap-1.5 cursor-pointer">
-                        <input
-                          type="radio"
-                          name="seats"
-                          value={seat}
-                          checked={selectedSeats === seat}
-                          onChange={() => setSelectedSeats(seat)}
-                          className="accent-[#2F5A84]"
-                        />
-                        {seat}
-                      </label>
-                    ))}
-                  </div>
+                  {/* CONVENCIÓN: maxPasesPorInvitado === 0 = SIN LÍMITE → campo
+                      numérico con −/+ (tope de sanidad 200). Con límite, radios 1..N. */}
+                  {data.maxPasesPorInvitado === 0 ? (
+                    <div className="flex items-center gap-2 pt-1">
+                      <button
+                        type="button"
+                        aria-label={isEn ? "One less guest" : "Un invitado menos"}
+                        onClick={() => setSelectedSeats(String(Math.max(1, (Number(selectedSeats) || 1) - 1)))}
+                        className="w-9 h-9 shrink-0 rounded-lg border border-slate-300 bg-white text-base font-bold text-slate-600 flex items-center justify-center"
+                      >
+                        −
+                      </button>
+                      <input
+                        type="number"
+                        min={1}
+                        max={200}
+                        value={selectedSeats}
+                        onChange={(e) => setSelectedSeats(e.target.value.replace(/[^0-9]/g, ""))}
+                        className="w-20 px-2 py-2 text-xs text-center rounded-lg border border-slate-300 bg-white text-slate-700 focus:outline-none"
+                      />
+                      <button
+                        type="button"
+                        aria-label={isEn ? "One more guest" : "Un invitado más"}
+                        onClick={() => setSelectedSeats(String(Math.min(200, (Number(selectedSeats) || 1) + 1)))}
+                        className="w-9 h-9 shrink-0 rounded-lg border border-slate-300 bg-white text-base font-bold text-slate-600 flex items-center justify-center"
+                      >
+                        +
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="flex flex-wrap gap-4 pt-1 text-xs text-slate-600">
+                      {Array.from(
+                        { length: Math.max(1, data.maxPasesPorInvitado ?? 4) },
+                        (_, i) => String(i + 1)
+                      ).map((seat) => (
+                        <label key={seat} className="flex items-center gap-1.5 cursor-pointer">
+                          <input
+                            type="radio"
+                            name="seats"
+                            value={seat}
+                            checked={selectedSeats === seat}
+                            onChange={() => setSelectedSeats(seat)}
+                            className="accent-[#2F5A84]"
+                          />
+                          {seat}
+                        </label>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
                 <button

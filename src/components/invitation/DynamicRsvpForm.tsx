@@ -884,17 +884,48 @@ export default function DynamicRsvpForm({
               <label className="block text-[10px] font-bold tracking-wider uppercase text-stone-600 mb-1">
                 {isEn ? "Number of Passes" : "Número de Pases"}
               </label>
-              <select
-                value={manualPax}
-                onChange={(e) => setManualPax(e.target.value)}
-                className="w-full bg-stone-50 border border-stone-200 rounded-xl px-3 py-2 text-xs text-stone-800 focus:outline-none focus:ring-2 focus:ring-stone-400 font-medium"
-              >
-                {Array.from({ length: maxPasesPorInvitado || 4 }, (_, i) => i + 1).map((n) => (
-                  <option key={n} value={String(n)}>
-                    {n} {n === 1 ? (isEn ? "Pass" : "Pase") : (isEn ? "Passes" : "Pases")}
-                  </option>
-                ))}
-              </select>
+              {/* CONVENCIÓN: maxPasesPorInvitado === 0 = SIN LÍMITE → campo numérico
+                  con −/+ (tope de sanidad 200). Con límite (>0), select 1..N. */}
+              {maxPasesPorInvitado === 0 ? (
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    aria-label={isEn ? "One less pass" : "Un pase menos"}
+                    onClick={() => setManualPax(String(Math.max(1, (Number(manualPax) || 1) - 1)))}
+                    className="w-9 h-9 shrink-0 bg-stone-50 border border-stone-200 rounded-xl text-base font-bold text-stone-700 flex items-center justify-center active:scale-95 transition"
+                  >
+                    −
+                  </button>
+                  <input
+                    type="number"
+                    min={1}
+                    max={200}
+                    value={manualPax}
+                    onChange={(e) => setManualPax(e.target.value.replace(/[^0-9]/g, ""))}
+                    className="w-full bg-stone-50 border border-stone-200 rounded-xl px-3 py-2 text-xs text-center text-stone-800 focus:outline-none focus:ring-2 focus:ring-stone-400 font-medium"
+                  />
+                  <button
+                    type="button"
+                    aria-label={isEn ? "One more pass" : "Un pase más"}
+                    onClick={() => setManualPax(String(Math.min(200, (Number(manualPax) || 1) + 1)))}
+                    className="w-9 h-9 shrink-0 bg-stone-50 border border-stone-200 rounded-xl text-base font-bold text-stone-700 flex items-center justify-center active:scale-95 transition"
+                  >
+                    +
+                  </button>
+                </div>
+              ) : (
+                <select
+                  value={manualPax}
+                  onChange={(e) => setManualPax(e.target.value)}
+                  className="w-full bg-stone-50 border border-stone-200 rounded-xl px-3 py-2 text-xs text-stone-800 focus:outline-none focus:ring-2 focus:ring-stone-400 font-medium"
+                >
+                  {Array.from({ length: Math.max(1, maxPasesPorInvitado) }, (_, i) => i + 1).map((n) => (
+                    <option key={n} value={String(n)}>
+                      {n} {n === 1 ? (isEn ? "Pass" : "Pase") : (isEn ? "Passes" : "Pases")}
+                    </option>
+                  ))}
+                </select>
+              )}
             </div>
 
             {manualError && (

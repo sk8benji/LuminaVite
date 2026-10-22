@@ -256,7 +256,7 @@ export default function TemplatesManager() {
       regalosZelle: editForm.regalosZelle || "",
       regalosCashApp: editForm.regalosCashApp || "",
       rsvpFechaLimite: editForm.rsvpFechaLimite || "20 de Octubre",
-      maxPasesPorInvitado: editForm.maxPasesPorInvitado || 3,
+      maxPasesPorInvitado: editForm.maxPasesPorInvitado ?? 3,
       mensajeDespedida: editForm.mensajeDespedida || "",
       autorBendicion: editForm.autorBendicion || "Con amor, tu familia",
       corteHonorJson: editForm.corteHonorJson || {},
@@ -850,13 +850,19 @@ export default function TemplatesManager() {
                         />
                       </div>
                       <div className="space-y-1">
-                        <label className="text-xs font-semibold text-stone-700">Máx Pases:</label>
+                        <label className="text-xs font-semibold text-stone-700">Máx Pases (0 = sin límite):</label>
                         <input
                           type="number"
-                          min={1}
-                          max={15}
-                          value={editForm.maxPasesPorInvitado || 3}
-                          onChange={(e) => setEditForm({ ...editForm, maxPasesPorInvitado: parseInt(e.target.value) || 1 })}
+                          min={0}
+                          max={100}
+                          value={editForm.maxPasesPorInvitado ?? 3}
+                          onChange={(e) => {
+                            const v = parseInt(e.target.value, 10);
+                            setEditForm({
+                              ...editForm,
+                              maxPasesPorInvitado: Number.isNaN(v) ? 0 : Math.min(100, Math.max(0, v)),
+                            });
+                          }}
                           className="w-full px-3.5 py-2 bg-stone-50 border border-stone-200 rounded-xl text-xs"
                         />
                       </div>

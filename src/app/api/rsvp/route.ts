@@ -67,7 +67,13 @@ export async function POST(req: NextRequest) {
       }
 
       // 2. Validar límite de pases por invitado
-      const maxAllowed = evento.maxPasesPorInvitado || 4;
+      // CONVENCIÓN: maxPasesPorInvitado === 0 significa SIN LÍMITE (el anfitrión
+      // lo elige al crear el evento, pensado para familias grandes de 20+).
+      // Sin límite solo aplica un tope de sanidad de 200 pases por confirmación
+      // (anti-abuso / errores de dedo). El aforo total del evento se valida
+      // aparte en el paso 4 (CAPACITY_EXCEEDED) y aplica SIEMPRE.
+      const sinLimitePases = evento.maxPasesPorInvitado === 0;
+      const maxAllowed = sinLimitePases ? 200 : (evento.maxPasesPorInvitado ?? 4);
       if (isAttending && requestedPasses > maxAllowed) {
         throw new Error(`MAX_PASSES_EXCEEDED:${maxAllowed}`);
       }

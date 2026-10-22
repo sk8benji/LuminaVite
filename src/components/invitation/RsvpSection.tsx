@@ -11,6 +11,8 @@ interface RsvpSectionProps {
   eventoId?: string;
   eventoTitulo: string;
   telefonoWhatsapp: string;
+  // CONVENCIÓN: maxPases === 0 significa SIN LÍMITE (selector numérico libre,
+  // tope de sanidad 200). Nunca aplicar `|| N` antes de pasar este valor.
   maxPases: number;
   fechaLimite?: string | null;
   template: TemplateConfig;
@@ -89,6 +91,7 @@ export default function RsvpSection({
     }, 400);
   };
 
+  const sinLimitePases = maxPases === 0;
   const pasesOptions = Array.from({ length: Math.min(Math.max(maxPases, 1), 10) }, (_, i) => i + 1);
 
   return (
@@ -206,22 +209,69 @@ export default function RsvpSection({
                 >
                   How many seats/guests will you bring?
                 </label>
-                <select
-                  value={pases}
-                  onChange={(e) => setPases(Number(e.target.value))}
-                  className="w-full px-3.5 py-2.5 text-xs rounded-xl border focus:outline-none"
-                  style={{
-                    backgroundColor: template.bgColor,
-                    borderColor: template.borderSoft,
-                    color: template.textPrimary,
-                  }}
-                >
-                  {pasesOptions.map((n) => (
-                    <option key={n} value={n}>
-                      {n} {n === 1 ? "Guest / Seat" : "Guests / Seats"}
-                    </option>
-                  ))}
-                </select>
+                {sinLimitePases ? (
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      aria-label="One less guest"
+                      onClick={() => setPases((p) => Math.max(1, p - 1))}
+                      className="w-10 h-10 shrink-0 rounded-xl border text-base font-bold flex items-center justify-center"
+                      style={{
+                        backgroundColor: template.bgColor,
+                        borderColor: template.borderSoft,
+                        color: template.textPrimary,
+                      }}
+                    >
+                      −
+                    </button>
+                    <input
+                      type="number"
+                      min={1}
+                      max={200}
+                      value={pases}
+                      onChange={(e) => {
+                        const v = Math.floor(Number(e.target.value));
+                        setPases(Number.isFinite(v) ? Math.min(200, Math.max(1, v)) : 1);
+                      }}
+                      className="w-full px-3.5 py-2.5 text-xs text-center rounded-xl border focus:outline-none"
+                      style={{
+                        backgroundColor: template.bgColor,
+                        borderColor: template.borderSoft,
+                        color: template.textPrimary,
+                      }}
+                    />
+                    <button
+                      type="button"
+                      aria-label="One more guest"
+                      onClick={() => setPases((p) => Math.min(200, p + 1))}
+                      className="w-10 h-10 shrink-0 rounded-xl border text-base font-bold flex items-center justify-center"
+                      style={{
+                        backgroundColor: template.bgColor,
+                        borderColor: template.borderSoft,
+                        color: template.textPrimary,
+                      }}
+                    >
+                      +
+                    </button>
+                  </div>
+                ) : (
+                  <select
+                    value={pases}
+                    onChange={(e) => setPases(Number(e.target.value))}
+                    className="w-full px-3.5 py-2.5 text-xs rounded-xl border focus:outline-none"
+                    style={{
+                      backgroundColor: template.bgColor,
+                      borderColor: template.borderSoft,
+                      color: template.textPrimary,
+                    }}
+                  >
+                    {pasesOptions.map((n) => (
+                      <option key={n} value={n}>
+                        {n} {n === 1 ? "Guest / Seat" : "Guests / Seats"}
+                      </option>
+                    ))}
+                  </select>
+                )}
               </div>
 
               {/* What are their names? */}
