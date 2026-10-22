@@ -53,7 +53,7 @@ export async function GET(req: NextRequest) {
     }
 
     // Foto de portada
-    let photoUrl = evento?.fotoPortadaUrl || "/assets/template-butterfly/foto-columpio-portada.png";
+    let photoUrl = evento?.fotoPortadaUrl || "/assets/template-butterfly/foto-columpio-portada.webp";
     if (photoUrl.startsWith("/")) {
       photoUrl = `${baseUrl}${photoUrl}`;
     }

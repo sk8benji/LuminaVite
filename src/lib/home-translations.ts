@@ -347,7 +347,7 @@ export const translations: Record<Language, HomeTranslations> = {
           description:
             "Efecto de mariposas 3D, sobre virtual con sello lacrado y tonos celestes con detalles dorados.",
           slug: "mariposas-xv",
-          image: "/assets/template-butterfly/foto-columpio-portada.png",
+          image: "/assets/template-butterfly/foto-columpio-portada.webp",
           features: ["Efecto de mariposas 3D", "Sobre virtual con sello lacrado", "RSVP por WhatsApp y SMS"],
         },
         {
@@ -496,7 +496,7 @@ export const translations: Record<Language, HomeTranslations> = {
           event: "Recepción en The Castaway • Burbank, CA",
           quote:
             "“Mandar la invitación por WhatsApp y ver las confirmaciones en vivo en nuestro celular fue la mejor inversión de la boda. Los invitados llegaron directo con el GPS a The Castaway sin perderse.”",
-          avatar: "/assets/template-butterfly/foto-columpio-portada.png",
+          avatar: "/assets/template-butterfly/foto-columpio-portada.webp",
           metric: "100% mesas organizadas",
           demoSlug: "mariposas-xv",
           demoBtnText: "Probar Invitación de Gala",
@@ -726,7 +726,7 @@ export const translations: Record<Language, HomeTranslations> = {
           description:
             "Our signature piece. Butterflies that animate on touch, soft watercolor skies, orchestral music, and an interactive envelope with royal blue wax seal.",
           slug: "mariposas-xv",
-          image: "/assets/template-butterfly/foto-columpio-portada.png",
+          image: "/assets/template-butterfly/foto-columpio-portada.webp",
           features: ["3D envelope with wax seal", "Background audio track", "WhatsApp & SMS RSVP"],
         },
         {
@@ -875,7 +875,7 @@ export const translations: Record<Language, HomeTranslations> = {
           event: "Reception at The Castaway • Burbank, CA",
           quote:
             "“Sending the invitation via WhatsApp and watching live RSVPs appear on our phone was our best celebration investment. Guests drove straight into The Castaway via GPS without getting lost!”",
-          avatar: "/assets/template-butterfly/foto-columpio-portada.png",
+          avatar: "/assets/template-butterfly/foto-columpio-portada.webp",
           metric: "100% seating tables ready",
           demoSlug: "mariposas-xv",
           demoBtnText: "Try Gala Invitation",

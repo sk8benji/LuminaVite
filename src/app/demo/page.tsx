@@ -15,7 +15,7 @@ const DEMO_CARDS = [
     tag: "XV Años & Gala",
     badge: "Más Solicitada",
     desc: "Efecto de mariposas 3D, sobre virtual con sello lacrado y tonos celestes con detalles dorados.",
-    image: "/assets/template-butterfly/foto-columpio-portada.png",
+    image: "/assets/template-butterfly/foto-columpio-portada.webp",
   },
   {
     slug: "isabella-xv",

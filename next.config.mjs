@@ -62,6 +62,17 @@ const nextConfig = {
           },
         ],
       },
+      {
+        // Arte de plantillas y assets estáticos: caché largo en el navegador
+        // (antes max-age=0 por defecto: cada visita re-descargaba varios MB).
+        source: "/assets/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=2592000, stale-while-revalidate=86400",
+          },
+        ],
+      },
     ];
   },
   async rewrites() {

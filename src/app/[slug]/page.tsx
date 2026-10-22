@@ -203,10 +203,10 @@ export const DEMO_BUTTERFLY: InvitationData = {
   textoDisco: "Click to Play Music",
   fechaEvento: new Date("2026-10-24T15:00:00Z"),
   fechaTextoPersonalizada: "SATURDAY, OCTOBER 24, 2026 AT 3 PM",
-  fotoPortadaUrl: "/assets/template-butterfly/foto-columpio-portada.png",
-  fotoInfanciaUrl: "/assets/template-butterfly/foto-sesion-1.jpg",
-  fotoActualUrl: "/assets/template-butterfly/foto-sesion-2.jpg",
-  fotoCierreUrl: "/assets/template-butterfly/foto-gala-vestido.jpg",
+  fotoPortadaUrl: "/assets/template-butterfly/foto-columpio-portada.webp",
+  fotoInfanciaUrl: "/assets/template-butterfly/foto-sesion-1.webp",
+  fotoActualUrl: "/assets/template-butterfly/foto-sesion-2.webp",
+  fotoCierreUrl: "/assets/template-butterfly/foto-gala-vestido.webp",
   musicaUrl:
     "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
   telefonoWhatsappRsvp: "18181234567",
@@ -525,7 +525,7 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
     (process.env.RAILWAY_PUBLIC_DOMAIN ? `https://${process.env.RAILWAY_PUBLIC_DOMAIN}` : null) ||
     "https://clickandlove.app";
 
-  let coverImage = data.fotoPortadaUrl || "/assets/template-butterfly/foto-columpio-portada.png";
+  let coverImage = data.fotoPortadaUrl || "/assets/template-butterfly/foto-columpio-portada.webp";
   if (coverImage.startsWith("/")) {
     coverImage = `${baseUrl}${coverImage}`;
   }

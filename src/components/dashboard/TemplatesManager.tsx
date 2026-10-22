@@ -234,7 +234,7 @@ export default function TemplatesManager() {
       fechaPlacaHora: editForm.fechaPlacaHora || "A LAS 3:00 PM",
       fechaPlacaLugar: editForm.fechaPlacaLugar || editForm.recepcionNombre || "QUINCE PALACE",
       countdownEncabezado: editForm.countdownEncabezado || "Faltan sólo...",
-      fotoPortadaUrl: editForm.fotoPortadaUrl || "/assets/template-butterfly/foto-columpio-portada.png",
+      fotoPortadaUrl: editForm.fotoPortadaUrl || "/assets/template-butterfly/foto-columpio-portada.webp",
       fotoInfanciaUrl: editForm.fotoInfanciaUrl || "",
       fotoActualUrl: editForm.fotoActualUrl || "",
       fotoCierreUrl: editForm.fotoCierreUrl || "",

@@ -291,7 +291,7 @@ export default function BlueButterflyTemplate({
       title.includes("recep") ||
       title.includes("welcome")
     ) {
-      return "/assets/template-butterfly/itinerario-welcome.png";
+      return "/assets/template-butterfly/itinerario-welcome.webp";
     }
     if (
       iconType.includes("church") ||
@@ -301,7 +301,7 @@ export default function BlueButterflyTemplate({
       title.includes("entrada") ||
       title.includes("entrance")
     ) {
-      return "/assets/template-butterfly/itinerario-entrance.png";
+      return "/assets/template-butterfly/itinerario-entrance.webp";
     }
     if (
       iconType.includes("wine") ||
@@ -311,7 +311,7 @@ export default function BlueButterflyTemplate({
       title.includes("brindis") ||
       title.includes("dinner")
     ) {
-      return "/assets/template-butterfly/itinerario-dinner.png";
+      return "/assets/template-butterfly/itinerario-dinner.webp";
     }
     if (
       iconType.includes("crown") ||
@@ -319,7 +319,7 @@ export default function BlueButterflyTemplate({
       title.includes("vals") ||
       title.includes("waltz")
     ) {
-      return "/assets/template-butterfly/itinerario-waltz.png";
+      return "/assets/template-butterfly/itinerario-waltz.webp";
     }
     if (
       iconType.includes("music") ||
@@ -330,7 +330,7 @@ export default function BlueButterflyTemplate({
       title.includes("pista") ||
       title.includes("open dance")
     ) {
-      return "/assets/template-butterfly/itinerario-disco.png";
+      return "/assets/template-butterfly/itinerario-disco.webp";
     }
     if (
       iconType.includes("cake") ||
@@ -338,16 +338,16 @@ export default function BlueButterflyTemplate({
       title.includes("torta") ||
       title.includes("cake")
     ) {
-      return "/assets/template-butterfly/itinerario-cake.png";
+      return "/assets/template-butterfly/itinerario-cake.webp";
     }
 
     const fallbackIcons = [
-      "/assets/template-butterfly/itinerario-welcome.png",
-      "/assets/template-butterfly/itinerario-entrance.png",
-      "/assets/template-butterfly/itinerario-dinner.png",
-      "/assets/template-butterfly/itinerario-waltz.png",
-      "/assets/template-butterfly/itinerario-disco.png",
-      "/assets/template-butterfly/itinerario-cake.png",
+      "/assets/template-butterfly/itinerario-welcome.webp",
+      "/assets/template-butterfly/itinerario-entrance.webp",
+      "/assets/template-butterfly/itinerario-dinner.webp",
+      "/assets/template-butterfly/itinerario-waltz.webp",
+      "/assets/template-butterfly/itinerario-disco.webp",
+      "/assets/template-butterfly/itinerario-cake.webp",
     ];
     return fallbackIcons[idx % fallbackIcons.length];
   };
@@ -391,7 +391,7 @@ export default function BlueButterflyTemplate({
       {/* 1. Fondo General Acuarela Contenido en el Viewport/Simulador */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src="/assets/template-butterfly/fondo-cielo-acuarela.jpg"
+        src="/assets/template-butterfly/fondo-cielo-acuarela.webp"
         alt="Fondo Acuarela"
         className="absolute inset-0 w-full h-full object-cover -z-10 pointer-events-none"
       />
@@ -415,7 +415,7 @@ export default function BlueButterflyTemplate({
               ya no se funde de golpe */}
           <div
             aria-hidden="true"
-            className={`absolute inset-0 bg-[#EBF3FA] bg-[url('/assets/template-butterfly/fondo-cielo-acuarela.png')] bg-cover bg-center transition-opacity duration-200 ${
+            className={`absolute inset-0 bg-[#EBF3FA] bg-[url('/assets/template-butterfly/fondo-cielo-acuarela.webp')] bg-cover bg-center transition-opacity duration-200 ${
               isEnvelopeFading ? "opacity-0" : "opacity-100"
             }`}
           />
@@ -466,7 +466,7 @@ export default function BlueButterflyTemplate({
               {/* Mariposa con aleteo 3D en la tarjeta */}
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/assets/template-butterfly/mariposa-azul.png"
+                src="/assets/template-butterfly/mariposa-azul.webp"
                 alt="Mariposa"
                 className="w-10 sm:w-12 lg:w-14 h-auto object-contain animate-flutter mb-1"
               />
@@ -498,7 +498,7 @@ export default function BlueButterflyTemplate({
                 {/* Bolsillo abierto (debajo): se revela con el crossfade */}
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src="/assets/template-butterfly/sobre-carta-base.png"
+                  src="/assets/template-butterfly/sobre-carta-base.webp"
                   alt="Bolsillo del sobre"
                   className={`absolute inset-0 w-full h-full object-contain transition-opacity duration-200 ${
                     isEnvelopeOpen ? "opacity-100" : "opacity-0"
@@ -514,7 +514,7 @@ export default function BlueButterflyTemplate({
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src="/assets/template-butterfly/sobre-cerrado.png"
+                    src="/assets/template-butterfly/sobre-cerrado.webp"
                     alt="Sobre Cerrado"
                     className="w-full h-full object-contain"
                   />
@@ -523,7 +523,7 @@ export default function BlueButterflyTemplate({
                   <div className="absolute -bottom-3 -left-4 sm:-bottom-4 sm:-left-6 z-30 pointer-events-none rotate-[22deg] drop-shadow-md">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
-                      src="/assets/template-butterfly/mariposa-perchada.png"
+                      src="/assets/template-butterfly/mariposa-perchada.webp"
                       alt="Mariposa viva"
                       className="w-16 sm:w-20 md:w-24 lg:w-32 h-auto object-contain animate-flutter"
                     />
@@ -537,7 +537,7 @@ export default function BlueButterflyTemplate({
                   <div className="absolute left-[36%] top-[54%] z-40 w-8 sm:w-10 lg:w-14 animate-butterfly-fly-left">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
-                      src="/assets/template-butterfly/mariposa-azul.png"
+                      src="/assets/template-butterfly/mariposa-azul.webp"
                       alt=""
                       className="w-full h-auto object-contain animate-flutter"
                     />
@@ -545,7 +545,7 @@ export default function BlueButterflyTemplate({
                   <div className="absolute left-[47%] top-[46%] z-40 w-7 sm:w-9 animate-butterfly-fly-up">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
-                      src="/assets/template-butterfly/mariposa-azul.png"
+                      src="/assets/template-butterfly/mariposa-azul.webp"
                       alt=""
                       className="w-full h-auto object-contain animate-flutter"
                     />
@@ -553,7 +553,7 @@ export default function BlueButterflyTemplate({
                   <div className="absolute left-[58%] top-[54%] z-40 w-8 sm:w-10 lg:w-14 animate-butterfly-fly-right">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
-                      src="/assets/template-butterfly/mariposa-azul.png"
+                      src="/assets/template-butterfly/mariposa-azul.webp"
                       alt=""
                       className="w-full h-auto object-contain animate-flutter"
                     />
@@ -580,7 +580,7 @@ export default function BlueButterflyTemplate({
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src="/assets/template-butterfly/boton-idioma-marco.png"
+                  src="/assets/template-butterfly/boton-idioma-marco.webp"
                   alt="English"
                   className="absolute inset-0 w-full h-full object-contain pointer-events-none drop-shadow-sm group-hover:drop-shadow-md transition-all"
                 />
@@ -599,7 +599,7 @@ export default function BlueButterflyTemplate({
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src="/assets/template-butterfly/boton-idioma-marco.png"
+                  src="/assets/template-butterfly/boton-idioma-marco.webp"
                   alt="Español"
                   className="absolute inset-0 w-full h-full object-contain pointer-events-none drop-shadow-sm group-hover:drop-shadow-md transition-all"
                 />
@@ -671,7 +671,7 @@ export default function BlueButterflyTemplate({
           <div className="absolute top-28 left-4 w-7 animate-float">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/assets/template-butterfly/mariposa-azul.png"
+              src="/assets/template-butterfly/mariposa-azul.webp"
               alt="Mariposa flotante"
               className="w-full h-auto animate-flutter"
             />
@@ -682,7 +682,7 @@ export default function BlueButterflyTemplate({
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/assets/template-butterfly/mariposa-azul.png"
+              src="/assets/template-butterfly/mariposa-azul.webp"
               alt="Mariposa flotante"
               className="w-full h-auto animate-flutter"
             />
@@ -693,7 +693,7 @@ export default function BlueButterflyTemplate({
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/assets/template-butterfly/mariposa-azul.png"
+              src="/assets/template-butterfly/mariposa-azul.webp"
               alt="Mariposa flotante"
               className="w-full h-auto animate-flutter"
             />
@@ -704,7 +704,7 @@ export default function BlueButterflyTemplate({
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/assets/template-butterfly/mariposa-azul.png"
+              src="/assets/template-butterfly/mariposa-azul.webp"
               alt="Mariposa flotante"
               className="w-full h-auto animate-flutter"
             />
@@ -734,7 +734,7 @@ export default function BlueButterflyTemplate({
           <div className="flex items-center gap-2 mb-2">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/assets/template-butterfly/mariposa-azul.png"
+              src="/assets/template-butterfly/mariposa-azul.webp"
               alt="Mariposa"
               className="w-5 h-auto object-contain animate-flutter"
             />
@@ -743,7 +743,7 @@ export default function BlueButterflyTemplate({
             </h1>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/assets/template-butterfly/mariposa-azul.png"
+              src="/assets/template-butterfly/mariposa-azul.webp"
               alt="Mariposa"
               className="w-5 h-auto object-contain animate-flutter"
             />
@@ -755,10 +755,10 @@ export default function BlueButterflyTemplate({
               {/* Foto aplicando el clipPath oficial */}
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={data.fotoPortadaUrl || "/assets/template-butterfly/foto-columpio-portada.png"}
+                src={data.fotoPortadaUrl || "/assets/template-butterfly/foto-columpio-portada.webp"}
                 alt={data.titulo}
                 onError={(e) => {
-                  e.currentTarget.src = "/assets/template-butterfly/foto-columpio-portada.png";
+                  e.currentTarget.src = "/assets/template-butterfly/foto-columpio-portada.webp";
                 }}
                 className="w-full h-full object-cover clip-canva-torn select-none"
               />
@@ -842,10 +842,10 @@ export default function BlueButterflyTemplate({
               <div className="w-1/2 h-full overflow-hidden bg-slate-100">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={data.fotoInfanciaUrl || "/assets/template-butterfly/foto-sesion-1.jpg"}
+                  src={data.fotoInfanciaUrl || "/assets/template-butterfly/foto-sesion-1.webp"}
                   alt="Sesión Foto 1"
                   onError={(e) => {
-                    e.currentTarget.src = "/assets/template-butterfly/foto-sesion-1.jpg";
+                    e.currentTarget.src = "/assets/template-butterfly/foto-sesion-1.webp";
                   }}
                   className="w-full h-full object-cover"
                 />
@@ -853,10 +853,10 @@ export default function BlueButterflyTemplate({
               <div className="w-1/2 h-full overflow-hidden bg-slate-100 border-l border-white/60">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={data.fotoActualUrl || "/assets/template-butterfly/foto-sesion-2.jpg"}
+                  src={data.fotoActualUrl || "/assets/template-butterfly/foto-sesion-2.webp"}
                   alt="Sesión Foto 2"
                   onError={(e) => {
-                    e.currentTarget.src = "/assets/template-butterfly/foto-sesion-2.jpg";
+                    e.currentTarget.src = "/assets/template-butterfly/foto-sesion-2.webp";
                   }}
                   className="w-full h-full object-cover"
                 />
@@ -866,13 +866,13 @@ export default function BlueButterflyTemplate({
             {/* 4. FLORES ESQUINAS */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/assets/template-butterfly/flores-azules-esquina-izq.png"
+              src="/assets/template-butterfly/flores-azules-esquina-izq.webp"
               alt="Flores Azules Izquierda"
               className="absolute -bottom-6 -left-3 w-36 h-auto z-30 pointer-events-none drop-shadow-md"
             />
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/assets/template-butterfly/flores-azules-esquina-der.png"
+              src="/assets/template-butterfly/flores-azules-esquina-der.webp"
               alt="Flores Azules Derecha"
               className="absolute -bottom-4 right-1 w-24 h-auto z-30 pointer-events-none drop-shadow-sm"
             />
@@ -884,7 +884,7 @@ export default function BlueButterflyTemplate({
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/assets/template-butterfly/mariposa-perchada.png"
+                src="/assets/template-butterfly/mariposa-perchada.webp"
                 alt="Blue Butterfly"
                 className="w-20 h-auto animate-flutter drop-shadow-lg"
               />
@@ -913,7 +913,7 @@ export default function BlueButterflyTemplate({
           <div className="w-full max-w-[280px] mx-auto my-3">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/assets/template-butterfly/separador-flores.png"
+              src="/assets/template-butterfly/separador-flores.webp"
               alt="Separador Floral"
               className="w-full h-auto object-contain"
             />
@@ -929,7 +929,7 @@ export default function BlueButterflyTemplate({
             {/* Marco de fondo de pergamino con flores */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img 
-              src="/assets/template-butterfly/marco-fecha-pergamino.png" 
+              src="/assets/template-butterfly/marco-fecha-pergamino.webp" 
               alt="Marco Fecha" 
               className="w-full h-auto drop-shadow-sm select-none"
             />
@@ -973,7 +973,7 @@ export default function BlueButterflyTemplate({
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img 
-                src="/assets/template-butterfly/mariposa-azul.png" 
+                src="/assets/template-butterfly/mariposa-azul.webp" 
                 alt="Mariposa" 
                 className="w-full h-auto drop-shadow-md animate-flutter"
               />
@@ -984,10 +984,10 @@ export default function BlueButterflyTemplate({
           <div className="relative w-full max-w-[390px] h-[480px] sm:h-[520px] mx-auto overflow-hidden bg-slate-100 shadow-xl my-4">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img 
-              src={data.fotoCierreUrl || "/assets/template-butterfly/foto-gala-vestido.jpg"} 
+              src={data.fotoCierreUrl || "/assets/template-butterfly/foto-gala-vestido.webp"} 
               alt="Quinceañera Gala" 
               onError={(e) => {
-                e.currentTarget.src = "/assets/template-butterfly/foto-gala-vestido.jpg";
+                e.currentTarget.src = "/assets/template-butterfly/foto-gala-vestido.webp";
               }}
               className="w-full h-full object-cover clip-canva-gala select-none"
             />
@@ -1001,7 +1001,7 @@ export default function BlueButterflyTemplate({
           <div className="relative w-full aspect-[1536/1024] max-w-[390px] mx-auto flex items-center justify-center">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/assets/template-butterfly/pergamino-countdown.png"
+              src="/assets/template-butterfly/pergamino-countdown.webp"
               alt="Pergamino de Cuenta Regresiva"
               className="absolute inset-0 w-full h-full object-contain pointer-events-none z-10 drop-shadow-md"
             />
@@ -1068,7 +1068,7 @@ export default function BlueButterflyTemplate({
                       <div className="w-16 h-16 mx-auto mb-1 flex items-center justify-center">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
-                          src={item.icon || "/assets/template-butterfly/itinerario-welcome.png"}
+                          src={item.icon || "/assets/template-butterfly/itinerario-welcome.webp"}
                           alt={item.titulo}
                           className="max-h-full object-contain drop-shadow-sm select-none"
                         />
@@ -1090,7 +1090,7 @@ export default function BlueButterflyTemplate({
                   {/* Imagen de la guirnalda continua estirada a todo el alto */}
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src="/assets/template-butterfly/guirnalda-itinerario-eje.png"
+                    src="/assets/template-butterfly/guirnalda-itinerario-eje.webp"
                     alt="Eje Floral"
                     className="w-full h-full object-fill pointer-events-none select-none drop-shadow-xs"
                   />
@@ -1108,7 +1108,7 @@ export default function BlueButterflyTemplate({
                       <div className="w-16 h-16 mx-auto mb-1 flex items-center justify-center">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
-                          src={item.icon || "/assets/template-butterfly/itinerario-entrance.png"}
+                          src={item.icon || "/assets/template-butterfly/itinerario-entrance.webp"}
                           alt={item.titulo}
                           className="max-h-full object-contain drop-shadow-sm select-none"
                         />
@@ -1141,10 +1141,10 @@ export default function BlueButterflyTemplate({
             <div className="w-[176px] h-[176px] rounded-full overflow-hidden z-10 shadow-inner">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={data.fotoActualUrl || "/assets/template-butterfly/foto-sesion-2.jpg"}
+                src={data.fotoActualUrl || "/assets/template-butterfly/foto-sesion-2.webp"}
                 alt="Retrato de Gala"
                 onError={(e) => {
-                  e.currentTarget.src = "/assets/template-butterfly/foto-sesion-2.jpg";
+                  e.currentTarget.src = "/assets/template-butterfly/foto-sesion-2.webp";
                 }}
                 className="w-full h-full object-cover"
               />
@@ -1153,7 +1153,7 @@ export default function BlueButterflyTemplate({
             {/* Marco barroco en z-20 */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/assets/template-butterfly/marco-dress-code.png"
+              src="/assets/template-butterfly/marco-dress-code.webp"
               alt="Marco Barroco"
               className="absolute inset-0 w-full h-full object-contain pointer-events-none z-20 drop-shadow-xl"
             />
@@ -1165,7 +1165,7 @@ export default function BlueButterflyTemplate({
             <div className="h-32 sm:h-36 w-20 sm:w-24 flex-shrink-0 flex items-center justify-center">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/assets/template-butterfly/vestido-maniqui.png"
+                src="/assets/template-butterfly/vestido-maniqui.webp"
                 alt="Vestido Formal de Dama"
                 className="h-full w-auto object-contain drop-shadow-md select-none"
               />
@@ -1192,7 +1192,7 @@ export default function BlueButterflyTemplate({
             <div className="h-32 sm:h-36 w-16 sm:w-20 flex-shrink-0 flex items-center justify-center">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/assets/template-butterfly/traje-maniqui.png"
+                src="/assets/template-butterfly/traje-maniqui.webp"
                 alt="Traje Formal de Caballero"
                 className="h-full w-auto object-contain drop-shadow-md select-none"
               />
@@ -1203,7 +1203,7 @@ export default function BlueButterflyTemplate({
           <div className="w-full max-w-[280px] sm:max-w-[320px] mx-auto mt-5">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/assets/template-butterfly/separador-flores.png"
+              src="/assets/template-butterfly/separador-flores.webp"
               alt="Separador Floral"
               className="w-full h-auto object-contain drop-shadow-xs"
             />
@@ -1303,7 +1303,7 @@ export default function BlueButterflyTemplate({
           <div className="w-44 h-44 mx-auto mb-2">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/assets/template-butterfly/caja-regalos.png"
+              src="/assets/template-butterfly/caja-regalos.webp"
               alt="Cofre de Regalos"
               className="w-full h-full object-contain drop-shadow-md"
             />
@@ -1342,7 +1342,7 @@ export default function BlueButterflyTemplate({
           <div className="relative w-full max-w-[390px] mx-auto -mb-6 z-20">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/assets/template-butterfly/sobre-rsvp.png"
+              src="/assets/template-butterfly/sobre-rsvp.webp"
               alt="RSVP Encabezado"
               className="w-full h-auto object-contain drop-shadow-xl"
             />
@@ -1624,7 +1624,7 @@ export default function BlueButterflyTemplate({
           <div className="w-36 h-36 mx-auto mb-2">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/assets/template-butterfly/ramo-flores.png"
+              src="/assets/template-butterfly/ramo-flores.webp"
               alt="Ramillete de Flores"
               className="w-full h-full object-contain drop-shadow-md"
             />

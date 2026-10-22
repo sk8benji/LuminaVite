@@ -46,7 +46,7 @@ export const TEMPLATE_CATALOG: TemplatePickerItem[] = [
     name: "Jardín de Mariposas Celestes",
     categoria: "QUINCEANERA",
     badgeLabel: "Efecto Mariposas",
-    thumbnail: "/assets/template-butterfly/foto-columpio-portada.png",
+    thumbnail: "/assets/template-butterfly/foto-columpio-portada.webp",
     description: "Animación de mariposas celestiales flotantes en CSS, sobre 3D azul noche con sello dorado, carta emotiva e itinerario de cuento.",
     demoSlug: "mariposas-xv",
     dots: ["#F0F8FF", "#87CEEB", "#1E3A5F"],
