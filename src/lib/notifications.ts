@@ -1,4 +1,5 @@
 import { SESClient, SendEmailCommand } from "@aws-sdk/client-ses";
+import { getSiteUrl } from "@/lib/url-safety";
 import { validateAndFormatPhone } from "@/lib/phoneValidator";
 import { extractCleanMapUrl } from "@/lib/mapsUrlCleaner";
 import { createShortMapLink } from "@/lib/shortener";
@@ -67,7 +68,7 @@ export async function sendHostNotificationEmail(params: HostEmailParams): Promis
     pases,
     totalPasesConfirmados,
     aforoTotal,
-    siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://clickandlove.app",
+    siteUrl = getSiteUrl(),
   } = params;
 
   const magicLink = panelToken
@@ -384,7 +385,7 @@ export async function sendGuestConfirmationEmail(
     recepcionNombre,
     recepcionDireccion,
     recepcionMapUrl,
-    siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://clickandlove.app",
+    siteUrl = getSiteUrl(),
   } = params;
 
   if (!guestEmail || !guestEmail.includes("@")) {
@@ -541,7 +542,7 @@ export async function sendHostManualRequestEmail(
     nombreSolicitante,
     telefono,
     pasesSolicitados,
-    siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://clickandlove.app",
+    siteUrl = getSiteUrl(),
   } = params;
 
   const magicLink = panelToken

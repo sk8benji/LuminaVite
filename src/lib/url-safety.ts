@@ -46,11 +46,41 @@ export function sanitizeUrl(raw: unknown): string | null {
  * NUNCA usar headers host/origin del request: un atacante puede inyectar
  * un dominio malicioso y robar panelTokens vía phishing.
  */
+export const CANONICAL_SITE_URL = "https://clickandlove.app";
+
+/**
+ * Sanea una URL base candidata (de env vars): devuelve null si no es una URL
+ * pública válida (localhost, 127.*, 0.0.0.0, ::1, *.local, sin TLD, esquema
+ * no-http). Las env vars de desarrollo JAMÁS deben filtrarse a links que
+ * reciben clientes (magic links, emails, redirects): en Railway quedó
+ * NEXT_PUBLIC_SITE_URL=http://localhost:3000 y los /m redirigían a localhost.
+ */
+export function sanitizePublicBaseUrl(raw?: string | null): string | null {
+  if (!raw || !raw.trim()) return null;
+  let v = raw.trim().replace(/\/+$/, "");
+  if (!/^https?:\/\//i.test(v)) v = `https://${v}`;
+  try {
+    const u = new URL(v);
+    const host = u.hostname.toLowerCase();
+    if (
+      host === "localhost" ||
+      host === "0.0.0.0" ||
+      host === "::1" ||
+      host.startsWith("127.") ||
+      host.endsWith(".local") ||
+      host.endsWith(".internal") ||
+      !host.includes(".")
+    ) {
+      return null;
+    }
+    return `${u.protocol}//${u.host}`;
+  } catch {
+    return null;
+  }
+}
+
 export function getSiteUrl(): string {
-  const v = process.env.NEXT_PUBLIC_SITE_URL;
-  if (v && v.trim()) return v.trim().replace(/\/+$/, "");
-  // Fallback al dominio canónico de producción
-  return "https://clickandlove.app";
+  return sanitizePublicBaseUrl(process.env.NEXT_PUBLIC_SITE_URL) ?? CANONICAL_SITE_URL;
 }
 export const EVENT_URL_FIELDS = [
   "fotoPortadaUrl",

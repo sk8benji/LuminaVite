@@ -1,4 +1,5 @@
 import { SESClient, SendEmailCommand } from "@aws-sdk/client-ses";
+import { getSiteUrl } from "@/lib/url-safety";
 import { OrderData } from "./order-store";
 
 const sesClient = new SESClient({
@@ -14,7 +15,7 @@ const sesClient = new SESClient({
  */
 export async function sendCustomerOrderConfirmationEmail(
   order: OrderData,
-  siteUrl: string = process.env.NEXT_PUBLIC_SITE_URL || "https://clickandlove.app"
+  siteUrl: string = getSiteUrl()
 ): Promise<{ success: boolean; simulated?: boolean; error?: string }> {
   const fromEmail = process.env.AWS_SES_FROM_EMAIL || "notificaciones@clickandlove.app";
   const toEmail = order.emailCliente;
@@ -154,7 +155,7 @@ export async function sendCustomerOrderConfirmationEmail(
  */
 export async function sendAdminOrderAlertEmail(
   order: OrderData,
-  siteUrl: string = process.env.NEXT_PUBLIC_SITE_URL || "https://clickandlove.app"
+  siteUrl: string = getSiteUrl()
 ): Promise<{ success: boolean; simulated?: boolean; error?: string }> {
   const fromEmail = process.env.AWS_SES_FROM_EMAIL || "notificaciones@clickandlove.app";
   const adminEmail = process.env.ADMIN_NOTIFICATION_EMAIL || fromEmail;

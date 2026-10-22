@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { sanitizePublicBaseUrl } from "@/lib/url-safety";
 import { notFound } from "next/navigation";
 import { InvitationData } from "@/components/invitation/InvitationMobileView";
 import TemplateDispatcher from "@/components/templates/TemplateDispatcher";
@@ -520,9 +521,9 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
 
   // Asegurar que la imagen sea URL absoluta con https para Facebook y WhatsApp
   const baseUrl =
-    process.env.NEXT_PUBLIC_APP_URL ||
+    sanitizePublicBaseUrl(process.env.NEXT_PUBLIC_APP_URL) ||
     (process.env.RAILWAY_PUBLIC_DOMAIN ? `https://${process.env.RAILWAY_PUBLIC_DOMAIN}` : null) ||
-    "https://luminavite-production.up.railway.app";
+    "https://clickandlove.app";
 
   let coverImage = data.fotoPortadaUrl || "/assets/template-butterfly/foto-columpio-portada.png";
   if (coverImage.startsWith("/")) {

@@ -1,4 +1,5 @@
 import { ImageResponse } from "next/og";
+import { sanitizePublicBaseUrl } from "@/lib/url-safety";
 import { NextRequest } from "next/server";
 import { normalizeSlug, getEventBySlug } from "@/lib/events";
 
@@ -18,9 +19,9 @@ export async function GET(req: NextRequest) {
     const evento = await getEventBySlug(slug);
 
     const baseUrl =
-      process.env.NEXT_PUBLIC_APP_URL ||
+      sanitizePublicBaseUrl(process.env.NEXT_PUBLIC_APP_URL) ||
       (process.env.RAILWAY_PUBLIC_DOMAIN ? `https://${process.env.RAILWAY_PUBLIC_DOMAIN}` : null) ||
-      "https://luminavite-production.up.railway.app";
+      "https://clickandlove.app";
 
     const isEn = evento?.idiomaDefault === "en";
 
