@@ -156,6 +156,37 @@ export interface HomeTranslations {
     close: string;
     changeDemo: string;
   };
+  brand: {
+    topbar: string;
+    navLiveDemo: string;
+    navTemplates: string;
+    createBtn: string;
+    heroEyebrow: string;
+    heroSubtitle: string;
+    heroCtaDemo: string;
+    heroCtaPricing: string;
+    heroNote: string;
+    strip: string[];
+    howScript: string;
+    howTitle: string;
+    steps: { title: string; line1: string; line2: string }[];
+    tplScript: string;
+    tplTitle: string;
+    tplViewDemo: string;
+    tplCards: { name: string; desc: string; image: string; slug: string }[];
+    pricingTitle: string;
+    pricingSubtitle: string;
+    pricingFavorite: string;
+    pricingPerNote: string;
+    pricingCta: string;
+    pricingSecondaryText: string;
+    planFeatures: { assisted: string[]; vip: string[] };
+    contactTitle: string;
+    contactText: string;
+    contactCall: string;
+    contactSms: string;
+    footerLine: string;
+  };
   announcementBar: string;
   footer: {
     brandSubtitle: string;
@@ -170,6 +201,61 @@ export interface HomeTranslations {
 
 export const translations: Record<Language, HomeTranslations> = {
   es: {
+    brand: {
+      topbar: "Los Angeles · Invitaciones digitales con RSVP por SMS · (818) 299-4882",
+      navLiveDemo: "Demo en vivo",
+      navTemplates: "Plantillas",
+      createBtn: "Crear mi invitación",
+      heroEyebrow: "Invitaciones web que tus invitados sí abren",
+      heroSubtitle:
+        "Invitaciones digitales hechas por nuestro equipo en Los Ángeles. Tus invitados confirman por texto (SMS) y tú ves cada respuesta en vivo desde tu teléfono. Sin apps, sin contraseñas.",
+      heroCtaDemo: "Ver la demo en vivo",
+      heroCtaPricing: "Ver precios",
+      heroNote: "Quinceañeras · Bodas · Cumpleaños — en inglés y español",
+      strip: ["RSVP por SMS", "Panel en vivo", "Mapas con un toque", "Música", "Cuenta regresiva"],
+      howScript: "Así de fácil",
+      howTitle: "Tú disfrutas tu evento. Nosotros hacemos la invitación.",
+      steps: [
+        { title: "Nos mandas tus fotos", line1: "y los datos de tu evento por texto.", line2: "Sin computadoras ni formularios" },
+        { title: "Creamos tu invitación", line1: "en 24–48 horas, lista para compartir.", line2: "Diseño profesional, tu estilo" },
+        { title: "Compartes el link", line1: "y ves cada RSVP en vivo en tu panel.", line2: "Confirmaciones por SMS reales" },
+      ],
+      tplScript: "Plantillas reales",
+      tplTitle: "Cada una con su demo en vivo para probarla",
+      tplViewDemo: "Ver demo",
+      tplCards: [
+        { name: "Elegant Rose", desc: "Quinceañera clásica en rosa", image: "/assets/template-rose/51d8fb6fdca05936497b8c7f02e14280.png", slug: "isabella-xv" },
+        { name: "Blue Butterfly", desc: "Mariposas azules y dorado", image: "/assets/template-butterfly/foto-columpio-portada.png", slug: "mariposas-xv" },
+        { name: "Esmeralda Royal", desc: "Verde esmeralda elegante", image: "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=800&q=80", slug: "esmeralda-royal" },
+      ],
+      pricingTitle: "Precios claros, sin sorpresas",
+      pricingSubtitle: "Un solo pago. Nosotros hacemos todo.",
+      pricingFavorite: "El favorito",
+      pricingPerNote: "USD · pago único",
+      pricingCta: "Empezar ahora",
+      pricingSecondaryText: "¿Prefieres pagar con Zelle? Mándanos un texto",
+      planFeatures: {
+        assisted: [
+          "Montaje completo por nuestro equipo",
+          "200 confirmaciones SMS incluidas",
+          "Botón de mapas (Waze y Google Maps)",
+          "Panel en vivo de invitados",
+          "1 ronda de cambios",
+        ],
+        vip: [
+          "Todo lo del plan Asistido",
+          "350 confirmaciones SMS incluidas",
+          "Retoque de fotos para portada",
+          "Tarjetas QR listas para tus mesas",
+          "Cambios ilimitados hasta el evento",
+        ],
+      },
+      contactTitle: "¿Lista para la tuya?",
+      contactText: "Llámanos o mándanos un texto — te respondemos hoy mismo.",
+      contactCall: "Llamar",
+      contactSms: "Texto SMS",
+      footerLine: "Click and Love · Hecho en Los Ángeles, California · clickandlove.app",
+    },
     announcementBar:
       "Atención y soporte local en Los Ángeles, CA · Diseñado para salones y eventos en el Sur de California",
     nav: {
@@ -494,6 +580,61 @@ export const translations: Record<Language, HomeTranslations> = {
     },
   },
   en: {
+    brand: {
+      topbar: "Los Angeles · Digital invitations with SMS RSVP · (818) 299-4882",
+      navLiveDemo: "Live demo",
+      navTemplates: "Templates",
+      createBtn: "Create my invitation",
+      heroEyebrow: "Website invitations your guests actually open",
+      heroSubtitle:
+        "Digital invitations made by our Los Angeles team. Your guests confirm by text (SMS) and you watch every reply live from your phone. No apps, no passwords.",
+      heroCtaDemo: "Watch the live demo",
+      heroCtaPricing: "See pricing",
+      heroNote: "Quinceañeras · Weddings · Birthdays — in English & Spanish",
+      strip: ["SMS RSVP", "Live dashboard", "One-tap maps", "Music", "Countdown"],
+      howScript: "So easy",
+      howTitle: "You enjoy your event. We make the invitation.",
+      steps: [
+        { title: "You send us your photos", line1: "and your event details by text.", line2: "No computers, no forms" },
+        { title: "We create your invitation", line1: "in 24–48 hours, ready to share.", line2: "Professional design, your style" },
+        { title: "You share the link", line1: "and watch every RSVP live in your dashboard.", line2: "Real SMS confirmations" },
+      ],
+      tplScript: "Real templates",
+      tplTitle: "Each one with a live demo to try",
+      tplViewDemo: "View demo",
+      tplCards: [
+        { name: "Elegant Rose", desc: "Classic pink quinceañera", image: "/assets/template-rose/51d8fb6fdca05936497b8c7f02e14280.png", slug: "isabella-xv" },
+        { name: "Blue Butterfly", desc: "Blue butterflies and gold", image: "/assets/template-butterfly/foto-columpio-portada.png", slug: "mariposas-xv" },
+        { name: "Esmeralda Royal", desc: "Elegant emerald green", image: "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=800&q=80", slug: "esmeralda-royal" },
+      ],
+      pricingTitle: "Clear pricing, no surprises",
+      pricingSubtitle: "One single payment. We do everything.",
+      pricingFavorite: "Most popular",
+      pricingPerNote: "USD · one-time payment",
+      pricingCta: "Get started",
+      pricingSecondaryText: "Prefer to pay with Zelle? Text us",
+      planFeatures: {
+        assisted: [
+          "Full setup by our team",
+          "200 SMS confirmations included",
+          "Maps button (Waze & Google Maps)",
+          "Live guest dashboard",
+          "1 round of changes included",
+        ],
+        vip: [
+          "Everything in the Assisted plan",
+          "350 SMS confirmations included",
+          "Photo retouching for your cover",
+          "Print-ready QR cards for your tables",
+          "Unlimited changes until your event",
+        ],
+      },
+      contactTitle: "Ready for yours?",
+      contactText: "Call us or send us a text — we'll reply today.",
+      contactCall: "Call",
+      contactSms: "Text us",
+      footerLine: "Click and Love · Made in Los Angeles, California · clickandlove.app",
+    },
     announcementBar:
       "Los Angeles Based & Local Support · Tailored for Southern California Venues & Celebrations",
     nav: {
