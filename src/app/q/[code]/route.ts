@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import prisma from "@/lib/db";
 import { ensureQrTables } from "@/lib/qr-table";
+import { getSiteUrl } from "@/lib/url-safety";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -20,7 +21,7 @@ export async function GET(
   const code = (resolvedParams?.code || "").trim();
 
   if (!code) {
-    return NextResponse.redirect(new URL("/", request.url));
+    return NextResponse.redirect(new URL("/", getSiteUrl()));
   }
 
   try {
@@ -30,7 +31,7 @@ export async function GET(
     });
 
     if (!campaign || !campaign.active || !campaign.targetUrl) {
-      return NextResponse.redirect(new URL("/", request.url));
+      return NextResponse.redirect(new URL("/", getSiteUrl()));
     }
 
     // Registrar el escaneo. visitorHash = sha256(IP + User-Agent):
@@ -61,6 +62,6 @@ export async function GET(
     return NextResponse.redirect(campaign.targetUrl, 302);
   } catch (err) {
     console.warn("Error en redirección de QR:", err);
-    return NextResponse.redirect(new URL("/", request.url));
+    return NextResponse.redirect(new URL("/", getSiteUrl()));
   }
 }

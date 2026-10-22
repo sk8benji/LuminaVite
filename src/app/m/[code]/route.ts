@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/db";
 import { isPanelShortCode, resolvePanelShortCode } from "@/lib/panel-link";
+import { getSiteUrl } from "@/lib/url-safety";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -13,7 +14,7 @@ export async function GET(
   const code = (resolvedParams?.code || "").trim();
 
   if (!code) {
-    return NextResponse.redirect(new URL("/", request.url));
+    return NextResponse.redirect(new URL("/", getSiteUrl()));
   }
 
   // Link corto del PANEL del anfitrión (10 caracteres, alfabeto sin ambiguos):
@@ -29,7 +30,7 @@ export async function GET(
       const path = target.panelToken
         ? `/${target.slug}/panel?key=${encodeURIComponent(target.panelToken)}`
         : `/${target.slug}/panel`;
-      return NextResponse.redirect(new URL(path, request.url), 302);
+      return NextResponse.redirect(new URL(path, getSiteUrl()), 302);
     } catch (err) {
       console.warn("Error en redirección de link corto de panel:", err);
       return new NextResponse("Enlace no encontrado.", { status: 404 });
@@ -42,12 +43,12 @@ export async function GET(
     });
 
     if (!shortLink?.url) {
-      return NextResponse.redirect(new URL("/", request.url));
+      return NextResponse.redirect(new URL("/", getSiteUrl()));
     }
 
     return NextResponse.redirect(shortLink.url, 302);
   } catch (err) {
     console.warn("Error en redirección de ShortLink:", err);
-    return NextResponse.redirect(new URL("/", request.url));
+    return NextResponse.redirect(new URL("/", getSiteUrl()));
   }
 }
