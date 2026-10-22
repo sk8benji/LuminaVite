@@ -449,7 +449,7 @@ export default function BlueButterflyTemplate({
           {/* Contenedor del Sobre Físico 3D */}
           <div
             id="envelopeContainer"
-            className={`relative w-[310px] sm:w-[410px] md:w-[460px] aspect-[5/4] cursor-pointer group ${
+            className={`relative w-[min(94vw,400px)] sm:w-[520px] md:w-[600px] lg:w-[680px] xl:w-[720px] aspect-[5/4] cursor-pointer group ${
               isEnvelopeOpen ? "animate-envelope-pulse" : ""
             }`}
             style={{ perspective: "1000px" }}
@@ -459,7 +459,7 @@ export default function BlueButterflyTemplate({
               id="innerCard"
               className={`absolute left-4 right-4 top-4 bottom-4 bg-[#FFFEFC] rounded-xl p-5 flex flex-col items-center justify-center text-center transform border border-[#D8B772]/60 transition-[transform,box-shadow] duration-[900ms] [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] ${
                 isLetterOut
-                  ? "-translate-y-20 sm:-translate-y-28 scale-[1.02] z-25 shadow-2xl"
+                  ? "-translate-y-20 sm:-translate-y-32 md:-translate-y-36 lg:-translate-y-44 scale-[1.02] z-25 shadow-2xl"
                   : "z-10 translate-y-0 shadow-lg"
               }`}
             >
@@ -468,12 +468,12 @@ export default function BlueButterflyTemplate({
               <img
                 src="/assets/template-butterfly/mariposa-azul.png"
                 alt="Mariposa"
-                className="w-10 h-auto object-contain animate-flutter mb-1"
+                className="w-10 sm:w-12 lg:w-14 h-auto object-contain animate-flutter mb-1"
               />
               <p className="font-serif-roman text-[10px] tracking-[0.25em] uppercase text-[#C5A059]">
                 My Quinceañera
               </p>
-              <h3 className="font-script text-4xl text-[#2F5A84] my-0.5">
+              <h3 className="font-script text-4xl sm:text-5xl lg:text-6xl text-[#2F5A84] my-0.5">
                 {data.titulo}
               </h3>
               <p className="text-[10px] text-slate-500 font-serif-roman tracking-wider uppercase">
@@ -525,7 +525,7 @@ export default function BlueButterflyTemplate({
                     <img
                       src="/assets/template-butterfly/mariposa-perchada.png"
                       alt="Mariposa viva"
-                      className="w-16 sm:w-20 md:w-24 h-auto object-contain animate-flutter"
+                      className="w-16 sm:w-20 md:w-24 lg:w-32 h-auto object-contain animate-flutter"
                     />
                   </div>
                 </div>
@@ -534,7 +534,7 @@ export default function BlueButterflyTemplate({
               {/* Mariposas que salen volando del bolsillo al abrirse (~1.2s) */}
               {isEnvelopeOpen && (
                 <>
-                  <div className="absolute left-[36%] top-[54%] z-40 w-8 sm:w-10 animate-butterfly-fly-left">
+                  <div className="absolute left-[36%] top-[54%] z-40 w-8 sm:w-10 lg:w-14 animate-butterfly-fly-left">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src="/assets/template-butterfly/mariposa-azul.png"
@@ -550,7 +550,7 @@ export default function BlueButterflyTemplate({
                       className="w-full h-auto object-contain animate-flutter"
                     />
                   </div>
-                  <div className="absolute left-[58%] top-[54%] z-40 w-8 sm:w-10 animate-butterfly-fly-right">
+                  <div className="absolute left-[58%] top-[54%] z-40 w-8 sm:w-10 lg:w-14 animate-butterfly-fly-right">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src="/assets/template-butterfly/mariposa-azul.png"
