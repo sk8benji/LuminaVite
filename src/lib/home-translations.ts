@@ -173,7 +173,7 @@ export interface HomeTranslations {
     tplScript: string;
     tplTitle: string;
     tplViewDemo: string;
-    tplCards: { name: string; desc: string; image: string; slug: string }[];
+    tplCards: { name: string; desc: string; image: string; slug: string; imgPos?: string }[];
     pricingTitle: string;
     pricingSubtitle: string;
     pricingFavorite: string;
@@ -224,9 +224,9 @@ export const translations: Record<Language, HomeTranslations> = {
       tplTitle: "Cada una con su demo en vivo para probarla",
       tplViewDemo: "Ver demo",
       tplCards: [
-        { name: "Elegant Rose", desc: "Quinceañera clásica en rosa", image: "/assets/template-rose/51d8fb6fdca05936497b8c7f02e14280.png", slug: "isabella-xv" },
-        { name: "Blue Butterfly", desc: "Mariposas azules y dorado", image: "/assets/template-butterfly/foto-columpio-portada.png", slug: "mariposas-xv" },
-        { name: "Esmeralda Royal", desc: "Verde esmeralda elegante", image: "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=800&q=80", slug: "esmeralda-royal" },
+        { name: "Elegant Rose", desc: "Quinceañera clásica en rosa", image: "/assets/home-real/elegant-rose-real.jpg", slug: "isabella-xv", imgPos: "50% 35%" },
+        { name: "Blue Butterfly", desc: "Mariposas azules y dorado", image: "/assets/home-real/blue-butterfly-real.jpg", slug: "mariposas-xv", imgPos: "50% 20%" },
+        { name: "Esmeralda Royal", desc: "Verde esmeralda elegante", image: "/assets/home-real/esmeralda-royal-real.jpg", slug: "esmeralda-royal", imgPos: "50% 20%" },
       ],
       pricingTitle: "Precios claros, sin sorpresas",
       pricingSubtitle: "Un solo pago. Nosotros hacemos todo.",
@@ -603,9 +603,9 @@ export const translations: Record<Language, HomeTranslations> = {
       tplTitle: "Each one with a live demo to try",
       tplViewDemo: "View demo",
       tplCards: [
-        { name: "Elegant Rose", desc: "Classic pink quinceañera", image: "/assets/template-rose/51d8fb6fdca05936497b8c7f02e14280.png", slug: "isabella-xv" },
-        { name: "Blue Butterfly", desc: "Blue butterflies and gold", image: "/assets/template-butterfly/foto-columpio-portada.png", slug: "mariposas-xv" },
-        { name: "Esmeralda Royal", desc: "Elegant emerald green", image: "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=800&q=80", slug: "esmeralda-royal" },
+        { name: "Elegant Rose", desc: "Classic pink quinceañera", image: "/assets/home-real/elegant-rose-real.jpg", slug: "isabella-xv", imgPos: "50% 35%" },
+        { name: "Blue Butterfly", desc: "Blue butterflies and gold", image: "/assets/home-real/blue-butterfly-real.jpg", slug: "mariposas-xv", imgPos: "50% 20%" },
+        { name: "Esmeralda Royal", desc: "Elegant emerald green", image: "/assets/home-real/esmeralda-royal-real.jpg", slug: "esmeralda-royal", imgPos: "50% 20%" },
       ],
       pricingTitle: "Clear pricing, no surprises",
       pricingSubtitle: "One single payment. We do everything.",

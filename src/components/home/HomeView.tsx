@@ -65,7 +65,7 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
   ];
 
   return (
-    <div className="min-h-screen bg-[#FFF8FB] text-[#2B0A18] selection:bg-[#7A002A]/20 selection:text-[#2B0A18] font-['Montserrat'] overflow-x-hidden relative">
+    <div className="min-h-screen bg-[#FDFBF8] text-[#2B0A18] selection:bg-[#7A002A]/20 selection:text-[#2B0A18] font-['Montserrat'] overflow-x-hidden relative">
       {/* ============================================================== */}
       {/* BARRA SUPERIOR BORGOÑA */}
       {/* ============================================================== */}
@@ -78,7 +78,7 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
       {/* ============================================================== */}
       {/* HEADER CON LOGO NUEVO */}
       {/* ============================================================== */}
-      <header className="sticky top-0 z-40 bg-[#FFF8FB]/92 backdrop-blur-md border-b border-[#F3CDDE]">
+      <header className="sticky top-0 z-40 bg-[#FDFBF8]/92 backdrop-blur-md border-b border-[#E7DCC8]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-[76px] flex items-center justify-between gap-3">
           {/* Logo: corazón a color + wordmark */}
           <Link href={lang === "es" ? "/es" : "/"} className="flex items-center gap-2.5 shrink-0" aria-label="Click and Love">
@@ -121,7 +121,7 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
               >
                 ES
               </Link>
-              <span className="text-[#C2185B]/40 select-none">|</span>
+              <span className="text-[#B08D3C]/50 select-none">|</span>
               <Link
                 href="/"
                 onClick={() => setLang("en")}
@@ -148,16 +148,16 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
       {/* HERO */}
       {/* ============================================================== */}
       <section className="relative px-4 sm:px-6 pt-12 pb-14 lg:pt-16 lg:pb-20 overflow-hidden">
-        <div className="absolute -top-24 right-0 w-[520px] h-[420px] bg-[#FF5DA2]/12 rounded-full blur-[120px] pointer-events-none" />
+        <div className="absolute -top-24 right-0 w-[520px] h-[420px] bg-[#D9B45B]/12 rounded-full blur-[120px] pointer-events-none" />
         <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center relative">
           {/* Copy */}
           <div className="text-center lg:text-left">
-            <p className="font-['Montserrat'] font-extrabold text-[12px] sm:text-[13px] tracking-[0.18em] uppercase text-[#C2185B]">
+            <p className="font-['Montserrat'] font-extrabold text-[12px] sm:text-[13px] tracking-[0.18em] uppercase text-[#B08D3C]">
               {b.heroEyebrow}
             </p>
             <h1 className="font-['Cinzel'] font-bold text-[34px] sm:text-5xl xl:text-[56px] leading-[1.14] text-[#2B0A18] mt-4">
               {t.hero.title1}{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#7A002A] via-[#C2185B] to-[#7A002A]">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#7A002A] via-[#B08D3C] to-[#7A002A]">
                 {t.hero.title2}
               </span>
             </h1>
@@ -173,7 +173,7 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
               </button>
               <a
                 href="#precios"
-                className="w-full sm:w-auto px-8 py-3.5 rounded-full border-2 border-[#7A002A] text-[#7A002A] hover:bg-[#FFE3EF] font-['Montserrat'] font-bold text-sm text-center transition active:scale-95"
+                className="w-full sm:w-auto px-8 py-3.5 rounded-full border-2 border-[#7A002A] text-[#7A002A] hover:bg-[#F5EDDA] font-['Montserrat'] font-bold text-sm text-center transition active:scale-95"
               >
                 {b.heroCtaPricing}
               </a>
@@ -193,7 +193,7 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
         <div className="max-w-6xl mx-auto flex flex-wrap items-center justify-center gap-x-3 gap-y-1.5 text-center">
           {b.strip.map((item, i) => (
             <span key={item} className="flex items-center gap-3">
-              {i > 0 && <span className="text-[#FF5DA2] font-extrabold">·</span>}
+              {i > 0 && <span className="text-[#D9B45B] font-extrabold">·</span>}
               <span className="font-['Montserrat'] font-extrabold text-[13px] sm:text-sm text-white tracking-wide">
                 {item}
               </span>
@@ -208,7 +208,7 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
       <section id="como-funciona" className="py-20 px-4 sm:px-6 scroll-mt-24">
         <div className="max-w-7xl mx-auto">
           <div className="text-center max-w-3xl mx-auto mb-12">
-            <span className="font-vibes text-5xl text-[#C2185B] block leading-tight">{b.howScript}</span>
+            <span className="font-vibes text-[32px] text-[#B08D3C] block leading-tight">{b.howScript}</span>
             <h2 className="font-['Cinzel'] font-bold text-2xl sm:text-[32px] text-[#2B0A18] mt-2 leading-snug">
               {b.howTitle}
             </h2>
@@ -217,7 +217,7 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
             {b.steps.map((step, i) => (
               <div
                 key={step.title}
-                className="rounded-3xl bg-white border border-[#F3CDDE] p-7 shadow-[0_12px_28px_rgba(122,0,42,0.07)]"
+                className="rounded-3xl bg-white border border-[#E7DCC8] p-7 shadow-[0_12px_28px_rgba(122,0,42,0.07)]"
               >
                 <div className="flex items-center gap-4">
                   <span className="w-11 h-11 rounded-full bg-[#7A002A] text-white flex items-center justify-center font-['Montserrat'] font-extrabold text-lg shrink-0">
@@ -238,10 +238,10 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
       {/* ============================================================== */}
       {/* PLANTILLAS REALES */}
       {/* ============================================================== */}
-      <section id="plantillas" className="py-20 px-4 sm:px-6 bg-[#FFE3EF] scroll-mt-24">
+      <section id="plantillas" className="py-20 px-4 sm:px-6 bg-[#F5EDDA] scroll-mt-24">
         <div className="max-w-7xl mx-auto">
           <div className="text-center max-w-3xl mx-auto mb-12">
-            <span className="font-vibes text-5xl text-[#C2185B] block leading-tight">{b.tplScript}</span>
+            <span className="font-vibes text-[32px] text-[#B08D3C] block leading-tight">{b.tplScript}</span>
             <h2 className="font-['Cinzel'] font-bold text-2xl sm:text-[30px] text-[#2B0A18] mt-2 leading-snug">
               {b.tplTitle}
             </h2>
@@ -250,7 +250,7 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
             {b.tplCards.map((card) => (
               <div
                 key={card.slug}
-                className="rounded-3xl bg-white border border-[#F3CDDE] overflow-hidden shadow-[0_12px_28px_rgba(122,0,42,0.08)] flex flex-col"
+                className="rounded-3xl bg-white border border-[#E7DCC8] overflow-hidden shadow-[0_12px_28px_rgba(122,0,42,0.08)] flex flex-col"
               >
                 <a href={`/demo/${card.slug}`} target="_blank" rel="noopener noreferrer" className="block group">
                   <div className="h-56 overflow-hidden">
@@ -258,7 +258,8 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
                     <img
                       src={card.image}
                       alt={card.name}
-                      className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700"
+                      style={{ objectPosition: card.imgPos ?? "50% 0%" }}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                     />
                   </div>
                 </a>
@@ -279,7 +280,7 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
           <div className="text-center mt-10">
             <Link
               href="/demo"
-              className="inline-flex items-center gap-2 font-['Montserrat'] font-bold text-sm text-[#7A002A] hover:text-[#C2185B] transition"
+              className="inline-flex items-center gap-2 font-['Montserrat'] font-bold text-sm text-[#7A002A] hover:text-[#B08D3C] transition"
             >
               {lang === "es" ? "Ver el catálogo completo" : "Browse the full catalog"}
               <ExternalLink className="w-4 h-4" />
@@ -305,7 +306,7 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
                 className={
                   plan.hot
                     ? "relative rounded-3xl bg-[#7A002A] text-white p-8 flex flex-col shadow-[0_22px_45px_rgba(122,0,42,0.35)]"
-                    : "relative rounded-3xl bg-white border border-[#F3CDDE] p-8 flex flex-col shadow-[0_12px_28px_rgba(122,0,42,0.07)]"
+                    : "relative rounded-3xl bg-white border border-[#E7DCC8] p-8 flex flex-col shadow-[0_12px_28px_rgba(122,0,42,0.07)]"
                 }
               >
                 {plan.hot && (
@@ -324,7 +325,7 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
                   <span className={`font-['Cinzel'] font-bold text-5xl ${plan.hot ? "text-white" : "text-[#2B0A18]"}`}>
                     {plan.dict.price}
                   </span>
-                  <span className={`font-['Montserrat'] text-xs font-semibold ${plan.hot ? "text-[#FFC7DC]" : "text-[#8A6B76]"}`}>
+                  <span className={`font-['Montserrat'] text-xs font-semibold ${plan.hot ? "text-[#F0DCAE]" : "text-[#8A6B76]"}`}>
                     {b.pricingPerNote}
                   </span>
                 </div>
@@ -333,7 +334,7 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
                     <li key={f} className="flex items-start gap-2.5">
                       <span
                         className={`w-[18px] h-[18px] rounded-full flex items-center justify-center shrink-0 mt-[1px] ${
-                          plan.hot ? "bg-[#FFD166] text-[#7A002A]" : "bg-[#FFE3EF] text-[#7A002A]"
+                          plan.hot ? "bg-[#FFD166] text-[#7A002A]" : "bg-[#F5EDDA] text-[#7A002A]"
                         }`}
                       >
                         <Check className="w-3 h-3" strokeWidth={3.5} />
@@ -349,7 +350,7 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
                   disabled={checkoutLoading !== null}
                   className={`mt-8 w-full py-3.5 rounded-full font-['Montserrat'] font-bold text-sm transition active:scale-95 disabled:opacity-50 cursor-pointer flex items-center justify-center gap-2 ${
                     plan.hot
-                      ? "bg-white text-[#7A002A] hover:bg-[#FFE3EF] shadow-[0_10px_24px_rgba(0,0,0,0.25)]"
+                      ? "bg-white text-[#7A002A] hover:bg-[#F5EDDA] shadow-[0_10px_24px_rgba(0,0,0,0.25)]"
                       : "bg-[#7A002A] text-white hover:bg-[#660025] shadow-[0_10px_24px_rgba(122,0,42,0.3)]"
                   }`}
                 >
@@ -369,8 +370,8 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
                   href={`${PHONE_SMS}?&body=${encodeURIComponent(plan.dict.secondaryActionMessage)}`}
                   className={`mt-3.5 text-center font-['Montserrat'] text-xs font-semibold underline underline-offset-4 transition ${
                     plan.hot
-                      ? "text-[#FFC7DC] decoration-[#FFC7DC]/50 hover:text-white"
-                      : "text-[#7A002A] decoration-[#C2185B]/40 hover:text-[#C2185B]"
+                      ? "text-[#F0DCAE] decoration-[#F0DCAE]/50 hover:text-white"
+                      : "text-[#7A002A] decoration-[#B08D3C]/40 hover:text-[#B08D3C]"
                   }`}
                 >
                   {b.pricingSecondaryText}
@@ -388,7 +389,7 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
                   ? "Hola, me interesa conocer los paquetes por volumen para salones y wedding planners de Click & Love."
                   : "Hello! I am interested in volume packages for venues and wedding planners with Click & Love."
               )}`}
-              className="text-[#7A002A] font-bold underline underline-offset-4 hover:text-[#C2185B]"
+              className="text-[#7A002A] font-bold underline underline-offset-4 hover:text-[#B08D3C]"
             >
               {t.pricing.venueFaqLink}
             </a>
@@ -406,14 +407,14 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
             <img src="/logo-white.png" alt="" className="w-16 h-16 object-contain shrink-0" />
             <div>
               <h2 className="font-['Cinzel'] font-bold text-2xl sm:text-[28px] text-white">{b.contactTitle}</h2>
-              <p className="font-['Montserrat'] text-sm text-[#FFC7DC] mt-1">{b.contactText}</p>
+              <p className="font-['Montserrat'] text-sm text-[#F0DCAE] mt-1">{b.contactText}</p>
             </div>
           </div>
           <div className="md:ml-auto flex flex-col items-center gap-2.5 shrink-0">
             <div className="flex items-center gap-3">
               <a
                 href={PHONE_TEL}
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white text-[#7A002A] font-['Montserrat'] font-extrabold text-sm hover:bg-[#FFE3EF] transition active:scale-95"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white text-[#7A002A] font-['Montserrat'] font-extrabold text-sm hover:bg-[#F5EDDA] transition active:scale-95"
               >
                 <Phone className="w-4 h-4" />
                 {b.contactCall}
@@ -426,7 +427,7 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
                 {b.contactSms}
               </a>
             </div>
-            <span className="font-['Montserrat'] font-bold text-[13px] text-[#FFC7DC]">{PHONE_DISPLAY}</span>
+            <span className="font-['Montserrat'] font-bold text-[13px] text-[#F0DCAE]">{PHONE_DISPLAY}</span>
           </div>
         </div>
       </section>
@@ -434,11 +435,11 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
       {/* ============================================================== */}
       {/* FOOTER SIMPLE */}
       {/* ============================================================== */}
-      <footer className="py-10 px-4 bg-[#FFF8FB]">
+      <footer className="py-10 px-4 bg-[#FDFBF8]">
         <div className="max-w-7xl mx-auto flex flex-col items-center gap-3 text-center">
           <p className="font-['Montserrat'] text-[13px] text-[#8A6B76]">{b.footerLine}</p>
           <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-1.5 font-['Montserrat'] text-xs text-[#8A6B76]">
-            <Link href="/dashboard" className="font-semibold text-[#7A002A] hover:text-[#C2185B] transition">
+            <Link href="/dashboard" className="font-semibold text-[#7A002A] hover:text-[#B08D3C] transition">
               {t.footer.adminLink}
             </Link>
             <span>
