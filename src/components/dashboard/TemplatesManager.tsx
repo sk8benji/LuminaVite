@@ -339,7 +339,7 @@ export default function TemplatesManager() {
             </button>
 
             <a
-              href={`/demo/${editingTemplate.slug}`}
+              href={`https://clickandlove.app/demo/${editingTemplate.slug}`}
               target="_blank"
               rel="noopener noreferrer"
               className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-stone-700 bg-stone-100 hover:bg-stone-200 rounded-xl transition"
@@ -1303,7 +1303,7 @@ export default function TemplatesManager() {
                 <div className="pt-2 border-t border-stone-100 space-y-2">
                   <div className="flex items-center gap-2">
                     <a
-                      href={`/demo/${tpl.slug}`}
+                      href={`https://clickandlove.app/demo/${tpl.slug}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-semibold text-stone-700 bg-stone-100 hover:bg-stone-200 rounded-xl transition"

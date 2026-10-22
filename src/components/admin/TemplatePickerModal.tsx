@@ -361,7 +361,7 @@ export default function TemplatePickerModal({
                   {/* Botones de Acción */}
                   <div className="pt-3 border-t border-stone-100 flex items-center gap-2">
                     <a
-                      href={`/demo/${tpl.demoSlug}`}
+                      href={`https://clickandlove.app/demo/${tpl.demoSlug}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="px-3 py-2 rounded-xl text-xs font-semibold text-stone-700 bg-stone-100 hover:bg-stone-200 transition flex items-center gap-1 cursor-pointer"

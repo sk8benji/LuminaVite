@@ -1059,7 +1059,7 @@ function NuevoEventoContent() {
           {/* Botón ver en vivo si existe slug */}
           {formData.slug && (
             <a
-              href={`/${formData.slug}`}
+              href={`https://clickandlove.app/${formData.slug}`}
               target="_blank"
               rel="noopener noreferrer"
               className="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 bg-white hover:bg-stone-50 text-[#7A002A] rounded-xl text-xs font-semibold border border-stone-200 transition"
