@@ -487,7 +487,7 @@ export default function BlueButterflyTemplate({
                 desenfoca 1px y baja a 0.9 de opacidad (profundidad) */}
             <div
               className={`absolute inset-0 z-20 pointer-events-none transition-transform duration-[900ms] [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] ${
-                isLetterOut ? "translate-y-2.5 scale-[0.92]" : ""
+                isLetterOut ? "translate-y-2.5" : ""
               }`}
             >
               <div
