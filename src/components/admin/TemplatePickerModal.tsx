@@ -54,6 +54,18 @@ export const TEMPLATE_CATALOG: TemplatePickerItem[] = [
     destacada: true,
   },
   {
+    id: "QUINCE_ERA_PINK",
+    name: "Quince Era Pink (Rosa Pastel)",
+    categoria: "QUINCEANERA",
+    badgeLabel: "Nuevo - Replica Canva",
+    thumbnail: "/assets/template-era-pink/foto-retrato.webp",
+    description: "Replica del 8 Quinceañera Pink de The Hanger PH: portada simple con sello, hero a foto completa al atardecer, programa con iconos ilustrados, detalles con paleta pastel y botones de borde punteado.",
+    demoSlug: "era-pink-xv",
+    dots: ["#F9E7EA", "#D98CA6", "#A63D57"],
+    features: ["Hero a Foto Completa", "Programa Ilustrado", "Botones Punteados", "Save the Date"],
+    destacada: true,
+  },
+  {
     id: "BLUSH_PRINCESS",
     name: "Blush Princess (Princesa Rosa y Oro)",
     categoria: "QUINCEANERA",

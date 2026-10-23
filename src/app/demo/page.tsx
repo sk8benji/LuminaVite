@@ -18,6 +18,14 @@ const DEMO_CARDS = [
     image: "/assets/template-butterfly/foto-columpio-portada.webp",
   },
   {
+    slug: "era-pink-xv",
+    title: "Quince Era Pink - Rosa Pastel",
+    category: "XV Años & Gala",
+    desc: "Portada simple con sello de cera, hero a foto completa al atardecer, programa ilustrado y detalles en rosa pastel con botones punteados.",
+    image: "/assets/template-era-pink/foto-retrato.webp",
+    badge: "The Hanger T6",
+  },
+  {
     slug: "blush-princess-xv",
     title: "Blush Princess - Princesa Rosa y Oro",
     name: "Isabella Sofia",

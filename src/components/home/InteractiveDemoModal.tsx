@@ -28,6 +28,13 @@ const DEMO_ITEMS: DemoItem[] = [
     icon: "🦋",
   },
   {
+    slug: "era-pink-xv",
+    title: "Quince Era Pink - Rosa Pastel",
+    shortTitle: "Era Pink",
+    category: "XV Años & Gala",
+    icon: "🎀",
+  },
+  {
     slug: "blush-princess-xv",
     title: "Blush Princess - Princesa Rosa y Oro",
     shortTitle: "Blush Princess",

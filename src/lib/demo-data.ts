@@ -419,12 +419,66 @@ export const DEMO_BLUSH: InvitationData = {
   },
 };
 
+
+// =========================================================================
+// 8. QUINCE ERA PINK (Issabella Gonzales - Replica Canva The Hanger PH)
+// =========================================================================
+export const DEMO_ERA: InvitationData = {
+  id: "demo-era",
+  slug: "era-pink-xv",
+  tipoEvento: "QUINCEANERA",
+  estiloPlantilla: "QUINCE_ERA_PINK",
+  titulo: "Issabella Gonzales",
+  subtitulo: "My Quinceañera",
+  frasePersonalizada: "I'm excited to share this special day with you.",
+  fechaEvento: new Date("2027-12-18T14:00:00-08:00"),
+  fechaTextoPersonalizada: "SATURDAY, DECEMBER 18, 2027 AT 2 PM",
+  fotoPortadaUrl: "/assets/template-era-pink/foto-frente.webp",
+  fotoInfanciaUrl: "/assets/template-era-pink/foto-retrato.webp",
+  fotoActualUrl: "/assets/template-era-pink/foto-espalda.webp",
+  fotoCierreUrl: "/assets/template-era-pink/foto-sentada.webp",
+  musicaUrl:
+    "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
+  musicaTitulo: "Never Grow Up (Taylor's Version) — Taylor Swift",
+  telefonoWhatsappRsvp: "(323) 555-0164",
+  emailOrganizador: "hola@familiagonzales.com",
+  fechaLimiteRsvp: "November 15",
+  maxPasesPorInvitado: 4,
+  ceremoniaNombre: "St. John Church",
+  ceremoniaDireccion: "123 Hilltop Ave, Los Angeles, California",
+  ceremoniaMapUrl: "https://maps.app.goo.gl/xgPfoiWX1nXCRf5W6",
+  recepcionNombre: "Willow Garden Estate",
+  recepcionDireccion: "225 Hilltop Ave, Los Angeles, CA",
+  recepcionMapUrl: "https://maps.app.goo.gl/Wd9egHa7TXeL6UzVA",
+  dressCodeTitulo: "Dress Code",
+  dressCodeNota: "Pasteles suaves y semiformal elegante",
+  dressCodeNotaEn: "Soft pastels & semi-formal elegant",
+  coloresReservados: ["#D98CA6", "#F3D9DE", "#B98A94"],
+  regalosMensaje:
+    "Estamos muy agradecidos de celebrar contigo. Los regalos no son necesarios, pero puedes visitar nuestro registro de Amazon si lo deseas.",
+  regalosMensajeEn:
+    "We're simply grateful to celebrate with you. Gifts aren't required, but you may visit our Amazon Registry if you wish.",
+  mesaRegalosJson: { plataformas: ["Amazon"] },
+  wishlistUrl: "https://www.amazon.com/registries",
+  rsvpDiasAntes: 30,
+  idiomaDefault: "en",
+  transporteJson: { mensaje: "Shuttles available from ceremony to reception" },
+  configPlantilla: {
+    familiaAnfitriona: "La Familia Gonzales",
+    familiaAnfitrionaEn: "Mr. & Mrs. Gonzales",
+    ceremoniaHora: "3:00 PM",
+    recepcionHora: "4:30 PM",
+  },
+};
+
 // Diccionario centralizado de los 8+ Demos del Sistema
 export const ALL_SYSTEM_DEMOS: Record<string, InvitationData> = {
   "mariposas-xv": DEMO_BUTTERFLY,
   "blue-butterfly": DEMO_BUTTERFLY,
   "blush-princess-xv": DEMO_BLUSH,
   "blush-princess": DEMO_BLUSH,
+  "era-pink-xv": DEMO_ERA,
+  "quince-era-pink": DEMO_ERA,
   "isabella-xv": DEMO_ISABELLA,
   "elegant-rose": DEMO_ISABELLA,
   "emma-and-lucas": DEMO_EMMA_LUCAS,

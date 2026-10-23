@@ -5,6 +5,7 @@ export type TemplateId =
   | "FAIRYTALE_CHATEAU"
   | "BLUE_BUTTERFLY"
   | "BLUSH_PRINCESS"
+  | "QUINCE_ERA_PINK"
   | "CORALINE_MYSTICAL"
   | "CLASICA_IMPERIAL"
   | "ESMERALDA_ROYAL"
@@ -135,6 +136,26 @@ export const TEMPLATES: Record<TemplateId, TemplateConfig> = {
     ribbonGradient: "from-rose-200 via-amber-100 to-rose-300",
     badgeBg: "#FDF3F5",
     description: "Replica blush y oro del sitio Canva de CouCou Printables: sobre con mono de seda y sello de corona, monograma en marco barroco, fotos Then/Now, corte de honor completa y RSVP bilingue.",
+  },
+  QUINCE_ERA_PINK: {
+    id: "QUINCE_ERA_PINK",
+    name: "Quince Era Pink (Canva T6)",
+    category: "QUINCEANERA",
+    bgColor: "#F9E7EA",
+    cardBg: "#FFFFFF",
+    textPrimary: "#3E2A2E",
+    textSecondary: "#A63D57",
+    accentColor: "#C4667D",
+    accentSoft: "#FBEFF1",
+    borderSoft: "#F3D9DE",
+    buttonBg: "#A63D57",
+    buttonText: "#FFFFFF",
+    fontHeading: "'Alex Brush', cursive",
+    fontSubheading: "'Playfair Display', serif",
+    fontBody: "'Montserrat', sans-serif",
+    ribbonGradient: "from-rose-200 via-pink-100 to-rose-300",
+    badgeBg: "#FBEFF1",
+    description: "Replica rosa pastel del 8 Quinceañera Pink de The Hanger PH: portada simple con sello de cera, hero a foto completa al atardecer, programa con iconos ilustrados, detalles con paleta pastel y botones de borde punteado.",
   },
   CORALINE_MYSTICAL: {
     id: "CORALINE_MYSTICAL",
