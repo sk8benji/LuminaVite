@@ -18,6 +18,14 @@ const DEMO_CARDS = [
     image: "/assets/template-butterfly/foto-columpio-portada.webp",
   },
   {
+    slug: "miss-15-xv",
+    title: "Miss 15 Años - Crema y Cobre",
+    category: "XV Años & Gala",
+    desc: "Directa sin sobre: tarjeta sobre la foto del columpio, reproductor de musica, corte de honor completa y RSVP en letras outline con mono.",
+    image: "/assets/template-miss15/foto-columpio.webp",
+    badge: "Miss 15 T8",
+  },
+  {
     slug: "era-pink-xv",
     title: "Quince Era Pink - Rosa Pastel",
     category: "XV Años & Gala",

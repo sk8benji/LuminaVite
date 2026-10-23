@@ -50,6 +50,13 @@ export interface QuinceEraPinkConfig {
   colorAcentoHex?: string;
 }
 
+export interface Miss15Config {
+  ceremoniaHora?: string;
+  recepcionHora?: string;
+  fraseEmocional?: string;
+  colorAcentoHex?: string;
+}
+
 export interface ElegantRoseConfig {
   padres?: string;
   padrinos?: string[];
@@ -95,6 +102,7 @@ export type TemplateConfigMap = {
   BLUE_BUTTERFLY: BlueButterflyConfig;
   BLUSH_PRINCESS: BlushPrincessConfig;
   QUINCE_ERA_PINK: QuinceEraPinkConfig;
+  MISS_15: Miss15Config;
   ELEGANT_ROSE: ElegantRoseConfig;
   FAIRYTALE_CHATEAU: FairytaleChateauConfig;
   CORALINE_MYSTICAL: CoralineMysticalConfig;

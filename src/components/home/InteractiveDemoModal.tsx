@@ -28,6 +28,13 @@ const DEMO_ITEMS: DemoItem[] = [
     icon: "🦋",
   },
   {
+    slug: "miss-15-xv",
+    title: "Miss 15 Años - Crema y Cobre",
+    shortTitle: "Miss 15",
+    category: "XV Años & Gala",
+    icon: "👑",
+  },
+  {
     slug: "era-pink-xv",
     title: "Quince Era Pink - Rosa Pastel",
     shortTitle: "Era Pink",

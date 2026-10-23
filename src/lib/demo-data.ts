@@ -471,6 +471,66 @@ export const DEMO_ERA: InvitationData = {
   },
 };
 
+
+// =========================================================================
+// 9. MISS 15 (Isabella Torres - Replica Canva Miss 15 Años)
+// =========================================================================
+export const DEMO_MISS15: InvitationData = {
+  id: "demo-miss15",
+  slug: "miss-15-xv",
+  tipoEvento: "QUINCEANERA",
+  estiloPlantilla: "MISS_15",
+  titulo: "Isabella Torres",
+  subtitulo: "Mis 15 Años",
+  frasePersonalizada: "I can't wait to celebrate with you!",
+  fechaEvento: new Date("2027-07-24T13:30:00-05:00"),
+  fechaTextoPersonalizada: "SATURDAY, JULY 24, 2027 AT 1:30 PM",
+  fotoPortadaUrl: "/assets/template-miss15/foto-columpio.webp",
+  fotoInfanciaUrl: "/assets/template-miss15/foto-damas.webp",
+  fotoActualUrl: "/assets/template-miss15/foto-columpio-2.webp",
+  fotoCierreUrl: "/assets/template-miss15/foto-retrato.webp",
+  musicaUrl:
+    "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
+  musicaTitulo: "Slow Down, Little Heart — Linhy",
+  telefonoWhatsappRsvp: "(210) 555-0119",
+  emailOrganizador: "hola@familiatorres.com",
+  fechaLimiteRsvp: "June 15",
+  maxPasesPorInvitado: 4,
+  ceremoniaNombre: "St. Mary's Church",
+  ceremoniaDireccion: "San Antonio, TX",
+  ceremoniaMapUrl: "",
+  recepcionNombre: "Grand Ballroom",
+  recepcionDireccion: "San Antonio, TX",
+  recepcionMapUrl: "",
+  dressCodeTitulo: "Dress Code",
+  dressCodeNota: "Elegante y semiformal. Se invita a usar colores pastel o suaves a tono con el tema.",
+  dressCodeNotaEn: "Elegant & Semi-Formal. Guests are encouraged to wear pastel or soft colors to match the theme.",
+  regalosMensaje: "¡Tu presencia es el mejor regalo! Pero si quieres traer algo, revisa la lista de deseos.",
+  regalosMensajeEn: "Your presence is the best gift of all! But if you'd like to bring something, feel free to check the wishlist below.",
+  mesaRegalosJson: { plataformas: ["Amazon"] },
+  wishlistUrl: "https://www.amazon.com/registries",
+  rsvpDiasAntes: 39,
+  idiomaDefault: "en",
+  hospedajeJson: {
+    mensaje: "For our out-of-town guests, we have reserved rooms at a partner hotel. Mention Isabella's Quinceañera when booking to receive a special rate.",
+  },
+  itinerarioJson: [
+    { hora: "3:00 PM", titulo: "Mass", tipoIcono: "mass", descripcion: "St. Mary's Church, San Antonio, TX" },
+    { hora: "4:30 PM", titulo: "Entrance", tipoIcono: "entrance", descripcion: "Grand Ballroom, San Antonio" },
+    { hora: "5:00 PM", titulo: "Waltz", tipoIcono: "waltz" },
+    { hora: "6:00 PM", titulo: "Dinner", tipoIcono: "dinner" },
+    { hora: "8:00 PM", titulo: "Party", tipoIcono: "party" },
+  ],
+  corteHonorJson: {
+    parents: "Mateo & Camila Torres",
+    damas: ["Valeria Sandoval", "Camila Esparza", "Mariana Delgado", "Luna Herrera", "Isabela Ríos", "Sofía Navarro", "Julieta Montoya"],
+    chambelanHonor: "Joaquín Jiménez",
+    chambelanes: ["Diego Torres", "Emiliano Vega", "Thiago Mendoza", "Mateo Castillo", "Nicolás Jiménez", "Alejandro Cruz", "Samuel Ramírez"],
+    mensajeGratitud: "I can't wait to celebrate my quinceañera with you! Thank you so much for being part of this unforgettable moment. Your hugs, your love, and your smiles mean so much to me!",
+  },
+  configPlantilla: {},
+};
+
 // Diccionario centralizado de los 8+ Demos del Sistema
 export const ALL_SYSTEM_DEMOS: Record<string, InvitationData> = {
   "mariposas-xv": DEMO_BUTTERFLY,
@@ -478,6 +538,8 @@ export const ALL_SYSTEM_DEMOS: Record<string, InvitationData> = {
   "blush-princess-xv": DEMO_BLUSH,
   "blush-princess": DEMO_BLUSH,
   "era-pink-xv": DEMO_ERA,
+  "miss-15-xv": DEMO_MISS15,
+  "miss-15": DEMO_MISS15,
   "quince-era-pink": DEMO_ERA,
   "isabella-xv": DEMO_ISABELLA,
   "elegant-rose": DEMO_ISABELLA,

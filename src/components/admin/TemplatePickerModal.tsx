@@ -54,6 +54,18 @@ export const TEMPLATE_CATALOG: TemplatePickerItem[] = [
     destacada: true,
   },
   {
+    id: "MISS_15",
+    name: "Miss 15 Años (Crema y Cobre)",
+    categoria: "QUINCEANERA",
+    badgeLabel: "Nuevo - Replica Canva",
+    thumbnail: "/assets/template-miss15/foto-columpio.webp",
+    description: "Replica del Miss 15 Años de Canva: abre directo en la tarjeta sobre la foto del columpio, reproductor de musica, corte de honor completa con fotos, programa con iconos y RSVP en letras outline con mono.",
+    demoSlug: "miss-15-xv",
+    dots: ["#F6EEE1", "#C9A24B", "#2B2118"],
+    features: ["Sin Sobre - Directa", "Reproductor de Musica", "Corte de Honor", "Letras Outline RSVP"],
+    destacada: true,
+  },
+  {
     id: "QUINCE_ERA_PINK",
     name: "Quince Era Pink (Rosa Pastel)",
     categoria: "QUINCEANERA",

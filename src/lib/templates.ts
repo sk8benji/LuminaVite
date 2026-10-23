@@ -6,6 +6,7 @@ export type TemplateId =
   | "BLUE_BUTTERFLY"
   | "BLUSH_PRINCESS"
   | "QUINCE_ERA_PINK"
+  | "MISS_15"
   | "CORALINE_MYSTICAL"
   | "CLASICA_IMPERIAL"
   | "ESMERALDA_ROYAL"
@@ -136,6 +137,26 @@ export const TEMPLATES: Record<TemplateId, TemplateConfig> = {
     ribbonGradient: "from-rose-200 via-amber-100 to-rose-300",
     badgeBg: "#FDF3F5",
     description: "Replica blush y oro del sitio Canva de CouCou Printables: sobre con mono de seda y sello de corona, monograma en marco barroco, fotos Then/Now, corte de honor completa y RSVP bilingue.",
+  },
+  MISS_15: {
+    id: "MISS_15",
+    name: "Miss 15 Años (Canva T8)",
+    category: "QUINCEANERA",
+    bgColor: "#F6EEE1",
+    cardBg: "#FDF9F0",
+    textPrimary: "#2B2118",
+    textSecondary: "#8C5A2B",
+    accentColor: "#B0703C",
+    accentSoft: "#FAF1DE",
+    borderSoft: "#E3D3AC",
+    buttonBg: "#2B2118",
+    buttonText: "#F3E7CE",
+    fontHeading: "'Alex Brush', cursive",
+    fontSubheading: "'Playfair Display', serif",
+    fontBody: "'Montserrat', sans-serif",
+    ribbonGradient: "from-amber-100 via-yellow-50 to-amber-200",
+    badgeBg: "#FAF1DE",
+    description: "Replica del Miss 15 Años de Canva: sin sobre, abre en la tarjeta sobre la foto del columpio, reproductor de musica, corte de honor completa, programa con iconos, detalles y RSVP en letras outline con mono.",
   },
   QUINCE_ERA_PINK: {
     id: "QUINCE_ERA_PINK",
