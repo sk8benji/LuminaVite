@@ -962,8 +962,13 @@ export default function BlueButterflyTemplate({
               className="w-full h-auto drop-shadow-sm select-none"
             />
 
-            {/* Contenido dinámico centrado */}
-            <div className="absolute inset-0 flex flex-col items-center justify-center pt-3 text-center pointer-events-none">
+            {/* Contenido dinámico: el arte del marco es un arreglo de
+                esquina (izquierda/abajo); su zona vacia medida es la
+                esquina superior derecha (x 50-100%, y 0-50% sin arte).
+                El texto vive en esa ventana, NO centrado sobre el marco
+                (correccion de Abraham 2026-10-22: los datos caian sobre
+                las rosas) */}
+            <div className="absolute top-0 right-0 w-[60%] h-[54%] flex flex-col items-center justify-center pr-1 text-center pointer-events-none">
               <p className="font-serif-roman text-xs tracking-[0.25em] text-[#C5A059] uppercase font-bold">
                 {isEn ? eventMonth : (data.fechaPlacaMes || eventMonth)}
               </p>
