@@ -433,7 +433,7 @@ export const DEMO_ERA: InvitationData = {
   frasePersonalizada: "I'm excited to share this special day with you.",
   fechaEvento: new Date("2027-12-18T14:00:00-08:00"),
   fechaTextoPersonalizada: "SATURDAY, DECEMBER 18, 2027 AT 2 PM",
-  fotoPortadaUrl: "/assets/template-era-pink/foto-frente.webp",
+  fotoPortadaUrl: "/assets/template-era-pink/foto-sentada.webp",
   fotoInfanciaUrl: "/assets/template-era-pink/foto-retrato.webp",
   fotoActualUrl: "/assets/template-era-pink/foto-espalda.webp",
   fotoCierreUrl: "/assets/template-era-pink/foto-sentada.webp",

@@ -472,7 +472,7 @@ export default function QuinceEraPinkTemplate({
                 />
                 {/* Sello de cera con monograma */}
                 <div
-                  className={`absolute left-1/2 top-[36%] -translate-x-1/2 -translate-y-1/2 w-20 h-20 sm:w-24 sm:h-24 transition-transform duration-300 ${
+                  className={`absolute left-1/2 top-[56%] -translate-x-1/2 -translate-y-1/2 w-20 h-20 sm:w-24 sm:h-24 transition-transform duration-300 ${
                     isLetterOut ? "scale-125 opacity-0" : "scale-100 opacity-100"
                   }`}
                 >
@@ -579,52 +579,54 @@ export default function QuinceEraPinkTemplate({
         {/* SECCIÓN 1: HERO A FOTO COMPLETA                         */}
         {/* ======================================================= */}
         <section className="relative text-center">
-          <div className="relative h-[88vh] min-h-[540px] overflow-hidden">
+          <div className="relative h-[62vh] min-h-[430px] overflow-hidden">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={data.fotoPortadaUrl} alt={data.titulo} className="absolute inset-0 w-full h-full object-cover object-top" />
-            <div className="absolute inset-0 bg-gradient-to-b from-[#F9E7EA]/55 via-transparent to-[#F9E7EA]" />
-            <div className="relative z-10 flex h-full flex-col items-center justify-end pb-10 px-6">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={ERA_ASSETS.tiara} alt="" className="w-36 sm:w-44 h-auto mb-1 drop-shadow-md" />
-              {familiaAnfitriona && (
-                <p className="font-serif-roman text-[11px] sm:text-xs tracking-[0.3em] uppercase text-[#3E2A2E] font-bold">
-                  {familiaAnfitriona}{" "}
-                  {isEn ? "invite you to celebrate the" : "te invita a celebrar la"}
-                </p>
-              )}
-              <h1 className="font-serif-roman text-5xl sm:text-7xl tracking-[0.06em] uppercase text-[#3E2A2E] font-bold leading-none mt-1">
-                {isEn ? "Quinceañera" : "Quinceañera"}
-              </h1>
-              <p className="font-serif-roman text-[11px] sm:text-xs tracking-[0.4em] uppercase text-[#3E2A2E] mt-2">
-                {isEn ? "of their daughter" : "de su hija"}
-              </p>
-              <p className="font-script text-6xl sm:text-7xl text-[#A63D57] leading-tight mt-1">{data.titulo}</p>
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#F9E7EA]/30 to-[#F9E7EA]" />
+          </div>
 
-              <div className="mt-4">
-                <p className="font-serif-roman text-xs tracking-[0.5em] uppercase text-[#3E2A2E] font-bold">{eventMonth}</p>
-                <div className="flex items-center justify-center gap-3 sm:gap-4 mt-1">
-                  <span className="font-serif-roman text-xs sm:text-sm tracking-[0.25em] uppercase text-[#3E2A2E] font-semibold">{eventWeekday}</span>
-                  <span className="w-8 sm:w-12 h-px bg-[#A63D57]/70" />
-                  <span className="font-serif-roman text-6xl sm:text-7xl font-bold text-[#3E2A2E] leading-none">{eventDay}</span>
-                  <span className="w-8 sm:w-12 h-px bg-[#A63D57]/70" />
-                  <span className="font-serif-roman text-xs sm:text-sm tracking-[0.25em] uppercase text-[#3E2A2E] font-semibold">
-                    {isEn ? "At" : "A las"} {eventTime}
-                  </span>
-                </div>
+          {/* Texto sobre el desvanecido inferior de la foto (legible, como la referencia) */}
+          <div className="relative z-10 px-6 -mt-[15vh]">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={ERA_ASSETS.tiara} alt="" className="w-16 sm:w-20 h-auto mx-auto mb-1 drop-shadow-sm" />
+            {familiaAnfitriona && (
+              <p className="font-serif-roman text-[11px] sm:text-xs tracking-[0.3em] uppercase text-[#3E2A2E] font-bold">
+                {familiaAnfitriona}{" "}
+                {isEn ? "invite you to celebrate the" : "te invita a celebrar la"}
+              </p>
+            )}
+            <h1 className="font-serif-roman text-4xl sm:text-6xl tracking-[0.1em] uppercase text-[#3E2A2E] font-bold leading-none mt-2">
+              {isEn ? "Quinceañera" : "Quinceañera"}
+            </h1>
+            <p className="font-serif-roman text-[11px] sm:text-xs tracking-[0.4em] uppercase text-[#3E2A2E] mt-2">
+              {isEn ? "of their daughter" : "de su hija"}
+            </p>
+            <p className="font-script text-6xl sm:text-7xl text-[#3E2A2E] leading-tight mt-1">{data.titulo}</p>
+
+            <div className="mt-4">
+              <p className="font-serif-roman text-xs tracking-[0.5em] uppercase text-[#3E2A2E] font-bold">{eventMonth}</p>
+              <div className="flex items-center justify-center gap-3 sm:gap-4 mt-1">
+                <span className="font-serif-roman text-xs sm:text-sm tracking-[0.25em] uppercase text-[#3E2A2E] font-semibold">{eventWeekday}</span>
+                <span className="w-8 sm:w-12 h-px bg-[#A63D57]/70" />
+                <span className="font-serif-roman text-6xl sm:text-7xl font-bold text-[#3E2A2E] leading-none">{eventDay}</span>
+                <span className="w-8 sm:w-12 h-px bg-[#A63D57]/70" />
+                <span className="font-serif-roman text-xs sm:text-sm tracking-[0.25em] uppercase text-[#3E2A2E] font-semibold">
+                  {isEn ? "At" : "A las"} {eventTime}
+                </span>
               </div>
-
-              <button
-                type="button"
-                onClick={toggleMusic}
-                className="mt-6 inline-flex items-center gap-2.5 rounded-full border-2 border-dashed border-[#C4667D] bg-white/75 backdrop-blur px-7 py-3 font-serif-roman text-xs tracking-[0.3em] uppercase font-bold text-[#A63D57] shadow-lg transition-transform hover:scale-105 active:scale-95 cursor-pointer"
-              >
-                {isPlaying ? <Pause className="w-4 h-4" /> : <Music className="w-4 h-4" />}
-                {isEn ? "Play me" : "Escuchar"}
-              </button>
-              <p className="text-[10px] font-serif-roman tracking-[0.2em] uppercase text-[#3E2A2E]/70 font-semibold mt-2">
-                {data.musicaTitulo || (isEn ? "My Song" : "Mi Canción")}
-              </p>
             </div>
+
+            <button
+              type="button"
+              onClick={toggleMusic}
+              className="mt-6 inline-flex items-center gap-2.5 rounded-full border-2 border-dashed border-[#C4667D] bg-white/75 backdrop-blur px-7 py-3 font-serif-roman text-xs tracking-[0.3em] uppercase font-bold text-[#A63D57] shadow-lg transition-transform hover:scale-105 active:scale-95 cursor-pointer"
+            >
+              {isPlaying ? <Pause className="w-4 h-4" /> : <Music className="w-4 h-4" />}
+              {isEn ? "Play me" : "Escuchar"}
+            </button>
+            <p className="text-[10px] font-serif-roman tracking-[0.2em] uppercase text-[#3E2A2E]/70 font-semibold mt-2">
+              {data.musicaTitulo || (isEn ? "My Song" : "Mi Canción")}
+            </p>
           </div>
 
           {/* Frase con foto */}
