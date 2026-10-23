@@ -42,6 +42,7 @@ enum EstiloPlantilla {
   JARDIN_BOTANICA         // Jardín Botánica
   MINIMALISTA_EDITORIAL   // Minimalista Editorial
   QUINCE_ROSADO           // Quince Rosado (Magdalena - Canva Réplica)
+  BLUSH_PRINCESS          // T5: Blush Princess (Réplica Canva CouCou Printables, rosa y oro)
 }
 
 enum RolUsuario {

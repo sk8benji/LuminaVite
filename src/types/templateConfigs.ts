@@ -34,6 +34,13 @@ export interface BlueButterflyConfig {
   reproductorViniloTexto?: string;
 }
 
+export interface BlushPrincessConfig {
+  familiaAnfitriona?: string;
+  familiaAnfitrionaEn?: string;
+  fraseEmocional?: string;
+  colorAcentoHex?: string;
+}
+
 export interface ElegantRoseConfig {
   padres?: string;
   padrinos?: string[];
@@ -77,6 +84,7 @@ export interface CoralineMysticalConfig {
 export type TemplateConfigMap = {
   QUINCE_ROSADO: QuinceRosadoConfig;
   BLUE_BUTTERFLY: BlueButterflyConfig;
+  BLUSH_PRINCESS: BlushPrincessConfig;
   ELEGANT_ROSE: ElegantRoseConfig;
   FAIRYTALE_CHATEAU: FairytaleChateauConfig;
   CORALINE_MYSTICAL: CoralineMysticalConfig;

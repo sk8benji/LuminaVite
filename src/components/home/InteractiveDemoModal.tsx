@@ -28,6 +28,13 @@ const DEMO_ITEMS: DemoItem[] = [
     icon: "🦋",
   },
   {
+    slug: "blush-princess-xv",
+    title: "Blush Princess - Princesa Rosa y Oro",
+    shortTitle: "Blush Princess",
+    category: "XV Años & Gala",
+    icon: "\U0001F451",
+  },
+  {
     slug: "isabella-xv",
     title: "Romance Vintage en Película",
     shortTitle: "Romance Vintage",

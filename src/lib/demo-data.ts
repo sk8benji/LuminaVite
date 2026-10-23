@@ -325,10 +325,106 @@ export const DEMO_MINIMALISTA: InvitationData = {
   recepcionMapUrl: "https://maps.google.com",
 };
 
+
+// =========================================================================
+// 7. BLUSH PRINCESS (Isabella Sofia Hernandez - Replica Canva CouCou)
+// =========================================================================
+export const DEMO_BLUSH: InvitationData = {
+  id: "demo-blush",
+  slug: "blush-princess-xv",
+  tipoEvento: "QUINCEANERA",
+  estiloPlantilla: "BLUSH_PRINCESS",
+  titulo: "Isabella Sofia",
+  subtitulo: "My Quinceañera",
+  fechaEvento: new Date("2027-11-27T14:00:00-06:00"),
+  fechaTextoPersonalizada: "SATURDAY, NOVEMBER 27, 2027 AT 2 PM",
+  fotoPortadaUrl: "/assets/template-blush/foto-1.webp",
+  fotoInfanciaUrl: "/assets/template-blush/foto-nina.webp",
+  fotoActualUrl: "/assets/template-blush/foto-2.webp",
+  fotoCierreUrl: "/assets/template-blush/foto-3.webp",
+  musicaUrl:
+    "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
+  musicaTitulo: "Tiempo de Vals — Chayanne",
+  telefonoWhatsappRsvp: "(210) 555-0147",
+  emailOrganizador: "hola@familiahernandez.com",
+  fechaLimiteRsvp: "November 12th",
+  maxPasesPorInvitado: 4,
+  ceremoniaNombre: "St. Michael Catholic Church",
+  ceremoniaDireccion: "245 Oakridge Avenue, San Antonio, Texas",
+  ceremoniaMapUrl: "https://maps.google.com/?q=St.+Michael+Catholic+Church+San+Antonio+TX",
+  recepcionNombre: "Magnolia Grand Ballroom",
+  recepcionDireccion: "1800 River Walk Blvd, San Antonio, Texas",
+  recepcionMapUrl: "https://maps.google.com/?q=Magnolia+Grand+Ballroom+San+Antonio+TX",
+  dressCodeTitulo: "Vestimenta Elegante",
+  dressCodeTituloEn: "Elegant Attire",
+  dressCodeNota:
+    "Se recomienda vestimenta formal. Acompañanos con tus mejores galas para celebrar esta ocasión inolvidable.",
+  dressCodeNotaEn:
+    "Formal attire encouraged. Please join us in your finest attire as we celebrate this unforgettable occasion.",
+  coloresReservados: ["#EFC3D0", "#E7D3B3", "#B7A08C", "#B08D3C"],
+  regalosMensaje:
+    "Su presencia es el mejor regalo. Si desean obsequiar algo más, preparamos una mesa de regalos para su comodidad. Con gratitud, la Familia Hernández.",
+  regalosMensajeEn:
+    "Your presence is the greatest gift we could ask for. If you'd like to celebrate with a gift, we've created a registry for your convenience. With gratitude, The Hernández Family",
+  mesaRegalosJson: { plataformas: ["Amazon", "Target"] },
+  wishlistUrl: "https://www.amazon.com",
+  rsvpDiasAntes: 15,
+  idiomaDefault: "bilingual",
+  mensajeDespedida:
+    "Your love and support mean the world to us, and we can't wait to celebrate together!",
+  hospedajeJson: {
+    mensaje:
+      "Whether you're traveling from near or far, we've selected a few wonderful accommodations close to the celebration. We recommend reserving your room in advance for the best availability.",
+  },
+  transporteJson: {
+    mensaje:
+      "For guests traveling from out of town, nearby hotels and accommodations can be found below. Complimentary parking will be available at the venue. Ride-share services are readily available throughout the area.",
+  },
+  configPlantilla: {
+    familiaAnfitriona: "La Familia Hernández",
+    familiaAnfitrionaEn: "The Hernández Family",
+  },
+  corteHonorJson: {
+    parents: "Carlos & Elena Hernández",
+    damas: [
+      "Sofia Martinez",
+      "Valeria Cruz",
+      "Camila Ramirez",
+      "Natalie Flores",
+      "Emily Torres",
+      "Gabriela Herrera",
+      "Lucia Morales",
+    ],
+    chambelanes: [
+      "Daniel Hernandez",
+      "Mateo Garcia",
+      "Sebastian Rivera",
+      "Adrian Castillo",
+      "Nicolas Lopez",
+      "Diego Santos",
+      "Alexander Reyes",
+    ],
+    padrinos: [
+      "Padrinos de Honor: Carlos & Elena Mendoza",
+      "Padrinos de la Corona: Miguel & Patricia Alvarez",
+      "Padrinos de la Biblia: Ricardo & Isabel Torres",
+      "Padrinos del Rosario: Javier & Monica Ramirez",
+      "Padrinos del Anillo: Fernando & Laura Morales",
+      "Padrinos del Ramo: Eduardo & Sofia Castillo",
+      "Padrinos de las Zapatillas: Roberto & Cristina Lopez",
+      "Padrinos de la Muñeca: Andres & Veronica Garcia",
+    ],
+    mensajeGratitud:
+      "A Quinceañera is made even more meaningful by the love and support of those who stand beside me. I am honored to celebrate this unforgettable day with my amazing court.",
+  },
+};
+
 // Diccionario centralizado de los 8+ Demos del Sistema
 export const ALL_SYSTEM_DEMOS: Record<string, InvitationData> = {
   "mariposas-xv": DEMO_BUTTERFLY,
   "blue-butterfly": DEMO_BUTTERFLY,
+  "blush-princess-xv": DEMO_BLUSH,
+  "blush-princess": DEMO_BLUSH,
   "isabella-xv": DEMO_ISABELLA,
   "elegant-rose": DEMO_ISABELLA,
   "emma-and-lucas": DEMO_EMMA_LUCAS,

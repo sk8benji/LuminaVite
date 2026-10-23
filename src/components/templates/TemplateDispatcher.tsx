@@ -5,6 +5,7 @@ import InvitationMobileView, { InvitationData } from "../invitation/InvitationMo
 import ElegantRoseTemplate from "./ElegantRoseTemplate";
 import FairytaleWeddingTemplate from "./FairytaleWeddingTemplate";
 import BlueButterflyTemplate from "./BlueButterflyTemplate";
+import BlushPrincessTemplate from "./BlushPrincessTemplate";
 import CoralineThemedTemplate from "./CoralineThemedTemplate";
 import QuinceRosadoTemplate from "./QuinceRosadoTemplate";
 
@@ -24,6 +25,8 @@ export default function TemplateDispatcher({
       return <FairytaleWeddingTemplate data={data} skipIntro={skipIntro} />;
     case "BLUE_BUTTERFLY":
       return <BlueButterflyTemplate data={data} skipIntro={skipIntro} />;
+    case "BLUSH_PRINCESS":
+      return <BlushPrincessTemplate data={data} skipIntro={skipIntro} />;
     case "CORALINE_MYSTICAL":
       return <CoralineThemedTemplate data={data} skipIntro={skipIntro} />;
     case "PRINCESA_ROSA":

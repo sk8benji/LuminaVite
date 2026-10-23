@@ -54,6 +54,18 @@ export const TEMPLATE_CATALOG: TemplatePickerItem[] = [
     destacada: true,
   },
   {
+    id: "BLUSH_PRINCESS",
+    name: "Blush Princess (Princesa Rosa y Oro)",
+    categoria: "QUINCEANERA",
+    badgeLabel: "Nuevo - Replica Canva",
+    thumbnail: "/assets/template-blush/foto-1.webp",
+    description: "Replica del Blush Quinceañera de CouCou: sobre rosa con mono y sello de corona, marco de monograma dorado, polaroids Then/Now, corte de honor completa y cuenta regresiva.",
+    demoSlug: "blush-princess-xv",
+    dots: ["#FDF3F5", "#EFC3D0", "#B08D3C"],
+    features: ["Sobre con Mono y Sello", "Musica Circular", "Corte de Honor", "Bilingue interactivo"],
+    destacada: true,
+  },
+  {
     id: "ELEGANT_ROSE",
     name: "Elegant Rose (Isabella)",
     categoria: "QUINCEANERA",

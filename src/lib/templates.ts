@@ -4,6 +4,7 @@ export type TemplateId =
   | "ELEGANT_ROSE"
   | "FAIRYTALE_CHATEAU"
   | "BLUE_BUTTERFLY"
+  | "BLUSH_PRINCESS"
   | "CORALINE_MYSTICAL"
   | "CLASICA_IMPERIAL"
   | "ESMERALDA_ROYAL"
@@ -114,6 +115,26 @@ export const TEMPLATES: Record<TemplateId, TemplateConfig> = {
     ribbonGradient: "from-sky-300 via-blue-200 to-purple-200",
     badgeBg: "#E8EFF8",
     description: "Mariposas celestiales flotantes en CSS, arco celestial, carta emotiva de los padres e itinerario de cuento.",
+  },
+  BLUSH_PRINCESS: {
+    id: "BLUSH_PRINCESS",
+    name: "Blush Princess (Canva T5)",
+    category: "QUINCEANERA",
+    bgColor: "#FDF8F4",
+    cardBg: "#FFFFFF",
+    textPrimary: "#4A3436",
+    textSecondary: "#9D2C4A",
+    accentColor: "#B08D3C",
+    accentSoft: "#FDF3F5",
+    borderSoft: "#EFC3D0",
+    buttonBg: "#9D2C4A",
+    buttonText: "#FFFFFF",
+    fontHeading: "'Alex Brush', cursive",
+    fontSubheading: "'Playfair Display', serif",
+    fontBody: "'Montserrat', sans-serif",
+    ribbonGradient: "from-rose-200 via-amber-100 to-rose-300",
+    badgeBg: "#FDF3F5",
+    description: "Replica blush y oro del sitio Canva de CouCou Printables: sobre con mono de seda y sello de corona, monograma en marco barroco, fotos Then/Now, corte de honor completa y RSVP bilingue.",
   },
   CORALINE_MYSTICAL: {
     id: "CORALINE_MYSTICAL",

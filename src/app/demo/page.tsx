@@ -18,6 +18,15 @@ const DEMO_CARDS = [
     image: "/assets/template-butterfly/foto-columpio-portada.webp",
   },
   {
+    slug: "blush-princess-xv",
+    title: "Blush Princess - Princesa Rosa y Oro",
+    name: "Isabella Sofia",
+    tag: "XV Años & Gala",
+    badge: "Nueva",
+    desc: "Replica del diseno Canva de CouCou: sobre rosa con mono y sello de corona, monograma dorado, fotos Then/Now y corte de honor completa.",
+    image: "/assets/template-blush/foto-1.webp",
+  },
+  {
     slug: "isabella-xv",
     title: "Romance Vintage en Película",
     name: "Isabella Cordero",
