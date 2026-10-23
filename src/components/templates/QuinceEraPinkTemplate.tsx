@@ -472,7 +472,7 @@ export default function QuinceEraPinkTemplate({
                 />
                 {/* Sello de cera con monograma */}
                 <div
-                  className={`absolute left-1/2 top-[56%] -translate-x-1/2 -translate-y-1/2 w-20 h-20 sm:w-24 sm:h-24 transition-transform duration-300 ${
+                  className={`absolute left-1/2 top-[56%] -translate-x-1/2 -translate-y-1/2 w-24 h-24 sm:w-28 sm:h-28 transition-transform duration-300 ${
                     isLetterOut ? "scale-125 opacity-0" : "scale-100 opacity-100"
                   }`}
                 >
