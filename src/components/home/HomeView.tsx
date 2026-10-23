@@ -33,6 +33,17 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
   const b = t.brand;
 
   const handleOpenDemo = (slug: string = "isabella-xv") => {
+    // En movil el popup de vista previa reduce demasiado la plantilla
+    // (decision de Abraham 2026-10-22): ir directo a la demo a pantalla
+    // completa, la misma ruta que enlaza el catalogo (/demo/<slug>).
+    // En escritorio se mantiene el modal con su iframe.
+    if (
+      typeof window !== "undefined" &&
+      window.matchMedia("(max-width: 767px)").matches
+    ) {
+      window.location.href = `/demo/${slug}`;
+      return;
+    }
     setActiveDemoSlug(slug);
     setIsDemoModalOpen(true);
   };
