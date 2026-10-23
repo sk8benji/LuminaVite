@@ -10,7 +10,7 @@ import { Play } from "lucide-react";
  * (isabella-xv), por eso se muestra igual en ES y EN, como en el mockup.
  */
 
-const ROSE_IMG = "/assets/template-rose/51d8fb6fdca05936497b8c7f02e14280.png";
+const ROSE_IMG = "/assets/template-rose/51d8fb6fdca05936497b8c7f02e14280.webp";
 
 function PhoneFrame({
   children,

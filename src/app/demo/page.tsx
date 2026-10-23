@@ -24,7 +24,7 @@ const DEMO_CARDS = [
     tag: "Alta Costura XV",
     badge: "Galería Film",
     desc: "Galería interactiva estilo tira de fotos, tonos rosa empolvado y cronograma detallado del evento.",
-    image: "/assets/template-rose/51d8fb6fdca05936497b8c7f02e14280.png",
+    image: "/assets/template-rose/51d8fb6fdca05936497b8c7f02e14280.webp",
   },
   {
     slug: "emma-and-lucas",
@@ -42,7 +42,7 @@ const DEMO_CARDS = [
     tag: "XV Años Princesa",
     badge: "Edición Floral",
     desc: "Diseño floral romántico, presentación de corte de honor y sección especial para el vals familiar.",
-    image: "/assets/template-quince-rosado/90043c428c5ec72c7adb26dce69dedd2.png",
+    image: "/assets/template-quince-rosado/90043c428c5ec72c7adb26dce69dedd2.webp",
   },
 
   // Fila 2
@@ -53,7 +53,7 @@ const DEMO_CARDS = [
     tag: "XV Años Clásica",
     badge: "Princesa Real",
     desc: "Apertura de sobre virtual interactivo, cuenta regresiva en vivo y formulario de confirmación automática.",
-    image: "/assets/template-rose/722d78548334333072ad7200e4f8233e.jpg",
+    image: "/assets/template-rose/722d78548334333072ad7200e4f8233e.webp",
   },
   {
     slug: "coraline-party",

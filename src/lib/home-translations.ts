@@ -422,7 +422,7 @@ export const translations: Record<Language, HomeTranslations> = {
           description:
             "Galería interactiva estilo tira de fotos, tonos rosa empolvado y cronograma detallado del evento.",
           slug: "isabella-xv",
-          image: "/assets/template-rose/51d8fb6fdca05936497b8c7f02e14280.png",
+          image: "/assets/template-rose/51d8fb6fdca05936497b8c7f02e14280.webp",
           features: ["Galería interactiva tira de fotos", "Cronograma por fases", "Dress code con paleta"],
         },
         {
@@ -549,7 +549,7 @@ export const translations: Record<Language, HomeTranslations> = {
           event: "XV Años de Isabella • Hello Banquet Hall • Van Nuys, CA",
           quote:
             "“Todos los invitados quedaron maravillados al abrir el sobre con la música. El control de pases por familia evitó que vinieran personas de más y todo estuvo súper ordenado en el salón.”",
-          avatar: "/assets/template-rose/51d8fb6fdca05936497b8c7f02e14280.png",
+          avatar: "/assets/template-rose/51d8fb6fdca05936497b8c7f02e14280.webp",
           metric: "Cero pases duplicados",
           demoSlug: "isabella-xv",
           demoBtnText: "Probar Invitación de XV Años",
@@ -845,7 +845,7 @@ export const translations: Record<Language, HomeTranslations> = {
           description:
             "Blush pink and champagne gold editorial aesthetic. Features an interactive timeline filmstrip, multi-stage itinerary, and shared guest photo album.",
           slug: "isabella-xv",
-          image: "/assets/template-rose/51d8fb6fdca05936497b8c7f02e14280.png",
+          image: "/assets/template-rose/51d8fb6fdca05936497b8c7f02e14280.webp",
           features: ["Interactive filmstrip timeline", "Phased itinerary", "Dress code palette"],
         },
         {
@@ -972,7 +972,7 @@ export const translations: Record<Language, HomeTranslations> = {
           event: "Isabella's XV Gala • Hello Banquet Hall • Van Nuys, CA",
           quote:
             "“Our guests were blown away when the 3D envelope opened with background music. Controlled passes per family kept everything organized with zero unexpected crashers.”",
-          avatar: "/assets/template-rose/51d8fb6fdca05936497b8c7f02e14280.png",
+          avatar: "/assets/template-rose/51d8fb6fdca05936497b8c7f02e14280.webp",
           metric: "Zero duplicate passes",
           demoSlug: "isabella-xv",
           demoBtnText: "Try Quinceañera Invitation",

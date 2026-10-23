@@ -91,7 +91,7 @@ export default function EnvelopeIntro({
 
   if (template.id === "ELEGANT_ROSE") {
     const isEnDefault = idiomaDefault === "en";
-    const heroBg = coverPhotoUrl || "/assets/template-rose/51d8fb6fdca05936497b8c7f02e14280.png";
+    const heroBg = coverPhotoUrl || "/assets/template-rose/51d8fb6fdca05936497b8c7f02e14280.webp";
 
     return (
       <div
@@ -144,7 +144,7 @@ export default function EnvelopeIntro({
           {/* Corona Tiara Dorada */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/assets/template-rose/ba47feef59edd928b7c840eae54838b3.png"
+            src="/assets/template-rose/ba47feef59edd928b7c840eae54838b3.webp"
             alt="Corona"
             className="w-12 h-auto my-1 drop-shadow transition-transform duration-300 group-hover:scale-110"
           />
@@ -161,7 +161,7 @@ export default function EnvelopeIntro({
           <div className="relative my-2 w-48 sm:w-52 transition-transform duration-500 group-hover:scale-105 active:scale-95">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/assets/template-rose/cb257414402ef9963727de1a6d13bd5c.png"
+              src="/assets/template-rose/cb257414402ef9963727de1a6d13bd5c.webp"
               alt="Sobre Quinceañera"
               className={`w-full h-auto drop-shadow-2xl transition-all duration-500 ${
                 isOpen ? "scale-110 -translate-y-4 opacity-80" : ""
@@ -342,7 +342,7 @@ export default function EnvelopeIntro({
         {/* Capa 3: Bolsillo Frontal continuo en V con bordes florales dorados estáticos */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src="/assets/sobre-rosa/bolsillo-frontal.png"
+          src="/assets/sobre-rosa/bolsillo-frontal.webp"
           alt="Bolsillo frontal del sobre"
           className="absolute inset-0 w-full h-full object-fill pointer-events-none select-none"
           style={{
@@ -372,7 +372,7 @@ export default function EnvelopeIntro({
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/assets/sobre-rosa/solapa.png"
+              src="/assets/sobre-rosa/solapa.webp"
               alt="Solapa cerrada"
               className="absolute top-0 left-[1.25%] w-[97.5%] h-full object-fill select-none"
               style={{
@@ -382,7 +382,7 @@ export default function EnvelopeIntro({
             {/* Sello de cera en la punta inferior cuando está cerrado */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/assets/sobre-rosa/sello-azul.png"
+              src="/assets/sobre-rosa/sello-azul.webp"
               alt="Sello de cera"
               className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 w-14 sm:w-16 h-14 sm:h-16 select-none"
               style={{
@@ -403,7 +403,7 @@ export default function EnvelopeIntro({
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/assets/sobre-rosa/solapa-interior.png"
+              src="/assets/sobre-rosa/solapa-interior.webp"
               alt="Solapa abierta"
               className="absolute top-0 left-[1.25%] w-[97.5%] h-full object-fill select-none"
               style={{
@@ -413,7 +413,7 @@ export default function EnvelopeIntro({
             {/* Sello de cera en la punta superior cuando está abierta */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/assets/sobre-rosa/sello-azul.png"
+              src="/assets/sobre-rosa/sello-azul.webp"
               alt="Sello de cera"
               className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 w-14 sm:w-16 h-14 sm:h-16 select-none"
               style={{
