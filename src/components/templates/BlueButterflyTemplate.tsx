@@ -459,8 +459,8 @@ export default function BlueButterflyTemplate({
               id="innerCard"
               className={`absolute left-4 right-4 top-4 bottom-4 bg-[#FFFEFC] rounded-xl p-5 flex flex-col items-center justify-center text-center transform border border-[#D8B772]/60 transition-[transform,box-shadow] duration-[900ms] [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] ${
                 isLetterOut
-                  ? "-translate-y-28 sm:-translate-y-40 md:-translate-y-44 lg:-translate-y-52 scale-[0.95] z-25 shadow-2xl"
-                  : "z-10 translate-y-0 shadow-lg"
+                  ? "-translate-y-28 sm:-translate-y-40 md:-translate-y-44 lg:-translate-y-52 scale-[0.95] z-20 shadow-2xl"
+                  : "z-20 translate-y-0 shadow-lg"
               }`}
             >
               {/* Mariposa con aleteo 3D en la tarjeta */}
@@ -481,16 +481,19 @@ export default function BlueButterflyTemplate({
               </p>
             </div>
 
-            {/* Obra del sobre: bolsillo abierto y sobre cerrado superpuestos
-                con crossfade breve al abrir (sin corte seco). El conjunto
-                reacciona mientras la carta sale: baja, se desenfoca 1px y
-                baja a 0.9 de opacidad (profundidad). El bolsillo es el arte
-                de Abraham estilo cerrado (800x887) con scale 1.38 en su <img>
-                para igualar el ancho visible del sobre cerrado (5:4); la
-                carta termina en scale 0.95 y subida extra (feedback de
-                Abraham 2026-10-22: el papel se veia grande y bajo) */}
+            {/* Estructura de 3 capas (plan de Abraham, 2026-10-22):
+                z-10 fondo del sobre abierto (solapa + interior), z-20 la
+                carta (sale del interior), z-30 el frente del bolsillo (la
+                "V" con rosas tapa la mitad inferior de la carta). El sobre
+                cerrado vive en z-40 mientras esta cerrado y se desvanece
+                al abrir. Las dos capas del arte son complementarias (mismo
+                lienzo 800x887, corte por las costuras diagonales): apiladas
+                reproducen el arte completo sin desalinearse. Fondo y frente
+                heredan el retroceso (baja + desenfoque + opacidad) cuando
+                la carta sale, igual que el bolsillo unico anterior */}
+            {/* Capa fondo (z-10): solapa abierta e interior del sobre */}
             <div
-              className={`absolute inset-0 z-20 pointer-events-none transition-transform duration-[900ms] [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] ${
+              className={`absolute inset-0 z-10 pointer-events-none transition-transform duration-[900ms] [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] ${
                 isLetterOut ? "translate-y-2.5" : ""
               }`}
             >
@@ -499,72 +502,93 @@ export default function BlueButterflyTemplate({
                   isLetterOut ? "opacity-90 blur-[1px]" : "opacity-100"
                 }`}
               >
-                {/* Bolsillo abierto (debajo): se revela con el crossfade */}
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src="/assets/template-butterfly/sobre-carta-base.webp"
+                  src="/assets/template-butterfly/sobre-fondo-abierto.webp"
+                  alt=""
+                  className={`absolute inset-0 w-full h-full object-contain scale-[1.38] transition-opacity duration-200 ${
+                    isEnvelopeOpen ? "opacity-100" : "opacity-0"
+                  }`}
+                />
+              </div>
+            </div>
+
+            {/* Capa frontal (z-30): bolsillo en "V" con las rosas inferiores */}
+            <div
+              className={`absolute inset-0 z-30 pointer-events-none transition-transform duration-[900ms] [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] ${
+                isLetterOut ? "translate-y-2.5" : ""
+              }`}
+            >
+              <div
+                className={`absolute inset-0 transition-[opacity,filter] duration-[900ms] [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] ${
+                  isLetterOut ? "opacity-90 blur-[1px]" : "opacity-100"
+                }`}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/assets/template-butterfly/sobre-frente-bolsillo.webp"
                   alt="Bolsillo del sobre"
                   className={`absolute inset-0 w-full h-full object-contain scale-[1.38] transition-opacity duration-200 ${
                     isEnvelopeOpen ? "opacity-100" : "opacity-0"
                   }`}
                 />
+              </div>
+            </div>
 
-                {/* Sobre cerrado con sello de cera (encima): al abrir se
-                    desvanece rápido (~200ms), escondido tras el pulso */}
-                <div
-                  className={`absolute inset-0 drop-shadow-xl transition-opacity duration-200 ${
-                    isEnvelopeOpen ? "opacity-0" : "opacity-100"
-                  }`}
-                >
+            {/* Sobre cerrado (z-40): encima de todo mientras esta cerrado;
+                al abrir se desvanece rapido (~200ms), tras el pulso */}
+            <div
+              className={`absolute inset-0 z-40 pointer-events-none drop-shadow-xl transition-opacity duration-200 ${
+                isEnvelopeOpen ? "opacity-0" : "opacity-100"
+              }`}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/assets/template-butterfly/sobre-cerrado.webp"
+                alt="Sobre Cerrado"
+                className="w-full h-full object-contain"
+              />
+
+              {/* Mariposa aleteando en 3D perchada en la esquina inferior izquierda (como en la foto de referencia) */}
+              <div className="absolute -bottom-3 -left-4 sm:-bottom-4 sm:-left-6 z-30 pointer-events-none rotate-[22deg] drop-shadow-md">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/assets/template-butterfly/mariposa-perchada.webp"
+                  alt="Mariposa viva"
+                  className="w-16 sm:w-20 md:w-24 lg:w-32 h-auto object-contain animate-flutter"
+                />
+              </div>
+            </div>
+
+            {/* Mariposas que salen volando del bolsillo al abrirse (~1.2s) */}
+            {isEnvelopeOpen && (
+              <>
+                <div className="absolute left-[36%] top-[54%] z-50 w-8 sm:w-10 lg:w-14 animate-butterfly-fly-left">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src="/assets/template-butterfly/sobre-cerrado.webp"
-                    alt="Sobre Cerrado"
-                    className="w-full h-full object-contain"
+                    src="/assets/template-butterfly/mariposa-azul.webp"
+                    alt=""
+                    className="w-full h-auto object-contain animate-flutter"
                   />
-
-                  {/* Mariposa aleteando en 3D perchada en la esquina inferior izquierda (como en la foto de referencia) */}
-                  <div className="absolute -bottom-3 -left-4 sm:-bottom-4 sm:-left-6 z-30 pointer-events-none rotate-[22deg] drop-shadow-md">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src="/assets/template-butterfly/mariposa-perchada.webp"
-                      alt="Mariposa viva"
-                      className="w-16 sm:w-20 md:w-24 lg:w-32 h-auto object-contain animate-flutter"
-                    />
-                  </div>
                 </div>
-              </div>
-
-              {/* Mariposas que salen volando del bolsillo al abrirse (~1.2s) */}
-              {isEnvelopeOpen && (
-                <>
-                  <div className="absolute left-[36%] top-[54%] z-40 w-8 sm:w-10 lg:w-14 animate-butterfly-fly-left">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src="/assets/template-butterfly/mariposa-azul.webp"
-                      alt=""
-                      className="w-full h-auto object-contain animate-flutter"
-                    />
-                  </div>
-                  <div className="absolute left-[47%] top-[46%] z-40 w-7 sm:w-9 animate-butterfly-fly-up">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src="/assets/template-butterfly/mariposa-azul.webp"
-                      alt=""
-                      className="w-full h-auto object-contain animate-flutter"
-                    />
-                  </div>
-                  <div className="absolute left-[58%] top-[54%] z-40 w-8 sm:w-10 lg:w-14 animate-butterfly-fly-right">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src="/assets/template-butterfly/mariposa-azul.webp"
-                      alt=""
-                      className="w-full h-auto object-contain animate-flutter"
-                    />
-                  </div>
-                </>
-              )}
-            </div>
+                <div className="absolute left-[47%] top-[46%] z-50 w-7 sm:w-9 animate-butterfly-fly-up">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src="/assets/template-butterfly/mariposa-azul.webp"
+                    alt=""
+                    className="w-full h-auto object-contain animate-flutter"
+                  />
+                </div>
+                <div className="absolute left-[58%] top-[54%] z-50 w-8 sm:w-10 lg:w-14 animate-butterfly-fly-right">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src="/assets/template-butterfly/mariposa-azul.webp"
+                    alt=""
+                    className="w-full h-auto object-contain animate-flutter"
+                  />
+                </div>
+              </>
+            )}
           </div>
 
           {/* Botones de Selección de Idioma con Marco Ornamental de la Foto */}
