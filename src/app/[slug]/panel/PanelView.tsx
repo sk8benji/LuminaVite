@@ -1233,7 +1233,119 @@ export default function PanelView({
               <p className="text-[11px]">{t.emptyFilterDesc}</p>
             </div>
           ) : (
-            <div className="overflow-x-auto">
+            <>
+            {/* Lista en tarjetas (solo movil): la tabla de 6 columnas no
+                cabe en el telefono y el estado quedaba cortado. Cada
+                invitado es una tarjeta con nombre, estado completo,
+                pases, telefono/notas y las mismas acciones de la tabla.
+                La tabla queda para pantallas md+ (decision de Abraham
+                2026-10-22: la lista de confirmados es lo mas importante
+                del panel y la mayoria de anfitriones entra del telefono) */}
+            <div className="md:hidden divide-y divide-[#E8E3D9]">
+              {filteredGuests.map((guest) => (
+                <div key={guest.id} className="p-4">
+                  <div className="flex items-start justify-between gap-3">
+                    <p className="font-semibold text-sm text-[#2C1F1B] capitalize leading-snug">
+                      {guest.name}
+                    </p>
+                    {guest.status === "attending" ? (
+                      <span className="inline-flex shrink-0 items-center gap-1 text-xs py-0.5 px-2.5 rounded-full font-medium text-emerald-700 bg-emerald-50 border border-emerald-200/60">
+                        <CheckCircle2 className="w-3 h-3" /> {t.statusAttending}
+                      </span>
+                    ) : guest.status === "declined" ? (
+                      <span className="inline-flex shrink-0 items-center gap-1 text-xs py-0.5 px-2.5 rounded-full font-medium text-[#8B2635] bg-[#FBF0F1] border border-[#F2D5D9]">
+                        <XCircle className="w-3 h-3" /> {t.statusDeclined}
+                      </span>
+                    ) : guest.status === "PENDIENTE_APROBACION" || guest.status === "pending_approval" ? (
+                      <span className="inline-flex shrink-0 items-center gap-1 text-xs py-0.5 px-2.5 rounded-full font-medium text-amber-800 bg-amber-50 border border-amber-300">
+                        <AlertCircle className="w-3 h-3 text-amber-600" /> {t.statusManual}
+                      </span>
+                    ) : (
+                      <span className="inline-flex shrink-0 items-center gap-1 text-xs py-0.5 px-2.5 rounded-full font-medium text-stone-600 bg-stone-100 border border-stone-200">
+                        <Clock className="w-3 h-3" /> {t.statusPending}
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs">
+                    <span className="text-[#8C8077]">
+                      {t.thAssigned}:{" "}
+                      <span className="font-bold text-[#2C1F1B]">{guest.max_pax}</span>
+                    </span>
+                    <span className="text-[#8C8077]">
+                      {t.thConfirmed}:{" "}
+                      <span className="font-bold text-[#1B5E20]">
+                        {guest.status === "attending" ? guest.confirmed_pax : "—"}
+                      </span>
+                    </span>
+                    {guest.phone && (
+                      <span className="font-mono text-[#2C1F1B]">
+                        {formatPhoneDisplay(guest.phone)}
+                      </span>
+                    )}
+                  </div>
+
+                  {guest.notes && (
+                    <p className="mt-1.5 text-[11px] text-[#8C8077] italic line-clamp-2">
+                      {guest.notes}
+                    </p>
+                  )}
+
+                  <div className="mt-3 flex items-center gap-1.5">
+                    <div className="flex items-center gap-1 bg-[#FAF6F0] p-0.5 rounded-xl border border-[#E8E3D9]">
+                      <button
+                        onClick={() => copyGuestLink(guest.id)}
+                        title={t.copyGuestLinkTitle}
+                        className={`w-9 h-9 flex items-center justify-center rounded-lg transition-colors cursor-pointer ${
+                          copiedGuestId === guest.id
+                            ? "text-emerald-700 bg-emerald-50 border border-emerald-200"
+                            : "text-stone-600 hover:text-[#2C1F1B] hover:bg-white"
+                        }`}
+                      >
+                        {copiedGuestId === guest.id ? (
+                          <Check className="w-4 h-4" />
+                        ) : (
+                          <Link2 className="w-4 h-4 text-[#8C6D2D]" />
+                        )}
+                      </button>
+                      <button
+                        onClick={() => setActivityGuest(guest)}
+                        title={t.viewActivityTitle}
+                        className="w-9 h-9 flex items-center justify-center text-blue-700 hover:text-blue-900 hover:bg-white rounded-lg transition-colors cursor-pointer relative"
+                      >
+                        <MessageSquare className="w-4 h-4" />
+                        {guest.notes && (
+                          <span className="w-1.5 h-1.5 rounded-full bg-amber-500 absolute top-1.5 right-1.5 ring-1 ring-white" />
+                        )}
+                      </button>
+                    </div>
+                    <div className="flex items-center gap-0.5">
+                      <button
+                        onClick={() => handleStartEdit(guest)}
+                        title={t.editGuestTitle}
+                        className="w-9 h-9 flex items-center justify-center text-stone-500 hover:text-[#2C1F1B] hover:bg-stone-100 rounded-lg transition-colors cursor-pointer"
+                      >
+                        <Edit2 className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={() => handleDeleteGuest(guest.id, guest.name)}
+                        disabled={deletingId === guest.id}
+                        title={t.deleteGuestTitle}
+                        className="w-9 h-9 flex items-center justify-center text-stone-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer disabled:opacity-50"
+                      >
+                        {deletingId === guest.id ? (
+                          <Loader2 className="w-4 h-4 animate-spin text-rose-600" />
+                        ) : (
+                          <Trash2 className="w-4 h-4" />
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="hidden md:block overflow-x-auto">
               <table className="w-full text-left border-collapse text-xs">
                 <thead>
                   <tr className="bg-stone-100/60 text-stone-600 font-semibold text-xs border-b border-[#E8E3D9]">
@@ -1344,6 +1456,7 @@ export default function PanelView({
                 </tbody>
               </table>
             </div>
+            </>
           )}
         </div>
 
