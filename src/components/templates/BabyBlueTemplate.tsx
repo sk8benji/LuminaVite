@@ -353,7 +353,7 @@ export default function BabyBlueTemplate({
   };
 
   return (
-    <div className="relative min-h-screen font-sans-body text-[#22344A] antialiased selection:bg-sky-200 selection:text-sky-900 overflow-x-hidden bg-[#FDFCF8]">
+    <div className="relative min-h-screen font-sans-body text-[#22344A] antialiased selection:bg-sky-200 selection:text-sky-900 overflow-x-hidden bg-[#FCFEFF]">
       {/* Audio en bucle (solo si el evento define música y el invitado la activa) */}
       <audio ref={audioRef} loop preload="none" src={defaultAudio} />
 
@@ -491,15 +491,22 @@ export default function BabyBlueTemplate({
       )}
 
       <main className="relative z-10">
+        {/* Composición de portada: marco + invitación en UNA pantalla (como el Canva) */}
+        <div className="relative">
+          <div aria-hidden="true" className="absolute inset-0 pointer-events-none">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={BABY_BLUE_ASSETS.blueTexture} alt="" className="w-full h-full object-cover opacity-45" />
+            <div className="absolute inset-0 bg-white/55" />
+          </div>
         {/* ======================================================= */}
         {/* HERO: MARCO ÓVALO DE PLATA CON FOTO                     */}
         {/* ======================================================= */}
-        <section className="relative px-6 pt-12 pb-2 text-center overflow-hidden">
+        <section className="relative px-6 pt-7 pb-1 text-center overflow-hidden">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={BABY_BLUE_ASSETS.blueBouquet} alt="" className="absolute -top-3 -left-6 w-36 opacity-85 pointer-events-none" />
+          <img src={BABY_BLUE_ASSETS.blueBouquet} alt="" className="absolute top-0 -left-6 w-44 opacity-90 pointer-events-none" />
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={BABY_BLUE_ASSETS.blueBouquet} alt="" className="absolute -top-3 -right-6 w-36 opacity-85 pointer-events-none -scale-x-100" />
-          <div className="relative w-[min(88vw,380px)] aspect-square mx-auto">
+          <img src={BABY_BLUE_ASSETS.blueBouquet} alt="" className="absolute top-0 -right-6 w-44 opacity-90 pointer-events-none -scale-x-100" />
+          <div className="relative w-[min(64vw,270px)] aspect-square mx-auto">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={data.fotoPortadaUrl}
@@ -518,7 +525,7 @@ export default function BabyBlueTemplate({
         {/* ======================================================= */}
         {/* INVITACIÓN + CUENTA REGRESIVA                           */}
         {/* ======================================================= */}
-        <section className="relative px-6 py-6 text-center overflow-hidden">
+        <section className="relative px-6 pt-2 pb-7 text-center overflow-hidden">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={BABY_BLUE_ASSETS.stardust} alt="" className="absolute left-1 top-16 w-16 opacity-60 pointer-events-none" />
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -537,7 +544,7 @@ export default function BabyBlueTemplate({
             </div>
           )}
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={BABY_BLUE_ASSETS.scriptQuinceanera} alt="Quinceañera" className="w-64 sm:w-80 h-auto mx-auto mt-2" />
+          <img src={BABY_BLUE_ASSETS.scriptQuinceanera} alt="Quinceañera" className="w-48 sm:w-56 h-auto mx-auto mt-1" />
           <p className="font-serif-roman text-xs tracking-[0.5em] uppercase text-[#7FA8C9] font-bold mt-1">
             {isEn ? "Celebration" : "Celebración"}
           </p>
@@ -550,8 +557,8 @@ export default function BabyBlueTemplate({
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={BABY_BLUE_ASSETS.wave} alt="" className="w-10 sm:w-14 h-auto opacity-70 shrink-0" />
           </div>
-          <h1 className="font-script text-6xl sm:text-7xl text-[#5B8DB8] leading-tight mt-1">{data.titulo}</h1>
-          <p className="font-serif-roman text-sm sm:text-base tracking-[0.2em] uppercase text-[#22344A] font-semibold mt-3">
+          <h1 className="font-script text-5xl sm:text-6xl text-[#5B8DB8] leading-tight mt-1">{data.titulo}</h1>
+          <p className="font-serif-roman text-xs sm:text-sm tracking-[0.2em] uppercase text-[#22344A] font-semibold mt-2">
             {formalDateDisplay}
             {eventTime ? ` | ${eventTime}` : ""}
           </p>
@@ -563,22 +570,24 @@ export default function BabyBlueTemplate({
             <img src={BABY_BLUE_ASSETS.wave} alt="" className="w-10 sm:w-14 h-auto opacity-70 shrink-0" />
           </div>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={BABY_BLUE_ASSETS.wave} alt="" className="w-52 h-auto mx-auto mt-5 opacity-80" />
+          <img src={BABY_BLUE_ASSETS.wave} alt="" className="w-44 h-auto mx-auto mt-3 opacity-80" />
 
-          <div className="flex items-stretch justify-center gap-2.5 sm:gap-3 mt-7">
+          <div className="flex items-stretch justify-center gap-2.5 sm:gap-3 mt-5">
             {[
               { v: timeLeft.days, l: isEn ? "Days" : "Días" },
               { v: timeLeft.hours, l: isEn ? "Hours" : "Horas" },
               { v: timeLeft.minutes, l: isEn ? "Mins" : "Min" },
               { v: timeLeft.seconds, l: isEn ? "Secs" : "Seg" },
             ].map((u) => (
-              <div key={u.l} className="w-16 sm:w-20 bg-white rounded-2xl border border-[#D6E6F2] shadow-md py-3">
+              <div key={u.l} className="w-[3.4rem] sm:w-[4.2rem] bg-white rounded-2xl border border-[#D6E6F2] shadow-md py-2.5">
                 <p className="font-serif-roman text-2xl sm:text-3xl font-bold text-[#1F3A5F] leading-none">{u.v}</p>
                 <p className="text-[8px] sm:text-[9px] tracking-[0.2em] uppercase text-[#7FA8C9] font-bold mt-1.5">{u.l}</p>
               </div>
             ))}
           </div>
         </section>
+
+        </div>
 
         {/* ======================================================= */}
         {/* MASS VENUE: POSTAL                                      */}
