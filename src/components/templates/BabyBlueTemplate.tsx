@@ -494,17 +494,17 @@ export default function BabyBlueTemplate({
         {/* ======================================================= */}
         {/* HERO: MARCO ÓVALO DE PLATA CON FOTO                     */}
         {/* ======================================================= */}
-        <section className="relative px-6 pt-12 pb-4 text-center overflow-hidden">
+        <section className="relative px-6 pt-12 pb-2 text-center overflow-hidden">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={BABY_BLUE_ASSETS.blueBouquet} alt="" className="absolute -top-2 -left-6 w-28 opacity-80 pointer-events-none" />
+          <img src={BABY_BLUE_ASSETS.blueBouquet} alt="" className="absolute -top-3 -left-6 w-36 opacity-85 pointer-events-none" />
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={BABY_BLUE_ASSETS.blueBouquet} alt="" className="absolute -top-2 -right-6 w-28 opacity-80 pointer-events-none -scale-x-100" />
+          <img src={BABY_BLUE_ASSETS.blueBouquet} alt="" className="absolute -top-3 -right-6 w-36 opacity-85 pointer-events-none -scale-x-100" />
           <div className="relative w-[min(88vw,380px)] aspect-square mx-auto">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={data.fotoPortadaUrl}
               alt={data.titulo}
-              className="absolute left-1/2 top-[47%] -translate-x-1/2 -translate-y-1/2 w-[63%] aspect-[3/4] object-cover rounded-[50%] shadow-inner"
+              className="absolute left-1/2 top-[44%] -translate-x-1/2 -translate-y-1/2 w-[64%] aspect-[5/6] object-cover object-[50%_15%] rounded-[50%] shadow-inner"
             />
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={BABY_BLUE_ASSETS.ovalFrame} alt="" className="absolute inset-0 w-full h-full object-contain pointer-events-none" />
@@ -518,26 +518,50 @@ export default function BabyBlueTemplate({
         {/* ======================================================= */}
         {/* INVITACIÓN + CUENTA REGRESIVA                           */}
         {/* ======================================================= */}
-        <section className="px-6 py-8 text-center">
+        <section className="relative px-6 py-6 text-center overflow-hidden">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={BABY_BLUE_ASSETS.stardust} alt="" className="absolute left-1 top-16 w-16 opacity-60 pointer-events-none" />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={BABY_BLUE_ASSETS.stardust} alt="" className="absolute right-1 top-40 w-16 opacity-60 pointer-events-none -scale-x-100" />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={BABY_BLUE_ASSETS.stardust} alt="" className="absolute left-2 bottom-6 w-14 opacity-50 pointer-events-none" />
           {familiaAnfitriona && (
-            <p className="font-serif-roman text-[11px] sm:text-xs tracking-[0.3em] uppercase text-[#7FA8C9] font-bold">
-              {familiaAnfitriona} {isEn ? "happily invite you to the" : "te invita con alegría a la"}
-            </p>
+            <div className="flex items-center justify-center gap-3 px-2">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={BABY_BLUE_ASSETS.wave} alt="" className="w-10 sm:w-14 h-auto opacity-70 -scale-x-100 shrink-0" />
+              <p className="font-serif-roman text-[11px] sm:text-xs tracking-[0.3em] uppercase text-[#7FA8C9] font-bold">
+                {familiaAnfitriona} {isEn ? "happily invite you to the" : "te invita con alegría a la"}
+              </p>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={BABY_BLUE_ASSETS.wave} alt="" className="w-10 sm:w-14 h-auto opacity-70 shrink-0" />
+            </div>
           )}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={BABY_BLUE_ASSETS.scriptQuinceanera} alt="Quinceañera" className="w-64 sm:w-80 h-auto mx-auto mt-2" />
           <p className="font-serif-roman text-xs tracking-[0.5em] uppercase text-[#7FA8C9] font-bold mt-1">
             {isEn ? "Celebration" : "Celebración"}
           </p>
-          <p className="font-serif-roman text-[11px] sm:text-xs tracking-[0.3em] uppercase text-[#22344A] mt-4">
-            {isEn ? "In honor of their daughter" : "En honor de su hija"}
-          </p>
+          <div className="flex items-center justify-center gap-3 px-2 mt-4">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={BABY_BLUE_ASSETS.wave} alt="" className="w-10 sm:w-14 h-auto opacity-70 -scale-x-100 shrink-0" />
+            <p className="font-serif-roman text-[11px] sm:text-xs tracking-[0.3em] uppercase text-[#22344A]">
+              {isEn ? "In honor of their daughter" : "En honor de su hija"}
+            </p>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={BABY_BLUE_ASSETS.wave} alt="" className="w-10 sm:w-14 h-auto opacity-70 shrink-0" />
+          </div>
           <h1 className="font-script text-6xl sm:text-7xl text-[#5B8DB8] leading-tight mt-1">{data.titulo}</h1>
           <p className="font-serif-roman text-sm sm:text-base tracking-[0.2em] uppercase text-[#22344A] font-semibold mt-3">
             {formalDateDisplay}
             {eventTime ? ` | ${eventTime}` : ""}
           </p>
-          <p className="font-serif-roman text-xs tracking-[0.2em] uppercase text-[#22344A]/70 mt-1">{data.recepcionDireccion}</p>
+          <div className="flex items-center justify-center gap-3 px-2 mt-1">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={BABY_BLUE_ASSETS.wave} alt="" className="w-10 sm:w-14 h-auto opacity-70 -scale-x-100 shrink-0" />
+            <p className="font-serif-roman text-xs tracking-[0.2em] uppercase text-[#22344A]/70">{data.recepcionDireccion}</p>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={BABY_BLUE_ASSETS.wave} alt="" className="w-10 sm:w-14 h-auto opacity-70 shrink-0" />
+          </div>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={BABY_BLUE_ASSETS.wave} alt="" className="w-52 h-auto mx-auto mt-5 opacity-80" />
 
@@ -908,7 +932,7 @@ export default function BabyBlueTemplate({
               <img
                 src={data.fotoCierreUrl}
                 alt=""
-                className="absolute left-1/2 top-[47%] -translate-x-1/2 -translate-y-1/2 w-[63%] aspect-[3/4] object-cover rounded-[50%]"
+                className="absolute left-1/2 top-[44%] -translate-x-1/2 -translate-y-1/2 w-[64%] aspect-[5/6] object-cover object-[50%_15%] rounded-[50%]"
               />
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={BABY_BLUE_ASSETS.ovalFrame} alt="" className="absolute inset-0 w-full h-full object-contain pointer-events-none" />
