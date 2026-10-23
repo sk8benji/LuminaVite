@@ -33,6 +33,7 @@ import {
 import { OrderData } from "@/lib/order-store";
 import TemplatesManager from "@/components/dashboard/TemplatesManager";
 import QrManager from "@/components/dashboard/QrManager";
+import MigrateAssetsCard from "@/components/dashboard/MigrateAssetsCard";
 
 interface EventoItem {
   id: string;
@@ -948,6 +949,9 @@ export default function DashboardPage() {
         {/* VISTA 4: CÓDIGOS QR CON TRACKING DE ESCANEOS */}
         {/* ============================================================== */}
         {activeTab === "qr" && <QrManager />}
+
+        {/* Herramienta de mantenimiento: migración de assets a AWS (una vez) */}
+        <MigrateAssetsCard />
 
         {/* Modal: nueva key rotada, lista para copiar y enviar al cliente */}
         {rotatedKey && (
