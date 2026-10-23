@@ -483,8 +483,10 @@ export default function BlueButterflyTemplate({
 
             {/* Obra del sobre: bolsillo abierto y sobre cerrado superpuestos
                 con crossfade breve al abrir (sin corte seco). El conjunto
-                reacciona mientras la carta sale: baja, se encoge a 0.92, se
-                desenfoca 1px y baja a 0.9 de opacidad (profundidad) */}
+                reacciona mientras la carta sale: baja, se desenfoca 1px y
+                baja a 0.9 de opacidad (profundidad). El bolsillo es el arte
+                vertical de Abraham (800x876) con scale 1.28 en su <img> para
+                igualar el ancho visible del sobre cerrado (5:4) */}
             <div
               className={`absolute inset-0 z-20 pointer-events-none transition-transform duration-[900ms] [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] ${
                 isLetterOut ? "translate-y-2.5" : ""
@@ -500,7 +502,7 @@ export default function BlueButterflyTemplate({
                 <img
                   src="/assets/template-butterfly/sobre-carta-base.webp"
                   alt="Bolsillo del sobre"
-                  className={`absolute inset-0 w-full h-full object-contain transition-opacity duration-200 ${
+                  className={`absolute inset-0 w-full h-full object-contain scale-[1.28] transition-opacity duration-200 ${
                     isEnvelopeOpen ? "opacity-100" : "opacity-0"
                   }`}
                 />
