@@ -531,6 +531,60 @@ export const DEMO_MISS15: InvitationData = {
   configPlantilla: {},
 };
 
+
+// =========================================================================
+// 10. BABY BLUE (Elina Miguel - Replica Canva Studio Eburnean)
+// =========================================================================
+export const DEMO_BABY_BLUE: InvitationData = {
+  id: "demo-baby-blue",
+  slug: "baby-blue-xv",
+  tipoEvento: "QUINCEANERA",
+  estiloPlantilla: "BABY_BLUE",
+  titulo: "Elina Miguel",
+  subtitulo: "My Quinceañera",
+  frasePersonalizada: "You're invited!",
+  fechaEvento: new Date("2027-08-07T17:00:00-05:00"),
+  fechaTextoPersonalizada: "SATURDAY, AUGUST 7, 2027 AT 5:00 PM",
+  fotoPortadaUrl: "/assets/template-baby-blue/foto-gazebo.webp",
+  fotoInfanciaUrl: "/assets/template-baby-blue/foto-bebe.webp",
+  fotoActualUrl: "/assets/template-baby-blue/foto-camara.webp",
+  fotoCierreUrl: "/assets/template-baby-blue/foto-espalda.webp",
+  musicaUrl:
+    "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
+  musicaTitulo: "",
+  telefonoWhatsappRsvp: "(123) 456-7890",
+  emailOrganizador: "hello@reallygreatsite.com",
+  fechaLimiteRsvp: "July 20",
+  maxPasesPorInvitado: 4,
+  ceremoniaNombre: "St. Andrew's Church",
+  ceremoniaDireccion: "Any City, TX",
+  ceremoniaMapUrl: "https://maps.app.goo.gl/2bPhi3avmo95TCSo8",
+  recepcionNombre: "Heaven Banquet Room",
+  recepcionDireccion: "123 Anywhere St, Any City, TX 112233",
+  recepcionMapUrl: "https://maps.app.goo.gl/2bPhi3avmo95TCSo8",
+  dressCodeTitulo: "Dress Code",
+  dressCodeNota: "Vestimenta formal, en armonía con el tema del evento.",
+  dressCodeNotaEn: "Formal attire in harmony with the event's theme.",
+  regalosMensaje:
+    "Tu presencia es el regalo más grande. Si deseas dar algo extra, preparamos un pequeño registro con mis artículos favoritos (Registro No. 12345).",
+  regalosMensajeEn:
+    "Your presence is the greatest gift of all. If you wish to give something extra, a small registry has been thoughtfully prepared with a few of my favorite items (Registry No. 12345).",
+  mesaRegalosJson: { plataformas: ["MyWishlist"] },
+  wishlistUrl: "https://mywishlist.online",
+  rsvpDiasAntes: 18,
+  idiomaDefault: "en",
+  configPlantilla: {
+    ceremoniaHora: "3:00 PM",
+    familiaAnfitriona: "Miguel y Hannah",
+    familiaAnfitrionaEn: "Miguel and Hannah",
+    contactoNombre: "Hannah Ramos",
+    cartaTextoEn:
+      "A special chapter begins as I step into my fifteenth year, surrounded by the love and laughter of the people who mean the most to me. To my family — thank you for your unconditional love, your encouragement, and for always believing in me. You are my foundation and my greatest blessing.",
+    cartaTexto:
+      "Comienza un capítulo especial al llegar a mis quince años, rodeada del amor y la alegría de las personas que más quiero. A mi familia: gracias por su amor incondicional, su apoyo y por siempre creer en mí. Son mi base y mi mayor bendición.",
+  },
+};
+
 // Diccionario centralizado de los 8+ Demos del Sistema
 export const ALL_SYSTEM_DEMOS: Record<string, InvitationData> = {
   "mariposas-xv": DEMO_BUTTERFLY,
@@ -539,6 +593,8 @@ export const ALL_SYSTEM_DEMOS: Record<string, InvitationData> = {
   "blush-princess": DEMO_BLUSH,
   "era-pink-xv": DEMO_ERA,
   "miss-15-xv": DEMO_MISS15,
+  "baby-blue-xv": DEMO_BABY_BLUE,
+  "baby-blue": DEMO_BABY_BLUE,
   "miss-15": DEMO_MISS15,
   "quince-era-pink": DEMO_ERA,
   "isabella-xv": DEMO_ISABELLA,

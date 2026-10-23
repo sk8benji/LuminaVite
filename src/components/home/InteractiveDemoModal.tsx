@@ -28,6 +28,13 @@ const DEMO_ITEMS: DemoItem[] = [
     icon: "🦋",
   },
   {
+    slug: "baby-blue-xv",
+    title: "Baby Blue - Azul Bebé y Plata",
+    shortTitle: "Baby Blue",
+    category: "XV Años & Gala",
+    icon: "🦋",
+  },
+  {
     slug: "miss-15-xv",
     title: "Miss 15 Años - Crema y Cobre",
     shortTitle: "Miss 15",

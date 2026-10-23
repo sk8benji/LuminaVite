@@ -54,6 +54,18 @@ export const TEMPLATE_CATALOG: TemplatePickerItem[] = [
     destacada: true,
   },
   {
+    id: "BABY_BLUE",
+    name: "Baby Blue (Azul Bebé y Plata)",
+    categoria: "QUINCEANERA",
+    badgeLabel: "Nuevo - Replica Canva",
+    thumbnail: "/assets/template-baby-blue/foto-gazebo.webp",
+    description: "Replica del Baby Blue Quinceañera de Studio Eburnean: portada con sobre azul y paloma, marco ovalo de plata, cuenta regresiva azul marino, postal de la misa, programa, wish list, carta, contacto y preguntas frecuentes.",
+    demoSlug: "baby-blue-xv",
+    dots: ["#FDFCF8", "#A9C8E2", "#2E5A88"],
+    features: ["Portada con Sobre", "Marco de Plata", "Postal de la Misa", "Carta y FAQ"],
+    destacada: true,
+  },
+  {
     id: "MISS_15",
     name: "Miss 15 Años (Crema y Cobre)",
     categoria: "QUINCEANERA",

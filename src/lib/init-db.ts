@@ -15,7 +15,7 @@ export async function ensurePostgresTables(): Promise<boolean> {
       END $$;`,
 
       `DO $$ BEGIN
-        CREATE TYPE "EstiloPlantilla" AS ENUM ('QUINCE_ROSADO', 'PRINCESA_ROSA', 'ELEGANT_ROSE', 'FAIRYTALE_CHATEAU', 'BLUE_BUTTERFLY', 'CORALINE_MYSTICAL', 'CLASICA_IMPERIAL', 'ESMERALDA_ROYAL', 'JARDIN_BOTANICA', 'MINIMALISTA_EDITORIAL', 'BLUSH_PRINCESS', 'QUINCE_ERA_PINK', 'MISS_15');
+        CREATE TYPE "EstiloPlantilla" AS ENUM ('QUINCE_ROSADO', 'PRINCESA_ROSA', 'ELEGANT_ROSE', 'FAIRYTALE_CHATEAU', 'BLUE_BUTTERFLY', 'CORALINE_MYSTICAL', 'CLASICA_IMPERIAL', 'ESMERALDA_ROYAL', 'JARDIN_BOTANICA', 'MINIMALISTA_EDITORIAL', 'BLUSH_PRINCESS', 'QUINCE_ERA_PINK', 'MISS_15', 'BABY_BLUE');
       EXCEPTION WHEN duplicate_object THEN null;
       END $$;`,
 
@@ -36,6 +36,11 @@ export async function ensurePostgresTables(): Promise<boolean> {
 
       `DO $$ BEGIN
         ALTER TYPE "EstiloPlantilla" ADD VALUE IF NOT EXISTS 'MISS_15';
+      EXCEPTION WHEN duplicate_object THEN null;
+      END $$;`,
+
+      `DO $$ BEGIN
+        ALTER TYPE "EstiloPlantilla" ADD VALUE IF NOT EXISTS 'BABY_BLUE';
       EXCEPTION WHEN duplicate_object THEN null;
       END $$;`,
 

@@ -7,6 +7,7 @@ export type TemplateId =
   | "BLUSH_PRINCESS"
   | "QUINCE_ERA_PINK"
   | "MISS_15"
+  | "BABY_BLUE"
   | "CORALINE_MYSTICAL"
   | "CLASICA_IMPERIAL"
   | "ESMERALDA_ROYAL"
@@ -137,6 +138,26 @@ export const TEMPLATES: Record<TemplateId, TemplateConfig> = {
     ribbonGradient: "from-rose-200 via-amber-100 to-rose-300",
     badgeBg: "#FDF3F5",
     description: "Replica blush y oro del sitio Canva de CouCou Printables: sobre con mono de seda y sello de corona, monograma en marco barroco, fotos Then/Now, corte de honor completa y RSVP bilingue.",
+  },
+  BABY_BLUE: {
+    id: "BABY_BLUE",
+    name: "Baby Blue (Canva T7)",
+    category: "QUINCEANERA",
+    bgColor: "#FDFCF8",
+    cardBg: "#FFFFFF",
+    textPrimary: "#22344A",
+    textSecondary: "#2E5A88",
+    accentColor: "#5B8DB8",
+    accentSoft: "#EEF4FA",
+    borderSoft: "#D6E6F2",
+    buttonBg: "#2E5A88",
+    buttonText: "#FFFFFF",
+    fontHeading: "'Alex Brush', cursive",
+    fontSubheading: "'Playfair Display', serif",
+    fontBody: "'Montserrat', sans-serif",
+    ribbonGradient: "from-sky-100 via-blue-50 to-sky-200",
+    badgeBg: "#EEF4FA",
+    description: "Replica del Baby Blue Quinceañera de Studio Eburnean: portada con sobre azul y paloma, marco ovalo de plata, cuenta regresiva azul marino, postal de la misa con castillo, programa, wish list, carta, contacto y FAQ.",
   },
   MISS_15: {
     id: "MISS_15",

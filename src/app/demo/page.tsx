@@ -18,6 +18,14 @@ const DEMO_CARDS = [
     image: "/assets/template-butterfly/foto-columpio-portada.webp",
   },
   {
+    slug: "baby-blue-xv",
+    title: "Baby Blue - Azul Bebé y Plata",
+    category: "XV Años & Gala",
+    desc: "Portada con sobre azul y paloma, marco ovalo de plata con foto, cuenta regresiva azul marino, postal de la misa, carta y preguntas frecuentes.",
+    image: "/assets/template-baby-blue/foto-gazebo.webp",
+    badge: "Baby Blue T7",
+  },
+  {
     slug: "miss-15-xv",
     title: "Miss 15 Años - Crema y Cobre",
     category: "XV Años & Gala",

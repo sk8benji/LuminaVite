@@ -45,6 +45,7 @@ enum EstiloPlantilla {
   BLUSH_PRINCESS          // T5: Blush Princess (Réplica Canva CouCou Printables, rosa y oro)
   QUINCE_ERA_PINK         // T6: Quince Era Pink (Réplica Canva The Hanger PH, rosa pastel)
   MISS_15                 // T8: Miss 15 Años (Réplica Canva, crema y cobre)
+  BABY_BLUE               // T7: Baby Blue (Réplica Canva Studio Eburnean, azul bebé y plata)
 }
 
 enum RolUsuario {

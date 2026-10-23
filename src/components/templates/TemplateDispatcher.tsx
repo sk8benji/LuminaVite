@@ -8,6 +8,7 @@ import BlueButterflyTemplate from "./BlueButterflyTemplate";
 import BlushPrincessTemplate from "./BlushPrincessTemplate";
 import QuinceEraPinkTemplate from "./QuinceEraPinkTemplate";
 import Miss15Template from "./Miss15Template";
+import BabyBlueTemplate from "./BabyBlueTemplate";
 import CoralineThemedTemplate from "./CoralineThemedTemplate";
 import QuinceRosadoTemplate from "./QuinceRosadoTemplate";
 
@@ -27,6 +28,8 @@ export default function TemplateDispatcher({
       return <FairytaleWeddingTemplate data={data} skipIntro={skipIntro} />;
     case "BLUE_BUTTERFLY":
       return <BlueButterflyTemplate data={data} skipIntro={skipIntro} />;
+    case "BABY_BLUE":
+      return <BabyBlueTemplate data={data} skipIntro={skipIntro} />;
     case "MISS_15":
       return <Miss15Template data={data} skipIntro={skipIntro} />;
     case "QUINCE_ERA_PINK":
