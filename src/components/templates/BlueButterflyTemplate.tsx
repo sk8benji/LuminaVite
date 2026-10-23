@@ -459,7 +459,7 @@ export default function BlueButterflyTemplate({
               id="innerCard"
               className={`absolute left-4 right-4 top-4 bottom-4 bg-[#FFFEFC] rounded-xl p-5 flex flex-col items-center justify-center text-center transform border border-[#D8B772]/60 transition-[transform,box-shadow] duration-[900ms] [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] ${
                 isLetterOut
-                  ? "-translate-y-20 sm:-translate-y-32 md:-translate-y-36 lg:-translate-y-44 scale-[1.02] z-25 shadow-2xl"
+                  ? "-translate-y-28 sm:-translate-y-40 md:-translate-y-44 lg:-translate-y-52 scale-[0.95] z-25 shadow-2xl"
                   : "z-10 translate-y-0 shadow-lg"
               }`}
             >
@@ -485,8 +485,10 @@ export default function BlueButterflyTemplate({
                 con crossfade breve al abrir (sin corte seco). El conjunto
                 reacciona mientras la carta sale: baja, se desenfoca 1px y
                 baja a 0.9 de opacidad (profundidad). El bolsillo es el arte
-                vertical de Abraham (800x876) con scale 1.28 en su <img> para
-                igualar el ancho visible del sobre cerrado (5:4) */}
+                de Abraham estilo cerrado (800x887) con scale 1.38 en su <img>
+                para igualar el ancho visible del sobre cerrado (5:4); la
+                carta termina en scale 0.95 y subida extra (feedback de
+                Abraham 2026-10-22: el papel se veia grande y bajo) */}
             <div
               className={`absolute inset-0 z-20 pointer-events-none transition-transform duration-[900ms] [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] ${
                 isLetterOut ? "translate-y-2.5" : ""
@@ -502,7 +504,7 @@ export default function BlueButterflyTemplate({
                 <img
                   src="/assets/template-butterfly/sobre-carta-base.webp"
                   alt="Bolsillo del sobre"
-                  className={`absolute inset-0 w-full h-full object-contain scale-[1.28] transition-opacity duration-200 ${
+                  className={`absolute inset-0 w-full h-full object-contain scale-[1.38] transition-opacity duration-200 ${
                     isEnvelopeOpen ? "opacity-100" : "opacity-0"
                   }`}
                 />
