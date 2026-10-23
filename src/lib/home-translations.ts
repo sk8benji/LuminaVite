@@ -160,20 +160,40 @@ export interface HomeTranslations {
     topbar: string;
     navLiveDemo: string;
     navTemplates: string;
+    navReviews: string;
     createBtn: string;
     heroEyebrow: string;
     heroSubtitle: string;
     heroCtaDemo: string;
     heroCtaPricing: string;
     heroNote: string;
+    shareLabel: string;
+    shareChannels: string[];
     strip: string[];
+    compScript: string;
+    rosterTitle: string;
+    rosterLive: string;
+    rosterConfirmed: string;
+    rosterDeclined: string;
+    rosterPending: string;
+    rosterGuest1Sub: string;
+    rosterGuest1Chip: string;
+    rosterGuest2Sub: string;
+    rosterGuest2Chip: string;
+    smsTitle: string;
+    smsFrom: string;
+    smsWhen: string;
+    smsBody: string;
+    reviewsScript: string;
+    verifiedLabel: string;
+    catalogLink: string;
     howScript: string;
     howTitle: string;
     steps: { title: string; line1: string; line2: string }[];
     tplScript: string;
     tplTitle: string;
     tplViewDemo: string;
-    tplCards: { name: string; desc: string; image: string; slug: string; imgPos?: string }[];
+    tplCards: { name: string; desc: string; tag: string; bullets: string[]; image: string; slug: string; imgPos?: string }[];
     pricingTitle: string;
     pricingSubtitle: string;
     pricingFavorite: string;
@@ -205,6 +225,7 @@ export const translations: Record<Language, HomeTranslations> = {
       topbar: "Los Angeles · Invitaciones digitales con RSVP por SMS · (818) 299-4882",
       navLiveDemo: "Demo en vivo",
       navTemplates: "Plantillas",
+      navReviews: "Opiniones",
       createBtn: "Crear mi invitación",
       heroEyebrow: "Invitaciones web que tus invitados sí abren",
       heroSubtitle:
@@ -212,7 +233,26 @@ export const translations: Record<Language, HomeTranslations> = {
       heroCtaDemo: "Ver la demo en vivo",
       heroCtaPricing: "Ver precios",
       heroNote: "Quinceañeras · Bodas · Cumpleaños — en inglés y español",
+      shareLabel: "Envía tu invitación por:",
+      shareChannels: ["Mensaje de Texto (SMS)", "Código QR", "Instagram / Messenger", "WhatsApp"],
       strip: ["RSVP por SMS", "Panel en vivo", "Mapas con un toque", "Música", "Cuenta regresiva"],
+      compScript: "La diferencia",
+      rosterTitle: "Panel en tu celular",
+      rosterLive: "En vivo",
+      rosterConfirmed: "Confirmados",
+      rosterDeclined: "Cancelados",
+      rosterPending: "Pendientes",
+      rosterGuest1Sub: "4 pases asignados · Mesa 7",
+      rosterGuest1Chip: "✓ Asistirán (4)",
+      rosterGuest2Sub: "2 pases asignados",
+      rosterGuest2Chip: "✕ No asisten",
+      smsTitle: "SMS recibido por invitado",
+      smsFrom: "Click & Love · Sofia & Mateo",
+      smsWhen: "SMS · Ahora",
+      smsBody: "¡Hola Familia Ramos! Confirmaron 3 pases para la Boda. Mesa #7 asignada. Tu pase y ruta GPS:",
+      reviewsScript: "Familias reales",
+      verifiedLabel: "Verificado",
+      catalogLink: "Ver el catálogo completo",
       howScript: "Así de fácil",
       howTitle: "Tú disfrutas tu evento. Nosotros hacemos la invitación.",
       steps: [
@@ -224,9 +264,33 @@ export const translations: Record<Language, HomeTranslations> = {
       tplTitle: "Cada una con su demo en vivo para probarla",
       tplViewDemo: "Ver demo",
       tplCards: [
-        { name: "Elegant Rose", desc: "Quinceañera clásica en rosa", image: "/assets/home-real/elegant-rose-real.jpg", slug: "isabella-xv", imgPos: "50% 35%" },
-        { name: "Blue Butterfly", desc: "Mariposas azules y dorado", image: "/assets/home-real/blue-butterfly-real.jpg", slug: "mariposas-xv", imgPos: "50% 20%" },
-        { name: "Esmeralda Royal", desc: "Verde esmeralda elegante", image: "/assets/home-real/esmeralda-royal-real.jpg", slug: "esmeralda-royal", imgPos: "50% 20%" },
+        {
+          name: "Elegant Rose",
+          desc: "Gala romántica en rosa empolvado con galería estilo tira de fotos y el cronograma completo de la fiesta.",
+          tag: "Alta Costura XV",
+          bullets: ["Galería interactiva tira de fotos", "Cronograma por fases", "Dress code con paleta"],
+          image: "/assets/home-real/elegant-rose-real.jpg",
+          slug: "isabella-xv",
+          imgPos: "50% 35%",
+        },
+        {
+          name: "Blue Butterfly",
+          desc: "Acuarela celeste, destellos de oro y mariposas etéreas que se mueven al tocar la pantalla.",
+          tag: "XV Años & Gala",
+          bullets: ["Sobre 3D con sello lacrado", "Pista de música de fondo", "RSVP por SMS y WhatsApp"],
+          image: "/assets/home-real/blue-butterfly-real.jpg",
+          slug: "mariposas-xv",
+          imgPos: "50% 20%",
+        },
+        {
+          name: "Esmeralda Royal",
+          desc: "Verde esmeralda y dorado real: elegancia de palacio para una quinceañera inolvidable.",
+          tag: "Esmeralda Royal",
+          bullets: ["Monograma personalizado", "Mesa de regalos Zelle/Amazon", "Google Maps en 1 clic"],
+          image: "/assets/home-real/esmeralda-royal-real.jpg",
+          slug: "esmeralda-royal",
+          imgPos: "50% 20%",
+        },
       ],
       pricingTitle: "Precios claros, sin sorpresas",
       pricingSubtitle: "Un solo pago. Nosotros hacemos todo.",
@@ -584,6 +648,7 @@ export const translations: Record<Language, HomeTranslations> = {
       topbar: "Los Angeles · Digital invitations with SMS RSVP · (818) 299-4882",
       navLiveDemo: "Live demo",
       navTemplates: "Templates",
+      navReviews: "Reviews",
       createBtn: "Create my invitation",
       heroEyebrow: "Website invitations your guests actually open",
       heroSubtitle:
@@ -591,7 +656,26 @@ export const translations: Record<Language, HomeTranslations> = {
       heroCtaDemo: "Watch the live demo",
       heroCtaPricing: "See pricing",
       heroNote: "Quinceañeras · Weddings · Birthdays — in English & Spanish",
+      shareLabel: "Share your invitation via:",
+      shareChannels: ["Text Message (SMS)", "QR Code", "Instagram / Messenger", "WhatsApp"],
       strip: ["SMS RSVP", "Live dashboard", "One-tap maps", "Music", "Countdown"],
+      compScript: "The difference",
+      rosterTitle: "Host Mobile Roster",
+      rosterLive: "Live Sync",
+      rosterConfirmed: "Confirmed",
+      rosterDeclined: "Declined",
+      rosterPending: "Pending",
+      rosterGuest1Sub: "4 assigned passes · Table 7",
+      rosterGuest1Chip: "✓ Attending (4)",
+      rosterGuest2Sub: "2 assigned passes",
+      rosterGuest2Chip: "✕ Not attending",
+      smsTitle: "Guest SMS Notification",
+      smsFrom: "Click & Love · Sofia & Mateo",
+      smsWhen: "SMS · Now",
+      smsBody: "Hi Ramos Family! 3 passes confirmed for the Wedding. Table #7 reserved. Your pass & GPS route:",
+      reviewsScript: "Real families",
+      verifiedLabel: "Verified",
+      catalogLink: "Browse the full catalog",
       howScript: "So easy",
       howTitle: "You enjoy your event. We make the invitation.",
       steps: [
@@ -603,9 +687,33 @@ export const translations: Record<Language, HomeTranslations> = {
       tplTitle: "Each one with a live demo to try",
       tplViewDemo: "View demo",
       tplCards: [
-        { name: "Elegant Rose", desc: "Classic pink quinceañera", image: "/assets/home-real/elegant-rose-real.jpg", slug: "isabella-xv", imgPos: "50% 35%" },
-        { name: "Blue Butterfly", desc: "Blue butterflies and gold", image: "/assets/home-real/blue-butterfly-real.jpg", slug: "mariposas-xv", imgPos: "50% 20%" },
-        { name: "Esmeralda Royal", desc: "Elegant emerald green", image: "/assets/home-real/esmeralda-royal-real.jpg", slug: "esmeralda-royal", imgPos: "50% 20%" },
+        {
+          name: "Elegant Rose",
+          desc: "Romantic blush-pink gala with a filmstrip photo gallery and the full party timeline built in.",
+          tag: "Haute Couture XV",
+          bullets: ["Interactive filmstrip timeline", "Phased itinerary", "Dress code palette"],
+          image: "/assets/home-real/elegant-rose-real.jpg",
+          slug: "isabella-xv",
+          imgPos: "50% 35%",
+        },
+        {
+          name: "Blue Butterfly",
+          desc: "Sky watercolor, gold foil accents, and ethereal butterflies that animate on touch.",
+          tag: "Quinceañera & Gala",
+          bullets: ["3D envelope with wax seal", "Background audio track", "WhatsApp & SMS RSVP"],
+          image: "/assets/home-real/blue-butterfly-real.jpg",
+          slug: "mariposas-xv",
+          imgPos: "50% 20%",
+        },
+        {
+          name: "Esmeralda Royal",
+          desc: "Emerald green and royal gold: palace-level elegance for an unforgettable quinceañera.",
+          tag: "Royal Emerald",
+          bullets: ["Custom monogram", "Zelle/Amazon gift registry", "1-Tap Google Maps GPS"],
+          image: "/assets/home-real/esmeralda-royal-real.jpg",
+          slug: "esmeralda-royal",
+          imgPos: "50% 20%",
+        },
       ],
       pricingTitle: "Clear pricing, no surprises",
       pricingSubtitle: "One single payment. We do everything.",
