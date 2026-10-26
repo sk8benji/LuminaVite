@@ -302,8 +302,11 @@ export default function DashboardPage() {
   const ordenesPagadas = ordenes.filter(esPagada);
   const ordenesNuevas = ordenesPagadas.filter((o) => o.estadoPedido === "NUEVO" || !o.estadoPedido).length;
   const ordenesEnDiseno = ordenesPagadas.filter((o) => o.estadoPedido === "EN_DISENO").length;
+  // Carrito abandonado: solo intentos CON algún dato de contacto. Sin nombre, email ni
+  // teléfono no se muestra (esos intentos vacíos, como pruebas, quedan fuera de la lista).
+  const tieneDatos = (o: OrderData) => Boolean(o.nombreCliente || o.emailCliente || o.telefonoCliente);
   const ordenesAbandonadas = ordenes
-    .filter((o) => o.estadoPago === "PENDIENTE" || o.estadoPago === "FALLIDO")
+    .filter((o) => (o.estadoPago === "PENDIENTE" || o.estadoPago === "FALLIDO") && tieneDatos(o))
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
   const ordenesFiltradas = ordenes.filter((o) => {
@@ -721,8 +724,9 @@ export default function DashboardPage() {
             <div>
               <h1 className="text-2xl font-bold text-stone-900">Carrito abandonado</h1>
               <p className="text-xs text-stone-500 mt-1">
-                Intentos de compra que no se completaron. Solo datos y fecha, sin acciones. La lista principal
-                muestra únicamente órdenes pagadas.
+                Intentos de compra que no se completaron y dejaron algún dato de contacto. Solo datos y fecha,
+                sin acciones. Los intentos sin ningún dato no se muestran. La lista principal muestra únicamente
+                órdenes pagadas.
               </p>
             </div>
             {ordenesAbandonadas.length === 0 ? (
