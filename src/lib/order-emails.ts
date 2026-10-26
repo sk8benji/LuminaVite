@@ -24,12 +24,11 @@ export async function sendCustomerOrderConfirmationEmail(
     return { success: false, error: "No email specified for customer" };
   }
 
-  const subject = `✨ ¡Bienvenido a Click and love! Confirmación de Pedido #${order.id.slice(-6).toUpperCase()}`;
+  const subject = `✨ Welcome to Click and love! Order Confirmation #${order.id.slice(-6).toUpperCase()}`;
 
   const thankYouUrl = `${siteUrl}/gracias?session_id=${order.stripeSessionId}`;
-  const whatsappUrl = `https://wa.me/18181234567?text=${encodeURIComponent(
-    `Hola Click and love! Acabo de comprar el paquete ${order.paqueteNombre} (Orden #${order.id.slice(-6).toUpperCase()}) y me gustaría coordinar los detalles de mi evento.`
-  )}`;
+  const teamPhoneDisplay = "(818) 299-4482";
+  const teamPhoneTel = "+18182994482";
 
   const htmlBody = `
 <!DOCTYPE html>
@@ -62,54 +61,54 @@ export async function sendCustomerOrderConfirmationEmail(
       <div class="tagline">Editorial Luxury Digital Invitations</div>
     </div>
     <div class="content">
-      <div class="greeting">¡Felicidades${order.nombreCliente ? `, ${order.nombreCliente}` : ""}!</div>
+      <div class="greeting">Congratulations${order.nombreCliente ? `, ${order.nombreCliente}` : ""}!</div>
       <p style="font-size: 15px; line-height: 1.6; color: #5E534C; margin: 0 0 20px 0;">
-        Tu pago ha sido procesado con éxito. Hemos reservado tu diseño y nuestro equipo de Concierge ya tiene todo listo para comenzar a crear tu invitación de ensueño.
+        Your payment has been processed successfully. We have reserved your design and our team already has everything ready to start creating your dream invitation.
       </p>
 
       <div class="order-box">
         <div style="margin-bottom: 12px;">
-          <span class="badge">Orden Confirmada</span>
+          <span class="badge">Order Confirmed</span>
         </div>
         <div class="order-row">
-          <span>Paquete adquirido:</span>
+          <span>Package:</span>
           <strong>${order.paqueteNombre}</strong>
         </div>
         <div class="order-row">
-          <span>Número de Orden:</span>
+          <span>Order Number:</span>
           <span>#${order.id.slice(-6).toUpperCase()}</span>
         </div>
         ${order.tipoEvento ? `
         <div class="order-row">
-          <span>Tipo de Evento:</span>
+          <span>Event Type:</span>
           <span>${order.tipoEvento}</span>
         </div>` : ""}
         ${order.fechaEvento ? `
         <div class="order-row">
-          <span>Fecha estimada:</span>
-          <span>${new Date(order.fechaEvento).toLocaleDateString("es-ES", { day: "numeric", month: "long", year: "numeric" })}</span>
+          <span>Estimated Date:</span>
+          <span>${new Date(order.fechaEvento).toLocaleDateString("en-US", { day: "numeric", month: "long", year: "numeric" })}</span>
         </div>` : ""}
         <div class="order-row">
-          <span>Total Pagado:</span>
+          <span>Total Paid:</span>
           <span>$${order.montoTotal.toFixed(2)} USD</span>
         </div>
       </div>
 
       <div class="concierge-card">
-        <h4 style="margin: 0 0 8px 0; color: #2C1F1B; font-size: 15px;">¿Qué ocurre ahora? (Cero estrés)</h4>
+        <h4 style="margin: 0 0 8px 0; color: #2C1F1B; font-size: 15px;">What happens now? (Zero stress)</h4>
         <p style="margin: 0; font-size: 13px; color: #5E534C; line-height: 1.6;">
-          No te preocupes si aún no tienes todas las fotos o la lista de chambelanes/padrinos lista. Nos pondremos en contacto contigo por WhatsApp para que nos envíes tus archivos a tu propio ritmo.
+          Don&apos;t worry if you don&apos;t have all your photos or your court list ready yet. Our team will contact you shortly so you can send us your files at your own pace.
         </p>
       </div>
 
       <div style="text-align: center; margin: 30px 0 10px 0;">
-        <a href="${thankYouUrl}" class="btn">Ver Mi Orden & Detalles</a>
-        <a href="${whatsappUrl}" class="btn-outline">Escribir por WhatsApp</a>
+        <a href="${thankYouUrl}" class="btn">View My Order & Details</a>
+        <a href="tel:${teamPhoneTel}" class="btn-outline">Call Our Team: ${teamPhoneDisplay}</a>
       </div>
     </div>
     <div class="footer">
-      <p style="margin: 0;">Click and love • Todos los derechos reservados.</p>
-      <p style="margin: 6px 0 0 0;">Si tienes preguntas inmediatas, contáctanos a soporte@clickandlove.app</p>
+      <p style="margin: 0;">Click and love • All rights reserved.</p>
+      <p style="margin: 6px 0 0 0;">Prefer to talk to our team? Call us at ${teamPhoneDisplay}.</p>
     </div>
   </div>
 </body>
@@ -134,7 +133,7 @@ export async function sendCustomerOrderConfirmationEmail(
         Body: {
           Html: { Data: htmlBody, Charset: "UTF-8" },
           Text: {
-            Data: `¡Felicidades! Tu compra de ${order.paqueteNombre} ($${order.montoTotal} USD) en Click and love ha sido confirmada.\nNúmero de orden: #${order.id.slice(-6).toUpperCase()}.\nVer detalles: ${thankYouUrl}`,
+            Data: `Congratulations! Your purchase of ${order.paqueteNombre} ($${order.montoTotal} USD) at Click and love has been confirmed.\nOrder number: #${order.id.slice(-6).toUpperCase()}.\nOur team will contact you shortly. Prefer to talk to our team? Call us at ${teamPhoneDisplay}.\nView details: ${thankYouUrl}`,
             Charset: "UTF-8",
           },
         },
@@ -161,14 +160,6 @@ export async function sendAdminOrderAlertEmail(
   const adminEmail = process.env.ADMIN_NOTIFICATION_EMAIL || fromEmail;
 
   const subject = `🚨 ¡NUEVA VENTA! $${order.montoTotal} USD • ${order.paqueteNombre} • ${order.nombreCliente || order.emailCliente}`;
-
-  // WhatsApp directo al cliente para empezar a chatear con un click
-  const clientWhatsappRaw = (order.telefonoCliente || "").replace(/\D/g, "");
-  const whatsappChatUrl = clientWhatsappRaw
-    ? `https://wa.me/${clientWhatsappRaw}?text=${encodeURIComponent(
-        `Hola ${order.nombreCliente || ""}! Te saluda el equipo de Click and love. Muchas gracias por adquirir tu paquete ${order.paqueteNombre}. Estoy a tu disposición para comenzar el diseño de tu invitación.`
-      )}`
-    : null;
 
   const adminDashboardUrl = `${siteUrl}/dashboard`;
 
@@ -212,7 +203,7 @@ export async function sendAdminOrderAlertEmail(
           <td class="val"><a href="mailto:${order.emailCliente}">${order.emailCliente}</a></td>
         </tr>
         <tr>
-          <td class="label">Teléfono / WhatsApp:</td>
+          <td class="label">Teléfono:</td>
           <td class="val">${order.telefonoCliente || "No indicado aún"}</td>
         </tr>
         <tr>
@@ -238,11 +229,6 @@ export async function sendAdminOrderAlertEmail(
       </table>
 
       <div style="text-align: center; margin-top: 25px;">
-        ${
-          whatsappChatUrl
-            ? `<a href="${whatsappChatUrl}" class="btn">Abrir WhatsApp del Cliente</a>`
-            : ""
-        }
         <a href="${adminDashboardUrl}" class="btn-admin">Ver en Panel Admin</a>
       </div>
     </div>
