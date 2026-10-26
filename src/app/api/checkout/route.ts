@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
               product_data: {
                 name: `Click and love - Paquete ${pkg.name}`,
                 description: pkg.description,
-                images: ["https://clickandlove.app/assets/template-era-pink/foto-retrato.webp"],
+                images: pkg.image ? [pkg.image] : [],
               },
               unit_amount: Math.round(pkg.price * 100),
             },

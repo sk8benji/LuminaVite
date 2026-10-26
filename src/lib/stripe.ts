@@ -6,6 +6,7 @@ export interface PackagePlan {
   price: number; // en dólares
   currency: string;
   description: string;
+  image?: string;
   badge: string;
   features: string[];
 }
@@ -17,6 +18,7 @@ export const PACKAGES: Record<string, PackagePlan> = {
     price: 99,
     currency: "usd",
     description: "Full setup by our team, 200 interactive SMS, GPS directions with Waze/Maps button, and virtual envelope with music.",
+    image: "https://clickandlove.app/assets/template-era-pink/foto-retrato.webp",
     badge: "El Estándar • Listo para Compartir",
     features: [
       "Configuración completa por nuestro equipo",
@@ -34,6 +36,7 @@ export const PACKAGES: Record<string, PackagePlan> = {
     price: 199,
     currency: "usd",
     description: "Zero hassle. Everything in Digital Asistido, plus photo retouching, 350 SMS, QR design, and priority support.",
+    image: "https://clickandlove.app/assets/template-era-pink/foto-sentada.webp",
     badge: "Recomendado • Quinceañeras & Bodas",
     features: [
       "Todo lo del Digital Asistido",
@@ -50,6 +53,7 @@ export const PACKAGES: Record<string, PackagePlan> = {
     price: 99,
     currency: "usd",
     description: "Full setup by our team, 200 interactive SMS, GPS directions with Waze/Maps button, and virtual envelope with music.",
+    image: "https://clickandlove.app/assets/template-era-pink/foto-retrato.webp",
     badge: "El Estándar • Listo para Compartir",
     features: [],
   },
@@ -59,6 +63,7 @@ export const PACKAGES: Record<string, PackagePlan> = {
     price: 199,
     currency: "usd",
     description: "Zero hassle. Everything in Digital Asistido, plus photo retouching, 350 SMS, QR design, and priority support.",
+    image: "https://clickandlove.app/assets/template-era-pink/foto-sentada.webp",
     badge: "Recomendado • Quinceañeras & Bodas",
     features: [],
   },
@@ -68,6 +73,7 @@ export const PACKAGES: Record<string, PackagePlan> = {
     price: 199,
     currency: "usd",
     description: "Zero hassle. Everything in Digital Asistido, plus photo retouching, 350 SMS, QR design, and priority support.",
+    image: "https://clickandlove.app/assets/template-era-pink/foto-sentada.webp",
     badge: "Recomendado • Quinceañeras & Bodas",
     features: [],
   },
