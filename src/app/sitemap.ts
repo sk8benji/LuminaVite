@@ -36,6 +36,26 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified,
       changeFrequency: "weekly",
       priority: 0.8,
+      alternates: {
+        languages: {
+          en: `${baseUrl}/demo`,
+          es: `${baseUrl}/es/demo`,
+          "x-default": `${baseUrl}/demo`,
+        },
+      },
+    },
+    {
+      url: `${baseUrl}/es/demo`,
+      lastModified,
+      changeFrequency: "weekly",
+      priority: 0.8,
+      alternates: {
+        languages: {
+          en: `${baseUrl}/demo`,
+          es: `${baseUrl}/es/demo`,
+          "x-default": `${baseUrl}/demo`,
+        },
+      },
     },
   ];
 }

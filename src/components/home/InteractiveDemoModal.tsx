@@ -241,7 +241,7 @@ export default function InteractiveDemoModal({
             {/* Enlace al Catálogo Completo */}
             <div>
               <a
-                href="/demo"
+                href={lang === "es" ? "/es/demo" : "/demo"}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-[11px] font-['Cinzel'] text-[#8C6D2D] hover:text-[#2C1F1B] font-bold flex items-center gap-1 transition-colors"

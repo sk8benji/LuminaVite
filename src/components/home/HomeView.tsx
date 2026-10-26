@@ -488,7 +488,7 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
           </div>
           <div className="text-center mt-10">
             <Link
-              href="/demo"
+              href={lang === "es" ? "/es/demo" : "/demo"}
               className="inline-flex items-center gap-2 font-['Montserrat'] font-bold text-sm text-[#7A002A] hover:text-[#B08D3C] transition"
             >
               {b.catalogLink}
