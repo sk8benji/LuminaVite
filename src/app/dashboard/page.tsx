@@ -16,6 +16,7 @@ import {
   Edit3,
   LogOut,
   ShoppingBag,
+  ShoppingCart,
   DollarSign,
   Phone,
   Mail,
@@ -52,7 +53,7 @@ interface EventoItem {
 }
 
 export default function DashboardPage() {
-  const [activeTab, setActiveTab] = useState<"eventos" | "ordenes" | "templates" | "qr">("ordenes");
+  const [activeTab, setActiveTab] = useState<"eventos" | "ordenes" | "templates" | "qr" | "abandonados">("ordenes");
   const [eventos, setEventos] = useState<EventoItem[]>([]);
   const [ordenes, setOrdenes] = useState<OrderData[]>([]);
   const [loading, setLoading] = useState(true);
@@ -296,10 +297,17 @@ export default function DashboardPage() {
   const totalIngresos = ordenes
     .filter((o) => o.estadoPago === "PAGADO")
     .reduce((acc, curr) => acc + curr.montoTotal, 0);
-  const ordenesNuevas = ordenes.filter((o) => o.estadoPedido === "NUEVO" || !o.estadoPedido).length;
-  const ordenesEnDiseno = ordenes.filter((o) => o.estadoPedido === "EN_DISENO").length;
+  // Lista principal: SOLO órdenes pagadas. Los intentos sin pago van a "Carrito abandonado".
+  const esPagada = (o: OrderData) => o.estadoPago === "PAGADO" || o.estadoPago === "REEMBOLSADO";
+  const ordenesPagadas = ordenes.filter(esPagada);
+  const ordenesNuevas = ordenesPagadas.filter((o) => o.estadoPedido === "NUEVO" || !o.estadoPedido).length;
+  const ordenesEnDiseno = ordenesPagadas.filter((o) => o.estadoPedido === "EN_DISENO").length;
+  const ordenesAbandonadas = ordenes
+    .filter((o) => o.estadoPago === "PENDIENTE" || o.estadoPago === "FALLIDO")
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
   const ordenesFiltradas = ordenes.filter((o) => {
+    if (!esPagada(o)) return false;
     if (filtroEstado !== "TODOS" && o.estadoPedido !== filtroEstado) return false;
     if (busquedaOrdenes) {
       const q = busquedaOrdenes.toLowerCase();
@@ -343,9 +351,26 @@ export default function DashboardPage() {
           >
             <ShoppingBag className="w-3.5 h-3.5" />
             <span>Compradores & Ventas</span>
-            {ordenes.length > 0 && (
+            {ordenesPagadas.length > 0 && (
               <span className="ml-0.5 px-1.5 py-0.2 rounded-full bg-[#7A002A] text-white text-[10px]">
-                {ordenes.length}
+                {ordenesPagadas.length}
+              </span>
+            )}
+          </button>
+
+          <button
+            onClick={() => setActiveTab("abandonados")}
+            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg transition cursor-pointer ${
+              activeTab === "abandonados"
+                ? "bg-white text-[#7A002A] shadow-xs font-bold"
+                : "text-stone-600 hover:text-stone-900"
+            }`}
+          >
+            <ShoppingCart className="w-3.5 h-3.5" />
+            <span>Carrito abandonado</span>
+            {ordenesAbandonadas.length > 0 && (
+              <span className="ml-0.5 px-1.5 py-0.2 rounded-full bg-stone-500 text-white text-[10px]">
+                {ordenesAbandonadas.length}
               </span>
             )}
           </button>
@@ -453,7 +478,7 @@ export default function DashboardPage() {
                       Órdenes Pagadas
                     </p>
                     <p className="text-2xl font-bold text-stone-900 mt-1">
-                      {ordenes.filter((o) => o.estadoPago === "PAGADO").length}
+                      {ordenesPagadas.length}
                     </p>
                   </div>
                   <div className="p-3 bg-emerald-50 text-emerald-600 rounded-xl">
@@ -683,6 +708,63 @@ export default function DashboardPage() {
                     </div>
                   );
                 })}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* ============================================================== */}
+        {/* VISTA: CARRITO ABANDONADO (intentos sin pago: solo datos y fecha) */}
+        {/* ============================================================== */}
+        {activeTab === "abandonados" && (
+          <div className="space-y-6">
+            <div>
+              <h1 className="text-2xl font-bold text-stone-900">Carrito abandonado</h1>
+              <p className="text-xs text-stone-500 mt-1">
+                Intentos de compra que no se completaron. Solo datos y fecha, sin acciones. La lista principal
+                muestra únicamente órdenes pagadas.
+              </p>
+            </div>
+            {ordenesAbandonadas.length === 0 ? (
+              <div className="bg-white rounded-3xl border border-stone-200 p-12 text-center">
+                <ShoppingCart className="w-12 h-12 text-stone-300 mx-auto mb-3" />
+                <h3 className="text-base font-bold text-stone-800">No hay carritos abandonados</h3>
+                <p className="text-xs text-stone-500 mt-1">
+                  Cuando alguien inicie un pago y no lo complete, aparecerá aquí.
+                </p>
+              </div>
+            ) : (
+              <div className="bg-white rounded-2xl border border-stone-200 shadow-xs overflow-x-auto">
+                <table className="w-full text-xs">
+                  <thead>
+                    <tr className="text-left text-[10px] uppercase tracking-wider text-stone-400 border-b border-stone-100">
+                      <th className="px-4 py-3 font-semibold">Fecha</th>
+                      <th className="px-4 py-3 font-semibold">Cliente</th>
+                      <th className="px-4 py-3 font-semibold">Email</th>
+                      <th className="px-4 py-3 font-semibold">Teléfono</th>
+                      <th className="px-4 py-3 font-semibold">Paquete</th>
+                      <th className="px-4 py-3 font-semibold">Monto</th>
+                      <th className="px-4 py-3 font-semibold">Orden</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {ordenesAbandonadas.map((o) => (
+                      <tr key={o.id} className="border-b border-stone-100 last:border-0">
+                        <td className="px-4 py-3 whitespace-nowrap text-stone-600">
+                          {new Date(o.createdAt).toLocaleDateString("es-ES")}
+                        </td>
+                        <td className="px-4 py-3 font-semibold text-stone-900">
+                          {o.nombreCliente || "Sin datos"}
+                        </td>
+                        <td className="px-4 py-3 text-stone-600">{o.emailCliente || "—"}</td>
+                        <td className="px-4 py-3 text-stone-600">{o.telefonoCliente || "—"}</td>
+                        <td className="px-4 py-3 text-stone-600">{o.paqueteNombre}</td>
+                        <td className="px-4 py-3 text-stone-600">${o.montoTotal} USD</td>
+                        <td className="px-4 py-3 text-stone-400">#{o.id.slice(-6).toUpperCase()}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             )}
           </div>
