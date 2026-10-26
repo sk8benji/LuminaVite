@@ -61,6 +61,7 @@ export default function DashboardPage() {
   const [copiedSlug, setCopiedSlug] = useState<string | null>(null);
   const [filtroEstado, setFiltroEstado] = useState<string>("TODOS");
   const [busquedaOrdenes, setBusquedaOrdenes] = useState<string>("");
+  const [busquedaAbandonados, setBusquedaAbandonados] = useState<string>("");
   const [actualizandoId, setActualizandoId] = useState<string | null>(null);
   // Rotación de panel key
   const [rotatingSlug, setRotatingSlug] = useState<string | null>(null);
@@ -308,6 +309,16 @@ export default function DashboardPage() {
   const ordenesAbandonadas = ordenes
     .filter((o) => (o.estadoPago === "PENDIENTE" || o.estadoPago === "FALLIDO") && tieneDatos(o))
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  const abandonadosFiltrados = ordenesAbandonadas.filter((o) => {
+    if (!busquedaAbandonados) return true;
+    const q = busquedaAbandonados.toLowerCase();
+    return (
+      (o.nombreCliente || "").toLowerCase().includes(q) ||
+      (o.emailCliente || "").toLowerCase().includes(q) ||
+      (o.telefonoCliente || "").toLowerCase().includes(q) ||
+      (o.paqueteNombre || "").toLowerCase().includes(q)
+    );
+  });
 
   const ordenesFiltradas = ordenes.filter((o) => {
     if (!esPagada(o)) return false;
@@ -729,12 +740,29 @@ export default function DashboardPage() {
                 órdenes pagadas.
               </p>
             </div>
+            <div className="bg-white p-4 rounded-2xl border border-stone-200 shadow-xs flex items-center gap-2 max-w-sm">
+              <Search className="w-4 h-4 text-stone-400" />
+              <input
+                type="text"
+                placeholder="Filtrar por cliente, email, teléfono o paquete..."
+                value={busquedaAbandonados}
+                onChange={(e) => setBusquedaAbandonados(e.target.value)}
+                className="w-full text-xs bg-transparent focus:outline-none text-stone-800"
+              />
+            </div>
             {ordenesAbandonadas.length === 0 ? (
               <div className="bg-white rounded-3xl border border-stone-200 p-12 text-center">
                 <ShoppingCart className="w-12 h-12 text-stone-300 mx-auto mb-3" />
                 <h3 className="text-base font-bold text-stone-800">No hay carritos abandonados</h3>
                 <p className="text-xs text-stone-500 mt-1">
                   Cuando alguien inicie un pago y no lo complete, aparecerá aquí.
+                </p>
+              </div>
+            ) : abandonadosFiltrados.length === 0 ? (
+              <div className="bg-white rounded-3xl border border-stone-200 p-12 text-center">
+                <h3 className="text-base font-bold text-stone-800">Sin resultados para tu búsqueda</h3>
+                <p className="text-xs text-stone-500 mt-1">
+                  Prueba con otro nombre, email, teléfono o paquete.
                 </p>
               </div>
             ) : (
@@ -752,7 +780,7 @@ export default function DashboardPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {ordenesAbandonadas.map((o) => (
+                    {abandonadosFiltrados.map((o) => (
                       <tr key={o.id} className="border-b border-stone-100 last:border-0">
                         <td className="px-4 py-3 whitespace-nowrap text-stone-600">
                           {new Date(o.createdAt).toLocaleDateString("es-ES")}
