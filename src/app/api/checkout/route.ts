@@ -32,6 +32,7 @@ export async function POST(req: NextRequest) {
           },
         ],
         mode: "payment",
+        allow_promotion_codes: true,
         billing_address_collection: "auto",
         phone_number_collection: {
           enabled: true,
