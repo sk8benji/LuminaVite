@@ -70,6 +70,16 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ received: true, ignored: "not_paid" });
     }
 
+    // Filtro espejo del de GeoStack: esta cuenta puede recibir eventos de otros
+    // productos si alguna vez vuelve a compartirse. Solo procesar sesiones que
+    // traigan paqueteId (todas las de Click and love lo traen); sin él, no se
+    // crea orden ni se mandan correos (caso inverso al de María Tapia en
+    // GeoStack, 2026-10-26). Se responde ok para que Stripe no reintente.
+    if (!(session.metadata as any)?.paqueteId) {
+      console.log(`[Stripe webhook] Sesión ${sessionId} ignorada: no es de Click and love (sin paqueteId).`);
+      return NextResponse.json({ received: true, ignored: "not_luminavite" });
+    }
+
     const existing = await getOrderBySessionId(sessionId);
     if (existing?.estadoPago === "PAGADO") {
       // Entrega duplicada del webhook: no reenviar correos
