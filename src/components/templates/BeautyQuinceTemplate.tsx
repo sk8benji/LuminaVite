@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { MapPin, Gift, Music, CalendarPlus, Sparkles } from "lucide-react";
 import { InvitationData } from "../invitation/InvitationMobileView";
 import { getTemplate } from "@/lib/templates";
@@ -60,6 +60,25 @@ export default function BeautyQuinceTemplate({
   const collageYear = eventDateObj.getFullYear();
   const collageTime =
     "AT " + eventDateObj.toLocaleTimeString("en-US", { hour: "numeric", hour12: true }).toUpperCase();
+  // Countdown del Canva: dígitos sin recuadros, sobre el fondo del palacio.
+  const [timeLeft, setTimeLeft] = useState({ days: "000", hours: "00", minutes: "00", seconds: "00" });
+  useEffect(() => {
+    const target = new Date(data.fechaEvento).getTime();
+    const tick = () => {
+      const diff = Math.max(0, target - Date.now());
+      const pad = (n: number, l = 2) => String(n).padStart(l, "0");
+      setTimeLeft({
+        days: pad(Math.floor(diff / 86400000), 3),
+        hours: pad(Math.floor(diff / 3600000) % 24),
+        minutes: pad(Math.floor(diff / 60000) % 60),
+        seconds: pad(Math.floor(diff / 1000) % 60),
+      });
+    };
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, [data.fechaEvento]);
+
   const addrParts = (data.recepcionDireccion || "123 Forever Street, Quince City").split(",");
   const addrStreet = addrParts[0].trim().toUpperCase();
   const addrCity = (addrParts.slice(1).join(",").trim() || "Quince City").toUpperCase();
@@ -267,15 +286,43 @@ export default function BeautyQuinceTemplate({
           </div>
         </section>
 
-        {/* Fotos: vestido y arreglo */}
-        <section className="px-6 py-8 text-center">
-          <h2 className="font-script text-5xl text-[#A6192E]">{isEn ? "A Dream Come True" : "Un Sueño Hecho Realidad"}</h2>
-          <div className="grid grid-cols-2 gap-3 mt-5">
-            <img src={fotoVestido} alt="Vestido" className="w-full h-56 object-cover rounded-2xl shadow bg-transparent" />
-            <img src={fotoArreglo} alt="Arreglo" className="w-full h-56 object-cover rounded-2xl shadow bg-transparent" />
+        {/* Countdown integrado en imagen de fondo: se quita la sección
+            beige con tarjetas y vestido/carroza sueltos. Fondo palacio
+            (puertas-palacio: columnas doradas, paneles azules, candil),
+            título COUNTDOWN TO party y dígitos sin recuadros blancos,
+            foto de preparación con corte rasgado, base floral dorada. */}
+        <section className="relative w-full max-w-[430px] mx-auto overflow-hidden flex flex-col justify-between items-center" style={{ minHeight: "780px", padding: "50px 16px 20px", boxSizing: "border-box", background: "transparent" }}>
+          <div className="absolute inset-0 z-[1]">
+            <img src={A.puertasPalacio} alt="Fondo de palacio" className="w-full h-full object-cover bg-transparent" style={{ background: "transparent" }} />
           </div>
-          <img src={A.vestidoBella} alt="Vestido Bella" className="w-40 h-40 object-contain mx-auto mt-4 bg-transparent" />
-          <img src={A.carroza} alt="Carroza" className="w-48 h-48 object-contain mx-auto -mt-2 bg-transparent" />
+          <div className="relative z-[3] w-full text-center" style={{ marginBottom: "20px", background: "transparent" }}>
+            <div className="flex items-baseline justify-center" style={{ gap: "10px", marginBottom: "12px" }}>
+              <span className="font-serif-roman font-bold" style={{ fontSize: "1.15rem", letterSpacing: "0.3em", color: "#1a365d" }}>COUNTDOWN TO</span>
+              <span className="font-script" style={{ fontSize: "2.8rem", color: "#1e3a8a", lineHeight: 0.8 }}>party</span>
+            </div>
+            <div className="inline-flex items-start justify-center" style={{ gap: "8px", background: "transparent", padding: 0, margin: "0 auto" }}>
+              {[
+                { v: timeLeft.days, tag: "DAYS" },
+                { v: timeLeft.hours, tag: "HOURS" },
+                { v: timeLeft.minutes, tag: "MINUTES" },
+                { v: timeLeft.seconds, tag: "SECONDS", highlight: true },
+              ].map((u, i) => (
+                <React.Fragment key={u.tag}>
+                  {i > 0 && <span className="font-serif-roman" style={{ fontSize: "1.8rem", lineHeight: 1, color: "#1e3a8a", marginTop: "2px", opacity: 0.8 }}>:</span>}
+                  <div className="flex flex-col items-center" style={{ minWidth: "44px" }}>
+                    <span className="font-serif-roman" style={{ fontSize: "2.1rem", fontWeight: 500, lineHeight: 1, color: u.highlight ? "#991b1b" : "#1e3a8a", textShadow: "0 0 12px rgba(255,255,255,0.8), 0 1px 2px rgba(0,0,0,0.2)" }}>{u.v}</span>
+                    <span className="font-serif-roman uppercase" style={{ fontSize: "0.55rem", fontWeight: 600, letterSpacing: "0.15em", color: "#2b4c7e", marginTop: "6px" }}>{u.tag}</span>
+                  </div>
+                </React.Fragment>
+              ))}
+            </div>
+          </div>
+          <div className="relative z-[2] w-[90%] mx-auto overflow-hidden" style={{ borderRadius: "12px", boxShadow: "0 8px 24px rgba(0,0,0,0.4)", background: "transparent" }}>
+            <img src={A.fotoMaquillajeRasgado} alt="Preparación Quinceañera" className="w-full h-auto block bg-transparent" style={{ background: "transparent" }} />
+          </div>
+          <div className="relative z-[3] w-full bg-transparent" style={{ marginTop: "15px", background: "transparent" }}>
+            <img src={A.baseFloralRosas} alt="Decoración floral" className="w-full h-auto block bg-transparent" style={{ background: "transparent" }} />
+          </div>
         </section>
 
         {/* Fecha y lugar */}
