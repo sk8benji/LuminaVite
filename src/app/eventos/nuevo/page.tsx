@@ -935,6 +935,7 @@ function NuevoEventoContent() {
           fotoActualUrl: esFotoDePreset(prev.fotoActualUrl) ? (preset.fotoActualUrl || prev.fotoActualUrl) : prev.fotoActualUrl,
           fotoCierreUrl: esFotoDePreset(prev.fotoCierreUrl) ? (preset.fotoCierreUrl || prev.fotoCierreUrl) : prev.fotoCierreUrl,
           musicaUrl: preset.musicaUrl || prev.musicaUrl,
+          musicaTitulo: preset.musicaTitulo || prev.musicaTitulo,
           dressCodeTitulo: preset.dressCodeTitulo || prev.dressCodeTitulo,
           dressCodeNota: preset.dressCodeNota || prev.dressCodeNota,
         };
