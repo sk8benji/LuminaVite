@@ -531,19 +531,46 @@ export default function BeautyQuinceTemplate({
           </div>
         </section>
 
-        {/* Dress code + detalles */}
+        {/* Dress Code: rosa en cúpula focal arriba, vestido a la izquierda
+            y casaca a la derecha flanqueando nota y paleta, como la
+            referencia. Las tres piezas ya son transparentes, sin fondo
+            blanco. La nota es la del requerimiento (evitar dorado
+            reservado); zapatos cómodos queda en el pie de Party Plan. */}
         {data.mostrarDressCode !== false && (
-          <section className="px-6 py-8 text-center">
-            <img src={A.trajePrincipe} alt="Traje" className="w-32 h-32 object-contain mx-auto bg-transparent" />
-            <h2 className="font-script text-5xl text-[#A6192E]">{data.dressCodeTitulo || (isEn ? "Dress Code" : "Código de Vestimenta")}</h2>
-            {data.dressCodeNota && <p className="text-sm mt-2">{isEn ? data.dressCodeNotaEn || data.dressCodeNota : data.dressCodeNota}</p>}
-            {data.coloresReservados && data.coloresReservados.length > 0 && (
-              <div className="flex justify-center gap-2 mt-3">
-                {data.coloresReservados.map((c) => (
-                  <span key={c} className="w-8 h-8 rounded-full border border-black/10 inline-block" style={{ backgroundColor: c }} />
-                ))}
+          <section className="flex flex-col items-center w-full max-w-[430px] mx-auto text-center" style={{ padding: "40px 16px 20px", boxSizing: "border-box", backgroundColor: "#faf5ea" }}>
+            <div style={{ width: "120px", height: "auto", marginBottom: "12px", filter: "drop-shadow(0 10px 15px rgba(11,23,54,0.2))" }}>
+              <img src={A.rosaCampana} alt="Rosa Encantada" className="w-full h-auto block bg-transparent" style={{ background: "transparent" }} />
+            </div>
+            <span className="font-serif-roman block font-semibold" style={{ fontSize: "0.65rem", letterSpacing: "0.35em", color: "#8c733e", marginBottom: "4px" }}>DRESS CODE</span>
+            <h2 className="font-script" style={{ fontSize: "3rem", color: "#a81c1c", margin: 0, lineHeight: 1 }}>{data.dressCodeTitulo || "Dress Code"}</h2>
+            <h4 className="font-serif-roman font-semibold" style={{ fontSize: "0.85rem", letterSpacing: "0.2em", color: "#0b1736", margin: "8px 0 16px" }}>{isEn ? "FORMAL & RIGUROSA ETIQUETA" : "FORMAL Y RIGUROSA ETIQUETA"}</h4>
+            <div className="flex items-center justify-between w-full" style={{ marginTop: "10px" }}>
+              <div style={{ width: "25%", flexShrink: 0 }}>
+                <img src={A.vestidoBella} alt="Etiqueta Damas" className="w-full h-auto block bg-transparent" style={{ background: "transparent", filter: "drop-shadow(0 8px 12px rgba(0,0,0,0.18))" }} />
               </div>
-            )}
+              <div style={{ flex: 1, padding: "0 12px" }}>
+                <p className="font-serif-roman" style={{ fontSize: "0.72rem", lineHeight: 1.6, letterSpacing: "0.05em", color: "#4a5568", margin: "0 0 16px" }}>
+                  {isEn
+                    ? "Formal gala attire. Please avoid the golden yellow tones reserved for the quinceañera."
+                    : "Vestimenta formal de gala. Se solicita evitar los tonos amarillo dorado reservados para la quinceañera."}
+                </p>
+                {data.coloresReservados && data.coloresReservados.length > 0 && (
+                  <div className="flex justify-center items-center" style={{ gap: "12px" }}>
+                    {data.coloresReservados.map((c) => (
+                      <span key={c} className="inline-block" style={{ width: "22px", height: "22px", borderRadius: "50%", backgroundColor: c, boxShadow: "0 2px 6px rgba(0,0,0,0.25)", border: "2px solid #ffffff" }} />
+                    ))}
+                  </div>
+                )}
+              </div>
+              <div style={{ width: "25%", flexShrink: 0 }}>
+                <img src={A.trajePrincipe} alt="Etiqueta Caballeros" className="w-full h-auto block bg-transparent" style={{ background: "transparent", filter: "drop-shadow(0 8px 12px rgba(0,0,0,0.18))" }} />
+              </div>
+            </div>
+            <div className="flex items-center justify-center" style={{ gap: "12px", width: "80%", margin: "35px auto 10px", opacity: 0.5 }}>
+              <span style={{ height: "1px", background: "linear-gradient(90deg, transparent, #8c733e, transparent)", flex: 1 }} />
+              <span style={{ color: "#8c733e", fontSize: "0.9rem" }}>❦</span>
+              <span style={{ height: "1px", background: "linear-gradient(90deg, transparent, #8c733e, transparent)", flex: 1 }} />
+            </div>
           </section>
         )}
 
