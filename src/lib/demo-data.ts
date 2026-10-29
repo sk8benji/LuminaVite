@@ -591,6 +591,58 @@ export const DEMO_BABY_BLUE: InvitationData = {
   },
 };
 
+// =========================================================================
+// 11. BEAUTY QUINCE (Jasmine - Replica Canva Beauty Quince Invitation)
+// Nota demo: el Canva original dice "Saturday, August 22, 20XX" (año
+// placeholder). Para que el demo tenga un sábado real, se usa el sábado
+// 21 de agosto de 2027 a las 7 PM.
+// =========================================================================
+export const DEMO_BEAUTY: InvitationData = {
+  id: "demo-beauty",
+  slug: "beauty-quince-xv",
+  tipoEvento: "QUINCEANERA",
+  estiloPlantilla: "BEAUTY_QUINCE",
+  titulo: "Jasmine",
+  subtitulo: "My Quinceañera",
+  frasePersonalizada:
+    "Fifteen candles softly glow, marking how much love you know. A touch of a woman, a heart still so sweet, the past and the future now dance at your feet.",
+  fechaEvento: new Date("2027-08-21T19:00:00-07:00"),
+  fechaTextoPersonalizada: "SATURDAY, AUGUST 21, 2027 AT 7:00 PM",
+  fotoPortadaUrl: "/assets/template-beauty-quince/foto-carroza-atardecer.webp",
+  fotoInfanciaUrl: "/assets/template-beauty-quince/foto-vestido-maniqui.webp",
+  fotoActualUrl: "/assets/template-beauty-quince/foto-maquillaje.webp",
+  fotoCierreUrl: "/assets/template-beauty-quince/arco-rosas-castillo.webp",
+  musicaUrl:
+    "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
+  musicaTitulo: "Vals Romántico en Piano",
+  telefonoWhatsappRsvp: "(323) 555-0189",
+  emailOrganizador: "hola@familiajasmine.com",
+  fechaLimiteRsvp: "May 19",
+  maxPasesPorInvitado: 4,
+  ceremoniaNombre: "St. Joseph's Cathedral",
+  ceremoniaDireccion: "123 Forever Street, Quince City",
+  ceremoniaMapUrl: "https://maps.google.com/?q=St.+Joseph%27s+Cathedral",
+  recepcionNombre: "Quince City Ballroom",
+  recepcionDireccion: "123 Forever Street, Quince City",
+  recepcionMapUrl: "https://maps.google.com/?q=123+Forever+Street+Quince+City",
+  dressCodeTitulo: "Dress Code",
+  dressCodeNota: "Vestimenta formal. Trae zapatos cómodos para bailar toda la noche.",
+  dressCodeNotaEn: "Formal attire. Bring comfy shoes to dance all night.",
+  coloresReservados: ["#0A1E4A", "#C5A059", "#A6192E"],
+  regalosMensaje:
+    "The biggest gift I could ask for is for you to join me to celebrate my quinceañera. However, if you wish to bring a present, I will be leaving a registry list here. Thank you so much!",
+  regalosMensajeEn:
+    "The biggest gift I could ask for is for you to join me to celebrate my quinceañera. However, if you wish to bring a present, I will be leaving a registry list here. Thank you so much!",
+  mesaRegalosJson: { plataformas: ["Amazon"] },
+  wishlistUrl: "https://www.amazon.com",
+  rsvpDiasAntes: 30,
+  idiomaDefault: "bilingual",
+  configPlantilla: {
+    familiaAnfitriona: "La Familia de Jasmine",
+    familiaAnfitrionaEn: "Jasmine's Family",
+  },
+};
+
 // Diccionario centralizado de los 8+ Demos del Sistema
 export const ALL_SYSTEM_DEMOS: Record<string, InvitationData> = {
   "mariposas-xv": DEMO_BUTTERFLY,
@@ -601,6 +653,8 @@ export const ALL_SYSTEM_DEMOS: Record<string, InvitationData> = {
   "miss-15-xv": DEMO_MISS15,
   "baby-blue-xv": DEMO_BABY_BLUE,
   "baby-blue": DEMO_BABY_BLUE,
+  "beauty-quince-xv": DEMO_BEAUTY,
+  "beauty-quince": DEMO_BEAUTY,
   "miss-15": DEMO_MISS15,
   "quince-era-pink": DEMO_ERA,
   "isabella-xv": DEMO_ISABELLA,

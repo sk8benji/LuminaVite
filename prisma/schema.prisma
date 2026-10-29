@@ -46,6 +46,7 @@ enum EstiloPlantilla {
   QUINCE_ERA_PINK         // T6: Quince Era Pink (Réplica Canva The Hanger PH, rosa pastel)
   MISS_15                 // T8: Miss 15 Años (Réplica Canva, crema y cobre)
   BABY_BLUE               // T7: Baby Blue (Réplica Canva Studio Eburnean, azul bebé y plata)
+  BEAUTY_QUINCE           // Beauty Quince (Réplica Canva Beauty Quince Invitation, azul/dorado/rojo)
 }
 
 enum RolUsuario {

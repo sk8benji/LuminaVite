@@ -13,6 +13,8 @@ export interface MasterTemplateItem {
   colorSobre: string;
   colorSello: string;
   fotoPortadaUrl: string;
+  /** Reemplazos de arte por pieza (solo Beauty Quince por ahora): clave -> URL S3. Sin clave, se usa el default del mapa de arte. */
+  arteBeautyQuince?: Record<string, string>;
   fotoInfanciaUrl?: string;
   fotoActualUrl?: string;
   fotoCierreUrl?: string;
@@ -287,6 +289,29 @@ export const INITIAL_MASTER_TEMPLATES: MasterTemplateItem[] = [
     fotoCierreUrl: "/assets/template-baby-blue/foto-espalda.webp",
     activo: true,
     orden: 10,
+  },
+  {
+    id: "tpl-beauty-quince",
+    slug: "beauty-quince-xv",
+    nombre: "Beauty Quince (XV Años)",
+    categoria: "QUINCEANERA",
+    estiloPlantilla: "BEAUTY_QUINCE",
+    titulo: "Jasmine",
+    subtitulo: "My Quinceañera",
+    frasePersonalizada:
+      "Fifteen candles softly glow, marking how much love you know. A touch of a woman, a heart still so sweet, the past and the future now dance at your feet.",
+    tipoLetra: "Cinzel",
+    musicaUrl:
+      "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
+    musicaTitulo: "Vals Romántico en Piano",
+    colorSobre: "#0A1E4A",
+    colorSello: "#C5A059",
+    fotoPortadaUrl: "/assets/template-beauty-quince/foto-carroza-atardecer.webp",
+    fotoInfanciaUrl: "/assets/template-beauty-quince/foto-vestido-maniqui.webp",
+    fotoActualUrl: "/assets/template-beauty-quince/foto-maquillaje.webp",
+    fotoCierreUrl: "/assets/template-beauty-quince/arco-rosas-castillo.webp",
+    activo: true,
+    orden: 15,
   },
   {
     id: "tpl-clasica",
