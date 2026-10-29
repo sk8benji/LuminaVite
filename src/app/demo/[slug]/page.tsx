@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getMergedDemo } from "@/lib/template-demo-merge";
 import TemplateDispatcher from "@/components/templates/TemplateDispatcher";
+import DemoCtaBar from "@/components/demo/DemoCtaBar";
 
 export const dynamic = "force-dynamic";
 // Sin generateStaticParams: cada demo se resuelve en request con la DB (edits del admin).
@@ -41,8 +42,10 @@ export default async function DemoPage(props: PageProps) {
   }
 
   return (
-    <div className="no-scrollbar overflow-x-hidden min-h-screen">
+    <div className="no-scrollbar overflow-x-hidden min-h-screen pb-24">
       <TemplateDispatcher data={data} />
+      {/* Barra CTA fija (Semana 2): que la demo nunca sea un callejón sin salida */}
+      <DemoCtaBar estiloPlantilla={data.estiloPlantilla} />
     </div>
   );
 }
