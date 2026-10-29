@@ -1,5 +1,17 @@
 "use client";
 
+/**
+ * FORMULARIO RSVP FIJO PARA TODAS LAS PLANTILLAS (decisión de Abraham 2026-10-29).
+ * Este componente es el formulario canónico: las plantillas nuevas lo reutilizan
+ * tal cual y NO inventan campos propios.
+ * Campos: 1) Nombre del invitado (obligatorio), 2) Asistencia Sí/No,
+ * 3) Pases (solo si asiste, tope = maxPases del evento, 0 = sin límite).
+ * Opcional por cliente (toggle permitirConfirmacionTelefono, default true):
+ * mini-sección "Confirmar por teléfono" con llamada al anfitrión.
+ * FUERA DEL FORMULARIO: nombres de acompañantes — se quitó 2026-10-29
+ * (el dato se guardaba en BD pero nunca se mostraba en el panel).
+ * El envío es por el sistema (POST /api/rsvp/save), nunca por WhatsApp.
+ */
 import React, { useState } from "react";
 import confetti from "canvas-confetti";
 import { Send, CheckCircle2, XCircle, Phone } from "lucide-react";
@@ -45,7 +57,6 @@ export default function RsvpSection({
   const [nombre, setNombre] = useState("");
   const [asistencia, setAsistencia] = useState<"SI" | "NO">("SI");
   const [pases, setPases] = useState(1);
-  const [acompanantes, setAcompanantes] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitOk, setSubmitOk] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -71,7 +82,6 @@ export default function RsvpSection({
           nombreInvitado: nombre.trim(),
           asistira: asistencia === "SI",
           pases: asistencia === "SI" ? pases : 0,
-          acompanantes,
         }),
       });
       const data = await res.json().catch(() => ({}));
@@ -409,29 +419,6 @@ export default function RsvpSection({
                 )}
               </div>
 
-              {/* What are their names? */}
-              <div>
-                <label
-                  className="block text-[11px] font-semibold uppercase tracking-wider mb-1"
-                  style={royalLabel}
-                >
-                  {isEn ? "What are their names? (Companion names)" : "¿Cómo se llaman? (Nombres de acompañantes)"}
-                </label>
-                <textarea
-                  rows={2}
-                  value={acompanantes}
-                  onChange={(e) => setAcompanantes(e.target.value)}
-                  placeholder={isEn ? "e.g. Maria and Daniel" : "ej. María y Daniel"}
-                  className="w-full px-3.5 py-2 text-xs rounded-xl border focus:outline-none resize-none"
-                  style={{
-                    ...royalInput,
-                    borderRadius: royal ? "10px" : undefined,
-                    padding: royal ? "12px 14px" : undefined,
-                    fontSize: royal ? "0.85rem" : undefined,
-                    color: template.textPrimary,
-                  }}
-                />
-              </div>
             </>
           )}
 
