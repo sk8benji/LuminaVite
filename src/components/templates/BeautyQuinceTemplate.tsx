@@ -44,7 +44,6 @@ export default function BeautyQuinceTemplate({
     data.idiomaDefault === "es" ? "es" : "en"
   );
   const isEn = currentLang === "en";
-  const isBilingual = data.idiomaDefault === "bilingual";
 
   const formattedDate =
     data.fechaTextoPersonalizada ||
@@ -77,33 +76,45 @@ export default function BeautyQuinceTemplate({
       className="min-h-screen flex justify-center antialiased"
       style={{ backgroundColor: "#0A1E4A" }}
     >
-      {/* Sobre: la portada de la invitación. Tocar el sello abre. */}
+      {/* Sobre de entrada, como el Canva: fondo cortina dorada, un solo
+          sobre y dos botones de idioma. El sobre se recorta con
+          object-cover en aspect 1.45 para quitar los márgenes blancos
+          del archivo original (el sobre real mide 1.45:1, medido
+          32..1087 x 196..922 en 1120x1120); tocar el sobre o un idioma abre. */}
       {!opened && (
-        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center px-6 text-center"
-          style={{ backgroundColor: "#0A1E4A" }}
-        >
-          <img src={A.bibliotecaDorada} alt="" className="absolute inset-0 w-full h-full object-cover opacity-30" />
-          <div className="relative">
-            <img src={A.sobreCerradoSello} alt="Sobre Beauty Quince" className="w-80 max-w-full h-auto object-contain mx-auto drop-shadow-2xl" />
+        <div className="fixed inset-0 z-50 overflow-hidden">
+          <img src={A.marcoCortinaDorada} alt="" className="absolute inset-0 w-full h-full object-cover" />
+          <div className="relative h-full w-full max-w-[440px] mx-auto flex flex-col items-center justify-center px-5 py-8 text-center">
+            <p className="font-script leading-[0.95] text-[64px]" style={{ color: "#2A2A9C" }}>
+              You are
+              <br />
+              <span className="inline-block ml-8">Invited</span>
+            </p>
             <button
               onClick={() => handleOpen()}
-              className="mt-2 px-6 py-3 rounded-full text-sm font-bold tracking-widest uppercase shadow-xl"
-              style={{ backgroundColor: "#C5A059", color: "#0A1E4A" }}
+              aria-label="Abrir la invitación"
+              className="w-full mt-10 cursor-pointer"
             >
-              {isEn ? "Tap the seal to open" : "Toca el sello para abrir"}
-            </button>
-            <p className="mt-4 text-white/90 font-script text-4xl">{data.titulo}</p>
-            <p className="text-[#E5C158] text-xs tracking-[0.25em] uppercase mt-1">
-              {data.subtitulo || "My Quinceañera"}
-            </p>
-            <p className="text-white/70 text-xs mt-2">{formattedDate}</p>
-            <img src={A.sobreAzulAbierto} alt="Sobre abierto" className="w-48 h-20 object-contain mx-auto mt-2 opacity-90" />
-            {isBilingual && (
-              <div className="mt-4 flex gap-2 justify-center">
-                <button onClick={() => handleOpen("es")} className="px-4 py-2 rounded-full border border-[#C5A059] text-[#E5C158] text-xs font-bold">Español</button>
-                <button onClick={() => handleOpen("en")} className="px-4 py-2 rounded-full border border-[#C5A059] text-[#E5C158] text-xs font-bold">English</button>
+              <div className="w-full aspect-[1.45] overflow-hidden shadow-2xl">
+                <img src={A.sobreCerradoSello} alt="Sobre Beauty Quince" className="w-full h-full object-cover object-center" />
               </div>
-            )}
+            </button>
+            <div className="mt-10 flex gap-3 justify-center">
+              <button
+                onClick={() => handleOpen("es")}
+                className="px-7 py-3 rounded-full border border-[#C5A059] text-sm font-bold tracking-wide shadow-xl"
+                style={{ backgroundColor: "#0A1E4A", color: "#E5C158" }}
+              >
+                Español
+              </button>
+              <button
+                onClick={() => handleOpen("en")}
+                className="px-7 py-3 rounded-full border border-[#C5A059] text-sm font-bold tracking-wide shadow-xl"
+                style={{ backgroundColor: "#0A1E4A", color: "#E5C158" }}
+              >
+                English
+              </button>
+            </div>
           </div>
         </div>
       )}
