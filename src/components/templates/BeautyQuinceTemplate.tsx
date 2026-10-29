@@ -37,6 +37,18 @@ export default function BeautyQuinceTemplate({
   const template = getTemplate("BEAUTY_QUINCE");
 
   const [opened, setOpened] = useState(skipIntro);
+  // Estado del reproductor, sincronizado con AudioPlayer (botón flotante)
+  // vía el evento luminavite:audio-state: el disco del hero muestra el
+  // mismo play/pause, giro y texto que el botón flotante.
+  const [isMusicPlaying, setIsMusicPlaying] = useState(false);
+  useEffect(() => {
+    const handleAudioState = (e: Event) => {
+      const detail = (e as CustomEvent).detail as { isPlaying?: boolean } | undefined;
+      if (detail && typeof detail.isPlaying === "boolean") setIsMusicPlaying(detail.isPlaying);
+    };
+    window.addEventListener("luminavite:audio-state", handleAudioState);
+    return () => window.removeEventListener("luminavite:audio-state", handleAudioState);
+  }, []);
   const [currentLang, setCurrentLang] = useState<"es" | "en">(
     data.idiomaDefault === "es" ? "es" : "en"
   );
@@ -149,6 +161,8 @@ export default function BeautyQuinceTemplate({
         }
         .envelope-wrapper { background: none !important; }
         .venue-map-card:hover iframe { filter: sepia(15%) contrast(100%) brightness(100%); }
+        .vinyl-disc-img.is-spinning { animation: spinVinyl 5s linear infinite; }
+        @keyframes spinVinyl { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         @media (prefers-color-scheme: light), (prefers-color-scheme: dark) {
           .envelope-container, .envelope-wrapper, .rose-item, .card-letter img, .envelope-container img {
             background: transparent !important;
@@ -246,20 +260,20 @@ export default function BeautyQuinceTemplate({
             <button
               onClick={() => {
                 if (typeof window !== "undefined") {
-                  window.dispatchEvent(new CustomEvent("luminavite:play-audio"));
+                  window.dispatchEvent(new CustomEvent("luminavite:toggle-audio"));
                 }
               }}
-              aria-label={isEn ? "Play music" : "Reproducir música"}
+              aria-label={isMusicPlaying ? (isEn ? "Pause music" : "Pausar música") : (isEn ? "Play music" : "Reproducir música")}
               className="mt-6 relative w-36 h-36 rounded-full overflow-hidden drop-shadow-xl cursor-pointer bg-transparent"
               style={{ background: "transparent" }}
             >
-              <img src={A.discoMusica} alt="Disco de música" className="w-full h-full object-cover bg-transparent" style={{ background: "transparent" }} />
+              <img src={A.discoMusica} alt="Disco de música" className={`vinyl-disc-img w-full h-full object-cover bg-transparent${isMusicPlaying ? " is-spinning" : ""}`} style={{ background: "transparent" }} />
               <span className="absolute inset-0 flex items-center justify-center">
-                <span className="w-12 h-12 rounded-full bg-white/85 flex items-center justify-center text-[#0A1E4A] text-xl pl-1">▶</span>
+                <span className="w-12 h-12 rounded-full bg-white/85 flex items-center justify-center text-[#0A1E4A] text-xl">{isMusicPlaying ? "❚❚" : <span className="pl-1">▶</span>}</span>
               </span>
             </button>
             <p className="text-xs font-bold tracking-[0.2em] uppercase mt-3" style={{ color: "#12265A" }}>
-              {isEn ? "Click to Play Music" : "Toca para escuchar"}
+              {isMusicPlaying ? (isEn ? "MUSIC PLAYING" : "Música sonando") : (isEn ? "Click to Play Music" : "Toca para escuchar")}
             </p>
           </div>
         </section>

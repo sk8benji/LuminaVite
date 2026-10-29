@@ -13,45 +13,56 @@ export default function AudioPlayer({ audioUrl, template }: AudioPlayerProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  // Escuchar evento de apertura del sobre 3D para iniciar música
+  // La decisión play/pause se toma con audio.paused, no con el estado,
+  // para que los listeners no queden con un cierre obsoleto.
+  const playAudio = () => {
+    if (!audioRef.current) return;
+    audioRef.current
+      .play()
+      .then(() => setIsPlaying(true))
+      .catch((err) => {
+        console.warn("Autoplay bloqueado:", err);
+        setIsPlaying(false);
+      });
+  };
+  const toggleAudio = () => {
+    if (!audioRef.current) return;
+    if (audioRef.current.paused) {
+      playAudio();
+    } else {
+      audioRef.current.pause();
+      setIsPlaying(false);
+    }
+  };
+
+  // Escuchar eventos: play-audio inicia (apertura del sobre), toggle-audio
+  // alterna (disco del hero y botón flotante comparten este estado).
   useEffect(() => {
     const handleStartAudio = () => {
-      if (audioRef.current && !isPlaying) {
-        audioRef.current
-          .play()
-          .then(() => setIsPlaying(true))
-          .catch((err) => {
-            console.warn("Autoplay bloqueado:", err);
-          });
-      }
+      if (audioRef.current && audioRef.current.paused) playAudio();
     };
+    const handleToggleAudio = () => toggleAudio();
 
     window.addEventListener("luminavite:play-audio", handleStartAudio);
+    window.addEventListener("luminavite:toggle-audio", handleToggleAudio);
     return () => {
       window.removeEventListener("luminavite:play-audio", handleStartAudio);
+      window.removeEventListener("luminavite:toggle-audio", handleToggleAudio);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Publicar el estado para que el disco del hero (y cualquier otro
+  // botón) muestre el mismo icono y texto que el botón flotante.
+  useEffect(() => {
+    window.dispatchEvent(
+      new CustomEvent("luminavite:audio-state", { detail: { isPlaying } })
+    );
   }, [isPlaying]);
 
   if (!audioUrl) return null;
 
-  const togglePlay = () => {
-    if (!audioRef.current) return;
-
-    if (isPlaying) {
-      audioRef.current.pause();
-      setIsPlaying(false);
-    } else {
-      audioRef.current
-        .play()
-        .then(() => {
-          setIsPlaying(true);
-        })
-        .catch((err) => {
-          console.warn("Autoplay bloqueado:", err);
-          setIsPlaying(false);
-        });
-    }
-  };
+  const togglePlay = () => toggleAudio();
 
   return (
     <div className="fixed top-4 right-4 z-40">
