@@ -2,16 +2,14 @@
 
 import React, { useState } from "react";
 import {
-  X,
   Palette,
   Sparkles,
   Check,
-  ExternalLink,
+  Eye,
   Crown,
   Heart,
-  Music,
-  Eye,
-  Filter,
+  ChevronDown,
+  ChevronUp,
 } from "lucide-react";
 import { TEMPLATES, TemplateId } from "@/lib/templates";
 
@@ -152,7 +150,7 @@ export const TEMPLATE_CATALOG: TemplatePickerItem[] = [
     name: "Clásica Imperial (Bodas & Galas)",
     categoria: "BODA",
     badgeLabel: "Bodas de Gala",
-    thumbnail: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=600&q=80",
+    thumbnail: "https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=600&q=80",
     description: "Diseño sobrio y señorial con tipografía romana clásica, acentos en oro pulido y fondo aperlado minimalista para bodas y galas.",
     demoSlug: "sofia-y-alejandro",
     dots: ["#FBFBF9", "#BFA15F", "#1A1A1A"],
@@ -193,32 +191,46 @@ export const TEMPLATE_CATALOG: TemplatePickerItem[] = [
   },
 ];
 
-interface TemplatePickerModalProps {
-  isOpen: boolean;
-  onClose: () => void;
+interface TemplatePickerGridProps {
   currentTemplateId: string;
   onSelectTemplate: (templateId: TemplateId) => void;
-  isInitialSelection?: boolean;
+  expanded: boolean;
+  onToggleExpanded: () => void;
 }
 
-export default function TemplatePickerModal({
-  isOpen,
-  onClose,
+// La foto va ARRIBA y el nombre SIEMPRE como título debajo (nunca superpuesto),
+// así la plantilla se identifica aunque la foto falle. Si la foto no carga,
+// se muestra un bloque con el nombre en grande en vez de una imagen rota.
+function TemplateCardImage({ tpl }: { tpl: TemplatePickerItem }) {
+  const [failed, setFailed] = useState(false);
+  if (failed) {
+    return (
+      <div className="h-52 bg-gradient-to-br from-[#3D0A1C] via-[#7A002A] to-[#3D0A1C] flex flex-col items-center justify-center text-white p-4 text-center">
+        <span className="font-serif font-bold text-lg leading-snug">{tpl.name}</span>
+        <span className="text-[11px] text-white/70 mt-2">Vista previa no disponible</span>
+      </div>
+    );
+  }
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={tpl.thumbnail}
+      alt={tpl.name}
+      loading="lazy"
+      decoding="async"
+      className="w-full h-52 object-cover"
+      onError={() => setFailed(true)}
+    />
+  );
+}
+
+export default function TemplatePickerGrid({
   currentTemplateId,
   onSelectTemplate,
-  isInitialSelection = false,
-}: TemplatePickerModalProps) {
+  expanded,
+  onToggleExpanded,
+}: TemplatePickerGridProps) {
   const [filter, setFilter] = useState<"ALL" | "QUINCEANERA" | "BODA" | "CUMPLEANOS">("ALL");
-
-  if (!isOpen) return null;
-
-  const filteredTemplates = TEMPLATE_CATALOG.filter((item) => {
-    if (filter === "ALL") return true;
-    if (filter === "QUINCEANERA") return item.categoria === "QUINCEANERA";
-    if (filter === "BODA") return item.categoria === "BODA";
-    if (filter === "CUMPLEANOS") return item.categoria === "CUMPLEANOS" || item.categoria === "UNIVERSAL";
-    return true;
-  });
 
   const counts = {
     QUINCEANERA: TEMPLATE_CATALOG.filter((t) => t.categoria === "QUINCEANERA").length,
@@ -228,48 +240,58 @@ export default function TemplatePickerModal({
     ).length,
   };
 
+  const filteredTemplates = TEMPLATE_CATALOG.filter((item) => {
+    if (filter === "ALL") return true;
+    if (filter === "QUINCEANERA") return item.categoria === "QUINCEANERA";
+    if (filter === "BODA") return item.categoria === "BODA";
+    if (filter === "CUMPLEANOS") return item.categoria === "CUMPLEANOS" || item.categoria === "UNIVERSAL";
+    return true;
+  });
+
+  const current = TEMPLATE_CATALOG.find((t) => t.id === currentTemplateId);
+
   return (
-    <div
-      className="fixed inset-0 z-50 bg-black/70 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto"
-      onClick={(e) => {
-        if (e.target === e.currentTarget && !isInitialSelection) {
-          onClose();
-        }
-      }}
-    >
-      <div className="bg-white w-full max-w-5xl rounded-3xl shadow-2xl border border-stone-200 overflow-hidden flex flex-col max-h-[92vh] animate-in fade-in zoom-in-95 duration-200">
-        {/* Cabecera del Modal */}
-        <div className="p-6 bg-gradient-to-r from-stone-900 via-[#3D0A1C] to-stone-900 text-white flex items-center justify-between border-b border-white/10 shrink-0">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white">
-              <Palette className="w-5 h-5" />
-            </div>
-            <div>
-              <h2 className="text-lg font-bold font-serif tracking-tight flex items-center gap-2">
-                <span>Elige la Plantilla de tu Invitación</span>
-                <span className="text-[10px] font-sans font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-white/10 text-white border border-white/20">
-                  {TEMPLATE_CATALOG.length} Diseños
-                </span>
-              </h2>
-              <p className="text-xs text-stone-300 mt-0.5">
-                Selecciona el estilo visual que mejor se adapte a tu evento. Puedes cambiar de plantilla en cualquier momento.
-              </p>
-            </div>
+    <section className="bg-white rounded-3xl border border-stone-200 shadow-sm overflow-hidden">
+      {/* Barra siempre visible: plantilla actual + mostrar/ocultar */}
+      <div className="p-4 sm:p-5 bg-gradient-to-r from-stone-900 via-[#3D0A1C] to-stone-900 text-white flex flex-wrap items-center justify-between gap-3">
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="w-10 h-10 rounded-2xl bg-white/10 border border-white/20 flex items-center justify-center shrink-0">
+            <Palette className="w-5 h-5" />
           </div>
-
-          <button
-            type="button"
-            onClick={onClose}
-            className="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-white/80 hover:text-white transition cursor-pointer"
-            title="Cerrar"
-          >
-            <X className="w-5 h-5" />
-          </button>
+          <div className="min-w-0">
+            <h2 className="text-base font-bold font-serif tracking-tight flex items-center gap-2 flex-wrap">
+              <span>Elige la plantilla de tu invitación</span>
+              <span className="text-[10px] font-sans font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-white/10 text-white border border-white/20">
+                {TEMPLATE_CATALOG.length} Diseños
+              </span>
+            </h2>
+            <p className="text-xs text-stone-300 mt-0.5 truncate">
+              Plantilla actual: <strong className="text-white">{current?.name || currentTemplateId}</strong>
+              <span className="text-stone-400"> · Puedes cambiarla en cualquier momento sin perder tus datos.</span>
+            </p>
+          </div>
         </div>
+        <button
+          type="button"
+          onClick={onToggleExpanded}
+          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold transition cursor-pointer shrink-0"
+        >
+          {expanded ? (
+            <>
+              Ocultar plantillas <ChevronUp className="w-4 h-4" />
+            </>
+          ) : (
+            <>
+              Cambiar plantilla <ChevronDown className="w-4 h-4" />
+            </>
+          )}
+        </button>
+      </div>
 
-        {/* Barra de Filtros por Categoría */}
-        <div className="px-6 py-3.5 bg-stone-50 border-b border-stone-200 flex flex-wrap items-center justify-between gap-3 shrink-0">
-          <div className="flex items-center gap-1.5 overflow-x-auto text-xs">
+      {expanded && (
+        <>
+          {/* Filtros por categoría */}
+          <div className="px-5 py-3.5 bg-stone-50 border-b border-stone-200 flex flex-wrap items-center gap-1.5 text-xs">
             <button
               type="button"
               onClick={() => setFilter("ALL")}
@@ -317,92 +339,66 @@ export default function TemplatePickerModal({
               <Sparkles className="w-3.5 h-3.5" />
               <span>Temáticas & Galas ({counts.CUMPLEANOS})</span>
             </button>
+            <span className="text-xs text-stone-400 font-medium ml-auto hidden sm:inline">
+              Haz clic en <strong>&quot;Elegir esta Plantilla&quot;</strong> para aplicarla
+            </span>
           </div>
 
-          <span className="text-xs text-stone-400 font-medium hidden sm:inline">
-            Haz clic en <strong>&quot;Elegir Plantilla&quot;</strong> para cargarla en el editor
-          </span>
-        </div>
+          {/* Grid de plantillas (sin popup, sin scroll interno) */}
+          <div className="p-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+            {filteredTemplates.map((tpl) => {
+              const isCurrent = currentTemplateId === tpl.id;
+              return (
+                <div
+                  key={tpl.id}
+                  className={`rounded-2xl border-2 transition-all flex flex-col overflow-hidden bg-white ${
+                    isCurrent
+                      ? "border-[#7A002A] ring-2 ring-[#7A002A]/20 shadow-lg"
+                      : "border-stone-200 hover:border-stone-300 hover:shadow-md"
+                  }`}
+                >
+                  <TemplateCardImage tpl={tpl} />
 
-        {/* Grid de Plantillas con Scroll */}
-        <div className="p-6 overflow-y-auto flex-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {filteredTemplates.map((tpl) => {
-            const isCurrent = currentTemplateId === tpl.id;
-
-            return (
-              <div
-                key={tpl.id}
-                className={`group rounded-2xl border-2 transition-all flex flex-col justify-between overflow-hidden bg-white ${
-                  isCurrent
-                    ? "border-[#7A002A] ring-2 ring-[#7A002A]/20 shadow-lg"
-                    : "border-stone-200 hover:border-stone-300 hover:shadow-md"
-                }`}
-              >
-                {/* Portada / Thumbnail */}
-                <div className="relative h-48 bg-stone-900 overflow-hidden">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={tpl.thumbnail}
-                    alt={tpl.name}
-                    loading="lazy"
-                    decoding="async"
-                    className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src =
-                        "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=600&q=80";
-                    }}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
-
-                  {/* Badges superiores */}
-                  <div className="absolute top-3 left-3 flex items-center gap-1.5">
-                    <span className="px-2.5 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase bg-white/95 text-stone-900 shadow-xs">
-                      {tpl.categoria === "QUINCEANERA"
-                        ? "👑 XV Años"
-                        : tpl.categoria === "BODA"
-                        ? "💍 Boda"
-                        : "✨ Temática"}
-                    </span>
-                    {tpl.badgeLabel && (
-                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#7A002A] text-white shadow-xs">
-                        {tpl.badgeLabel}
-                      </span>
-                    )}
-                  </div>
-
-                  {isCurrent && (
-                    <div className="absolute top-3 right-3 px-2.5 py-1 rounded-full text-[10px] font-bold bg-[#7A002A] text-white flex items-center gap-1 shadow-md">
-                      <Check className="w-3 h-3" />
-                      <span>Activa</span>
+                  <div className="p-4 flex-1 flex flex-col">
+                    <div className="flex items-start justify-between gap-2">
+                      <h3 className="font-serif font-bold text-base leading-snug text-stone-900">
+                        {tpl.name}
+                      </h3>
+                      {isCurrent && (
+                        <span className="shrink-0 px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#7A002A] text-white flex items-center gap-1">
+                          <Check className="w-3 h-3" />
+                          Activa
+                        </span>
+                      )}
                     </div>
-                  )}
 
-                  {/* Título sobre el thumbnail */}
-                  <div className="absolute bottom-3 left-3 right-3 text-white">
-                    <h3 className="font-serif font-bold text-base leading-snug drop-shadow-md [text-shadow:0_1px_8px_rgba(0,0,0,0.85)]">
-                      {tpl.name}
-                    </h3>
-                    <div className="flex items-center gap-1.5 mt-1.5">
+                    <div className="flex flex-wrap items-center gap-1.5 mt-2">
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold tracking-wider uppercase bg-stone-100 text-stone-700 border border-stone-200">
+                        {tpl.categoria === "QUINCEANERA"
+                          ? "👑 XV Años"
+                          : tpl.categoria === "BODA"
+                          ? "💍 Boda"
+                          : "✨ Temática"}
+                      </span>
+                      {tpl.badgeLabel && (
+                        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#7A002A]/10 text-[#7A002A] border border-[#7A002A]/20">
+                          {tpl.badgeLabel}
+                        </span>
+                      )}
                       {tpl.dots.map((c, i) => (
                         <span
                           key={i}
-                          className="w-3.5 h-3.5 rounded-full border border-white/60 shadow-xs"
+                          className="w-3.5 h-3.5 rounded-full border border-stone-300 shadow-xs"
                           style={{ backgroundColor: c }}
                         />
                       ))}
                     </div>
-                  </div>
-                </div>
 
-                {/* Contenido / Descripción y Features */}
-                <div className="p-4 space-y-3 flex-1 flex flex-col justify-between">
-                  <div className="space-y-2">
-                    <p className="text-xs text-stone-600 line-clamp-2 leading-relaxed">
+                    <p className="text-xs text-stone-600 leading-relaxed mt-2 line-clamp-2">
                       {tpl.description}
                     </p>
 
-                    {/* Chips de características */}
-                    <div className="flex flex-wrap gap-1.5 pt-1">
+                    <div className="flex flex-wrap gap-1.5 mt-3">
                       {tpl.features.map((feat, i) => (
                         <span
                           key={i}
@@ -412,66 +408,50 @@ export default function TemplatePickerModal({
                         </span>
                       ))}
                     </div>
-                  </div>
 
-                  {/* Botones de Acción */}
-                  <div className="pt-3 border-t border-stone-100 flex items-center gap-2">
-                    <a
-                      href={`https://clickandlove.app/demo/${tpl.demoSlug}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="px-3 py-2 rounded-xl text-xs font-semibold text-stone-700 bg-stone-100 hover:bg-stone-200 transition flex items-center gap-1 cursor-pointer"
-                      title="Ver invitación en vivo con música"
-                    >
-                      <Eye className="w-3.5 h-3.5" />
-                      <span className="hidden sm:inline">Demo</span>
-                    </a>
-
-                    <button
-                      type="button"
-                      onClick={() => {
-                        onSelectTemplate(tpl.id);
-                        onClose();
-                      }}
-                      className={`flex-1 py-2 px-3.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer shadow-xs ${
-                        isCurrent
-                          ? "bg-stone-900 hover:bg-stone-800 text-white"
-                          : "bg-[#7A002A] hover:bg-[#5e0020] text-white"
-                      }`}
-                    >
-                      {isCurrent ? (
-                        <>
-                          <Check className="w-3.5 h-3.5" />
-                          <span>Plantilla Seleccionada</span>
-                        </>
-                      ) : (
-                        <>
-                          <Sparkles className="w-3.5 h-3.5 text-white" />
-                          <span>Elegir esta Plantilla</span>
-                        </>
-                      )}
-                    </button>
+                    <div className="mt-4 pt-3 border-t border-stone-100 flex items-center gap-2">
+                      <a
+                        href={`https://clickandlove.app/demo/${tpl.demoSlug}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-3 py-2 rounded-xl text-xs font-semibold text-stone-700 bg-stone-100 hover:bg-stone-200 transition flex items-center gap-1 cursor-pointer"
+                        title="Ver invitación en vivo"
+                      >
+                        <Eye className="w-3.5 h-3.5" />
+                        <span className="hidden sm:inline">Demo</span>
+                      </a>
+                      <button
+                        type="button"
+                        onClick={() => onSelectTemplate(tpl.id)}
+                        className={`flex-1 py-2 px-3.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer shadow-xs ${
+                          isCurrent
+                            ? "bg-stone-900 hover:bg-stone-800 text-white"
+                            : "bg-[#7A002A] hover:bg-[#5e0020] text-white"
+                        }`}
+                      >
+                        {isCurrent ? (
+                          <>
+                            <Check className="w-3.5 h-3.5" />
+                            <span>Plantilla Seleccionada</span>
+                          </>
+                        ) : (
+                          <>
+                            <Sparkles className="w-3.5 h-3.5" />
+                            <span>Elegir esta Plantilla</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Footer del Modal */}
-        <div className="px-6 py-4 bg-stone-50 border-t border-stone-200 flex items-center justify-between shrink-0">
-          <p className="text-xs text-stone-500">
+              );
+            })}
+          </div>
+          <p className="px-5 pb-5 text-xs text-stone-500">
             ¿No estás segura? Puedes cambiar de plantilla en cualquier momento sin perder los datos que hayas llenado.
           </p>
-          <button
-            type="button"
-            onClick={onClose}
-            className="px-4 py-2 rounded-xl text-xs font-semibold text-stone-700 hover:bg-stone-200 transition cursor-pointer"
-          >
-            Continuar editando
-          </button>
-        </div>
-      </div>
-    </div>
+        </>
+      )}
+    </section>
   );
 }

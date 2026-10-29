@@ -36,7 +36,7 @@ import MobileSimulator from "@/components/preview/MobileSimulator";
 import TemplateConfigDispatcher from "@/components/events/forms/TemplateConfigDispatcher";
 import TemplateSectionBuilder from "@/components/admin/TemplateSectionBuilder";
 import EventSettingsConfig from "@/components/admin/EventSettingsConfig";
-import TemplatePickerModal from "@/components/admin/TemplatePickerModal";
+import TemplatePickerGrid from "@/components/admin/TemplatePickerGrid";
 
 // Valores de ejemplo con los que arranca el formulario en modo crear (hallazgo 15)
 const DEMO_INITIAL_VALUES = {
@@ -74,9 +74,19 @@ function NuevoEventoContent() {
   const [saveSuccessMsg, setSaveSuccessMsg] = useState<string | null>(null);
   const [showMobilePreview, setShowMobilePreview] = useState(false);
   const [editorMode, setEditorMode] = useState<"sections" | "settings">("sections");
-  const [showTemplatePicker, setShowTemplatePicker] = useState(
+  const [showTemplateGrid, setShowTemplateGrid] = useState(
     !isEditMode && !searchParams.get("plantilla") && !searchParams.get("nombre")
   );
+
+  // Sin popup: la selección de plantilla vive en una sección de la misma página.
+  // Muestra la sección y baja hasta ella (la usan el botón del encabezado y
+  // los botones "Cambiar plantilla" dentro de las pestañas).
+  const openTemplateGrid = () => {
+    setShowTemplateGrid(true);
+    setTimeout(() => {
+      document.getElementById("selector-plantilla")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 50);
+  };
 
   // Estados locales para inputs de corte de honor (evitar pérdida de comas al teclear)
   const [damasRaw, setDamasRaw] = useState<string | null>(null);
@@ -1044,7 +1054,7 @@ function NuevoEventoContent() {
           {/* Selector y botón interactivo para cambiar plantilla */}
           <button
             type="button"
-            onClick={() => setShowTemplatePicker(true)}
+            onClick={openTemplateGrid}
             className="inline-flex items-center gap-2 px-3 py-1.5 bg-white hover:bg-stone-50 text-[#7A002A] rounded-xl text-xs font-semibold border border-stone-200 transition shadow-2xs cursor-pointer"
             title="Cambiar la plantilla visual de la invitación"
           >
@@ -1128,6 +1138,20 @@ function NuevoEventoContent() {
         </div>
       )}
 
+      {/* Selector de plantillas en la misma página (sin popup): tarjetas grandes,
+          nombre siempre visible debajo de la foto. Al elegir, se aplica y se cierra. */}
+      <div id="selector-plantilla" className="max-w-7xl mx-auto px-4 sm:px-6 mt-6 scroll-mt-24">
+        <TemplatePickerGrid
+          currentTemplateId={formData.estiloPlantilla || "QUINCE_ROSADO"}
+          onSelectTemplate={(newId) => {
+            handleSelectTemplate(newId);
+            setShowTemplateGrid(false);
+          }}
+          expanded={showTemplateGrid}
+          onToggleExpanded={() => setShowTemplateGrid((v) => !v)}
+        />
+      </div>
+
       {/* Contenedor principal: Formulario a la izquierda + Live Phone Simulator a la derecha */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 grid grid-cols-1 lg:grid-cols-12 gap-8">
         {/* Formulario Wizard / Organizador Modular (7 Columnas en escritorio) */}
@@ -1170,7 +1194,7 @@ function NuevoEventoContent() {
               uploadingField={uploadingField}
               formatFormalDate={formatFormalDate}
               computeRsvpPhrases={computeRsvpPhrases}
-              onOpenTemplatePicker={() => setShowTemplatePicker(true)}
+              onOpenTemplatePicker={openTemplateGrid}
             />
           ) : (
             <EventSettingsConfig
@@ -1183,7 +1207,7 @@ function NuevoEventoContent() {
               handleSave={handleSave}
               isSaving={isSaving}
               onSelectTemplate={handleSelectTemplate}
-              onOpenTemplatePicker={() => setShowTemplatePicker(true)}
+              onOpenTemplatePicker={openTemplateGrid}
             />
           )}
       </div>
@@ -1358,14 +1382,6 @@ function NuevoEventoContent() {
           </div>
         </div>
       )}
-      {/* Modal Interactivo de Selección de Plantilla */}
-      <TemplatePickerModal
-        isOpen={showTemplatePicker}
-        onClose={() => setShowTemplatePicker(false)}
-        currentTemplateId={formData.estiloPlantilla || "QUINCE_ROSADO"}
-        onSelectTemplate={(newId) => handleSelectTemplate(newId)}
-        isInitialSelection={!isEditMode && !searchParams.get("plantilla")}
-      />
     </div>
   );
 }
