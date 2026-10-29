@@ -96,7 +96,7 @@ export default function BeautyQuinceTemplate({
               className="w-full mt-10 cursor-pointer"
             >
               <div className="w-full aspect-[1.45] overflow-hidden shadow-2xl">
-                <img src={A.sobreCerradoSello} alt="Sobre Beauty Quince" className="w-full h-full object-cover object-center" />
+                <img src={A.sobreCerradoSello} alt="Sobre Beauty Quince" className="w-full h-full object-cover object-center scale-[1.03]" />
               </div>
             </button>
             <div className="mt-10 flex gap-3 justify-center">
@@ -125,29 +125,57 @@ export default function BeautyQuinceTemplate({
       >
         <AudioPlayer audioUrl={data.musicaUrl} template={template} />
 
-        {/* Hero: castillo a la luna + rosa encantada + disco */}
-        <section className="relative text-center overflow-hidden">
-          <img src={A.castilloLuna} alt="Castillo a la luz de la luna" className="w-full h-[560px] object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#0A1E4A]/30 via-transparent to-[#FDF6E3]" />
-          <div className="absolute inset-x-0 top-8 flex flex-col items-center px-6">
-            <img src={A.rosaEncantada} alt="Rosa encantada" className="w-28 h-28 object-contain drop-shadow-xl" />
-            <p className="font-serif-roman text-[11px] tracking-[0.3em] uppercase text-white drop-shadow mt-2">
-              {isEn ? "You are cordially invited to" : "Con cariño te invitamos a"}
+        {/* Hero tal cual el Canva: fondo biblioteca dorada, tarjeta
+            inclinada con nombre/fecha/poema, ramo de rosas a la derecha,
+            sobre abajo y disco con play. La rosa ya es transparente
+            (fondo blanco quitado), así que no sale cuadro blanco. */}
+        <section className="relative overflow-hidden">
+          <img src={A.bibliotecaDorada} alt="" className="absolute inset-0 w-full h-full object-cover" />
+          <div className="relative px-5 pt-10 pb-8 flex flex-col items-center">
+            <div className="relative w-[88%] max-w-[340px] -rotate-6 shadow-2xl">
+              <img src={A.cartaPapelCinta} alt="" className="w-full aspect-[0.67] object-cover" />
+              <div className="absolute inset-0 flex flex-col items-center text-center px-9 pt-[24%] pb-[16%]">
+                <h1 className="font-script text-5xl leading-none" style={{ color: "#2A2A9C" }}>{data.titulo}</h1>
+                <p className="font-script text-3xl leading-tight mt-1" style={{ color: "#2A2A9C" }}>
+                  {data.subtitulo || "Quinceañera"}
+                </p>
+                <p className="font-serif-roman text-[11px] tracking-[0.15em] uppercase font-bold mt-4" style={{ color: "#2A2A9C" }}>
+                  {formattedDate.replace(" AT ", " | ")}
+                </p>
+                <p className="text-[10px] leading-relaxed tracking-[0.08em] uppercase whitespace-pre-line mt-4" style={{ color: "#2A2A9C" }}>
+                  {data.frasePersonalizada || (isEn ? poemaEn : poemaEs)}
+                </p>
+              </div>
+              <div className="absolute -right-10 top-[38%] flex flex-col items-end pointer-events-none">
+                <img src={A.rosaEncantada} alt="" className="w-28 h-28 object-contain rotate-12 drop-shadow-xl" />
+                <img src={A.rosaEncantada} alt="" className="w-20 h-20 object-contain -mt-6 mr-4 -rotate-12 drop-shadow-xl" />
+                <img src={A.rosaEncantada} alt="" className="w-16 h-16 object-contain -mt-4 mr-8 rotate-6 drop-shadow-xl" />
+              </div>
+            </div>
+            <div className="w-[92%] max-w-[360px] -mt-10 relative z-10">
+              <div className="w-full aspect-[1.45] overflow-hidden shadow-2xl">
+                <img src={A.sobreCerradoSello} alt="Sobre Beauty Quince" className="w-full h-full object-cover object-center scale-[1.03]" />
+              </div>
+            </div>
+            <button
+              onClick={() => {
+                if (typeof window !== "undefined") {
+                  window.dispatchEvent(new CustomEvent("luminavite:play-audio"));
+                }
+              }}
+              aria-label={isEn ? "Play music" : "Reproducir música"}
+              className="mt-6 relative w-36 h-36 rounded-full overflow-hidden shadow-2xl cursor-pointer"
+            >
+              <img src={A.discoMusica} alt="Disco de música" className="w-full h-full object-cover" />
+              <span className="absolute inset-0 flex items-center justify-center">
+                <span className="w-12 h-12 rounded-full bg-white/85 flex items-center justify-center text-[#0A1E4A] text-xl pl-1">▶</span>
+              </span>
+            </button>
+            <p className="text-xs font-bold tracking-[0.2em] uppercase mt-3" style={{ color: "#12265A" }}>
+              {isEn ? "Click to Play Music" : "Toca para escuchar"}
             </p>
-            <h1 className="font-script text-6xl leading-tight text-white drop-shadow-lg mt-1">{data.titulo}</h1>
-            <p className="text-[#E5C158] font-serif-roman tracking-[0.2em] uppercase text-sm drop-shadow">
-              {data.subtitulo || "My Quinceañera"}
-            </p>
-          </div>
-          <div className="absolute inset-x-0 bottom-0 pb-4 flex flex-col items-center">
-            <img src={A.discoMusica} alt="Disco de música" className="w-20 h-20 object-contain rounded-full shadow-xl" style={{ animation: "spin 8s linear infinite" }} />
-            <p className="font-serif-roman text-xs tracking-[0.2em] uppercase mt-2 text-[#12265A] font-bold">{formattedDate}</p>
-            <p className="text-[#12265A]/80 text-xs">{data.recepcionNombre}</p>
           </div>
         </section>
-
-        {/* Solapa dorada como divisor, sin recorte */}
-        <img src={A.solapaSobreDorada} alt="Solapa dorada" className="w-full h-28 object-contain bg-[#FDF6E3]" />
 
         {/* Poema */}
         <section className="relative px-6 py-10 text-center overflow-hidden">
