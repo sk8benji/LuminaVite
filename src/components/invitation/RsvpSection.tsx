@@ -18,6 +18,8 @@ interface RsvpSectionProps {
   template: TemplateConfig;
   // Hallazgo 11: respeta el toggle "permitir confirmación por teléfono" del evento
   permitirConfirmacionTelefono?: boolean;
+  // Idioma del formulario (la vista genérica lo pasa; Coraline/Fairytale no, y quedan en inglés)
+  isEn?: boolean;
 }
 
 export default function RsvpSection({
@@ -28,9 +30,10 @@ export default function RsvpSection({
   fechaLimite,
   template,
   permitirConfirmacionTelefono = true,
+  isEn = true,
 }: RsvpSectionProps) {
   // La fecha límite puede llegar como ISO (guardado nuevo): se muestra legible, nunca cruda.
-  const fechaLimiteLegible = formatFechaLimiteRsvp(fechaLimite, "en");
+  const fechaLimiteLegible = formatFechaLimiteRsvp(fechaLimite, isEn ? "en" : "es");
   const [nombre, setNombre] = useState("");
   const [asistencia, setAsistencia] = useState<"SI" | "NO">("SI");
   const [pases, setPases] = useState(1);
@@ -111,12 +114,12 @@ export default function RsvpSection({
             fontFamily: template.fontSubheading,
           }}
         >
-          WILL YOU BE PART OF My Special Day?
+          {isEn ? "WILL YOU BE PART OF My Special Day?" : "¿SERÁS PARTE DE Mi Día Especial?"}
         </h3>
         <p
           className="text-xs mt-1 mb-5 font-serif italic text-stone-600"
         >
-          Save Your Seat for the Celebration!
+          {isEn ? "Save Your Seat for the Celebration!" : "¡Aparta tu lugar para la celebración!"}
         </p>
 
         {fechaLimiteLegible && (
@@ -127,7 +130,7 @@ export default function RsvpSection({
               fontFamily: template.fontBody,
             }}
           >
-            Please confirm your seat before{" "}
+            {isEn ? "Please confirm your seat before" : "Por favor confirma tu lugar antes del"}{" "}
             <span className="font-semibold text-[#9E2A4B]">{fechaLimiteLegible}</span>
           </p>
         )}
@@ -139,14 +142,14 @@ export default function RsvpSection({
               className="block text-[11px] font-semibold uppercase tracking-wider mb-1"
               style={{ color: "#7A6E70" }}
             >
-              Full name *
+              {isEn ? "Full name *" : "Nombre completo *"}
             </label>
             <input
               type="text"
               required
               value={nombre}
               onChange={(e) => setNombre(e.target.value)}
-              placeholder="e.g. John Doe / Familia Hernández"
+              placeholder={isEn ? "e.g. John Doe / Familia Hernández" : "ej. Juan Pérez / Familia Hernández"}
               className="w-full px-3.5 py-2.5 text-xs rounded-xl border focus:outline-none focus:ring-2 transition"
               style={{
                 backgroundColor: template.bgColor,
@@ -162,7 +165,7 @@ export default function RsvpSection({
               className="block text-[11px] font-semibold uppercase tracking-wider mb-1"
               style={{ color: "#7A6E70" }}
             >
-              Will you attend?
+              {isEn ? "Will you attend?" : "¿Asistirás?"}
             </label>
             <div className="grid grid-cols-2 gap-2">
               <button
@@ -178,7 +181,7 @@ export default function RsvpSection({
                 }}
               >
                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-                Yes, with pleasure
+                {isEn ? "Yes, with pleasure" : "Sí, con gusto"}
               </button>
 
               <button
@@ -194,7 +197,7 @@ export default function RsvpSection({
                 }}
               >
                 <XCircle className="w-3.5 h-3.5 text-rose-500" />
-                Regretfully decline
+                {isEn ? "Regretfully decline" : "Lamentablemente no podré"}
               </button>
             </div>
           </div>
@@ -207,13 +210,13 @@ export default function RsvpSection({
                   className="block text-[11px] font-semibold uppercase tracking-wider mb-1"
                   style={{ color: "#7A6E70" }}
                 >
-                  How many seats/guests will you bring?
+                  {isEn ? "How many seats/guests will you bring?" : "¿Cuántos lugares/invitados traerás?"}
                 </label>
                 {sinLimitePases ? (
                   <div className="flex items-center gap-2">
                     <button
                       type="button"
-                      aria-label="One less guest"
+                      aria-label={isEn ? "One less guest" : "Un invitado menos"}
                       onClick={() => setPases((p) => Math.max(1, p - 1))}
                       className="w-10 h-10 shrink-0 rounded-xl border text-base font-bold flex items-center justify-center"
                       style={{
@@ -242,7 +245,7 @@ export default function RsvpSection({
                     />
                     <button
                       type="button"
-                      aria-label="One more guest"
+                      aria-label={isEn ? "One more guest" : "Un invitado más"}
                       onClick={() => setPases((p) => Math.min(200, p + 1))}
                       className="w-10 h-10 shrink-0 rounded-xl border text-base font-bold flex items-center justify-center"
                       style={{
@@ -267,7 +270,7 @@ export default function RsvpSection({
                   >
                     {pasesOptions.map((n) => (
                       <option key={n} value={n}>
-                        {n} {n === 1 ? "Guest / Seat" : "Guests / Seats"}
+                        {n} {n === 1 ? (isEn ? "Guest / Seat" : "Invitado / Lugar") : (isEn ? "Guests / Seats" : "Invitados / Lugares")}
                       </option>
                     ))}
                   </select>
@@ -280,13 +283,13 @@ export default function RsvpSection({
                   className="block text-[11px] font-semibold uppercase tracking-wider mb-1"
                   style={{ color: "#7A6E70" }}
                 >
-                  What are their names? (Companion names)
+                  {isEn ? "What are their names? (Companion names)" : "¿Cómo se llaman? (Nombres de acompañantes)"}
                 </label>
                 <textarea
                   rows={2}
                   value={acompanantes}
                   onChange={(e) => setAcompanantes(e.target.value)}
-                  placeholder="e.g. Maria and Daniel"
+                  placeholder={isEn ? "e.g. Maria and Daniel" : "ej. María y Daniel"}
                   className="w-full px-3.5 py-2 text-xs rounded-xl border focus:outline-none resize-none"
                   style={{
                     backgroundColor: template.bgColor,
@@ -310,7 +313,7 @@ export default function RsvpSection({
             }}
           >
             <Send className="w-3.5 h-3.5" />
-            {isSubmitting ? "Connecting to WhatsApp..." : "Submit RSVP via WhatsApp"}
+            {isSubmitting ? (isEn ? "Connecting to WhatsApp..." : "Conectando con WhatsApp...") : (isEn ? "Submit RSVP via WhatsApp" : "Enviar RSVP por WhatsApp")}
           </button>
         </form>
 
@@ -322,7 +325,7 @@ export default function RsvpSection({
             style={{ color: template.textSecondary }}
           >
             <Phone className="w-4 h-4" />
-            Prefer to call? Call the host
+            {isEn ? "Prefer to call? Call the host" : "¿Prefieres llamar? Llama al anfitrión"}
           </a>
         )}
       </div>

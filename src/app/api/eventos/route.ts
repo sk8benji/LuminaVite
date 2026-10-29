@@ -121,6 +121,7 @@ export async function POST(req: NextRequest) {
       fotoZapato1Url,
       fotoZapato2Url,
       musicaUrl,
+      musicaTitulo,
       videoUrl,
       galeriaFotosUrls = [],
       wishlistUrl,
@@ -245,13 +246,14 @@ export async function POST(req: NextRequest) {
         frasePersonalizadaEn: frasePersonalizadaEn || null,
         fechaEvento: parseSafeIsoString(fechaEvento),
         fechaTextoPersonalizada: fechaTextoPersonalizada || null,
-        fotoPortadaUrl,
+        fotoPortadaUrl: fotoPortadaUrl || null,
         fotoInfanciaUrl: fotoInfanciaUrl || null,
         fotoActualUrl: fotoActualUrl || null,
         fotoCierreUrl: fotoCierreUrl || null,
         fotoZapato1Url: fotoZapato1Url || null,
         fotoZapato2Url: fotoZapato2Url || null,
         musicaUrl: musicaUrl || null,
+        musicaTitulo: musicaTitulo || null,
         reproducirMusicaAlAbrir: reproducirMusicaAlAbrir !== false,
         videoUrl: videoUrl || null,
         galeriaFotosUrls: Array.isArray(galeriaFotosUrls) ? galeriaFotosUrls : [],
@@ -364,7 +366,7 @@ export async function PUT(req: NextRequest) {
     // C6: sanitizar URLs — solo http(s), rechaza javascript:/data:
     sanitizeEventUrls(body);
 
-    const cleanSlug = slug.toLowerCase().trim();
+    const cleanSlug = normalizeSlug(slug);
 
     const parseSafeDate = (val: any): Date | null => {
       if (!val) return null;
@@ -390,15 +392,16 @@ export async function PUT(req: NextRequest) {
         frasePersonalizadaEn: body.frasePersonalizadaEn ?? null,
         fechaEvento: body.fechaEvento ? parseSafeIsoString(body.fechaEvento) : undefined,
         fechaTextoPersonalizada: body.fechaTextoPersonalizada ?? null,
-        fotoPortadaUrl: body.fotoPortadaUrl,
-        fotoInfanciaUrl: body.fotoInfanciaUrl ?? null,
-        fotoActualUrl: body.fotoActualUrl ?? null,
-        fotoCierreUrl: body.fotoCierreUrl ?? null,
-        fotoZapato1Url: body.fotoZapato1Url ?? null,
-        fotoZapato2Url: body.fotoZapato2Url ?? null,
-        musicaUrl: body.musicaUrl ?? null,
+        fotoPortadaUrl: body.fotoPortadaUrl || null,
+        fotoInfanciaUrl: body.fotoInfanciaUrl || null,
+        fotoActualUrl: body.fotoActualUrl || null,
+        fotoCierreUrl: body.fotoCierreUrl || null,
+        fotoZapato1Url: body.fotoZapato1Url || null,
+        fotoZapato2Url: body.fotoZapato2Url || null,
+        musicaUrl: body.musicaUrl || null,
+        musicaTitulo: body.musicaTitulo || null,
         reproducirMusicaAlAbrir: body.reproducirMusicaAlAbrir !== undefined ? Boolean(body.reproducirMusicaAlAbrir) : undefined,
-        videoUrl: body.videoUrl ?? null,
+        videoUrl: body.videoUrl || null,
         galeriaFotosUrls: Array.isArray(body.galeriaFotosUrls) ? body.galeriaFotosUrls : [],
         wishlistUrl: body.wishlistUrl ?? null,
         idiomaDefault: body.idiomaDefault || "es",

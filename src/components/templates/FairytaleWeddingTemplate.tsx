@@ -67,6 +67,7 @@ export default function FairytaleWeddingTemplate({
           tagline={data.subtitulo || "Save the Date"}
           template={template}
           reproducirMusicaAlAbrir={data.reproducirMusicaAlAbrir}
+          idiomaDefault={data.idiomaDefault}
         />
       )}
 

@@ -109,6 +109,7 @@ model Evento {
   fotoZapato1Url     String?         // Foto Zapato 1 (Zapatilla de cristal / Ceremonia)
   fotoZapato2Url     String?         // Foto Zapato 2 (Zapatilla en cojín / Corte y Damas)
   musicaUrl          String?         // URL del audio MP3 en S3
+  musicaTitulo         String?         // Título de la canción que suena en la invitación
   reproducirMusicaAlAbrir Boolean    @default(true) // Reproducir automáticamente al abrir el sobre
   videoUrl           String?         // Enlace a video YouTube o MP4
   galeriaFotosUrls   String[]        @default([]) // Galería de fotos o hitos históricos

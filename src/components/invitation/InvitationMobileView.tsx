@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   MapPin,
   Gift,
@@ -142,6 +142,21 @@ export default function InvitationMobileView({
   const template = getTemplate(data.estiloPlantilla);
   const eventDateObj = new Date(data.fechaEvento);
 
+  // Idioma: solo los eventos en español puro nacen en español; en inglés o
+  // bilingües el defecto es inglés (mismo patrón que las 5 plantillas con toggle).
+  const isBilingual = data.idiomaDefault === "bilingual";
+  const [currentLang, setCurrentLang] = useState<"es" | "en">(
+    data.idiomaDefault === "es" ? "es" : "en"
+  );
+  const isEn = currentLang === "en";
+  // Frase mostrada (versión en inglés si existe) y corte real (sin datos, no hay sección)
+  const fraseMostrada =
+    isEn && data.frasePersonalizadaEn ? data.frasePersonalizadaEn : data.frasePersonalizada;
+  const corte = data.corteHonorJson;
+  const tieneCorte = Boolean(
+    corte && (corte.chambelan || corte.damas?.length || corte.parents || corte.padrinos?.length)
+  );
+
   // Fecha por defecto o personalizada
   const formattedDate =
     data.fechaTextoPersonalizada ||
@@ -166,6 +181,7 @@ export default function InvitationMobileView({
           tagline={data.subtitulo || undefined}
           template={template}
           reproducirMusicaAlAbrir={data.reproducirMusicaAlAbrir}
+          idiomaDefault={data.idiomaDefault}
         />
       )}
 
@@ -191,7 +207,7 @@ export default function InvitationMobileView({
             href="#inicio"
             className="hover:text-pink-700 transition font-serif tracking-widest text-[#5A3E44]"
           >
-            Invitation
+            {isEn ? "Invitation" : "Invitación"}
           </a>
           <a
             href="#rsvp"
@@ -203,6 +219,23 @@ export default function InvitationMobileView({
           >
             RSVP
           </a>
+          {isBilingual && (
+            <div className="flex items-center gap-1 text-[11px] font-bold">
+              <button
+                onClick={() => setCurrentLang("es")}
+                className={!isEn ? "text-[#5A3E44]" : "text-stone-400"}
+              >
+                ES
+              </button>
+              <span className="text-stone-300">|</span>
+              <button
+                onClick={() => setCurrentLang("en")}
+                className={isEn ? "text-[#5A3E44]" : "text-stone-400"}
+              >
+                EN
+              </button>
+            </div>
+          )}
         </nav>
 
         {/* 2. Portada (Sobre y Lazo con Glitter Oro Rosa) */}
@@ -252,28 +285,30 @@ export default function InvitationMobileView({
             className="text-[11px] tracking-widest uppercase text-stone-500 mb-3 font-semibold"
             style={{ fontFamily: template.fontSubheading }}
           >
-            WITH LOVE WE INVITE YOU
+            {isEn ? "WITH LOVE WE INVITE YOU" : "CON AMOR TE INVITAMOS"}
           </p>
 
-          {/* Fotografía vertical enmarcada en arco superior */}
-          <div
-            className="rounded-t-full overflow-hidden border-4 border-white shadow-xl mx-auto w-72 h-96 relative bg-stone-100"
-          >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={data.fotoPortadaUrl}
-              alt={data.titulo}
-              className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
-            />
-          </div>
+          {/* Fotografía vertical enmarcada en arco superior (solo si hay portada) */}
+          {data.fotoPortadaUrl && (
+            <div
+              className="rounded-t-full overflow-hidden border-4 border-white shadow-xl mx-auto w-72 h-96 relative bg-stone-100"
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={data.fotoPortadaUrl}
+                alt={data.titulo}
+                className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
+              />
+            </div>
+          )}
 
           <p
             className="text-[11px] tracking-widest uppercase text-stone-400 mt-6 font-semibold"
             style={{ fontFamily: template.fontSubheading }}
           >
             {data.tipoEvento === "QUINCEANERA"
-              ? "CELEBRATE THE QUINCEAÑERA OF"
-              : "CELEBRATE THE WEDDING OF"}
+              ? (isEn ? "CELEBRATE THE QUINCEAÑERA OF" : "CELEBRA LA QUINCEAÑERA DE")
+              : (isEn ? "CELEBRATE THE WEDDING OF" : "CELEBRA LA BODA DE")}
           </p>
 
           {/* Nombre caligráfico + Corazón musical */}
@@ -319,8 +354,8 @@ export default function InvitationMobileView({
               style={{ fontFamily: template.fontSubheading }}
             >
               {data.tipoEvento === "QUINCEANERA"
-                ? "FROM GIRL TO SEÑORITA"
-                : "OUR LOVE STORY"}
+                ? (isEn ? "FROM GIRL TO SEÑORITA" : "DE NIÑA A SEÑORITA")
+                : (isEn ? "OUR LOVE STORY" : "NUESTRA HISTORIA DE AMOR")}
             </h3>
 
             {/* Dos fotos comparativas en marcos redondeados / ovalados */}
@@ -339,7 +374,7 @@ export default function InvitationMobileView({
                     <span
                       className="mt-2 text-[10px] font-bold tracking-widest uppercase text-stone-500 font-serif"
                     >
-                      FROM GIRL
+                      {isEn ? "FROM GIRL" : "DE NIÑA"}
                     </span>
                   </div>
                 )}
@@ -357,19 +392,20 @@ export default function InvitationMobileView({
                     <span
                       className="mt-2 text-[10px] font-bold tracking-widest uppercase text-[#5A3E44] font-serif"
                     >
-                      TO SEÑORITA
+                      {isEn ? "TO SEÑORITA" : "A SEÑORITA"}
                     </span>
                   </div>
                 )}
               </div>
             )}
 
-            <p
-              className="text-xs leading-relaxed font-light px-2 text-stone-600 mt-2"
-            >
-              {data.frasePersonalizada ||
-                "Desde pequeña, Elsy soñó con este instante. Hoy celebramos el hermoso paso de niña a señorita, rodeada del cariño y bendición de quienes han guiado cada uno de sus pasos."}
-            </p>
+            {fraseMostrada ? (
+              <p
+                className="text-xs leading-relaxed font-light px-2 text-stone-600 mt-2"
+              >
+                {fraseMostrada}
+              </p>
+            ) : null}
           </section>
         )}
 
@@ -382,6 +418,7 @@ export default function InvitationMobileView({
           fechaLimite={data.fechaLimiteRsvp}
           template={template}
           permitirConfirmacionTelefono={data.permitirConfirmacionTelefono !== false}
+          isEn={isEn}
         />
 
         {/* 7. Mesa de Regalos / Lluvia de Sobres (The Registry) */}
@@ -394,12 +431,14 @@ export default function InvitationMobileView({
               className="text-xs uppercase tracking-widest font-bold mt-2 text-[#5A3E44]"
               style={{ fontFamily: template.fontSubheading }}
             >
-              {data.mesaRegalosJson?.titulo || "THE REGISTRY"}
+              {data.mesaRegalosJson?.titulo || (isEn ? "THE REGISTRY" : "MESA DE REGALOS")}
             </h3>
 
             <p className="text-xs text-stone-600 mt-2 leading-relaxed font-light">
               {data.mesaRegalosJson?.mensaje ||
-                "Celebrating with you is the greatest gift of all. For guests who wish to bring a contribution, is warmly appreciated."}
+                (isEn
+                  ? "Celebrating with you is the greatest gift of all. For guests who wish to bring a contribution, is warmly appreciated."
+                  : "Celebrar contigo es el mayor regalo. Si deseas traer una aportación, será muy apreciada.")}
             </p>
 
             {/* Badges de opciones de aportación (Zelle / CashApp / Urna de sobres) */}
@@ -433,7 +472,7 @@ export default function InvitationMobileView({
               className="text-sm uppercase tracking-widest font-bold mt-1 text-[#5A3E44]"
               style={{ fontFamily: "'Cinzel', serif" }}
             >
-              THE LOCATION
+              {isEn ? "THE LOCATION" : "LA UBICACIÓN"}
             </h3>
           </div>
 
@@ -528,14 +567,14 @@ export default function InvitationMobileView({
                 className="inline-flex items-center gap-1.5 mt-2 text-xs uppercase tracking-wider font-semibold text-[#5A3E44] underline underline-offset-4"
               >
                 <MapPin className="w-3.5 h-3.5" />
-                Ver Mapa Iglesia
+                {isEn ? "View Church Map" : "Ver Mapa Iglesia"}
               </a>
             </div>
           )}
         </section>
 
         {/* 9. Línea de Tiempo del Evento (The Program) */}
-        <TimelineSection items={data.itinerarioJson} template={template} />
+        <TimelineSection items={data.itinerarioJson} template={template} isEn={isEn} />
 
         {/* 10. Código de Vestimenta (Dress Code) */}
         <section className="px-6 py-6">
@@ -547,25 +586,27 @@ export default function InvitationMobileView({
               className="text-xs uppercase tracking-widest font-bold mt-2 text-[#5A3E44]"
               style={{ fontFamily: template.fontSubheading }}
             >
-              BRING YOUR DANCING SHOES
+              {isEn ? "BRING YOUR DANCING SHOES" : "TRAE TUS ZAPATOS DE BAILE"}
             </h3>
 
             <p
               className="text-xs font-semibold text-[#5A3E44] mt-1 uppercase tracking-wider"
               style={{ fontFamily: template.fontSubheading }}
             >
-              {data.dressCodeTitulo || "DRESS CODE: ELEGANT & FORMAL"}
+              {isEn && data.dressCodeTituloEn ? data.dressCodeTituloEn : data.dressCodeTitulo || (isEn ? "DRESS CODE: ELEGANT & FORMAL" : "CÓDIGO DE VESTIMENTA: ELEGANTE Y FORMAL")}
             </p>
 
             <p className="text-xs text-stone-600 mt-2 leading-relaxed font-light">
-              {data.dressCodeNota ||
-                "Guests are encouraged to wear shades of white/formal to match the celebration."}
+              {isEn && data.dressCodeNotaEn ? data.dressCodeNotaEn : data.dressCodeNota ||
+                (isEn
+                  ? "Guests are encouraged to wear shades of white/formal to match the celebration."
+                  : "Se recomienda vestir de blanco o formal para acompañar la celebración.")}
             </p>
 
             {/* Muestra de colores reservados */}
             {data.coloresReservados && data.coloresReservados.length > 0 && (
               <div className="flex items-center justify-center gap-2 mt-4">
-                <span className="text-[10px] uppercase tracking-wider text-stone-400">Reserved tones:</span>
+                <span className="text-[10px] uppercase tracking-wider text-stone-400">{isEn ? "Reserved tones:" : "Tonos reservados:"}</span>
                 {data.coloresReservados.map((hex, i) => (
                   <div
                     key={i}
@@ -589,16 +630,19 @@ export default function InvitationMobileView({
               className="text-xs uppercase tracking-widest font-bold mt-1 text-[#5A3E44]"
               style={{ fontFamily: template.fontSubheading }}
             >
-              CELEBRATION GUIDELINE
+              {isEn ? "CELEBRATION GUIDELINE" : "GUÍA DE LA CELEBRACIÓN"}
             </h3>
             <p className="text-xs text-stone-600 mt-2 leading-relaxed font-light px-2">
               {data.celebrationGuideline ||
-                "OUR LITTLE GUESTS: We lovingly welcome children to celebrate with us. During special dances and performances, we kindly ask that children remain seated."}
+                (isEn
+                  ? "OUR LITTLE GUESTS: We lovingly welcome children to celebrate with us. During special dances and performances, we kindly ask that children remain seated."
+                  : "NUESTROS PEQUEÑOS INVITADOS: Recibimos con cariño a los niños. Durante los bailes y presentaciones especiales, les pedimos amablemente que permanezcan sentados.")}
             </p>
           </div>
         </section>
 
         {/* 12. Corte de Honor y Agradecimientos (The Court of Honor & Special Thank You) */}
+        {tieneCorte && (
         <section className="px-6 py-6">
           <div
             className="p-6 rounded-3xl border border-pink-100 shadow-sm text-center bg-white"
@@ -607,28 +651,32 @@ export default function InvitationMobileView({
               className="text-xs uppercase tracking-widest font-bold text-[#5A3E44]"
               style={{ fontFamily: template.fontSubheading }}
             >
-              THE COURT OF HONOR
+              {isEn ? "THE COURT OF HONOR" : "LA CORTE DE HONOR"}
             </h3>
 
             {/* Main Chambelán */}
-            <div className="mt-4">
-              <p className="text-[10px] uppercase tracking-wider text-stone-400 font-semibold">
-                Main Chambelán
-              </p>
-              <p className="text-xs font-bold text-[#5A3E44]">
-                {data.corteHonorJson?.chambelan || "Jeremiah"}
-              </p>
-            </div>
+            {data.corteHonorJson?.chambelan && (
+              <div className="mt-4">
+                <p className="text-[10px] uppercase tracking-wider text-stone-400 font-semibold">
+                  {isEn ? "Main Chambelán" : "Chambelán Principal"}
+                </p>
+                <p className="text-xs font-bold text-[#5A3E44]">
+                  {data.corteHonorJson.chambelan}
+                </p>
+              </div>
+            )}
 
             {/* Damitas */}
-            <div className="mt-3">
-              <p className="text-[10px] uppercase tracking-wider text-stone-400 font-semibold">
-                Damitas
-              </p>
-              <p className="text-xs text-stone-700">
-                {data.corteHonorJson?.damas?.join(" • ") || "Magdalena • Violeta • Tania"}
-              </p>
-            </div>
+            {data.corteHonorJson?.damas && data.corteHonorJson.damas.length > 0 && (
+              <div className="mt-3">
+                <p className="text-[10px] uppercase tracking-wider text-stone-400 font-semibold">
+                  {isEn ? "Damitas" : "Damas"}
+                </p>
+                <p className="text-xs text-stone-700">
+                  {data.corteHonorJson.damas.join(" • ")}
+                </p>
+              </div>
+            )}
 
             {/* Chambelanes adicionales si existen */}
             {data.corteHonorJson?.chambelanes && data.corteHonorJson.chambelanes.length > 0 && (
@@ -648,35 +696,42 @@ export default function InvitationMobileView({
               className="text-[11px] uppercase tracking-widest font-bold text-[#5A3E44]"
               style={{ fontFamily: template.fontSubheading }}
             >
-              SPECIAL THANK YOU
+              {isEn ? "SPECIAL THANK YOU" : "AGRADECIMIENTO ESPECIAL"}
             </h4>
 
             {/* Parents */}
-            <div className="mt-3">
-              <p className="text-[10px] uppercase tracking-wider text-stone-400 font-semibold">
-                Parents
-              </p>
-              <p className="text-xs font-semibold text-stone-700">
-                {data.corteHonorJson?.parents || "Magdalena & Adrian"}
-              </p>
-            </div>
+            {data.corteHonorJson?.parents && (
+              <div className="mt-3">
+                <p className="text-[10px] uppercase tracking-wider text-stone-400 font-semibold">
+                  {isEn ? "Parents" : "Padres"}
+                </p>
+                <p className="text-xs font-semibold text-stone-700">
+                  {data.corteHonorJson.parents}
+                </p>
+              </div>
+            )}
 
             {/* Padrinos de Honor */}
-            <div className="mt-3">
-              <p className="text-[10px] uppercase tracking-wider text-stone-400 font-semibold">
-                Padrinos de Honor
-              </p>
-              <p className="text-xs text-stone-600">
-                {data.corteHonorJson?.padrinos?.join(" • ") || "Tania & Carl"}
-              </p>
-            </div>
+            {data.corteHonorJson?.padrinos && data.corteHonorJson.padrinos.length > 0 && (
+              <div className="mt-3">
+                <p className="text-[10px] uppercase tracking-wider text-stone-400 font-semibold">
+                  {isEn ? "Godparents of Honor" : "Padrinos de Honor"}
+                </p>
+                <p className="text-xs text-stone-600">
+                  {data.corteHonorJson.padrinos.join(" • ")}
+                </p>
+              </div>
+            )}
 
             <p className="text-[11px] text-stone-500 italic mt-4 font-light">
               {data.corteHonorJson?.mensajeGratitud ||
-                "Gracias a nuestros seres queridos por su amor, generosidad y apoyo incondicional para hacer posible este sueño."}
+                (isEn
+                  ? "Thank you to our loved ones for your love, generosity and unconditional support in making this dream possible."
+                  : "Gracias a nuestros seres queridos por su amor, generosidad y apoyo incondicional para hacer posible este sueño.")}
             </p>
           </div>
         </section>
+        )}
 
         {/* 13. Despedida y Agendar en Calendario (See You Soon!) */}
         <footer className="px-6 pt-6 pb-12 text-center">
@@ -699,19 +754,19 @@ export default function InvitationMobileView({
               fontFamily: template.fontHeading,
             }}
           >
-            See You Soon!
+            {isEn ? "See You Soon!" : "¡Nos vemos pronto!"}
           </h3>
           <p
             className="text-[11px] tracking-widest uppercase text-stone-500 mt-1 mb-6 font-semibold"
             style={{ fontFamily: template.fontSubheading }}
           >
-            WITH LOVE AND GRATITUDE, {data.titulo} - SAVE THE DATE
+            {isEn ? "WITH LOVE AND GRATITUDE, " : "CON AMOR Y GRATITUD, "}{data.titulo}{isEn ? " - SAVE THE DATE" : " - APARTA LA FECHA"}
           </p>
 
           {/* Botón de acción: Add to Calendar */}
           <AddToCalendarButton
-            titulo={`Celebración: ${data.titulo}`}
-            descripcion={`Acompáñanos en la celebración de ${data.titulo} en ${data.recepcionNombre}.`}
+            titulo={isEn ? `Celebration: ${data.titulo}` : `Celebración: ${data.titulo}`}
+            descripcion={isEn ? `Join us in celebrating ${data.titulo} at ${data.recepcionNombre}.` : `Acompáñanos en la celebración de ${data.titulo} en ${data.recepcionNombre}.`}
             ubicacion={`${data.recepcionNombre}, ${data.recepcionDireccion}`}
             fechaEvento={data.fechaEvento}
             template={template}

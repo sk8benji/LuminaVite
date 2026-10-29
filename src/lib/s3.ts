@@ -40,6 +40,8 @@ export async function getPresignedUploadUrl(
     Bucket: BUCKET_NAME,
     Key: fileKey,
     ContentType: contentType,
+    // Keys únicas por timestamp+random: el navegador puede cachearlas para siempre
+    CacheControl: "public, max-age=31536000, immutable",
   });
 
   // Expira en 5 minutos (300 segundos)

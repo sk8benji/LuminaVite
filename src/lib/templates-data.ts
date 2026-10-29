@@ -149,6 +149,12 @@ export const INITIAL_MASTER_TEMPLATES: MasterTemplateItem[] = [
     colorSello: "#C5A059",
     fotoPortadaUrl:
       "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=600&q=80",
+    fotoInfanciaUrl:
+      "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=400&q=80",
+    fotoActualUrl:
+      "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=400&q=80",
+    fotoCierreUrl:
+      "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=600&q=80",
     activo: true,
     orden: 4,
   },

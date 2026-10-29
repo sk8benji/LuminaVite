@@ -1,4 +1,5 @@
 "use client";
+import { optimizarImagen } from "@/lib/optimize-image";
 
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
@@ -147,6 +148,21 @@ export default function TemplatesManager() {
         else if (["webp"].includes(ext)) resolvedType = "image/webp";
       }
 
+      // Optimizar imágenes en el cliente antes de subir (peso): WebP, máx.
+      // 1600 px la portada / 1200 px el resto, calidad 82. Si no achica el
+      // archivo (o falla), se sube el original intacto.
+      let uploadFile: File = file;
+      let uploadName = file.name;
+      let uploadType = resolvedType;
+      if (!isAudio && (resolvedType.startsWith("image/") || ["jpg", "jpeg", "png", "webp"].includes(ext))) {
+        const optimized = await optimizarImagen(file, fieldName === "fotoPortadaUrl" ? 1600 : 1200);
+        if (optimized && optimized.blob.size < file.size) {
+          uploadFile = new File([optimized.blob], optimized.name, { type: "image/webp" });
+          uploadName = optimized.name;
+          uploadType = "image/webp";
+        }
+      }
+
       // Cada plantilla tiene su carpeta propia en S3: templates/<slug>/images|audio (sin mezclarse)
       const templateSlug = (editingTemplate.slug || "general").replace(/[^a-z0-9-]/gi, "-");
       const folder = isAudio ? `templates/${templateSlug}/audio` : `templates/${templateSlug}/images`;
@@ -156,10 +172,10 @@ export default function TemplatesManager() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          filename: file.name,
-          contentType: resolvedType,
+          filename: uploadName,
+          contentType: uploadType,
           folder,
-          fileSize: file.size,
+          fileSize: uploadFile.size,
         }),
       });
 
@@ -171,8 +187,8 @@ export default function TemplatesManager() {
       // 2. Subir binario a S3
       const uploadRes = await fetch(presignedData.uploadUrl, {
         method: "PUT",
-        headers: { "Content-Type": resolvedType },
-        body: file,
+        headers: { "Content-Type": uploadType },
+        body: uploadFile,
       });
 
       if (!uploadRes.ok) {
@@ -250,7 +266,10 @@ export default function TemplatesManager() {
       fechaPlacaHora: editForm.fechaPlacaHora || "A LAS 3:00 PM",
       fechaPlacaLugar: editForm.fechaPlacaLugar || editForm.recepcionNombre || "QUINCE PALACE",
       countdownEncabezado: editForm.countdownEncabezado || "Faltan sólo...",
-      fotoPortadaUrl: editForm.fotoPortadaUrl || "/assets/template-butterfly/foto-columpio-portada.webp",
+      // Sin portada, placeholder neutro (nunca la foto de otra plantilla)
+      fotoPortadaUrl:
+        editForm.fotoPortadaUrl ||
+        `data:image/svg+xml;utf8,${encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' width='1200' height='630'><rect width='1200' height='630' fill='#7A002A'/></svg>")}`,
       fotoInfanciaUrl: editForm.fotoInfanciaUrl || "",
       fotoActualUrl: editForm.fotoActualUrl || "",
       fotoCierreUrl: editForm.fotoCierreUrl || "",

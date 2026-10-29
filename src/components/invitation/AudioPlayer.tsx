@@ -55,7 +55,7 @@ export default function AudioPlayer({ audioUrl, template }: AudioPlayerProps) {
 
   return (
     <div className="fixed top-4 right-4 z-40">
-      <audio ref={audioRef} src={audioUrl} loop preload="auto" />
+      <audio ref={audioRef} src={audioUrl} loop preload="none" />
       <button
         onClick={togglePlay}
         aria-label={isPlaying ? "Pausar música" : "Reproducir música"}

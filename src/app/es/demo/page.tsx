@@ -43,7 +43,7 @@ const DEMO_CARDS = [
     title: "Quince Pink",
     tag: "XV Años & Gala",
     desc: "Portada simple con sello de cera, hero a foto completa al atardecer, programa ilustrado y detalles en rosa pastel con botones punteados.",
-    image: "/assets/template-era-pink/foto-retrato.webp",
+    image: "/assets/template-era-pink/foto-sentada.webp",
     badge: "The Hanger T6",
   },
   {
@@ -80,7 +80,7 @@ const DEMO_CARDS = [
     tag: "XV Años Princesa",
     badge: "Edición Floral",
     desc: "Diseño floral romántico, presentación de corte de honor y sección especial para el vals familiar.",
-    image: "/assets/template-quince-rosado/90043c428c5ec72c7adb26dce69dedd2.webp",
+    image: "/assets/template-quince-rosado/da616fa36a10f18a133b2dc0383a07d0.webp",
   },
 
   // Fila 2

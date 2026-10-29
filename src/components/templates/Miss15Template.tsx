@@ -349,6 +349,28 @@ export default function Miss15Template({
       {/* Audio en bucle */}
       <audio ref={audioRef} loop preload="none" src={defaultAudio} />
 
+      {/* Selector de idioma flotante (solo si la invitación es bilingüe) */}
+      {isBilingual && (
+        <div className="absolute top-3 right-3 z-30 flex items-center gap-1 bg-black/35 backdrop-blur-md border border-white/30 rounded-full p-0.5 text-[9px] font-bold shadow-lg">
+          <button
+            onClick={() => setCurrentLang("en")}
+            className={`px-2 py-0.5 rounded-full transition-all ${
+              isEn ? "bg-white text-[#8C5A2B] shadow-xs" : "text-white/80 hover:text-white"
+            }`}
+          >
+            EN
+          </button>
+          <button
+            onClick={() => setCurrentLang("es")}
+            className={`px-2 py-0.5 rounded-full transition-all ${
+              !isEn ? "bg-white text-[#8C5A2B] shadow-xs" : "text-white/80 hover:text-white"
+            }`}
+          >
+            ES
+          </button>
+        </div>
+      )}
+
       <main className="relative z-10">
         {/* ======================================================= */}
         {/* HERO: FOTO COLUMPIO + TARJETA + REPRODUCTOR             */}

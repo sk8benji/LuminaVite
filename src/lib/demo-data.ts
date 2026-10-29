@@ -625,23 +625,5 @@ export function getSystemDemo(slug: string): InvitationData | null {
   const base = ALL_SYSTEM_DEMOS[clean];
   if (!base) return null;
 
-  try {
-    const fs = require("fs");
-    const path = require("path");
-    const overridesPath = path.join(process.cwd(), "src", "lib", "templates-overrides.json");
-    if (fs.existsSync(overridesPath)) {
-      const overrides = JSON.parse(fs.readFileSync(overridesPath, "utf-8"));
-      const match = overrides[clean] || overrides[base.slug];
-      if (match) {
-        return {
-          ...base,
-          ...match,
-        };
-      }
-    }
-  } catch {
-    // Si falla o estamos en entorno sin fs directo, devolver datos base
-  }
-
   return base;
 }

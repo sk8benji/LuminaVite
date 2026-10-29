@@ -2,6 +2,14 @@ import { Metadata } from "next";
 import { sanitizePublicBaseUrl } from "@/lib/url-safety";
 import { notFound } from "next/navigation";
 import { InvitationData } from "@/components/invitation/InvitationMobileView";
+import {
+  DEMO_BUTTERFLY,
+  DEMO_ISABELLA,
+  DEMO_EMMA_LUCAS,
+  DEMO_ELSY,
+  DEMO_CORALINE,
+  DEMO_BODA,
+} from "@/lib/demo-data";
 import TemplateDispatcher from "@/components/templates/TemplateDispatcher";
 import ContactBanner from "@/components/invitation/ContactBanner";
 import { normalizeSlug, getEventBySlug } from "@/lib/events";
@@ -14,283 +22,10 @@ interface PageProps {
   params: Promise<{ slug: string }> | { slug: string };
 }
 
-// ==========================================
-// 1. DEMO ELSY (Réplica Video de Referencia)
-// ==========================================
-export const DEMO_ELSY: InvitationData = {
-  id: "demo-elsy",
-  slug: "elsy-xv",
-  tipoEvento: "QUINCEANERA",
-  estiloPlantilla: "PRINCESA_ROSA",
-  titulo: "Elsy",
-  subtitulo: "An Unforgettable Celebration Awaits",
-  frasePersonalizada:
-    "Desde pequeña, Elsy soñó con este instante. Hoy celebramos el hermoso paso de niña a señorita, rodeada del cariño y bendición de quienes han guiado cada uno de sus pasos.",
-  fechaEvento: new Date("2026-12-05T14:00:00Z"),
-  fechaTextoPersonalizada: "DECEMBER 05, 2026 AT 2 PM",
-  fotoPortadaUrl:
-    "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=800&q=80",
-  fotoInfanciaUrl:
-    "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=400&q=80",
-  fotoActualUrl:
-    "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=400&q=80",
-  fotoCierreUrl:
-    "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=600&q=80",
-  musicaUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
-  telefonoWhatsappRsvp: "18181234567",
-  fechaLimiteRsvp: "November 15, 2026",
-  maxPasesPorInvitado: 4,
-  ceremoniaNombre: "Parroquia San Juan Bautista",
-  ceremoniaDireccion: "Av. Las Rosas 450, Los Ángeles, CA",
-  ceremoniaMapUrl: "https://maps.google.com",
-  recepcionNombre: "123 Forever Street, Los Ángeles, CA",
-  recepcionDireccion: "123 Forever Street, City, State",
-  recepcionMapUrl: "https://maps.google.com",
-  dressCodeTitulo: "BRING YOUR DANCING SHOES - DRESS CODE: Elegant & Formal",
-  dressCodeNota: "Guests are encouraged to wear shades of white/formal to match the celebration.",
-  coloresReservados: ["#FFFFFF", "#FCECEE", "#D4A59A"],
-  celebrationGuideline:
-    "OUR LITTLE GUESTS: We lovingly welcome children to celebrate with us. During special dances and performances, we kindly ask that children remain seated.",
-  itinerarioJson: [
-    { hora: "2:00 PM", titulo: "Llegada de invitados", tipoIcono: "car" },
-    { hora: "3:00 PM", titulo: "Ceremonia Religiosa", tipoIcono: "church" },
-    { hora: "5:30 PM", titulo: "Recepción y Brindis", tipoIcono: "wine" },
-    { hora: "7:00 PM", titulo: "Entrada y Vals / Protocolo", tipoIcono: "crown" },
-    { hora: "8:30 PM", titulo: "Apertura de pista de baile", tipoIcono: "party" },
-  ],
-  corteHonorJson: {
-    quinceanera: "Magdalena",
-    showQuinceanera: true,
-    miniQuinceanera: "Elsy",
-    showMiniQuinceanera: true,
-    chambelan: "Jeremiah",
-    showChambelan: true,
-    miniChambelan: "Jose",
-    showMiniChambelan: true,
-    damas: ["Violeta", "Zoe", "Elsy Magdalena", "Tania", "Yani"],
-    showDamas: true,
-    damitasHojitas: ["Violet", "Zoe", "Green"],
-    showDamitasHojitas: true,
-    parents: "Magdalena & Adrian",
-    showParents: true,
-    padrinos: ["Tania & Carl"],
-    showPadrinos: true,
-    mensajeGratitud: "Un agradecimiento de todo corazón a nuestros padres y padrinos por su generosidad y apoyo.",
-  },
-  mesaRegalosJson: {
-    titulo: "THE REGISTRY",
-    mensaje:
-      "Celebrating with you is the greatest gift of all. For guests who wish to bring a contribution, is warmly appreciated.",
-    plataformas: ["Zelle", "CashApp", "Urna de sobres"],
-    datosBancarios: "Zelle: elsy.family@example.com",
-  },
-};
+// Los demos ya no se duplican aquí: vienen de "@/lib/demo-data"
+// (la misma fuente que /demo/*), para que /<slug> y /demo/<slug>
+// muestren siempre el mismo contenido.
 
-// ==========================================
-// 2. DEMO ISABELLA (Canva T1: Elegant Rose)
-// ==========================================
-export const DEMO_ISABELLA: InvitationData = {
-  id: "demo-isabella",
-  slug: "isabella-xv",
-  tipoEvento: "QUINCEANERA",
-  estiloPlantilla: "ELEGANT_ROSE",
-  titulo: "Isabella",
-  subtitulo: "BLG 2UPT Elegant Rose Themed Quinceanera",
-  frasePersonalizada: "Celebrating Fifteen Amazing Years—The Best Is Yet to Come.",
-  fechaEvento: new Date("2026-07-18T16:00:00Z"),
-  fechaTextoPersonalizada: "SUNDAY, JULY 18 • 4:00 PM",
-  fotoPortadaUrl: "/assets/template-rose/51d8fb6fdca05936497b8c7f02e14280.webp",
-  fotoInfanciaUrl: "/assets/template-rose/722d78548334333072ad7200e4f8233e.webp",
-  fotoActualUrl: "/assets/template-rose/5f24871f73b9424764387ef47bb5723e.webp",
-  fotoCierreUrl: "/assets/template-rose/51d8fb6fdca05936497b8c7f02e14280.webp",
-  musicaUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
-  musicaTitulo: "Photograph - Ed Sheeran",
-  videoUrl: "https://www.youtube.com/embed/0ZVsGVE1qCg",
-  telefonoWhatsappRsvp: "18181234567",
-  fechaLimiteRsvp: "June 20th",
-  maxPasesPorInvitado: 4,
-  ceremoniaNombre: "St. Mary's Church",
-  ceremoniaDireccion: "Any City, Any Street, AZ 12345",
-  ceremoniaMapUrl: "https://maps.google.com/?q=St.+Mary's+Church",
-  recepcionNombre: "Grand Ballroom",
-  recepcionDireccion: "Any City, Any Street, AZ 12345",
-  recepcionMapUrl: "https://maps.google.com/?q=Grand+Ballroom",
-  dressCodeTitulo: "Formal & Elegant Attire",
-  dressCodeNota: "We invite our guests to dress in elegant formal attire as we celebrate together. Reserved color: Blush pink for the Quinceañera.",
-  wishlistUrl: "https://www.amazon.com/baby-reg",
-  idiomaDefault: "bilingual",
-  itinerarioJson: [
-    { hora: "4:00 PM", titulo: "Mass - St. Mary's Church", tipoIcono: "church" },
-    { hora: "5:00 PM", titulo: "Entrance - Grand Ballroom", tipoIcono: "car" },
-    { hora: "6:00 PM", titulo: "Waltz", tipoIcono: "crown" },
-    { hora: "7:00 PM", titulo: "Dinner", tipoIcono: "wine" },
-    { hora: "9:00 PM", titulo: "Party", tipoIcono: "party" },
-  ],
-  corteHonorJson: {
-    chambelan: "Emilio Salazar",
-    damas: ["Isabella Cordero", "Valeria Morales", "Sofia Villanueva", "Emilia Rodriguez", "Camila Aguilar", "Maria Paz Leon", "Alondra Jimenez", "Regina Castro", "Natalia Sanchez"],
-    chambelanes: ["Diego Alvarez", "Santiago Lopez", "Francisco Ruiz", "Mateo Ramírez", "Alejandro Torres"],
-    padrinos: ["Miguel Herrera", "Daniela Herrera"],
-  },
-  historiaHitosJson: [
-    {
-      foto: "/assets/template-rose/722d78548334333072ad7200e4f8233e.webp",
-      fecha: "2011",
-      titulo: "First Steps",
-      texto: "Every story has a beginning, and mine started with the love of family, the comfort of home, and countless little moments that became treasured memories.",
-    },
-    {
-      foto: "/assets/template-rose/94a9fcddf0e62c3f0ffe60a5a769dd9c.webp",
-      fecha: "2016",
-      titulo: "New Adventures",
-      texto: "With each new adventure came exciting firsts, growing confidence, and friendships that would become an important part of my journey.",
-    },
-    {
-      foto: "/assets/template-rose/97da854ac288883d24133acda9d854ca.webp",
-      fecha: "2020",
-      titulo: "Treasured Memories",
-      texto: "From laughter-filled days to unforgettable memories, these special people helped shape the person I am today.",
-    },
-    {
-      foto: "/assets/template-rose/39e6d693ec9d82a484d96df04a0cffd3.webp",
-      fecha: "2024",
-      titulo: "Loyal Companion",
-      texto: "And through every chapter, there was one loyal companion by my side—sharing the cuddles, the adventures, and all of life's happiest moments.",
-    },
-  ],
-};
-
-// ==========================================
-// 3. DEMO EMMA & LUCAS (Canva T2: Fairytale Wedding)
-// ==========================================
-export const DEMO_EMMA_LUCAS: InvitationData = {
-  id: "demo-emma-lucas",
-  slug: "emma-and-lucas",
-  tipoEvento: "BODA",
-  estiloPlantilla: "FAIRYTALE_CHATEAU",
-  titulo: "Emma & Lucas",
-  subtitulo: "Fairytale Château Wedding at Oheka Castle",
-  frasePersonalizada: "Together with their families, invite you to their wedding celebration.",
-  fechaEvento: new Date("2030-07-22T15:30:00Z"),
-  fechaTextoPersonalizada: "SATURDAY, JULY 22, 2030 AT 3:30 PM",
-  fotoPortadaUrl:
-    "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80",
-  musicaUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
-  telefonoWhatsappRsvp: "18189876543",
-  fechaLimiteRsvp: "July 15",
-  maxPasesPorInvitado: 2,
-  recepcionNombre: "Oheka Castle Estate",
-  recepcionDireccion: "8221 Sunset Blvd, West Hollywood, CA",
-  recepcionMapUrl: "https://maps.google.com",
-  dressCodeTitulo: "Semi-Formal and Elegant",
-  dressCodeNota: "Feel free to add a touch of pastel to match our theme.",
-  wishlistUrl: "https://www.zola.com/registry",
-};
-
-// ==========================================
-// 4. DEMO MARIPOSAS (Canva T3: Blue Butterfly Garden)
-// ==========================================
-export const DEMO_BUTTERFLY: InvitationData = {
-  id: "demo-butterfly",
-  slug: "mariposas-xv",
-  tipoEvento: "QUINCEANERA",
-  estiloPlantilla: "BLUE_BUTTERFLY",
-  titulo: "Valeria",
-  subtitulo: "My Quinceañera",
-  frasePersonalizada:
-    "“Doy gracias a Dios por concederme la dicha de celebrar mis quince primaveras, y a mis padres por guiar cada uno de mis pasos con amor incondicional.”",
-  autorBendicion: "Con amor, tu familia",
-  textoDisco: "Click to Play Music",
-  fechaEvento: new Date("2026-10-24T15:00:00Z"),
-  fechaTextoPersonalizada: "SATURDAY, OCTOBER 24, 2026 AT 3 PM",
-  fotoPortadaUrl: "/assets/template-butterfly/foto-columpio-portada.webp",
-  fotoInfanciaUrl: "/assets/template-butterfly/foto-sesion-1.webp",
-  fotoActualUrl: "/assets/template-butterfly/foto-sesion-2.webp",
-  fotoCierreUrl: "/assets/template-butterfly/foto-gala-vestido.webp",
-  musicaUrl:
-    "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
-  telefonoWhatsappRsvp: "18181234567",
-  fechaLimiteRsvp: "20 de Octubre",
-  maxPasesPorInvitado: 3,
-  recepcionNombre: "QUINCE PALACE",
-  recepcionDireccion: "123 Quince St, City, ST 90210",
-  recepcionMapUrl: "https://maps.google.com",
-  dressCodeTitulo: "Formal & Elegant",
-  dressCodeNota:
-    "Agradecemos reservar los tonos azul celeste y blanco exclusivamente para la quinceañera.",
-  coloresReservados: ["#7FA2C6", "#FFFFFF"],
-  fechaPlacaMes: "OCTUBRE",
-  fechaPlacaHora: "A LAS 3:00 PM",
-  fechaPlacaLugar: "QUINCE PALACE",
-  countdownEncabezado: "Faltan sólo...",
-  dressCodeEtiqueta: "Formal & Rigurosa Etiqueta",
-  dressCodeColoresReservados: "Tonos azul celeste y blanco reservados exclusivamente para la quinceañera",
-  regalosMensaje: "Tu presencia es nuestro mayor regalo. Si deseas tener un detalle con la quinceañera, dispondremos de un cofre en la recepción.",
-  regalosZelle: "valeria.xv@example.com",
-  regalosCashApp: "$ValeriaXV",
-  rsvpFechaLimite: "Favor de confirmar antes del 20 de Octubre",
-  rsvpDiasAntes: 15,
-  mensajeDespedida: "See You Soon! With love and gratitude for being part of this fairytale day.",
-  itinerarioJson: [
-    { hora: "04:30 PM", titulo: "Llegada & Recepción", tipoIcono: "car" },
-    { hora: "05:30 PM", titulo: "Misa Solemne de Acción de Gracias", tipoIcono: "church" },
-    { hora: "07:00 PM", titulo: "Cena & Brindis de Honor", tipoIcono: "wine" },
-    { hora: "08:30 PM", titulo: "Vals de Gala & Pista de Baile", tipoIcono: "crown" },
-  ],
-  corteHonorJson: {
-    chambelan: "Sebastián Ramos",
-    damas: ["Camila", "Valentina", "Sofía", "Isabella"],
-    parents: "Carlos & Elena Morales",
-    padrinos: ["Roberto & Patricia Méndez"],
-  },
-};
-
-// ==========================================
-// 5. DEMO CORALINE (Canva T4: Coraline Other World)
-// ==========================================
-export const DEMO_CORALINE: InvitationData = {
-  id: "demo-coraline",
-  slug: "coraline-party",
-  tipoEvento: "CUMPLEANOS",
-  estiloPlantilla: "CORALINE_MYSTICAL",
-  titulo: "Valeria's 15th Mystery",
-  subtitulo: "Coraline Other World Secret Party",
-  frasePersonalizada: "You have found the secret door... be careful what you wish for!",
-  fechaEvento: new Date("2026-10-31T18:00:00Z"),
-  fechaTextoPersonalizada: "OCTOBER 31, 2026 • 6:00 PM",
-  fotoPortadaUrl:
-    "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=800&q=80",
-  musicaUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
-  telefonoWhatsappRsvp: "18181234567",
-  fechaLimiteRsvp: "October 20",
-  maxPasesPorInvitado: 2,
-  recepcionNombre: "The Pink Palace Apartments & Secret Garden",
-  recepcionDireccion: "123 Oregon Fall Way, Ashland, OR",
-  recepcionMapUrl: "https://maps.google.com",
-  dressCodeTitulo: "Other World Attire: Yellow & Deep Blue",
-  dressCodeNota: "Guests are encouraged to wear shades of yellow, deep blue, or whimsical vintage attire!",
-  coloresReservados: ["#FFD700", "#0A1956", "#3A0443", "#000000"],
-};
-
-// Boda clásica adicional
-export const DEMO_BODA: InvitationData = {
-  id: "demo-boda",
-  slug: "sofia-y-alejandro",
-  tipoEvento: "BODA",
-  estiloPlantilla: "CLASICA_IMPERIAL",
-  titulo: "Sofía & Alejandro",
-  subtitulo: "Nuestra Boda",
-  fechaEvento: new Date("2026-10-24T18:00:00Z"),
-  fotoPortadaUrl:
-    "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80",
-  musicaUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
-  telefonoWhatsappRsvp: "18189876543",
-  recepcionNombre: "Hacienda Los Laureles",
-  recepcionDireccion: "Km 14 Carretera Antigua",
-  recepcionMapUrl: "https://maps.google.com",
-};
-
-// Evento del cliente: Maydelin Mendez (Quince Rosado)
 export const EVENT_MAYDELIN_MENDEZ: InvitationData = {
   id: "client-maydelin-mendez",
   slug: "maydelin-mendez",
@@ -388,6 +123,7 @@ async function getEventoData(rawSlug: string): Promise<InvitationData | null> {
       fotoZapato1Url: (dbEvento as any).fotoZapato1Url ?? null,
       fotoZapato2Url: (dbEvento as any).fotoZapato2Url ?? null,
       musicaUrl: dbEvento.musicaUrl,
+      musicaTitulo: (dbEvento as any).musicaTitulo ?? null,
       reproducirMusicaAlAbrir: dbEvento.reproducirMusicaAlAbrir !== false,
       videoUrl: dbEvento.videoUrl,
       galeriaFotosUrls: dbEvento.galeriaFotosUrls,

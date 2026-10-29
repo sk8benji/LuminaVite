@@ -37,6 +37,7 @@ export async function getMergedDemo(slug: string) {
       where: { slug: initial.slug },
     });
     if (!row) return base;
+    if (row.activo === false) return base; // Plantilla desactivada: el demo queda con su base
     const { configExtra, ...rest } = row;
     const dbFields = nonEmpty(rest);
     for (const k of EXCLUDE) delete dbFields[k];

@@ -73,6 +73,83 @@ const nextConfig = {
           },
         ],
       },
+      {
+        // template-baby-blue: nombres sin hash -> TTL corto (7 dias) para que una portada
+        // cambiada en el editor no quede un mes en cache.
+        source: "/assets/template-baby-blue/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=604800, stale-while-revalidate=86400",
+          },
+        ],
+      },
+      {
+        // template-blush: nombres sin hash -> TTL corto (7 dias) para que una portada
+        // cambiada en el editor no quede un mes en cache.
+        source: "/assets/template-blush/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=604800, stale-while-revalidate=86400",
+          },
+        ],
+      },
+      {
+        // template-butterfly: nombres sin hash -> TTL corto (7 dias) para que una portada
+        // cambiada en el editor no quede un mes en cache.
+        source: "/assets/template-butterfly/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=604800, stale-while-revalidate=86400",
+          },
+        ],
+      },
+      {
+        // template-era-pink: nombres sin hash -> TTL corto (7 dias) para que una portada
+        // cambiada en el editor no quede un mes en cache.
+        source: "/assets/template-era-pink/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=604800, stale-while-revalidate=86400",
+          },
+        ],
+      },
+      {
+        // template-miss15: nombres sin hash -> TTL corto (7 dias) para que una portada
+        // cambiada en el editor no quede un mes en cache.
+        source: "/assets/template-miss15/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=604800, stale-while-revalidate=86400",
+          },
+        ],
+      },
+      {
+        // template-quince-rosado: nombres sin hash -> TTL corto (7 dias) para que una portada
+        // cambiada en el editor no quede un mes en cache.
+        source: "/assets/template-quince-rosado/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=604800, stale-while-revalidate=86400",
+          },
+        ],
+      },
+      {
+        // template-rose: nombres sin hash -> TTL corto (7 dias) para que una portada
+        // cambiada en el editor no quede un mes en cache.
+        source: "/assets/template-rose/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=604800, stale-while-revalidate=86400",
+          },
+        ],
+      },
     ];
   },
   async rewrites() {

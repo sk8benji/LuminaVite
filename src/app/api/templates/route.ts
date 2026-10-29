@@ -45,7 +45,7 @@ export async function GET(req: NextRequest) {
     const row: any = await (prisma as any).masterTemplate.findUnique({
       where: { slug: initial.slug },
     });
-    if (row) {
+    if (row && row.activo !== false) {
       const { configExtra, ...rest } = row;
       const dbFields = nonEmpty(rest);
       for (const k of EXCLUDE) delete dbFields[k];

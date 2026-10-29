@@ -43,7 +43,7 @@ const DEMO_CARDS = [
     title: "Quince Pink",
     tag: "Quinceañera & Gala",
     desc: "Simple cover with wax seal, full-photo sunset hero, illustrated program, and pastel pink details with dotted buttons.",
-    image: "/assets/template-era-pink/foto-retrato.webp",
+    image: "/assets/template-era-pink/foto-sentada.webp",
     badge: "The Hanger T6",
   },
   {
@@ -80,7 +80,7 @@ const DEMO_CARDS = [
     tag: "Princess Quinceañera",
     badge: "Floral Edition",
     desc: "Romantic floral design, court of honor presentation, and special section for the family waltz.",
-    image: "/assets/template-quince-rosado/90043c428c5ec72c7adb26dce69dedd2.webp",
+    image: "/assets/template-quince-rosado/da616fa36a10f18a133b2dc0383a07d0.webp",
   },
 
   // Row 2

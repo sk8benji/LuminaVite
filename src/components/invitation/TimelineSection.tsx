@@ -24,6 +24,8 @@ export interface TimelineItem {
 interface TimelineSectionProps {
   items?: TimelineItem[] | null;
   template: TemplateConfig;
+  // Idioma de los títulos (la vista genérica lo pasa; Coraline no, y queda en inglés)
+  isEn?: boolean;
 }
 
 const defaultItems: TimelineItem[] = [
@@ -34,7 +36,7 @@ const defaultItems: TimelineItem[] = [
   { hora: "9:30 PM", titulo: "Apertura de Pista y Fiesta", tipoIcono: "party" },
 ];
 
-export default function TimelineSection({ items, template }: TimelineSectionProps) {
+export default function TimelineSection({ items, template, isEn = true }: TimelineSectionProps) {
   const timelineData = items && items.length > 0 ? items : defaultItems;
 
   const renderIcon = (tipo?: string) => {
@@ -68,7 +70,7 @@ export default function TimelineSection({ items, template }: TimelineSectionProp
             fontFamily: template.fontSubheading,
           }}
         >
-          THE PROGRAM
+          {isEn ? "THE PROGRAM" : "EL PROGRAMA"}
         </h3>
         <p
           className="text-[11px] opacity-75 mt-0.5"
@@ -104,7 +106,7 @@ export default function TimelineSection({ items, template }: TimelineSectionProp
 
             {/* Título */}
             <p className="font-medium text-stone-700 mt-0.5 text-xs" style={{ fontFamily: template.fontSubheading }}>
-              {item.titulo}
+              {isEn && item.tituloEn ? item.tituloEn : item.titulo}
             </p>
 
             {/* Descripción opcional */}

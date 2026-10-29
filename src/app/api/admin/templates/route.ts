@@ -48,6 +48,8 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const { slug, ...updates } = body;
+    // No anidar el blob anterior: configExtra se guarda plano, sin configExtra dentro
+    const { configExtra: _configExtraPrevio, ...cleanUpdates } = updates as any;
 
     if (!slug) {
       return NextResponse.json({ error: "El slug de la plantilla es requerido." }, { status: 400 });
@@ -74,7 +76,7 @@ export async function POST(req: NextRequest) {
           fotoInfanciaUrl: updates.fotoInfanciaUrl,
           fotoActualUrl: updates.fotoActualUrl,
           fotoCierreUrl: updates.fotoCierreUrl,
-          configExtra: updates,
+          configExtra: cleanUpdates,
         },
         create: {
           slug,
@@ -92,7 +94,7 @@ export async function POST(req: NextRequest) {
           fotoInfanciaUrl: updates.fotoInfanciaUrl,
           fotoActualUrl: updates.fotoActualUrl,
           fotoCierreUrl: updates.fotoCierreUrl,
-          configExtra: updates,
+          configExtra: cleanUpdates,
         },
       });
     } catch (dbErr) {

@@ -93,6 +93,7 @@ export async function ensurePostgresTables(): Promise<boolean> {
           "fotoZapato1Url" TEXT,
           "fotoZapato2Url" TEXT,
           "musicaUrl" TEXT,
+          "musicaTitulo" TEXT,
           "reproducirMusicaAlAbrir" BOOLEAN DEFAULT true,
           "videoUrl" TEXT,
           "galeriaFotosUrls" TEXT[] DEFAULT ARRAY[]::TEXT[],
@@ -271,6 +272,7 @@ export async function ensurePostgresTables(): Promise<boolean> {
       `CREATE INDEX IF NOT EXISTS "MasterTemplate_estiloPlantilla_idx" ON "MasterTemplate"("estiloPlantilla");`,
       // Marca demo: columna en tablas viejas + las 3 invitaciones de muestra del evento (idempotente)
       `ALTER TABLE "Evento" ADD COLUMN IF NOT EXISTS "esDemo" BOOLEAN NOT NULL DEFAULT false;`,
+      `ALTER TABLE "Evento" ADD COLUMN IF NOT EXISTS "musicaTitulo" TEXT;`,
       `UPDATE "Evento" SET "esDemo" = true WHERE slug IN ('quinceano-evento', 'quinceano-evento2', 'quinceano-tarjeta');`,
     ];
 

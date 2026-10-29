@@ -56,6 +56,7 @@ export default function CoralineThemedTemplate({
           tagline={data.subtitulo || "Secret Door Invitation"}
           template={template}
           reproducirMusicaAlAbrir={data.reproducirMusicaAlAbrir}
+          idiomaDefault={data.idiomaDefault}
         />
       )}
 

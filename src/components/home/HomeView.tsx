@@ -454,6 +454,10 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
                     <img
                       src={card.image}
                       alt={card.name}
+                      loading="lazy"
+                      decoding="async"
+                      width={800}
+                      height={533}
                       style={{ objectPosition: card.imgPos ?? "50% 0%" }}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                     />

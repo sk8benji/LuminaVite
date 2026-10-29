@@ -33,6 +33,7 @@ import {
 import { TEMPLATES, TemplateId } from "@/lib/templates";
 import { InvitationData } from "@/components/invitation/InvitationMobileView";
 import MobileSimulator from "@/components/preview/MobileSimulator";
+import { optimizarImagen } from "@/lib/optimize-image";
 import TemplateConfigDispatcher from "@/components/events/forms/TemplateConfigDispatcher";
 import TemplateSectionBuilder from "@/components/admin/TemplateSectionBuilder";
 import EventSettingsConfig from "@/components/admin/EventSettingsConfig";
@@ -46,14 +47,46 @@ const DEMO_INITIAL_VALUES = {
   recepcionNombre: "Gran Salón Diamante",
 };
 
-// Una foto es "de plantilla/stock" si NO fue subida por el usuario a S3 (hallazgo 12)
+// Corte e itinerario de ejemplo con los que arranca el formulario (hallazgo 15):
+// si siguen intactos al guardar, el guard lo bloquea aunque el nombre ya haya cambiado.
+const DEMO_ITINERARIO = [
+  { hora: "4:00 PM", titulo: "Llegada de Invitados", tipoIcono: "welcome" },
+  { hora: "5:00 PM", titulo: "Ceremonia Religiosa", tipoIcono: "entrance" },
+  { hora: "7:00 PM", titulo: "Cena & Brindis", tipoIcono: "dinner" },
+  { hora: "8:30 PM", titulo: "Vals y Fiesta", tipoIcono: "waltz" },
+];
+const DEMO_CORTE_HONOR = {
+  quinceanera: "Magdalena",
+  showQuinceanera: true,
+  miniQuinceanera: "Elsy",
+  showMiniQuinceanera: true,
+  chambelan: "Jeremiah",
+  showChambelan: true,
+  miniChambelan: "Jose",
+  showMiniChambelan: true,
+  damas: ["Violeta", "Zoe", "Elsy Magdalena", "Tania", "Yani"],
+  showDamas: true,
+  damitasHojitas: ["Violet", "Zoe", "Green"],
+  showDamitasHojitas: true,
+  parents: "Magdalena & Adrian",
+  showParents: true,
+  padrinos: ["Tania", "Carl"],
+  showPadrinos: true,
+};
+
+// Una foto es del usuario solo si vive bajo clientes/ (su carpeta en S3).
+// Funciona con cualquier dominio (S3 directo, CloudFront o endpoint propio):
+// las fotos de plantilla (Unsplash, /assets o templates/...) nunca se confunden
+// con fotos del cliente, ni al revés.
+function esFotoUsuario(url?: string | null): boolean {
+  if (!url) return false;
+  return url.includes("clientes/");
+}
+
+// Una foto es "de plantilla/stock" si NO fue subida por el usuario (hallazgo 12)
 function esFotoDePreset(url?: string | null): boolean {
   if (!url) return true;
-  return !(
-    url.includes("s3.") ||
-    url.includes("amazonaws.com") ||
-    url.includes("clientes/")
-  );
+  return !esFotoUsuario(url);
 }
 
 function NuevoEventoContent() {
@@ -73,6 +106,8 @@ function NuevoEventoContent() {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [saveSuccessMsg, setSaveSuccessMsg] = useState<string | null>(null);
   const [showMobilePreview, setShowMobilePreview] = useState(false);
+  // Título tecleado (o venido por ?nombre=): la invitación ya es de un cliente real
+  const [tituloEditado, setTituloEditado] = useState(false);
   const [editorMode, setEditorMode] = useState<"sections" | "settings">("sections");
   const [showTemplateGrid, setShowTemplateGrid] = useState(
     !isEditMode && !searchParams.get("plantilla") && !searchParams.get("nombre")
@@ -140,30 +175,8 @@ function NuevoEventoContent() {
     rsvpFechaLimite: "Favor de confirmar antes del 15 de Noviembre",
     rsvpDiasAntes: 15,
     coloresReservados: ["#FCECEE", "#FFFFFF"],
-    itinerarioJson: [
-      { hora: "4:00 PM", titulo: "Llegada de Invitados", tipoIcono: "welcome" },
-      { hora: "5:00 PM", titulo: "Ceremonia Religiosa", tipoIcono: "entrance" },
-      { hora: "7:00 PM", titulo: "Cena & Brindis", tipoIcono: "dinner" },
-      { hora: "8:30 PM", titulo: "Vals y Fiesta", tipoIcono: "waltz" },
-    ],
-    corteHonorJson: {
-      quinceanera: "Magdalena",
-      showQuinceanera: true,
-      miniQuinceanera: "Elsy",
-      showMiniQuinceanera: true,
-      chambelan: "Jeremiah",
-      showChambelan: true,
-      miniChambelan: "Jose",
-      showMiniChambelan: true,
-      damas: ["Violeta", "Zoe", "Elsy Magdalena", "Tania", "Yani"],
-      showDamas: true,
-      damitasHojitas: ["Violet", "Zoe", "Green"],
-      showDamitasHojitas: true,
-      parents: "Magdalena & Adrian",
-      showParents: true,
-      padrinos: ["Tania", "Carl"],
-      showPadrinos: true,
-    },
+    itinerarioJson: DEMO_ITINERARIO,
+    corteHonorJson: DEMO_CORTE_HONOR,
     mesaRegalosJson: {
       titulo: "Lluvia de Sobres",
       mensaje: "Tu presencia es nuestro mayor regalo. Disponemos de un cofre en la recepción.",
@@ -192,9 +205,9 @@ function NuevoEventoContent() {
       mostrarDressCode: true,
       mostrarFrasePersonalizada: true,
       titulo: "Magdalena",
-      subtitulo: "La Quinceañera",
+      subtitulo: "Mis Quince Años",
       frasePersonalizada:
-        "Hoy comienzo a escribir un nuevo capítulo al dejar atrás mi niñez para convertirme en mujer. En este día tan especial, rodeada del cariño de quienes más quiero, sería un honor contar con tu presencia para celebrar un momento que guardaré por siempre en mi corazón.",
+        "Con la bendición de Dios y el amor de mi familia, tengo el honor de invitarte a celebrar este día tan esperado.",
       frasePersonalizadaEn:
         "Today I begin to write a new chapter as I leave childhood behind to become a young woman. On this special day, surrounded by the love of those I cherish most, it would be an honor to have your presence to celebrate a moment I will keep in my heart forever.",
       fechaTextoPersonalizada: "SÁBADO 15 DE MAYO, 2027 • 4:00 PM",
@@ -401,7 +414,7 @@ function NuevoEventoContent() {
     },
     CORALINE_MYSTICAL: {
       estiloPlantilla: "CORALINE_MYSTICAL",
-      tipoEvento: "CUMPLEANOS",
+      tipoEvento: "QUINCEANERA",
       titulo: "Coraline Jones",
       subtitulo: "Welcome to The Other World",
       frasePersonalizada:
@@ -428,6 +441,7 @@ function NuevoEventoContent() {
       fotoPortadaUrl: "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=800&q=80",
       fotoInfanciaUrl: "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=400&q=80",
       fotoActualUrl: "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=400&q=80",
+      fotoCierreUrl: "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=600&q=80",
       musicaUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
       dressCodeTitulo: "Elegante y Formal",
       dressCodeNota: "Por favor reservamos tonos rosa pastel para la quinceañera.",
@@ -442,7 +456,7 @@ function NuevoEventoContent() {
       titulo: "Isabella Sofia",
       subtitulo: "My Quinceañera",
       frasePersonalizada:
-        "Hoy celebro mis quince años rodeada de amor, familia y sueños que apenas comienzan.",
+        "Con la bendición de Dios y el amor de mi familia, celebro mis quince años rodeada de quienes más quiero.",
       fotoPortadaUrl: "/assets/template-blush/foto-1.webp",
       fotoInfanciaUrl: "/assets/template-blush/foto-nina.webp",
       fotoActualUrl: "/assets/template-blush/foto-2.webp",
@@ -457,7 +471,7 @@ function NuevoEventoContent() {
       titulo: "Issabella Gonzales",
       subtitulo: "My Quinceañera",
       frasePersonalizada:
-        "De niña a señorita, celebro este momento único con las personas que más amo.",
+        "I'm excited to share this special day with you.",
       fotoPortadaUrl: "/assets/template-era-pink/foto-sentada.webp",
       fotoInfanciaUrl: "/assets/template-era-pink/foto-retrato.webp",
       fotoActualUrl: "/assets/template-era-pink/foto-espalda.webp",
@@ -472,7 +486,7 @@ function NuevoEventoContent() {
       titulo: "Isabella Torres",
       subtitulo: "Mis 15 Años",
       frasePersonalizada:
-        "Quince años de sueños, amor y familia. Hoy brindo por todo lo que viene.",
+        "I can't wait to celebrate with you!",
       fotoPortadaUrl: "/assets/template-miss15/foto-columpio.webp",
       fotoInfanciaUrl: "/assets/template-miss15/foto-damas.webp",
       fotoActualUrl: "/assets/template-miss15/foto-columpio-2.webp",
@@ -487,7 +501,7 @@ function NuevoEventoContent() {
       titulo: "Elina Miguel",
       subtitulo: "My Quinceañera",
       frasePersonalizada:
-        "Entre flores y cielo azul, celebro mis quince años con el corazón lleno de alegría.",
+        "You're invited!",
       fotoPortadaUrl: "/assets/template-baby-blue/foto-gazebo.webp",
       fotoInfanciaUrl: "/assets/template-baby-blue/foto-bebe.webp",
       fotoActualUrl: "/assets/template-baby-blue/foto-camara.webp",
@@ -499,7 +513,7 @@ function NuevoEventoContent() {
       estiloPlantilla: "CLASICA_IMPERIAL",
       tipoEvento: "BODA",
       titulo: "Sofía & Alejandro",
-      subtitulo: "Nuestra Boda de Ensueño",
+      subtitulo: "Nuestra Boda",
       frasePersonalizada:
         "Dos almas con un solo pensamiento, dos corazones que laten como uno solo.",
       fotoPortadaUrl: "https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=800&q=80",
@@ -512,7 +526,7 @@ function NuevoEventoContent() {
       estiloPlantilla: "ESMERALDA_ROYAL",
       tipoEvento: "QUINCEANERA",
       titulo: "Renata Villarreal",
-      subtitulo: "My Sweet Fifteen",
+      subtitulo: "Gala Esmeralda & Oro",
       frasePersonalizada:
         "Hoy doy el hermoso paso de niña a señorita, rodeada de las personas que más amo en el mundo.",
       fotoPortadaUrl: "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=800&q=80",
@@ -525,7 +539,7 @@ function NuevoEventoContent() {
       estiloPlantilla: "JARDIN_BOTANICA",
       tipoEvento: "BODA",
       titulo: "Camila & Mateo",
-      subtitulo: "Nuestra Boda de Ensueño",
+      subtitulo: "Amor en el Jardín",
       frasePersonalizada:
         "Entre flores y familia, celebramos el día en que dos corazones se vuelven uno.",
       fotoPortadaUrl: "https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&w=800&q=80",
@@ -538,7 +552,7 @@ function NuevoEventoContent() {
       estiloPlantilla: "MINIMALISTA_EDITORIAL",
       tipoEvento: "BODA",
       titulo: "Victoria & David",
-      subtitulo: "Nuestra Boda de Ensueño",
+      subtitulo: "The Modern Wedding",
       frasePersonalizada:
         "Lo esencial es invisible a los ojos: hoy celebramos nuestro amor, simple y verdadero.",
       fotoPortadaUrl: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=800&q=80",
@@ -550,6 +564,8 @@ function NuevoEventoContent() {
   };
 
   const updateField = (field: keyof InvitationData, value: any) => {
+    // El título tecleado marca la invitación como personalizada (ver handleSelectTemplate)
+    if (field === "titulo") setTituloEditado(true);
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
@@ -851,6 +867,7 @@ function NuevoEventoContent() {
       setFormData((prev) => {
         const isCustomName =
           isEditMode ||
+          tituloEditado ||
           (prev.titulo &&
             prev.titulo !== "Valeria Sofía" &&
             prev.titulo !== "Isabella" &&
@@ -873,12 +890,14 @@ function NuevoEventoContent() {
           (prev.idiomaDefault || preset.idiomaDefault || "es") as any
         );
 
-        // Si el usuario subió una foto propia a S3, respetarla; si es una foto de plantilla por defecto, adoptar la del nuevo template
-        const isUserUploadedPhoto =
-          prev.fotoPortadaUrl &&
-          (prev.fotoPortadaUrl.includes("s3.") ||
-            prev.fotoPortadaUrl.includes("amazonaws.com") ||
-            prev.fotoPortadaUrl.includes("clientes/"));
+        // Si el usuario subió fotos propias (carpeta clientes/ en S3), son suyas:
+        // se conservan y la invitación ya no se renombra aunque el título
+        // coincida con un nombre demo ("Sofía", "Isabella"...).
+        const tieneFotosUsuario =
+          !esFotoDePreset(prev.fotoPortadaUrl) ||
+          !esFotoDePreset(prev.fotoInfanciaUrl) ||
+          !esFotoDePreset(prev.fotoActualUrl) ||
+          !esFotoDePreset(prev.fotoCierreUrl);
 
         // Si el usuario no ha puesto un nombre propio aún, adoptar completamente el preset
         if (!isCustomName) {
@@ -886,11 +905,15 @@ function NuevoEventoContent() {
             ...prev,
             ...preset,
             estiloPlantilla: tempKey,
+            titulo: tituloEditado || tieneFotosUsuario ? prev.titulo : preset.titulo,
             fechaEvento: prev.fechaEvento,
             fechaTextoPersonalizada: formatted.formalText || preset.fechaTextoPersonalizada || prev.fechaTextoPersonalizada,
             fechaPlacaMes: formatted.mes || preset.fechaPlacaMes || prev.fechaPlacaMes,
             fechaPlacaHora: formatted.horaPlaca || preset.fechaPlacaHora || prev.fechaPlacaHora,
-            fotoPortadaUrl: isUserUploadedPhoto ? prev.fotoPortadaUrl : (preset.fotoPortadaUrl || prev.fotoPortadaUrl),
+            fotoPortadaUrl: esFotoDePreset(prev.fotoPortadaUrl) ? (preset.fotoPortadaUrl || prev.fotoPortadaUrl) : prev.fotoPortadaUrl,
+            fotoInfanciaUrl: esFotoDePreset(prev.fotoInfanciaUrl) ? (preset.fotoInfanciaUrl || prev.fotoInfanciaUrl) : prev.fotoInfanciaUrl,
+            fotoActualUrl: esFotoDePreset(prev.fotoActualUrl) ? (preset.fotoActualUrl || prev.fotoActualUrl) : prev.fotoActualUrl,
+            fotoCierreUrl: esFotoDePreset(prev.fotoCierreUrl) ? (preset.fotoCierreUrl || prev.fotoCierreUrl) : prev.fotoCierreUrl,
           };
         }
 
@@ -905,7 +928,7 @@ function NuevoEventoContent() {
           fechaTextoPersonalizada: formatted.formalText || prev.fechaTextoPersonalizada,
           fechaPlacaMes: formatted.mes || prev.fechaPlacaMes,
           fechaPlacaHora: formatted.horaPlaca || prev.fechaPlacaHora,
-          fotoPortadaUrl: isUserUploadedPhoto ? prev.fotoPortadaUrl : (preset.fotoPortadaUrl || prev.fotoPortadaUrl),
+          fotoPortadaUrl: esFotoDePreset(prev.fotoPortadaUrl) ? (preset.fotoPortadaUrl || prev.fotoPortadaUrl) : prev.fotoPortadaUrl,
           // Hallazgo 12: mismo criterio que la portada para las demás fotos —
           // foto de plantilla/stock se reemplaza por la del preset nuevo; subida S3 del usuario se conserva
           fotoInfanciaUrl: esFotoDePreset(prev.fotoInfanciaUrl) ? (preset.fotoInfanciaUrl || prev.fotoInfanciaUrl) : prev.fotoInfanciaUrl,
@@ -960,6 +983,21 @@ function NuevoEventoContent() {
         else resolvedType = isAudio ? "audio/mpeg" : "image/jpeg";
       }
 
+      // Optimizar imágenes en el cliente antes de subir (peso): WebP, máx.
+      // 1600 px la portada / 1200 px el resto, calidad 82. Si no achica el
+      // archivo (o falla), se sube el original intacto.
+      let uploadFile: File = file;
+      let uploadName = file.name;
+      let uploadType = resolvedType;
+      if (!isAudio && (resolvedType.startsWith("image/") || ["jpg", "jpeg", "png", "webp"].includes(ext))) {
+        const optimized = await optimizarImagen(file, field === "fotoPortadaUrl" ? 1600 : 1200);
+        if (optimized && optimized.blob.size < file.size) {
+          uploadFile = new File([optimized.blob], optimized.name, { type: "image/webp" });
+          uploadName = optimized.name;
+          uploadType = "image/webp";
+        }
+      }
+
       // Carpeta estructurada dentro del bucket luminavite-storage
       const subFolder = isAudio ? "audio" : "images";
       const clientFolder = `clientes/invitaciones/${formData.slug || "general"}/${subFolder}`;
@@ -969,10 +1007,10 @@ function NuevoEventoContent() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          filename: file.name,
-          contentType: resolvedType,
+          filename: uploadName,
+          contentType: uploadType,
           folder: clientFolder,
-          fileSize: file.size,
+          fileSize: uploadFile.size,
         }),
       });
 
@@ -985,8 +1023,8 @@ function NuevoEventoContent() {
       // 2. Subir binario directo a S3 usando PUT con el Content-Type firmado
       const uploadRes = await fetch(data.uploadUrl, {
         method: "PUT",
-        headers: { "Content-Type": resolvedType },
-        body: file,
+        headers: { "Content-Type": uploadType },
+        body: uploadFile,
       });
 
       if (!uploadRes.ok) {
@@ -1062,12 +1100,16 @@ function NuevoEventoContent() {
       .finally(() => setIsLoadingEdit(false));
   }, [editSlug]);
 
-  // Hallazgo 15: ¿el formulario sigue EXACTAMENTE con los datos de ejemplo iniciales?
+  // Hallazgo 15: ¿el formulario sigue con datos de ejemplo?
+  // Basta con que el corte o el itinerario sigan siendo los demo para bloquear:
+  // cambiar solo el nombre ya no publica el corte de Magdalena/Jeremiah.
   const isStillDemoData = () =>
-    formData.titulo === DEMO_INITIAL_VALUES.titulo &&
-    formData.slug === DEMO_INITIAL_VALUES.slug &&
-    formData.telefonoWhatsappRsvp === DEMO_INITIAL_VALUES.telefonoWhatsappRsvp &&
-    formData.recepcionNombre === DEMO_INITIAL_VALUES.recepcionNombre;
+    (formData.titulo === DEMO_INITIAL_VALUES.titulo &&
+      formData.slug === DEMO_INITIAL_VALUES.slug &&
+      formData.telefonoWhatsappRsvp === DEMO_INITIAL_VALUES.telefonoWhatsappRsvp &&
+      formData.recepcionNombre === DEMO_INITIAL_VALUES.recepcionNombre) ||
+    JSON.stringify(formData.corteHonorJson) === JSON.stringify(DEMO_CORTE_HONOR) ||
+    JSON.stringify(formData.itinerarioJson) === JSON.stringify(DEMO_ITINERARIO);
 
   // Guardar en la base de datos (POST para crear, PUT para actualizar)
   const handleSave = async () => {
@@ -1103,18 +1145,19 @@ function NuevoEventoContent() {
           (formData.idiomaDefault === "en" ? rsvpCalc.fraseEn : rsvpCalc.fraseEs),
       };
 
-      // Hallazgo 1: en modo crear, verificar primero si el slug ya existe;
-      // si existe, se ACTUALIZA ese evento con PUT en vez de perder el formulario en un 409
+      // En modo crear, un slug existente BLOQUEA: nunca se pisa en silencio
+      // la invitación en vivo de otro cliente con un PUT.
       let method = effectiveEditMode ? "PUT" : "POST";
-      let slugAlreadyExists = false;
       if (!effectiveEditMode && formData.slug) {
         try {
           const checkRes = await fetch(`/api/eventos?slug=${encodeURIComponent(formData.slug)}`);
           if (checkRes.ok) {
             const checkData = await checkRes.json();
             if (checkData.evento) {
-              method = "PUT";
-              slugAlreadyExists = true;
+              setErrorMsg("⚠️ Ya existe una invitación con este enlace (/" + formData.slug + "). Elige otro enlace para no sobrescribirla.");
+              window.scrollTo({ top: 0, behavior: "smooth" });
+              setIsSaving(false);
+              return;
             }
           }
         } catch {}
@@ -1132,11 +1175,7 @@ function NuevoEventoContent() {
         throw new Error(result.error || "No se pudo guardar la invitación.");
       }
 
-      if (slugAlreadyExists) {
-        setExistingEventMode(true);
-        setSaveSuccessMsg("Esta invitación ya existía: se actualizaron sus datos.");
-        setTimeout(() => setSaveSuccessMsg(null), 5000);
-      } else if (isEditMode) {
+      if (isEditMode) {
         setSaveSuccessMsg("¡Cambios guardados con éxito en la invitación!");
         setTimeout(() => setSaveSuccessMsg(null), 4000);
       } else {
