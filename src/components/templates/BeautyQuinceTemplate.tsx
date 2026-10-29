@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { MapPin, Music, CalendarPlus, Sparkles } from "lucide-react";
+import { MapPin, Gift, CalendarPlus } from "lucide-react";
 import { InvitationData } from "../invitation/InvitationMobileView";
 import { getTemplate } from "@/lib/templates";
 import { getMapDirectionsUrl } from "@/lib/maps";
@@ -421,14 +421,14 @@ export default function BeautyQuinceTemplate({
           <img src={A.baseFloralRosas} alt="" className="absolute top-0 left-0 w-full h-[80px] object-cover pointer-events-none bg-transparent" style={{ background: "transparent" }} />
           <img src={A.baseFloralRosas} alt="" className="absolute bottom-0 left-0 w-full h-[80px] object-cover pointer-events-none bg-transparent" style={{ background: "transparent" }} />
           <div className="relative z-[2] w-full flex flex-col items-center">
-            <h2 className="font-script text-center" style={{ fontSize: "3rem", color: "#7b2020", margin: "10px 0 25px", lineHeight: 1 }}>The Party Plan</h2>
-            <div className="relative w-full flex flex-col" style={{ gap: "22px" }}>
-              <div className="absolute top-0 bottom-0" style={{ left: "50%", width: "1px", background: "#a2834b", transform: "translateX(-50%)" }} />
+            <h2 className="font-script text-center" style={{ fontSize: "3.6rem", color: "#a81c1c", margin: "10px 0 30px", lineHeight: 1 }}>The Party Plan</h2>
+            <div className="relative w-full" style={{ padding: "10px 0 20px" }}>
+              <div className="absolute top-0 bottom-0" style={{ left: "50%", width: "2px", background: "linear-gradient(180deg, #d4af37 0%, #a88338 100%)", transform: "translateX(-50%)", zIndex: 1 }} />
               {[
                 { side: "right", time: "11:00 AM", name: "CHURCH CEREMONY", icon: A.castillo, alt: "Ceremonia" },
                 { side: "left", time: "12:00 PM", name: "LIMO ARRIVAL", icon: A.carroza, alt: "Llegada" },
                 { side: "right", time: "1:00 PM", name: "ARRIVAL TO SALON", icon: A.rosaCampana, alt: "Recepción" },
-                { side: "left", time: "3:00 PM", name: "FOOD SERVED", icon: A.candelabro, alt: "Banquete", extra: A.copaBrindis },
+                { side: "left", time: "3:00 PM", name: "FOOD SERVED", icon: A.copaBrindis, alt: "Banquete" },
                 { side: "right", time: "4:00 PM", name: "VALS, BAILE SORPRESA", icon: A.vestidoBella, alt: "Vals" },
                 { side: "left", time: "5:00 PM", name: "FATHER & DAUGHTER DANCE", icon: A.trajePrincipe, alt: "Baile papá" },
                 { side: "right", time: "6:00 PM", name: "PADRINOS DE HONOR", icon: A.corona, alt: "Padrinos" },
@@ -438,53 +438,40 @@ export default function BeautyQuinceTemplate({
                   key={e.time}
                   className="flex items-center relative"
                   style={{
-                    width: "50%",
-                    alignSelf: e.side === "left" ? "flex-start" : "flex-end",
-                    justifyContent: e.side === "left" ? "flex-end" : "flex-start",
-                    paddingRight: e.side === "left" ? "14px" : undefined,
-                    paddingLeft: e.side === "right" ? "14px" : undefined,
-                    textAlign: e.side === "left" ? "right" : "left",
-                    gap: "8px",
+                    width: "100%",
+                    minHeight: "70px",
+                    marginBottom: "24px",
+                    zIndex: 2,
                     boxSizing: "border-box",
+                    justifyContent: e.side === "left" ? "flex-start" : "flex-end",
                   }}
                 >
-                  {e.side === "right" && (
-                    <div className="flex items-center justify-center flex-shrink-0" style={{ width: "44px", height: "44px" }}>
-                      <img src={e.icon} alt={e.alt} className="bg-transparent" style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain", filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.15))", background: "transparent" }} />
-                    </div>
-                  )}
-                  <div className="flex flex-col">
-                    <span className="font-serif-roman" style={{ fontSize: "0.72rem", fontWeight: 700, letterSpacing: "0.1em", color: "#2b1f14" }}>{e.time}</span>
-                    <span className="font-serif-roman" style={{ fontSize: "0.65rem", letterSpacing: "0.08em", color: "#5a452e", lineHeight: 1.25 }}>{e.name}</span>
+                  <div className="absolute flex items-center justify-center" style={{ left: "50%", transform: "translateX(-50%)", width: "42px", height: "42px", backgroundColor: "#f7eed7", borderRadius: "50%", padding: "4px" }}>
+                    <img src={e.icon} alt={e.alt} className="bg-transparent" style={{ width: "100%", height: "100%", objectFit: "contain", filter: "drop-shadow(0 2px 5px rgba(0,0,0,0.2))", background: "transparent" }} />
                   </div>
-                  {e.side === "left" && (
-                    <div className="flex items-center justify-center flex-shrink-0" style={{ width: "44px", height: "44px" }}>
-                      <img src={e.icon} alt={e.alt} className="bg-transparent" style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain", filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.15))", background: "transparent" }} />
-                      {e.extra && <img src={e.extra} alt="Copa" className="bg-transparent" style={{ maxWidth: "60%", maxHeight: "100%", objectFit: "contain", filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.15))", background: "transparent" }} />}
-                    </div>
-                  )}
+                  <div className="flex flex-col" style={{ width: "calc(50% - 32px)", textAlign: e.side === "left" ? "right" : "left" }}>
+                    <span className="font-serif-roman" style={{ fontSize: "0.95rem", fontWeight: 700, letterSpacing: "0.1em", color: "#a81c1c", marginBottom: "4px" }}>{e.time}</span>
+                    <span className="font-serif-roman" style={{ fontSize: "0.85rem", fontWeight: 600, letterSpacing: "0.08em", color: "#1e293b", lineHeight: 1.3 }}>{e.name}</span>
+                  </div>
                 </div>
               ))}
             </div>
-            <div className="flex items-center justify-center w-full" style={{ gap: "12px", marginTop: "25px" }}>
-              <img src={A.zapatoOro} alt="Tacón" className="bg-transparent" style={{ width: "55px", height: "auto", objectFit: "contain", filter: "drop-shadow(0 4px 6px rgba(0,0,0,0.2))", background: "transparent" }} />
-              <div className="flex flex-col font-script" style={{ fontSize: "1.9rem", lineHeight: 0.85, color: "#3b2a1a" }}>
-                <span>Bring</span>
-                <span>Comfy</span>
-                <span>Shoes</span>
-              </div>
+            <div className="flex flex-col items-center w-full text-center" style={{ marginTop: "25px" }}>
+              <img src={A.zapatoOro} alt="Tacón" className="bg-transparent" style={{ width: "65px", height: "auto", objectFit: "contain", filter: "drop-shadow(0 6px 12px rgba(0,0,0,0.2))", background: "transparent", marginBottom: "8px" }} />
+              <span className="font-script" style={{ fontSize: "2.2rem", color: "#2b3a4a", lineHeight: 1 }}>Bring Comfy Shoes</span>
             </div>
           </div>
         </section>
 
-        {/* Kids Policy: texto DENTRO del marco azul barroco, no fuera.
-            Antes el marco quedaba vacío y el texto en fondo crema.
-            La frase de zapatos cómodos no va aquí: ya está en Party Plan
-            y en Dress Code, así que se quita de esta sección. */}
+        {/* Kids Policy: marco en 3 partes con altura extensible, no una
+            imagen fija. Rosas superiores e inferiores fijas en los
+            bordes, cuerpo azul noche que crece con el texto, así el
+            último párrafo ya no choca con las rosas inferiores. */}
         <section className="flex justify-center items-center w-full max-w-[430px] mx-auto" style={{ padding: "24px 16px", boxSizing: "border-box" }}>
-          <div className="relative w-full flex items-center justify-center overflow-hidden" style={{ minHeight: "620px", borderRadius: "16px", boxShadow: "0 12px 30px rgba(0,0,0,0.25)" }}>
-            <img src={A.marcoAzulRosas} alt="Fondo decorativo" className="absolute inset-0 w-full h-full object-fill pointer-events-none bg-transparent" style={{ zIndex: 1, background: "transparent" }} />
-            <div className="relative w-full text-center" style={{ zIndex: 2, padding: "50px 32px 40px", color: "#f8fafc", boxSizing: "border-box" }}>
+          <div className="relative w-full flex items-center justify-center overflow-hidden" style={{ border: "2px solid #d4af37", borderRadius: "20px", backgroundColor: "#0b1736", boxShadow: "0 12px 30px rgba(0,0,0,0.25)" }}>
+            <img src={A.marcoAzulSuperior} alt="" className="absolute top-0 left-0 right-0 w-full pointer-events-none" style={{ height: "90px", objectFit: "cover", objectPosition: "top center", zIndex: 1 }} />
+            <img src={A.marcoAzulInferior} alt="" className="absolute bottom-0 left-0 right-0 w-full pointer-events-none" style={{ height: "90px", objectFit: "cover", objectPosition: "bottom center", zIndex: 1 }} />
+            <div className="relative w-full text-center" style={{ zIndex: 2, padding: "80px 28px 70px", color: "#f8fafc", boxSizing: "border-box" }}>
               <span className="font-script block" style={{ fontSize: "2.6rem", lineHeight: 0.9, color: "#f7d070", textShadow: "0 2px 6px rgba(0,0,0,0.7)" }}>{isEn ? "Important" : "Importante"}</span>
               <h2 className="font-serif-roman font-bold" style={{ fontSize: "1.4rem", letterSpacing: "0.28em", color: "#ffffff", margin: "4px 0 10px", textShadow: "0 2px 6px rgba(0,0,0,0.7)" }}>DETAILS</h2>
               <h3 className="font-serif-roman" style={{ fontSize: "1.25rem", color: "#fde68a", marginBottom: "16px", fontWeight: 500 }}>{isEn ? "Kids Policy" : "Política para Niños"}</h3>
@@ -549,15 +536,15 @@ export default function BeautyQuinceTemplate({
                 <img src={A.vestidoBella} alt="Etiqueta Damas" className="w-full h-auto block bg-transparent" style={{ background: "transparent", filter: "drop-shadow(0 8px 12px rgba(0,0,0,0.18))" }} />
               </div>
               <div style={{ flex: 1, padding: "0 12px" }}>
-                <p className="font-serif-roman" style={{ fontSize: "0.72rem", lineHeight: 1.6, letterSpacing: "0.05em", color: "#4a5568", margin: "0 0 16px" }}>
+                <p className="font-serif-roman" style={{ fontSize: "0.92rem", fontWeight: 500, lineHeight: 1.55, letterSpacing: "0.04em", color: "#1e293b", textAlign: "center", margin: "0 auto 18px", maxWidth: "220px" }}>
                   {isEn
-                    ? "Formal gala attire. Please avoid the golden yellow tones reserved for the quinceañera."
-                    : "Vestimenta formal de gala. Se solicita evitar los tonos amarillo dorado reservados para la quinceañera."}
+                    ? (<>Formal gala attire. Please avoid the <span style={{ color: "#a81c1c", fontWeight: 700 }}>golden yellow tones reserved for the quinceañera</span>.</>)
+                    : (<>Vestimenta formal de gala. Se solicita evitar los <span style={{ color: "#a81c1c", fontWeight: 700 }}>tonos amarillo dorado reservados para la quinceañera</span>.</>)}
                 </p>
                 {data.coloresReservados && data.coloresReservados.length > 0 && (
-                  <div className="flex justify-center items-center" style={{ gap: "12px" }}>
+                  <div className="flex justify-center items-center" style={{ gap: "14px", marginTop: "14px" }}>
                     {data.coloresReservados.map((c) => (
-                      <span key={c} className="inline-block" style={{ width: "22px", height: "22px", borderRadius: "50%", backgroundColor: c, boxShadow: "0 2px 6px rgba(0,0,0,0.25)", border: "2px solid #ffffff" }} />
+                      <span key={c} className="inline-block" style={{ width: "26px", height: "26px", borderRadius: "50%", backgroundColor: c, boxShadow: "0 2px 6px rgba(0,0,0,0.2)", border: "2px solid #ffffff" }} />
                     ))}
                   </div>
                 )}
@@ -574,75 +561,144 @@ export default function BeautyQuinceTemplate({
           </section>
         )}
 
-        {/* Registry se integra en el arco de cierre, no como sección
-            aparte, para no duplicar el mensaje ni el botón View. */}
+        {/* Corte de Honor: tarjeta pergamino con filetes dorados, tiara
+            para Padrinos y cetro para el Chambelán de Honor, Damas y
+            Chambelanes en 2 columnas. Se alimenta de corteHonorJson del
+            evento; sin datos de corte, no se muestra. */}
+        {(() => {
+          const corte: any = (data as any).corteHonorJson || null;
+          if (!corte) return null;
+          const padrinos: string[] = corte.padrinos || [];
+          const chambelan: string | null = corte.chambelan || corte.chambelanHonor || null;
+          const damas: string[] = corte.damas || [];
+          const chambelanes: string[] = corte.chambelanes || [];
+          if (!padrinos.length && !chambelan && !damas.length && !chambelanes.length) return null;
+          return (
+            <section className="flex flex-col items-center w-full max-w-[430px] mx-auto text-center" style={{ padding: "40px 16px 50px", boxSizing: "border-box", backgroundColor: "#faf5ea" }}>
+              <div style={{ marginBottom: "24px" }}>
+                <span className="font-serif-roman block font-semibold" style={{ fontSize: "0.7rem", letterSpacing: "0.3em", color: "#8c733e", marginBottom: "4px" }}>CORTE DE HONOR</span>
+                <h2 className="font-script" style={{ fontSize: "3.5rem", color: "#a81c1c", lineHeight: 1, margin: 0 }}>{isEn ? "Quince Court" : "Corte de Honor"}</h2>
+              </div>
+              <div className="w-full" style={{ background: "radial-gradient(circle at center, #ffffff 0%, #fbf8f2 100%)", border: "1.5px solid rgba(212,175,55,0.45)", borderRadius: "20px", padding: "32px 20px", boxShadow: "0 10px 30px rgba(11,23,54,0.08), inset 0 0 20px rgba(212,175,55,0.1)", boxSizing: "border-box" }}>
+                {padrinos.length > 0 && (
+                  <div className="w-full" style={{ margin: "8px 0" }}>
+                    <div style={{ width: "50px", height: "auto", margin: "0 auto 8px" }}>
+                      <img src={A.coronaTiara} alt="Corona Padrinos" className="w-full h-auto block bg-transparent" style={{ background: "transparent", filter: "drop-shadow(0 4px 8px rgba(0,0,0,0.15))" }} />
+                    </div>
+                    <h3 className="font-serif-roman font-bold uppercase" style={{ fontSize: "0.82rem", letterSpacing: "0.22em", color: "#0b1736", margin: "0 0 10px" }}>PADRINOS</h3>
+                    <p className="font-serif" style={{ fontSize: "1.05rem", fontStyle: "italic", color: "#334155", margin: 0 }}>{padrinos.join(" & ")}</p>
+                  </div>
+                )}
+                {padrinos.length > 0 && chambelan && <div style={{ color: "#d4af37", fontSize: "0.9rem", margin: "18px 0", opacity: 0.6 }}>❦</div>}
+                {chambelan && (
+                  <div className="w-full" style={{ margin: "8px 0" }}>
+                    <div style={{ width: "50px", height: "auto", margin: "0 auto 8px" }}>
+                      <img src={A.cetroReal} alt="Cetro de Honor" className="w-full h-auto block bg-transparent" style={{ background: "transparent", filter: "drop-shadow(0 4px 8px rgba(0,0,0,0.15))" }} />
+                    </div>
+                    <h3 className="font-serif-roman font-bold uppercase" style={{ fontSize: "0.82rem", letterSpacing: "0.22em", color: "#0b1736", margin: "0 0 10px" }}>CHAMBELÁN DE HONOR</h3>
+                    <p className="font-serif font-semibold" style={{ fontSize: "1.05rem", fontStyle: "italic", color: "#a81c1c", margin: 0 }}>{chambelan}</p>
+                  </div>
+                )}
+                {chambelan && damas.length > 0 && <div style={{ color: "#d4af37", fontSize: "0.9rem", margin: "18px 0", opacity: 0.6 }}>❦</div>}
+                {damas.length > 0 && (
+                  <div className="w-full" style={{ margin: "8px 0" }}>
+                    <h3 className="font-serif-roman font-bold uppercase" style={{ fontSize: "0.82rem", letterSpacing: "0.22em", color: "#0b1736", margin: "0 0 10px" }}>DAMAS</h3>
+                    <div className="grid" style={{ gridTemplateColumns: "repeat(2, 1fr)", gap: "8px 16px", maxWidth: "320px", margin: "0 auto" }}>
+                      {damas.map((n) => (
+                        <span key={n} className="font-serif-roman text-center" style={{ fontSize: "0.72rem", letterSpacing: "0.08em", color: "#475569", whiteSpace: "nowrap" }}>{n}</span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {damas.length > 0 && chambelanes.length > 0 && <div style={{ color: "#d4af37", fontSize: "0.9rem", margin: "18px 0", opacity: 0.6 }}>❦</div>}
+                {chambelanes.length > 0 && (
+                  <div className="w-full" style={{ margin: "8px 0" }}>
+                    <h3 className="font-serif-roman font-bold uppercase" style={{ fontSize: "0.82rem", letterSpacing: "0.22em", color: "#0b1736", margin: "0 0 10px" }}>CHAMBELANES</h3>
+                    <div className="grid" style={{ gridTemplateColumns: "repeat(2, 1fr)", gap: "8px 16px", maxWidth: "320px", margin: "0 auto" }}>
+                      {chambelanes.map((n) => (
+                        <span key={n} className="font-serif-roman text-center" style={{ fontSize: "0.72rem", letterSpacing: "0.08em", color: "#475569", whiteSpace: "nowrap" }}>{n}</span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </section>
+          );
+        })()}
 
-        {/* RSVP */}
-        <section className="px-4 py-6">
-          <RsvpSection
-            eventoId={data.id}
-            eventoTitulo={data.titulo}
-            telefonoWhatsapp={data.telefonoWhatsappRsvp}
-            maxPases={data.maxPasesPorInvitado ?? 4}
-            fechaLimite={data.fechaLimiteRsvp || data.rsvpFechaLimite}
-            template={template}
-            permitirConfirmacionTelefono={data.permitirConfirmacionTelefono}
-            isEn={isEn}
-          />
-        </section>
+        {/* Registry: libro de cuento protagonista, sección propia en
+            pergamino. No va duplicado en el arco de cierre: el arco queda
+            solo con Save the Date. */}
+        {data.mostrarMesaRegalos !== false && (
+          <section className="flex justify-center items-center w-full max-w-[430px] mx-auto" style={{ padding: "30px 16px 50px", boxSizing: "border-box", backgroundColor: "#faf5ea" }}>
+            <div className="flex flex-col items-center w-full text-center" style={{ background: "radial-gradient(circle at center, #ffffff 0%, #fbf7ee 100%)", border: "1px solid rgba(212,175,55,0.4)", borderRadius: "20px", padding: "36px 24px 32px", boxShadow: "0 10px 30px rgba(11,23,54,0.08), inset 0 0 20px rgba(212,175,55,0.1)", boxSizing: "border-box" }}>
+              <div style={{ marginBottom: "8px", filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.1))" }}>
+                <Gift className="w-7 h-7 mx-auto" style={{ color: "#a88338" }} />
+              </div>
+              <h3 className="font-script" style={{ fontSize: "3.2rem", color: "#a81c1c", margin: "0 0 12px", lineHeight: 1 }}>{isEn ? "Registry" : "Mesa de Regalos"}</h3>
+              <p className="font-serif-roman" style={{ fontSize: "0.76rem", lineHeight: 1.65, letterSpacing: "0.06em", color: "#4a5568", maxWidth: "320px", margin: "0 0 20px" }}>
+                {isEn
+                  ? "The biggest gift I could ask for is for you to join me to celebrate my quinceañera. However, if you wish to bring a present, I have left a registry list here. Thank you so much!"
+                  : "El regalo más grande que puedo pedir es que me acompañes a celebrar mis quince años. Si deseas traer un presente, aquí dejaré mi lista de regalos. ¡Muchas gracias!"}
+              </p>
+              <div style={{ width: "170px", height: "auto", margin: "8px auto 24px", perspective: "600px" }}>
+                <img src={A.libroCuento} alt="Mesa de Regalos" className="w-full h-auto block bg-transparent" style={{ background: "transparent", filter: "drop-shadow(0 15px 25px rgba(11,23,54,0.35))" }} />
+              </div>
+              {data.wishlistUrl && (
+                <a href={data.wishlistUrl} target="_blank" rel="noreferrer" className="font-serif-roman inline-flex items-center justify-center font-semibold" style={{ backgroundColor: "#0b1736", color: "#ffffff", fontSize: "0.85rem", letterSpacing: "0.18em", textDecoration: "none", padding: "14px 34px", borderRadius: "10px", border: "1px solid #d4af37", boxShadow: "0 6px 18px rgba(11,23,54,0.3)" }}>
+                  {isEn ? "View Registry" : "Ver Mesa de Regalos"}
+                </a>
+              )}
+            </div>
+          </section>
+        )}
+
+        {/* RSVP estilo cuento: la sección compartida renderiza su variante
+            royal (tarjeta pergamino, copa focal, rosa lateral). */}
+        <RsvpSection
+          eventoId={data.id}
+          eventoTitulo={data.titulo}
+          telefonoWhatsapp={data.telefonoWhatsappRsvp}
+          maxPases={data.maxPasesPorInvitado ?? 4}
+          fechaLimite={data.fechaLimiteRsvp || data.rsvpFechaLimite}
+          template={template}
+          permitirConfirmacionTelefono={data.permitirConfirmacionTelefono}
+          isEn={isEn}
+          royal
+          gobletImage={A.copaBrindis}
+          roseImage={A.rosaEncantada}
+        />
 
         {/* Cierre: cabecera pergamino con firma + arco floral con castillo
-            como fondo completo. Save the Date y Registry van DENTRO del
-            cielo del arco, no abajo en beige, y se quitan los botones
-            sueltos y los iconos en recuadros blancos (espejo, abanico,
-            castillo) y la tarjeta pequeña del arco. */}
+            como fondo completo. Save the Date va DENTRO del cielo del
+            arco; Registry tiene su sección propia arriba y ya no va
+            duplicado aquí. */}
         <div className="relative text-center" style={{ backgroundColor: "#f7eedb", padding: "30px 20px 20px" }}>
           <h2 className="font-script" style={{ fontSize: "4rem", color: "#a81c1c", margin: 0, lineHeight: 1 }}>{data.titulo}</h2>
           <img src={A.espejoMano} alt="Detalle decorativo" className="absolute pointer-events-none bg-transparent" style={{ top: "15px", right: "25px", width: "55px", height: "auto", background: "transparent" }} />
         </div>
-        <section className="relative w-full max-w-[430px] mx-auto overflow-hidden" style={{ boxSizing: "border-box" }}>
+        {/* Escena final: solo Save the Date, centrado sobre el cielo del
+            arco. Sin franja beige inferior: el arco cierra la página. */}
+        <section className="relative w-full max-w-[430px] mx-auto overflow-hidden" style={{ boxSizing: "border-box", minHeight: "520px", marginBottom: 0, paddingBottom: 0 }}>
           <div className="absolute inset-0" style={{ zIndex: 1 }}>
-            <img src={A.arcoRosasCastillo} alt="Castillo de noche con arco de rosas" className="w-full h-full object-cover block bg-transparent" style={{ background: "transparent" }} />
+            <img src={A.arcoRosasCastillo} alt="Castillo de noche con arco de rosas" className="w-full h-full object-cover block bg-transparent" style={{ background: "transparent", verticalAlign: "bottom" }} />
           </div>
-          <div className="relative flex flex-col items-center text-center" style={{ zIndex: 2, padding: "100px 40px 60px" }}>
-            <div className="flex flex-col items-center w-full" style={{ marginBottom: "35px" }}>
-              <div className="flex items-baseline justify-center" style={{ gap: "8px", marginBottom: "12px" }}>
-                <span className="font-script" style={{ fontSize: "2.8rem", color: "#c92a2a", textShadow: "0 2px 8px rgba(0,0,0,0.8)", lineHeight: 0.8 }}>{isEn ? "Save" : "Guarda"}</span>
-                <span className="font-serif-roman font-bold" style={{ fontSize: "1.15rem", letterSpacing: "0.25em", color: "#e03131", textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>THE DATE</span>
+          <div className="relative flex flex-col items-center text-center" style={{ zIndex: 2, padding: "85px 24px 60px", justifyContent: "flex-start" }}>
+            <div className="flex flex-col items-center w-full">
+              <div className="flex items-baseline justify-center" style={{ gap: "8px", marginBottom: "22px" }}>
+                <span className="font-script" style={{ fontSize: "3.2rem", color: "#ff4d4d", textShadow: "0 2px 10px rgba(0,0,0,0.9)", lineHeight: 0.8 }}>{isEn ? "Save" : "Guarda"}</span>
+                <span className="font-serif-roman font-bold" style={{ fontSize: "1.25rem", letterSpacing: "0.25em", color: "#ff6b6b", textShadow: "0 2px 10px rgba(0,0,0,0.9)" }}>THE DATE</span>
               </div>
-              <div className="flex flex-col items-center gap-3 w-full">
-                <a href={googleCalendarUrl} target="_blank" rel="noreferrer" className="font-serif-roman inline-flex items-center justify-center" style={{ backgroundColor: "#030816", color: "#ffffff", fontSize: "0.85rem", letterSpacing: "0.15em", padding: "12px 28px", borderRadius: "8px", border: "1px solid rgba(212,175,55,0.4)", textDecoration: "none", boxShadow: "0 4px 15px rgba(0,0,0,0.6)" }}>
+              <div className="flex flex-col items-center w-full" style={{ gap: "12px", maxWidth: "270px" }}>
+                <a href={googleCalendarUrl} target="_blank" rel="noreferrer" className="font-serif-roman inline-flex items-center justify-center" style={{ backgroundColor: "#0b1736", color: "#ffffff", fontSize: "0.78rem", fontWeight: 600, letterSpacing: "0.15em", padding: "13px 16px", borderRadius: "10px", border: "1px solid rgba(212,175,55,0.5)", textDecoration: "none", boxShadow: "0 4px 15px rgba(0,0,0,0.6)", width: "100%", boxSizing: "border-box" }}>
                   <CalendarPlus className="w-4 h-4 mr-2" /> GOOGLE CALENDAR
                 </a>
-                <button type="button" onClick={handleDownloadIcs} className="font-serif-roman inline-flex items-center justify-center cursor-pointer" style={{ backgroundColor: "#030816", color: "#ffffff", fontSize: "0.85rem", letterSpacing: "0.15em", padding: "12px 28px", borderRadius: "8px", border: "1px solid rgba(212,175,55,0.4)", boxShadow: "0 4px 15px rgba(0,0,0,0.6)" }}>
+                <button type="button" onClick={handleDownloadIcs} className="font-serif-roman inline-flex items-center justify-center cursor-pointer" style={{ backgroundColor: "#0b1736", color: "#ffffff", fontSize: "0.78rem", fontWeight: 600, letterSpacing: "0.15em", padding: "13px 16px", borderRadius: "10px", border: "1px solid rgba(212,175,55,0.5)", boxShadow: "0 4px 15px rgba(0,0,0,0.6)", width: "100%", boxSizing: "border-box" }}>
                   APPLE / OUTLOOK (.ICS)
                 </button>
               </div>
             </div>
-            {data.mostrarMesaRegalos !== false && (
-              <div className="flex flex-col items-center w-full">
-                <div className="flex items-baseline justify-center" style={{ gap: "8px", marginBottom: "12px" }}>
-                  <span className="font-script" style={{ fontSize: "2.8rem", color: "#c92a2a", textShadow: "0 2px 8px rgba(0,0,0,0.8)", lineHeight: 0.8 }}>{isEn ? "View" : "Ver"}</span>
-                  <span className="font-serif-roman font-bold" style={{ fontSize: "1.15rem", letterSpacing: "0.25em", color: "#e03131", textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>REGISTRY</span>
-                </div>
-                <p className="font-serif-roman" style={{ fontSize: "0.75rem", lineHeight: 1.7, letterSpacing: "0.12em", color: "#f8fafc", textShadow: "0 2px 6px rgba(0,0,0,0.9), 0 0 10px rgba(0,0,0,0.8)", margin: "0 0 18px", padding: "0 10px" }}>
-                  {isEn
-                    ? "THE BIGGEST GIFT I COULD ASK FOR IS FOR YOU TO JOIN ME TO CELEBRATE MY QUINCEAÑERA, HOWEVER IF YOU WISH TO BRING A PRESENT I WILL BE LEAVING A REGISTRY LIST HERE. THANK YOU SO MUCH!"
-                    : "EL REGALO MÁS GRANDE QUE PUEDO PEDIR ES QUE ME ACOMPAÑES A CELEBRAR MIS QUINCE AÑOS. SI DESEAS TRAER UN PRESENTE, AQUÍ DEJARÉ MI LISTA DE REGALOS. ¡MUCHAS GRACIAS!"}
-                </p>
-                {data.wishlistUrl && (
-                  <a href={data.wishlistUrl} target="_blank" rel="noreferrer" className="font-serif-roman inline-flex items-center justify-center" style={{ backgroundColor: "#030816", color: "#ffffff", fontSize: "0.85rem", letterSpacing: "0.15em", padding: "12px 28px", borderRadius: "8px", border: "1px solid rgba(212,175,55,0.4)", textDecoration: "none", boxShadow: "0 4px 15px rgba(0,0,0,0.6)" }}>
-                    View
-                  </a>
-                )}
-              </div>
-            )}
           </div>
-        </section>
-        <section className="px-6 py-6 text-center">
-          <p className="text-[11px] tracking-widest uppercase opacity-50 flex items-center justify-center gap-1">
-            <Sparkles className="w-3 h-3" /> Beauty Quince <Music className="w-3 h-3" />
-          </p>
         </section>
       </main>
     </div>
