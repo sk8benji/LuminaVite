@@ -321,13 +321,37 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
   };
 }
 
+// Demos de marketing (Semana 2 del plan): el banner de contacto va siempre
+// encendido en ellas, vengan de evento en DB o de demo estático. Los eventos
+// reales de clientes siguen usando su ajuste propio.
+const DEMO_BANNER_SLUGS = new Set([
+  "isabella-xv",
+  "mariposas-xv",
+  "blush-princess-xv",
+  "era-pink-xv",
+  "miss-15-xv",
+  "baby-blue-xv",
+  "beauty-quince-xv",
+]);
+
 export default async function InvitationPage(props: PageProps) {
   const resolvedParams = await props.params;
   const cleanSlug = decodeURIComponent(resolvedParams?.slug || "").trim().toLowerCase();
-  const data = await getEventoData(cleanSlug);
+  let data = await getEventoData(cleanSlug);
 
   if (!data) {
     notFound();
+  }
+
+  if (DEMO_BANNER_SLUGS.has(cleanSlug)) {
+    data = {
+      ...data,
+      bannerContactoActivo: true,
+      bannerContactoTexto: "¿Te gustó esta invitación? Haz la tuya",
+      bannerContactoTelefono: "(818) 299-4882",
+      bannerContactoLlamar: true,
+      bannerContactoSms: true,
+    };
   }
 
   return (
