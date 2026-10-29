@@ -486,20 +486,44 @@ export default function RsvpSection({
           </div>
         )}
 
-        {/* Hallazgo 11: enlace de llamada al anfitrión, controlado por el toggle del evento */}
+        {/* Hallazgo 11 + mini-sección de la otra plantilla (DynamicRsvpForm):
+            opcional por cliente vía permitirConfirmacionTelefono (toggle en
+            admin y en el panel del anfitrión; default true). En royal se
+            adapta como mini-sección con divisor dorado y píldora crema,
+            no como enlace de texto suelto. */}
         {permitirConfirmacionTelefono !== false && telefonoWhatsapp && (
-          <a
-            href={`tel:${telefonoWhatsapp.replace(/[^0-9+]/g, "")}`}
-            className="mt-4 flex items-center justify-center gap-2 w-full py-2 text-[11px] font-bold uppercase tracking-widest opacity-80 hover:opacity-100 transition"
-            style={
-              royal
-                ? { color: "#a81c1c", fontFamily: "'Cinzel', serif", fontSize: "0.68rem", letterSpacing: "0.12em", fontWeight: 600, marginTop: "14px", textAlign: "center", display: "block" }
-                : { color: template.textSecondary }
-            }
-          >
-            <Phone className="w-4 h-4" />
-            {isEn ? "Prefer to call? Call the host" : "¿Prefieres llamar? Llama al anfitrión"}
-          </a>
+          royal ? (
+            <div className="text-center" style={{ paddingTop: "14px", marginTop: "8px", borderTop: "1px solid rgba(212,175,55,0.45)" }}>
+              <p className="flex items-center justify-center" style={{ gap: "6px", fontFamily: "'Cinzel', serif", fontSize: "0.62rem", letterSpacing: "0.15em", fontWeight: 700, color: "#64748b", margin: "0 0 6px", textTransform: "uppercase" }}>
+                <Phone className="w-3 h-3" style={{ color: "#a88338" }} />
+                <span>{isEn ? "Prefer to confirm by phone?" : "¿Prefieres confirmar por teléfono?"}</span>
+              </p>
+              <a
+                href={`tel:${telefonoWhatsapp.replace(/[^0-9+]/g, "")}`}
+                className="inline-flex items-center justify-center"
+                style={{ gap: "6px", padding: "6px 14px", borderRadius: "999px", backgroundColor: "#f7eedb", color: "#0b1736", fontSize: "0.75rem", fontWeight: 600, border: "1px solid #d4af37", textDecoration: "none" }}
+              >
+                <span>{isEn ? "Call Host:" : "Llamar a la anfitriona:"}</span>
+                <span style={{ fontWeight: 700, textDecoration: "underline", textUnderlineOffset: "2px" }}>
+                  {(() => {
+                    const digits = telefonoWhatsapp.replace(/\D/g, "");
+                    if (digits.length === 11 && digits.startsWith("1")) return `+1 (${digits.slice(1, 4)}) ${digits.slice(4, 7)}-${digits.slice(7)}`;
+                    if (digits.length === 10) return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
+                    return telefonoWhatsapp;
+                  })()}
+                </span>
+              </a>
+            </div>
+          ) : (
+            <a
+              href={`tel:${telefonoWhatsapp.replace(/[^0-9+]/g, "")}`}
+              className="mt-4 flex items-center justify-center gap-2 w-full py-2 text-[11px] font-bold uppercase tracking-widest opacity-80 hover:opacity-100 transition"
+              style={{ color: template.textSecondary }}
+            >
+              <Phone className="w-4 h-4" />
+              {isEn ? "Prefer to call? Call the host" : "¿Prefieres llamar? Llama al anfitrión"}
+            </a>
+          )
         )}
       </div>
       </div>
