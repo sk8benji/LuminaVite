@@ -323,7 +323,7 @@ export const translations: Record<Language, HomeTranslations> = {
       pricingSubtitle: "Un solo pago. Nosotros hacemos todo.",
       pricingFavorite: "El favorito",
       pricingPerNote: "USD · pago único",
-      pricingCta: "Empezar ahora",
+      pricingCta: "Comprar ahora",
       pricingSecondaryText: "¿Prefieres pagar con Zelle? Mándanos un texto",
       planFeatures: {
         assisted: [
@@ -773,7 +773,7 @@ export const translations: Record<Language, HomeTranslations> = {
       pricingSubtitle: "One single payment. We do everything.",
       pricingFavorite: "Most popular",
       pricingPerNote: "USD · one-time payment",
-      pricingCta: "Get started",
+      pricingCta: "Buy now",
       pricingSecondaryText: "Prefer to pay with Zelle? Text us",
       planFeatures: {
         assisted: [
