@@ -50,7 +50,6 @@ export default function TemplatesManager() {
 
   // Opciones de visualizador en vivo
   const [skipIntroPreview, setSkipIntroPreview] = useState(false);
-  const [showMobilePreviewModal, setShowMobilePreviewModal] = useState(false);
 
   // Estado de subida a S3
   const [uploadingField, setUploadingField] = useState<string | null>(null);
@@ -228,6 +227,8 @@ export default function TemplatesManager() {
         body: JSON.stringify({
           slug: editingTemplate.slug,
           ...editForm,
+          // Nunca guardar un nombre vacío: si lo borró, queda el anterior
+          nombre: editForm.nombre?.trim() ? editForm.nombre : editingTemplate.nombre,
         }),
       });
 
@@ -349,15 +350,20 @@ export default function TemplatesManager() {
             </button>
             <div>
               <div className="flex items-center gap-2">
-                <span className="font-serif font-bold text-lg text-stone-900 leading-tight">
-                  {editForm.nombre || editingTemplate.nombre}
-                </span>
+                <input
+                  type="text"
+                  value={editForm.nombre || ""}
+                  onChange={(e) => setEditForm({ ...editForm, nombre: e.target.value })}
+                  title="Haz clic aquí para cambiar el nombre del template"
+                  placeholder={editingTemplate.nombre}
+                  className="font-serif font-bold text-lg text-stone-900 leading-tight bg-transparent border border-transparent hover:border-stone-300 focus:border-[#C5A059] rounded-lg px-1.5 py-0.5 outline-none w-full max-w-[340px]"
+                />
                 <span className="text-[10px] font-mono bg-stone-100 text-stone-600 px-2 py-0.5 rounded-md border border-stone-200">
                   /{editingTemplate.slug}
                 </span>
               </div>
               <p className="text-xs text-stone-500">
-                Ajusta las secciones en vertical y observa los cambios en vivo en el smartphone de la derecha
+                Ajusta las secciones y observa los cambios en vivo en la vista previa
               </p>
               <div className="flex flex-wrap items-center gap-2 mt-2">
                 <label className="text-xs font-semibold text-stone-700">Tema:</label>
@@ -376,14 +382,14 @@ export default function TemplatesManager() {
           </div>
 
           <div className="flex items-center gap-2.5">
-            {/* Botón flotante para ver preview en móviles */}
+            {/* Botón para bajar a la vista previa en pantallas chicas */}
             <button
               type="button"
-              onClick={() => setShowMobilePreviewModal(!showMobilePreviewModal)}
+              onClick={() => document.getElementById("vista-previa-template")?.scrollIntoView({ behavior: "smooth", block: "start" })}
               className="xl:hidden inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-stone-700 bg-stone-100 hover:bg-stone-200 rounded-xl transition cursor-pointer"
             >
               <Eye className="w-4 h-4" />
-              <span>{showMobilePreviewModal ? "Ocultar Teléfono" : "Ver Teléfono"}</span>
+              <span>Ver Teléfono</span>
             </button>
 
             <a
@@ -435,7 +441,7 @@ export default function TemplatesManager() {
           {/* ============================================================== */}
           {/* COLUMNA IZQUIERDA (7 Columnas): Menú Vertical & Formulario */}
           {/* ============================================================== */}
-          <div className={`xl:col-span-7 space-y-6 ${showMobilePreviewModal ? "hidden xl:block" : "block"}`}>
+          <div className="xl:col-span-7 space-y-6 block">
             <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
               {/* Menú Vertical Lateral de Secciones */}
               <div className="md:col-span-4 space-y-1.5 bg-stone-100 p-2 rounded-2xl border border-stone-200">
@@ -1213,16 +1219,7 @@ export default function TemplatesManager() {
           {/* ============================================================== */}
           {/* COLUMNA DERECHA (5 Columnas): SMARTPHONE EN VIVO EN TIEMPO REAL */}
           {/* ============================================================== */}
-          <div className={`xl:col-span-5 sticky top-24 ${showMobilePreviewModal ? "block" : "hidden xl:block"}`}>
-            {showMobilePreviewModal && (
-              <button
-                type="button"
-                onClick={() => setShowMobilePreviewModal(false)}
-                className="xl:hidden fixed bottom-5 right-5 z-50 px-5 py-3 bg-[#7A002A] text-white rounded-full text-sm font-bold shadow-2xl"
-              >
-                ✏️ Volver a editar
-              </button>
-            )}
+          <div id="vista-previa-template" className="xl:col-span-5 sticky top-24 block">
             <div className="flex flex-col items-center justify-center bg-stone-100 p-4 rounded-3xl border border-stone-200 shadow-sm">
               {/* Barra superior de controles del Simulador */}
               <div className="w-full max-w-[370px] flex items-center justify-between pb-3 mb-2 border-b border-stone-200 text-xs">

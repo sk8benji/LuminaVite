@@ -16,8 +16,6 @@ import {
   Music,
   Upload,
   Loader2,
-  ChevronDown,
-  ChevronUp,
   Languages,
   Check,
   Plus,
@@ -218,39 +216,17 @@ export default function TemplateSectionBuilder({
   computeRsvpPhrases,
   onOpenTemplatePicker,
 }: TemplateSectionBuilderProps) {
-  // Estado para acordeones expandidos/colapsados (todos expandidos por defecto para acceso rápido)
-  const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
-    portada: true,
-    medallonFecha: true,
-    dedicatoria: true,
-    rsvp: true,
-    fotoZapatos1: false,
-    ubicaciones: true,
-    dressCode: true,
-    mesaRegalos: true,
-    itinerario: true,
-    fotoZapatos2: false,
-    corteHonor: true,
-    cuentaRegresiva: false,
-    videoDespedida: false,
-    musica: false,
-  });
-
-  const toggleAccordion = (id: string) => {
-    setExpandedSections((prev) => ({ ...prev, [id]: !prev[id] }));
-  };
-
-  const expandAll = () => {
-    const all: Record<string, boolean> = {};
-    SECCIONES_QUINCE_ROSADO.forEach((s) => (all[s.id] = true));
-    setExpandedSections(all);
-  };
-
-  const collapseAll = () => {
-    const none: Record<string, boolean> = {};
-    SECCIONES_QUINCE_ROSADO.forEach((s) => (none[s.id] = false));
-    setExpandedSections(none);
-  };
+  // Una sección a la vez con menú vertical (igual que el editor de templates):
+  // se acabó la pared de acordeones que abrumaba.
+  const [activeSection, setActiveSection] = useState<string>(
+    SECCIONES_QUINCE_ROSADO[0]?.id ?? "portada"
+  );
+  const activeSectionIndex = Math.max(
+    0,
+    SECCIONES_QUINCE_ROSADO.findIndex((s) => s.id === activeSection)
+  );
+  const activeSectionDef =
+    SECCIONES_QUINCE_ROSADO[activeSectionIndex] ?? SECCIONES_QUINCE_ROSADO[0];
 
   // Auto-limpieza en carga de URLs de mapas si contienen código <iframe> residual
   useEffect(() => {
@@ -519,32 +495,68 @@ export default function TemplateSectionBuilder({
           </p>
         </div>
 
-        {/* Acciones de expandir / colapsar */}
+        {/* Indicador de paso (como el editor de templates) */}
         <div className="flex items-center gap-1 shrink-0">
-          <button
-            type="button"
-            onClick={expandAll}
-            className="text-xs font-medium px-2.5 py-1.5 rounded-lg text-stone-500 hover:text-stone-900 hover:bg-stone-100 transition cursor-pointer"
-          >
-            Expandir Todo
-          </button>
-          <button
-            type="button"
-            onClick={collapseAll}
-            className="text-xs font-medium px-2.5 py-1.5 rounded-lg text-stone-500 hover:text-stone-900 hover:bg-stone-100 transition cursor-pointer"
-          >
-            Colapsar Todo
-          </button>
+          <span className="text-xs font-bold text-stone-700 bg-stone-100 border border-stone-200 px-3 py-1.5 rounded-lg">
+            Paso {activeSectionIndex + 1} de {SECCIONES_QUINCE_ROSADO.length}:{" "}
+            {activeSectionDef?.label}
+          </span>
         </div>
       </div>
 
       {/* ══════════════════════════════════════════════════════════════════════
           LISTADO ORDENADO DE LAS 14 SECCIONES
       ══════════════════════════════════════════════════════════════════════ */}
-      <div className="space-y-4">
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-start">
+        {/* Menú vertical de secciones (como el editor de templates) */}
+        <div className="md:col-span-4 space-y-1.5 bg-stone-100 p-2 rounded-2xl border border-stone-200">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-stone-400 px-3 py-1 block">
+            Secciones de la Invitación
+          </span>
+          {SECCIONES_QUINCE_ROSADO.map((sec) => {
+            const isEnabled = checkSectionEnabled(sec.id);
+            const isActive = activeSection === sec.id;
+            return (
+              <button
+                key={sec.id}
+                type="button"
+                onClick={() => setActiveSection(sec.id)}
+                className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold transition text-left cursor-pointer ${
+                  isActive
+                    ? "bg-white shadow-sm border border-stone-200 text-stone-900"
+                    : "text-stone-600 hover:bg-white/70"
+                } ${isEnabled ? "" : "opacity-60"}`}
+              >
+                <span
+                  className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 ${
+                    isActive
+                      ? "bg-[#7A002A] text-white"
+                      : "bg-white text-stone-500 border border-stone-200"
+                  }`}
+                >
+                  {renderIcon(sec.icono, "w-4 h-4")}
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block truncate">
+                    {sec.numero}. {sec.label}
+                  </span>
+                  {!isEnabled && (
+                    <span className="block text-[10px] font-medium text-stone-400">
+                      Desactivada
+                    </span>
+                  )}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Formulario de la sección activa (una a la vez, sin pared de acordeones) */}
+        <div className="md:col-span-8 space-y-4">
         {SECCIONES_QUINCE_ROSADO.map((sec) => {
+          if (sec.id !== activeSection) return null;
           const isEnabled = checkSectionEnabled(sec.id);
-          const isExpanded = expandedSections[sec.id] ?? false;
+          const isExpanded = true;
 
           return (
             <div
@@ -558,10 +570,9 @@ export default function TemplateSectionBuilder({
             >
               {/* ENCABEZADO DEL ACORDEÓN DE LA SECCIÓN */}
               <div
-                className={`p-4 sm:p-5 flex items-center justify-between gap-3 cursor-pointer select-none transition-colors ${
+                className={`p-4 sm:p-5 flex items-center justify-between gap-3 select-none transition-colors ${
                   isEnabled ? "hover:bg-stone-50" : "hover:bg-stone-100/60"
                 }`}
-                onClick={() => toggleAccordion(sec.id)}
               >
                 <div className="flex items-center gap-3.5 min-w-0">
                   {/* Número y Badge de Ícono */}
@@ -614,18 +625,6 @@ export default function TemplateSectionBuilder({
                     </button>
                   </label>
 
-                  <button
-                    type="button"
-                    onClick={() => toggleAccordion(sec.id)}
-                    className="p-1.5 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition cursor-pointer"
-                    aria-label="Alternar acordeón"
-                  >
-                    {isExpanded ? (
-                      <ChevronUp className="w-5 h-5" />
-                    ) : (
-                      <ChevronDown className="w-5 h-5" />
-                    )}
-                  </button>
                 </div>
               </div>
 
@@ -2049,6 +2048,7 @@ export default function TemplateSectionBuilder({
             </div>
           );
         })}
+        </div>
       </div>
     </div>
   );
