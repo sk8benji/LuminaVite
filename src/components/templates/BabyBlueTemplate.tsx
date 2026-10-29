@@ -511,7 +511,7 @@ export default function BabyBlueTemplate({
             <img
               src={data.fotoPortadaUrl}
               alt={data.titulo}
-              className="absolute left-1/2 top-[44%] -translate-x-1/2 -translate-y-1/2 w-[64%] aspect-[5/6] object-cover object-[50%_15%] rounded-[50%] shadow-inner"
+              className="absolute left-[51%] top-[48%] -translate-x-1/2 -translate-y-1/2 w-[37%] aspect-[4/5] object-cover object-[50%_15%] rounded-[50%] shadow-inner"
             />
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={BABY_BLUE_ASSETS.ovalFrame} alt="" className="absolute inset-0 w-full h-full object-contain pointer-events-none" />
@@ -941,7 +941,7 @@ export default function BabyBlueTemplate({
               <img
                 src={data.fotoCierreUrl}
                 alt=""
-                className="absolute left-1/2 top-[44%] -translate-x-1/2 -translate-y-1/2 w-[64%] aspect-[5/6] object-cover object-[50%_15%] rounded-[50%]"
+                className="absolute left-[51%] top-[48%] -translate-x-1/2 -translate-y-1/2 w-[37%] aspect-[4/5] object-cover object-[50%_15%] rounded-[50%]"
               />
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={BABY_BLUE_ASSETS.ovalFrame} alt="" className="absolute inset-0 w-full h-full object-contain pointer-events-none" />
