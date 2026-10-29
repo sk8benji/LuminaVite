@@ -279,6 +279,18 @@ export async function ensurePostgresTables(): Promise<boolean> {
       `ALTER TABLE "Evento" ADD COLUMN IF NOT EXISTS "esDemo" BOOLEAN NOT NULL DEFAULT false;`,
       `ALTER TABLE "Evento" ADD COLUMN IF NOT EXISTS "musicaTitulo" TEXT;`,
       `UPDATE "Evento" SET "esDemo" = true WHERE slug IN ('quinceano-evento', 'quinceano-evento2', 'quinceano-tarjeta');`,
+      // Unificación nombres 2026-10-28 (catálogo público) -> tarjetas admin: solo renombra
+      // si el nombre sigue siendo el viejo editorial; un rename manual del admin se respeta.
+      `UPDATE "MasterTemplate" SET "nombre" = 'Celestial Butterfly' WHERE slug = 'mariposas-xv' AND "nombre" = 'Jardín de Mariposas Celestes (XV Años)';`,
+      `UPDATE "MasterTemplate" SET "nombre" = 'Vintage Quinceanera' WHERE slug = 'isabella-xv' AND "nombre" = 'Blush Rose Filmstrip (XV Años)';`,
+      `UPDATE "MasterTemplate" SET "nombre" = 'Fairytale Castle' WHERE slug = 'emma-and-lucas' AND "nombre" = 'Castillo de Cuento de Hadas (Boda)';`,
+      `UPDATE "MasterTemplate" SET "nombre" = 'Royal Pink' WHERE slug = 'elsy-xv' AND "nombre" = 'Princesa Rosa Gala Real (XV Años)';`,
+      `UPDATE "MasterTemplate" SET "nombre" = 'Sweet Fifteen in Pink' WHERE slug = 'quince-rosado' AND "nombre" = 'Quince Rosado (XV Años)';`,
+      `UPDATE "MasterTemplate" SET "nombre" = 'Our Wedding' WHERE slug = 'sofia-y-alejandro' AND "nombre" = 'Clásica Imperial (Boda)';`,
+      `UPDATE "MasterTemplate" SET "nombre" = 'Blush Princess' WHERE slug = 'blush-princess-xv' AND "nombre" = 'Blush Princess (XV Años)';`,
+      `UPDATE "MasterTemplate" SET "nombre" = 'Quince Pink' WHERE slug = 'era-pink-xv' AND "nombre" = 'Quince Pink (XV Años)';`,
+      `UPDATE "MasterTemplate" SET "nombre" = 'Mis 15 Cream & Gold' WHERE slug = 'miss-15-xv' AND "nombre" = 'Mis 15 Cream & Gold (XV Años)';`,
+      `UPDATE "MasterTemplate" SET "nombre" = 'Garden Baby Blue' WHERE slug = 'baby-blue-xv' AND "nombre" = 'Garden Baby Blue (XV Años)';`,
     ];
 
     for (const sql of sqlStatements) {

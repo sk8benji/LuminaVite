@@ -71,7 +71,7 @@ export const INITIAL_MASTER_TEMPLATES: MasterTemplateItem[] = [
   {
     id: "tpl-butterfly",
     slug: "mariposas-xv",
-    nombre: "Jardín de Mariposas Celestes (XV Años)",
+    nombre: "Celestial Butterfly",
     categoria: "QUINCEANERA",
     estiloPlantilla: "BLUE_BUTTERFLY",
     titulo: "Valeria Sofía",
@@ -94,7 +94,7 @@ export const INITIAL_MASTER_TEMPLATES: MasterTemplateItem[] = [
   {
     id: "tpl-rose",
     slug: "isabella-xv",
-    nombre: "Blush Rose Filmstrip (XV Años)",
+    nombre: "Vintage Quinceanera",
     categoria: "QUINCEANERA",
     estiloPlantilla: "ELEGANT_ROSE",
     titulo: "Isabella",
@@ -115,7 +115,7 @@ export const INITIAL_MASTER_TEMPLATES: MasterTemplateItem[] = [
   {
     id: "tpl-chateau",
     slug: "emma-and-lucas",
-    nombre: "Castillo de Cuento de Hadas (Boda)",
+    nombre: "Fairytale Castle",
     categoria: "BODA",
     estiloPlantilla: "FAIRYTALE_CHATEAU",
     titulo: "Emma & Lucas",
@@ -137,7 +137,7 @@ export const INITIAL_MASTER_TEMPLATES: MasterTemplateItem[] = [
   {
     id: "tpl-elsy",
     slug: "elsy-xv",
-    nombre: "Princesa Rosa Gala Real (XV Años)",
+    nombre: "Royal Pink",
     categoria: "QUINCEANERA",
     estiloPlantilla: "PRINCESA_ROSA",
     titulo: "Sofía",
@@ -182,7 +182,7 @@ export const INITIAL_MASTER_TEMPLATES: MasterTemplateItem[] = [
   {
     id: "tpl-quince-rosado",
     slug: "quince-rosado",
-    nombre: "Quince Rosado (XV Años)",
+    nombre: "Sweet Fifteen in Pink",
     categoria: "QUINCEANERA",
     estiloPlantilla: "QUINCE_ROSADO",
     titulo: "Magdalena",
@@ -204,7 +204,7 @@ export const INITIAL_MASTER_TEMPLATES: MasterTemplateItem[] = [
   {
     id: "tpl-blush",
     slug: "blush-princess-xv",
-    nombre: "Blush Princess (XV Años)",
+    nombre: "Blush Princess",
     categoria: "QUINCEANERA",
     estiloPlantilla: "BLUSH_PRINCESS",
     titulo: "Isabella Sofia",
@@ -227,7 +227,7 @@ export const INITIAL_MASTER_TEMPLATES: MasterTemplateItem[] = [
   {
     id: "tpl-era-pink",
     slug: "era-pink-xv",
-    nombre: "Quince Pink (XV Años)",
+    nombre: "Quince Pink",
     categoria: "QUINCEANERA",
     estiloPlantilla: "QUINCE_ERA_PINK",
     titulo: "Issabella Gonzales",
@@ -249,7 +249,7 @@ export const INITIAL_MASTER_TEMPLATES: MasterTemplateItem[] = [
   {
     id: "tpl-miss15",
     slug: "miss-15-xv",
-    nombre: "Mis 15 Cream & Gold (XV Años)",
+    nombre: "Mis 15 Cream & Gold",
     categoria: "QUINCEANERA",
     estiloPlantilla: "MISS_15",
     titulo: "Isabella Torres",
@@ -271,7 +271,7 @@ export const INITIAL_MASTER_TEMPLATES: MasterTemplateItem[] = [
   {
     id: "tpl-baby-blue",
     slug: "baby-blue-xv",
-    nombre: "Garden Baby Blue (XV Años)",
+    nombre: "Garden Baby Blue",
     categoria: "QUINCEANERA",
     estiloPlantilla: "BABY_BLUE",
     titulo: "Elina Miguel",
@@ -316,7 +316,7 @@ export const INITIAL_MASTER_TEMPLATES: MasterTemplateItem[] = [
   {
     id: "tpl-clasica",
     slug: "sofia-y-alejandro",
-    nombre: "Clásica Imperial (Boda)",
+    nombre: "Our Wedding",
     categoria: "BODA",
     estiloPlantilla: "CLASICA_IMPERIAL",
     titulo: "Sofía & Alejandro",
