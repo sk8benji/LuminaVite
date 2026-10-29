@@ -417,11 +417,12 @@ export default function BeautyQuinceTemplate({
             transparentes, sin recuadro blanco. Marco floral: no existe
             un marco pergamino-rosas en el set, así que arriba y abajo
             va la base floral dorada con rosas sobre pergamino #f7eed7. */}
-        <section className="relative w-full max-w-[430px] mx-auto overflow-hidden" style={{ minHeight: "840px", padding: "60px 24px 80px", boxSizing: "border-box", backgroundColor: "#f7eed7" }}>
-          <img src={A.baseFloralRosas} alt="" className="absolute top-0 left-0 w-full h-[80px] object-cover pointer-events-none bg-transparent" style={{ background: "transparent" }} />
-          <img src={A.baseFloralRosas} alt="" className="absolute bottom-0 left-0 w-full h-[80px] object-cover pointer-events-none bg-transparent" style={{ background: "transparent" }} />
-          <div className="relative z-[2] w-full flex flex-col items-center">
-            <h2 className="font-script text-center" style={{ fontSize: "3.6rem", color: "#a81c1c", margin: "10px 0 30px", lineHeight: 1 }}>The Party Plan</h2>
+        <section className="relative w-full max-w-[430px] mx-auto overflow-hidden" style={{ boxSizing: "border-box", backgroundColor: "#f7eed7" }}>
+          <div className="relative w-full flex items-center justify-center overflow-hidden" style={{ height: "90px" }}>
+            <img src={A.baseFloralRosas} alt="Marco dorado superior" className="absolute inset-0 w-full h-full object-cover pointer-events-none bg-transparent" style={{ zIndex: 1, background: "transparent" }} />
+            <h2 className="font-script relative text-center" style={{ zIndex: 2, fontSize: "3.4rem", color: "#8c1d28", textShadow: "0 1px 4px rgba(255,255,255,0.6), 0 2px 6px rgba(0,0,0,0.25)", margin: 0, padding: "0 40px", lineHeight: 1 }}>The Party Plan</h2>
+          </div>
+          <div className="relative z-[2] w-full flex flex-col items-center" style={{ padding: "30px 24px" }}>
             <div className="relative w-full" style={{ padding: "10px 0 20px" }}>
               <div className="absolute top-0 bottom-0" style={{ left: "50%", width: "2px", background: "linear-gradient(180deg, #d4af37 0%, #a88338 100%)", transform: "translateX(-50%)", zIndex: 1 }} />
               {[
@@ -456,9 +457,12 @@ export default function BeautyQuinceTemplate({
                 </div>
               ))}
             </div>
-            <div className="flex flex-col items-center w-full text-center" style={{ marginTop: "25px" }}>
-              <img src={A.zapatoOro} alt="Tacón" className="bg-transparent" style={{ width: "65px", height: "auto", objectFit: "contain", filter: "drop-shadow(0 6px 12px rgba(0,0,0,0.2))", background: "transparent", marginBottom: "8px" }} />
-              <span className="font-script" style={{ fontSize: "2.2rem", color: "#2b3a4a", lineHeight: 1 }}>Bring Comfy Shoes</span>
+          </div>
+          <div className="relative w-full flex items-center justify-center overflow-hidden" style={{ height: "90px" }}>
+            <img src={A.baseFloralRosas} alt="Marco dorado inferior" className="absolute inset-0 w-full h-full object-cover pointer-events-none bg-transparent" style={{ zIndex: 1, background: "transparent" }} />
+            <div className="relative flex items-center justify-center" style={{ zIndex: 2, gap: "12px", padding: "0 30px" }}>
+              <img src={A.zapatoOro} alt="Zapatilla" className="block bg-transparent" style={{ width: "45px", height: "auto", filter: "drop-shadow(0 4px 8px rgba(0,0,0,0.35))", background: "transparent" }} />
+              <span className="font-script" style={{ fontSize: "2.3rem", color: "#1e293b", textShadow: "0 1px 3px rgba(255,255,255,0.7)", whiteSpace: "nowrap", lineHeight: 1 }}>Bring Comfy Shoes</span>
             </div>
           </div>
         </section>
