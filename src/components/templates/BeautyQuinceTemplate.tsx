@@ -11,7 +11,6 @@ import {
   type BeautyQuinceArtOverrides,
 } from "@/lib/templates/beautyQuinceAssets";
 import AudioPlayer from "../invitation/AudioPlayer";
-import CountdownTimer from "../invitation/CountdownTimer";
 import RsvpSection from "../invitation/RsvpSection";
 import TimelineSection from "../invitation/TimelineSection";
 import AddToCalendarButton from "../invitation/AddToCalendarButton";
@@ -52,6 +51,18 @@ export default function BeautyQuinceTemplate({
       day: "2-digit",
       year: "numeric",
     }).toUpperCase();
+
+  // Fecha del collage, dinámica del evento (no el 20XX del Canva).
+  const eventDateObj = new Date(data.fechaEvento);
+  const collageMonth = eventDateObj.toLocaleDateString("en-US", { month: "long" }).toUpperCase();
+  const collageWeekday = eventDateObj.toLocaleDateString("en-US", { weekday: "long" }).toUpperCase();
+  const collageDay = eventDateObj.getDate();
+  const collageYear = eventDateObj.getFullYear();
+  const collageTime =
+    "AT " + eventDateObj.toLocaleTimeString("en-US", { hour: "numeric", hour12: true }).toUpperCase();
+  const addrParts = (data.recepcionDireccion || "123 Forever Street, Quince City").split(",");
+  const addrStreet = addrParts[0].trim().toUpperCase();
+  const addrCity = (addrParts.slice(1).join(",").trim() || "Quince City").toUpperCase();
 
   const handleOpen = (lang?: "es" | "en") => {
     if (lang) setCurrentLang(lang);
@@ -183,25 +194,58 @@ export default function BeautyQuinceTemplate({
           </div>
         </section>
 
-        {/* Poema */}
-        <section className="relative px-6 py-10 text-center overflow-hidden">
-          <img src={A.marcoCremaCinta} alt="" className="absolute inset-0 w-full h-full object-cover opacity-40" />
-          <div className="relative">
-            <img src={A.corona} alt="Corona" className="w-24 h-24 object-contain mx-auto" />
-            <p className="font-serif-roman text-base leading-relaxed whitespace-pre-line mt-2">
-              {data.frasePersonalizada || (isEn ? poemaEn : poemaEs)}
-            </p>
-            <img src={A.llaveReal} alt="Llave real" className="w-16 h-16 object-contain mx-auto mt-4" />
+        {/* Collage cinematográfico justo debajo del hero: cielo, foto
+            con bordes rasgados y castillo con fecha/hora/dirección.
+            La foto vestido-maniquí ya es transparente en sus bordes
+            rasgados, así que cielo y castillo asoman por el corte.
+            Se quitan la sección poema con corona/llave en cuadro blanco
+            y el recuadro blanco del temporizador de esta zona (el poema
+            ya está en la tarjeta del hero). */}
+        <section className="relative w-full max-w-[430px] mx-auto overflow-hidden text-white" style={{ backgroundColor: "#030816", fontFamily: template.fontSubheading }}>
+          {/* Nivel 1: cielo nocturno */}
+          <div className="relative w-full h-[140px] z-[1]">
+            <img src={A.castilloLuna} alt="Cielo nocturno" className="w-full h-full object-cover object-top block" />
+            <div
+              className="absolute left-0 bottom-[-1px] w-full h-[40px] z-[4] pointer-events-none"
+              style={{
+                backgroundRepeat: "repeat-x",
+                backgroundSize: "contain",
+                backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0,120 C200,30 450,110 700,20 C950,110 1100,50 1200,80 L1200,120 L0,120 Z' fill='%23030816'/%3E%3C/svg%3E")`,
+              }}
+            />
           </div>
-        </section>
-
-        {/* Countdown */}
-        <section className="px-4 py-6">
-          <CountdownTimer
-            targetDate={data.fechaEvento}
-            template={template}
-            titulo={data.countdownEncabezado || (isEn ? "COUNTDOWN TO THE PARTY" : "FALTA POCO PARA LA FIESTA")}
-          />
+          {/* Nivel 2: foto central, entre los dos cortes rasgados */}
+          <div className="relative w-full -mt-[25px] z-[2]">
+            <img src={A.fotoVestidoManiqui} alt="Quinceañera y vestido" className="w-full h-auto block" />
+          </div>
+          {/* Nivel 3: castillo con textos del evento */}
+          <div className="relative w-full min-h-[480px] -mt-[30px] z-[3]">
+            <div
+              className="absolute left-0 top-[-1px] w-full h-[40px] z-[4] pointer-events-none"
+              style={{
+                backgroundRepeat: "repeat-x",
+                backgroundSize: "contain",
+                backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0,0 C150,90 350,-40 500,60 C650,140 900,10 1200,40 L1200,0 L0,0 Z' fill='%23030816'/%3E%3C/svg%3E")`,
+              }}
+            />
+            <img src={A.castilloLuna} alt="Castillo de noche" className="absolute inset-0 w-full h-full object-cover object-bottom block" />
+            <div
+              className="absolute inset-0 flex flex-col items-center justify-center text-center px-5 pt-10 pb-[100px]"
+              style={{ textShadow: "0 2px 8px rgba(0,0,0,0.9), 0 0 15px rgba(0,0,0,0.7)" }}
+            >
+              <span className="text-[1.3rem] tracking-[0.35em] font-semibold mb-2">{collageMonth}</span>
+              <div className="flex items-center justify-center gap-4 w-full my-1.5">
+                <span className="text-[0.95rem] tracking-[0.2em] font-medium">{collageWeekday}</span>
+                <span className="font-script text-[3.2rem] leading-none" style={{ color: "#f7d070" }}>{collageDay}</span>
+                <span className="text-[0.95rem] tracking-[0.2em] font-medium">{collageTime}</span>
+              </div>
+              <span className="text-[1.1rem] tracking-[0.4em] mb-6">{collageYear}</span>
+              <div className="text-[0.8rem] tracking-[0.25em] leading-relaxed opacity-90">
+                <p>{addrStreet}</p>
+                <p>{addrCity}</p>
+              </div>
+            </div>
+          </div>
         </section>
 
         {/* Fotos: vestido y arreglo */}
