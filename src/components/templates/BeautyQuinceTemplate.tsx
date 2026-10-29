@@ -174,6 +174,7 @@ export default function BeautyQuinceTemplate({
         .venue-map-card:hover iframe { filter: sepia(35%) saturate(85%) hue-rotate(8deg) contrast(105%) brightness(95%); }
         .registry-book { transition: transform 0.25s ease; will-change: transform; }
         .registry-book:hover, .registry-book:active { transform: translateY(-4px) scale(1.02); }
+        .registry-btn:hover { background-color: #b89326 !important; }
         .vinyl-disc-img.is-spinning { animation: spinVinyl 5s linear infinite; }
         @keyframes spinVinyl { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         @media (prefers-color-scheme: light), (prefers-color-scheme: dark) {
@@ -664,16 +665,18 @@ export default function BeautyQuinceTemplate({
         })()}
 
         {/* Registry: libro de cuento protagonista, sección propia en
-            pergamino. No va duplicado en el arco de cierre: el arco queda
-            solo con Save the Date. */}
+            AZUL NOCHE palaciego (Abraham 2026-10-29, ritmo visual:
+            Party Plan beige → Details azul → Dress/Corte beige →
+            Registry azul → RSVP beige → arco azul). No va duplicado
+            en el arco de cierre: el arco queda solo con Save the Date. */}
         {data.mostrarMesaRegalos !== false && (
-          <section className="flex justify-center items-center w-full max-w-[430px] mx-auto" style={{ padding: "30px 16px 50px", boxSizing: "border-box", backgroundColor: "#faf5ea" }}>
-            <div className="flex flex-col items-center w-full text-center" style={{ background: "radial-gradient(circle at center, #ffffff 0%, #fbf7ee 100%)", border: "1px solid rgba(212,175,55,0.4)", borderRadius: "20px", padding: "36px 24px 32px", boxShadow: "0 10px 30px rgba(11,23,54,0.08), inset 0 0 20px rgba(212,175,55,0.1)", boxSizing: "border-box" }}>
-              <div style={{ marginBottom: "8px", filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.1))" }}>
-                <Gift className="w-7 h-7 mx-auto" style={{ color: "#a88338" }} />
+          <section className="registry-section flex justify-center items-center w-full max-w-[430px] mx-auto" style={{ padding: "50px 16px", boxSizing: "border-box", backgroundColor: "#0b1736" }}>
+            <div className="registry-card-frame flex flex-col items-center w-full text-center" style={{ background: "radial-gradient(circle at center, #0e1e47 0%, #08132e 100%)", border: "1px solid rgba(212,175,55,0.5)", borderRadius: "20px", padding: "36px 24px 32px", boxShadow: "0 12px 30px rgba(0,0,0,0.45)", boxSizing: "border-box" }}>
+              <div style={{ marginBottom: "8px", filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.3))" }}>
+                <Gift className="w-7 h-7 mx-auto" style={{ color: "#d4af37" }} />
               </div>
-              <h3 className="font-script" style={{ fontSize: "3.2rem", color: "#a81c1c", margin: "0 0 12px", lineHeight: 1 }}>{isEn ? "Registry" : "Mesa de Regalos"}</h3>
-              <p className="font-serif-roman" style={{ fontSize: "0.76rem", lineHeight: 1.65, letterSpacing: "0.06em", color: "#4a5568", maxWidth: "320px", margin: "0 0 20px" }}>
+              <h3 className="registry-title font-script" style={{ fontSize: "3.2rem", color: "#d4af37", margin: "0 0 12px", lineHeight: 1 }}>{isEn ? "Registry" : "Mesa de Regalos"}</h3>
+              <p className="registry-intro font-serif-roman" style={{ fontSize: "0.76rem", lineHeight: 1.65, letterSpacing: "0.06em", color: "#e2e8f0", maxWidth: "320px", margin: "0 0 20px" }}>
                 {isEn
                   ? "The biggest gift I could ask for is for you to join me to celebrate my quinceañera. However, if you wish to bring a present, I have left a registry list here. Thank you so much!"
                   : "El regalo más grande que puedo pedir es que me acompañes a celebrar mis quince años. Si deseas traer un presente, aquí dejaré mi lista de regalos. ¡Muchas gracias!"}
@@ -682,7 +685,7 @@ export default function BeautyQuinceTemplate({
                 <img src={A.libroCuento} alt="Mesa de Regalos" className="w-full h-auto block bg-transparent" style={{ background: "transparent", filter: "drop-shadow(0 15px 25px rgba(11,23,54,0.35))" }} />
               </div>
               {data.wishlistUrl && (
-                <a href={data.wishlistUrl} target="_blank" rel="noreferrer" className="font-serif-roman inline-flex items-center justify-center font-semibold" style={{ backgroundColor: "#0b1736", color: "#ffffff", fontSize: "0.85rem", letterSpacing: "0.18em", textDecoration: "none", padding: "14px 34px", borderRadius: "10px", border: "1px solid #d4af37", boxShadow: "0 6px 18px rgba(11,23,54,0.3)" }}>
+                <a href={data.wishlistUrl} target="_blank" rel="noreferrer" className="registry-btn font-serif-roman inline-flex items-center justify-center font-semibold" style={{ backgroundColor: "#d4af37", color: "#0b1736", fontWeight: 700, fontSize: "0.85rem", letterSpacing: "0.18em", textDecoration: "none", padding: "14px 34px", borderRadius: "10px", border: "1px solid #ffffff", boxShadow: "0 6px 18px rgba(0,0,0,0.45)" }}>
                   {isEn ? "View Registry" : "Ver Mesa de Regalos"}
                 </a>
               )}
