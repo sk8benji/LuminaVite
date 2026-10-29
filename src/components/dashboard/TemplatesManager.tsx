@@ -31,6 +31,11 @@ import {
   Smartphone,
 } from "lucide-react";
 import { MasterTemplateItem } from "@/lib/templates-data";
+import {
+  BEAUTY_QUINCE_ASSETS,
+  BEAUTY_QUINCE_ASSET_LABELS,
+  type BeautyQuinceArtKey,
+} from "@/lib/templates/beautyQuinceAssets";
 import TemplateDispatcher from "@/components/templates/TemplateDispatcher";
 import { InvitationData } from "@/components/invitation/InvitationMobileView";
 
@@ -45,7 +50,7 @@ export default function TemplatesManager() {
   const [editingTemplate, setEditingTemplate] = useState<MasterTemplateItem | null>(null);
   const [editForm, setEditForm] = useState<Partial<MasterTemplateItem>>({});
   const [activeSection, setActiveSection] = useState<
-    "musica" | "sobre" | "textos" | "fechas" | "lugares" | "dresscode" | "regalos" | "corte" | "fotos"
+    "musica" | "sobre" | "textos" | "fechas" | "lugares" | "dresscode" | "regalos" | "corte" | "fotos" | "arte"
   >("musica");
 
   // Opciones de visualizador en vivo
@@ -96,7 +101,13 @@ export default function TemplatesManager() {
 
   const handleOpenEdit = (template: MasterTemplateItem) => {
     setEditingTemplate(template);
-    setEditForm({ ...template });
+    // El arte Beauty Quince guardado vive en configExtra (DB); normalizarlo
+    // a nivel superior para que el editor lo lea aunque se abra de nuevo.
+    setEditForm({
+      ...template,
+      arteBeautyQuince:
+        (template as any).arteBeautyQuince || (template as any).configExtra?.arteBeautyQuince || {},
+    });
     // Al abrir, respetar ?seccion= de la URL si es una sección válida
     const secParam = (() => {
       try {
@@ -105,7 +116,7 @@ export default function TemplatesManager() {
         return null;
       }
     })();
-    const validSections = ["musica", "sobre", "textos", "fechas", "lugares", "dresscode", "regalos", "corte", "fotos"];
+    const validSections = ["musica", "sobre", "textos", "fechas", "lugares", "dresscode", "regalos", "corte", "fotos", "arte"];
     setActiveSection(validSections.includes(secParam || "") ? (secParam as any) : "musica");
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -214,6 +225,72 @@ export default function TemplatesManager() {
     }
   };
 
+  // Subida de una pieza de arte Beauty Quince: misma ruta S3 que las fotos
+  // (templates/<slug>/images), pero guardada por clave en arteBeautyQuince.
+  // Al guardar, la API la persiste en configExtra y el demo la toma de ahí;
+  // sin reemplazo, el template usa su arte default. Nunca toca código.
+  const handleBeautyArtUpload = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+    artKey: BeautyQuinceArtKey
+  ) => {
+    const file = e.target.files?.[0];
+    if (!file || !editingTemplate) return;
+    const fieldKey = `arte-${artKey}`;
+    setUploadingField(fieldKey);
+    setErrorToast(null);
+    try {
+      let resolvedType = file.type;
+      const ext = file.name.split(".").pop()?.toLowerCase() || "";
+      if (!resolvedType || resolvedType === "application/octet-stream") {
+        if (["jpg", "jpeg"].includes(ext)) resolvedType = "image/jpeg";
+        else if (["png"].includes(ext)) resolvedType = "image/png";
+        else if (["webp"].includes(ext)) resolvedType = "image/webp";
+      }
+      let uploadFile: File = file;
+      let uploadName = file.name;
+      let uploadType = resolvedType;
+      if (resolvedType.startsWith("image/") || ["jpg", "jpeg", "png", "webp"].includes(ext)) {
+        const optimized = await optimizarImagen(file, 1200);
+        if (optimized && optimized.blob.size < file.size) {
+          uploadFile = new File([optimized.blob], optimized.name, { type: "image/webp" });
+          uploadName = optimized.name;
+          uploadType = "image/webp";
+        }
+      }
+      const templateSlug = (editingTemplate.slug || "general").replace(/[^a-z0-9-]/gi, "-");
+      const presignedRes = await fetch("/api/s3/presigned-url", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          filename: uploadName,
+          contentType: uploadType,
+          folder: `templates/${templateSlug}/images`,
+          fileSize: uploadFile.size,
+        }),
+      });
+      const presignedData = await presignedRes.json();
+      if (!presignedRes.ok) throw new Error(presignedData.error || "No se pudo obtener enlace firmado de S3");
+      const uploadRes = await fetch(presignedData.uploadUrl, {
+        method: "PUT",
+        headers: { "Content-Type": uploadType },
+        body: uploadFile,
+      });
+      if (!uploadRes.ok) throw new Error("Falló la transferencia del archivo a S3.");
+      setEditForm((prev) => ({
+        ...prev,
+        arteBeautyQuince: { ...(prev as any).arteBeautyQuince, [artKey]: presignedData.fileUrl },
+      }));
+      setSuccessToast("¡Arte reemplazado y subido a S3! Guarda la plantilla para aplicarlo.");
+      setTimeout(() => setSuccessToast(null), 3000);
+    } catch (err: any) {
+      console.error(err);
+      setErrorToast(err.message || "Error al subir el arte a AWS S3");
+      setTimeout(() => setErrorToast(null), 4000);
+    } finally {
+      setUploadingField(null);
+    }
+  };
+
   const handleSave = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     if (!editingTemplate) return;
@@ -302,6 +379,9 @@ export default function TemplatesManager() {
         colorSello: editForm.colorSello || "#C5A059",
         tipoLetra: editForm.tipoLetra || "Cinzel",
         ...(editForm.configExtra || {}),
+        // El arte recién subido (aún sin guardar) también se previsualiza
+        arteBeautyQuince:
+          (editForm as any).arteBeautyQuince || (editForm as any).configExtra?.arteBeautyQuince,
       },
     };
   };
@@ -316,6 +396,10 @@ export default function TemplatesManager() {
     { id: "regalos", label: "Regalos & RSVP", icon: Gift },
     { id: "corte", label: "Corte & Programa", icon: Users },
     { id: "fotos", label: "Fotos & Galería", icon: ImageIcon },
+    // Solo Beauty Quince tiene arte reemplazable por pieza por ahora
+    ...(editingTemplate?.estiloPlantilla === "BEAUTY_QUINCE"
+      ? [{ id: "arte", label: "Arte Beauty Quince", icon: ImageIcon }]
+      : []),
   ] as const;
 
   const filteredTemplates = templates.filter((tpl) => {
@@ -455,7 +539,7 @@ export default function TemplatesManager() {
                     <button
                       key={sec.id}
                       onClick={() => {
-                        setActiveSection(sec.id);
+                        setActiveSection(sec.id as typeof activeSection);
                         try {
                           const url = new URL(window.location.href);
                           url.searchParams.set("seccion", sec.id);
@@ -1210,6 +1294,86 @@ export default function TemplatesManager() {
                       )}
                     </div>
                     </div>
+                  </div>
+                )}
+
+                {/* 10. ARTE BEAUTY QUINCE (solo esta plantilla) */}
+                {activeSection === "arte" && (
+                  <div className="space-y-4">
+                    <div>
+                      <h3 className="font-serif font-bold text-base text-stone-900">Arte Beauty Quince</h3>
+                      <p className="text-[11px] text-stone-500">
+                        Reemplaza cualquier pieza sin tocar código: sube tu arte, se guarda en S3 en templates/beauty-quince/images y, al guardar la plantilla, el demo y los eventos con esta plantilla lo usan. Sin reemplazo, se usa el arte original. Guía: mantén la misma proporción que la pieza actual (cuadrada, vertical u horizontal); el sistema optimiza a webp máx. 1200 px y la pieza se muestra completa, sin recortar.
+                      </p>
+                    </div>
+                    {(Object.keys(BEAUTY_QUINCE_ASSETS) as BeautyQuinceArtKey[]).map((artKey) => {
+                      const current =
+                        (editForm as any).arteBeautyQuince?.[artKey] || BEAUTY_QUINCE_ASSETS[artKey];
+                      const isReplaced = Boolean((editForm as any).arteBeautyQuince?.[artKey]);
+                      return (
+                        <div key={artKey} className="p-3.5 bg-stone-50 rounded-2xl border border-stone-200 space-y-2">
+                          <div className="flex items-center justify-between gap-2">
+                            <span className="text-xs font-bold text-stone-800">
+                              {BEAUTY_QUINCE_ASSET_LABELS[artKey]}
+                              {isReplaced && <span className="ml-2 text-[10px] font-bold text-emerald-700 bg-emerald-100 px-1.5 py-0.5 rounded">Reemplazada</span>}
+                            </span>
+                            <div className="flex items-center gap-2">
+                              {isReplaced && (
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    const next = { ...((editForm as any).arteBeautyQuince || {}) };
+                                    delete next[artKey];
+                                    setEditForm({ ...editForm, arteBeautyQuince: next });
+                                  }}
+                                  className="px-2.5 py-1 bg-white border border-stone-300 text-stone-700 rounded-lg text-xs font-semibold cursor-pointer"
+                                >
+                                  Volver al original
+                                </button>
+                              )}
+                              <label className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#0A1E4A] text-white rounded-lg text-xs font-semibold cursor-pointer">
+                                <Upload className="w-3 h-3" />
+                                <span>{uploadingField === `arte-${artKey}` ? "Subiendo..." : "Subir arte"}</span>
+                                <input
+                                  type="file"
+                                  accept="image/*"
+                                  onChange={(e) => handleBeautyArtUpload(e, artKey)}
+                                  disabled={uploadingField === `arte-${artKey}`}
+                                  className="hidden"
+                                />
+                              </label>
+                            </div>
+                          </div>
+                          <input
+                            type="text"
+                            value={(editForm as any).arteBeautyQuince?.[artKey] || ""}
+                            placeholder={BEAUTY_QUINCE_ASSETS[artKey]}
+                            onChange={(e) => {
+                              const val = e.target.value.trim();
+                              const next = { ...((editForm as any).arteBeautyQuince || {}) };
+                              if (val) next[artKey] = val;
+                              else delete next[artKey];
+                              setEditForm({ ...editForm, arteBeautyQuince: next });
+                            }}
+                            className="w-full px-3 py-1.5 bg-white border border-stone-200 rounded-xl text-xs font-mono"
+                          />
+                          <div className="flex items-center gap-3">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                              src={current}
+                              alt={BEAUTY_QUINCE_ASSET_LABELS[artKey]}
+                              onError={(e) => {
+                                (e.target as HTMLImageElement).style.display = "none";
+                              }}
+                              className="w-24 h-16 object-contain rounded-lg border border-stone-200 bg-white"
+                            />
+                            <span className="text-[11px] text-stone-400">
+                              {isReplaced ? "Vista previa del reemplazo" : "Arte original"}
+                            </span>
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
                 )}
               </div>

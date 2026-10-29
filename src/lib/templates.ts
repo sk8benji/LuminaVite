@@ -5,6 +5,7 @@ export type TemplateId =
   | "FAIRYTALE_CHATEAU"
   | "BLUE_BUTTERFLY"
   | "BLUSH_PRINCESS"
+  | "BEAUTY_QUINCE"
   | "QUINCE_ERA_PINK"
   | "MISS_15"
   | "BABY_BLUE"
@@ -155,6 +156,26 @@ export const TEMPLATES: Record<TemplateId, TemplateConfig> = {
     ribbonGradient: "from-sky-100 via-blue-50 to-sky-200",
     badgeBg: "#EEF4FA",
     description: "Replica del Baby Blue Quinceañera de Studio Eburnean: portada con sobre azul y paloma, marco ovalo de plata, cuenta regresiva azul marino, postal de la misa con castillo, programa, wish list, carta, contacto y FAQ.",
+  },
+  BEAUTY_QUINCE: {
+    id: "BEAUTY_QUINCE",
+    name: "Beauty Quince (Canva)",
+    category: "QUINCEANERA",
+    bgColor: "#FDF6E3",
+    cardBg: "#FFFFFF",
+    textPrimary: "#12265A",
+    textSecondary: "#A6192E",
+    accentColor: "#C5A059",
+    accentSoft: "#0A1E4A",
+    borderSoft: "#E5C158",
+    buttonBg: "#0A1E4A",
+    buttonText: "#FFFFFF",
+    fontHeading: "'Alex Brush', cursive",
+    fontSubheading: "'Playfair Display', serif",
+    fontBody: "'Montserrat', sans-serif",
+    ribbonGradient: "from-blue-900 via-amber-200 to-blue-900",
+    badgeBg: "#FDF6E3",
+    description: "Réplica de la Beauty Quince Invitation de Canva: sobre azul con sello de rosa, castillo a la luna, rosa encantada, disco de música, Party Plan, Kids Policy, registry y RSVP. Arte reemplazable por pieza desde el admin, sin tocar código.",
   },
   MISS_15: {
     id: "MISS_15",

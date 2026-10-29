@@ -1,0 +1,310 @@
+"use client";
+
+import React, { useState } from "react";
+import { MapPin, Gift, Music, CalendarPlus, Sparkles } from "lucide-react";
+import { InvitationData } from "../invitation/InvitationMobileView";
+import { getTemplate } from "@/lib/templates";
+import { getMapDirectionsUrl } from "@/lib/maps";
+import {
+  BEAUTY_QUINCE_ASSETS,
+  resolveBeautyQuinceAssets,
+  type BeautyQuinceArtOverrides,
+} from "@/lib/templates/beautyQuinceAssets";
+import AudioPlayer from "../invitation/AudioPlayer";
+import CountdownTimer from "../invitation/CountdownTimer";
+import RsvpSection from "../invitation/RsvpSection";
+import TimelineSection from "../invitation/TimelineSection";
+import AddToCalendarButton from "../invitation/AddToCalendarButton";
+
+/**
+ * Beauty Quince (réplica Canva "Beauty Quince Invitation", Jasmine).
+ * El arte NO está regado por el JSX: todo sale de BEAUTY_QUINCE_ASSETS y
+ * cualquier reemplazo guardado en la plantilla (arteBeautyQuince, desde el
+ * admin) lo pisa sin tocar código. Las piezas decorativas se muestran con
+ * object-contain, así que un reemplazo con otra proporción no se recorta
+ * ni rompe la sección; los fondos y fotos usan object-cover.
+ */
+export default function BeautyQuinceTemplate({
+  data,
+  skipIntro = false,
+}: {
+  data: InvitationData;
+  skipIntro?: boolean;
+}) {
+  const overrides = (data as unknown as { arteBeautyQuince?: BeautyQuinceArtOverrides })
+    .arteBeautyQuince ||
+    (data.configPlantilla as unknown as { arteBeautyQuince?: BeautyQuinceArtOverrides } | null)
+      ?.arteBeautyQuince ||
+    null;
+  const A = resolveBeautyQuinceAssets(overrides);
+  const template = getTemplate("BEAUTY_QUINCE");
+
+  const [opened, setOpened] = useState(skipIntro);
+  const [currentLang, setCurrentLang] = useState<"es" | "en">(
+    data.idiomaDefault === "es" ? "es" : "en"
+  );
+  const isEn = currentLang === "en";
+  const isBilingual = data.idiomaDefault === "bilingual";
+
+  const formattedDate =
+    data.fechaTextoPersonalizada ||
+    new Date(data.fechaEvento).toLocaleDateString("en-US", {
+      month: "long",
+      day: "2-digit",
+      year: "numeric",
+    }).toUpperCase();
+
+  const handleOpen = (lang?: "es" | "en") => {
+    if (lang) setCurrentLang(lang);
+    if (typeof window !== "undefined" && data.reproducirMusicaAlAbrir !== false) {
+      window.dispatchEvent(new CustomEvent("luminavite:play-audio"));
+    }
+    setOpened(true);
+  };
+
+  const portada = data.fotoPortadaUrl || A.fotoCarrozaAtardecer;
+  const fotoVestido = data.fotoActualUrl || A.fotoVestidoManiqui;
+  const fotoArreglo = data.fotoInfanciaUrl || A.fotoMaquillaje;
+  const fotoCierre = data.fotoCierreUrl || A.arcoRosasCastillo;
+
+  const poemaEn =
+    "Fifteen candles softly glow,\nMarking how much love you know.\nA touch of a woman, a heart still so sweet,\nThe past and the future now dance at your feet.";
+  const poemaEs =
+    "Quince velas brillan con suavidad,\nmostrando cuánto amor hay de verdad.\nUn toque de mujer, un corazón tan dulce,\nel pasado y el futuro ya bailan a tus pies.";
+
+  return (
+    <div
+      className="min-h-screen flex justify-center antialiased"
+      style={{ backgroundColor: "#0A1E4A" }}
+    >
+      {/* Sobre: la portada de la invitación. Tocar el sello abre. */}
+      {!opened && (
+        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center px-6 text-center"
+          style={{ backgroundColor: "#0A1E4A" }}
+        >
+          <img src={A.bibliotecaDorada} alt="" className="absolute inset-0 w-full h-full object-cover opacity-30" />
+          <div className="relative">
+            <img src={A.sobreCerradoSello} alt="Sobre Beauty Quince" className="w-80 max-w-full h-auto object-contain mx-auto drop-shadow-2xl" />
+            <button
+              onClick={() => handleOpen()}
+              className="mt-2 px-6 py-3 rounded-full text-sm font-bold tracking-widest uppercase shadow-xl"
+              style={{ backgroundColor: "#C5A059", color: "#0A1E4A" }}
+            >
+              {isEn ? "Tap the seal to open" : "Toca el sello para abrir"}
+            </button>
+            <p className="mt-4 text-white/90 font-script text-4xl">{data.titulo}</p>
+            <p className="text-[#E5C158] text-xs tracking-[0.25em] uppercase mt-1">
+              {data.subtitulo || "My Quinceañera"}
+            </p>
+            <p className="text-white/70 text-xs mt-2">{formattedDate}</p>
+            <img src={A.sobreAzulAbierto} alt="Sobre abierto" className="w-48 h-20 object-contain mx-auto mt-2 opacity-90" />
+            {isBilingual && (
+              <div className="mt-4 flex gap-2 justify-center">
+                <button onClick={() => handleOpen("es")} className="px-4 py-2 rounded-full border border-[#C5A059] text-[#E5C158] text-xs font-bold">Español</button>
+                <button onClick={() => handleOpen("en")} className="px-4 py-2 rounded-full border border-[#C5A059] text-[#E5C158] text-xs font-bold">English</button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      <main
+        className="w-full max-w-[440px] min-h-screen shadow-2xl relative overflow-hidden flex flex-col pb-12"
+        style={{ backgroundColor: "#FDF6E3", color: "#12265A", fontFamily: template.fontBody }}
+      >
+        <AudioPlayer audioUrl={data.musicaUrl} template={template} />
+
+        {/* Hero: castillo a la luna + rosa encantada + disco */}
+        <section className="relative text-center overflow-hidden">
+          <img src={A.castilloLuna} alt="Castillo a la luz de la luna" className="w-full h-[560px] object-cover" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#0A1E4A]/30 via-transparent to-[#FDF6E3]" />
+          <div className="absolute inset-x-0 top-8 flex flex-col items-center px-6">
+            <img src={A.rosaEncantada} alt="Rosa encantada" className="w-28 h-28 object-contain drop-shadow-xl" />
+            <p className="font-serif-roman text-[11px] tracking-[0.3em] uppercase text-white drop-shadow mt-2">
+              {isEn ? "You are cordially invited to" : "Con cariño te invitamos a"}
+            </p>
+            <h1 className="font-script text-6xl leading-tight text-white drop-shadow-lg mt-1">{data.titulo}</h1>
+            <p className="text-[#E5C158] font-serif-roman tracking-[0.2em] uppercase text-sm drop-shadow">
+              {data.subtitulo || "My Quinceañera"}
+            </p>
+          </div>
+          <div className="absolute inset-x-0 bottom-0 pb-4 flex flex-col items-center">
+            <img src={A.discoMusica} alt="Disco de música" className="w-20 h-20 object-contain rounded-full shadow-xl" style={{ animation: "spin 8s linear infinite" }} />
+            <p className="font-serif-roman text-xs tracking-[0.2em] uppercase mt-2 text-[#12265A] font-bold">{formattedDate}</p>
+            <p className="text-[#12265A]/80 text-xs">{data.recepcionNombre}</p>
+          </div>
+        </section>
+
+        {/* Solapa dorada como divisor, sin recorte */}
+        <img src={A.solapaSobreDorada} alt="Solapa dorada" className="w-full h-28 object-contain bg-[#FDF6E3]" />
+
+        {/* Poema */}
+        <section className="relative px-6 py-10 text-center overflow-hidden">
+          <img src={A.marcoCremaCinta} alt="" className="absolute inset-0 w-full h-full object-cover opacity-40" />
+          <div className="relative">
+            <img src={A.corona} alt="Corona" className="w-24 h-24 object-contain mx-auto" />
+            <p className="font-serif-roman text-base leading-relaxed whitespace-pre-line mt-2">
+              {data.frasePersonalizada || (isEn ? poemaEn : poemaEs)}
+            </p>
+            <img src={A.llaveReal} alt="Llave real" className="w-16 h-16 object-contain mx-auto mt-4" />
+          </div>
+        </section>
+
+        {/* Countdown */}
+        <section className="px-4 py-6">
+          <CountdownTimer
+            targetDate={data.fechaEvento}
+            template={template}
+            titulo={data.countdownEncabezado || (isEn ? "COUNTDOWN TO THE PARTY" : "FALTA POCO PARA LA FIESTA")}
+          />
+        </section>
+
+        {/* Fotos: vestido y arreglo */}
+        <section className="px-6 py-8 text-center">
+          <h2 className="font-script text-5xl text-[#A6192E]">{isEn ? "A Dream Come True" : "Un Sueño Hecho Realidad"}</h2>
+          <div className="grid grid-cols-2 gap-3 mt-5">
+            <img src={fotoVestido} alt="Vestido" className="w-full h-56 object-cover rounded-2xl shadow" />
+            <img src={fotoArreglo} alt="Arreglo" className="w-full h-56 object-cover rounded-2xl shadow" />
+          </div>
+          <img src={A.vestidoBella} alt="Vestido Bella" className="w-40 h-40 object-contain mx-auto mt-4" />
+          <img src={A.carroza} alt="Carroza" className="w-48 h-48 object-contain mx-auto -mt-2" />
+        </section>
+
+        {/* Fecha y lugar */}
+        <section className="relative px-6 py-10 text-center overflow-hidden">
+          <img src={A.bibliotecaAzul} alt="" className="absolute inset-0 w-full h-full object-cover opacity-25" />
+          <div className="relative">
+            <h2 className="font-script text-5xl text-[#A6192E]">{isEn ? "When & Where" : "Fecha y Lugar"}</h2>
+            <p className="font-serif-roman tracking-[0.2em] uppercase text-sm mt-3 font-bold">{formattedDate}</p>
+            {data.ceremoniaNombre && (
+              <div className="mt-5">
+                <p className="text-xs tracking-[0.25em] uppercase font-bold text-[#C5A059]">{isEn ? "Church Ceremony" : "Ceremonia"}</p>
+                <p className="font-serif-roman text-lg">{data.ceremoniaNombre}</p>
+                {data.ceremoniaDireccion && <p className="text-sm opacity-80">{data.ceremoniaDireccion}</p>}
+                {data.ceremoniaMapUrl && (
+                  <a href={getMapDirectionsUrl(data.ceremoniaMapUrl)} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-sm font-bold text-[#A6192E] mt-1">
+                    <MapPin className="w-4 h-4" /> {isEn ? "Directions" : "Cómo llegar"}
+                  </a>
+                )}
+              </div>
+            )}
+            <div className="mt-5">
+              <p className="text-xs tracking-[0.25em] uppercase font-bold text-[#C5A059]">{isEn ? "Reception" : "Recepción"}</p>
+              <p className="font-serif-roman text-lg">{data.recepcionNombre}</p>
+              <p className="text-sm opacity-80">{data.recepcionDireccion}</p>
+              <a href={getMapDirectionsUrl(data.recepcionMapUrl)} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-sm font-bold text-[#A6192E] mt-1">
+                <MapPin className="w-4 h-4" /> {isEn ? "Directions" : "Cómo llegar"}
+              </a>
+            </div>
+            <img src={portada} alt="Portada" className="w-full h-72 object-cover rounded-2xl shadow mt-6" />
+            <img src={A.puertasPalacio} alt="Puertas del palacio" className="w-full h-72 object-cover rounded-2xl shadow mt-3" />
+          </div>
+        </section>
+
+        {/* Party Plan / Itinerario */}
+        <section className="px-4 py-8">
+          <TimelineSection items={data.itinerarioJson as never} template={template} isEn={isEn} />
+          <div className="flex justify-center gap-4 mt-2">
+            <img src={A.copaBrindis} alt="Brindis" className="w-16 h-16 object-contain" />
+            <img src={A.candelabro} alt="Candelabro" className="w-16 h-16 object-contain" />
+            <img src={A.zapatoOro} alt="Zapato" className="w-16 h-16 object-contain" />
+          </div>
+        </section>
+
+        {/* Kids Policy: texto tal cual del Canva original */}
+        <section className="px-6 py-10 text-center">
+          <img src={A.marcoAzulRosas} alt="" className="w-full h-64 object-cover rounded-2xl shadow" />
+          <h2 className="font-script text-5xl text-[#A6192E] mt-4">{isEn ? "Kids Policy" : "Niños"}</h2>
+          <p className="text-sm leading-relaxed mt-3">
+            {isEn
+              ? "We absolutely love and welcome children to celebrate this special day with us. To help keep certain moments safe and uninterrupted, we kindly ask that all children remain seated and supervised during important dances — especially the Father & Daughter Dance and any formal performances. Please ensure children do not enter the dance floor during these times. Thank you for your understanding and cooperation in making this celebration beautiful for everyone."
+              : "Amamos y damos la bienvenida a los niños en este día tan especial. Para que ciertos momentos sean seguros y sin interrupciones, les pedimos amablemente que los niños permanezcan sentados y supervisados durante los bailes importantes, especialmente el baile de padre e hija y las presentaciones formales. Por favor, que no entren a la pista en esos momentos. Gracias por ayudarnos a que esta celebración sea hermosa para todos."}
+          </p>
+          <p className="text-xs mt-3 opacity-70">{isEn ? "Bring comfy shoes." : "Trae zapatos cómodos."}</p>
+          <img src={A.cartaPapelCinta} alt="Papel carta" className="w-full h-64 object-cover rounded-2xl shadow mt-4" />
+        </section>
+
+        {/* Dress code + detalles */}
+        {data.mostrarDressCode !== false && (
+          <section className="px-6 py-8 text-center">
+            <img src={A.trajePrincipe} alt="Traje" className="w-32 h-32 object-contain mx-auto" />
+            <h2 className="font-script text-5xl text-[#A6192E]">{data.dressCodeTitulo || (isEn ? "Dress Code" : "Código de Vestimenta")}</h2>
+            {data.dressCodeNota && <p className="text-sm mt-2">{isEn ? data.dressCodeNotaEn || data.dressCodeNota : data.dressCodeNota}</p>}
+            {data.coloresReservados && data.coloresReservados.length > 0 && (
+              <div className="flex justify-center gap-2 mt-3">
+                {data.coloresReservados.map((c) => (
+                  <span key={c} className="w-8 h-8 rounded-full border border-black/10 inline-block" style={{ backgroundColor: c }} />
+                ))}
+              </div>
+            )}
+          </section>
+        )}
+
+        {/* Registry / Regalos */}
+        {data.mostrarMesaRegalos !== false && (
+          <section className="relative px-6 py-10 text-center overflow-hidden">
+            <img src={A.marcoCremaEsquinas} alt="" className="absolute inset-0 w-full h-full object-cover opacity-30" />
+            <div className="relative">
+            <Gift className="w-8 h-8 mx-auto text-[#C5A059]" />
+            <h2 className="font-script text-5xl text-[#A6192E] mt-2">{isEn ? "Registry" : "Mesa de Regalos"}</h2>
+            <p className="text-sm leading-relaxed mt-3">
+              {data.regalosMensaje ||
+                (isEn
+                  ? "The biggest gift I could ask for is for you to join me to celebrate my quinceañera. However, if you wish to bring a present, I will be leaving a registry list here. Thank you so much!"
+                  : "El regalo más grande que puedo pedir es que me acompañes a celebrar mis quince años. Si deseas traer un presente, aquí dejaré mi lista de regalos. ¡Muchas gracias!")}
+            </p>
+            <img src={A.libroCuento} alt="Libro de cuento" className="w-32 h-32 object-contain mx-auto mt-3" />
+            {data.wishlistUrl && (
+              <a href={data.wishlistUrl} target="_blank" rel="noreferrer" className="inline-block mt-2 px-6 py-3 rounded-full text-sm font-bold" style={{ backgroundColor: "#0A1E4A", color: "#fff" }}>
+                {isEn ? "View Registry" : "Ver Mesa de Regalos"}
+              </a>
+            )}
+            </div>
+          </section>
+        )}
+
+        {/* RSVP */}
+        <section className="px-4 py-6">
+          <RsvpSection
+            eventoId={data.id}
+            eventoTitulo={data.titulo}
+            telefonoWhatsapp={data.telefonoWhatsappRsvp}
+            maxPases={data.maxPasesPorInvitado ?? 4}
+            fechaLimite={data.fechaLimiteRsvp || data.rsvpFechaLimite}
+            template={template}
+            permitirConfirmacionTelefono={data.permitirConfirmacionTelefono}
+            isEn={isEn}
+          />
+        </section>
+
+        {/* Cierre */}
+        <section className="px-6 py-10 text-center">
+          <img src={A.rosaCampana} alt="Rosa en campana" className="w-40 h-40 object-contain mx-auto" />
+          <img src={A.marcoCortinaDorada} alt="Marco cortina dorada" className="w-full h-64 object-cover rounded-2xl shadow mt-2" />
+          <img src={A.destellosDorados} alt="Destellos dorados" className="w-full h-32 object-contain mt-2" />
+          <img src={A.brilloDoradoMarco} alt="Brillo dorado" className="w-full h-32 object-contain" />
+          <img src={fotoCierre} alt="Cierre" className="w-full h-72 object-cover rounded-2xl shadow mt-2" />
+          <h2 className="font-script text-5xl text-[#A6192E] mt-5">{isEn ? "See you soon!" : "¡Te esperamos!"}</h2>
+          {data.mensajeDespedida && <p className="text-sm mt-2">{data.mensajeDespedida}</p>}
+          <div className="mt-5 flex flex-col items-center gap-3">
+            <AddToCalendarButton
+              titulo={`${data.titulo} - ${data.subtitulo || "Quinceañera"}`}
+              ubicacion={data.recepcionDireccion}
+              fechaEvento={data.fechaEvento}
+              template={template}
+            />
+            <span className="inline-flex items-center gap-1 text-xs opacity-70"><CalendarPlus className="w-4 h-4" /> {isEn ? "Save the date" : "Guarda la fecha"}</span>
+          </div>
+          <div className="flex justify-center gap-3 mt-6">
+            <img src={A.espejoMano} alt="Espejo" className="w-14 h-14 object-contain" />
+            <img src={A.abanico} alt="Abanico" className="w-14 h-14 object-contain" />
+            <img src={A.castillo} alt="Castillo" className="w-14 h-14 object-contain" />
+          </div>
+          <p className="text-[11px] tracking-widest uppercase opacity-50 mt-6 flex items-center justify-center gap-1">
+            <Sparkles className="w-3 h-3" /> Beauty Quince <Music className="w-3 h-3" />
+          </p>
+        </section>
+      </main>
+    </div>
+  );
+}

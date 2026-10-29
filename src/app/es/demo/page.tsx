@@ -47,6 +47,15 @@ const DEMO_CARDS = [
     badge: "The Hanger T6",
   },
   {
+    slug: "beauty-quince-xv",
+    title: "Beauty Quince",
+    name: "Jasmine",
+    tag: "Quinceañera & Gala",
+    badge: "New",
+    desc: "Replica of the Canva Beauty Quince Invitation: blue envelope with rose wax seal, moonlit castle, enchanted rose, music disc, Party Plan, Kids Policy, registry and RSVP. Art replaceable piece by piece from the admin.",
+    image: "/assets/template-beauty-quince/foto-carroza-atardecer.webp",
+  },
+  {
     slug: "blush-princess-xv",
     title: "Blush Princess",
     name: "Isabella Sofia",
