@@ -625,6 +625,12 @@ export const DEMO_BEAUTY: InvitationData = {
   recepcionNombre: "Quince City Ballroom",
   recepcionDireccion: "123 Forever Street, Quince City",
   recepcionMapUrl: "https://maps.google.com/?q=123+Forever+Street+Quince+City",
+  corteHonorJson: {
+    chambelan: "Emilio Salazar",
+    damas: ["Isabella Cordero", "Valeria Morales", "Sofia Villanueva", "Emilia Rodriguez", "Camila Aguilar", "Maria Paz Leon", "Alondra Jimenez", "Regina Castro"],
+    chambelanes: ["Diego Alvarez", "Santiago Lopez", "Francisco Ruiz", "Mateo Ramírez", "Alejandro Torres", "Emiliano Vega"],
+    padrinos: ["Miguel Herrera", "Daniela Herrera"],
+  },
   dressCodeTitulo: "Dress Code",
   dressCodeNota: "Vestimenta formal. Trae zapatos cómodos para bailar toda la noche.",
   dressCodeNotaEn: "Formal attire. Bring comfy shoes to dance all night.",
