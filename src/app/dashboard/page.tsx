@@ -850,43 +850,9 @@ export default function DashboardPage() {
                 Gestiona tus invitaciones interactivas publicadas, revisa confirmaciones y obtén enlaces directos.
               </p>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6">
-                <div className="bg-white p-5 rounded-2xl border border-stone-200 shadow-sm flex items-center justify-between">
-                  <div>
-                    <p className="text-[11px] font-semibold text-stone-500 uppercase tracking-wider">
-                      Invitaciones Activas
-                    </p>
-                    <p className="text-2xl font-bold text-stone-900 mt-1">{eventos.length}</p>
-                  </div>
-                  <div className="p-3 bg-pink-50 text-[#7A002A] rounded-xl">
-                    <Sparkles className="w-5 h-5" />
-                  </div>
-                </div>
-
-                <div className="bg-white p-5 rounded-2xl border border-stone-200 shadow-sm flex items-center justify-between">
-                  <div>
-                    <p className="text-[11px] font-semibold text-stone-500 uppercase tracking-wider">
-                      Confirmaciones RSVP
-                    </p>
-                    <p className="text-2xl font-bold text-stone-900 mt-1">{totalRsvps} pases</p>
-                  </div>
-                  <div className="p-3 bg-emerald-50 text-emerald-600 rounded-xl">
-                    <Users className="w-5 h-5" />
-                  </div>
-                </div>
-
-                <div className="bg-white p-5 rounded-2xl border border-stone-200 shadow-sm flex items-center justify-between">
-                  <div>
-                    <p className="text-[11px] font-semibold text-stone-500 uppercase tracking-wider">
-                      Almacenamiento Conectado
-                    </p>
-                    <p className="text-2xl font-bold text-stone-900 mt-1">AWS S3</p>
-                  </div>
-                  <div className="p-3 bg-amber-50 text-amber-600 rounded-xl">
-                    <Share2 className="w-5 h-5" />
-                  </div>
-                </div>
-              </div>
+              <p className="text-xs text-stone-500 mt-2">
+                {eventos.length} invitaciones activas · {totalRsvps} pases confirmados
+              </p>
             </div>
 
             {/* Listado de Invitaciones */}
@@ -902,7 +868,7 @@ export default function DashboardPage() {
                 </Link>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 {eventos.map((ev) => {
                   const formattedDate = new Date(ev.fechaEvento).toLocaleDateString("es-ES", {
                     day: "2-digit",
@@ -925,7 +891,7 @@ export default function DashboardPage() {
                             (e.target as HTMLImageElement).src =
                               "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=600&q=80";
                           }}
-                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                          className="w-full h-full object-contain"
                         />
                         <div className="absolute top-3 left-3 flex gap-2">
                           <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-black/60 text-white backdrop-blur-sm">
@@ -958,6 +924,10 @@ export default function DashboardPage() {
                           <div className="flex items-center gap-2 text-xs text-stone-500 mt-1">
                             <Calendar className="w-3.5 h-3.5" />
                             <span>{formattedDate}</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-xs text-stone-500 mt-1">
+                            <Users className="w-3.5 h-3.5" />
+                            <span>{ev._count?.rsvps || 0} pases confirmados</span>
                           </div>
 
                           <div className="mt-3 p-2 bg-stone-50 rounded-xl text-xs font-mono text-stone-600 truncate border border-stone-100 flex items-center justify-between">
