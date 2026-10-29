@@ -58,6 +58,7 @@ export default function DashboardPage() {
   const [ordenes, setOrdenes] = useState<OrderData[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadingOrdenes, setLoadingOrdenes] = useState(false);
+  const [errorOrdenes, setErrorOrdenes] = useState<string | null>(null);
   const [copiedSlug, setCopiedSlug] = useState<string | null>(null);
   const [filtroEstado, setFiltroEstado] = useState<string>("TODOS");
   const [busquedaOrdenes, setBusquedaOrdenes] = useState<string>("");
@@ -194,14 +195,23 @@ export default function DashboardPage() {
 
   const cargarOrdenes = () => {
     setLoadingOrdenes(true);
+    setErrorOrdenes(null);
     fetch("/api/admin/ordenes")
-      .then((res) => res.json())
-      .then((data) => {
+      .then(async (res) => {
+        const data = await res.json();
+        if (!res.ok || data.error) {
+          throw new Error(data.error || "No se pudieron cargar las órdenes");
+        }
         if (data.orders) {
           setOrdenes(data.orders);
         }
       })
-      .catch((err) => console.error("Error cargando órdenes:", err))
+      .catch((err) => {
+        console.error("Error cargando órdenes:", err);
+        setErrorOrdenes(
+          "No se pudieron cargar las órdenes. Si el servidor se está reiniciando, espera un momento y pulsa Reintentar."
+        );
+      })
       .finally(() => setLoadingOrdenes(false));
   };
 
@@ -478,7 +488,8 @@ export default function DashboardPage() {
                       Ingresos Totales
                     </p>
                     <p className="text-2xl font-bold text-[#C5A059] mt-1">
-                      ${totalIngresos.toFixed(2)} <span className="text-xs text-stone-400">USD</span>
+                      {loadingOrdenes && ordenes.length === 0 ? "…" : `$${totalIngresos.toFixed(2)}`}{" "}
+                      <span className="text-xs text-stone-400">USD</span>
                     </p>
                   </div>
                   <div className="p-3 bg-amber-50 text-amber-700 rounded-xl">
@@ -492,7 +503,7 @@ export default function DashboardPage() {
                       Órdenes Pagadas
                     </p>
                     <p className="text-2xl font-bold text-stone-900 mt-1">
-                      {ordenesPagadas.length}
+                      {loadingOrdenes && ordenes.length === 0 ? "…" : ordenesPagadas.length}
                     </p>
                   </div>
                   <div className="p-3 bg-emerald-50 text-emerald-600 rounded-xl">
@@ -505,7 +516,9 @@ export default function DashboardPage() {
                     <p className="text-[11px] font-semibold text-stone-500 uppercase tracking-wider">
                       Nuevos por Contactar
                     </p>
-                    <p className="text-2xl font-bold text-[#7A002A] mt-1">{ordenesNuevas}</p>
+                    <p className="text-2xl font-bold text-[#7A002A] mt-1">
+                      {loadingOrdenes && ordenes.length === 0 ? "…" : ordenesNuevas}
+                    </p>
                   </div>
                   <div className="p-3 bg-pink-50 text-[#7A002A] rounded-xl">
                     <AlertCircle className="w-5 h-5" />
@@ -517,7 +530,9 @@ export default function DashboardPage() {
                     <p className="text-[11px] font-semibold text-stone-500 uppercase tracking-wider">
                       En Proceso de Diseño
                     </p>
-                    <p className="text-2xl font-bold text-stone-900 mt-1">{ordenesEnDiseno}</p>
+                    <p className="text-2xl font-bold text-stone-900 mt-1">
+                      {loadingOrdenes && ordenes.length === 0 ? "…" : ordenesEnDiseno}
+                    </p>
                   </div>
                   <div className="p-3 bg-blue-50 text-blue-600 rounded-xl">
                     <Clock className="w-5 h-5" />
@@ -564,7 +579,28 @@ export default function DashboardPage() {
             </div>
 
             {/* Listado de Compradores */}
-            {ordenesFiltradas.length === 0 ? (
+            {loadingOrdenes && ordenes.length === 0 ? (
+              <div className="bg-white rounded-3xl border border-stone-200 p-12 text-center">
+                <RefreshCw className="w-10 h-10 text-stone-300 mx-auto mb-3 animate-spin" />
+                <h3 className="text-base font-bold text-stone-800">Cargando órdenes...</h3>
+                <p className="text-xs text-stone-500 mt-1 max-w-sm mx-auto">
+                  Estamos trayendo tus ventas desde la base de datos. Si el servidor se acaba de reiniciar, esto puede tardar unos segundos.
+                </p>
+              </div>
+            ) : errorOrdenes && ordenes.length === 0 ? (
+              <div className="bg-white rounded-3xl border border-red-200 p-12 text-center">
+                <h3 className="text-base font-bold text-stone-800">No se pudieron cargar las órdenes</h3>
+                <p className="text-xs text-stone-500 mt-1 max-w-sm mx-auto">{errorOrdenes}</p>
+                <div className="mt-5">
+                  <button
+                    onClick={cargarOrdenes}
+                    className="px-4 py-2 bg-[#7A002A] text-white rounded-xl text-xs font-semibold hover:bg-[#5e0020] transition shadow-xs cursor-pointer"
+                  >
+                    Reintentar
+                  </button>
+                </div>
+              </div>
+            ) : ordenesFiltradas.length === 0 ? (
               <div className="bg-white rounded-3xl border border-stone-200 p-12 text-center">
                 <ShoppingBag className="w-12 h-12 text-stone-300 mx-auto mb-3" />
                 <h3 className="text-base font-bold text-stone-800">No hay órdenes para mostrar</h3>
