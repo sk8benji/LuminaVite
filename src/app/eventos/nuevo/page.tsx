@@ -104,11 +104,13 @@ function NuevoEventoContent() {
       "Hoy doy el hermoso paso de niña a señorita, rodeada de las personas que más amo en el mundo.",
     fechaEvento: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toISOString().slice(0, 16),
     fotoPortadaUrl:
-      "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=800&q=80",
+      "/assets/template-quince-rosado/da616fa36a10f18a133b2dc0383a07d0.webp",
     fotoInfanciaUrl:
-      "https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&w=400&q=80",
+      "/assets/template-quince-rosado/083dc0c793669d4a4d4a782851e93f65.webp",
     fotoActualUrl:
-      "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=400&q=80",
+      "/assets/template-quince-rosado/c0ec302539da1389b4c6b7d0b122ddd7.webp",
+    fotoCierreUrl:
+      "/assets/template-quince-rosado/4046b1a7e943f6186c4bd79419897578.webp",
     fotoZapato1Url: "",
     fotoZapato2Url: "",
     musicaUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
@@ -386,8 +388,9 @@ function NuevoEventoContent() {
         "Dos almas con un solo pensamiento, dos corazones que laten como uno solo.",
       fechaTextoPersonalizada: "SATURDAY, JULY 22 • 3:30 PM",
       fotoPortadaUrl: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80",
-      fotoInfanciaUrl: "https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=400&q=80",
-      fotoActualUrl: "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=400&q=80",
+      fotoInfanciaUrl: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=400&q=80",
+      fotoActualUrl: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=400&q=80",
+      fotoCierreUrl: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=400&q=80",
       musicaUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
       dressCodeTitulo: "Black Tie / Formal",
       dressCodeNota: "Rogamos vestir de gala. El blanco está reservado exclusivamente para la novia.",
@@ -404,7 +407,10 @@ function NuevoEventoContent() {
       frasePersonalizada:
         "Ten cuidado con lo que deseas... estás cordialmente invitado a cruzar la puerta secreta.",
       fechaTextoPersonalizada: "OCTOBER 31 • 6:00 PM",
-      fotoPortadaUrl: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=800&q=80",
+      fotoPortadaUrl: "https://images.unsplash.com/photo-1517841905240-472988bab304?auto=format&fit=crop&w=800&q=80",
+      fotoInfanciaUrl: "https://images.unsplash.com/photo-1517841905240-472988bab304?auto=format&fit=crop&w=400&q=80",
+      fotoActualUrl: "https://images.unsplash.com/photo-1517841905240-472988bab304?auto=format&fit=crop&w=400&q=80",
+      fotoCierreUrl: "https://images.unsplash.com/photo-1517841905240-472988bab304?auto=format&fit=crop&w=400&q=80",
       musicaUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
       dressCodeTitulo: "Gótico / Fantasía Mística",
       dressCodeNota: "Trae tu mejor atuendo de otro mundo o detalle amarillo.",
@@ -420,7 +426,7 @@ function NuevoEventoContent() {
         "Hoy doy el hermoso paso de niña a señorita, rodeada de las personas que más amo en el mundo.",
       fechaTextoPersonalizada: "15 DE NOVIEMBRE, 2026",
       fotoPortadaUrl: "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=800&q=80",
-      fotoInfanciaUrl: "https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&w=400&q=80",
+      fotoInfanciaUrl: "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=400&q=80",
       fotoActualUrl: "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=400&q=80",
       musicaUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
       dressCodeTitulo: "Elegante y Formal",
@@ -429,6 +435,117 @@ function NuevoEventoContent() {
       ceremoniaDireccion: "Av. Las Flores 123",
       recepcionNombre: "Gran Salón Diamante",
       recepcionDireccion: "Blvd. Principal 456, Suite A",
+    },
+    BLUSH_PRINCESS: {
+      estiloPlantilla: "BLUSH_PRINCESS",
+      tipoEvento: "QUINCEANERA",
+      titulo: "Isabella Sofia",
+      subtitulo: "My Quinceañera",
+      frasePersonalizada:
+        "Hoy celebro mis quince años rodeada de amor, familia y sueños que apenas comienzan.",
+      fotoPortadaUrl: "/assets/template-blush/foto-1.webp",
+      fotoInfanciaUrl: "/assets/template-blush/foto-nina.webp",
+      fotoActualUrl: "/assets/template-blush/foto-2.webp",
+      fotoCierreUrl: "/assets/template-blush/foto-3.webp",
+      musicaUrl: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
+      musicaTitulo: "Tiempo de Vals — Chayanne",
+      idiomaDefault: "bilingual",
+    },
+    QUINCE_ERA_PINK: {
+      estiloPlantilla: "QUINCE_ERA_PINK",
+      tipoEvento: "QUINCEANERA",
+      titulo: "Issabella Gonzales",
+      subtitulo: "My Quinceañera",
+      frasePersonalizada:
+        "De niña a señorita, celebro este momento único con las personas que más amo.",
+      fotoPortadaUrl: "/assets/template-era-pink/foto-sentada.webp",
+      fotoInfanciaUrl: "/assets/template-era-pink/foto-retrato.webp",
+      fotoActualUrl: "/assets/template-era-pink/foto-espalda.webp",
+      fotoCierreUrl: "/assets/template-era-pink/foto-sentada.webp",
+      musicaUrl: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
+      musicaTitulo: "Never Grow Up (Taylor's Version) — Taylor Swift",
+      idiomaDefault: "en",
+    },
+    MISS_15: {
+      estiloPlantilla: "MISS_15",
+      tipoEvento: "QUINCEANERA",
+      titulo: "Isabella Torres",
+      subtitulo: "Mis 15 Años",
+      frasePersonalizada:
+        "Quince años de sueños, amor y familia. Hoy brindo por todo lo que viene.",
+      fotoPortadaUrl: "/assets/template-miss15/foto-columpio.webp",
+      fotoInfanciaUrl: "/assets/template-miss15/foto-damas.webp",
+      fotoActualUrl: "/assets/template-miss15/foto-columpio-2.webp",
+      fotoCierreUrl: "/assets/template-miss15/foto-retrato.webp",
+      musicaUrl: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
+      musicaTitulo: "Slow Down, Little Heart — Linhy",
+      idiomaDefault: "en",
+    },
+    BABY_BLUE: {
+      estiloPlantilla: "BABY_BLUE",
+      tipoEvento: "QUINCEANERA",
+      titulo: "Elina Miguel",
+      subtitulo: "My Quinceañera",
+      frasePersonalizada:
+        "Entre flores y cielo azul, celebro mis quince años con el corazón lleno de alegría.",
+      fotoPortadaUrl: "/assets/template-baby-blue/foto-gazebo.webp",
+      fotoInfanciaUrl: "/assets/template-baby-blue/foto-bebe.webp",
+      fotoActualUrl: "/assets/template-baby-blue/foto-camara.webp",
+      fotoCierreUrl: "/assets/template-baby-blue/foto-espalda.webp",
+      musicaUrl: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
+      idiomaDefault: "en",
+    },
+    CLASICA_IMPERIAL: {
+      estiloPlantilla: "CLASICA_IMPERIAL",
+      tipoEvento: "BODA",
+      titulo: "Sofía & Alejandro",
+      subtitulo: "Nuestra Boda de Ensueño",
+      frasePersonalizada:
+        "Dos almas con un solo pensamiento, dos corazones que laten como uno solo.",
+      fotoPortadaUrl: "https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=800&q=80",
+      fotoInfanciaUrl: "https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=400&q=80",
+      fotoActualUrl: "https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=400&q=80",
+      fotoCierreUrl: "https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=400&q=80",
+      musicaUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
+    },
+    ESMERALDA_ROYAL: {
+      estiloPlantilla: "ESMERALDA_ROYAL",
+      tipoEvento: "QUINCEANERA",
+      titulo: "Renata Villarreal",
+      subtitulo: "My Sweet Fifteen",
+      frasePersonalizada:
+        "Hoy doy el hermoso paso de niña a señorita, rodeada de las personas que más amo en el mundo.",
+      fotoPortadaUrl: "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=800&q=80",
+      fotoInfanciaUrl: "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=400&q=80",
+      fotoActualUrl: "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=400&q=80",
+      fotoCierreUrl: "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=400&q=80",
+      musicaUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+    },
+    JARDIN_BOTANICA: {
+      estiloPlantilla: "JARDIN_BOTANICA",
+      tipoEvento: "BODA",
+      titulo: "Camila & Mateo",
+      subtitulo: "Nuestra Boda de Ensueño",
+      frasePersonalizada:
+        "Entre flores y familia, celebramos el día en que dos corazones se vuelven uno.",
+      fotoPortadaUrl: "https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&w=800&q=80",
+      fotoInfanciaUrl: "https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&w=400&q=80",
+      fotoActualUrl: "https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&w=400&q=80",
+      fotoCierreUrl: "https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&w=400&q=80",
+      musicaUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
+    },
+    MINIMALISTA_EDITORIAL: {
+      estiloPlantilla: "MINIMALISTA_EDITORIAL",
+      tipoEvento: "BODA",
+      titulo: "Victoria & David",
+      subtitulo: "Nuestra Boda de Ensueño",
+      frasePersonalizada:
+        "Lo esencial es invisible a los ojos: hoy celebramos nuestro amor, simple y verdadero.",
+      fotoPortadaUrl: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=800&q=80",
+      fotoInfanciaUrl: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=400&q=80",
+      fotoActualUrl: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=400&q=80",
+      fotoCierreUrl: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=400&q=80",
+      musicaUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
     },
   };
 
@@ -708,11 +825,28 @@ function NuevoEventoContent() {
   }, [searchParams, isEditMode]);
 
   // Al seleccionar plantilla, se actualizan el estilo y los datos de demo/preview preservando datos del usuario
-  const handleSelectTemplate = (tempKey: TemplateId) => {
+  const handleSelectTemplate = async (tempKey: TemplateId) => {
     setDamasRaw(null);
     setDamitasRaw(null);
     setPadrinosRaw(null);
-    const preset = TEMPLATE_PRESETS[tempKey];
+    // La plantilla editada en el admin (DB) gana sobre el preset local; si la DB
+    // no responde, se usa el preset local sin bloquear al usuario.
+    let preset: any = TEMPLATE_PRESETS[tempKey];
+    try {
+      const res = await fetch(`/api/templates?estilo=${encodeURIComponent(tempKey)}`);
+      if (res.ok) {
+        const data = await res.json();
+        if (data?.template) {
+          const { id, slug, nombre, activo, orden, createdAt, updatedAt, configExtra, ...rest } = data.template;
+          const dbPreset: any = { ...rest };
+          if (dbPreset.categoria) {
+            dbPreset.tipoEvento = dbPreset.categoria;
+            delete dbPreset.categoria;
+          }
+          preset = { ...preset, ...dbPreset };
+        }
+      }
+    } catch {}
     if (preset) {
       setFormData((prev) => {
         const isCustomName =
@@ -724,7 +858,15 @@ function NuevoEventoContent() {
             prev.titulo !== "Emma & Lucas" &&
             prev.titulo !== "Coraline Jones" &&
             prev.titulo !== "Sofía" &&
-            prev.titulo !== "Magdalena");
+            prev.titulo !== "Magdalena" &&
+            prev.titulo !== "Isabella Sofia" &&
+            prev.titulo !== "Issabella Gonzales" &&
+            prev.titulo !== "Isabella Torres" &&
+            prev.titulo !== "Elina Miguel" &&
+            prev.titulo !== "Sofía & Alejandro" &&
+            prev.titulo !== "Renata Villarreal" &&
+            prev.titulo !== "Camila & Mateo" &&
+            prev.titulo !== "Victoria & David");
 
         const formatted = formatFormalDate(
           prev.fechaEvento,
@@ -1214,6 +1356,15 @@ function NuevoEventoContent() {
 
         {/* Live Simulator en Tiempo Real (5 Columnas en escritorio) */}
         <div className={`lg:col-span-5 ${showMobilePreview ? "block" : "hidden lg:block"}`}>
+          {showMobilePreview && (
+            <button
+              type="button"
+              onClick={() => setShowMobilePreview(false)}
+              className="lg:hidden fixed bottom-5 right-5 z-50 px-5 py-3 bg-[#7A002A] text-white rounded-full text-sm font-bold shadow-2xl"
+            >
+              ✏️ Volver a editar
+            </button>
+          )}
           <div className="sticky top-24">
             <MobileSimulator data={formData} />
           </div>

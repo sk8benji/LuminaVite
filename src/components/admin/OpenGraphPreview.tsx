@@ -63,11 +63,13 @@ export default function OpenGraphPreview({ formData }: OpenGraphPreviewProps) {
   const displayDomain = "clickandlove.app";
   const fullUrl = `https://${displayDomain}/${slug}`;
 
-  // Imagen para la tarjeta OG
+  // Imagen para la tarjeta OG: sin foto no hay respaldo genérico (antes ponía
+  // rosas en todas las invitaciones). Se usa un bloque borgoña neutro.
+  const ogPlaceholder = `data:image/svg+xml;utf8,${encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' width='1200' height='630'><rect width='1200' height='630' fill='#7A002A'/></svg>")}`;
   const imageUrl =
     formData.fotoPortadaUrl ||
     formData.fotoActualUrl ||
-    "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=1200&q=80";
+    ogPlaceholder;
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(fullUrl);

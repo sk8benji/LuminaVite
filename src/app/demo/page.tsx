@@ -1,5 +1,10 @@
 import Link from "next/link";
 import { Sparkles, ArrowRight, ExternalLink } from "lucide-react";
+import prisma from "@/lib/db";
+import { ALL_SYSTEM_DEMOS } from "@/lib/demo-data";
+import { INITIAL_MASTER_TEMPLATES } from "@/lib/templates-data";
+
+export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: "Interactive Collections Catalog | Click & Love",
@@ -86,7 +91,7 @@ const DEMO_CARDS = [
     tag: "Classic Quinceañera",
     badge: "Royal Princess",
     desc: "Interactive virtual envelope opening, live countdown, and automatic confirmation form.",
-    image: "/assets/template-rose/722d78548334333072ad7200e4f8233e.webp",
+    image: "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=800&q=80",
   },
   {
     slug: "sofia-y-alejandro",
@@ -99,7 +104,24 @@ const DEMO_CARDS = [
   },
 ];
 
-export default function DemosIndexPage() {
+export default async function DemosIndexPage() {
+  // La portada elegida en el editor (DB) es la que se muestra en el catálogo.
+  // Sin DB o sin fila: se usa la imagen fija de cada tarjeta.
+  let cards = DEMO_CARDS;
+  try {
+    const rows: any[] = await (prisma as any).masterTemplate.findMany({
+      select: { slug: true, fotoPortadaUrl: true },
+    });
+    const bySlug = new Map(rows.map((r) => [r.slug, r.fotoPortadaUrl]));
+    cards = DEMO_CARDS.map((card) => {
+      const base: any = (ALL_SYSTEM_DEMOS as any)[card.slug];
+      const initial = base
+        ? INITIAL_MASTER_TEMPLATES.find((t) => t.estiloPlantilla === base.estiloPlantilla)
+        : undefined;
+      const portada = initial ? bySlug.get(initial.slug) : undefined;
+      return portada ? { ...card, image: portada } : card;
+    });
+  } catch {}
   return (
     <div className="min-h-screen bg-[#FDFBF8] text-[#2B0A18] py-16 px-4 font-['Montserrat']">
       <div className="max-w-6xl mx-auto">
@@ -138,7 +160,7 @@ export default function DemosIndexPage() {
         </header>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {DEMO_CARDS.map((card) => (
+          {cards.map((card) => (
             <div
               key={card.slug}
               className="bg-white border border-[#E7DCC8] rounded-3xl overflow-hidden shadow-[0_10px_30px_rgba(44,31,27,0.06)] hover:border-[#7A002A] flex flex-col justify-between transition-all duration-300 group"

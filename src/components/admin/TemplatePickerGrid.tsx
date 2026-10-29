@@ -139,7 +139,7 @@ export const TEMPLATE_CATALOG: TemplatePickerItem[] = [
     name: "El Otro Mundo Místico (Coraline)",
     categoria: "CUMPLEANOS",
     badgeLabel: "Temática Especial",
-    thumbnail: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=600&q=80",
+    thumbnail: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=600&q=80",
     description: "Atmósfera mágica y gótica con sobre azul noche, puerta secreta, llave dorada, botón de nácar y animación de misterio.",
     demoSlug: "coraline-party",
     dots: ["#0A1956", "#FFD700", "#3A0443"],
@@ -159,7 +159,7 @@ export const TEMPLATE_CATALOG: TemplatePickerItem[] = [
   {
     id: "ESMERALDA_ROYAL",
     name: "Esmeralda Royal (Etiqueta Rigurosa)",
-    categoria: "UNIVERSAL",
+    categoria: "QUINCEANERA",
     badgeLabel: "Gala Nocturna",
     thumbnail: "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=600&q=80",
     description: "Elegancia nocturna con fondo verde esmeralda oscuro, detalles en oro brillante y acabados de lujo para recepciones de gala.",
@@ -170,7 +170,7 @@ export const TEMPLATE_CATALOG: TemplatePickerItem[] = [
   {
     id: "JARDIN_BOTANICA",
     name: "Jardín Botánica (Boho Chic)",
-    categoria: "UNIVERSAL",
+    categoria: "BODA",
     badgeLabel: "Romántica / Boho",
     thumbnail: "https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&w=600&q=80",
     description: "Hojas de eucalipto, tonos salvia y diseño campestre elegante para celebraciones al aire libre y bodas de jardín.",
@@ -181,7 +181,7 @@ export const TEMPLATE_CATALOG: TemplatePickerItem[] = [
   {
     id: "MINIMALISTA_EDITORIAL",
     name: "Minimalista Editorial (Vogue)",
-    categoria: "UNIVERSAL",
+    categoria: "BODA",
     badgeLabel: "Modern Editorial",
     thumbnail: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=600&q=80",
     description: "Estética contemporánea en blanco y negro con tipografía de revista de moda, espaciado generoso y fotografía protagonista.",

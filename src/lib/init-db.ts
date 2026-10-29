@@ -1,4 +1,5 @@
 import prisma from "./db";
+import { INITIAL_MASTER_TEMPLATES } from "./templates-data";
 
 let tablesInitialized = false;
 
@@ -77,6 +78,7 @@ export async function ensurePostgresTables(): Promise<boolean> {
           "slug" TEXT UNIQUE NOT NULL,
           "panelToken" TEXT,
           "panelShortCode" TEXT,
+          "esDemo" BOOLEAN NOT NULL DEFAULT false,
           "tipoEvento" "TipoEvento" NOT NULL DEFAULT 'QUINCEANERA',
           "estiloPlantilla" "EstiloPlantilla" NOT NULL DEFAULT 'PRINCESA_ROSA',
           "titulo" TEXT NOT NULL,
@@ -238,7 +240,38 @@ export async function ensurePostgresTables(): Promise<boolean> {
 
       `CREATE INDEX IF NOT EXISTS "QrCampaign_code_idx" ON "QrCampaign"("code");`,
       `CREATE INDEX IF NOT EXISTS "QrScan_campaignId_idx" ON "QrScan"("campaignId");`,
-      `CREATE INDEX IF NOT EXISTS "QrScan_createdAt_idx" ON "QrScan"("createdAt");`
+      `CREATE INDEX IF NOT EXISTS "QrScan_createdAt_idx" ON "QrScan"("createdAt");`,
+
+      `CREATE TABLE IF NOT EXISTS "MasterTemplate" (
+          "id" TEXT NOT NULL PRIMARY KEY,
+          "slug" TEXT NOT NULL UNIQUE,
+          "nombre" TEXT NOT NULL,
+          "categoria" "TipoEvento" NOT NULL DEFAULT 'QUINCEANERA',
+          "estiloPlantilla" "EstiloPlantilla" NOT NULL DEFAULT 'BLUE_BUTTERFLY',
+          "titulo" TEXT NOT NULL,
+          "subtitulo" TEXT,
+          "frasePersonalizada" TEXT,
+          "tipoLetra" TEXT DEFAULT 'Cinzel',
+          "musicaUrl" TEXT,
+          "musicaTitulo" TEXT,
+          "fotoPortadaUrl" TEXT NOT NULL,
+          "fotoInfanciaUrl" TEXT,
+          "fotoActualUrl" TEXT,
+          "fotoCierreUrl" TEXT,
+          "colorSobre" TEXT DEFAULT '#E8D5C4',
+          "colorSello" TEXT DEFAULT '#C5A059',
+          "configExtra" JSONB,
+          "activo" BOOLEAN NOT NULL DEFAULT true,
+          "orden" INTEGER NOT NULL DEFAULT 0,
+          "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
+      );`,
+
+      `CREATE INDEX IF NOT EXISTS "MasterTemplate_slug_idx" ON "MasterTemplate"("slug");`,
+      `CREATE INDEX IF NOT EXISTS "MasterTemplate_estiloPlantilla_idx" ON "MasterTemplate"("estiloPlantilla");`,
+      // Marca demo: columna en tablas viejas + las 3 invitaciones de muestra del evento (idempotente)
+      `ALTER TABLE "Evento" ADD COLUMN IF NOT EXISTS "esDemo" BOOLEAN NOT NULL DEFAULT false;`,
+      `UPDATE "Evento" SET "esDemo" = true WHERE slug IN ('quinceano-evento', 'quinceano-evento2', 'quinceano-tarjeta');`,
     ];
 
     for (const sql of sqlStatements) {
@@ -247,6 +280,40 @@ export async function ensurePostgresTables(): Promise<boolean> {
       } catch (sqlErr: any) {
         // Ignorar si el tipo o columna ya existe
       }
+    }
+
+    // Sembrar plantillas maestras (solo las que falten; nunca sobrescribe ediciones del admin)
+    try {
+      const prismaAny = prisma as any;
+      if (prismaAny.masterTemplate) {
+        await prismaAny.masterTemplate.createMany({
+          data: INITIAL_MASTER_TEMPLATES.map((t) => ({
+            id: t.id,
+            slug: t.slug,
+            nombre: t.nombre,
+            categoria: t.categoria as any,
+            estiloPlantilla: t.estiloPlantilla as any,
+            titulo: t.titulo,
+            subtitulo: t.subtitulo,
+            frasePersonalizada: t.frasePersonalizada,
+            tipoLetra: t.tipoLetra,
+            musicaUrl: t.musicaUrl,
+            musicaTitulo: t.musicaTitulo,
+            colorSobre: t.colorSobre,
+            colorSello: t.colorSello,
+            fotoPortadaUrl: t.fotoPortadaUrl,
+            fotoInfanciaUrl: t.fotoInfanciaUrl || null,
+            fotoActualUrl: t.fotoActualUrl || null,
+            fotoCierreUrl: t.fotoCierreUrl || null,
+            configExtra: t as any,
+            activo: t.activo,
+            orden: t.orden,
+          })),
+          skipDuplicates: true,
+        });
+      }
+    } catch (seedErr: any) {
+      console.warn("⚠️ No se pudieron sembrar las plantillas maestras:", seedErr?.message);
     }
 
     tablesInitialized = true;

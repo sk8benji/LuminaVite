@@ -174,7 +174,7 @@ export const DEMO_QUINCE_ROSADO: InvitationData = {
   fechaEvento: new Date("2026-12-05T16:00:00Z"),
   fechaTextoPersonalizada: "SÁBADO 5 DE DICIEMBRE, 2026 • 4:00 PM",
   fotoPortadaUrl: "/assets/template-quince-rosado/90043c428c5ec72c7adb26dce69dedd2.webp",
-  fotoInfanciaUrl: "/assets/template-rose/722d78548334333072ad7200e4f8233e.webp",
+  fotoInfanciaUrl: "/assets/template-quince-rosado/083dc0c793669d4a4d4a782851e93f65.webp",
   fotoActualUrl: "/assets/template-quince-rosado/90043c428c5ec72c7adb26dce69dedd2.webp",
   fotoCierreUrl: "/assets/template-quince-rosado/90043c428c5ec72c7adb26dce69dedd2.webp",
   musicaUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
@@ -208,6 +208,12 @@ export const DEMO_ELSY: InvitationData = {
   fechaTextoPersonalizada: "DECEMBER 05, 2026 AT 2 PM",
   fotoPortadaUrl:
     "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=800&q=80",
+  fotoInfanciaUrl:
+    "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=400&q=80",
+  fotoActualUrl:
+    "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=400&q=80",
+  fotoCierreUrl:
+    "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=600&q=80",
   musicaUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
   telefonoWhatsappRsvp: "18181234567",
   recepcionNombre: "Grand Ballroom Estate",
@@ -251,7 +257,7 @@ export const DEMO_BODA: InvitationData = {
   fechaEvento: new Date("2026-10-24T18:00:00Z"),
   fechaTextoPersonalizada: "SÁBADO 24 DE OCTUBRE • 6:00 PM",
   fotoPortadaUrl:
-    "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=800&q=80",
   musicaUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
   telefonoWhatsappRsvp: "18189876543",
   recepcionNombre: "Hacienda Los Laureles",
@@ -273,7 +279,7 @@ export const DEMO_ESMERALDA: InvitationData = {
   fechaEvento: new Date("2026-11-14T19:00:00Z"),
   fechaTextoPersonalizada: "SÁBADO 14 DE NOVIEMBRE • 7:00 PM",
   fotoPortadaUrl:
-    "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=800&q=80",
   musicaUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
   telefonoWhatsappRsvp: "18181234567",
   recepcionNombre: "Salón Real Esmeralda",
@@ -295,7 +301,7 @@ export const DEMO_JARDIN: InvitationData = {
   fechaEvento: new Date("2026-09-19T17:00:00Z"),
   fechaTextoPersonalizada: "SÁBADO 19 DE SEPTIEMBRE • 5:00 PM",
   fotoPortadaUrl:
-    "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&w=800&q=80",
   musicaUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
   telefonoWhatsappRsvp: "18189876543",
   recepcionNombre: "Jardín Botánico Los Olivos",
@@ -317,7 +323,7 @@ export const DEMO_MINIMALISTA: InvitationData = {
   fechaEvento: new Date("2026-10-10T18:00:00Z"),
   fechaTextoPersonalizada: "OCTOBER 10, 2026 • 6:00 PM",
   fotoPortadaUrl:
-    "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=800&q=80",
   musicaUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
   telefonoWhatsappRsvp: "18189876543",
   recepcionNombre: "The Modern Loft Studio",

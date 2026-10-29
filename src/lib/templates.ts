@@ -32,7 +32,6 @@ export interface TemplateConfig {
   fontBody: string;
   ribbonGradient: string;
   badgeBg: string;
-  previewThumbnail?: string;
   description?: string;
 }
 
@@ -55,7 +54,6 @@ export const TEMPLATES: Record<TemplateId, TemplateConfig> = {
     fontBody: "'Lora', serif",
     ribbonGradient: "from-pink-300 via-rose-200 to-pink-400",
     badgeBg: "#FDF0F3",
-    previewThumbnail: "/assets/template-quince-rosado/90043c428c5ec72c7adb26dce69dedd2.webp",
     description: "Sobre interactivo 3D con lazo de seda y rosas, arco de princesa a caballo, línea de tiempo floral, dress code, regalos y confirmación.",
   },
   ELEGANT_ROSE: {
@@ -76,7 +74,6 @@ export const TEMPLATES: Record<TemplateId, TemplateConfig> = {
     fontBody: "'Montserrat', sans-serif",
     ribbonGradient: "from-rose-300 via-pink-200 to-rose-400",
     badgeBg: "#FDECEF",
-    previewThumbnail: "/assets/template-rose/51d8fb6fdca05936497b8c7f02e14280.webp",
     description: "Bilingüe (EN/ES), video embed YouTube, línea de tiempo 'Growing Up' con fotos por año y wishlist.",
   },
   FAIRYTALE_CHATEAU: {

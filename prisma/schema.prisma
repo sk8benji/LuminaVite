@@ -88,6 +88,7 @@ model Evento {
   slug               String          @unique // URL pública: tudominio.com/[slug]
   panelToken         String?         // Token secreto para el Magic Link del cliente (Mamá): ?key=...
   panelShortCode     String?         @unique // Código corto /m/<code> (10 chars) que redirige al panel con el panelToken ACTUAL; regenerable sin tocar el token
+  esDemo               Boolean         @default(false) // true = invitación de muestra (demo), se filtra aparte de los clientes
   tipoEvento         TipoEvento      @default(QUINCEANERA)
   estiloPlantilla    EstiloPlantilla @default(PRINCESA_ROSA)
 

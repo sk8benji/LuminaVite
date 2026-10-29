@@ -48,7 +48,29 @@ export async function GET(req: NextRequest) {
       },
     });
 
-    return NextResponse.json({ eventos });
+    // Pases reales: el panel cuenta SUMA de pases de confirmados (asistira=true),
+    // no cantidad de filas RSVP. Replicar exactamente ese cálculo para el dashboard.
+    const eventoIds = eventos.map((e: any) => e.id);
+    const rsvps: any[] = eventoIds.length
+      ? await (prisma as any).rsvpRegistro.findMany({
+          where: { eventoId: { in: eventoIds } },
+          select: { eventoId: true, pases: true, asistira: true },
+        })
+      : [];
+    const pasesByEvento = new Map<string, { confirmados: number; asignados: number }>();
+    for (const r of rsvps) {
+      const cur = pasesByEvento.get(r.eventoId) || { confirmados: 0, asignados: 0 };
+      cur.asignados += r.pases || 1;
+      if (r.asistira) cur.confirmados += r.pases || 1;
+      pasesByEvento.set(r.eventoId, cur);
+    }
+    const eventosConPases = eventos.map((e: any) => ({
+      ...e,
+      pasesConfirmados: pasesByEvento.get(e.id)?.confirmados || 0,
+      pasesAsignados: pasesByEvento.get(e.id)?.asignados || 0,
+    }));
+
+    return NextResponse.json({ eventos: eventosConPases });
   } catch (error: any) {
     console.error("Error al consultar eventos en PostgreSQL:", error);
     return NextResponse.json(
@@ -453,6 +475,39 @@ export async function PUT(req: NextRequest) {
     }
     return NextResponse.json(
       { error: "Ocurrió un error al actualizar el evento en la base de datos." },
+      { status: 500 }
+    );
+  }
+}
+
+// PATCH: marcar o desmarcar una invitación como demo (muestra) desde el dashboard.
+// Solo cambia el flag esDemo; no toca ningún otro campo de la invitación.
+export async function PATCH(req: NextRequest) {
+  const unauthorized = await requireAdmin(req);
+  if (unauthorized) return unauthorized;
+  try {
+    const body = await req.json();
+    const { slug, esDemo } = body;
+    if (!slug || typeof esDemo !== "boolean") {
+      return NextResponse.json(
+        { error: "Se requiere slug y esDemo (booleano)." },
+        { status: 400 }
+      );
+    }
+    const updated = await (prisma as any).evento.update({
+      where: { slug },
+      data: { esDemo },
+    });
+    return NextResponse.json({ ok: true, slug: updated.slug, esDemo: updated.esDemo });
+  } catch (error: any) {
+    if (error.code === "P2025") {
+      return NextResponse.json(
+        { error: "No existe una invitación con ese enlace (slug)." },
+        { status: 404 }
+      );
+    }
+    return NextResponse.json(
+      { error: "Ocurrió un error al actualizar la invitación." },
       { status: 500 }
     );
   }

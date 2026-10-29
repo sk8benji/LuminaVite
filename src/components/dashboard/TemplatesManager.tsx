@@ -97,7 +97,16 @@ export default function TemplatesManager() {
   const handleOpenEdit = (template: MasterTemplateItem) => {
     setEditingTemplate(template);
     setEditForm({ ...template });
-    setActiveSection("musica");
+    // Al abrir, respetar ?seccion= de la URL si es una sección válida
+    const secParam = (() => {
+      try {
+        return new URLSearchParams(window.location.search).get("seccion");
+      } catch {
+        return null;
+      }
+    })();
+    const validSections = ["musica", "sobre", "textos", "fechas", "lugares", "dresscode", "regalos", "corte", "fotos"];
+    setActiveSection(validSections.includes(secParam || "") ? (secParam as any) : "musica");
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -106,6 +115,11 @@ export default function TemplatesManager() {
       audioRef.current.pause();
       setPlayingAudioUrl(null);
     }
+    try {
+      const url = new URL(window.location.href);
+      url.searchParams.delete("seccion");
+      window.history.replaceState(null, "", url);
+    } catch {}
     setEditingTemplate(null);
   };
 
@@ -133,7 +147,9 @@ export default function TemplatesManager() {
         else if (["webp"].includes(ext)) resolvedType = "image/webp";
       }
 
-      const folder = isAudio ? "templates/audio" : "templates/images";
+      // Cada plantilla tiene su carpeta propia en S3: templates/<slug>/images|audio (sin mezclarse)
+      const templateSlug = (editingTemplate.slug || "general").replace(/[^a-z0-9-]/gi, "-");
+      const folder = isAudio ? `templates/${templateSlug}/audio` : `templates/${templateSlug}/images`;
 
       // 1. Pedir presigned URL a la API
       const presignedRes = await fetch("/api/s3/presigned-url", {
@@ -315,7 +331,7 @@ export default function TemplatesManager() {
             <div>
               <div className="flex items-center gap-2">
                 <span className="font-serif font-bold text-lg text-stone-900 leading-tight">
-                  {editingTemplate.nombre}
+                  {editForm.nombre || editingTemplate.nombre}
                 </span>
                 <span className="text-[10px] font-mono bg-stone-100 text-stone-600 px-2 py-0.5 rounded-md border border-stone-200">
                   /{editingTemplate.slug}
@@ -324,6 +340,19 @@ export default function TemplatesManager() {
               <p className="text-xs text-stone-500">
                 Ajusta las secciones en vertical y observa los cambios en vivo en el smartphone de la derecha
               </p>
+              <div className="flex flex-wrap items-center gap-2 mt-2">
+                <label className="text-xs font-semibold text-stone-700">Tema:</label>
+                <select
+                  value={editForm.categoria || "QUINCEANERA"}
+                  onChange={(e) => setEditForm({ ...editForm, categoria: e.target.value as any })}
+                  className="px-2.5 py-1.5 bg-white border border-stone-200 rounded-lg text-xs font-semibold cursor-pointer"
+                >
+                  <option value="QUINCEANERA">XV Años</option>
+                  <option value="BODA">Boda</option>
+                  <option value="CUMPLEANOS">Cumpleaños / Temática</option>
+                </select>
+                <span className="text-[11px] text-stone-400">Define si el template es de boda o XV.</span>
+              </div>
             </div>
           </div>
 
@@ -400,7 +429,14 @@ export default function TemplatesManager() {
                   return (
                     <button
                       key={sec.id}
-                      onClick={() => setActiveSection(sec.id)}
+                      onClick={() => {
+                        setActiveSection(sec.id);
+                        try {
+                          const url = new URL(window.location.href);
+                          url.searchParams.set("seccion", sec.id);
+                          window.history.replaceState(null, "", url);
+                        } catch {}
+                      }}
                       className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold transition text-left cursor-pointer ${
                         isActive
                           ? "bg-white text-stone-900 shadow-xs font-bold border-l-4 border-l-[#C5A059]"
@@ -416,6 +452,20 @@ export default function TemplatesManager() {
 
               {/* Formulario de la Sección Activa */}
               <div className="md:col-span-8 bg-white p-6 rounded-3xl border border-stone-200 shadow-xs space-y-5">
+                {/* Indicador de paso: siempre sabes en qué sección estás */}
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-stone-800">
+                    Paso {sectionsList.findIndex((s) => s.id === activeSection) + 1} de {sectionsList.length}: {sectionsList.find((s) => s.id === activeSection)?.label}
+                  </span>
+                  <span className="text-[11px] font-mono text-stone-400">?seccion={activeSection}</span>
+                </div>
+                <div className="h-1.5 bg-stone-100 rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-[#C5A059] transition-all"
+                    style={{ width: `${((sectionsList.findIndex((s) => s.id === activeSection) + 1) / sectionsList.length) * 100}%` }}
+                  />
+                </div>
+
                 {/* 1. MÚSICA & AUDIO */}
                 {activeSection === "musica" && (
                   <div className="space-y-4">
@@ -560,6 +610,17 @@ export default function TemplatesManager() {
                     <div>
                       <h3 className="font-serif font-bold text-base text-stone-900">Textos Principales</h3>
                       <p className="text-[11px] text-stone-500">Títulos, subtítulo y frase dedicatoria emocional.</p>
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="text-xs font-semibold text-stone-700">Nombre del template (se muestra en la lista del admin):</label>
+                      <input
+                        type="text"
+                        placeholder="Ej. Blush Rose Filmstrip (XV Años)"
+                        value={editForm.nombre || ""}
+                        onChange={(e) => setEditForm({ ...editForm, nombre: e.target.value })}
+                        className="w-full px-3.5 py-2 bg-stone-50 border border-stone-200 rounded-xl text-xs font-semibold"
+                      />
                     </div>
 
                     <div className="space-y-1">
@@ -963,7 +1024,7 @@ export default function TemplatesManager() {
                   <div className="space-y-4">
                     <div>
                       <h3 className="font-serif font-bold text-base text-stone-900">Fotos & Galería</h3>
-                      <p className="text-[11px] text-stone-500">Sube imágenes directamente a tu bucket de S3.</p>
+                      <p className="text-[11px] text-stone-500">Sube imágenes a la carpeta propia de esta plantilla en S3. La foto de portada es la que se muestra en la lista del catálogo web.</p>
                     </div>
 
                     {/* Foto de Portada */}
@@ -988,6 +1049,22 @@ export default function TemplatesManager() {
                         onChange={(e) => setEditForm({ ...editForm, fotoPortadaUrl: e.target.value })}
                         className="w-full px-3 py-1.5 bg-white border border-stone-200 rounded-xl text-xs font-mono"
                       />
+                      {editForm.fotoPortadaUrl ? (
+                        <div className="flex items-center gap-3">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={editForm.fotoPortadaUrl}
+                            alt="Vista previa de la portada"
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).style.display = "none";
+                            }}
+                            className="w-24 h-16 object-cover rounded-lg border border-stone-200 bg-white"
+                          />
+                          <span className="text-[11px] text-stone-400">Vista previa de la portada</span>
+                        </div>
+                      ) : (
+                        <span className="text-[11px] text-stone-400">Sin foto todavía</span>
+                      )}
                     </div>
 
                     {/* Foto Infancia */}
@@ -1012,6 +1089,22 @@ export default function TemplatesManager() {
                         onChange={(e) => setEditForm({ ...editForm, fotoInfanciaUrl: e.target.value })}
                         className="w-full px-3 py-1.5 bg-white border border-stone-200 rounded-xl text-xs font-mono"
                       />
+                      {editForm.fotoInfanciaUrl ? (
+                        <div className="flex items-center gap-3">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={editForm.fotoInfanciaUrl}
+                            alt="Vista previa de la foto de infancia"
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).style.display = "none";
+                            }}
+                            className="w-24 h-16 object-cover rounded-lg border border-stone-200 bg-white"
+                          />
+                          <span className="text-[11px] text-stone-400">Vista previa de la foto de infancia</span>
+                        </div>
+                      ) : (
+                        <span className="text-[11px] text-stone-400">Sin foto todavía</span>
+                      )}
                     </div>
 
                     {/* Foto Actual */}
@@ -1036,6 +1129,61 @@ export default function TemplatesManager() {
                         onChange={(e) => setEditForm({ ...editForm, fotoActualUrl: e.target.value })}
                         className="w-full px-3 py-1.5 bg-white border border-stone-200 rounded-xl text-xs font-mono"
                       />
+                      {editForm.fotoActualUrl ? (
+                        <div className="flex items-center gap-3">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={editForm.fotoActualUrl}
+                            alt="Vista previa de la sesión de gala"
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).style.display = "none";
+                            }}
+                            className="w-24 h-16 object-cover rounded-lg border border-stone-200 bg-white"
+                          />
+                          <span className="text-[11px] text-stone-400">Vista previa de la sesión de gala</span>
+                        </div>
+                      ) : (
+                        <span className="text-[11px] text-stone-400">Sin foto todavía</span>
+                      )}
+                    {/* Foto de Cierre */}
+                    <div className="p-3.5 bg-stone-50 rounded-2xl border border-stone-200 space-y-2">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-bold text-stone-800">Foto de Cierre</span>
+                        <label className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#7A002A] text-white rounded-lg text-xs font-semibold cursor-pointer">
+                          <Upload className="w-3 h-3" />
+                          <span>{uploadingField === "fotoCierreUrl" ? "Subiendo..." : "Subir Foto"}</span>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => handleFileUpload(e, "fotoCierreUrl", false)}
+                            disabled={uploadingField === "fotoCierreUrl"}
+                            className="hidden"
+                          />
+                        </label>
+                      </div>
+                      <input
+                        type="text"
+                        value={editForm.fotoCierreUrl || ""}
+                        onChange={(e) => setEditForm({ ...editForm, fotoCierreUrl: e.target.value })}
+                        className="w-full px-3 py-1.5 bg-white border border-stone-200 rounded-xl text-xs font-mono"
+                      />
+                      {editForm.fotoCierreUrl ? (
+                        <div className="flex items-center gap-3">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={editForm.fotoCierreUrl}
+                            alt="Vista previa de la foto de cierre"
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).style.display = "none";
+                            }}
+                            className="w-24 h-16 object-cover rounded-lg border border-stone-200 bg-white"
+                          />
+                          <span className="text-[11px] text-stone-400">Vista previa de la foto de cierre</span>
+                        </div>
+                      ) : (
+                        <span className="text-[11px] text-stone-400">Sin foto todavía</span>
+                      )}
+                    </div>
                     </div>
                   </div>
                 )}
@@ -1047,6 +1195,15 @@ export default function TemplatesManager() {
           {/* COLUMNA DERECHA (5 Columnas): SMARTPHONE EN VIVO EN TIEMPO REAL */}
           {/* ============================================================== */}
           <div className={`xl:col-span-5 sticky top-24 ${showMobilePreviewModal ? "block" : "hidden xl:block"}`}>
+            {showMobilePreviewModal && (
+              <button
+                type="button"
+                onClick={() => setShowMobilePreviewModal(false)}
+                className="xl:hidden fixed bottom-5 right-5 z-50 px-5 py-3 bg-[#7A002A] text-white rounded-full text-sm font-bold shadow-2xl"
+              >
+                ✏️ Volver a editar
+              </button>
+            )}
             <div className="flex flex-col items-center justify-center bg-stone-100 p-4 rounded-3xl border border-stone-200 shadow-sm">
               {/* Barra superior de controles del Simulador */}
               <div className="w-full max-w-[370px] flex items-center justify-between pb-3 mb-2 border-b border-stone-200 text-xs">

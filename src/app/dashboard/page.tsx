@@ -50,10 +50,48 @@ interface EventoItem {
   _count?: {
     rsvps: number;
   };
+  pasesConfirmados?: number;
+  pasesAsignados?: number;
+  esDemo?: boolean;
 }
 
 export default function DashboardPage() {
   const [activeTab, setActiveTab] = useState<"eventos" | "ordenes" | "templates" | "qr" | "abandonados">("ordenes");
+  // La pestana vive en la URL (?tab=...): al recargar o compartir el enlace sigues en el mismo paso
+  useEffect(() => {
+    try {
+      const t = new URLSearchParams(window.location.search).get("tab");
+      if (t && ["eventos", "ordenes", "templates", "qr", "abandonados"].includes(t)) {
+        setActiveTab(t as "eventos" | "ordenes" | "templates" | "qr" | "abandonados");
+      }
+    } catch {}
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  useEffect(() => {
+    try {
+      const url = new URL(window.location.href);
+      url.searchParams.set("tab", activeTab);
+      window.history.replaceState(null, "", url);
+    } catch {}
+  }, [activeTab]);
+  // Filtro Clientes/Demo en Invitaciones: vive en la URL (?filtroInvitaciones=...); por defecto: clientes
+  const [filtroInvitaciones, setFiltroInvitaciones] = useState<"clientes" | "demo" | "todas">("clientes");
+  useEffect(() => {
+    try {
+      const f = new URLSearchParams(window.location.search).get("filtroInvitaciones");
+      if (f && ["clientes", "demo", "todas"].includes(f)) {
+        setFiltroInvitaciones(f as "clientes" | "demo" | "todas");
+      }
+    } catch {}
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  useEffect(() => {
+    try {
+      const url = new URL(window.location.href);
+      url.searchParams.set("filtroInvitaciones", filtroInvitaciones);
+      window.history.replaceState(null, "", url);
+    } catch {}
+  }, [filtroInvitaciones]);
   const [eventos, setEventos] = useState<EventoItem[]>([]);
   const [ordenes, setOrdenes] = useState<OrderData[]>([]);
   const [loading, setLoading] = useState(true);
@@ -223,45 +261,7 @@ export default function DashboardPage() {
         if (data.eventos && data.eventos.length > 0) {
           setEventos(data.eventos);
         } else {
-          // Demos de respaldo
-          setEventos([
-            {
-              id: "demo-1",
-              slug: "elsy-xv",
-              titulo: "Mis XV Años - Elsy (Clásica)",
-              tipoEvento: "QUINCEANERA",
-              fechaEvento: "2026-12-05T17:00:00Z",
-              fotoPortadaUrl:
-                "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=600&q=80",
-              activo: true,
-              telefonoWhatsappRsvp: "18181234567",
-              _count: { rsvps: 24 },
-            },
-            {
-              id: "demo-t1",
-              slug: "isabella-xv",
-              titulo: "Isabella XV (Elegant Rose - Canva T1)",
-              tipoEvento: "QUINCEANERA",
-              fechaEvento: "2026-11-20T17:00:00Z",
-              fotoPortadaUrl:
-                "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=600&q=80",
-              activo: true,
-              telefonoWhatsappRsvp: "18181234567",
-              _count: { rsvps: 38 },
-            },
-            {
-              id: "demo-t2",
-              slug: "emma-and-lucas",
-              titulo: "Emma & Lucas (Fairytale Château - Canva T2)",
-              tipoEvento: "BODA",
-              fechaEvento: "2026-09-18T16:30:00Z",
-              fotoPortadaUrl:
-                "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=600&q=80",
-              activo: true,
-              telefonoWhatsappRsvp: "18181234567",
-              _count: { rsvps: 92 },
-            },
-          ]);
+          setEventos([]);
         }
       })
       .catch(() => {})
@@ -304,7 +304,26 @@ export default function DashboardPage() {
     }
   };
 
-  const totalRsvps = eventos.reduce((acc, curr) => acc + (curr._count?.rsvps || 0), 0);
+  const totalPasesConfirmados = eventos.reduce((acc, curr) => acc + (curr.pasesConfirmados ?? 0), 0);
+  // Lista y conteos según el filtro (por defecto solo clientes; las de muestra quedan en Demo)
+  const eventosFiltrados = eventos.filter((ev) =>
+    filtroInvitaciones === "todas" ? true : filtroInvitaciones === "demo" ? !!ev.esDemo : !ev.esDemo
+  );
+  const totalPasesFiltrados = eventosFiltrados.reduce((acc, curr) => acc + (curr.pasesConfirmados ?? 0), 0);
+  // Marcar/desmarcar una invitación como demo (muestra) sin tocar sus datos
+  const toggleEsDemo = async (ev: EventoItem) => {
+    const nuevo = !ev.esDemo;
+    try {
+      const res = await fetch("/api/eventos", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ slug: ev.slug, esDemo: nuevo }),
+      });
+      if (res.ok) {
+        setEventos((prev) => prev.map((e) => (e.slug === ev.slug ? { ...e, esDemo: nuevo } : e)));
+      }
+    } catch {}
+  };
   const totalIngresos = ordenes
     .filter((o) => o.estadoPago === "PAGADO")
     .reduce((acc, curr) => acc + curr.montoTotal, 0);
@@ -851,8 +870,28 @@ export default function DashboardPage() {
               </p>
 
               <p className="text-xs text-stone-500 mt-2">
-                {eventos.length} invitaciones activas · {totalRsvps} pases confirmados
+                {eventosFiltrados.length} {eventosFiltrados.length === 1 ? "invitación activa" : "invitaciones activas"} · {totalPasesFiltrados} pases confirmados
               </p>
+              <div className="flex flex-wrap items-center gap-2 mt-3">
+                <span className="text-xs font-semibold text-stone-700">Mostrar:</span>
+                {([
+                  ["clientes", "Clientes"],
+                  ["demo", "Demo"],
+                  ["todas", "Todas"],
+                ] as const).map(([valor, etiqueta]) => (
+                  <button
+                    key={valor}
+                    type="button"
+                    onClick={() => setFiltroInvitaciones(valor)}
+                    className={filtroInvitaciones === valor
+                      ? "px-3 py-1.5 rounded-full bg-[#7A002A] text-white text-xs font-bold"
+                      : "px-3 py-1.5 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-700 text-xs font-semibold"}
+                  >
+                    {etiqueta}
+                  </button>
+                ))}
+                <span className="text-[11px] text-stone-400">Por defecto solo clientes; las invitaciones de muestra quedan en Demo.</span>
+              </div>
             </div>
 
             {/* Listado de Invitaciones */}
@@ -869,7 +908,7 @@ export default function DashboardPage() {
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                {eventos.map((ev) => {
+                {eventosFiltrados.map((ev) => {
                   const formattedDate = new Date(ev.fechaEvento).toLocaleDateString("es-ES", {
                     day: "2-digit",
                     month: "short",
@@ -883,16 +922,21 @@ export default function DashboardPage() {
                     >
                       {/* Foto de Portada con badge de tipo */}
                       <div className="relative h-48 bg-stone-100 overflow-hidden">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                          src={ev.fotoPortadaUrl || "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=600&q=80"}
-                          alt={ev.titulo}
-                          onError={(e) => {
-                            (e.target as HTMLImageElement).src =
-                              "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=600&q=80";
-                          }}
-                          className="w-full h-full object-contain"
-                        />
+                        {/* Sin portada o si falla: bloque con el nombre, nunca otra foto */}
+                        <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-[#3D0A1C] via-[#7A002A] to-[#3D0A1C] p-4 text-center">
+                          <span className="font-serif font-bold text-white leading-snug">{ev.titulo}</span>
+                        </div>
+                        {ev.fotoPortadaUrl && (
+                          /* eslint-disable-next-line @next/next/no-img-element */
+                          <img
+                            src={ev.fotoPortadaUrl}
+                            alt={ev.titulo}
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).style.display = "none";
+                            }}
+                            className="relative w-full h-full object-contain"
+                          />
+                        )}
                         <div className="absolute top-3 left-3 flex gap-2">
                           <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-black/60 text-white backdrop-blur-sm">
                             {ev.tipoEvento === "QUINCEANERA"
@@ -911,6 +955,11 @@ export default function DashboardPage() {
                           >
                             <Edit3 className="w-3.5 h-3.5 text-stone-800" />
                           </Link>
+                          {ev.esDemo && (
+                            <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-amber-500 text-white shadow">
+                              Demo
+                            </span>
+                          )}
                           <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-emerald-500 text-white shadow">
                             Activa
                           </span>
@@ -927,7 +976,7 @@ export default function DashboardPage() {
                           </div>
                           <div className="flex items-center gap-2 text-xs text-stone-500 mt-1">
                             <Users className="w-3.5 h-3.5" />
-                            <span>{ev._count?.rsvps || 0} pases confirmados</span>
+                            <span>{ev.pasesConfirmados ?? 0} pases confirmados</span>
                           </div>
 
                           <div className="mt-3 p-2 bg-stone-50 rounded-xl text-xs font-mono text-stone-600 truncate border border-stone-100 flex items-center justify-between">
@@ -955,6 +1004,13 @@ export default function DashboardPage() {
                             <Edit3 className="w-3.5 h-3.5" />
                             Editar Invitación
                           </Link>
+
+                          <button
+                            onClick={() => toggleEsDemo(ev)}
+                            className="w-full flex items-center justify-center gap-1.5 py-2 px-3 bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 rounded-xl text-xs font-semibold transition cursor-pointer"
+                          >
+                            {ev.esDemo ? "Es demo · Mostrar como cliente" : "Marcar como demo"}
+                          </button>
 
                           <div className="grid grid-cols-2 gap-2">
                             <Link

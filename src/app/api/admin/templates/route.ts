@@ -1,41 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
-import fs from "fs";
-import path from "path";
 import prisma from "@/lib/db";
 import { INITIAL_MASTER_TEMPLATES, MasterTemplateItem } from "@/lib/templates-data";
 import { requireAdmin } from "@/lib/auth";
+import { ensurePostgresTables } from "@/lib/init-db";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
-
-const OVERRIDES_FILE = path.join(process.cwd(), "src", "lib", "templates-overrides.json");
-
-function getLocalOverrides(): Record<string, Partial<MasterTemplateItem>> {
-  try {
-    if (fs.existsSync(OVERRIDES_FILE)) {
-      const data = fs.readFileSync(OVERRIDES_FILE, "utf-8");
-      return JSON.parse(data);
-    }
-  } catch (err) {
-    console.warn("No se pudo leer templates-overrides.json:", err);
-  }
-  return {};
-}
-
-function saveLocalOverride(slug: string, updates: Partial<MasterTemplateItem>) {
-  try {
-    const current = getLocalOverrides();
-    current[slug] = { ...(current[slug] || {}), ...updates };
-    fs.writeFileSync(OVERRIDES_FILE, JSON.stringify(current, null, 2), "utf-8");
-  } catch (err) {
-    console.warn("No se pudo guardar en templates-overrides.json:", err);
-  }
-}
 
 export async function GET(req: NextRequest) {
   const unauthorized = await requireAdmin(req);
   if (unauthorized) return unauthorized;
   try {
+    // La tabla MasterTemplate debe existir antes de leer (primer guardado tras el deploy)
+    await ensurePostgresTables();
     // 1. Intentar cargar desde Prisma
     let dbTemplates: any[] = [];
     try {
@@ -46,17 +23,13 @@ export async function GET(req: NextRequest) {
       // Si la tabla aún no está lista en PostgreSQL local, procedemos con overrides locales
     }
 
-    const localOverrides = getLocalOverrides();
-
-    // 2. Combinar base con DB y overrides
+    // 2. Combinar base con DB (la DB gana). Sin archivo local: lo guardado persiste entre deploys.
     const templates = INITIAL_MASTER_TEMPLATES.map((item) => {
       const dbMatch = dbTemplates.find((d) => d.slug === item.slug);
-      const localMatch = localOverrides[item.slug];
 
       return {
         ...item,
         ...(dbMatch || {}),
-        ...(localMatch || {}),
       };
     });
 
@@ -80,15 +53,15 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "El slug de la plantilla es requerido." }, { status: 400 });
     }
 
-    // 1. Guardar localmente para disponibilidad inmediata y fallback offline
-    saveLocalOverride(slug, updates);
-
-    // 2. Intentar guardar en PostgreSQL via Prisma si está disponible
+    // La tabla MasterTemplate debe existir antes del upsert (primer guardado tras el deploy)
+    await ensurePostgresTables();
+    // Guardar en PostgreSQL via Prisma (única fuente de verdad)
     try {
       await (prisma as any).masterTemplate.upsert({
         where: { slug },
         update: {
           nombre: updates.nombre,
+          categoria: updates.categoria as any,
           titulo: updates.titulo,
           subtitulo: updates.subtitulo,
           frasePersonalizada: updates.frasePersonalizada,
@@ -106,6 +79,7 @@ export async function POST(req: NextRequest) {
         create: {
           slug,
           nombre: updates.nombre || slug,
+          categoria: (updates.categoria as any) || "QUINCEANERA",
           titulo: updates.titulo || "Título Base",
           subtitulo: updates.subtitulo,
           frasePersonalizada: updates.frasePersonalizada,
@@ -122,7 +96,11 @@ export async function POST(req: NextRequest) {
         },
       });
     } catch (dbErr) {
-      console.warn("No se pudo persistir en DB PostgreSQL (se guardó en almacenamiento local):", dbErr);
+      console.error("No se pudo persistir la plantilla en PostgreSQL:", dbErr);
+      return NextResponse.json(
+        { error: "No se pudo guardar la plantilla en la base de datos. Inténtalo de nuevo." },
+        { status: 500 }
+      );
     }
 
     return NextResponse.json({ success: true, message: "Plantilla actualizada con éxito." });

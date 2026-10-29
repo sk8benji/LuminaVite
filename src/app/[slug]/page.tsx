@@ -31,11 +31,11 @@ export const DEMO_ELSY: InvitationData = {
   fotoPortadaUrl:
     "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=800&q=80",
   fotoInfanciaUrl:
-    "https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&w=400&q=80",
+    "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=400&q=80",
   fotoActualUrl:
     "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=400&q=80",
   fotoCierreUrl:
-    "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=600&q=80",
+    "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=600&q=80",
   musicaUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
   telefonoWhatsappRsvp: "18181234567",
   fechaLimiteRsvp: "November 15, 2026",
