@@ -18,7 +18,8 @@ export default function MobileSimulator({ data }: MobileSimulatorProps) {
         </div>
 
         {/* Pantalla del teléfono con scroll independiente */}
-        <div className="w-full h-full bg-white rounded-[38px] overflow-y-auto overflow-x-hidden relative scrollbar-thin scrollbar-thumb-stone-300">
+        {/* translateZ(0): contiene los fixed del template (el sobre es fixed inset-0) dentro del teléfono; sin esto el sobre tapa todo el admin */}
+        <div className="w-full h-full bg-white rounded-[38px] overflow-y-auto overflow-x-hidden relative scrollbar-thin scrollbar-thumb-stone-300 [transform:translateZ(0)]">
           <TemplateDispatcher data={data} skipIntro={true} />
         </div>
 
