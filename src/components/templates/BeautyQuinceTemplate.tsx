@@ -12,7 +12,6 @@ import {
 } from "@/lib/templates/beautyQuinceAssets";
 import AudioPlayer from "../invitation/AudioPlayer";
 import RsvpSection from "../invitation/RsvpSection";
-import TimelineSection from "../invitation/TimelineSection";
 import AddToCalendarButton from "../invitation/AddToCalendarButton";
 
 /**
@@ -79,6 +78,17 @@ export default function BeautyQuinceTemplate({
     return () => clearInterval(id);
   }, [data.fechaEvento]);
 
+  // Mapa de recepción: embed sin API key. Si el link guardado ya trae
+  // ?q=, se le agrega output=embed; si es un goo.gl corto, se busca por
+  // nombre + dirección. La dirección del demo es ficticia, así que el mapa
+  // muestra la búsqueda, no una ficha exacta.
+  const mapEmbedUrl =
+    data.recepcionMapUrl && data.recepcionMapUrl.includes("?q=")
+      ? `${data.recepcionMapUrl}&output=embed`
+      : `https://www.google.com/maps?q=${encodeURIComponent(
+          `${data.recepcionNombre || ""} ${data.recepcionDireccion || ""}`.trim()
+        )}&output=embed`;
+
   const addrParts = (data.recepcionDireccion || "123 Forever Street, Quince City").split(",");
   const addrStreet = addrParts[0].trim().toUpperCase();
   const addrCity = (addrParts.slice(1).join(",").trim() || "Quince City").toUpperCase();
@@ -117,6 +127,7 @@ export default function BeautyQuinceTemplate({
           background-color: transparent !important;
         }
         .envelope-wrapper { background: none !important; }
+        .venue-map-card:hover iframe { filter: sepia(15%) contrast(100%) brightness(100%); }
         @media (prefers-color-scheme: light), (prefers-color-scheme: dark) {
           .envelope-container, .envelope-wrapper, .rose-item, .card-letter img, .envelope-container img {
             background: transparent !important;
@@ -351,32 +362,152 @@ export default function BeautyQuinceTemplate({
                 <MapPin className="w-4 h-4" /> {isEn ? "Directions" : "Cómo llegar"}
               </a>
             </div>
-            <img src={portada} alt="Portada" className="w-full h-72 object-cover rounded-2xl shadow mt-6 bg-transparent" />
-            <img src={A.puertasPalacio} alt="Puertas del palacio" className="w-full h-72 object-cover rounded-2xl shadow mt-3 bg-transparent" />
+            <img src={portada} alt="Portada" className="w-full h-[260px] object-cover rounded-[18px] shadow mt-6 mb-[18px] bg-transparent" />
+            {/* Mapa interactivo en lugar del bloque inferior vacío, con
+                filtro dorado/pergamino/azul noche (sin API de Maps). */}
+            <div className="venue-map-card w-full overflow-hidden" style={{ height: "270px", borderRadius: "18px", border: "1px solid #d4af37", boxShadow: "0 8px 24px rgba(11,23,54,0.35), inset 0 0 15px rgba(212,175,55,0.2)", backgroundColor: "#0b1736", marginBottom: "24px" }}>
+              <iframe
+                src={mapEmbedUrl}
+                width="100%"
+                height="100%"
+                style={{ border: 0, display: "block", filter: "sepia(35%) hue-rotate(5deg) contrast(105%) brightness(95%)", transition: "filter 0.3s ease" }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title={data.recepcionNombre || "Mapa de la recepción"}
+              />
+            </div>
+            <a
+              href={getMapDirectionsUrl(data.recepcionMapUrl)}
+              target="_blank"
+              rel="noreferrer"
+              className="font-serif-roman flex items-center justify-center w-full mx-auto"
+              style={{ maxWidth: "280px", padding: "14px 20px", backgroundColor: "#0b1736", color: "#ffffff", fontSize: "0.9rem", letterSpacing: "0.15em", textDecoration: "none", borderRadius: "12px", border: "1px solid rgba(255,215,0,0.3)", boxShadow: "0 4px 12px rgba(0,0,0,0.2)" }}
+            >
+              {isEn ? "Directions" : "Cómo llegar"}
+            </a>
           </div>
         </section>
 
-        {/* Party Plan / Itinerario */}
-        <section className="px-4 py-8">
-          <TimelineSection items={data.itinerarioJson as never} template={template} isEn={isEn} />
-          <div className="flex justify-center gap-4 mt-2">
-            <img src={A.copaBrindis} alt="Brindis" className="w-16 h-16 object-contain bg-transparent" />
-            <img src={A.candelabro} alt="Candelabro" className="w-16 h-16 object-contain bg-transparent" />
-            <img src={A.zapatoOro} alt="Zapato" className="w-16 h-16 object-contain bg-transparent" />
+        {/* Party Plan: timeline central alternado en pergamino, como el
+            Canva. Sin lista simple, sin tarjetas blancas, sin iconos
+            sueltos al fondo. Los 8 momentos son los del Canva (no el
+            itinerario genérico de 5 eventos); los iconos ya son
+            transparentes, sin recuadro blanco. Marco floral: no existe
+            un marco pergamino-rosas en el set, así que arriba y abajo
+            va la base floral dorada con rosas sobre pergamino #f7eed7. */}
+        <section className="relative w-full max-w-[430px] mx-auto overflow-hidden" style={{ minHeight: "840px", padding: "60px 24px 80px", boxSizing: "border-box", backgroundColor: "#f7eed7" }}>
+          <img src={A.baseFloralRosas} alt="" className="absolute top-0 left-0 w-full h-[80px] object-cover pointer-events-none bg-transparent" style={{ background: "transparent" }} />
+          <img src={A.baseFloralRosas} alt="" className="absolute bottom-0 left-0 w-full h-[80px] object-cover pointer-events-none bg-transparent" style={{ background: "transparent" }} />
+          <div className="relative z-[2] w-full flex flex-col items-center">
+            <h2 className="font-script text-center" style={{ fontSize: "3rem", color: "#7b2020", margin: "10px 0 25px", lineHeight: 1 }}>The Party Plan</h2>
+            <div className="relative w-full flex flex-col" style={{ gap: "22px" }}>
+              <div className="absolute top-0 bottom-0" style={{ left: "50%", width: "1px", background: "#a2834b", transform: "translateX(-50%)" }} />
+              {[
+                { side: "right", time: "11:00 AM", name: "CHURCH CEREMONY", icon: A.castillo, alt: "Ceremonia" },
+                { side: "left", time: "12:00 PM", name: "LIMO ARRIVAL", icon: A.carroza, alt: "Llegada" },
+                { side: "right", time: "1:00 PM", name: "ARRIVAL TO SALON", icon: A.rosaCampana, alt: "Recepción" },
+                { side: "left", time: "3:00 PM", name: "FOOD SERVED", icon: A.candelabro, alt: "Banquete", extra: A.copaBrindis },
+                { side: "right", time: "4:00 PM", name: "VALS, BAILE SORPRESA", icon: A.vestidoBella, alt: "Vals" },
+                { side: "left", time: "5:00 PM", name: "FATHER & DAUGHTER DANCE", icon: A.trajePrincipe, alt: "Baile papá" },
+                { side: "right", time: "6:00 PM", name: "PADRINOS DE HONOR", icon: A.corona, alt: "Padrinos" },
+                { side: "left", time: "7:00 PM", name: "BAILE STARTS", icon: A.abanico, alt: "Fiesta" },
+              ].map((e) => (
+                <div
+                  key={e.time}
+                  className="flex items-center relative"
+                  style={{
+                    width: "50%",
+                    alignSelf: e.side === "left" ? "flex-start" : "flex-end",
+                    justifyContent: e.side === "left" ? "flex-end" : "flex-start",
+                    paddingRight: e.side === "left" ? "14px" : undefined,
+                    paddingLeft: e.side === "right" ? "14px" : undefined,
+                    textAlign: e.side === "left" ? "right" : "left",
+                    gap: "8px",
+                    boxSizing: "border-box",
+                  }}
+                >
+                  {e.side === "right" && (
+                    <div className="flex items-center justify-center flex-shrink-0" style={{ width: "44px", height: "44px" }}>
+                      <img src={e.icon} alt={e.alt} className="bg-transparent" style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain", filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.15))", background: "transparent" }} />
+                    </div>
+                  )}
+                  <div className="flex flex-col">
+                    <span className="font-serif-roman" style={{ fontSize: "0.72rem", fontWeight: 700, letterSpacing: "0.1em", color: "#2b1f14" }}>{e.time}</span>
+                    <span className="font-serif-roman" style={{ fontSize: "0.65rem", letterSpacing: "0.08em", color: "#5a452e", lineHeight: 1.25 }}>{e.name}</span>
+                  </div>
+                  {e.side === "left" && (
+                    <div className="flex items-center justify-center flex-shrink-0" style={{ width: "44px", height: "44px" }}>
+                      <img src={e.icon} alt={e.alt} className="bg-transparent" style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain", filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.15))", background: "transparent" }} />
+                      {e.extra && <img src={e.extra} alt="Copa" className="bg-transparent" style={{ maxWidth: "60%", maxHeight: "100%", objectFit: "contain", filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.15))", background: "transparent" }} />}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+            <div className="flex items-center justify-center w-full" style={{ gap: "12px", marginTop: "25px" }}>
+              <img src={A.zapatoOro} alt="Tacón" className="bg-transparent" style={{ width: "55px", height: "auto", objectFit: "contain", filter: "drop-shadow(0 4px 6px rgba(0,0,0,0.2))", background: "transparent" }} />
+              <div className="flex flex-col font-script" style={{ fontSize: "1.9rem", lineHeight: 0.85, color: "#3b2a1a" }}>
+                <span>Bring</span>
+                <span>Comfy</span>
+                <span>Shoes</span>
+              </div>
+            </div>
           </div>
         </section>
 
-        {/* Kids Policy: texto tal cual del Canva original */}
-        <section className="px-6 py-10 text-center">
-          <img src={A.marcoAzulRosas} alt="" className="w-full h-64 object-cover rounded-2xl shadow bg-transparent" />
-          <h2 className="font-script text-5xl text-[#A6192E] mt-4">{isEn ? "Kids Policy" : "Niños"}</h2>
-          <p className="text-sm leading-relaxed mt-3">
-            {isEn
-              ? "We absolutely love and welcome children to celebrate this special day with us. To help keep certain moments safe and uninterrupted, we kindly ask that all children remain seated and supervised during important dances — especially the Father & Daughter Dance and any formal performances. Please ensure children do not enter the dance floor during these times. Thank you for your understanding and cooperation in making this celebration beautiful for everyone."
-              : "Amamos y damos la bienvenida a los niños en este día tan especial. Para que ciertos momentos sean seguros y sin interrupciones, les pedimos amablemente que los niños permanezcan sentados y supervisados durante los bailes importantes, especialmente el baile de padre e hija y las presentaciones formales. Por favor, que no entren a la pista en esos momentos. Gracias por ayudarnos a que esta celebración sea hermosa para todos."}
-          </p>
-          <p className="text-xs mt-3 opacity-70">{isEn ? "Bring comfy shoes." : "Trae zapatos cómodos."}</p>
-          <img src={A.cartaPapelCinta} alt="Papel carta" className="w-full h-64 object-cover rounded-2xl shadow mt-4 bg-transparent" />
+        {/* Kids Policy: texto DENTRO del marco azul barroco, no fuera.
+            Antes el marco quedaba vacío y el texto en fondo crema.
+            La frase de zapatos cómodos no va aquí: ya está en Party Plan
+            y en Dress Code, así que se quita de esta sección. */}
+        <section className="flex justify-center items-center w-full max-w-[430px] mx-auto" style={{ padding: "24px 16px", boxSizing: "border-box" }}>
+          <div className="relative w-full flex items-center justify-center overflow-hidden" style={{ minHeight: "620px", borderRadius: "16px", boxShadow: "0 12px 30px rgba(0,0,0,0.25)" }}>
+            <img src={A.marcoAzulRosas} alt="Fondo decorativo" className="absolute inset-0 w-full h-full object-fill pointer-events-none bg-transparent" style={{ zIndex: 1, background: "transparent" }} />
+            <div className="relative w-full text-center" style={{ zIndex: 2, padding: "50px 32px 40px", color: "#f8fafc", boxSizing: "border-box" }}>
+              <span className="font-script block" style={{ fontSize: "2.6rem", lineHeight: 0.9, color: "#f7d070", textShadow: "0 2px 6px rgba(0,0,0,0.7)" }}>{isEn ? "Important" : "Importante"}</span>
+              <h2 className="font-serif-roman font-bold" style={{ fontSize: "1.4rem", letterSpacing: "0.28em", color: "#ffffff", margin: "4px 0 10px", textShadow: "0 2px 6px rgba(0,0,0,0.7)" }}>DETAILS</h2>
+              <h3 className="font-serif-roman" style={{ fontSize: "1.25rem", color: "#fde68a", marginBottom: "16px", fontWeight: 500 }}>{isEn ? "Kids Policy" : "Política para Niños"}</h3>
+              <p style={{ fontSize: "0.78rem", lineHeight: 1.55, color: "#e2e8f0", marginBottom: "12px", textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
+                {isEn
+                  ? "We absolutely love and welcome children to celebrate this special day with us."
+                  : "Amamos y damos la bienvenida a los niños en este día tan especial."}
+              </p>
+              <p style={{ fontSize: "0.78rem", lineHeight: 1.55, color: "#e2e8f0", marginBottom: "12px", textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
+                {isEn
+                  ? "To help keep certain moments safe and uninterrupted, we kindly ask that all children remain seated and supervised during important dances — especially the Father & Daughter Dance and any formal performances."
+                  : "Para que ciertos momentos sean seguros y sin interrupciones, les pedimos amablemente que los niños permanezcan sentados y supervisados durante los bailes importantes, especialmente el baile de padre e hija y las presentaciones formales."}
+              </p>
+              <p style={{ fontSize: "0.78rem", lineHeight: 1.55, color: "#e2e8f0", marginBottom: "12px", textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
+                {isEn
+                  ? "For everyone's safety and to preserve these meaningful moments:"
+                  : "Para la seguridad de todos y para preservar estos momentos significativos:"}
+              </p>
+              <ul className="text-left" style={{ listStyle: "none", padding: 0, margin: "12px 0 16px" }}>
+                {(isEn
+                  ? [
+                      "Please ensure children do not enter the dance floor during these times",
+                      "Children should remain seated and under adult supervision",
+                      "We appreciate your help in keeping the space clear and safe",
+                    ]
+                  : [
+                      "Por favor, que los niños no entren a la pista durante esos momentos",
+                      "Los niños deben permanecer sentados y bajo supervisión de un adulto",
+                      "Agradecemos su ayuda para mantener el espacio despejado y seguro",
+                    ]
+                ).map((b) => (
+                  <li key={b} className="relative" style={{ paddingLeft: "20px", fontSize: "0.75rem", lineHeight: 1.45, color: "#f1f5f9", marginBottom: "8px", textShadow: "0 1px 3px rgba(0,0,0,0.8)" }}>
+                    <span className="absolute left-0 top-0" style={{ color: "#f7d070", fontSize: "0.75rem" }}>✦</span>
+                    {b}
+                  </li>
+                ))}
+              </ul>
+              <p style={{ fontSize: "0.78rem", lineHeight: 1.55, color: "#e2e8f0", marginBottom: "12px", textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
+                {isEn
+                  ? "Thank you for your understanding and cooperation in making this celebration beautiful for everyone."
+                  : "Gracias por su comprensión y cooperación para que esta celebración sea hermosa para todos."}
+              </p>
+            </div>
+          </div>
         </section>
 
         {/* Dress code + detalles */}
