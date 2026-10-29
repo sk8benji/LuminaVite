@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Sparkles, ArrowRight, ExternalLink } from "lucide-react";
+import { Sparkles, ArrowRight, ExternalLink, MessageSquare } from "lucide-react";
 import prisma from "@/lib/db";
 import { ALL_SYSTEM_DEMOS } from "@/lib/demo-data";
 import { INITIAL_MASTER_TEMPLATES } from "@/lib/templates-data";
@@ -212,6 +212,14 @@ export default async function DemosIndexPage() {
                 >
                   <span>View interactive example</span>
                   <ExternalLink className="w-3.5 h-3.5" />
+                </Link>
+                {/* Semana 2: contacto directo desde el catálogo */}
+                <Link
+                  href={`sms:+18182994882?&body=${encodeURIComponent(`Hi, I saw the ${card.title} template and I want it for my event`)}`}
+                  className="w-full mt-2 py-2.5 px-3 rounded-xl border border-[#7A002A] bg-white text-[#7A002A] hover:brightness-105 active:scale-95 font-['Cinzel'] text-[10px] tracking-wider uppercase font-bold shadow-xs transition flex items-center justify-center gap-1.5"
+                >
+                  <MessageSquare className="w-3.5 h-3.5" />
+                  <span>I want this template</span>
                 </Link>
               </div>
             </div>
