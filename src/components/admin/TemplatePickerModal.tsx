@@ -220,6 +220,14 @@ export default function TemplatePickerModal({
     return true;
   });
 
+  const counts = {
+    QUINCEANERA: TEMPLATE_CATALOG.filter((t) => t.categoria === "QUINCEANERA").length,
+    BODA: TEMPLATE_CATALOG.filter((t) => t.categoria === "BODA").length,
+    CUMPLEANOS: TEMPLATE_CATALOG.filter(
+      (t) => t.categoria === "CUMPLEANOS" || t.categoria === "UNIVERSAL"
+    ).length,
+  };
+
   return (
     <div
       className="fixed inset-0 z-50 bg-black/70 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto"
@@ -283,7 +291,7 @@ export default function TemplatePickerModal({
               }`}
             >
               <Crown className="w-3.5 h-3.5" />
-              <span>Mis XV Años (4)</span>
+              <span>Mis XV Años ({counts.QUINCEANERA})</span>
             </button>
             <button
               type="button"
@@ -295,7 +303,7 @@ export default function TemplatePickerModal({
               }`}
             >
               <Heart className="w-3.5 h-3.5" />
-              <span>Bodas & Matrimonios (2)</span>
+              <span>Bodas & Matrimonios ({counts.BODA})</span>
             </button>
             <button
               type="button"
@@ -307,7 +315,7 @@ export default function TemplatePickerModal({
               }`}
             >
               <Sparkles className="w-3.5 h-3.5" />
-              <span>Temáticas & Galas (4)</span>
+              <span>Temáticas & Galas ({counts.CUMPLEANOS})</span>
             </button>
           </div>
 
