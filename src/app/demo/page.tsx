@@ -10,7 +10,7 @@ const DEMO_CARDS = [
   // Row 1
   {
     slug: "mariposas-xv",
-    title: "Celestial Butterfly Garden",
+    title: "Celestial Butterfly",
     name: "Valeria Morales",
     tag: "Quinceañera & Gala",
     badge: "Most Requested",
@@ -19,7 +19,7 @@ const DEMO_CARDS = [
   },
   {
     slug: "baby-blue-xv",
-    title: "Baby Blue - Baby Blue & Silver",
+    title: "Garden Baby Blue",
     tag: "Quinceañera & Gala",
     desc: "Blue envelope cover with dove, silver oval photo frame, navy countdown, mass postcard, letter, and FAQs.",
     image: "/assets/template-baby-blue/foto-gazebo.webp",
@@ -27,7 +27,7 @@ const DEMO_CARDS = [
   },
   {
     slug: "miss-15-xv",
-    title: "Miss 15 - Cream & Copper",
+    title: "Mis 15 Cream & Gold",
     tag: "Quinceañera & Gala",
     desc: "Straight to the point, no envelope: card over the swing photo, music player, full court of honor, and RSVP in outline letters with monogram.",
     image: "/assets/template-miss15/foto-columpio.webp",
@@ -35,7 +35,7 @@ const DEMO_CARDS = [
   },
   {
     slug: "era-pink-xv",
-    title: "Quince Era Pink - Pastel Pink",
+    title: "Quince Pink",
     tag: "Quinceañera & Gala",
     desc: "Simple cover with wax seal, full-photo sunset hero, illustrated program, and pastel pink details with dotted buttons.",
     image: "/assets/template-era-pink/foto-retrato.webp",
@@ -43,7 +43,7 @@ const DEMO_CARDS = [
   },
   {
     slug: "blush-princess-xv",
-    title: "Blush Princess - Pink & Gold Princess",
+    title: "Blush Princess",
     name: "Isabella Sofia",
     tag: "Quinceañera & Gala",
     badge: "New",
@@ -52,7 +52,7 @@ const DEMO_CARDS = [
   },
   {
     slug: "isabella-xv",
-    title: "Vintage Romance on Film",
+    title: "Vintage Quinceanera",
     name: "Isabella Cordero",
     tag: "Haute Couture XV",
     badge: "Film Gallery",
@@ -81,7 +81,7 @@ const DEMO_CARDS = [
   // Row 2
   {
     slug: "elsy-xv",
-    title: "Royal Pink Crown",
+    title: "Royal Pink",
     name: "Elsy",
     tag: "Classic Quinceañera",
     badge: "Royal Princess",
@@ -89,26 +89,8 @@ const DEMO_CARDS = [
     image: "/assets/template-rose/722d78548334333072ad7200e4f8233e.webp",
   },
   {
-    slug: "coraline-party",
-    title: "Coraline's Secret Night",
-    name: "Valeria's Secret",
-    tag: "Signature Theme",
-    badge: "Mystical & Mysterious",
-    desc: "Secret door animation with golden key, guided dress code, and themed background music.",
-    image: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=800&q=80",
-  },
-  {
-    slug: "esmeralda-royal",
-    title: "Emerald Green Gala",
-    name: "Renata Villarreal",
-    tag: "Night Gala",
-    badge: "Emerald & Gold",
-    desc: "Emerald green background with gold-leaf finishes, ideal for nighttime receptions and gala dinners.",
-    image: "https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=800&q=80",
-  },
-  {
     slug: "sofia-y-alejandro",
-    title: "Imperial Hacienda Wedding",
+    title: "Our Wedding",
     name: "Sofía & Alejandro",
     tag: "Traditional Wedding",
     badge: "Hacienda Romance",

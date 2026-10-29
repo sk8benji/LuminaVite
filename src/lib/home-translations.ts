@@ -265,7 +265,7 @@ export const translations: Record<Language, HomeTranslations> = {
       tplViewDemo: "Ver demo",
       tplCards: [
         {
-          name: "Elegant Rose",
+          name: "Vintage Quinceanera",
           desc: "Gala romántica en rosa empolvado con galería estilo tira de fotos y el cronograma completo de la fiesta.",
           tag: "Alta Costura XV",
           bullets: ["Galería interactiva tira de fotos", "Cronograma por fases", "Dress code con paleta"],
@@ -274,21 +274,12 @@ export const translations: Record<Language, HomeTranslations> = {
           imgPos: "50% 35%",
         },
         {
-          name: "Blue Butterfly",
+          name: "Celestial Butterfly",
           desc: "Acuarela celeste, destellos de oro y mariposas etéreas que se mueven al tocar la pantalla.",
           tag: "XV Años & Gala",
           bullets: ["Sobre 3D con sello lacrado", "Pista de música de fondo", "RSVP por SMS y WhatsApp"],
           image: "/assets/home-real/blue-butterfly-real.jpg",
           slug: "mariposas-xv",
-          imgPos: "50% 20%",
-        },
-        {
-          name: "Esmeralda Royal",
-          desc: "Verde esmeralda y dorado real: elegancia de palacio para una quinceañera inolvidable.",
-          tag: "Esmeralda Royal",
-          bullets: ["Monograma personalizado", "Mesa de regalos Zelle/Amazon", "Google Maps en 1 clic"],
-          image: "/assets/home-real/esmeralda-royal-real.jpg",
-          slug: "esmeralda-royal",
           imgPos: "50% 20%",
         },
       ],
@@ -688,7 +679,7 @@ export const translations: Record<Language, HomeTranslations> = {
       tplViewDemo: "View demo",
       tplCards: [
         {
-          name: "Elegant Rose",
+          name: "Vintage Quinceanera",
           desc: "Romantic blush-pink gala with a filmstrip photo gallery and the full party timeline built in.",
           tag: "Haute Couture XV",
           bullets: ["Interactive filmstrip timeline", "Phased itinerary", "Dress code palette"],
@@ -697,21 +688,12 @@ export const translations: Record<Language, HomeTranslations> = {
           imgPos: "50% 35%",
         },
         {
-          name: "Blue Butterfly",
+          name: "Celestial Butterfly",
           desc: "Sky watercolor, gold foil accents, and ethereal butterflies that animate on touch.",
           tag: "Quinceañera & Gala",
           bullets: ["3D envelope with wax seal", "Background audio track", "WhatsApp & SMS RSVP"],
           image: "/assets/home-real/blue-butterfly-real.jpg",
           slug: "mariposas-xv",
-          imgPos: "50% 20%",
-        },
-        {
-          name: "Esmeralda Royal",
-          desc: "Emerald green and royal gold: palace-level elegance for an unforgettable quinceañera.",
-          tag: "Royal Emerald",
-          bullets: ["Custom monogram", "Zelle/Amazon gift registry", "1-Tap Google Maps GPS"],
-          image: "/assets/home-real/esmeralda-royal-real.jpg",
-          slug: "esmeralda-royal",
           imgPos: "50% 20%",
         },
       ],

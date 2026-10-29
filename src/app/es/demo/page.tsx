@@ -10,7 +10,7 @@ const DEMO_CARDS = [
   // Fila 1
   {
     slug: "mariposas-xv",
-    title: "Jardín de Mariposas Celestes",
+    title: "Celestial Butterfly",
     name: "Valeria Morales",
     tag: "XV Años & Gala",
     badge: "Más Solicitada",
@@ -19,7 +19,7 @@ const DEMO_CARDS = [
   },
   {
     slug: "baby-blue-xv",
-    title: "Baby Blue - Azul Bebé y Plata",
+    title: "Garden Baby Blue",
     tag: "XV Años & Gala",
     desc: "Portada con sobre azul y paloma, marco ovalo de plata con foto, cuenta regresiva azul marino, postal de la misa, carta y preguntas frecuentes.",
     image: "/assets/template-baby-blue/foto-gazebo.webp",
@@ -27,7 +27,7 @@ const DEMO_CARDS = [
   },
   {
     slug: "miss-15-xv",
-    title: "Miss 15 Años - Crema y Cobre",
+    title: "Mis 15 Cream & Gold",
     tag: "XV Años & Gala",
     desc: "Directa sin sobre: tarjeta sobre la foto del columpio, reproductor de musica, corte de honor completa y RSVP en letras outline con mono.",
     image: "/assets/template-miss15/foto-columpio.webp",
@@ -35,7 +35,7 @@ const DEMO_CARDS = [
   },
   {
     slug: "era-pink-xv",
-    title: "Quince Era Pink - Rosa Pastel",
+    title: "Quince Pink",
     tag: "XV Años & Gala",
     desc: "Portada simple con sello de cera, hero a foto completa al atardecer, programa ilustrado y detalles en rosa pastel con botones punteados.",
     image: "/assets/template-era-pink/foto-retrato.webp",
@@ -43,7 +43,7 @@ const DEMO_CARDS = [
   },
   {
     slug: "blush-princess-xv",
-    title: "Blush Princess - Princesa Rosa y Oro",
+    title: "Blush Princess",
     name: "Isabella Sofia",
     tag: "XV Años & Gala",
     badge: "Nueva",
@@ -52,7 +52,7 @@ const DEMO_CARDS = [
   },
   {
     slug: "isabella-xv",
-    title: "Romance Vintage en Película",
+    title: "Vintage Quinceanera",
     name: "Isabella Cordero",
     tag: "Alta Costura XV",
     badge: "Galería Film",
@@ -61,7 +61,7 @@ const DEMO_CARDS = [
   },
   {
     slug: "emma-and-lucas",
-    title: "Castillo de Cuento de Hadas",
+    title: "Fairytale Castle",
     name: "Emma & Lucas",
     tag: "Bodas de Gala",
     badge: "Boda Imperial",
@@ -70,7 +70,7 @@ const DEMO_CARDS = [
   },
   {
     slug: "quince-rosado",
-    title: "Dulces Quince en Rosa",
+    title: "Sweet Fifteen in Pink",
     name: "Magdalena",
     tag: "XV Años Princesa",
     badge: "Edición Floral",
@@ -81,7 +81,7 @@ const DEMO_CARDS = [
   // Fila 2
   {
     slug: "elsy-xv",
-    title: "Corona Real Rosa",
+    title: "Royal Pink",
     name: "Elsy",
     tag: "XV Años Clásica",
     badge: "Princesa Real",
@@ -89,26 +89,8 @@ const DEMO_CARDS = [
     image: "/assets/template-rose/722d78548334333072ad7200e4f8233e.webp",
   },
   {
-    slug: "coraline-party",
-    title: "Noche Secreta de Coraline",
-    name: "Valeria's Secret",
-    tag: "Temática de Autor",
-    badge: "Mística & Misterio",
-    desc: "Animación de puerta secreta con llave dorada, código de vestimenta guiado y música temática de fondo.",
-    image: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=800&q=80",
-  },
-  {
-    slug: "esmeralda-royal",
-    title: "Gala Verde Esmeralda",
-    name: "Renata Villarreal",
-    tag: "Gala Nocturna",
-    badge: "Esmeralda & Oro",
-    desc: "Fondo verde esmeralda con acabados en pan de oro, ideal para recepciones nocturnas y cenas de gala.",
-    image: "https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=800&q=80",
-  },
-  {
     slug: "sofia-y-alejandro",
-    title: "Boda Imperial en Hacienda",
+    title: "Our Wedding",
     name: "Sofía & Alejandro",
     tag: "Boda Tradicional",
     badge: "Hacienda Romance",
