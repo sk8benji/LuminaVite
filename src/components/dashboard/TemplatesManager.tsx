@@ -31,6 +31,7 @@ import {
   Smartphone,
 } from "lucide-react";
 import { MasterTemplateItem } from "@/lib/templates-data";
+import MiniaturaConMeta from "@/components/admin/MiniaturaConMeta";
 import {
   BEAUTY_QUINCE_ASSETS,
   BEAUTY_QUINCE_ASSET_LABELS,
@@ -1161,14 +1162,7 @@ export default function TemplatesManager() {
                       {editForm.fotoPortadaUrl ? (
                         <div className="flex items-center gap-3">
                           {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img
-                            src={editForm.fotoPortadaUrl}
-                            alt="Vista previa de la portada"
-                            onError={(e) => {
-                              (e.target as HTMLImageElement).style.display = "none";
-                            }}
-                            className="w-24 h-16 object-cover rounded-lg border border-stone-200 bg-white"
-                          />
+                          <MiniaturaConMeta url={editForm.fotoPortadaUrl} alt="Vista previa de la portada" imgClassName="w-24 h-16 object-cover rounded-lg border border-stone-200 bg-white" />
                           <span className="text-[11px] text-stone-400">Vista previa de la portada</span>
                         </div>
                       ) : (
@@ -1201,14 +1195,7 @@ export default function TemplatesManager() {
                       {editForm.fotoInfanciaUrl ? (
                         <div className="flex items-center gap-3">
                           {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img
-                            src={editForm.fotoInfanciaUrl}
-                            alt="Vista previa de la foto de infancia"
-                            onError={(e) => {
-                              (e.target as HTMLImageElement).style.display = "none";
-                            }}
-                            className="w-24 h-16 object-cover rounded-lg border border-stone-200 bg-white"
-                          />
+                          <MiniaturaConMeta url={editForm.fotoInfanciaUrl} alt="Vista previa de la foto de infancia" imgClassName="w-24 h-16 object-cover rounded-lg border border-stone-200 bg-white" />
                           <span className="text-[11px] text-stone-400">Vista previa de la foto de infancia</span>
                         </div>
                       ) : (
@@ -1241,14 +1228,7 @@ export default function TemplatesManager() {
                       {editForm.fotoActualUrl ? (
                         <div className="flex items-center gap-3">
                           {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img
-                            src={editForm.fotoActualUrl}
-                            alt="Vista previa de la sesión de gala"
-                            onError={(e) => {
-                              (e.target as HTMLImageElement).style.display = "none";
-                            }}
-                            className="w-24 h-16 object-cover rounded-lg border border-stone-200 bg-white"
-                          />
+                          <MiniaturaConMeta url={editForm.fotoActualUrl} alt="Vista previa de la sesión de gala" imgClassName="w-24 h-16 object-cover rounded-lg border border-stone-200 bg-white" />
                           <span className="text-[11px] text-stone-400">Vista previa de la sesión de gala</span>
                         </div>
                       ) : (
@@ -1279,14 +1259,7 @@ export default function TemplatesManager() {
                       {editForm.fotoCierreUrl ? (
                         <div className="flex items-center gap-3">
                           {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img
-                            src={editForm.fotoCierreUrl}
-                            alt="Vista previa de la foto de cierre"
-                            onError={(e) => {
-                              (e.target as HTMLImageElement).style.display = "none";
-                            }}
-                            className="w-24 h-16 object-cover rounded-lg border border-stone-200 bg-white"
-                          />
+                          <MiniaturaConMeta url={editForm.fotoCierreUrl} alt="Vista previa de la foto de cierre" imgClassName="w-24 h-16 object-cover rounded-lg border border-stone-200 bg-white" />
                           <span className="text-[11px] text-stone-400">Vista previa de la foto de cierre</span>
                         </div>
                       ) : (
@@ -1359,14 +1332,7 @@ export default function TemplatesManager() {
                           />
                           <div className="flex items-center gap-3">
                             {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img
-                              src={current}
-                              alt={BEAUTY_QUINCE_ASSET_LABELS[artKey]}
-                              onError={(e) => {
-                                (e.target as HTMLImageElement).style.display = "none";
-                              }}
-                              className="w-24 h-16 object-contain rounded-lg border border-stone-200 bg-white"
-                            />
+                            <MiniaturaConMeta url={current} alt={BEAUTY_QUINCE_ASSET_LABELS[artKey]} imgClassName="w-24 h-16 object-contain rounded-lg border border-stone-200 bg-white" />
                             <span className="text-[11px] text-stone-400">
                               {isReplaced ? "Vista previa del reemplazo" : "Arte original"}
                             </span>

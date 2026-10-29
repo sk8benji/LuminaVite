@@ -32,6 +32,7 @@ import { extractCleanMapUrl } from "@/lib/mapsUrlCleaner";
 import { InvitationData } from "@/components/invitation/InvitationMobileView";
 import { SECCIONES_QUINCE_ROSADO, SeccionId, isSectionEnabledInEvent } from "@/config/templateSections";
 import { TEMPLATES, TemplateId } from "@/lib/templates";
+import MiniaturaConMeta from "@/components/admin/MiniaturaConMeta";
 
 interface TemplateSectionBuilderProps {
   formData: InvitationData;
@@ -693,11 +694,7 @@ export default function TemplateSectionBuilder({
                         <div className="flex flex-col sm:flex-row items-center gap-4 p-4 rounded-xl border border-dashed border-stone-200 bg-stone-50">
                           {formData.fotoPortadaUrl ? (
                             // eslint-disable-next-line @next/next/no-img-element
-                            <img
-                              src={formData.fotoPortadaUrl}
-                              alt="Portada"
-                              className="w-20 h-28 object-cover rounded-t-full border-2 border-white shadow-md shrink-0"
-                            />
+                            <MiniaturaConMeta url={formData.fotoPortadaUrl} alt="Portada" imgClassName="w-20 h-28 object-cover rounded-t-full border-2 border-white shadow-md shrink-0" />
                           ) : (
                             <div className="w-20 h-28 rounded-t-full bg-stone-100 flex items-center justify-center text-stone-400 shrink-0">
                               <ImageIcon className="w-6 h-6" />
@@ -927,11 +924,7 @@ export default function TemplateSectionBuilder({
                         <div className="p-3.5 rounded-xl border border-stone-200 bg-stone-50 flex items-center gap-3">
                           {formData.fotoInfanciaUrl ? (
                             // eslint-disable-next-line @next/next/no-img-element
-                            <img
-                              src={formData.fotoInfanciaUrl}
-                              alt="De Niña"
-                              className="w-16 h-16 object-cover rounded-lg border-2 border-white shadow-sm shrink-0"
-                            />
+                            <MiniaturaConMeta url={formData.fotoInfanciaUrl} alt="De Niña" imgClassName="w-16 h-16 object-cover rounded-lg border-2 border-white shadow-sm shrink-0" />
                           ) : (
                             <div className="w-16 h-16 rounded-lg bg-stone-100 flex items-center justify-center text-stone-400 shrink-0">
                               <ImageIcon className="w-6 h-6" />
@@ -966,11 +959,7 @@ export default function TemplateSectionBuilder({
                         <div className="p-3.5 rounded-xl border border-stone-200 bg-stone-50 flex items-center gap-3">
                           {formData.fotoActualUrl ? (
                             // eslint-disable-next-line @next/next/no-img-element
-                            <img
-                              src={formData.fotoActualUrl}
-                              alt="A Señorita"
-                              className="w-16 h-16 object-cover rounded-lg border-2 border-white shadow-sm shrink-0"
-                            />
+                            <MiniaturaConMeta url={formData.fotoActualUrl} alt="A Señorita" imgClassName="w-16 h-16 object-cover rounded-lg border-2 border-white shadow-sm shrink-0" />
                           ) : (
                             <div className="w-16 h-16 rounded-lg bg-stone-100 flex items-center justify-center text-stone-400 shrink-0">
                               <ImageIcon className="w-6 h-6" />
@@ -1012,11 +1001,7 @@ export default function TemplateSectionBuilder({
                       <div className="flex flex-col sm:flex-row items-center gap-4 p-4 rounded-xl border border-dashed border-stone-200 bg-stone-50">
                         {formData.fotoZapato1Url ? (
                           // eslint-disable-next-line @next/next/no-img-element
-                          <img
-                            src={formData.fotoZapato1Url}
-                            alt="Zapatillas 1"
-                            className="w-24 h-28 object-cover rounded-2xl border-2 border-white shadow-md shrink-0"
-                          />
+                          <MiniaturaConMeta url={formData.fotoZapato1Url} alt="Zapatillas 1" imgClassName="w-24 h-28 object-cover rounded-2xl border-2 border-white shadow-md shrink-0" />
                         ) : (
                           <div className="w-24 h-28 rounded-2xl bg-stone-100 flex items-center justify-center text-stone-400 shrink-0">
                             <ImageIcon className="w-6 h-6" />
@@ -1545,11 +1530,7 @@ export default function TemplateSectionBuilder({
                       <div className="flex flex-col sm:flex-row items-center gap-4 p-4 rounded-xl border border-dashed border-stone-200 bg-stone-50">
                         {formData.fotoZapato2Url ? (
                           // eslint-disable-next-line @next/next/no-img-element
-                          <img
-                            src={formData.fotoZapato2Url}
-                            alt="Zapatilla 2"
-                            className="w-24 h-20 object-cover rounded-xl border-2 border-white shadow-md shrink-0"
-                          />
+                          <MiniaturaConMeta url={formData.fotoZapato2Url} alt="Zapatilla 2" imgClassName="w-24 h-20 object-cover rounded-xl border-2 border-white shadow-md shrink-0" />
                         ) : (
                           <div className="w-24 h-20 rounded-xl bg-stone-100 flex items-center justify-center text-stone-400 shrink-0">
                             <ImageIcon className="w-6 h-6" />
@@ -1918,11 +1899,7 @@ export default function TemplateSectionBuilder({
                       <div className="flex flex-col sm:flex-row items-center gap-4 p-4 rounded-xl border border-dashed border-stone-200 bg-stone-50">
                         {formData.fotoCierreUrl ? (
                           // eslint-disable-next-line @next/next/no-img-element
-                          <img
-                            src={formData.fotoCierreUrl}
-                            alt="Foto Despedida"
-                            className="w-20 h-28 object-cover rounded-t-full border-2 border-white shadow-md shrink-0"
-                          />
+                          <MiniaturaConMeta url={formData.fotoCierreUrl} alt="Foto Despedida" imgClassName="w-20 h-28 object-cover rounded-t-full border-2 border-white shadow-md shrink-0" />
                         ) : (
                           <div className="w-20 h-28 rounded-t-full bg-stone-100 flex items-center justify-center text-stone-400 shrink-0">
                             <ImageIcon className="w-6 h-6" />
