@@ -30,6 +30,13 @@ export const BEAUTY_QUINCE_ASSETS = {
   marcoAzulRosas: A("marco-azul-rosas.webp"),
   marcoAzulSuperior: A("marco-azul-superior.webp"),
   marcoAzulInferior: A("marco-azul-inferior.webp"),
+  // Important Details: marco extensible en 3 partes (Abraham 2026-10-29).
+  // Superior = rosas esquina superior izquierda; central = rieles dorados
+  // + fondo azul noche, se repite en vertical; inferior = rosas esquina
+  // inferior derecha. Así el marco crece con el texto sin cortar flores.
+  detailsFrameTop: A("details-frame-top.webp"),
+  detailsFrameMiddle: A("details-frame-middle.webp"),
+  detailsFrameBottom: A("details-frame-bottom.webp"),
   marcoCortinaDorada: A("marco-cortina-dorada.webp"),
   marcoCremaCinta: A("marco-crema-cinta.webp"),
   marcoCremaEsquinas: A("marco-crema-esquinas.webp"),
@@ -82,6 +89,9 @@ export const BEAUTY_QUINCE_ASSET_LABELS: Record<BeautyQuinceArtKey, string> = {
   marcoAzulRosas: "Marco azul con rosas",
   marcoAzulSuperior: "Marco azul superior (rosas)",
   marcoAzulInferior: "Marco azul inferior (rosas)",
+  detailsFrameTop: "Marco Details superior (rosas)",
+  detailsFrameMiddle: "Marco Details central (repetible)",
+  detailsFrameBottom: "Marco Details inferior (rosas)",
   marcoCortinaDorada: "Marco cortina dorada",
   marcoCremaCinta: "Marco crema con cinta azul",
   marcoCremaEsquinas: "Marco crema esquinas doradas",

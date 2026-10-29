@@ -89,16 +89,27 @@ export default function BeautyQuinceTemplate({
     return () => clearInterval(id);
   }, [data.fechaEvento]);
 
-  // Mapa de recepción: embed sin API key. Si el link guardado ya trae
-  // ?q=, se le agrega output=embed; si es un goo.gl corto, se busca por
-  // nombre + dirección. La dirección del demo es ficticia, así que el mapa
-  // muestra la búsqueda, no una ficha exacta.
+  // Mapa de recepción: embed sin API key, centrado a nivel de calle
+  // (zoom 16). Si el link guardado ya trae ?q=, se le agrega z=16 +
+  // output=embed; si no, se busca por nombre + dirección con z=16.
+  // La dirección del demo es ficticia, así que Google muestra el área
+  // de la búsqueda, no una ficha exacta; con dirección real, el pin
+  // queda exacto a nivel de calle.
   const mapEmbedUrl =
     data.recepcionMapUrl && data.recepcionMapUrl.includes("?q=")
-      ? `${data.recepcionMapUrl}&output=embed`
+      ? `${data.recepcionMapUrl}${data.recepcionMapUrl.includes("z=") ? "" : "&z=16"}&output=embed`
       : `https://www.google.com/maps?q=${encodeURIComponent(
           `${data.recepcionNombre || ""} ${data.recepcionDireccion || ""}`.trim()
-        )}&output=embed`;
+        )}&z=16&output=embed`;
+
+  // Botón Directions: enlace directo a Google Maps con destino
+  // (dir/?api=1&destination=), no a una búsqueda genérica.
+  const receptionDirectionsUrl =
+    `${data.recepcionNombre || ""} ${data.recepcionDireccion || ""}`.trim()
+      ? `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
+          `${data.recepcionNombre || ""} ${data.recepcionDireccion || ""}`.trim()
+        )}`
+      : getMapDirectionsUrl(data.recepcionMapUrl);
 
   // Botones de cierre: Google Calendar + .ics (Apple/Outlook), con el
   // mismo formato que AddToCalendarButton, pero en botones oscuros con
@@ -160,7 +171,9 @@ export default function BeautyQuinceTemplate({
           background-color: transparent !important;
         }
         .envelope-wrapper { background: none !important; }
-        .venue-map-card:hover iframe { filter: sepia(15%) contrast(100%) brightness(100%); }
+        .venue-map-card:hover iframe { filter: sepia(35%) saturate(85%) hue-rotate(8deg) contrast(105%) brightness(95%); }
+        .registry-book { transition: transform 0.25s ease; will-change: transform; }
+        .registry-book:hover, .registry-book:active { transform: translateY(-4px) scale(1.02); }
         .vinyl-disc-img.is-spinning { animation: spinVinyl 5s linear infinite; }
         @keyframes spinVinyl { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         @media (prefers-color-scheme: light), (prefers-color-scheme: dark) {
@@ -405,7 +418,7 @@ export default function BeautyQuinceTemplate({
                 src={mapEmbedUrl}
                 width="100%"
                 height="100%"
-                style={{ border: 0, display: "block", filter: "sepia(35%) hue-rotate(5deg) contrast(105%) brightness(95%)", transition: "filter 0.3s ease" }}
+                style={{ border: 0, display: "block", filter: "sepia(55%) saturate(70%) hue-rotate(8deg) contrast(105%) brightness(95%)", transition: "filter 0.3s ease" }}
                 allowFullScreen
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
@@ -413,7 +426,7 @@ export default function BeautyQuinceTemplate({
               />
             </div>
             <a
-              href={getMapDirectionsUrl(data.recepcionMapUrl)}
+              href={receptionDirectionsUrl}
               target="_blank"
               rel="noreferrer"
               className="font-serif-roman flex items-center justify-center w-full mx-auto"
@@ -481,18 +494,21 @@ export default function BeautyQuinceTemplate({
           </div>
         </section>
 
-        {/* Kids Policy: marco en 3 partes con altura extensible, no una
-            imagen fija. Rosas superiores e inferiores fijas en los
-            bordes, cuerpo azul noche que crece con el texto, así el
-            último párrafo ya no choca con las rosas inferiores. */}
+        {/* Important Details: tarjeta extensible en 3 partes (Abraham
+            2026-10-29). Tapa superior con rosas, cuerpo central con el
+            patrón de rieles dorados repetido en vertical (repeat-y) y
+            tapa inferior con rosas: el marco crece con el texto sin
+            cortar flores ni pisar letras. */}
         <section className="flex justify-center items-center w-full max-w-[430px] mx-auto" style={{ padding: "24px 16px", boxSizing: "border-box" }}>
-          <div className="relative w-full flex items-center justify-center overflow-hidden" style={{ border: "2px solid #d4af37", borderRadius: "20px", backgroundColor: "#0b1736", boxShadow: "0 12px 30px rgba(0,0,0,0.25)" }}>
-            <img src={A.marcoAzulSuperior} alt="" className="absolute top-0 left-0 right-0 w-full pointer-events-none" style={{ height: "90px", objectFit: "cover", objectPosition: "top center", zIndex: 1 }} />
-            <img src={A.marcoAzulInferior} alt="" className="absolute bottom-0 left-0 right-0 w-full pointer-events-none" style={{ height: "90px", objectFit: "cover", objectPosition: "bottom center", zIndex: 1 }} />
-            <div className="relative w-full text-center" style={{ zIndex: 2, padding: "80px 28px 70px", color: "#f8fafc", boxSizing: "border-box" }}>
-              <span className="font-script block" style={{ fontSize: "2.6rem", lineHeight: 0.9, color: "#f7d070", textShadow: "0 2px 6px rgba(0,0,0,0.7)" }}>{isEn ? "Important" : "Importante"}</span>
-              <h2 className="font-serif-roman font-bold" style={{ fontSize: "1.4rem", letterSpacing: "0.28em", color: "#ffffff", margin: "4px 0 10px", textShadow: "0 2px 6px rgba(0,0,0,0.7)" }}>DETAILS</h2>
-              <h3 className="font-serif-roman" style={{ fontSize: "1.25rem", color: "#fde68a", marginBottom: "16px", fontWeight: 500 }}>{isEn ? "Kids Policy" : "Política para Niños"}</h3>
+          <div className="w-full" style={{ maxWidth: "390px", margin: "0 auto", display: "flex", flexDirection: "column", boxShadow: "0 12px 35px rgba(0,0,0,0.45)", borderRadius: "20px", overflow: "hidden", boxSizing: "border-box" }}>
+            <div style={{ width: "100%", lineHeight: 0 }}>
+              <img src={A.detailsFrameTop} alt="Marco superior" style={{ width: "100%", height: "auto", display: "block" }} />
+            </div>
+            <div style={{ width: "100%", backgroundImage: `url(${A.detailsFrameMiddle})`, backgroundRepeat: "repeat-y", backgroundSize: "100% auto", backgroundColor: "#081738", padding: "10px 32px", boxSizing: "border-box" }}>
+            <div className="w-full text-center" style={{ color: "#f8fafc", boxSizing: "border-box" }}>
+              <span className="font-script block" style={{ fontSize: "3.2rem", lineHeight: 0.9, color: "#d4af37", textShadow: "0 2px 6px rgba(0,0,0,0.8)", margin: "0 0 4px" }}>{isEn ? "Important" : "Importante"}</span>
+              <h2 className="font-serif-roman font-bold" style={{ fontSize: "1rem", letterSpacing: "0.35em", color: "#ffffff", margin: "0 0 6px", textShadow: "0 2px 6px rgba(0,0,0,0.7)" }}>DETAILS</h2>
+              <h3 className="font-serif-roman" style={{ fontSize: "0.82rem", letterSpacing: "0.15em", color: "#d4af37", margin: "0 0 16px", fontWeight: 500 }}>{isEn ? "Kids Policy" : "Política para Niños"}</h3>
               <p style={{ fontSize: "0.78rem", lineHeight: 1.55, color: "#e2e8f0", marginBottom: "12px", textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
                 {isEn
                   ? "We absolutely love and welcome children to celebrate this special day with us."
@@ -527,11 +543,15 @@ export default function BeautyQuinceTemplate({
                   </li>
                 ))}
               </ul>
-              <p style={{ fontSize: "0.78rem", lineHeight: 1.55, color: "#e2e8f0", marginBottom: "12px", textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
+              <p style={{ fontSize: "0.76rem", fontStyle: "italic", lineHeight: 1.55, color: "#cbd5e1", margin: "12px 0 0", textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
                 {isEn
                   ? "Thank you for your understanding and cooperation in making this celebration beautiful for everyone."
                   : "Gracias por su comprensión y cooperación para que esta celebración sea hermosa para todos."}
               </p>
+            </div>
+            </div>
+            <div style={{ width: "100%", lineHeight: 0 }}>
+              <img src={A.detailsFrameBottom} alt="Marco inferior" style={{ width: "100%", height: "auto", display: "block" }} />
             </div>
           </div>
         </section>
@@ -659,7 +679,7 @@ export default function BeautyQuinceTemplate({
                   ? "The biggest gift I could ask for is for you to join me to celebrate my quinceañera. However, if you wish to bring a present, I have left a registry list here. Thank you so much!"
                   : "El regalo más grande que puedo pedir es que me acompañes a celebrar mis quince años. Si deseas traer un presente, aquí dejaré mi lista de regalos. ¡Muchas gracias!"}
               </p>
-              <div style={{ width: "170px", height: "auto", margin: "8px auto 24px", perspective: "600px" }}>
+              <div className="registry-book" style={{ width: "170px", height: "auto", margin: "8px auto 24px", perspective: "600px" }}>
                 <img src={A.libroCuento} alt="Mesa de Regalos" className="w-full h-auto block bg-transparent" style={{ background: "transparent", filter: "drop-shadow(0 15px 25px rgba(11,23,54,0.35))" }} />
               </div>
               {data.wishlistUrl && (
@@ -687,17 +707,11 @@ export default function BeautyQuinceTemplate({
           roseImage={A.rosaEncantada}
         />
 
-        {/* Cierre: cabecera pergamino con firma + arco floral con castillo
-            como fondo completo. Save the Date va DENTRO del cielo del
-            arco; Registry tiene su sección propia arriba y ya no va
-            duplicado aquí. */}
-        <div className="relative text-center" style={{ backgroundColor: "#f7eedb", padding: "30px 20px 20px" }}>
-          <h2 className="font-script" style={{ fontSize: "4rem", color: "#a81c1c", margin: 0, lineHeight: 1 }}>{data.titulo}</h2>
-          <img src={A.espejoMano} alt="Detalle decorativo" className="absolute pointer-events-none bg-transparent" style={{ top: "15px", right: "25px", width: "55px", height: "auto", background: "transparent" }} />
-        </div>
-        {/* Escena final: solo Save the Date, centrado sobre el cielo del
-            arco. Sin franja beige inferior: el arco cierra la página. */}
-        <section className="relative w-full max-w-[430px] mx-auto overflow-hidden" style={{ boxSizing: "border-box", minHeight: "520px", marginBottom: 0, paddingBottom: 0 }}>
+        {/* Cierre: el arco cierra la página directo, sin cabecera
+            pergamino con firma encima (partía la transición RSVP→arco).
+            Save the Date va DENTRO del cielo del arco; Registry tiene
+            su sección propia arriba y ya no va duplicado aquí. */}
+        <section className="relative w-full max-w-[430px] mx-auto overflow-hidden" style={{ boxSizing: "border-box", minHeight: "520px", marginBottom: 0, paddingBottom: 0, backgroundColor: "#0b1736" }}>
           <div className="absolute inset-0" style={{ zIndex: 1 }}>
             <img src={A.arcoRosasCastillo} alt="Castillo de noche con arco de rosas" className="w-full h-full object-cover block bg-transparent" style={{ background: "transparent", verticalAlign: "bottom" }} />
           </div>
