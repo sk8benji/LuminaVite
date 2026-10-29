@@ -349,8 +349,10 @@ export default function BeautyQuinceTemplate({
             beige con tarjetas y vestido/carroza sueltos. Fondo palacio
             (puertas-palacio: columnas doradas, paneles azules, candil),
             título COUNTDOWN TO party y dígitos sin recuadros blancos,
-            foto de preparación con corte rasgado, base floral dorada. */}
-        <section className="relative w-full max-w-[430px] mx-auto overflow-hidden flex flex-col justify-between items-center" style={{ minHeight: "780px", padding: "50px 16px 20px", boxSizing: "border-box", background: "transparent" }}>
+            foto de preparación con corte rasgado. Sin bloque dorado
+            vacío debajo de la foto (Abraham 2026-10-29): el Countdown
+            conecta directo con When & Where, sin separación cuadrada. */}
+        <section className="relative w-full max-w-[430px] mx-auto overflow-hidden flex flex-col items-center" style={{ minHeight: "780px", padding: "50px 16px 20px", boxSizing: "border-box", background: "transparent" }}>
           <div className="absolute inset-0 z-[1]">
             <img src={A.puertasPalacio} alt="Fondo de palacio" className="w-full h-full object-cover bg-transparent" style={{ background: "transparent" }} />
           </div>
@@ -378,9 +380,6 @@ export default function BeautyQuinceTemplate({
           </div>
           <div className="relative z-[2] w-[90%] mx-auto overflow-hidden" style={{ borderRadius: "12px", boxShadow: "0 8px 24px rgba(0,0,0,0.4)", background: "transparent" }}>
             <img src={A.fotoMaquillajeRasgado} alt="Preparación Quinceañera" className="w-full h-auto block bg-transparent" style={{ background: "transparent" }} />
-          </div>
-          <div className="relative z-[3] w-full bg-transparent" style={{ marginTop: "15px", background: "transparent" }}>
-            <img src={A.baseFloralRosas} alt="Decoración floral" className="w-full h-auto block bg-transparent" style={{ background: "transparent" }} />
           </div>
         </section>
 
@@ -447,7 +446,7 @@ export default function BeautyQuinceTemplate({
         <section className="relative w-full max-w-[430px] mx-auto overflow-hidden" style={{ boxSizing: "border-box", backgroundColor: "#f7eed7" }}>
           <div className="relative w-full flex items-center justify-center overflow-hidden" style={{ height: "90px" }}>
             <img src={A.baseFloralRosas} alt="Marco dorado superior" className="absolute inset-0 w-full h-full object-cover pointer-events-none bg-transparent" style={{ zIndex: 1, background: "transparent" }} />
-            <h2 className="font-script relative text-center" style={{ zIndex: 2, fontSize: "3.4rem", color: "#8c1d28", textShadow: "0 1px 4px rgba(255,255,255,0.6), 0 2px 6px rgba(0,0,0,0.25)", margin: 0, padding: "0 40px", lineHeight: 1 }}>The Party Plan</h2>
+            <h2 className="font-vibes banner-title relative text-center" style={{ zIndex: 2, fontSize: "2.3rem", maxWidth: "65%", color: "#8c1d28", textShadow: "0 1px 3px rgba(255,255,255,0.7), 0 2px 6px rgba(0,0,0,0.3)", margin: "0 auto", padding: "0 10px", lineHeight: 1, whiteSpace: "nowrap", textAlign: "center" }}>The Party Plan</h2>
           </div>
           <div className="relative z-[2] w-full flex flex-col items-center" style={{ padding: "30px 24px" }}>
             <div className="relative w-full" style={{ padding: "10px 0 20px" }}>
