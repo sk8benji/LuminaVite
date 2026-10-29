@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import confetti from "canvas-confetti";
 import { Send, CheckCircle2, XCircle, Phone } from "lucide-react";
 import { TemplateConfig } from "@/lib/templates";
-import { generateWhatsAppRsvpUrl } from "@/lib/whatsapp";
 import { formatFechaLimiteRsvp } from "@/lib/fecha-limite";
 
 interface RsvpSectionProps {
@@ -47,60 +46,94 @@ export default function RsvpSection({
   const [asistencia, setAsistencia] = useState<"SI" | "NO">("SI");
   const [pases, setPases] = useState(1);
   const [acompanantes, setAcompanantes] = useState("");
-  const [comentarios, setComentarios] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitOk, setSubmitOk] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
+  // RSVP por el sistema (NO por WhatsApp): POST /api/rsvp/save guarda la
+  // confirmación en rsvpRegistro + tabla guest, aparece en el panel del
+  // anfitrión y dispara confirmación al invitado + aviso al anfitrión.
+  // Sin eventoId o con evento de demo (no existe en la BD) el sistema
+  // responde EVENT_NOT_FOUND y se muestra el error, sin abrir WhatsApp.
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!nombre.trim()) return;
+    if (!nombre.trim() || isSubmitting) return;
 
     setIsSubmitting(true);
+    setSubmitError(null);
 
-    // Lanzar confeti si confirma asistencia
-    if (asistencia === "SI") {
-      try {
-        confetti({
-          particleCount: 80,
-          spread: 70,
-          origin: { y: 0.8 },
-          colors: [template.accentColor, "#FCECEE", "#FFFFFF", "#E5C158"],
-        });
-      } catch (err) {}
-    }
+    try {
+      const res = await fetch("/api/rsvp/save", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          eventoId,
+          nombreInvitado: nombre.trim(),
+          asistira: asistencia === "SI",
+          pases: asistencia === "SI" ? pases : 0,
+          acompanantes,
+        }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        const errCode = String(data?.error || "");
+        if (errCode.startsWith("ALREADY_CONFIRMED")) {
+          setSubmitError(
+            isEn
+              ? "You already have a confirmed RSVP for this event."
+              : "Ya tienes una confirmación registrada para este evento."
+          );
+        } else if (errCode.startsWith("MAX_PASSES_EXCEEDED")) {
+          const max = errCode.split(":")[1] || "";
+          setSubmitError(
+            isEn
+              ? `The maximum number of guests per confirmation is ${max}.`
+              : `El máximo de invitados por confirmación es ${max}.`
+          );
+        } else if (errCode.startsWith("CAPACITY_EXCEEDED")) {
+          const left = errCode.split(":")[1] || "0";
+          setSubmitError(
+            isEn
+              ? `The event is almost full — only ${left} seats left.`
+              : `El evento está casi lleno, solo quedan ${left} lugares.`
+          );
+        } else if (errCode.includes("EVENT_NOT_FOUND")) {
+          setSubmitError(
+            isEn
+              ? "This is a demo invitation, so the confirmation is not saved in the system."
+              : "Esta es una invitación de demostración, la confirmación no se guarda en el sistema."
+          );
+        } else {
+          setSubmitError(
+            isEn
+              ? "We could not save your confirmation. Please try again."
+              : "No pudimos guardar tu confirmación. Inténtalo de nuevo."
+          );
+        }
+        setIsSubmitting(false);
+        return;
+      }
 
-    // Registro opcional en backend
-    if (eventoId) {
-      try {
-        fetch("/api/rsvp/save", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            eventoId,
-            nombreInvitado: nombre,
-            asistira: asistencia === "SI",
-            pases: asistencia === "SI" ? pases : 0,
-            acompanantes,
-          }),
-        }).catch(() => {});
-      } catch {}
-    }
-
-    // Generar enlace directo de WhatsApp
-    const whatsappUrl = generateWhatsAppRsvpUrl({
-      telefono: telefonoWhatsapp,
-      eventoTitulo,
-      nombreInvitado: nombre,
-      asistencia,
-      pases,
-      acompanantes,
-      comentarios,
-    });
-
-    // Abrir WhatsApp
-    setTimeout(() => {
-      window.open(whatsappUrl, "_blank");
+      if (asistencia === "SI") {
+        try {
+          confetti({
+            particleCount: 80,
+            spread: 70,
+            origin: { y: 0.8 },
+            colors: [template.accentColor, "#FCECEE", "#FFFFFF", "#E5C158"],
+          });
+        } catch {}
+      }
+      setSubmitOk(true);
+    } catch {
+      setSubmitError(
+        isEn
+          ? "We could not save your confirmation. Please try again."
+          : "No pudimos guardar tu confirmación. Inténtalo de nuevo."
+      );
+    } finally {
       setIsSubmitting(false);
-    }, 400);
+    }
   };
 
   const sinLimitePases = maxPases === 0;
@@ -199,7 +232,7 @@ export default function RsvpSection({
           </>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4 text-left mt-2">
+        <form onSubmit={handleSubmit} className="space-y-4 text-left mt-2" style={submitOk ? { display: "none" } : undefined}>
           {/* Full name * */}
           <div>
             <label
@@ -238,23 +271,23 @@ export default function RsvpSection({
                 type="button"
                 onClick={() => setAsistencia("SI")}
                 className={`flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl text-xs font-medium border transition ${
-                  asistencia === "SI" ? "ring-2 font-semibold" : "opacity-75"
+                  asistencia === "SI" ? "font-semibold" : "opacity-75"
                 }`}
                 style={
                   royal
                     ? {
                         flex: 1,
-                        padding: "12px 8px",
-                        borderRadius: "10px",
-                        border: "1px solid rgba(212,175,55,0.4)",
-                        backgroundColor: asistencia === "SI" ? "#0b1736" : "#fffdf9",
-                        borderColor: asistencia === "SI" ? "#d4af37" : "rgba(212,175,55,0.4)",
-                        color: asistencia === "SI" ? "#ffffff" : "#475569",
+                        padding: "11px 10px",
+                        borderRadius: "8px",
+                        border: "1px solid rgba(212,175,55,0.45)",
+                        backgroundColor: asistencia === "SI" ? "#f7eedb" : "#fffdf9",
+                        borderColor: asistencia === "SI" ? "#d4af37" : "rgba(212,175,55,0.45)",
+                        color: asistencia === "SI" ? "#0b1736" : "#64748b",
                         fontFamily: "'Cinzel', serif",
-                        fontSize: "0.7rem",
+                        fontSize: "0.72rem",
                         letterSpacing: "0.08em",
                         fontWeight: 600,
-                        boxShadow: asistencia === "SI" ? "0 4px 12px rgba(11,23,54,0.25)" : undefined,
+                        boxShadow: asistencia === "SI" ? "inset 0 0 0 1px #d4af37" : undefined,
                       }
                     : {
                         backgroundColor: asistencia === "SI" ? template.badgeBg : template.bgColor,
@@ -263,7 +296,7 @@ export default function RsvpSection({
                       }
                 }
               >
-                <CheckCircle2 className="w-3.5 h-3.5" style={{ color: royal ? (asistencia === "SI" ? "#d4af37" : "#10b981") : undefined }} />
+                <CheckCircle2 className="w-3.5 h-3.5" style={{ color: royal ? (asistencia === "SI" ? "#0b1736" : "#a88338") : undefined }} />
                 {isEn ? "Yes, with pleasure" : "Sí, con gusto"}
               </button>
 
@@ -271,23 +304,23 @@ export default function RsvpSection({
                 type="button"
                 onClick={() => setAsistencia("NO")}
                 className={`flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl text-xs font-medium border transition ${
-                  asistencia === "NO" ? "ring-2 font-semibold" : "opacity-75"
+                  asistencia === "NO" ? "font-semibold" : "opacity-75"
                 }`}
                 style={
                   royal
                     ? {
                         flex: 1,
-                        padding: "12px 8px",
-                        borderRadius: "10px",
-                        border: "1px solid rgba(212,175,55,0.4)",
-                        backgroundColor: asistencia === "NO" ? "#0b1736" : "#fffdf9",
-                        borderColor: asistencia === "NO" ? "#d4af37" : "rgba(212,175,55,0.4)",
-                        color: asistencia === "NO" ? "#ffffff" : "#475569",
+                        padding: "11px 10px",
+                        borderRadius: "8px",
+                        border: "1px solid rgba(212,175,55,0.45)",
+                        backgroundColor: asistencia === "NO" ? "#f7eedb" : "#fffdf9",
+                        borderColor: asistencia === "NO" ? "#d4af37" : "rgba(212,175,55,0.45)",
+                        color: asistencia === "NO" ? "#0b1736" : "#64748b",
                         fontFamily: "'Cinzel', serif",
-                        fontSize: "0.7rem",
+                        fontSize: "0.72rem",
                         letterSpacing: "0.08em",
                         fontWeight: 600,
-                        boxShadow: asistencia === "NO" ? "0 4px 12px rgba(11,23,54,0.25)" : undefined,
+                        boxShadow: asistencia === "NO" ? "inset 0 0 0 1px #d4af37" : undefined,
                       }
                     : {
                         backgroundColor: asistencia === "NO" ? template.badgeBg : template.bgColor,
@@ -403,6 +436,11 @@ export default function RsvpSection({
           )}
 
           {/* Botón Submit RSVP via WhatsApp */}
+          {submitError && (
+            <p className="text-center text-xs font-medium" style={{ color: "#a81c1c", marginTop: "12px" }}>
+              {submitError}
+            </p>
+          )}
           <button
             type="submit"
             disabled={isSubmitting}
@@ -410,7 +448,7 @@ export default function RsvpSection({
             style={
               royal
                 ? {
-                    background: "linear-gradient(135deg, #0b1736 0%, #172a5a 100%)",
+                    background: "#0b1736",
                     color: "#ffffff",
                     fontFamily: "'Cinzel', serif",
                     fontSize: "0.82rem",
@@ -420,7 +458,7 @@ export default function RsvpSection({
                     borderRadius: "12px",
                     padding: "15px 20px",
                     marginTop: "24px",
-                    boxShadow: "0 6px 18px rgba(11,23,54,0.3)",
+                    boxShadow: "0 4px 15px rgba(11,23,54,0.3)",
                   }
                 : {
                     backgroundColor: "#5A3E44",
@@ -430,9 +468,23 @@ export default function RsvpSection({
             }
           >
             <Send className="w-3.5 h-3.5" />
-            {isSubmitting ? (isEn ? "Connecting to WhatsApp..." : "Conectando con WhatsApp...") : (isEn ? "Submit RSVP via WhatsApp" : "Enviar RSVP por WhatsApp")}
+            {isSubmitting ? (isEn ? "Saving..." : "Guardando...") : (isEn ? "Confirm RSVP" : "Confirmar asistencia")}
           </button>
         </form>
+
+        {submitOk && (
+          <div className="text-center" style={{ marginTop: "20px" }}>
+            <CheckCircle2 className="w-10 h-10 mx-auto" style={{ color: "#0b1736" }} />
+            <p className="font-semibold mt-3" style={{ color: "#0b1736" }}>
+              {isEn ? "Thank you! Your RSVP has been confirmed." : "¡Gracias! Tu asistencia quedó confirmada."}
+            </p>
+            <p className="text-xs mt-1" style={{ color: "#64748b" }}>
+              {asistencia === "SI"
+                ? (isEn ? `${nombre} — ${pases} ${pases === 1 ? "guest" : "guests"}` : `${nombre} — ${pases} ${pases === 1 ? "invitado" : "invitados"}`)
+                : (isEn ? `${nombre} — Regretfully declined` : `${nombre} — Lamentablemente no podrás asistir`)}
+            </p>
+          </div>
+        )}
 
         {/* Hallazgo 11: enlace de llamada al anfitrión, controlado por el toggle del evento */}
         {permitirConfirmacionTelefono !== false && telefonoWhatsapp && (
