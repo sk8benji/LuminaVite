@@ -61,6 +61,8 @@ export const BEAUTY_QUINCE_ASSETS = {
   fotoCarrozaAtardecer: A("foto-carroza-atardecer.webp"),
   fotoVestidoManiqui: A("foto-vestido-maniqui.webp"),
   fotoMaquillaje: A("foto-maquillaje.webp"),
+  fotoMaquillajeRasgado: A("foto-maquillaje-rasgado.webp"),
+  baseFloralRosas: A("base-floral-rosas.webp"),
 };
 
 export type BeautyQuinceArtKey = keyof typeof BEAUTY_QUINCE_ASSETS;
@@ -101,6 +103,8 @@ export const BEAUTY_QUINCE_ASSET_LABELS: Record<BeautyQuinceArtKey, string> = {
   fotoCarrozaAtardecer: "Foto: carroza al atardecer",
   fotoVestidoManiqui: "Foto: vestido en maniquí",
   fotoMaquillaje: "Foto: maquillaje / arreglo",
+  fotoMaquillajeRasgado: "Foto: maquillaje con bordes rasgados (countdown)",
+  baseFloralRosas: "Base floral dorada con rosas (countdown)",
 };
 
 /** Defaults + reemplazos no vacíos. Nunca rompe si el override viene incompleto. */
