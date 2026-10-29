@@ -125,36 +125,42 @@ export default function BeautyQuinceTemplate({
       >
         <AudioPlayer audioUrl={data.musicaUrl} template={template} />
 
-        {/* Hero tal cual el Canva: fondo biblioteca dorada, tarjeta
-            inclinada con nombre/fecha/poema, ramo de rosas a la derecha,
-            sobre abajo y disco con play. La rosa ya es transparente
-            (fondo blanco quitado), así que no sale cuadro blanco. */}
+        {/* Hero: efecto sobre abierto con tarjeta saliendo, 4 capas.
+            Capa 1 solapa trasera dorada, capa 2 tarjeta, capa 3 bolsillo
+            frontal azul en V (transparente arriba, la tarjeta asoma por
+            la V), capa 4 rosas frontales. Solapa y bolsillo ya son
+            transparentes (fondo blanco quitado), así que no sale cuadro. */}
         <section className="relative overflow-hidden">
           <img src={A.bibliotecaDorada} alt="" className="absolute inset-0 w-full h-full object-cover" />
           <div className="relative px-5 pt-10 pb-8 flex flex-col items-center">
-            <div className="relative w-[88%] max-w-[340px] -rotate-6 shadow-2xl">
-              <img src={A.cartaPapelCinta} alt="" className="w-full aspect-[0.67] object-cover" />
-              <div className="absolute inset-0 flex flex-col items-center text-center px-9 pt-[24%] pb-[16%]">
-                <h1 className="font-script text-5xl leading-none" style={{ color: "#2A2A9C" }}>{data.titulo}</h1>
-                <p className="font-script text-3xl leading-tight mt-1" style={{ color: "#2A2A9C" }}>
-                  {data.subtitulo || "Quinceañera"}
-                </p>
-                <p className="font-serif-roman text-[11px] tracking-[0.15em] uppercase font-bold mt-4" style={{ color: "#2A2A9C" }}>
-                  {formattedDate.replace(" AT ", " | ")}
-                </p>
-                <p className="text-[10px] leading-relaxed tracking-[0.08em] uppercase whitespace-pre-line mt-4" style={{ color: "#2A2A9C" }}>
-                  {data.frasePersonalizada || (isEn ? poemaEn : poemaEs)}
-                </p>
+            <div className="relative w-full max-w-[360px] h-[560px]">
+              {/* Capa 1: solapa trasera abierta */}
+              <img src={A.solapaSobreDorada} alt="" className="absolute bottom-0 left-0 w-full h-auto z-[1] pointer-events-none" />
+              {/* Capa 2: tarjeta saliendo del sobre */}
+              <div className="absolute left-1/2 bottom-[110px] w-[82%] aspect-[2/3] -translate-x-1/2 rotate-[-4deg] origin-bottom z-[2] shadow-2xl">
+                <img src={A.cartaPapelCinta} alt="" className="absolute inset-0 w-full h-full object-cover" />
+                <div className="relative z-[2] flex flex-col items-center text-center px-8 pt-[24%] pb-[16%]">
+                  <h1 className="font-script text-5xl leading-none" style={{ color: "#2A2A9C" }}>{data.titulo}</h1>
+                  <p className="font-script text-3xl leading-tight mt-1" style={{ color: "#2A2A9C" }}>
+                    {data.subtitulo || "Quinceañera"}
+                  </p>
+                  <p className="font-serif-roman text-[11px] tracking-[0.15em] uppercase font-bold mt-4" style={{ color: "#2A2A9C" }}>
+                    {formattedDate.replace(" AT ", " | ")}
+                  </p>
+                  <p className="text-[10px] leading-relaxed tracking-[0.08em] uppercase whitespace-pre-line mt-4" style={{ color: "#2A2A9C" }}>
+                    {data.frasePersonalizada || (isEn ? poemaEn : poemaEs)}
+                  </p>
+                </div>
               </div>
-              <div className="absolute -right-10 top-[38%] flex flex-col items-end pointer-events-none">
-                <img src={A.rosaEncantada} alt="" className="w-28 h-28 object-contain rotate-12 drop-shadow-xl" />
-                <img src={A.rosaEncantada} alt="" className="w-20 h-20 object-contain -mt-6 mr-4 -rotate-12 drop-shadow-xl" />
-                <img src={A.rosaEncantada} alt="" className="w-16 h-16 object-contain -mt-4 mr-8 rotate-6 drop-shadow-xl" />
-              </div>
-            </div>
-            <div className="w-[92%] max-w-[360px] -mt-10 relative z-10">
-              <div className="w-full aspect-[1.45] overflow-hidden shadow-2xl">
-                <img src={A.sobreCerradoSello} alt="Sobre Beauty Quince" className="w-full h-full object-cover object-center scale-[1.03]" />
+              {/* Capa 3: bolsillo frontal en V, oculta la parte baja de la tarjeta */}
+              <img src={A.sobreAzulAbierto} alt="" className="absolute bottom-0 left-0 w-full h-auto z-[3] pointer-events-none drop-shadow-xl" />
+              {/* Capa 4: rosas frontales, rompen el marco por encima del bolsillo */}
+              <div className="absolute right-[-10px] bottom-[140px] w-[110px] z-[4] pointer-events-none">
+                <div className="relative w-[110px] h-[150px]">
+                  <img src={A.rosaEncantada} alt="" className="absolute top-0 right-0 w-[80px] h-[80px] object-contain rotate-12 drop-shadow-xl" />
+                  <img src={A.rosaEncantada} alt="" className="absolute top-[50px] left-0 w-[70px] h-[70px] object-contain -rotate-12 drop-shadow-xl" />
+                  <img src={A.rosaEncantada} alt="" className="absolute bottom-0 right-[10px] w-[60px] h-[60px] object-contain rotate-6 drop-shadow-xl" />
+                </div>
               </div>
             </div>
             <button
