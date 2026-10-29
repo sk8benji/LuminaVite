@@ -45,7 +45,7 @@ export default async function DemoPage(props: PageProps) {
     <div className="no-scrollbar overflow-x-hidden min-h-screen pb-24">
       <TemplateDispatcher data={data} />
       {/* Barra CTA fija (Semana 2): que la demo nunca sea un callejón sin salida */}
-      <DemoCtaBar estiloPlantilla={data.estiloPlantilla} />
+      <DemoCtaBar estiloPlantilla={data.estiloPlantilla} idioma={data.idiomaDefault} />
     </div>
   );
 }
