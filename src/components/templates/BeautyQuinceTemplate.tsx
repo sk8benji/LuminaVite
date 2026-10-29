@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { MapPin, Gift, Music, CalendarPlus, Sparkles } from "lucide-react";
+import { MapPin, Music, CalendarPlus, Sparkles } from "lucide-react";
 import { InvitationData } from "../invitation/InvitationMobileView";
 import { getTemplate } from "@/lib/templates";
 import { getMapDirectionsUrl } from "@/lib/maps";
@@ -12,7 +12,6 @@ import {
 } from "@/lib/templates/beautyQuinceAssets";
 import AudioPlayer from "../invitation/AudioPlayer";
 import RsvpSection from "../invitation/RsvpSection";
-import AddToCalendarButton from "../invitation/AddToCalendarButton";
 
 /**
  * Beauty Quince (réplica Canva "Beauty Quince Invitation", Jasmine).
@@ -89,6 +88,29 @@ export default function BeautyQuinceTemplate({
           `${data.recepcionNombre || ""} ${data.recepcionDireccion || ""}`.trim()
         )}&output=embed`;
 
+  // Botones de cierre: Google Calendar + .ics (Apple/Outlook), con el
+  // mismo formato que AddToCalendarButton, pero en botones oscuros con
+  // borde dorado para que vivan dentro del arco nocturno.
+  const calStart = new Date(data.fechaEvento);
+  const calEnd = new Date(calStart.getTime() + 6 * 60 * 60 * 1000);
+  const calIso = (d: Date) => d.toISOString().replace(/-|:|\.\d\d/g, "");
+  const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(
+    `${data.titulo} - ${data.subtitulo || "Quinceañera"}`
+  )}&dates=${calIso(calStart)}/${calIso(calEnd)}&details=${encodeURIComponent(
+    "¡Acompáñanos a celebrar este gran momento!"
+  )}&location=${encodeURIComponent(data.recepcionDireccion || "")}`;
+  const handleDownloadIcs = () => {
+    if (typeof window === "undefined") return;
+    const ics = `BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//LuminaVite//Invitaciones Digitales//ES\nCALSCALE:GREGORIAN\nBEGIN:VEVENT\nSUMMARY:${data.titulo} - ${data.subtitulo || "Quinceañera"}\nDESCRIPTION:¡Acompáñanos a celebrar este gran momento!\nLOCATION:${data.recepcionDireccion || ""}\nDTSTART:${calIso(calStart)}\nDTEND:${calIso(calEnd)}\nSTATUS:CONFIRMED\nEND:VEVENT\nEND:VCALENDAR`;
+    const blob = new Blob([ics], { type: "text/calendar;charset=utf-8" });
+    const link = document.createElement("a");
+    link.href = window.URL.createObjectURL(blob);
+    link.setAttribute("download", `${data.titulo.replace(/[^a-zA-Z0-9]/g, "_")}.ics`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   const addrParts = (data.recepcionDireccion || "123 Forever Street, Quince City").split(",");
   const addrStreet = addrParts[0].trim().toUpperCase();
   const addrCity = (addrParts.slice(1).join(",").trim() || "Quince City").toUpperCase();
@@ -104,7 +126,6 @@ export default function BeautyQuinceTemplate({
   const portada = data.fotoPortadaUrl || A.fotoCarrozaAtardecer;
   const fotoVestido = data.fotoActualUrl || A.fotoVestidoManiqui;
   const fotoArreglo = data.fotoInfanciaUrl || A.fotoMaquillaje;
-  const fotoCierre = data.fotoCierreUrl || A.arcoRosasCastillo;
 
   const poemaEn =
     "Fifteen candles softly glow,\nMarking how much love you know.\nA touch of a woman, a heart still so sweet,\nThe past and the future now dance at your feet.";
@@ -526,28 +547,8 @@ export default function BeautyQuinceTemplate({
           </section>
         )}
 
-        {/* Registry / Regalos */}
-        {data.mostrarMesaRegalos !== false && (
-          <section className="relative px-6 py-10 text-center overflow-hidden">
-            <img src={A.marcoCremaEsquinas} alt="" className="absolute inset-0 w-full h-full object-cover opacity-30 bg-transparent" />
-            <div className="relative">
-            <Gift className="w-8 h-8 mx-auto text-[#C5A059]" />
-            <h2 className="font-script text-5xl text-[#A6192E] mt-2">{isEn ? "Registry" : "Mesa de Regalos"}</h2>
-            <p className="text-sm leading-relaxed mt-3">
-              {data.regalosMensaje ||
-                (isEn
-                  ? "The biggest gift I could ask for is for you to join me to celebrate my quinceañera. However, if you wish to bring a present, I will be leaving a registry list here. Thank you so much!"
-                  : "El regalo más grande que puedo pedir es que me acompañes a celebrar mis quince años. Si deseas traer un presente, aquí dejaré mi lista de regalos. ¡Muchas gracias!")}
-            </p>
-            <img src={A.libroCuento} alt="Libro de cuento" className="w-32 h-32 object-contain mx-auto mt-3 bg-transparent" />
-            {data.wishlistUrl && (
-              <a href={data.wishlistUrl} target="_blank" rel="noreferrer" className="inline-block mt-2 px-6 py-3 rounded-full text-sm font-bold" style={{ backgroundColor: "#0A1E4A", color: "#fff" }}>
-                {isEn ? "View Registry" : "Ver Mesa de Regalos"}
-              </a>
-            )}
-            </div>
-          </section>
-        )}
+        {/* Registry se integra en el arco de cierre, no como sección
+            aparte, para no duplicar el mensaje ni el botón View. */}
 
         {/* RSVP */}
         <section className="px-4 py-6">
@@ -563,30 +564,56 @@ export default function BeautyQuinceTemplate({
           />
         </section>
 
-        {/* Cierre */}
-        <section className="px-6 py-10 text-center">
-          <img src={A.rosaCampana} alt="Rosa en campana" className="w-40 h-40 object-contain mx-auto bg-transparent" />
-          <img src={A.marcoCortinaDorada} alt="Marco cortina dorada" className="w-full h-64 object-cover rounded-2xl shadow mt-2 bg-transparent" />
-          <img src={A.destellosDorados} alt="Destellos dorados" className="w-full h-32 object-contain mt-2 bg-transparent" />
-          <img src={A.brilloDoradoMarco} alt="Brillo dorado" className="w-full h-32 object-contain bg-transparent" />
-          <img src={fotoCierre} alt="Cierre" className="w-full h-72 object-cover rounded-2xl shadow mt-2 bg-transparent" />
-          <h2 className="font-script text-5xl text-[#A6192E] mt-5">{isEn ? "See you soon!" : "¡Te esperamos!"}</h2>
-          {data.mensajeDespedida && <p className="text-sm mt-2">{data.mensajeDespedida}</p>}
-          <div className="mt-5 flex flex-col items-center gap-3">
-            <AddToCalendarButton
-              titulo={`${data.titulo} - ${data.subtitulo || "Quinceañera"}`}
-              ubicacion={data.recepcionDireccion}
-              fechaEvento={data.fechaEvento}
-              template={template}
-            />
-            <span className="inline-flex items-center gap-1 text-xs opacity-70"><CalendarPlus className="w-4 h-4" /> {isEn ? "Save the date" : "Guarda la fecha"}</span>
+        {/* Cierre: cabecera pergamino con firma + arco floral con castillo
+            como fondo completo. Save the Date y Registry van DENTRO del
+            cielo del arco, no abajo en beige, y se quitan los botones
+            sueltos y los iconos en recuadros blancos (espejo, abanico,
+            castillo) y la tarjeta pequeña del arco. */}
+        <div className="relative text-center" style={{ backgroundColor: "#f7eedb", padding: "30px 20px 20px" }}>
+          <h2 className="font-script" style={{ fontSize: "4rem", color: "#a81c1c", margin: 0, lineHeight: 1 }}>{data.titulo}</h2>
+          <img src={A.espejoMano} alt="Detalle decorativo" className="absolute pointer-events-none bg-transparent" style={{ top: "15px", right: "25px", width: "55px", height: "auto", background: "transparent" }} />
+        </div>
+        <section className="relative w-full max-w-[430px] mx-auto overflow-hidden" style={{ boxSizing: "border-box" }}>
+          <div className="absolute inset-0" style={{ zIndex: 1 }}>
+            <img src={A.arcoRosasCastillo} alt="Castillo de noche con arco de rosas" className="w-full h-full object-cover block bg-transparent" style={{ background: "transparent" }} />
           </div>
-          <div className="flex justify-center gap-3 mt-6">
-            <img src={A.espejoMano} alt="Espejo" className="w-14 h-14 object-contain bg-transparent" />
-            <img src={A.abanico} alt="Abanico" className="w-14 h-14 object-contain bg-transparent" />
-            <img src={A.castillo} alt="Castillo" className="w-14 h-14 object-contain bg-transparent" />
+          <div className="relative flex flex-col items-center text-center" style={{ zIndex: 2, padding: "100px 40px 60px" }}>
+            <div className="flex flex-col items-center w-full" style={{ marginBottom: "35px" }}>
+              <div className="flex items-baseline justify-center" style={{ gap: "8px", marginBottom: "12px" }}>
+                <span className="font-script" style={{ fontSize: "2.8rem", color: "#c92a2a", textShadow: "0 2px 8px rgba(0,0,0,0.8)", lineHeight: 0.8 }}>{isEn ? "Save" : "Guarda"}</span>
+                <span className="font-serif-roman font-bold" style={{ fontSize: "1.15rem", letterSpacing: "0.25em", color: "#e03131", textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>THE DATE</span>
+              </div>
+              <div className="flex flex-col items-center gap-3 w-full">
+                <a href={googleCalendarUrl} target="_blank" rel="noreferrer" className="font-serif-roman inline-flex items-center justify-center" style={{ backgroundColor: "#030816", color: "#ffffff", fontSize: "0.85rem", letterSpacing: "0.15em", padding: "12px 28px", borderRadius: "8px", border: "1px solid rgba(212,175,55,0.4)", textDecoration: "none", boxShadow: "0 4px 15px rgba(0,0,0,0.6)" }}>
+                  <CalendarPlus className="w-4 h-4 mr-2" /> GOOGLE CALENDAR
+                </a>
+                <button type="button" onClick={handleDownloadIcs} className="font-serif-roman inline-flex items-center justify-center cursor-pointer" style={{ backgroundColor: "#030816", color: "#ffffff", fontSize: "0.85rem", letterSpacing: "0.15em", padding: "12px 28px", borderRadius: "8px", border: "1px solid rgba(212,175,55,0.4)", boxShadow: "0 4px 15px rgba(0,0,0,0.6)" }}>
+                  APPLE / OUTLOOK (.ICS)
+                </button>
+              </div>
+            </div>
+            {data.mostrarMesaRegalos !== false && (
+              <div className="flex flex-col items-center w-full">
+                <div className="flex items-baseline justify-center" style={{ gap: "8px", marginBottom: "12px" }}>
+                  <span className="font-script" style={{ fontSize: "2.8rem", color: "#c92a2a", textShadow: "0 2px 8px rgba(0,0,0,0.8)", lineHeight: 0.8 }}>{isEn ? "View" : "Ver"}</span>
+                  <span className="font-serif-roman font-bold" style={{ fontSize: "1.15rem", letterSpacing: "0.25em", color: "#e03131", textShadow: "0 2px 8px rgba(0,0,0,0.8)" }}>REGISTRY</span>
+                </div>
+                <p className="font-serif-roman" style={{ fontSize: "0.75rem", lineHeight: 1.7, letterSpacing: "0.12em", color: "#f8fafc", textShadow: "0 2px 6px rgba(0,0,0,0.9), 0 0 10px rgba(0,0,0,0.8)", margin: "0 0 18px", padding: "0 10px" }}>
+                  {isEn
+                    ? "THE BIGGEST GIFT I COULD ASK FOR IS FOR YOU TO JOIN ME TO CELEBRATE MY QUINCEAÑERA, HOWEVER IF YOU WISH TO BRING A PRESENT I WILL BE LEAVING A REGISTRY LIST HERE. THANK YOU SO MUCH!"
+                    : "EL REGALO MÁS GRANDE QUE PUEDO PEDIR ES QUE ME ACOMPAÑES A CELEBRAR MIS QUINCE AÑOS. SI DESEAS TRAER UN PRESENTE, AQUÍ DEJARÉ MI LISTA DE REGALOS. ¡MUCHAS GRACIAS!"}
+                </p>
+                {data.wishlistUrl && (
+                  <a href={data.wishlistUrl} target="_blank" rel="noreferrer" className="font-serif-roman inline-flex items-center justify-center" style={{ backgroundColor: "#030816", color: "#ffffff", fontSize: "0.85rem", letterSpacing: "0.15em", padding: "12px 28px", borderRadius: "8px", border: "1px solid rgba(212,175,55,0.4)", textDecoration: "none", boxShadow: "0 4px 15px rgba(0,0,0,0.6)" }}>
+                    View
+                  </a>
+                )}
+              </div>
+            )}
           </div>
-          <p className="text-[11px] tracking-widest uppercase opacity-50 mt-6 flex items-center justify-center gap-1">
+        </section>
+        <section className="px-6 py-6 text-center">
+          <p className="text-[11px] tracking-widest uppercase opacity-50 flex items-center justify-center gap-1">
             <Sparkles className="w-3 h-3" /> Beauty Quince <Music className="w-3 h-3" />
           </p>
         </section>
