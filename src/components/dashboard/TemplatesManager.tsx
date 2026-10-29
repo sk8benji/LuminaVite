@@ -49,7 +49,7 @@ export default function TemplatesManager() {
   >("musica");
 
   // Opciones de visualizador en vivo
-  const [skipIntroPreview, setSkipIntroPreview] = useState(false);
+  const [skipIntroPreview, setSkipIntroPreview] = useState(true);
 
   // Estado de subida a S3
   const [uploadingField, setUploadingField] = useState<string | null>(null);
