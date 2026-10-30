@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Sparkles, ArrowRight, ExternalLink, MessageSquare } from "lucide-react";
+import TrackLink from "@/components/analytics/TrackLink";
 import prisma from "@/lib/db";
 import { ALL_SYSTEM_DEMOS } from "@/lib/demo-data";
 import { INITIAL_MASTER_TEMPLATES } from "@/lib/templates-data";
@@ -214,13 +215,15 @@ export default async function DemosIndexPageEs() {
                   <ExternalLink className="w-3.5 h-3.5" />
                 </Link>
                 {/* Semana 2: contacto directo desde el catálogo */}
-                <Link
+                <TrackLink
                   href={`sms:+18182994882?&body=${encodeURIComponent(`Hola, vi la plantilla ${card.title} y la quiero para mi evento`)}`}
+                  event="click_sms"
+                  eventParams={{ origen: "catalogo", plantilla: card.title }}
                   className="w-full mt-2 py-2.5 px-3 rounded-xl border border-[#7A002A] bg-white text-[#7A002A] hover:brightness-105 active:scale-95 font-['Cinzel'] text-[10px] tracking-wider uppercase font-bold shadow-xs transition flex items-center justify-center gap-1.5"
                 >
                   <MessageSquare className="w-3.5 h-3.5" />
                   <span>Quiero esta plantilla</span>
-                </Link>
+                </TrackLink>
               </div>
             </div>
           ))}

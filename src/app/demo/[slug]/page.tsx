@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { getMergedDemo } from "@/lib/template-demo-merge";
 import TemplateDispatcher from "@/components/templates/TemplateDispatcher";
 import DemoCtaBar from "@/components/demo/DemoCtaBar";
+import TrackOnMount from "@/components/analytics/TrackOnMount";
 
 export const dynamic = "force-dynamic";
 // Sin generateStaticParams: cada demo se resuelve en request con la DB (edits del admin).
@@ -43,6 +44,7 @@ export default async function DemoPage(props: PageProps) {
 
   return (
     <div className="no-scrollbar overflow-x-hidden min-h-screen pb-24">
+      <TrackOnMount event="view_demo" eventParams={{ plantilla: data.estiloPlantilla }} />
       <TemplateDispatcher data={data} />
       {/* Barra CTA fija (Semana 2): que la demo nunca sea un callejón sin salida */}
       <DemoCtaBar estiloPlantilla={data.estiloPlantilla} idioma={data.idiomaDefault} />

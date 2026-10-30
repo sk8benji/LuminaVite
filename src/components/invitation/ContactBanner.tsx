@@ -1,5 +1,8 @@
+"use client";
+
 import { MessageSquare, Phone } from "lucide-react";
 import type { InvitationData } from "./InvitationMobileView";
+import { track } from "@/lib/analytics";
 
 /**
  * Banner de contacto — barra fija comercial al pie de la invitación pública.
@@ -51,6 +54,7 @@ export default function ContactBanner({ data }: { data: InvitationData }) {
           {mostrarLlamar && (
             <a
               href={`tel:${intl}`}
+              onClick={() => track("click_llamar", { origen: "banner_evento" })}
               className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-[#FFD166] text-[#7A002A] text-xs font-extrabold uppercase tracking-wide shadow-sm shrink-0"
             >
               <Phone className="w-4 h-4" />
@@ -60,6 +64,7 @@ export default function ContactBanner({ data }: { data: InvitationData }) {
           {mostrarSms && (
             <a
               href={`sms:${intl}`}
+              onClick={() => track("click_sms", { origen: "banner_evento" })}
               className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-white text-[#7A002A] text-xs font-extrabold uppercase tracking-wide shadow-sm shrink-0"
             >
               <MessageSquare className="w-4 h-4" />
