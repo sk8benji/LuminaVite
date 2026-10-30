@@ -810,68 +810,19 @@ export default function TemplateSectionBuilder({
                               updateField("fechaEvento", val);
                               const formatted = formatFormalDate(val, "es");
                               updateField("fechaTextoPersonalizada", formatted.formalText);
-                              updateField("fechaPlacaMes", formatted.mes);
-                              updateField("fechaPlacaHora", formatted.horaPlaca);
-                              const formattedEn = formatFormalDate(val, "en");
-                              updateField("fechaPlacaHoraEn", formattedEn.horaPlaca);
                             }}
                             className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
                           />
                         </div>
 
-                        <div>
-                          <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
-                            Mes del Medallón (En mayúsculas)
-                          </label>
-                          <input
-                            type="text"
-                            value={formData.fechaPlacaMes || ""}
-                            onChange={(e) => updateField("fechaPlacaMes", e.target.value)}
-                            placeholder="Ej. MAYO / MAY"
-                            className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
-                          />
-                        </div>
                       </div>
+                      <p className="text-[11px] text-gray-500">
+                        El mes sale automático de la fecha, en español e inglés. Ya no se escribe a mano.
+                      </p>
 
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
-                          <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
-                            Hora en Español (🇲🇽 ES)
-                          </label>
-                          <input
-                            type="text"
-                            value={formData.fechaPlacaHora || ""}
-                            onChange={(e) => updateField("fechaPlacaHora", e.target.value)}
-                            placeholder="Ej. A las 4:00 PM"
-                            className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
-                          />
-                        </div>
-
-                        <div>
-                          <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
-                            Hora en Inglés (🇺🇸 EN)
-                          </label>
-                          <div className="flex gap-2">
-                            <input
-                              type="text"
-                              value={formData.fechaPlacaHoraEn || ""}
-                              onChange={(e) => updateField("fechaPlacaHoraEn", e.target.value)}
-                              placeholder="Ej. AT 4:00 PM"
-                              className="flex-1 px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
-                            />
-                            <button
-                              type="button"
-                              onClick={() => {
-                                const formattedEn = formatFormalDate(formData.fechaEvento, "en");
-                                updateField("fechaPlacaHoraEn", formattedEn.horaPlaca);
-                              }}
-                              className="px-3 py-2 rounded-xl bg-stone-100 text-[#7A002A] text-xs font-bold hover:bg-stone-200 transition shrink-0 cursor-pointer"
-                            >
-                              Auto EN
-                            </button>
-                          </div>
-                        </div>
-                      </div>
+                      <p className="text-[11px] text-gray-500">
+                        La hora sale de la fecha y hora que elijas arriba, en español e inglés.
+                      </p>
                     </div>
                   )}
 

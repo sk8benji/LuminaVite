@@ -341,8 +341,6 @@ export default function TemplatesManager() {
       frasePersonalizada: editForm.frasePersonalizada || "",
       fechaEvento: new Date("2026-10-24T15:00:00Z"),
       fechaTextoPersonalizada: editForm.fechaTextoPersonalizada || "SATURDAY, OCTOBER 24, 2026 AT 3 PM",
-      fechaPlacaMes: editForm.fechaPlacaMes || "OCTUBRE",
-      fechaPlacaHora: editForm.fechaPlacaHora || "A LAS 3:00 PM",
       fechaPlacaLugar: editForm.fechaPlacaLugar || editForm.recepcionNombre || "QUINCE PALACE",
       countdownEncabezado: editForm.countdownEncabezado || "Faltan sólo...",
       // Sin portada, placeholder neutro (nunca la foto de otra plantilla)
@@ -806,29 +804,6 @@ export default function TemplatesManager() {
                         onChange={(e) => setEditForm({ ...editForm, fechaTextoPersonalizada: e.target.value })}
                         className="w-full px-3.5 py-2 bg-stone-50 border border-stone-200 rounded-xl text-xs"
                       />
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-3">
-                      <div className="space-y-1">
-                        <label className="text-xs font-semibold text-stone-700">Mes en Medallón:</label>
-                        <input
-                          type="text"
-                          placeholder="OCTUBRE"
-                          value={editForm.fechaPlacaMes || ""}
-                          onChange={(e) => setEditForm({ ...editForm, fechaPlacaMes: e.target.value })}
-                          className="w-full px-3.5 py-2 bg-stone-50 border border-stone-200 rounded-xl text-xs"
-                        />
-                      </div>
-                      <div className="space-y-1">
-                        <label className="text-xs font-semibold text-stone-700">Hora en Medallón:</label>
-                        <input
-                          type="text"
-                          placeholder="A LAS 4:00 PM"
-                          value={editForm.fechaPlacaHora || ""}
-                          onChange={(e) => setEditForm({ ...editForm, fechaPlacaHora: e.target.value })}
-                          className="w-full px-3.5 py-2 bg-stone-50 border border-stone-200 rounded-xl text-xs"
-                        />
-                      </div>
                     </div>
 
                     <div className="space-y-1">

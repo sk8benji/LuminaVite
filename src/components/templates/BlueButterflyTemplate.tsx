@@ -970,7 +970,7 @@ export default function BlueButterflyTemplate({
                 las rosas) */}
             <div className="absolute top-0 right-0 w-[60%] h-[54%] flex flex-col items-center justify-center pr-1 text-center pointer-events-none">
               <p className="font-serif-roman text-xs tracking-[0.25em] text-[#C5A059] uppercase font-bold">
-                {isEn ? eventMonth : (data.fechaPlacaMes || eventMonth)}
+                {eventMonth}
               </p>
               
               <div className="flex items-center gap-3 my-1 border-t border-b border-[#D8B772]/60 py-0.5 px-3">
@@ -981,7 +981,7 @@ export default function BlueButterflyTemplate({
                   {eventDay}
                 </span>
                 <span className="font-serif-roman text-[10px] tracking-widest text-slate-500 uppercase">
-                  {isEn ? `AT ${eventTime}` : (data.fechaPlacaHora || `A LAS ${eventTime}`)}
+                  {isEn ? `AT ${eventTime}` : `A LAS ${eventTime}`}
                 </span>
               </div>
 

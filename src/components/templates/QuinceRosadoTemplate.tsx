@@ -470,7 +470,7 @@ export default function QuinceRosadoTemplate({
                   />
                 </div>
                 <p className="font-['Cinzel',serif] text-[9px] sm:text-[10px] tracking-[0.2em] uppercase text-[#B74F5F] font-bold text-center mt-2">
-                  {data.fechaPlacaMes || `${eventMonthName.toUpperCase()} ${eventYear}`}
+                  {`${eventMonthName.toUpperCase()} ${eventYear}`}
                 </p>
               </div>
 
@@ -765,7 +765,7 @@ export default function QuinceRosadoTemplate({
                   {eventDayOfWeek}
                 </span>
                 <span className="font-['Cinzel',serif] text-xs tracking-[0.2em] uppercase font-bold text-[#7A002A]">
-                  {data.fechaPlacaMes || eventMonthName.toUpperCase()}
+                  {eventMonthName.toUpperCase()}
                 </span>
                 <span className="font-['Great_Vibes',cursive] text-4xl text-[#B74F5F] leading-none my-0.5">
                   {eventDay}
@@ -773,25 +773,12 @@ export default function QuinceRosadoTemplate({
                 {data.mostrarFechaPlacaHora !== false && (
                   <span className="font-['Cinzel',serif] text-[10px] tracking-wider text-[#7A002A] font-medium">
                     {(() => {
-                      if (isEn) {
-                        if (data.fechaPlacaHoraEn) return data.fechaPlacaHoraEn;
-                        if (data.fechaPlacaHora) {
-                          return data.fechaPlacaHora.replace(/^[Aa]\s+las?\s+/i, "AT ").replace(/^[Aa]\s+/i, "AT ");
-                        }
-                        const h = eventDateInfo.hours;
-                        const m = eventDateInfo.minutes;
-                        const ampm = h >= 12 ? "PM" : "AM";
-                        const h12 = h % 12 || 12;
-                        const mStr = m ? `:${String(m).padStart(2, "0")}` : ":00";
-                        return `AT ${h12}${mStr} ${ampm}`;
-                      }
-                      if (data.fechaPlacaHora) return data.fechaPlacaHora;
                       const h = eventDateInfo.hours;
                       const m = eventDateInfo.minutes;
                       const ampm = h >= 12 ? "PM" : "AM";
                       const h12 = h % 12 || 12;
                       const mStr = m ? `:${String(m).padStart(2, "0")}` : ":00";
-                      return `A las ${h12}${mStr} ${ampm}`;
+                      return isEn ? `AT ${h12}${mStr} ${ampm}` : `A las ${h12}${mStr} ${ampm}`;
                     })()}
                   </span>
                 )}
