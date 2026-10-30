@@ -14,8 +14,8 @@ import {
   Heart,
 } from "lucide-react";
 
-const TEAM_PHONE_DISPLAY = "(818) 299-4482";
-const TEAM_PHONE_TEL = "+18182994482";
+const TEAM_PHONE_DISPLAY = "(818) 299-4882";
+const TEAM_PHONE_TEL = "+18182994882";
 
 interface OrderInfo {
   id: string;

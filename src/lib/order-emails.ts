@@ -27,8 +27,8 @@ export async function sendCustomerOrderConfirmationEmail(
   const subject = `✨ Welcome to Click and love! Order Confirmation #${order.id.slice(-6).toUpperCase()}`;
 
   const thankYouUrl = `${siteUrl}/gracias?session_id=${order.stripeSessionId}`;
-  const teamPhoneDisplay = "(818) 299-4482";
-  const teamPhoneTel = "+18182994482";
+  const teamPhoneDisplay = "(818) 299-4882";
+  const teamPhoneTel = "+18182994882";
 
   const htmlBody = `
 <!DOCTYPE html>
