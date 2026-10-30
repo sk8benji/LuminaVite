@@ -27,11 +27,12 @@ const WhatsAppIcon = ({ className = "w-3.5 h-3.5" }: { className?: string }) => 
 
 interface OpenGraphPreviewProps {
   formData: InvitationData;
+  updateField: (field: keyof InvitationData, value: any) => void;
 }
 
 type PreviewPlatform = "whatsapp" | "facebook" | "imessage";
 
-export default function OpenGraphPreview({ formData }: OpenGraphPreviewProps) {
+export default function OpenGraphPreview({ formData, updateField }: OpenGraphPreviewProps) {
   const [platform, setPlatform] = useState<PreviewPlatform>("whatsapp");
   const [copied, setCopied] = useState(false);
 
@@ -50,14 +51,16 @@ export default function OpenGraphPreview({ formData }: OpenGraphPreviewProps) {
   }
 
   const titulo = formData.titulo?.trim() || (isEn ? "Celebrant" : "Nombre de la Festejada");
-  const displayTitle = `${titulo} • ${tipoTexto}`;
+  const tituloAuto = `${titulo} • ${tipoTexto}`;
+  const displayTitle = formData.ogTitulo?.trim() || tituloAuto;
 
-  const displayDescription =
+  const descripcionAuto =
     formData.subtitulo?.trim() ||
     formData.frasePersonalizada?.trim() ||
     (isEn
       ? "✨ You are cordially invited to celebrate with us! Tap to view details, photos, maps, and RSVP."
       : "✨ ¡Estás cordialmente invitado a celebrar con nosotros! Toca para abrir la invitación, mapas y confirmar tu asistencia.");
+  const displayDescription = formData.ogDescripcion?.trim() || descripcionAuto;
 
   const slug = formData.slug?.trim() || "mi-evento";
   const displayDomain = "clickandlove.app";
@@ -67,9 +70,21 @@ export default function OpenGraphPreview({ formData }: OpenGraphPreviewProps) {
   // rosas en todas las invitaciones). Se usa un bloque borgoña neutro.
   const ogPlaceholder = `data:image/svg+xml;utf8,${encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' width='1200' height='630'><rect width='1200' height='630' fill='#7A002A'/></svg>")}`;
   const imageUrl =
+    formData.ogImagenUrl ||
     formData.fotoPortadaUrl ||
     formData.fotoActualUrl ||
     ogPlaceholder;
+
+  // Fotos del evento entre las que se puede elegir la imagen para compartir.
+  // Si se sube una foto nueva en su sección, aparece aquí sola.
+  const opcionesImagen = [
+    { etiqueta: "Portada", url: formData.fotoPortadaUrl },
+    { etiqueta: "Actual", url: formData.fotoActualUrl },
+    { etiqueta: "Infancia", url: formData.fotoInfanciaUrl },
+    { etiqueta: "Zapato 1", url: formData.fotoZapato1Url },
+    { etiqueta: "Zapato 2", url: formData.fotoZapato2Url },
+    { etiqueta: "Cierre", url: formData.fotoCierreUrl },
+  ].filter((o) => !!o.url) as { etiqueta: string; url: string }[];
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(fullUrl);
@@ -141,6 +156,93 @@ export default function OpenGraphPreview({ formData }: OpenGraphPreviewProps) {
       <p className="text-xs text-stone-500">
         Así es como tus invitados verán la tarjeta con imagen, título y enlace al compartir la invitación por WhatsApp, Facebook o mensajes directos:
       </p>
+
+      {/* ──────────────────────────────────────────────────────────
+          EDITAR LA TARJETA: todo lo que escribas o elijas aquí se ve
+          al instante en la vista previa de abajo y queda guardado al
+          darle a Guardar. Vacío = automático (lo de siempre).
+      ────────────────────────────────────────────────────────── */}
+      <div className="rounded-2xl border border-stone-200 bg-stone-50/70 p-4 space-y-4">
+        <p className="text-xs font-bold text-stone-800">
+          Editar tarjeta para compartir{" "}
+          <span className="font-medium text-stone-500">
+            — se ve en tiempo real abajo y se guarda con Guardar.
+          </span>
+        </p>
+
+        <div className="grid grid-cols-1 gap-3">
+          <div>
+            <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-1.5">
+              Título para compartir
+            </label>
+            <input
+              type="text"
+              value={formData.ogTitulo || ""}
+              onChange={(e) => updateField("ogTitulo", e.target.value)}
+              placeholder={tituloAuto}
+              className="w-full px-3 py-2 rounded-lg border border-gray-200 bg-white text-xs text-gray-900"
+            />
+            <p className="text-[11px] text-stone-400 mt-1">
+              Vacío = automático: {tituloAuto}
+            </p>
+          </div>
+
+          <div>
+            <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-1.5">
+              Descripción para compartir
+            </label>
+            <textarea
+              rows={2}
+              value={formData.ogDescripcion || ""}
+              onChange={(e) => updateField("ogDescripcion", e.target.value)}
+              placeholder={descripcionAuto}
+              className="w-full px-3 py-2 rounded-lg border border-gray-200 bg-white text-xs text-gray-900 resize-y"
+            />
+            <p className="text-[11px] text-stone-400 mt-1">
+              Vacía = automática.
+            </p>
+          </div>
+        </div>
+
+        <div>
+          <p className="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-1.5">
+            Imagen para compartir
+          </p>
+          <div className="flex flex-wrap items-start gap-2">
+            <button
+              type="button"
+              onClick={() => updateField("ogImagenUrl", "")}
+              className={`px-3 py-2 rounded-xl border text-xs font-bold transition cursor-pointer ${
+                !formData.ogImagenUrl
+                  ? "border-[#7A002A] bg-[#7A002A] text-white"
+                  : "border-stone-200 bg-white text-stone-700 hover:border-stone-300"
+              }`}
+            >
+              Automática (portada)
+            </button>
+            {opcionesImagen.map((op) => (
+              <button
+                key={op.url}
+                type="button"
+                onClick={() => updateField("ogImagenUrl", op.url)}
+                title={op.etiqueta}
+                className={`flex flex-col items-center gap-1 p-1.5 rounded-xl border transition cursor-pointer ${
+                  formData.ogImagenUrl === op.url
+                    ? "border-[#7A002A] ring-2 ring-[#7A002A]/30 bg-white"
+                    : "border-stone-200 bg-white hover:border-stone-300"
+                }`}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={op.url} alt={op.etiqueta} className="w-20 h-12 object-cover rounded-lg" />
+                <span className="text-[10px] font-bold text-stone-700">{op.etiqueta}</span>
+              </button>
+            ))}
+          </div>
+          <p className="text-[11px] text-stone-400 mt-1.5">
+            Si subes una foto nueva en su sección, aparecerá aquí para elegirla. La foto elegida es la que usa la tarjeta real al compartir, dentro de su diseño 1200×630.
+          </p>
+        </div>
+      </div>
 
       {/* ──────────────────────────────────────────────────────────
           CONTENEDOR DE LA VISTA PREVIA

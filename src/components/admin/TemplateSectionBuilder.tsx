@@ -52,6 +52,7 @@ interface TemplateSectionBuilderProps {
   ) => Promise<void>;
   uploadingS3: boolean;
   uploadingField: string | null;
+  uploadEstado?: { field: string; estado: "ok" | "error"; mensaje?: string } | null;
   formatFormalDate: (dateInput: string | Date, lang?: string) => any;
   computeRsvpPhrases: (eventDateInput: string | Date, dias: number) => any;
   onOpenTemplatePicker?: () => void;
@@ -213,6 +214,7 @@ export default function TemplateSectionBuilder({
   handleFileUpload,
   uploadingS3,
   uploadingField,
+  uploadEstado,
   formatFormalDate,
   computeRsvpPhrases,
   onOpenTemplatePicker,
@@ -510,7 +512,7 @@ export default function TemplateSectionBuilder({
       ══════════════════════════════════════════════════════════════════════ */}
       <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-start">
         {/* Menú vertical de secciones (como el editor de templates) */}
-        <div className="md:col-span-4 space-y-1.5 bg-stone-100 p-2 rounded-2xl border border-stone-200">
+        <div className="md:col-span-4 xl:col-span-3 space-y-1.5 bg-stone-100 p-2 rounded-2xl border border-stone-200">
           <span className="text-[10px] font-bold uppercase tracking-wider text-stone-400 px-3 py-1 block">
             Secciones de la Invitación
           </span>
@@ -553,7 +555,7 @@ export default function TemplateSectionBuilder({
         </div>
 
         {/* Formulario de la sección activa (una a la vez, sin pared de acordeones) */}
-        <div className="md:col-span-8 space-y-4">
+        <div className="md:col-span-8 xl:col-span-9 space-y-4">
         {SECCIONES_QUINCE_ROSADO.map((sec) => {
           if (sec.id !== activeSection) return null;
           const isEnabled = checkSectionEnabled(sec.id);
@@ -715,7 +717,7 @@ export default function TemplateSectionBuilder({
                                 ) : (
                                   <Upload className="w-3.5 h-3.5" />
                                 )}
-                                <span>Cambiar Foto</span>
+                                <span>{uploadingS3 && uploadingField === "fotoPortadaUrl" ? "Subiendo..." : "Cambiar Foto"}</span>
                                 <input
                                   type="file"
                                   accept="image/*"
@@ -724,6 +726,12 @@ export default function TemplateSectionBuilder({
                                   className="hidden"
                                 />
                               </label>
+                              {uploadEstado?.field === "fotoPortadaUrl" && uploadEstado.estado === "ok" && (
+                                <span className="text-[11px] font-bold text-emerald-700">✓ Foto subida</span>
+                              )}
+                              {uploadEstado?.field === "fotoPortadaUrl" && uploadEstado.estado === "error" && (
+                                <span className="text-[11px] font-bold text-red-600">✗ {uploadEstado.mensaje || "Error al subir"}</span>
+                              )}
                               <input
                                 type="text"
                                 value={formData.fotoPortadaUrl}
@@ -943,7 +951,7 @@ export default function TemplateSectionBuilder({
                               ) : (
                                 <Upload className="w-3 h-3" />
                               )}
-                              <span>Subir Foto</span>
+                              <span>{uploadingS3 && uploadingField === "fotoInfanciaUrl" ? "Subiendo..." : "Subir Foto"}</span>
                               <input
                                 type="file"
                                 accept="image/*"
@@ -952,6 +960,12 @@ export default function TemplateSectionBuilder({
                                 className="hidden"
                               />
                             </label>
+                            {uploadEstado?.field === "fotoInfanciaUrl" && uploadEstado.estado === "ok" && (
+                              <span className="text-[11px] font-bold text-emerald-700">✓ Foto subida</span>
+                            )}
+                            {uploadEstado?.field === "fotoInfanciaUrl" && uploadEstado.estado === "error" && (
+                              <span className="text-[11px] font-bold text-red-600">✗ {uploadEstado.mensaje || "Error al subir"}</span>
+                            )}
                           </div>
                         </div>
 
@@ -978,7 +992,7 @@ export default function TemplateSectionBuilder({
                               ) : (
                                 <Upload className="w-3 h-3" />
                               )}
-                              <span>Subir Foto</span>
+                              <span>{uploadingS3 && uploadingField === "fotoActualUrl" ? "Subiendo..." : "Subir Foto"}</span>
                               <input
                                 type="file"
                                 accept="image/*"
@@ -987,6 +1001,12 @@ export default function TemplateSectionBuilder({
                                 className="hidden"
                               />
                             </label>
+                            {uploadEstado?.field === "fotoActualUrl" && uploadEstado.estado === "ok" && (
+                              <span className="text-[11px] font-bold text-emerald-700">✓ Foto subida</span>
+                            )}
+                            {uploadEstado?.field === "fotoActualUrl" && uploadEstado.estado === "error" && (
+                              <span className="text-[11px] font-bold text-red-600">✗ {uploadEstado.mensaje || "Error al subir"}</span>
+                            )}
                           </div>
                         </div>
                       </div>
@@ -1021,7 +1041,7 @@ export default function TemplateSectionBuilder({
                               ) : (
                                 <Upload className="w-3.5 h-3.5" />
                               )}
-                              <span>Subir Foto</span>
+                              <span>{uploadingS3 && uploadingField === "fotoZapato1Url" ? "Subiendo..." : "Subir Foto"}</span>
                               <input
                                 type="file"
                                 accept="image/*"
@@ -1030,6 +1050,12 @@ export default function TemplateSectionBuilder({
                                 className="hidden"
                               />
                             </label>
+                            {uploadEstado?.field === "fotoZapato1Url" && uploadEstado.estado === "ok" && (
+                              <span className="text-[11px] font-bold text-emerald-700">✓ Foto subida</span>
+                            )}
+                            {uploadEstado?.field === "fotoZapato1Url" && uploadEstado.estado === "error" && (
+                              <span className="text-[11px] font-bold text-red-600">✗ {uploadEstado.mensaje || "Error al subir"}</span>
+                            )}
                             <input
                               type="text"
                               value={formData.fotoZapato1Url || ""}
@@ -1550,7 +1576,7 @@ export default function TemplateSectionBuilder({
                               ) : (
                                 <Upload className="w-3.5 h-3.5" />
                               )}
-                              <span>Subir Foto</span>
+                              <span>{uploadingS3 && uploadingField === "fotoZapato2Url" ? "Subiendo..." : "Subir Foto"}</span>
                               <input
                                 type="file"
                                 accept="image/*"
@@ -1559,6 +1585,12 @@ export default function TemplateSectionBuilder({
                                 className="hidden"
                               />
                             </label>
+                            {uploadEstado?.field === "fotoZapato2Url" && uploadEstado.estado === "ok" && (
+                              <span className="text-[11px] font-bold text-emerald-700">✓ Foto subida</span>
+                            )}
+                            {uploadEstado?.field === "fotoZapato2Url" && uploadEstado.estado === "error" && (
+                              <span className="text-[11px] font-bold text-red-600">✗ {uploadEstado.mensaje || "Error al subir"}</span>
+                            )}
                             <input
                               type="text"
                               value={formData.fotoZapato2Url || ""}
@@ -1919,7 +1951,7 @@ export default function TemplateSectionBuilder({
                               ) : (
                                 <Upload className="w-3.5 h-3.5" />
                               )}
-                              <span>Subir Retrato</span>
+                              <span>{uploadingS3 && uploadingField === "fotoCierreUrl" ? "Subiendo..." : "Subir Retrato"}</span>
                               <input
                                 type="file"
                                 accept="image/*"
@@ -1928,6 +1960,12 @@ export default function TemplateSectionBuilder({
                                 className="hidden"
                               />
                             </label>
+                            {uploadEstado?.field === "fotoCierreUrl" && uploadEstado.estado === "ok" && (
+                              <span className="text-[11px] font-bold text-emerald-700">✓ Foto subida</span>
+                            )}
+                            {uploadEstado?.field === "fotoCierreUrl" && uploadEstado.estado === "error" && (
+                              <span className="text-[11px] font-bold text-red-600">✗ {uploadEstado.mensaje || "Error al subir"}</span>
+                            )}
                             <input
                               type="text"
                               value={formData.fotoCierreUrl || ""}
@@ -1964,7 +2002,7 @@ export default function TemplateSectionBuilder({
                               ) : (
                                 <Upload className="w-3.5 h-3.5" />
                               )}
-                              <span>Subir Audio MP3</span>
+                              <span>{uploadingS3 && uploadingField === "musicaUrl" ? "Subiendo..." : "Subir Audio MP3"}</span>
                               <input
                                 type="file"
                                 accept="audio/*"
@@ -1973,6 +2011,12 @@ export default function TemplateSectionBuilder({
                                 className="hidden"
                               />
                             </label>
+                            {uploadEstado?.field === "musicaUrl" && uploadEstado.estado === "ok" && (
+                              <span className="text-[11px] font-bold text-emerald-700">✓ Audio subido</span>
+                            )}
+                            {uploadEstado?.field === "musicaUrl" && uploadEstado.estado === "error" && (
+                              <span className="text-[11px] font-bold text-red-600">✗ {uploadEstado.mensaje || "Error al subir"}</span>
+                            )}
                             <input
                               type="text"
                               value={formData.musicaUrl || ""}

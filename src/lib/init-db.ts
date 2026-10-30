@@ -97,6 +97,9 @@ export async function ensurePostgresTables(): Promise<boolean> {
           "fotoCierreUrl" TEXT,
           "fotoZapato1Url" TEXT,
           "fotoZapato2Url" TEXT,
+          "ogTitulo" TEXT,
+          "ogDescripcion" TEXT,
+          "ogImagenUrl" TEXT,
           "musicaUrl" TEXT,
           "musicaTitulo" TEXT,
           "reproducirMusicaAlAbrir" BOOLEAN DEFAULT true,
@@ -278,6 +281,9 @@ export async function ensurePostgresTables(): Promise<boolean> {
       // Marca demo: columna en tablas viejas + las 3 invitaciones de muestra del evento (idempotente)
       `ALTER TABLE "Evento" ADD COLUMN IF NOT EXISTS "esDemo" BOOLEAN NOT NULL DEFAULT false;`,
       `ALTER TABLE "Evento" ADD COLUMN IF NOT EXISTS "musicaTitulo" TEXT;`,
+      `ALTER TABLE "Evento" ADD COLUMN IF NOT EXISTS "ogTitulo" TEXT;`,
+      `ALTER TABLE "Evento" ADD COLUMN IF NOT EXISTS "ogDescripcion" TEXT;`,
+      `ALTER TABLE "Evento" ADD COLUMN IF NOT EXISTS "ogImagenUrl" TEXT;`,
       `UPDATE "Evento" SET "esDemo" = true WHERE slug IN ('quinceano-evento', 'quinceano-evento2', 'quinceano-tarjeta');`,
       // Unificación nombres 2026-10-28 (catálogo público) -> tarjetas admin: solo renombra
       // si el nombre sigue siendo el viejo editorial; un rename manual del admin se respeta.

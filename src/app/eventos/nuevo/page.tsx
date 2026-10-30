@@ -47,8 +47,8 @@ const DEMO_INITIAL_VALUES = {
   recepcionNombre: "Gran Salón Diamante",
 };
 
-// Corte e itinerario de ejemplo con los que arranca el formulario (hallazgo 15):
-// si siguen intactos al guardar, el guard lo bloquea aunque el nombre ya haya cambiado.
+// Corte e itinerario de ejemplo con los que arranca el formulario (hallazgo 15).
+// Desde 2026-10-30 (orden Abraham) YA NO bloquean el guardado: solo el slug bloquea.
 const DEMO_ITINERARIO = [
   { hora: "4:00 PM", titulo: "Llegada de Invitados", tipoIcono: "welcome" },
   { hora: "5:00 PM", titulo: "Ceremonia Religiosa", tipoIcono: "entrance" },
@@ -103,7 +103,15 @@ function NuevoEventoContent() {
   const [isSaving, setIsSaving] = useState(false);
   const [uploadingS3, setUploadingS3] = useState(false);
   const [uploadingField, setUploadingField] = useState<string | null>(null);
+  // Resultado de la última subida, por campo: se muestra junto al botón
+  // ("✓ Foto subida" / "✗ error") hasta la siguiente subida.
+  const [uploadEstado, setUploadEstado] = useState<{
+    field: string;
+    estado: "ok" | "error";
+    mensaje?: string;
+  } | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [slugError, setSlugError] = useState(false);
   const [saveSuccessMsg, setSaveSuccessMsg] = useState<string | null>(null);
   const [showMobilePreview, setShowMobilePreview] = useState(false);
   // Título tecleado (o venido por ?nombre=): la invitación ya es de un cliente real
@@ -585,6 +593,7 @@ function NuevoEventoContent() {
   const updateField = (field: keyof InvitationData, value: any) => {
     // El título tecleado marca la invitación como personalizada (ver handleSelectTemplate)
     if (field === "titulo") setTituloEditado(true);
+    if (field === "slug") setSlugError(false);
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
@@ -982,9 +991,13 @@ function NuevoEventoContent() {
   ) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    // Guardar el input: al final se limpia para poder volver a elegir el
+    // MISMO archivo (si no, el navegador no dispara onChange y "no pasa nada").
+    const inputEl = e.target;
 
     setUploadingS3(true);
     setUploadingField(field);
+    setUploadEstado(null);
     setErrorMsg(null);
 
     try {
@@ -1053,12 +1066,15 @@ function NuevoEventoContent() {
 
       // 3. Guardar URL final del archivo en el estado
       updateField(field, data.fileUrl);
+      setUploadEstado({ field, estado: "ok" });
     } catch (err: any) {
       console.error(err);
       setErrorMsg(err.message || "Error al subir archivo a S3");
+      setUploadEstado({ field, estado: "error", mensaje: err.message || "Error al subir archivo a S3" });
     } finally {
       setUploadingS3(false);
       setUploadingField(null);
+      if (inputEl) inputEl.value = "";
     }
   };
 
@@ -1120,22 +1136,21 @@ function NuevoEventoContent() {
       .finally(() => setIsLoadingEdit(false));
   }, [editSlug]);
 
-  // Hallazgo 15: ¿el formulario sigue con datos de ejemplo?
-  // Basta con que el corte o el itinerario sigan siendo los demo para bloquear:
-  // cambiar solo el nombre ya no publica el corte de Magdalena/Jeremiah.
-  const isStillDemoData = () =>
-    (formData.titulo === DEMO_INITIAL_VALUES.titulo &&
-      formData.slug === DEMO_INITIAL_VALUES.slug &&
-      formData.telefonoWhatsappRsvp === DEMO_INITIAL_VALUES.telefonoWhatsappRsvp &&
-      formData.recepcionNombre === DEMO_INITIAL_VALUES.recepcionNombre) ||
-    JSON.stringify(formData.corteHonorJson) === JSON.stringify(DEMO_CORTE_HONOR) ||
-    JSON.stringify(formData.itinerarioJson) === JSON.stringify(DEMO_ITINERARIO);
+  // Orden Abraham 2026-10-30: el Corte y el Itinerario YA NO bloquean el guardado.
+  // Lo único que bloquea en modo crear es el enlace (slug): si sigue siendo el
+  // de ejemplo ("mi-celebracion") o está vacío, se marca en rojo y no se publica.
+  const isDemoSlug = () =>
+    !formData.slug || formData.slug === DEMO_INITIAL_VALUES.slug;
 
   // Guardar en la base de datos (POST para crear, PUT para actualizar)
   const handleSave = async () => {
-    // Hallazgo 15: en modo crear, no publicar con los datos de ejemplo intactos
-    if (!effectiveEditMode && isStillDemoData()) {
-      setErrorMsg("⚠️ Estás usando los datos de ejemplo: personalízalos antes de publicar.");
+    // Orden Abraham 2026-10-30: en modo crear, lo único que bloquea es el enlace.
+    // Corte e Itinerario ya no bloquean: se guardan tal como estén.
+    setSlugError(false);
+    if (!effectiveEditMode && isDemoSlug()) {
+      setSlugError(true);
+      setEditorMode("settings");
+      setErrorMsg("⚠️ Cambia el enlace: todavía es el de ejemplo (mi-celebracion). Pon el enlace real de la invitación y vuelve a guardar.");
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
@@ -1174,6 +1189,8 @@ function NuevoEventoContent() {
           if (checkRes.ok) {
             const checkData = await checkRes.json();
             if (checkData.evento) {
+              setSlugError(true);
+              setEditorMode("settings");
               setErrorMsg("⚠️ Ya existe una invitación con este enlace (/" + formData.slug + "). Elige otro enlace para no sobrescribirla.");
               window.scrollTo({ top: 0, behavior: "smooth" });
               setIsSaving(false);
@@ -1212,6 +1229,13 @@ function NuevoEventoContent() {
           shortLink: shortCode ? `${origin}/m/${shortCode}` : "",
           titulo: formData.titulo,
         });
+        // Al crear con éxito, el editor pasa a modo edición en esta misma sesión:
+        // el siguiente Guardar usa PUT y ya no choca con el bloqueo de slug existente.
+        // También se deja la URL en ?editar=slug para que un recargo siga en modo edición.
+        setExistingEventMode(true);
+        try {
+          window.history.replaceState(null, "", `/eventos/nuevo?editar=${encodeURIComponent(formData.slug)}`);
+        } catch {}
       }
       setIsSaving(false);
     } catch (err: any) {
@@ -1305,7 +1329,7 @@ function NuevoEventoContent() {
 
       {/* Alerta de éxito al guardar cambios */}
       {saveSuccessMsg && (
-        <div className="max-w-7xl mx-auto px-6 mt-4">
+        <div className="max-w-7xl xl:max-w-[1720px] 2xl:max-w-[1920px] mx-auto px-6 mt-4">
           <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-800 text-xs font-semibold flex justify-between items-center shadow-sm">
             <span>✅ {saveSuccessMsg}</span>
             <button
@@ -1320,7 +1344,7 @@ function NuevoEventoContent() {
 
       {/* Alerta de error si ocurre */}
       {errorMsg && (
-        <div className="max-w-7xl mx-auto px-6 mt-4">
+        <div className="max-w-7xl xl:max-w-[1720px] 2xl:max-w-[1920px] mx-auto px-6 mt-4">
           <div className="p-4 bg-rose-50 border border-rose-200 rounded-xl text-rose-800 text-xs flex justify-between items-center">
             <span>{errorMsg}</span>
             <button onClick={() => setErrorMsg(null)} className="font-bold ml-2">
@@ -1332,7 +1356,7 @@ function NuevoEventoContent() {
 
       {/* Hallazgo 15: aviso permanente en modo crear — el formulario parte de datos de ejemplo */}
       {!effectiveEditMode && (
-        <div className="max-w-7xl mx-auto px-6 mt-4">
+        <div className="max-w-7xl xl:max-w-[1720px] 2xl:max-w-[1920px] mx-auto px-6 mt-4">
           <div className="p-3 bg-amber-50 border border-amber-200 rounded-xl text-amber-800 text-xs font-medium shadow-sm">
             📝 Estás partiendo de datos de ejemplo: cambia el nombre, el enlace, el teléfono y el salón por los datos reales de tu evento antes de publicar.
           </div>
@@ -1341,7 +1365,7 @@ function NuevoEventoContent() {
 
       {/* Selector de plantillas en la misma página (sin popup): tarjetas grandes,
           nombre siempre visible debajo de la foto. Al elegir, se aplica y se cierra. */}
-      <div id="selector-plantilla" className="max-w-7xl mx-auto px-4 sm:px-6 mt-6 scroll-mt-24">
+      <div id="selector-plantilla" className="max-w-7xl xl:max-w-[1720px] 2xl:max-w-[1920px] mx-auto px-4 sm:px-6 mt-6 scroll-mt-24">
         <TemplatePickerGrid
           currentTemplateId={formData.estiloPlantilla || "QUINCE_ROSADO"}
           onSelectTemplate={(newId) => {
@@ -1354,9 +1378,9 @@ function NuevoEventoContent() {
       </div>
 
       {/* Contenedor principal: Formulario a la izquierda + Live Phone Simulator a la derecha */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <div className="max-w-7xl xl:max-w-[1720px] 2xl:max-w-[1920px] mx-auto px-4 sm:px-6 py-6 grid grid-cols-1 lg:grid-cols-12 gap-8">
         {/* Formulario Wizard / Organizador Modular (7 Columnas en escritorio) */}
-        <div className={`lg:col-span-7 ${showMobilePreview ? "hidden lg:block" : "block"}`}>
+        <div className={`lg:col-span-7 xl:col-span-8 ${showMobilePreview ? "hidden lg:block" : "block"}`}>
           {/* Selector de Pestañas Unificado: Diseño y Secciones vs Ajustes del Evento */}
           <div className="flex items-center justify-between bg-white p-1 rounded-2xl border border-stone-200 shadow-xs mb-6">
             <button
@@ -1393,6 +1417,7 @@ function NuevoEventoContent() {
               handleFileUpload={handleFileUpload}
               uploadingS3={uploadingS3}
               uploadingField={uploadingField}
+              uploadEstado={uploadEstado}
               formatFormalDate={formatFormalDate}
               computeRsvpPhrases={computeRsvpPhrases}
               onOpenTemplatePicker={openTemplateGrid}
@@ -1405,6 +1430,7 @@ function NuevoEventoContent() {
               computeRsvpPhrases={computeRsvpPhrases}
               handleRsvpDiasChange={handleRsvpDiasChange}
               isEditMode={effectiveEditMode}
+              slugError={slugError}
               handleSave={handleSave}
               isSaving={isSaving}
               onSelectTemplate={handleSelectTemplate}
@@ -1414,7 +1440,7 @@ function NuevoEventoContent() {
       </div>
 
         {/* Live Simulator en Tiempo Real (5 Columnas en escritorio) */}
-        <div className={`lg:col-span-5 ${showMobilePreview ? "block" : "hidden lg:block"}`}>
+        <div className={`lg:col-span-5 xl:col-span-4 ${showMobilePreview ? "block" : "hidden lg:block"}`}>
           {showMobilePreview && (
             <button
               type="button"
@@ -1586,7 +1612,7 @@ function NuevoEventoContent() {
                 onClick={() => setCreatedLinks(null)}
                 className="w-full sm:w-auto px-4 py-2.5 text-center bg-stone-200 hover:bg-stone-300 text-stone-700 rounded-xl text-xs font-semibold transition"
               >
-                Cerrar
+                Seguir modificando
               </button>
             </div>
           </div>

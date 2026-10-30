@@ -35,6 +35,9 @@ export interface InvitationData {
   fotoCierreUrl?: string | null;
   fotoZapato1Url?: string | null;
   fotoZapato2Url?: string | null;
+  ogTitulo?: string | null;
+  ogDescripcion?: string | null;
+  ogImagenUrl?: string | null;
   musicaUrl?: string | null;
   musicaTitulo?: string | null;
   reproducirMusicaAlAbrir?: boolean;

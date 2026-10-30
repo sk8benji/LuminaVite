@@ -109,6 +109,9 @@ model Evento {
   fotoCierreUrl      String?         // Foto de despedida / cierre
   fotoZapato1Url     String?         // Foto Zapato 1 (Zapatilla de cristal / Ceremonia)
   fotoZapato2Url     String?         // Foto Zapato 2 (Zapatilla en cojín / Corte y Damas)
+  ogTitulo           String?         // Título personalizado de la tarjeta al compartir (OpenGraph); vacío = automático
+  ogDescripcion      String?         // Descripción personalizada de la tarjeta al compartir; vacía = automática
+  ogImagenUrl        String?         // Imagen elegida para la tarjeta al compartir; vacía = foto de portada
   musicaUrl          String?         // URL del audio MP3 en S3
   musicaTitulo         String?         // Título de la canción que suena en la invitación
   reproducirMusicaAlAbrir Boolean    @default(true) // Reproducir automáticamente al abrir el sobre

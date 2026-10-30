@@ -33,6 +33,7 @@ interface EventSettingsConfigProps {
   };
   handleRsvpDiasChange: (dias: number) => void;
   isEditMode: boolean;
+  slugError?: boolean;
   handleSave: () => void;
   isSaving: boolean;
   onSelectTemplate?: (tempKey: TemplateId) => void;
@@ -82,6 +83,7 @@ export default function EventSettingsConfig({
   computeRsvpPhrases,
   handleRsvpDiasChange,
   isEditMode,
+  slugError,
   handleSave,
   isSaving,
   onOpenTemplatePicker,
@@ -141,7 +143,7 @@ export default function EventSettingsConfig({
             <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-1.5">
               Enlace Personalizado (Slug de la Invitación)
             </label>
-            <div className="flex items-center rounded-xl border border-stone-200 bg-stone-50/50 overflow-hidden focus-within:border-[#7A002A] focus-within:ring-1 focus-within:ring-[#7A002A]">
+            <div className={`flex items-center rounded-xl border overflow-hidden ${slugError ? "border-red-500 bg-red-50 ring-1 ring-red-500" : "border-stone-200 bg-stone-50/50 focus-within:border-[#7A002A] focus-within:ring-1 focus-within:ring-[#7A002A]"}`}>
               <span className="px-3 py-2.5 text-xs text-stone-400 bg-stone-100/60 border-r border-stone-200 select-none">
                 clickandlove.app/
               </span>
@@ -171,6 +173,11 @@ export default function EventSettingsConfig({
             ) : (
               <p className="text-[11px] text-stone-400 mt-1">
                 Solo letras minúsculas, números y guiones.
+              </p>
+            )}
+            {slugError && (
+              <p className="text-[11px] text-red-600 font-semibold mt-1">
+                ⚠️ Este enlace todavía es el de ejemplo (mi-celebracion). Cámbialo por el enlace real antes de publicar.
               </p>
             )}
           </div>
@@ -255,18 +262,13 @@ export default function EventSettingsConfig({
       </div>
 
       {/* ──────────────────────────────────────────────────────────
-          TARJETA 2: PREVISUALIZADOR DE OPENGRAPH (WHATSAPP & FACEBOOK)
-      ────────────────────────────────────────────────────────── */}
-      <OpenGraphPreview formData={formData} />
-
-      {/* ──────────────────────────────────────────────────────────
-          TARJETA 3: CONFIRMACIÓN DE ASISTENCIA (RSVP) Y NOTIFICACIONES
+          TARJETA 2: CONFIRMACIÓN DE ASISTENCIA (RSVP) Y NOTIFICACIONES
       ────────────────────────────────────────────────────────── */}
       <div className="bg-white rounded-2xl p-6 border border-stone-200 shadow-xs space-y-5">
         <div className="border-b border-stone-100 pb-3 flex items-center gap-2">
           <Bell className="w-4 h-4 text-[#7A002A]" />
           <h3 className="text-xs font-bold text-stone-900 uppercase tracking-wider">
-            3. Confirmaciones RSVP y Contacto de la Anfitriona
+            2. Confirmaciones RSVP y Contacto de la Anfitriona
           </h3>
         </div>
 
@@ -545,13 +547,13 @@ export default function EventSettingsConfig({
       </div>
 
       {/* ──────────────────────────────────────────────────────────
-          TARJETA 4: BANNER DE CONTACTO (BARRA FIJA COMERCIAL)
+          TARJETA 3: BANNER DE CONTACTO (BARRA FIJA COMERCIAL)
       ────────────────────────────────────────────────────────── */}
       <div className="bg-white rounded-2xl p-6 border border-stone-200 shadow-xs space-y-5">
         <div className="border-b border-stone-100 pb-3 flex items-center gap-2">
           <Megaphone className="w-4 h-4 text-[#7A002A]" />
           <h3 className="text-xs font-bold text-stone-900 uppercase tracking-wider">
-            4. Banner de Contacto (Barra Fija en la Invitación)
+            3. Banner de Contacto (Barra Fija en la Invitación)
           </h3>
         </div>
 
@@ -629,6 +631,12 @@ export default function EventSettingsConfig({
           </>
         )}
       </div>
+
+      {/* ──────────────────────────────────────────────────────────
+          TARJETA 4: PREVISUALIZADOR DE OPENGRAPH (WHATSAPP & FACEBOOK)
+          Al final: es solo una vista previa, no un ajuste.
+      ────────────────────────────────────────────────────────── */}
+      <OpenGraphPreview formData={formData} updateField={updateField} />
 
       {/* Botón flotante / inferior de guardar cambios */}
       <div className="pt-2 flex justify-end">

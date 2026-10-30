@@ -122,6 +122,9 @@ async function getEventoData(rawSlug: string): Promise<InvitationData | null> {
       fotoCierreUrl: dbEvento.fotoCierreUrl,
       fotoZapato1Url: (dbEvento as any).fotoZapato1Url ?? null,
       fotoZapato2Url: (dbEvento as any).fotoZapato2Url ?? null,
+      ogTitulo: (dbEvento as any).ogTitulo ?? null,
+      ogDescripcion: (dbEvento as any).ogDescripcion ?? null,
+      ogImagenUrl: (dbEvento as any).ogImagenUrl ?? null,
       musicaUrl: dbEvento.musicaUrl,
       musicaTitulo: (dbEvento as any).musicaTitulo ?? null,
       reproducirMusicaAlAbrir: dbEvento.reproducirMusicaAlAbrir !== false,
@@ -249,11 +252,13 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
   }
 
   const tituloEvento = `${tipoTexto}: ${data.titulo}`;
-  const title = `${tituloEvento} • ¡Tú estás invitado!`;
+  const title = (data as any).ogTitulo?.trim() || `${tituloEvento} • ¡Tú estás invitado!`;
 
-  const description = fechaTexto
-    ? `${tituloEvento} • 📅 ${fechaTexto} • ✨ ¡Estás cordialmente invitado a celebrar con nosotros!`
-    : `${tituloEvento} • ✨ ¡Estás cordialmente invitado a celebrar con nosotros!`;
+  const description =
+    (data as any).ogDescripcion?.trim() ||
+    (fechaTexto
+      ? `${tituloEvento} • 📅 ${fechaTexto} • ✨ ¡Estás cordialmente invitado a celebrar con nosotros!`
+      : `${tituloEvento} • ✨ ¡Estás cordialmente invitado a celebrar con nosotros!`);
 
   // Asegurar que la imagen sea URL absoluta con https para Facebook y WhatsApp
   const baseUrl =
