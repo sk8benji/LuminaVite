@@ -809,7 +809,7 @@ export default function BlueButterflyTemplate({
                 {/* Frase emotiva */}
                 <p className="font-cormorant italic text-[13px] text-slate-600 my-2 leading-relaxed">
                   {templateConfig.fraseBiblica ||
-                    data.frasePersonalizada ||
+                    (isEn && data.frasePersonalizadaEn ? data.frasePersonalizadaEn : data.frasePersonalizada) ||
                     (isEn
                       ? "“I thank God for this special day and invite you to share this magical night with me.”"
                       : "“Doy gracias a Dios por este día tan especial y te invito a compartir conmigo esta noche mágica.”")}
@@ -926,7 +926,7 @@ export default function BlueButterflyTemplate({
         <section className="px-8 py-4 text-center z-20">
           <p className="font-cormorant italic text-base leading-relaxed text-slate-700">
             {templateConfig.fraseBiblica ||
-              data.frasePersonalizada ||
+              (isEn && data.frasePersonalizadaEn ? data.frasePersonalizadaEn : data.frasePersonalizada) ||
               (isEn
                 ? "“I thank God for granting me the blessing of celebrating my sweet fifteen, and my parents for guiding every step of my journey with unconditional love.”"
                 : "“Doy gracias a Dios por concederme la dicha de celebrar mis quince primaveras, y a mis padres por guiar cada uno de mis pasos con amor incondicional.”")}
@@ -1210,11 +1210,11 @@ export default function BlueButterflyTemplate({
                 {isEn ? "Dress Code" : "Código de Vestir"}
               </p>
               <p className="font-serif-roman text-xs sm:text-[13px] font-bold text-[#2F5A84] tracking-[0.15em] uppercase mt-1">
-                {data.dressCodeEtiqueta || data.dressCodeTitulo || (isEn ? "Formal Attire" : "Formal & Rigurosa Etiqueta")}
+                {isEn ? (data.dressCodeTituloEn || data.dressCodeEtiqueta || data.dressCodeTitulo || "Formal Attire") : (data.dressCodeEtiqueta || data.dressCodeTitulo || "Formal & Rigurosa Etiqueta")}
               </p>
               <p className="font-cormorant italic text-[11px] sm:text-xs text-slate-600 leading-relaxed mt-2 max-w-[175px] mx-auto">
                 {data.dressCodeColoresReservados ||
-                  data.dressCodeNota ||
+                  (isEn && data.dressCodeNotaEn ? data.dressCodeNotaEn : data.dressCodeNota) ||
                   (isEn
                     ? "Please join us in your finest formal attire. Shades of sky blue and white are exclusively reserved for the quinceañera."
                     : "Acompáñanos luciendo tu mejor atuendo formal. Tonos azul celeste y blanco reservados exclusivamente para la quinceañera.")}
@@ -1346,7 +1346,7 @@ export default function BlueButterflyTemplate({
             {isEn ? "Gift Table / Wishing Well" : "Lluvia de Sobres"}
           </h3>
           <p className="font-cormorant italic text-sm text-slate-600 max-w-xs mx-auto mt-1">
-            {data.regalosMensaje ||
+            {(isEn && data.regalosMensajeEn ? data.regalosMensajeEn : data.regalosMensaje) ||
               (isEn
                 ? "“Your presence is our greatest gift. Should you wish to honor the quinceañera with a token of affection, a wishing well will be available at the reception.”"
                 : "“Tu presencia es nuestro mayor regalo. Si deseas tener un detalle con la quinceañera, dispondremos de un cofre en la recepción.”")}

@@ -168,6 +168,8 @@ async function getEventoData(rawSlug: string): Promise<InvitationData | null> {
       dressCodeTituloEn: (dbEvento as any).dressCodeTituloEn,
       dressCodeNota: dbEvento.dressCodeNota,
       dressCodeNotaEn: (dbEvento as any).dressCodeNotaEn,
+      emailOrganizador: (dbEvento as any).emailOrganizador ?? null,
+      aforoTotal: (dbEvento as any).aforoTotal ?? null,
       coloresReservados: dbEvento.coloresReservados,
       celebrationGuideline: dbEvento.celebrationGuideline,
       wishlistUrl: dbEvento.wishlistUrl,

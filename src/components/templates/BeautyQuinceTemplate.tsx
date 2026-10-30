@@ -256,7 +256,7 @@ export default function BeautyQuinceTemplate({
                     {formattedDate.replace(" AT ", " | ")}
                   </p>
                   <p className="text-[10px] leading-relaxed tracking-[0.08em] uppercase whitespace-pre-line mt-4" style={{ color: "#2A2A9C" }}>
-                    {data.frasePersonalizada || (isEn ? poemaEn : poemaEs)}
+                    {(isEn && data.frasePersonalizadaEn ? data.frasePersonalizadaEn : data.frasePersonalizada) || (isEn ? poemaEn : poemaEs)}
                   </p>
                 </div>
               </div>
@@ -567,7 +567,7 @@ export default function BeautyQuinceTemplate({
               <img src={A.rosaCampana} alt="Rosa Encantada" className="w-full h-auto block bg-transparent" style={{ background: "transparent" }} />
             </div>
             <span className="font-serif-roman block font-semibold" style={{ fontSize: "0.65rem", letterSpacing: "0.35em", color: "#8c733e", marginBottom: "4px" }}>DRESS CODE</span>
-            <h2 className="font-script" style={{ fontSize: "3rem", color: "#a81c1c", margin: 0, lineHeight: 1 }}>{data.dressCodeTitulo || "Dress Code"}</h2>
+            <h2 className="font-script" style={{ fontSize: "3rem", color: "#a81c1c", margin: 0, lineHeight: 1 }}>{isEn ? (data.dressCodeTituloEn || data.dressCodeTitulo || "Dress Code") : (data.dressCodeTitulo || "Dress Code")}</h2>
             <h4 className="font-serif-roman font-semibold" style={{ fontSize: "0.85rem", letterSpacing: "0.2em", color: "#0b1736", margin: "8px 0 16px" }}>{isEn ? "FORMAL & RIGUROSA ETIQUETA" : "FORMAL Y RIGUROSA ETIQUETA"}</h4>
             <div className="flex items-center justify-between w-full" style={{ marginTop: "10px" }}>
               <div style={{ width: "25%", flexShrink: 0 }}>

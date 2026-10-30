@@ -30,7 +30,7 @@ import {
 } from "lucide-react";
 import { extractCleanMapUrl } from "@/lib/mapsUrlCleaner";
 import { InvitationData } from "@/components/invitation/InvitationMobileView";
-import { SECCIONES_QUINCE_ROSADO, SeccionId, isSectionEnabledInEvent } from "@/config/templateSections";
+import { SECCIONES_QUINCE_ROSADO, SeccionId, isSectionEnabledInEvent, seccionesSoportadas } from "@/config/templateSections";
 import { TEMPLATES, TemplateId } from "@/lib/templates";
 import MiniaturaConMeta from "@/components/admin/MiniaturaConMeta";
 
@@ -232,6 +232,12 @@ export default function TemplateSectionBuilder({
   );
   const activeSection = activeSectionProp ?? internalSection;
   const setActiveSection = onActiveSectionChange ?? setInternalSection;
+  // Sincronización plantilla-secciones: la plantilla actual solo soporta
+  // algunos bloques; el resto se muestra desactivado y no se puede editar,
+  // porque la plantilla nunca los mostraría aunque se suba una foto.
+  const seccionesSoportadasIds = seccionesSoportadas((formData as any).estiloPlantilla);
+  const esSeccionSoportada = (id: string) =>
+    (seccionesSoportadasIds as string[]).includes(id);
   const activeSectionIndex = Math.max(
     0,
     SECCIONES_QUINCE_ROSADO.findIndex((s) => s.id === activeSection)
@@ -502,7 +508,7 @@ export default function TemplateSectionBuilder({
             Secciones de la invitación
           </h2>
           <p className="text-xs text-stone-500 mt-0.5">
-            Activa o desactiva cada bloque con el interruptor y edita sus contenidos en español e inglés.
+            Activa o desactiva cada bloque con el interruptor y edita sus contenidos en español e inglés. Las secciones que tu plantilla no incluye aparecen marcadas y no se pueden editar.
           </p>
         </div>
 
@@ -527,12 +533,16 @@ export default function TemplateSectionBuilder({
           {SECCIONES_QUINCE_ROSADO.map((sec) => {
             const isEnabled = checkSectionEnabled(sec.id);
             const isActive = activeSection === sec.id;
+            const isSupported = esSeccionSoportada(sec.id);
             return (
               <button
                 key={sec.id}
                 type="button"
-                onClick={() => setActiveSection(sec.id)}
-                className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold transition text-left cursor-pointer ${
+                disabled={!isSupported}
+                onClick={() => { if (isSupported) setActiveSection(sec.id); }}
+                className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold transition text-left ${
+                  isSupported ? "cursor-pointer" : "cursor-not-allowed opacity-50"
+                } ${
                   isActive
                     ? "bg-white shadow-sm border border-stone-200 text-stone-900"
                     : "text-stone-600 hover:bg-white/70"
@@ -556,6 +566,11 @@ export default function TemplateSectionBuilder({
                       Desactivada
                     </span>
                   )}
+                  {!isSupported && (
+                    <span className="block text-[10px] font-medium text-stone-400">
+                      No incluida en esta plantilla
+                    </span>
+                  )}
                 </span>
               </button>
             );
@@ -566,6 +581,30 @@ export default function TemplateSectionBuilder({
         <div className="md:col-span-8 xl:col-span-9 space-y-4">
         {SECCIONES_QUINCE_ROSADO.map((sec) => {
           if (sec.id !== activeSection) return null;
+          if (!esSeccionSoportada(sec.id)) {
+            return (
+              <div
+                key={sec.id}
+                className="rounded-2xl border border-amber-200 bg-amber-50 p-5"
+              >
+                <h3 className="text-base font-bold text-gray-900">
+                  Esta plantilla no incluye esta sección
+                </h3>
+                <p className="text-sm text-gray-600 mt-1">
+                  La sección «{sec.label}» no existe en esta plantilla, por eso
+                  no aparece en la invitación aunque esté activada. Lo que se
+                  suba o escriba aquí no se mostraría.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setActiveSection(seccionesSoportadasIds[0] ?? "portada")}
+                  className="mt-3 px-3 py-2 rounded-xl bg-[#7A002A] text-white text-xs font-bold hover:opacity-90 transition cursor-pointer"
+                >
+                  Ir a la primera sección disponible
+                </button>
+              </div>
+            );
+          }
           const isEnabled = checkSectionEnabled(sec.id);
           const isExpanded = true;
 

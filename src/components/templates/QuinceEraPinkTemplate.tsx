@@ -638,7 +638,7 @@ export default function QuinceEraPinkTemplate({
               </div>
             )}
             <p className="font-script text-4xl sm:text-5xl text-[#A63D57] max-w-md mx-auto leading-snug mt-7">
-              {data.frasePersonalizada ||
+              {(isEn && data.frasePersonalizadaEn ? data.frasePersonalizadaEn : data.frasePersonalizada) ||
                 (isEn
                   ? "I'm excited to share this special day with you."
                   : "Me emociona compartir este día tan especial contigo.")}

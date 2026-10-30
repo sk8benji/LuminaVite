@@ -143,6 +143,106 @@ export const SECCIONES_QUINCE_ROSADO: SeccionMeta[] = [
 ];
 
 /**
+ * Secciones que cada plantilla renderiza de verdad (auditoría 2026-10-30).
+ * Las plantillas fijas (BlueButterfly, BabyBlue, Miss15, EraPink, Blush,
+ * BeautyQuince) y la vista genérica NO tienen bloque de zapato (fotoZapatos1),
+ * ni de cojín (fotoZapatos2), ni de video de despedida: esos campos existen
+ * en el editor pero la plantilla nunca los muestra. BabyBlue tampoco tiene
+ * dedicatoria; ElegantRose tampoco; Coraline no tiene mesa de regalos ni
+ * corte; Fairytale (boda) no tiene dedicatoria ni corte. QuinceRosado es
+ * la única con las 13. Si una plantilla no está aquí, se listan las 13
+ * (comportamiento anterior) para no desactivar nada sin evidencia.
+ */
+const TODAS_MENOS_ZAPATOS_VIDEO: SeccionId[] = [
+  'portada',
+  'medallonFecha',
+  'dedicatoria',
+  'ubicaciones',
+  'dressCode',
+  'mesaRegalos',
+  'itinerario',
+  'corteHonor',
+  'cuentaRegresiva',
+  'musica',
+];
+
+export const SECCIONES_POR_PLANTILLA: Record<string, SeccionId[]> = {
+  QUINCE_ROSADO: [
+    'portada',
+    'medallonFecha',
+    'dedicatoria',
+    'fotoZapatos1',
+    'ubicaciones',
+    'dressCode',
+    'mesaRegalos',
+    'itinerario',
+    'fotoZapatos2',
+    'corteHonor',
+    'cuentaRegresiva',
+    'videoDespedida',
+    'musica',
+  ],
+  BLUE_BUTTERFLY: TODAS_MENOS_ZAPATOS_VIDEO,
+  MISS_15: TODAS_MENOS_ZAPATOS_VIDEO,
+  QUINCE_ERA_PINK: TODAS_MENOS_ZAPATOS_VIDEO,
+  BLUSH_PRINCESS: TODAS_MENOS_ZAPATOS_VIDEO,
+  BEAUTY_QUINCE: TODAS_MENOS_ZAPATOS_VIDEO,
+  PRINCESA_ROSA: TODAS_MENOS_ZAPATOS_VIDEO,
+  CLASICA_IMPERIAL: TODAS_MENOS_ZAPATOS_VIDEO,
+  ESMERALDA_ROYAL: TODAS_MENOS_ZAPATOS_VIDEO,
+  JARDIN_BOTANICA: TODAS_MENOS_ZAPATOS_VIDEO,
+  MINIMALISTA_EDITORIAL: TODAS_MENOS_ZAPATOS_VIDEO,
+  BABY_BLUE: [
+    'portada',
+    'medallonFecha',
+    'ubicaciones',
+    'dressCode',
+    'mesaRegalos',
+    'itinerario',
+    'corteHonor',
+    'cuentaRegresiva',
+    'musica',
+  ],
+  ELEGANT_ROSE: [
+    'portada',
+    'medallonFecha',
+    'ubicaciones',
+    'dressCode',
+    'mesaRegalos',
+    'itinerario',
+    'corteHonor',
+    'cuentaRegresiva',
+    'musica',
+  ],
+  CORALINE_MYSTICAL: [
+    'portada',
+    'medallonFecha',
+    'dedicatoria',
+    'ubicaciones',
+    'dressCode',
+    'itinerario',
+    'cuentaRegresiva',
+    'musica',
+  ],
+  FAIRYTALE_CHATEAU: [
+    'portada',
+    'medallonFecha',
+    'ubicaciones',
+    'dressCode',
+    'mesaRegalos',
+    'itinerario',
+    'cuentaRegresiva',
+    'musica',
+  ],
+};
+
+export function seccionesSoportadas(estiloPlantilla?: string | null): SeccionId[] {
+  const todas = SECCIONES_QUINCE_ROSADO.map((s) => s.id);
+  if (!estiloPlantilla) return todas;
+  return SECCIONES_POR_PLANTILLA[estiloPlantilla] ?? todas;
+}
+
+/**
  * Obtener estado de habilitación de una sección dado el objeto de invitación
  */
 export function isSectionEnabledInEvent(
