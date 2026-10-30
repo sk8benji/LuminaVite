@@ -38,6 +38,7 @@ type LandingPageProps = {
   demosText: string;
   demoCatalogUrl: string;
   demoCatalogLabel: string;
+  featuredDemos?: { slug: string; label: string }[];
   finalTitle: string;
   finalText: string;
   callLabel: string;
@@ -84,6 +85,10 @@ export default function LandingPage(props: LandingPageProps) {
     demosText,
     demoCatalogUrl,
     demoCatalogLabel,
+    featuredDemos = [
+      { slug: "isabella-xv", label: "Elegant Rose" },
+      { slug: "beauty-quince-xv", label: "Beauty Quince" },
+    ],
     finalTitle,
     finalText,
     callLabel,
@@ -213,18 +218,15 @@ export default function LandingPage(props: LandingPageProps) {
             >
               {demoCatalogLabel}
             </Link>
-            <Link
-              href={`${demoCatalogUrl}/isabella-xv`}
-              className="inline-flex px-5 py-3 rounded-xl border border-[#7A002A] text-[#7A002A] font-bold"
-            >
-              Elegant Rose
-            </Link>
-            <Link
-              href={`${demoCatalogUrl}/beauty-quince-xv`}
-              className="inline-flex px-5 py-3 rounded-xl border border-[#7A002A] text-[#7A002A] font-bold"
-            >
-              Beauty Quince
-            </Link>
+            {featuredDemos.map((d) => (
+              <Link
+                key={d.slug}
+                href={`${demoCatalogUrl}/${d.slug}`}
+                className="inline-flex px-5 py-3 rounded-xl border border-[#7A002A] text-[#7A002A] font-bold"
+              >
+                {d.label}
+              </Link>
+            ))}
           </div>
         </section>
         <section>

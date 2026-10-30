@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import LandingPage from "@/components/landing/LandingPage";
 
 export const metadata: Metadata = {
-  title: "Digital Invitations with RSVP Tracking | Click & Love",
+  title: "Digital Invitations with RSVP | Click & Love",
   description:
     "Digital invitations with RSVP tracking in real time. See every confirmation, pass and guest detail in one host panel. Assisted $99. VIP $199.",
   metadataBase: new URL("https://clickandlove.app"),
@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     canonical: "https://clickandlove.app/rsvp-tracking",
   },
   openGraph: {
-    title: "Digital Invitations with RSVP Tracking | Click & Love",
+    title: "Digital Invitations with RSVP | Click & Love",
     description:
       "Digital invitations with RSVP tracking in real time. See every confirmation, pass and guest detail in one host panel. Assisted $99. VIP $199.",
     url: "https://clickandlove.app/rsvp-tracking",
@@ -36,7 +36,7 @@ export default function Page() {
       canonical="https://clickandlove.app/rsvp-tracking"
       homeUrl="https://clickandlove.app/"
       pageSlug="rsvp-tracking"
-      h1="Digital Invitations with RSVP Tracking | Click and Love"
+      h1="Digital Invitations with RSVP | Click and Love"
       intro="Digital invitations with RSVP tracking from Click and Love show you every confirmation as it arrives. Your guests open the link, enjoy the 3D envelope and music, and confirm in the invitation form. You see names, passes and details in one host panel, with no calls one guest at a time."
       sections={[
         {
@@ -92,7 +92,7 @@ export default function Page() {
         },
       ]}
       faqTitle="Frequently asked questions about RSVP tracking"
-      serviceName="Digital invitations with RSVP tracking"
+      serviceName="Digital invitations with RSVP"
       serviceDescription="Digital invitations with real-time RSVP tracking: live guest list, pass control and form details in one host panel."
       packagesTitle="Packages and prices"
       assistedName="Assisted"

@@ -4,7 +4,7 @@ import LandingPage from "@/components/landing/LandingPage";
 export const metadata: Metadata = {
   title: "Invitaciones de Quinceañera en Los Ángeles | Click & Love",
   description:
-    "Invitaciones de quinceañera en Los Ángeles con sobre 3D, música y RSVP por SMS. Ve las demos en vivo, elige tu plantilla y comparte el link. Asistido $99. VIP $199.",
+    "Invitaciones de quinceañera en Los Ángeles con sobre 3D, música y RSVP por SMS. Ve las demos, elige plantilla y comparte el link. Asistido $99. VIP $199.",
   metadataBase: new URL("https://clickandlove.app"),
   alternates: {
     canonical: "https://clickandlove.app/es/invitaciones-de-quinceanera",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Invitaciones de Quinceañera en Los Ángeles | Click & Love",
     description:
-      "Invitaciones de quinceañera en Los Ángeles con sobre 3D, música y RSVP por SMS. Ve las demos en vivo, elige tu plantilla y comparte el link. Asistido $99. VIP $199.",
+      "Invitaciones de quinceañera en Los Ángeles con sobre 3D, música y RSVP por SMS. Ve las demos, elige plantilla y comparte el link. Asistido $99. VIP $199.",
     url: "https://clickandlove.app/es/invitaciones-de-quinceanera",
     siteName: "Click & Love",
     locale: "es_MX",

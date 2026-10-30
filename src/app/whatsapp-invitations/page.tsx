@@ -4,7 +4,7 @@ import LandingPage from "@/components/landing/LandingPage";
 export const metadata: Metadata = {
   title: "WhatsApp Invitation Link for Your Event | Click & Love",
   description:
-    "Share your interactive invitation with a WhatsApp invitation link: 3D envelope preview, event title and ready message. Guests confirm on the invitation. Assisted $99. VIP $199.",
+    "Share your invitation with a WhatsApp invitation link: 3D envelope preview and ready message. Guests confirm on the invitation. Assisted $99. VIP $199.",
   metadataBase: new URL("https://clickandlove.app"),
   alternates: {
     canonical: "https://clickandlove.app/whatsapp-invitations",
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "WhatsApp Invitation Link for Your Event | Click & Love",
     description:
-      "Share your interactive invitation with a WhatsApp invitation link: 3D envelope preview, event title and ready message. Guests confirm on the invitation. Assisted $99. VIP $199.",
+      "Share your invitation with a WhatsApp invitation link: 3D envelope preview and ready message. Guests confirm on the invitation. Assisted $99. VIP $199.",
     url: "https://clickandlove.app/whatsapp-invitations",
     siteName: "Click & Love",
     locale: "en_US",
@@ -88,9 +88,9 @@ export default function Page() {
       serviceDescription="Share your interactive invitation with a WhatsApp invitation link: optimized preview, ready message template and confirmation on the invitation."
       packagesTitle="Packages and prices"
       assistedName="Assisted"
-      assistedText="Digital invitation with SMS RSVP and host panel."
+      assistedText="Digital invitation with WhatsApp link sharing, interactive web RSVP and host panel."
       vipName="VIP"
-      vipText="VIP Los Angeles service with full team support, SMS RSVP and host panel."
+      vipText="VIP Los Angeles service with full team support, WhatsApp link sharing, interactive web RSVP and host panel."
       zelleNote="The Buy button charges the home price. If you prefer Zelle, text (818) 299-4882 and the team will help you through that channel."
       demosTitle="See the templates live"
       demosText="Open the catalog and browse every live demo on your phone before you buy. Elegant Rose and Beauty Quince are two of the most requested templates."

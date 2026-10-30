@@ -101,9 +101,13 @@ export default function Page() {
       vipText="VIP Los Angeles service with full team support, SMS RSVP and host panel."
       zelleNote="The Buy button charges the home price. If you prefer Zelle, text (818) 299-4882 and the team will help you through that channel."
       demosTitle="See the designs live"
-      demosText="Open the catalog and browse every live demo on your phone before you buy. Elegant Rose and Beauty Quince are two of the most requested designs."
+      demosText="Open the catalog and browse every live demo on your phone before you buy. Emma & Lucas and Sofía & Alejandro are two wedding designs you can preview now."
       demoCatalogUrl="/demo"
       demoCatalogLabel="Browse the catalog"
+      featuredDemos={[
+        { slug: "emma-and-lucas", label: "Emma & Lucas" },
+        { slug: "sofia-y-alejandro", label: "Sofía & Alejandro" },
+      ]}
       finalTitle="Book your wedding invitations"
       finalText="Do you need wedding invitations in Los Angeles? Call (818) 299-4882 to confirm availability and answer your questions. We serve the full Los Angeles area, including Glendale, Burbank, Pasadena and the San Fernando Valley."
       callLabel="Call (818) 299-4882"
