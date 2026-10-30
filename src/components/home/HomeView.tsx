@@ -16,6 +16,7 @@ import {
   X,
 } from "lucide-react";
 import { Language, translations } from "@/lib/home-translations";
+import { track } from "@/lib/analytics";
 import HeroPhones from "@/components/home/HeroPhones";
 import InteractiveDemoModal from "@/components/home/InteractiveDemoModal";
 
@@ -49,6 +50,8 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
   };
 
   const handleCheckout = async (plan: "assisted" | "vip" | string) => {
+    // Semana 1: inicio de checkout como evento (antes de salir a Stripe).
+    track("begin_checkout", { paquete: plan });
     setCheckoutLoading(plan);
     try {
       const res = await fetch("/api/checkout", {
@@ -592,6 +595,7 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
                 </button>
                 <a
                   href={`${PHONE_SMS}?&body=${encodeURIComponent(plan.dict.secondaryActionMessage)}`}
+                  onClick={() => track("click_zelle", { paquete: plan.key })}
                   className={`mt-3.5 text-center font-['Montserrat'] text-xs font-semibold underline underline-offset-4 transition ${
                     plan.hot
                       ? "text-[#F0DCAE] decoration-[#F0DCAE]/50 hover:text-white"
@@ -613,6 +617,7 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
                   ? "Hola, me interesa conocer los paquetes por volumen para salones y wedding planners de Click & Love."
                   : "Hello! I am interested in volume packages for venues and wedding planners with Click & Love."
               )}`}
+              onClick={() => track("click_sms", { origen: "volumen" })}
               className="text-[#7A002A] font-bold underline underline-offset-4 hover:text-[#B08D3C]"
             >
               {t.pricing.venueFaqLink}

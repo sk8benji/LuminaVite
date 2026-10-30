@@ -17,6 +17,7 @@ import confetti from "canvas-confetti";
 import { Send, CheckCircle2, XCircle, Phone } from "lucide-react";
 import { TemplateConfig } from "@/lib/templates";
 import { formatFechaLimiteRsvp } from "@/lib/fecha-limite";
+import { track } from "@/lib/analytics";
 
 interface RsvpSectionProps {
   eventoId?: string;
@@ -123,6 +124,10 @@ export default function RsvpSection({
         setIsSubmitting(false);
         return;
       }
+
+      // Semana 1: RSVP guardado con éxito (solo guardados reales; en demos
+      // el sistema responde EVENT_NOT_FOUND y no se dispara).
+      track("demo_rsvp_click", { evento: eventoTitulo });
 
       if (asistencia === "SI") {
         try {

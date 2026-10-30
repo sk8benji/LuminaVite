@@ -7,6 +7,8 @@
 // Historial 2026-10-29: el diseño "Call / Pricing" sin rótulo no le gustó
 // a Abraham; se volvió a este diseño con el botón principal llamando.
 
+import TrackLink from "@/components/analytics/TrackLink";
+
 const PHONE_TEL = "tel:+18182994882";
 
 export default function DemoCtaBar({
@@ -24,13 +26,15 @@ export default function DemoCtaBar({
         <p className="flex-1 min-w-0 text-[13px] font-bold leading-snug truncate">
           {es ? "¿Te gusta esta plantilla?" : "Do you like this template?"}
         </p>
-        <a
+        <TrackLink
           href={PHONE_TEL}
+          event="click_llamar"
+          eventParams={{ origen: "barra_demo" }}
           className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-[#FFD166] text-[#7A002A] text-[11px] font-extrabold uppercase tracking-wide shadow-sm shrink-0"
         >
           <span aria-hidden="true">📞</span>
           {es ? "Quiero esta plantilla" : "I want this template"}
-        </a>
+        </TrackLink>
         <a
           href="/#precios"
           className="inline-flex items-center px-3.5 py-2.5 rounded-xl bg-white text-[#7A002A] text-[11px] font-extrabold uppercase tracking-wide shadow-sm shrink-0"

@@ -1,9 +1,10 @@
 "use client";
 
-import React, { Suspense, useEffect, useState } from "react";
+import React, { Suspense, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import confetti from "canvas-confetti";
+import { track } from "@/lib/analytics";
 import {
   CheckCircle2,
   Sparkles,
@@ -40,6 +41,7 @@ function GraciasContent() {
 
   const [loading, setLoading] = useState(true);
   const [order, setOrder] = useState<OrderInfo | null>(null);
+  const purchaseFiredFor = useRef<string | null>(null);
 
   useEffect(() => {
     // Celebration confetti
@@ -69,6 +71,31 @@ function GraciasContent() {
       .catch((err) => console.error("Error verifying session:", err))
       .finally(() => setLoading(false));
   }, [sessionId]);
+
+  // Semana 1: llegada a la thank-you page como evento (conteo de arribos).
+  useEffect(() => {
+    if (sessionId) {
+      track("thank_you_page", { session_id: sessionId });
+    }
+  }, [sessionId]);
+
+  // Semana 1: compra confirmada como conversión GA4 (solo pago PAGADO,
+  // una sola vez por sesión, con monto y paquete reales de Stripe).
+  useEffect(() => {
+    if (
+      order &&
+      order.estadoPago === "PAGADO" &&
+      purchaseFiredFor.current !== order.stripeSessionId
+    ) {
+      purchaseFiredFor.current = order.stripeSessionId;
+      track("purchase", {
+        transaction_id: order.stripeSessionId,
+        value: order.montoTotal,
+        currency: order.moneda.toUpperCase(),
+        items: [{ item_id: order.paqueteId, item_name: order.paqueteNombre }],
+      });
+    }
+  }, [order]);
 
   if (loading) {
     return (
