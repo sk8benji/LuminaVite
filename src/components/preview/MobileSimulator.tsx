@@ -1,13 +1,38 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import TemplateDispatcher from "../templates/TemplateDispatcher";
 import { InvitationData } from "../invitation/InvitationMobileView";
 
 interface MobileSimulatorProps {
   data: InvitationData;
+  activeSection?: string;
 }
 
-export default function MobileSimulator({ data }: MobileSimulatorProps) {
+export default function MobileSimulator({ data, activeSection }: MobileSimulatorProps) {
+  const pantallaRef = useRef<HTMLDivElement | null>(null);
+
+  // Al cambiar la sección en el menú del editor, el teléfono se mueve a esa
+  // parte de la invitación. Solo mueve el scroll del teléfono, no la página.
+  // Portada = arriba del todo. Si la plantilla no tiene ancla para esa
+  // sección, no se mueve (nunca a un lugar equivocado).
+  useEffect(() => {
+    if (!activeSection) return;
+    const pantalla = pantallaRef.current;
+    if (!pantalla) return;
+    if (activeSection === "portada") {
+      pantalla.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+    const el = pantalla.querySelector(`[data-preview-section="${activeSection}"]`);
+    if (!el) return;
+    const rectPantalla = pantalla.getBoundingClientRect();
+    const rectEl = el.getBoundingClientRect();
+    pantalla.scrollTo({
+      top: pantalla.scrollTop + (rectEl.top - rectPantalla.top) - 16,
+      behavior: "smooth",
+    });
+  }, [activeSection]);
   return (
     <div className="flex flex-col items-center justify-center p-4">
       {/* Marco de smartphone */}
@@ -19,7 +44,7 @@ export default function MobileSimulator({ data }: MobileSimulatorProps) {
 
         {/* Pantalla del teléfono con scroll independiente */}
         {/* translateZ(0): contiene los fixed del template (el sobre es fixed inset-0) dentro del teléfono; sin esto el sobre tapa todo el admin */}
-        <div className="w-full h-full bg-white rounded-[38px] overflow-y-auto overflow-x-hidden relative scrollbar-thin scrollbar-thumb-stone-300 [transform:translateZ(0)]">
+        <div ref={pantallaRef} className="w-full h-full bg-white rounded-[38px] overflow-y-auto overflow-x-hidden relative scrollbar-thin scrollbar-thumb-stone-300 [transform:translateZ(0)]">
           <TemplateDispatcher data={data} skipIntro={true} />
         </div>
 

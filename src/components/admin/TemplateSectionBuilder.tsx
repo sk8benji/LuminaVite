@@ -56,6 +56,10 @@ interface TemplateSectionBuilderProps {
   formatFormalDate: (dateInput: string | Date, lang?: string) => any;
   computeRsvpPhrases: (eventDateInput: string | Date, dias: number) => any;
   onOpenTemplatePicker?: () => void;
+  // Sección activa controlada desde fuera (para sincronizar el preview del
+  // teléfono). Si no se pasa, el builder usa su estado interno de siempre.
+  activeSection?: string;
+  onActiveSectionChange?: (id: string) => void;
 }
 
 function MapShortLinkTester({
@@ -218,12 +222,16 @@ export default function TemplateSectionBuilder({
   formatFormalDate,
   computeRsvpPhrases,
   onOpenTemplatePicker,
+  activeSection: activeSectionProp,
+  onActiveSectionChange,
 }: TemplateSectionBuilderProps) {
   // Una sección a la vez con menú vertical (igual que el editor de templates):
   // se acabó la pared de acordeones que abrumaba.
-  const [activeSection, setActiveSection] = useState<string>(
+  const [internalSection, setInternalSection] = useState<string>(
     SECCIONES_QUINCE_ROSADO[0]?.id ?? "portada"
   );
+  const activeSection = activeSectionProp ?? internalSection;
+  const setActiveSection = onActiveSectionChange ?? setInternalSection;
   const activeSectionIndex = Math.max(
     0,
     SECCIONES_QUINCE_ROSADO.findIndex((s) => s.id === activeSection)

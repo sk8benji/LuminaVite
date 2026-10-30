@@ -10,6 +10,8 @@ import {
   Eye,
   Sparkles,
   Globe,
+  Upload,
+  Loader2,
 } from "lucide-react";
 import type { InvitationData } from "@/components/invitation/InvitationMobileView";
 
@@ -28,11 +30,27 @@ const WhatsAppIcon = ({ className = "w-3.5 h-3.5" }: { className?: string }) => 
 interface OpenGraphPreviewProps {
   formData: InvitationData;
   updateField: (field: keyof InvitationData, value: any) => void;
+  handleFileUpload?: (
+    e: React.ChangeEvent<HTMLInputElement>,
+    field:
+      | "fotoPortadaUrl"
+      | "fotoInfanciaUrl"
+      | "fotoActualUrl"
+      | "musicaUrl"
+      | "fotoCierreUrl"
+      | "fotoZapato1Url"
+      | "fotoZapato2Url"
+      | "ogImagenUrl",
+    mediaType?: "images" | "audio"
+  ) => Promise<void>;
+  uploadingS3?: boolean;
+  uploadingField?: string | null;
+  uploadEstado?: { field: string; estado: "ok" | "error"; mensaje?: string } | null;
 }
 
 type PreviewPlatform = "whatsapp" | "facebook" | "imessage";
 
-export default function OpenGraphPreview({ formData, updateField }: OpenGraphPreviewProps) {
+export default function OpenGraphPreview({ formData, updateField, handleFileUpload, uploadingS3, uploadingField, uploadEstado }: OpenGraphPreviewProps) {
   const [platform, setPlatform] = useState<PreviewPlatform>("whatsapp");
   const [copied, setCopied] = useState(false);
 
@@ -85,6 +103,13 @@ export default function OpenGraphPreview({ formData, updateField }: OpenGraphPre
     { etiqueta: "Zapato 2", url: formData.fotoZapato2Url },
     { etiqueta: "Cierre", url: formData.fotoCierreUrl },
   ].filter((o) => !!o.url) as { etiqueta: string; url: string }[];
+
+  // Imagen subida directo desde aquí: no está entre las fotos del evento,
+  // pero si es la elegida hay que mostrarla como seleccionada.
+  const imagenSubidaActual =
+    formData.ogImagenUrl && !opcionesImagen.some((o) => o.url === formData.ogImagenUrl)
+      ? formData.ogImagenUrl
+      : null;
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(fullUrl);
@@ -237,10 +262,45 @@ export default function OpenGraphPreview({ formData, updateField }: OpenGraphPre
                 <span className="text-[10px] font-bold text-stone-700">{op.etiqueta}</span>
               </button>
             ))}
+            {imagenSubidaActual && (
+              <button
+                type="button"
+                onClick={() => updateField("ogImagenUrl", imagenSubidaActual)}
+                title="Imagen subida"
+                className="flex flex-col items-center gap-1 p-1.5 rounded-xl border border-[#7A002A] ring-2 ring-[#7A002A]/30 bg-white transition cursor-pointer"
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={imagenSubidaActual} alt="Subida" className="w-20 h-12 object-cover rounded-lg" />
+                <span className="text-[10px] font-bold text-stone-700">Subida</span>
+              </button>
+            )}
+            {handleFileUpload && (
+              <label className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#7A002A] text-white text-xs font-bold hover:bg-[#600021] transition cursor-pointer self-center">
+                {uploadingS3 && uploadingField === "ogImagenUrl" ? (
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                ) : (
+                  <Upload className="w-3.5 h-3.5" />
+                )}
+                <span>{uploadingS3 && uploadingField === "ogImagenUrl" ? "Subiendo..." : "Subir imagen"}</span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => handleFileUpload(e, "ogImagenUrl")}
+                  disabled={uploadingS3}
+                  className="hidden"
+                />
+              </label>
+            )}
           </div>
           <p className="text-[11px] text-stone-400 mt-1.5">
             Si subes una foto nueva en su sección, aparecerá aquí para elegirla. La foto elegida es la que usa la tarjeta real al compartir, dentro de su diseño 1200×630.
           </p>
+          {uploadEstado?.field === "ogImagenUrl" && uploadEstado.estado === "ok" && (
+            <p className="text-[11px] font-bold text-emerald-700 mt-1">✓ Imagen subida</p>
+          )}
+          {uploadEstado?.field === "ogImagenUrl" && uploadEstado.estado === "error" && (
+            <p className="text-[11px] font-bold text-red-600 mt-1">✗ {uploadEstado.mensaje || "Error al subir"}</p>
+          )}
         </div>
       </div>
 

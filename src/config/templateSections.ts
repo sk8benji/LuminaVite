@@ -35,7 +35,7 @@ export const SECCIONES_QUINCE_ROSADO: SeccionMeta[] = [
   {
     id: 'portada',
     numero: 1,
-    label: 'Portada y Encabezado Principal',
+    label: 'Portada',
     descripcion: 'Arco con nubes, "CON Amor LE INVITAMOS", foto principal de portada y nombre de la festejada.',
     icono: 'Sparkles',
     defaultEnabled: true,
@@ -43,7 +43,7 @@ export const SECCIONES_QUINCE_ROSADO: SeccionMeta[] = [
   {
     id: 'medallonFecha',
     numero: 2,
-    label: 'Medallón de Fecha y Hora',
+    label: 'Fecha y Hora',
     descripcion: 'Medallón circular "15 Años", día, mes, año y hora con formato formal.',
     icono: 'Calendar',
     defaultEnabled: true,
@@ -52,7 +52,7 @@ export const SECCIONES_QUINCE_ROSADO: SeccionMeta[] = [
   {
     id: 'dedicatoria',
     numero: 3,
-    label: 'Dedicatoria ("De Niña a Señorita")',
+    label: 'Dedicatoria',
     descripcion: 'Mensaje emotivo bilingüe y las 2 fotos polaroids (Infancia y Quinceañera).',
     icono: 'Heart',
     defaultEnabled: true,
@@ -61,7 +61,7 @@ export const SECCIONES_QUINCE_ROSADO: SeccionMeta[] = [
   {
     id: 'fotoZapatos1',
     numero: 4,
-    label: 'Foto Zapatillas de Cristal / Ceremonia',
+    label: 'Zapato Cristal',
     descripcion: 'Fotografía vertical de transición hacia los templos y recepciones.',
     icono: 'Image',
     defaultEnabled: true,
@@ -69,7 +69,7 @@ export const SECCIONES_QUINCE_ROSADO: SeccionMeta[] = [
   {
     id: 'ubicaciones',
     numero: 5,
-    label: 'Ubicaciones (Ceremonia y Recepción)',
+    label: 'Ubicaciones',
     descripcion: 'Detalles de la iglesia y salón de fiesta con botones directos hacia Google Maps.',
     icono: 'MapPin',
     defaultEnabled: true,
@@ -77,7 +77,7 @@ export const SECCIONES_QUINCE_ROSADO: SeccionMeta[] = [
   {
     id: 'dressCode',
     numero: 6,
-    label: 'Código de Vestimenta (Dress Code)',
+    label: 'Vestimenta',
     descripcion: 'Etiqueta formal o de gala y especificación de colores reservados para la festejada.',
     icono: 'Sliders',
     defaultEnabled: true,
@@ -86,7 +86,7 @@ export const SECCIONES_QUINCE_ROSADO: SeccionMeta[] = [
   {
     id: 'mesaRegalos',
     numero: 7,
-    label: 'Mesa de Regalos / Lluvia de Sobres',
+    label: 'Mesa de Regalos',
     descripcion: 'Aviso de cofre en recepción, enlaces de wishlist y cuentas Zelle, Venmo, PayPal.',
     icono: 'Gift',
     defaultEnabled: true,
@@ -95,7 +95,7 @@ export const SECCIONES_QUINCE_ROSADO: SeccionMeta[] = [
   {
     id: 'itinerario',
     numero: 8,
-    label: 'El Plan de la Fiesta (Itinerario)',
+    label: 'Plan de la Fiesta',
     descripcion: 'Línea de tiempo vertical con rosas decorativas e hitos de la fiesta (ES / EN).',
     icono: 'Clock',
     defaultEnabled: true,
@@ -103,7 +103,7 @@ export const SECCIONES_QUINCE_ROSADO: SeccionMeta[] = [
   {
     id: 'fotoZapatos2',
     numero: 9,
-    label: 'Foto en Cojín & Aviso "Para Nuestros Niños"',
+    label: 'Foto en Cojín',
     descripcion: 'Fotografía en cojín, mensaje de despedida y pautas para pequeños invitados.',
     icono: 'Image',
     defaultEnabled: true,
@@ -111,7 +111,7 @@ export const SECCIONES_QUINCE_ROSADO: SeccionMeta[] = [
   {
     id: 'corteHonor',
     numero: 10,
-    label: 'La Corte de Honor & Padres / Padrinos',
+    label: 'Corte de Honor',
     descripcion: 'Quinceañera, Chambelanes, Damiselas, Damitas de Hojitas, Padres, Padrinos y Agradecimiento.',
     icono: 'Crown',
     defaultEnabled: true,
@@ -119,7 +119,7 @@ export const SECCIONES_QUINCE_ROSADO: SeccionMeta[] = [
   {
     id: 'cuentaRegresiva',
     numero: 11,
-    label: 'Cuenta Regresiva & Calendario',
+    label: 'Cuenta Regresiva',
     descripcion: 'Cronómetro en vivo hacia el evento y calendario mensual con lazo de seda en el día de la fiesta.',
     icono: 'Hourglass',
     defaultEnabled: true,
@@ -127,7 +127,7 @@ export const SECCIONES_QUINCE_ROSADO: SeccionMeta[] = [
   {
     id: 'videoDespedida',
     numero: 12,
-    label: 'Video Embed & Retrato de Despedida',
+    label: 'Video',
     descripcion: 'Reproductor de video (YouTube o MP4) y foto final arqueada de despedida.',
     icono: 'Video',
     defaultEnabled: true,
@@ -135,7 +135,7 @@ export const SECCIONES_QUINCE_ROSADO: SeccionMeta[] = [
   {
     id: 'musica',
     numero: 13,
-    label: 'Música de Fondo Ambiental',
+    label: 'Música',
     descripcion: 'Reproductor de audio flotante y música instrumental de fondo.',
     icono: 'Music',
     defaultEnabled: true,

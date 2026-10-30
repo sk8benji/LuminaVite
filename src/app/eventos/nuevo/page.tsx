@@ -117,6 +117,9 @@ function NuevoEventoContent() {
   // Título tecleado (o venido por ?nombre=): la invitación ya es de un cliente real
   const [tituloEditado, setTituloEditado] = useState(false);
   const [editorMode, setEditorMode] = useState<"sections" | "settings">("sections");
+  // Sección activa del editor: se comparte con el preview del teléfono para
+  // que al elegir una sección el teléfono se mueva a esa parte.
+  const [activeSection, setActiveSection] = useState<string>("portada");
   const [showTemplateGrid, setShowTemplateGrid] = useState(
     !isEditMode && !searchParams.get("plantilla") && !searchParams.get("nombre")
   );
@@ -986,7 +989,8 @@ function NuevoEventoContent() {
       | "musicaUrl"
       | "fotoCierreUrl"
       | "fotoZapato1Url"
-      | "fotoZapato2Url",
+      | "fotoZapato2Url"
+      | "ogImagenUrl",
     mediaType: "images" | "audio" = "images"
   ) => {
     const file = e.target.files?.[0];
@@ -1414,6 +1418,8 @@ function NuevoEventoContent() {
               formData={formData}
               updateField={updateField}
               setFormData={setFormData}
+              activeSection={activeSection}
+              onActiveSectionChange={setActiveSection}
               handleFileUpload={handleFileUpload}
               uploadingS3={uploadingS3}
               uploadingField={uploadingField}
@@ -1427,6 +1433,10 @@ function NuevoEventoContent() {
               formData={formData}
               updateField={updateField}
               setFormData={setFormData}
+              handleFileUpload={handleFileUpload}
+              uploadingS3={uploadingS3}
+              uploadingField={uploadingField}
+              uploadEstado={uploadEstado}
               computeRsvpPhrases={computeRsvpPhrases}
               handleRsvpDiasChange={handleRsvpDiasChange}
               isEditMode={effectiveEditMode}
@@ -1451,7 +1461,7 @@ function NuevoEventoContent() {
             </button>
           )}
           <div className="sticky top-24">
-            <MobileSimulator data={formData} />
+            <MobileSimulator data={formData} activeSection={activeSection} />
           </div>
         </div>
       </div>

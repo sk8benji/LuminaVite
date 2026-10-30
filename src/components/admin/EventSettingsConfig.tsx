@@ -38,6 +38,22 @@ interface EventSettingsConfigProps {
   isSaving: boolean;
   onSelectTemplate?: (tempKey: TemplateId) => void;
   onOpenTemplatePicker?: () => void;
+  handleFileUpload?: (
+    e: React.ChangeEvent<HTMLInputElement>,
+    field:
+      | "fotoPortadaUrl"
+      | "fotoInfanciaUrl"
+      | "fotoActualUrl"
+      | "musicaUrl"
+      | "fotoCierreUrl"
+      | "fotoZapato1Url"
+      | "fotoZapato2Url"
+      | "ogImagenUrl",
+    mediaType?: "images" | "audio"
+  ) => Promise<void>;
+  uploadingS3?: boolean;
+  uploadingField?: string | null;
+  uploadEstado?: { field: string; estado: "ok" | "error"; mensaje?: string } | null;
 }
 
 /** Switch reutilizable con el mismo estilo de "Permitir Confirmación por Teléfono". */
@@ -80,6 +96,10 @@ function SettingsSwitch({
 export default function EventSettingsConfig({
   formData,
   updateField,
+  handleFileUpload,
+  uploadingS3,
+  uploadingField,
+  uploadEstado,
   computeRsvpPhrases,
   handleRsvpDiasChange,
   isEditMode,
@@ -636,7 +656,7 @@ export default function EventSettingsConfig({
           TARJETA 4: PREVISUALIZADOR DE OPENGRAPH (WHATSAPP & FACEBOOK)
           Al final: es solo una vista previa, no un ajuste.
       ────────────────────────────────────────────────────────── */}
-      <OpenGraphPreview formData={formData} updateField={updateField} />
+      <OpenGraphPreview formData={formData} updateField={updateField} handleFileUpload={handleFileUpload} uploadingS3={uploadingS3} uploadingField={uploadingField} uploadEstado={uploadEstado} />
 
       {/* Botón flotante / inferior de guardar cambios */}
       <div className="pt-2 flex justify-end">

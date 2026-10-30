@@ -750,7 +750,7 @@ export default function QuinceRosadoTemplate({
 
           {/* Medallón de Fecha Circular con Cinta */}
           {isSectionActive("medallonFecha") && (
-            <div className="relative z-10 flex items-center justify-center gap-4 w-full max-w-[290px] mx-auto py-2">
+            <div data-preview-section="medallonFecha" className="relative z-10 flex items-center justify-center gap-4 w-full max-w-[290px] mx-auto py-2">
               {/* Medallón circular dusty rose */}
               <div className="relative w-24 h-24 rounded-full bg-[#A55B64] text-white flex flex-col items-center justify-center shadow-lg border-2 border-white">
                 <span className="font-['Great_Vibes',cursive] text-3xl leading-none">15</span>
@@ -812,7 +812,7 @@ export default function QuinceRosadoTemplate({
             SECCIÓN 2: DEDICATORIA & POLAROIDS ("DE NIÑA A SEÑORITA")
         ══════════════════════════════════════════════════════════════ */}
         {isSectionActive("dedicatoria") && (
-          <section className="relative w-full py-12 px-5 bg-white overflow-hidden text-center">
+          <section data-preview-section="dedicatoria" className="relative w-full py-12 px-5 bg-white overflow-hidden text-center">
             {/* Fondo de brillo suave */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -922,7 +922,7 @@ export default function QuinceRosadoTemplate({
 
             {/* Foto de Zapatos 1 (Zapatilla de Cristal / Decorativa Ceremonia) */}
             {isSectionActive("fotoZapatos1") && (
-              <div className="relative w-full aspect-[4/5] rounded-3xl overflow-hidden shadow-xl border-4 border-white mb-8 bg-pink-100">
+              <div data-preview-section="fotoZapatos1" className="relative w-full aspect-[4/5] rounded-3xl overflow-hidden shadow-xl border-4 border-white mb-8 bg-pink-100">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={photoShoe1}
@@ -937,7 +937,7 @@ export default function QuinceRosadoTemplate({
 
             {/* Ubicaciones de Iglesia y Salón */}
             {isSectionActive("ubicaciones") && (
-              <div className="space-y-4 mb-8">
+              <div data-preview-section="ubicaciones" className="space-y-4 mb-8">
                 {/* Iglesia */}
                 <div className="bg-white p-4 rounded-2xl shadow-md border border-pink-100 text-center">
                   <h4 className="font-['Cinzel',serif] text-xs tracking-widest uppercase text-[#7A002A] font-bold">
@@ -990,7 +990,7 @@ export default function QuinceRosadoTemplate({
 
             {/* Código de Vestimenta */}
             {isSectionActive("dressCode") && (
-              <div className="bg-white p-6 rounded-3xl shadow-xl border border-pink-100 text-center mb-8">
+              <div data-preview-section="dressCode" className="bg-white p-6 rounded-3xl shadow-xl border border-pink-100 text-center mb-8">
                 <h3 className="font-['Cinzel',serif] text-sm tracking-[0.25em] uppercase text-[#7A002A] font-bold mb-2">
                   {isEn ? "DRESS CODE" : "CÓDIGO DE VESTIMENTA"}
                 </h3>
@@ -1020,7 +1020,7 @@ export default function QuinceRosadoTemplate({
 
             {/* Mesa de Regalos */}
             {isSectionActive("mesaRegalos") && (
-              <div className="bg-white p-6 rounded-3xl shadow-xl border border-pink-100 text-center">
+              <div data-preview-section="mesaRegalos" className="bg-white p-6 rounded-3xl shadow-xl border border-pink-100 text-center">
                 <h3 className="font-['Great_Vibes',cursive] text-4xl text-[#7A002A] mb-1">
                   {isEn ? "Gift Registry" : "Lista de Regalos"}
                 </h3>
@@ -1084,7 +1084,7 @@ export default function QuinceRosadoTemplate({
               {isSectionActive("itinerario") && (
                 <>
                   {/* Cabecera Itinerario */}
-                  <div className="mb-8">
+                  <div data-preview-section="itinerario" className="mb-8">
                     <h3 className="font-['Alex_Brush',cursive] text-4xl text-[#7A002A]">
                       {isEn ? "The" : "El"}
                     </h3>
@@ -1143,7 +1143,7 @@ export default function QuinceRosadoTemplate({
               {/* Foto de Zapatos 2 (Zapatilla en Cojín / Corte de Honor y Damas) & Aviso Niños */}
               {isSectionActive("fotoZapatos2") && (
                 <>
-                  <div className="mt-12 mb-8 relative">
+                  <div data-preview-section="fotoZapatos2" className="mt-12 mb-8 relative">
                     <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl border-4 border-white bg-pink-100">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
@@ -1242,7 +1242,7 @@ export default function QuinceRosadoTemplate({
           if (!isSectionActive("corteHonor")) return null;
 
           return (
-            <section className="relative w-full py-12 px-5 bg-gradient-to-b from-white to-pink-50/60 text-center">
+            <section data-preview-section="corteHonor" className="relative w-full py-12 px-5 bg-gradient-to-b from-white to-pink-50/60 text-center">
               <div className="max-w-[360px] mx-auto">
                 {hasAnyCorteCards && (
                   <>
@@ -1405,7 +1405,7 @@ export default function QuinceRosadoTemplate({
               {isSectionActive("cuentaRegresiva") && (
                 <>
                   {/* Encabezado Cierre */}
-                  <p className="font-['Cinzel',serif] text-xs tracking-[0.2em] uppercase text-[#CE2962] font-bold">
+                  <p data-preview-section="cuentaRegresiva" className="font-['Cinzel',serif] text-xs tracking-[0.2em] uppercase text-[#CE2962] font-bold">
                     {isEn ? "I CANNOT WAIT TO" : "NO PUEDO ESPERAR PARA PODER"}
                   </p>
                   <h2 className="font-['Cinzel',serif] text-2xl tracking-[0.15em] uppercase text-[#CE2962] font-black mt-1 mb-6">
@@ -1558,7 +1558,7 @@ export default function QuinceRosadoTemplate({
                     if (!videoEmbed) return null;
 
                     return (
-                      <div className="relative w-full aspect-video rounded-2xl overflow-hidden shadow-2xl border-4 border-white mb-8 bg-black">
+                      <div data-preview-section="videoDespedida" className="relative w-full aspect-video rounded-2xl overflow-hidden shadow-2xl border-4 border-white mb-8 bg-black">
                         {videoEmbed.type === "youtube" ? (
                           <iframe
                             src={videoEmbed.src}
@@ -1582,7 +1582,7 @@ export default function QuinceRosadoTemplate({
                   })()}
 
                   {/* Retrato Final de Despedida */}
-                  <div className="relative w-[240px] aspect-[3/4] mx-auto rounded-t-[120px] overflow-hidden shadow-2xl border-4 border-white mb-4 bg-pink-100">
+                  <div data-preview-section="videoDespedida" className="relative w-[240px] aspect-[3/4] mx-auto rounded-t-[120px] overflow-hidden shadow-2xl border-4 border-white mb-4 bg-pink-100">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={photoFarewell}
