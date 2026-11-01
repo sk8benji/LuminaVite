@@ -97,7 +97,8 @@ export default function PortalDatosPage() {
   const [paqueteNombre, setPaqueteNombre] = useState("");
   const [respuestas, setRespuestas] = useState<DatosRespuestas>({});
   const [completado, setCompletado] = useState(false);
-  const [idioma, setIdioma] = useState<Idioma>("es");
+  // Por defecto en inglés; español como secundario (botón ES/EN arriba). Decisión de Abraham 2026-11-01.
+  const [idioma, setIdioma] = useState<Idioma>("en");
   const [vista, setVista] = useState<Vista>("inicio");
   const [idx, setIdx] = useState(0);
   const [valorActual, setValorActual] = useState("");
