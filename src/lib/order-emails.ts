@@ -27,6 +27,7 @@ export async function sendCustomerOrderConfirmationEmail(
   const subject = `✨ Welcome to Click and love! Order Confirmation #${order.id.slice(-6).toUpperCase()}`;
 
   const thankYouUrl = `${siteUrl}/gracias?session_id=${order.stripeSessionId}`;
+  const datosUrl = order.datosToken ? `${siteUrl}/datos/${order.datosToken}` : null;
   const teamPhoneDisplay = "(818) 299-4882";
   const teamPhoneTel = "+18182994882";
 
@@ -100,6 +101,12 @@ export async function sendCustomerOrderConfirmationEmail(
           Don&apos;t worry if you don&apos;t have all your photos or your court list ready yet. Our team will contact you shortly so you can send us your files at your own pace.
         </p>
       </div>
+
+      ${datosUrl ? `<div class="concierge-card" style="text-align: center;">
+        <h4 style="margin: 0 0 8px 0; color: #2C1F1B; font-size: 15px;">Share your event details</h4>
+        <p style="margin: 0; font-size: 13px; color: #5E534C; line-height: 1.6;">Fill this out at your own pace — every answer saves automatically and you can continue another day from the same link.</p>
+        <a href="${datosUrl}" class="btn">Fill In My Event Details</a>
+      </div>` : ""}
 
       <div style="text-align: center; margin: 30px 0 10px 0;">
         <a href="${thankYouUrl}" class="btn">View My Order & Details</a>

@@ -256,6 +256,10 @@ model OrdenCompra {
   comentarios           String?
   onboardingCompletado  Boolean         @default(false)
 
+  // Portal de datos del cliente: link único por orden (sin login)
+  datosToken            String?         @unique
+  datosRespuestas       Json?
+
   // Relación opcional con Evento si ya se creó la invitación
   eventoId              String?
   evento                Evento?         @relation(fields: [eventoId], references: [id], onDelete: SetNull)

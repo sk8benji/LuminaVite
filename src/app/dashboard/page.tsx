@@ -32,6 +32,7 @@ import {
   Link2,
 } from "lucide-react";
 import { OrderData } from "@/lib/order-store";
+import { DATOS_SECCIONES, calcularProgresoDatos, campoVisible } from "@/lib/datos-questions";
 import TemplatesManager from "@/components/dashboard/TemplatesManager";
 import QrManager from "@/components/dashboard/QrManager";
 import MigrateAssetsCard from "@/components/dashboard/MigrateAssetsCard";
@@ -98,6 +99,8 @@ export default function DashboardPage() {
   const [loadingOrdenes, setLoadingOrdenes] = useState(false);
   const [errorOrdenes, setErrorOrdenes] = useState<string | null>(null);
   const [copiedSlug, setCopiedSlug] = useState<string | null>(null);
+  const [respuestasAbiertas, setRespuestasAbiertas] = useState<string | null>(null);
+  const [copiadoDatosId, setCopiadoDatosId] = useState<string | null>(null);
   const [filtroEstado, setFiltroEstado] = useState<string>("TODOS");
   const [busquedaOrdenes, setBusquedaOrdenes] = useState<string>("");
   const [busquedaAbandonados, setBusquedaAbandonados] = useState<string>("");
@@ -281,6 +284,28 @@ export default function DashboardPage() {
     navigator.clipboard.writeText(url);
     setCopiedSlug(slug);
     setTimeout(() => setCopiedSlug(null), 2000);
+  };
+
+  // Portal de datos: copiar el link único de la orden (genera el token si
+  // la orden es vieja y aún no tiene). El link apunta al dominio público.
+  const handleCopyDatosLink = async (order: OrderData) => {
+    let origin = window.location.origin;
+    if (window.location.host.startsWith("admin.")) {
+      origin = `${window.location.protocol}//${window.location.host.replace(/^admin\./, "")}`;
+    }
+    let token = order.datosToken || null;
+    if (!token) {
+      const res = await fetch(`/api/admin/ordenes/${order.id}/datos-link`, { method: "POST" });
+      const data = await res.json();
+      if (!data.success || !data.token) return;
+      token = data.token;
+      setOrdenes((prev) =>
+        prev.map((o) => (o.id === order.id ? { ...o, datosToken: token } : o))
+      );
+    }
+    await navigator.clipboard.writeText(`${origin}/datos/${token}`);
+    setCopiadoDatosId(order.id);
+    setTimeout(() => setCopiadoDatosId(null), 2000);
   };
 
   const handleUpdateStatus = async (orderId: string, nuevoEstado: string) => {
@@ -648,16 +673,29 @@ export default function DashboardPage() {
               <div className="space-y-4">
                 {ordenesFiltradas.map((order) => {
                   const rawPhone = (order.telefonoCliente || "").replace(/\D/g, "");
+                  let originPublico = "";
+                  if (typeof window !== "undefined") {
+                    originPublico = window.location.origin;
+                    if (window.location.host.startsWith("admin.")) {
+                      originPublico = `${window.location.protocol}//${window.location.host.replace(/^admin\./, "")}`;
+                    }
+                  }
+                  const datosLink = order.datosToken
+                    ? `${originPublico}/datos/${order.datosToken}`
+                    : null;
                   const whatsappMessage = encodeURIComponent(
-                    `Hola ${order.nombreCliente || ""}! Te saluda el equipo de Click and love. Muchas gracias por tu compra del paquete ${order.paqueteNombre}. Estoy a tu disposición para comenzar el diseño de tu invitación.`
+                    `Hola ${order.nombreCliente || ""}! Te saluda el equipo de Click and love. Muchas gracias por tu compra del paquete ${order.paqueteNombre}. Estoy a tu disposición para comenzar el diseño de tu invitación.` +
+                      (datosLink ? `\n\nLlena tus datos aquí, a tu ritmo: ${datosLink}` : "")
                   );
+                  const progresoDatos = calcularProgresoDatos(order.datosRespuestas || {});
                   const whatsappUrl = rawPhone ? `https://wa.me/${rawPhone}?text=${whatsappMessage}` : null;
 
                   return (
                     <div
                       key={order.id}
-                      className="bg-white rounded-2xl border border-stone-200 p-5 shadow-xs hover:shadow-md transition flex flex-col lg:flex-row lg:items-center justify-between gap-5"
+                      className="bg-white rounded-2xl border border-stone-200 p-5 shadow-xs hover:shadow-md transition space-y-4"
                     >
+                      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-5">
                       {/* Columna 1: Cliente e Información */}
                       <div className="space-y-2 min-w-[260px]">
                         <div className="flex items-center gap-2">
@@ -773,7 +811,81 @@ export default function DashboardPage() {
                           <Edit3 className="w-3.5 h-3.5" />
                           Crear Invitación
                         </Link>
+
+                        {/* Portal de datos: progreso + acciones */}
+                        <div className="w-full lg:w-[280px] space-y-2">
+                          <div className="flex items-center justify-between text-[11px] font-semibold text-stone-500">
+                            <span>Datos del cliente</span>
+                            <span>
+                              {order.onboardingCompletado
+                                ? "Completado ✓"
+                                : `${progresoDatos.porcentaje}% (${progresoDatos.contestadas}/${progresoDatos.total})`}
+                            </span>
+                          </div>
+                          <div className="h-2 bg-stone-100 rounded-full overflow-hidden">
+                            <div
+                              className="h-full bg-[#7A002A] transition-all"
+                              style={{
+                                width: `${order.onboardingCompletado ? 100 : progresoDatos.porcentaje}%`,
+                              }}
+                            />
+                          </div>
+                          <div className="flex gap-2">
+                            <button
+                              onClick={() => handleCopyDatosLink(order)}
+                              className="flex-1 py-2 px-3 bg-white border border-stone-200 hover:border-[#7A002A] text-stone-800 rounded-xl text-xs font-semibold transition"
+                            >
+                              {copiadoDatosId === order.id ? "¡Link copiado!" : "Copiar link de datos"}
+                            </button>
+                            <button
+                              onClick={() =>
+                                setRespuestasAbiertas(
+                                  respuestasAbiertas === order.id ? null : order.id
+                                )
+                              }
+                              className="flex-1 py-2 px-3 bg-stone-100 hover:bg-stone-200 text-stone-700 rounded-xl text-xs font-semibold transition"
+                            >
+                              {respuestasAbiertas === order.id ? "Ocultar respuestas" : "Ver respuestas"}
+                            </button>
+                          </div>
+                        </div>
                       </div>
+                      </div>
+                      {respuestasAbiertas === order.id && (
+                        <div className="bg-stone-50 rounded-xl border border-stone-100 p-4 space-y-4">
+                          {DATOS_SECCIONES.map((sec) => (
+                            <div key={sec.id} className="space-y-1.5">
+                              <p className="text-[11px] font-bold uppercase text-stone-400">
+                                {sec.titulo}
+                              </p>
+                              {sec.campos
+                                .filter((c) => campoVisible(c, order.datosRespuestas || {}))
+                                .map((c) => {
+                                const v = (order.datosRespuestas || {})[c.id] || "";
+                                return (
+                                  <div key={c.id} className="flex gap-2 text-xs">
+                                    <span className="text-stone-400 min-w-[140px]">{c.pregunta}</span>
+                                    {c.tipo === "foto" && v ? (
+                                      <a
+                                        href={v}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="font-semibold text-[#7A002A] underline"
+                                      >
+                                        Ver foto
+                                      </a>
+                                    ) : (
+                                      <span className="font-semibold text-stone-700 break-words">
+                                        {v || "Sin respuesta"}
+                                      </span>
+                                    )}
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   );
                 })}

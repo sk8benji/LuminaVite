@@ -170,6 +170,8 @@ export async function ensurePostgresTables(): Promise<boolean> {
       `ALTER TABLE "Evento" ADD COLUMN IF NOT EXISTS "permitirConfirmacionTelefono" BOOLEAN DEFAULT true;`,
       `ALTER TABLE "Evento" ADD COLUMN IF NOT EXISTS "mostrarMesaRegalos" BOOLEAN DEFAULT true;`,
       `ALTER TABLE "Evento" ADD COLUMN IF NOT EXISTS "regalosMensajeEn" TEXT;`,
+      `ALTER TABLE "OrdenCompra" ADD COLUMN IF NOT EXISTS "datosToken" TEXT UNIQUE;`,
+      `ALTER TABLE "OrdenCompra" ADD COLUMN IF NOT EXISTS "datosRespuestas" JSONB DEFAULT '{}'::jsonb;`,
       `ALTER TABLE "Evento" ADD COLUMN IF NOT EXISTS "mostrarDressCode" BOOLEAN DEFAULT true;`,
       `ALTER TABLE "Evento" ADD COLUMN IF NOT EXISTS "dressCodeTituloEn" TEXT;`,
       `ALTER TABLE "Evento" ADD COLUMN IF NOT EXISTS "dressCodeNotaEn" TEXT;`,
@@ -216,6 +218,8 @@ export async function ensurePostgresTables(): Promise<boolean> {
           "comentarios" TEXT,
           "onboardingCompletado" BOOLEAN NOT NULL DEFAULT false,
           "eventoId" TEXT REFERENCES "Evento"("id") ON DELETE SET NULL,
+          "datosToken" TEXT UNIQUE,
+          "datosRespuestas" JSONB DEFAULT '{}'::jsonb,
           "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
           "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
       );`,

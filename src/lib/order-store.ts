@@ -22,6 +22,8 @@ export interface OrderData {
   plantillaDeseada?: string | null;
   comentarios?: string | null;
   onboardingCompletado: boolean;
+  datosToken?: string | null;
+  datosRespuestas?: Record<string, string> | null;
   eventoId?: string | null;
   createdAt: string;
   updatedAt: string;
@@ -93,6 +95,8 @@ export async function saveOrder(data: Partial<OrderData> & { stripeSessionId: st
           plantillaDeseada: (data.plantillaDeseada as any) ?? existing.plantillaDeseada,
           comentarios: data.comentarios !== undefined ? data.comentarios : existing.comentarios,
           onboardingCompletado: data.onboardingCompletado ?? existing.onboardingCompletado,
+          datosToken: data.datosToken ?? existing.datosToken,
+          datosRespuestas: (data.datosRespuestas as any) ?? existing.datosRespuestas,
           eventoId: data.eventoId ?? existing.eventoId,
         },
       });
@@ -123,6 +127,8 @@ export async function saveOrder(data: Partial<OrderData> & { stripeSessionId: st
           plantillaDeseada: (data.plantillaDeseada as any) || null,
           comentarios: data.comentarios,
           onboardingCompletado: data.onboardingCompletado || false,
+          datosToken: data.datosToken || (typeof crypto !== "undefined" && "randomUUID" in crypto ? crypto.randomUUID() : `datos_${Date.now()}_${Math.random().toString(36).substring(2, 10)}`),
+          datosRespuestas: (data.datosRespuestas as any) || {},
           eventoId: data.eventoId,
         },
       });
@@ -170,6 +176,8 @@ export async function saveOrder(data: Partial<OrderData> & { stripeSessionId: st
       plantillaDeseada: data.plantillaDeseada || null,
       comentarios: data.comentarios || null,
       onboardingCompletado: data.onboardingCompletado || false,
+      datosToken: data.datosToken || `datos_${Date.now()}_${Math.random().toString(36).substring(2, 10)}`,
+      datosRespuestas: data.datosRespuestas || {},
       eventoId: data.eventoId || null,
       createdAt: now,
       updatedAt: now,
@@ -259,6 +267,136 @@ export async function updateOrderStatus(
     orders[idx].updatedAt = new Date().toISOString();
     saveFallbackOrders(orders);
     return orders[idx];
+  }
+  return null;
+}
+
+/**
+ * Portal de datos: la plantilla elegida en el formulario también queda en
+ * plantillaDeseada de la orden, para que el equipo la vea en la tarjeta
+ * del admin sin abrir las respuestas.
+ */
+export async function updatePlantillaDeseada(
+  id: string,
+  estilo: string
+): Promise<OrderData | null> {
+  try {
+    await ensurePostgresTables();
+    const updated = await prisma.ordenCompra.update({
+      where: { id },
+      data: { plantillaDeseada: estilo as any },
+    });
+    return {
+      ...updated,
+      fechaEvento: updated.fechaEvento ? updated.fechaEvento.toISOString() : null,
+      createdAt: updated.createdAt.toISOString(),
+      updatedAt: updated.updatedAt.toISOString(),
+    } as unknown as OrderData;
+  } catch (err) {
+    // Fallback
+  }
+
+  const orders = readFallbackOrders();
+  const idx = orders.findIndex((o) => o.id === id);
+  if (idx >= 0) {
+    (orders[idx] as any).plantillaDeseada = estilo;
+    orders[idx].updatedAt = new Date().toISOString();
+    saveFallbackOrders(orders);
+    return orders[idx];
+  }
+  return null;
+}
+
+/**
+ * Portal de datos: buscar orden por su token único (link sin login).
+ * El token es el único secreto: no se lista ni se adivina por id.
+ */
+export async function getOrderByDatosToken(token: string): Promise<OrderData | null> {
+  try {
+    await ensurePostgresTables();
+    const order = await prisma.ordenCompra.findUnique({ where: { datosToken: token } });
+    if (order) {
+      return {
+        ...order,
+        fechaEvento: order.fechaEvento ? order.fechaEvento.toISOString() : null,
+        createdAt: order.createdAt.toISOString(),
+        updatedAt: order.updatedAt.toISOString(),
+      } as unknown as OrderData;
+    }
+  } catch (err) {
+    // Continuar a fallback
+  }
+  const orders = readFallbackOrders();
+  return orders.find((o) => o.datosToken === token) || null;
+}
+
+/**
+ * Portal de datos: guardar respuestas (mezcla con las ya guardadas) y
+ * opcionalmente marcar el onboarding como completado. Nunca toca montos,
+ * estado de pago ni estado del pedido.
+ */
+export async function saveDatosRespuestas(
+  id: string,
+  respuestasParciales: Record<string, string>,
+  completar = false
+): Promise<OrderData | null> {
+  try {
+    await ensurePostgresTables();
+    const existing = await prisma.ordenCompra.findUnique({ where: { id } });
+    if (existing) {
+      const prev = (existing.datosRespuestas as Record<string, string> | null) || {};
+      const updated = await prisma.ordenCompra.update({
+        where: { id },
+        data: {
+          datosRespuestas: { ...prev, ...respuestasParciales },
+          ...(completar ? { onboardingCompletado: true } : {}),
+        },
+      });
+      return {
+        ...updated,
+        fechaEvento: updated.fechaEvento ? updated.fechaEvento.toISOString() : null,
+        createdAt: updated.createdAt.toISOString(),
+        updatedAt: updated.updatedAt.toISOString(),
+      } as unknown as OrderData;
+    }
+  } catch (err) {
+    // Fallback
+  }
+  const orders = readFallbackOrders();
+  const idx = orders.findIndex((o) => o.id === id);
+  if (idx >= 0) {
+    orders[idx].datosRespuestas = { ...(orders[idx].datosRespuestas || {}), ...respuestasParciales };
+    if (completar) orders[idx].onboardingCompletado = true;
+    orders[idx].updatedAt = new Date().toISOString();
+    saveFallbackOrders(orders);
+    return orders[idx];
+  }
+  return null;
+}
+
+/**
+ * Admin: asegurar que una orden tenga token de datos (órdenes viejas,
+ * creadas antes del portal, nacen sin token). Devuelve el token.
+ */
+export async function ensureDatosToken(id: string): Promise<string | null> {
+  const token =
+    typeof crypto !== "undefined" && "randomUUID" in crypto
+      ? crypto.randomUUID()
+      : `datos_${Date.now()}_${Math.random().toString(36).substring(2, 10)}`;
+  try {
+    await ensurePostgresTables();
+    const updated = await prisma.ordenCompra.update({ where: { id }, data: { datosToken: token } });
+    if (updated) return token;
+  } catch (err) {
+    // Fallback
+  }
+  const orders = readFallbackOrders();
+  const idx = orders.findIndex((o) => o.id === id);
+  if (idx >= 0) {
+    orders[idx].datosToken = token;
+    orders[idx].updatedAt = new Date().toISOString();
+    saveFallbackOrders(orders);
+    return token;
   }
   return null;
 }
