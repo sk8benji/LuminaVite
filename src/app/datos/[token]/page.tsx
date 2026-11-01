@@ -86,6 +86,10 @@ const UI = {
 export default function PortalDatosPage() {
   const params = useParams();
   const token = params.token as string;
+  // Vista previa: /datos/demo muestra el portal completo sin tocar ninguna
+  // orden real. No lee ni escribe en la API: todo vive en el estado local
+  // y se pierde al recargar. Solo sirve para ver cómo quedó y ajustar.
+  const esDemo = token === "demo";
 
   const [cargando, setCargando] = useState(true);
   const [linkValido, setLinkValido] = useState(true);
@@ -114,6 +118,14 @@ export default function PortalDatosPage() {
   const progreso = calcularProgresoDatos(respuestas);
 
   const cargar = useCallback(async () => {
+    if (esDemo) {
+      setNombreCliente("");
+      setPaqueteNombre("");
+      setRespuestas({});
+      setCompletado(false);
+      setCargando(false);
+      return;
+    }
     try {
       const res = await fetch(`/api/datos/${encodeURIComponent(token)}`);
       const data = await res.json();
@@ -162,6 +174,13 @@ export default function PortalDatosPage() {
   }, [vista, idx]);
 
   async function guardar(id: string, valor: string): Promise<boolean> {
+    if (esDemo) {
+      setRespuestas((prev) => ({ ...prev, [id]: valor }));
+      setEstadoGuardado("guardado");
+      if (timerRef.current) clearTimeout(timerRef.current);
+      timerRef.current = setTimeout(() => setEstadoGuardado("idle"), 2000);
+      return true;
+    }
     setEstadoGuardado("guardando");
     try {
       const res = await fetch(`/api/datos/${encodeURIComponent(token)}`, {
@@ -223,6 +242,13 @@ export default function PortalDatosPage() {
 
   async function subirFoto(file: File) {
     if (!campo) return;
+    if (esDemo) {
+      // Vista previa local: se ve la foto en el flujo, pero no se sube a S3.
+      const preview = URL.createObjectURL(file);
+      setValorActual(preview);
+      await guardar(campo.id, preview);
+      return;
+    }
     setSubiendoFoto(true);
     try {
       const res = await fetch(`/api/datos/${encodeURIComponent(token)}/upload-url`, {
@@ -248,6 +274,11 @@ export default function PortalDatosPage() {
   }
 
   async function completar() {
+    if (esDemo) {
+      setCompletado(true);
+      setVista("exito");
+      return;
+    }
     setEstadoGuardado("guardando");
     try {
       const res = await fetch(`/api/datos/${encodeURIComponent(token)}`, {
@@ -341,6 +372,13 @@ export default function PortalDatosPage() {
                 </p>
               )}
               <p className="text-stone-600 mt-2">{t.bienvenidaSub}</p>
+              {esDemo && (
+                <p className="mt-3 rounded-xl bg-amber-50 border border-amber-200 px-4 py-3 text-sm font-semibold text-amber-800">
+                  {idioma === "es"
+                    ? "VISTA PREVIA — Solo para ver cómo quedó y hacer ajustes. No guarda nada en ninguna orden."
+                    : "PREVIEW — Only to see how it looks and make adjustments. Nothing is saved to any order."}
+                </p>
+              )}
               {paqueteNombre && (
                 <p className="text-xs font-semibold uppercase tracking-wider text-stone-400 mt-3">
                   {paqueteNombre}
@@ -564,12 +602,14 @@ export default function PortalDatosPage() {
                 </button>
               )}
             </div>
-            <button
-              onClick={guardarYSalir}
-              className="w-full text-center text-sm font-semibold text-stone-500 underline underline-offset-2"
-            >
-              {t.guardarSalir}
-            </button>
+            {!esDemo && (
+              <button
+                onClick={guardarYSalir}
+                className="w-full text-center text-sm font-semibold text-stone-500 underline underline-offset-2"
+              >
+                {t.guardarSalir}
+              </button>
+            )}
             {avisoGuardadoSalir && (
               <p className="text-center text-sm font-semibold text-emerald-600">{t.guardado}</p>
             )}
@@ -640,6 +680,13 @@ export default function PortalDatosPage() {
             <p className="text-5xl">💌</p>
             <h1 className="text-2xl font-bold">{t.exitoTitulo}</h1>
             <p className="text-stone-600">{completado ? t.exitoSub : t.yaCompletado}</p>
+            {esDemo && (
+              <p className="text-sm font-semibold text-amber-800">
+                {idioma === "es"
+                  ? "Vista previa: en el link real aquí se marca el formulario como completado. Aquí no se guardó nada."
+                  : "Preview: on the real link this marks the form as completed. Nothing was saved here."}
+              </p>
+            )}
           </div>
         )}
       </div>
