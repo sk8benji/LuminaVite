@@ -384,7 +384,9 @@ export default function EventSettingsConfig({
                   type="number"
                   min={1}
                   max={100}
-                  value={formData.maxPasesPorInvitado === 0 ? 4 : formData.maxPasesPorInvitado ?? 4}
+                  disabled={formData.maxPasesPorInvitado === 0}
+                  placeholder={formData.maxPasesPorInvitado === 0 ? "—" : undefined}
+                  value={formData.maxPasesPorInvitado === 0 ? "" : formData.maxPasesPorInvitado ?? 4}
                   onClick={(e) => e.stopPropagation()}
                   onChange={(e) => {
                     const v = Math.floor(Number(e.target.value));
