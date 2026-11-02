@@ -43,7 +43,7 @@ export const BLOG_POSTS: BlogPost[] = [
       {
         heading: "Give guests one place to upload",
         paragraphs: [
-          "Print a QR code or share a link and let guests upload straight from their phones, with no app to install and no account to create. Every photo lands in one gallery for the event, instead of ten different chats. With Click & Love, the guest gallery is part of the VIP plan: guests scan the code or open the link, upload photos and videos, and the host sees them in the event panel. See how a wedding design looks live in the [Fairytale Castle template](https://clickandlove.app/templates/emma-and-lucas).",
+          "Print a QR code or share a link and let guests upload straight from their phones, with no app to install and no account to create. Every photo lands in one gallery for the event, instead of ten different chats. With Click & Love, the guest gallery is part of the VIP plan: guests scan the code or open the link, upload photos and videos, and the host sees them in the event panel. See how a wedding design looks live in the [Fairytale Castle demo](https://clickandlove.app/demo/emma-and-lucas).",
         ],
         bullets: [
           "QR code or link: guests open it with the phone camera, nothing to install.",
@@ -114,7 +114,7 @@ export const BLOG_POSTS: BlogPost[] = [
       {
         heading: "Warm and family wording",
         paragraphs: [
-          "With hearts full of joy, our family invites you to celebrate fifteen years of Sofia. Join us for mass, the waltz and a night of dancing on Saturday, June 12th, 2027, at six in the evening. Your presence is the best gift. Please confirm through the invitation link so we can save your seats. See a design that fits this tone in the [Vintage Quinceanera template](https://clickandlove.app/templates/isabella-xv).",
+          "With hearts full of joy, our family invites you to celebrate fifteen years of Sofia. Join us for mass, the waltz and a night of dancing on Saturday, June 12th, 2027, at six in the evening. Your presence is the best gift. Please confirm through the invitation link so we can save your seats. See a design that fits this tone in the [Vintage Quinceanera demo](https://clickandlove.app/demo/isabella-xv).",
         ],
       },
       {
@@ -224,7 +224,7 @@ export const BLOG_POSTS: BlogPost[] = [
       {
         heading: "Passes per family, not per invitation",
         paragraphs: [
-          "The number that breaks a budget is not the guest count, it is the passes count. One invitation for a family of four is four plates, and one invitation for a single guest is one. Set the passes per guest when you send, and the panel adds them up for you. When a family confirms two passes instead of four, you know it the same day, not the week of the event. See it in a real design with the [Celestial Butterfly template](https://clickandlove.app/templates/mariposas-xv).",
+          "The number that breaks a budget is not the guest count, it is the passes count. One invitation for a family of four is four plates, and one invitation for a single guest is one. Set the passes per guest when you send, and the panel adds them up for you. When a family confirms two passes instead of four, you know it the same day, not the week of the event. See it in a real design with the [Celestial Butterfly demo](https://clickandlove.app/demo/mariposas-xv).",
         ],
       },
       {

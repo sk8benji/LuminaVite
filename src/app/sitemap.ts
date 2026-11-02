@@ -1,6 +1,5 @@
 import { MetadataRoute } from "next";
 import { BLOG_POSTS } from "@/lib/blog-posts";
-import { INITIAL_MASTER_TEMPLATES } from "@/lib/templates-data";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = "https://clickandlove.app";
@@ -120,13 +119,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...BLOG_POSTS.map((post) => ({
       url: `${baseUrl}/blog/${post.slug}`,
       lastModified: new Date(post.datePublished),
-      changeFrequency: "monthly" as const,
-      priority: 0.8,
-    })),
-    // Plantillas (arquitectura 2026-11-02)
-    ...INITIAL_MASTER_TEMPLATES.map((t) => ({
-      url: `${baseUrl}/templates/${t.slug}`,
-      lastModified,
       changeFrequency: "monthly" as const,
       priority: 0.8,
     })),
