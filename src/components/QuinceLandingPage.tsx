@@ -2,6 +2,8 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
+import { FAQS_LIST } from "@/lib/quince-faqs";
 import {
   ArrowRight,
   Check,
@@ -57,17 +59,17 @@ const TEMPLATES_LIST: TemplateItem[] = [
     tag: "Gala & Royal",
     slug: "mariposas-xv",
     image: "/assets/home-real/blue-butterfly-real.webp",
-    palette: "Baby Blue ΓÇó Lavender ΓÇó Silver",
+    palette: "Baby Blue • Lavender • Silver",
     description: "Floating CSS butterflies, fairy tale arch, parental dedication letter, and full court of honor.",
     highlights: ["Interactive 3D Envelope", "Floating butterflies animation", "Court of Honor breakdown"],
   },
   {
     id: "elegant-rose",
-    name: "Vintage Quincea├▒era (Elegant Rose)",
-    tag: "Rom├íntico",
+    name: "Vintage Quinceañera (Elegant Rose)",
+    tag: "Romántico",
     slug: "isabella-xv",
     image: "/assets/home-real/elegant-rose-real.webp",
-    palette: "Blush Rose ΓÇó Soft Gold ΓÇó Ivory",
+    palette: "Blush Rose • Soft Gold • Ivory",
     description: "Canva luxury replica with velvet wax seal, bilingual switcher, Then & Now photo timeline, and song player.",
     highlights: ["Bilingual EN / ES toggle", "Then & Now photo timeline", "Curved typography header"],
   },
@@ -77,7 +79,7 @@ const TEMPLATES_LIST: TemplateItem[] = [
     tag: "Elegante",
     slug: "quince-rosado",
     image: "/assets/template-quince-rosado/90043c428c5ec72c7adb26dce69dedd2.webp",
-    palette: "Deep Magenta ΓÇó Rose ΓÇó Gold",
+    palette: "Deep Magenta • Rose • Gold",
     description: "Classic royal ball theme with gold filigree accents, silk bow unboxing, and church mass details.",
     highlights: ["Gold silk bow seal", "Strict RSVP pass selector", "Gift registry with Zelle"],
   },
@@ -87,7 +89,7 @@ const TEMPLATES_LIST: TemplateItem[] = [
     tag: "Majestuoso",
     slug: "baby-blue-xv",
     image: "/assets/template-baby-blue/foto-castillo.webp",
-    palette: "Cinderella Blue ΓÇó Platinum ΓÇó Pearl",
+    palette: "Cinderella Blue • Platinum • Pearl",
     description: "Dreamy royal carriage aesthetic with countdown clock, chapel postal map, and father-daughter dance tribute.",
     highlights: ["Palace carriage illustration", "Father-daughter waltz track", "Live GPS directions"],
   },
@@ -97,64 +99,23 @@ const TEMPLATES_LIST: TemplateItem[] = [
     tag: "Gala Nocturna",
     slug: "beauty-quince-xv",
     image: "/assets/template-rose/722d78548334333072ad7200e4f8233e.webp",
-    palette: "Midnight Blue ΓÇó Imperial Gold",
+    palette: "Midnight Blue • Imperial Gold",
     description: "Enchanted rose under glass dome motif, spinning vinyl disc, kids policy notice, and registry box.",
     highlights: ["Spinning vinyl record player", "Children policy card", "High-contrast night palette"],
   },
   {
     id: "miss-15",
-    name: "Miss 15 A├▒os Champagne Floral",
+    name: "Miss 15 Años Champagne Floral",
     tag: "Moderno",
     slug: "miss-15-xv",
     image: "/assets/home-real/quince-telefono-aerea.jpg",
-    palette: "Champagne ΓÇó Cream ΓÇó Warm Tan",
+    palette: "Champagne • Cream • Warm Tan",
     description: "Minimalist floral swing concept opening directly to the gala photo with modern typography and timeline icons.",
     highlights: ["Instant card reveal", "Minimalist outlined icons", "Instagram story friendly"],
   },
 ];
 
-interface FaqItem {
-  question: string;
-  answer: string;
-}
 
-const FAQS_LIST: FaqItem[] = [
-  {
-    question: "Do our guests need to download an app or sign up to view the invitation?",
-    answer:
-      "Zero downloads required. Your guests simply tap a private link sent via text, WhatsApp, or Instagram DM. The invitation opens instantly in Safari, Chrome, or any mobile browser with high-definition animations, music, and GPS navigation.",
-  },
-  {
-    question: "How does the strict pass control per family work?",
-    answer:
-      "Unlike paper invitations where guests assume they can bring uninvited plus-ones, our platform locks the RSVP to the exact number of passes you assign (e.g., 'Familia Morales ┬╖ 4 passes assigned'). When they confirm, they can only confirm up to that limit, saving you thousands on catering headcount.",
-  },
-  {
-    question: "What happens if our mass time, dinner schedule, or venue changes at the last minute?",
-    answer:
-      "Because your invitation is live software hosted in the cloud, our local Los Angeles team updates your schedule or venue details instantly. Your guests will always see the 100% correct information without you having to reprint anything.",
-  },
-  {
-    question: "Are you locally based in Los Angeles? Can we talk to a real person?",
-    answer:
-      "Yes! We are proudly based in Southern California, serving the San Fernando Valley, Glendale, Burbank, Pasadena, Downtown LA, and Orange County. You can call or text us anytime at (818) 299-4882 or message us on WhatsApp.",
-  },
-  {
-    question: "Can we include my daughter's favorite waltz or entrance song?",
-    answer:
-      "Absolutely. You can upload any song file (.mp3, .m4a) or choose from our curated library of romantic waltzes and pop hits. As soon as your guest taps the envelope to open, the music plays automatically in high-fidelity audio.",
-  },
-  {
-    question: "How fast is the turnaround time after I place my order?",
-    answer:
-      "Our team handcrafts and delivers your custom link within 24 to 48 hours. If you choose our VIP Los Angeles package, rush 24-hour turnaround and dedicated priority WhatsApp support are included at no extra cost.",
-  },
-  {
-    question: "Can we manage a bilingual celebration for English and Spanish speakers?",
-    answer:
-      "Yes! Both our Assisted and VIP templates support bilingual options so abuelitos and tias can read in Spanish, while cousins and classmates can read in English with a single tap.",
-  },
-];
 
 // ============================================================================
 // MAIN COMPONENT
@@ -195,17 +156,18 @@ export default function QuinceLandingPage() {
       {/* ================================================================== */}
       <div className="bg-[#7A002A] text-white py-2 px-4 text-center border-b border-[#5A0020] text-xs font-medium tracking-wide flex items-center justify-center gap-2">
         <span className="inline-block w-2 h-2 rounded-full bg-[#E5C158] animate-pulse" />
-        <span>≡ƒææ Serving Greater Los Angeles, San Fernando Valley & Orange County ΓÇó 24ΓÇô48h Turnaround</span>
+        <span>📍 Serving Greater Los Angeles, San Fernando Valley & Orange County • 24–48h Turnaround</span>
       </div>
 
       <header className="sticky top-0 z-50 bg-[#FDFBF8]/90 backdrop-blur-md border-b border-[#E7DCC8]/80 transition-all duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2.5 group">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <Image
               src="/logo.png"
               alt="Click & Love"
+              width={40}
+              height={40}
               className="w-10 h-10 object-contain group-hover:scale-105 transition-transform duration-300"
             />
             <div className="flex items-baseline">
@@ -281,7 +243,7 @@ export default function QuinceLandingPage() {
 
               {/* H1 Headline */}
               <h1 className="text-4xl sm:text-5xl lg:text-[58px] font-extrabold text-[#2B0A18] tracking-tight leading-[1.12]">
-                Quincea├▒era Digital Invitations{" "}
+                Quinceañera Digital Invitations{" "}
                 <span className="relative whitespace-nowrap text-[#7A002A]">
                   <span className="relative z-10">Your Guests</span>
                   <span className="absolute bottom-1.5 left-0 w-full h-3 bg-[#E5C158]/30 -z-0 rounded-sm transform -rotate-1" />
@@ -358,7 +320,7 @@ export default function QuinceLandingPage() {
                 </span>
                 <span className="flex items-center gap-1.5">
                   <Check className="w-4 h-4 text-emerald-600 stroke-[3]" />
-                  Ready in 24ΓÇô48 hours
+                  Ready in 24–48 hours
                 </span>
               </div>
             </div>
@@ -381,12 +343,12 @@ export default function QuinceLandingPage() {
                     {/* Event Pill */}
                     <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#7A002A]/10 text-[10px] font-bold uppercase tracking-widest text-[#7A002A] mb-3">
                       <Sparkles className="w-3 h-3 text-[#B08D3C]" />
-                      <span>Mis Quince A├▒os</span>
+                      <span>Mis Quince Años</span>
                     </div>
 
                     <h2 className="font-serif italic text-3xl text-[#7A002A] mb-1">Valeria Morales</h2>
                     <p className="text-[11px] font-semibold text-[#8A6B76] uppercase tracking-wider mb-4">
-                      Saturday, October 24 ΓÇó Los Angeles, CA
+                      Saturday, October 24 • Los Angeles, CA
                     </p>
 
                     {/* Interactive 3D Envelope Simulation */}
@@ -410,15 +372,15 @@ export default function QuinceLandingPage() {
                         </span>
                         <span className="font-serif italic text-2xl text-[#2B0A18] my-1">Valeria Morales</span>
                         <div className="w-16 h-[1px] bg-[#D4AF37]/50 my-1" />
-                        <span className="text-[10px] font-semibold text-[#5A3C46]">OCTOBER 24 ΓÇó 4:00 PM</span>
-                        <span className="text-[9px] text-[#8A6B76] mt-0.5">The Castaway ΓÇó Burbank, CA</span>
+                        <span className="text-[10px] font-semibold text-[#5A3C46]">OCTOBER 24 • 4:00 PM</span>
+                        <span className="text-[9px] text-[#8A6B76] mt-0.5">The Castaway • Burbank, CA</span>
                       </div>
 
                       {/* Front Pocket */}
                       <div className="absolute inset-x-0 bottom-0 h-[150px] bg-gradient-to-t from-[#E29B95] to-[#EBB5BF] rounded-b-2xl border-t border-white/40 shadow-md z-25 flex flex-col justify-end p-3 pointer-events-none">
                         <div className="flex items-center justify-between text-[10px] text-[#5A3C46] font-semibold px-1">
-                          <span>≡ƒî╕ Floral Gold Foil</span>
-                          <span>Stereo Audio ΓÖ½</span>
+                          <span>🌸 Floral Gold Foil</span>
+                          <span>Stereo Audio ♫</span>
                         </div>
                       </div>
 
@@ -437,12 +399,12 @@ export default function QuinceLandingPage() {
                           isEnvelopeOpen ? "scale-0 opacity-0" : "scale-100 opacity-100 animate-pulse"
                         }`}
                       >
-                        <span className="text-xs">≡ƒææ</span>
+                        <span className="text-xs">📍</span>
                       </div>
                     </div>
 
                     <p className="text-[10px] text-[#8A6B76] mt-2 mb-3">
-                      {isEnvelopeOpen ? "Γ£ô Envelope opened with waltz music" : "≡ƒæå Tap envelope to simulate unboxing"}
+                      {isEnvelopeOpen ? "✓ Envelope opened with waltz music" : "👆 Tap envelope to simulate unboxing"}
                     </p>
 
                     {/* RSVP Action Bar */}
@@ -456,7 +418,7 @@ export default function QuinceLandingPage() {
                       </button>
                       <div className="flex items-center justify-center gap-2 text-[10px] text-[#5A3C46]">
                         <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-                        <span>Instant SMS Confirmation ΓÇó 4 Passes Reserved</span>
+                        <span>Instant SMS Confirmation • 4 Passes Reserved</span>
                       </div>
                     </div>
                   </div>
@@ -475,10 +437,10 @@ export default function QuinceLandingPage() {
           {/* Section Header */}
           <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
             <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#F5EDDA] border border-[#B08D3C]/40 text-xs font-bold uppercase tracking-widest text-[#7A002A]">
-              <span>Γ£ª Modern Quince Platform</span>
+              <span>✪ Modern Quince Platform</span>
             </div>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#2B0A18] tracking-tight">
-              Everything paper invitations can&rsquo;t doΓÇöwithout the chaos.
+              Everything paper invitations can&rsquo;t do—without the chaos.
             </h2>
             <p className="text-base sm:text-lg text-[#5A3C46] leading-relaxed">
               Designed specifically for Los Angeles families managing 150 to 400+ guests. Keep full control of your
@@ -530,13 +492,13 @@ export default function QuinceLandingPage() {
                       FM
                     </div>
                     <div>
-                      <h4 className="text-xs font-bold text-[#2B0A18]">Familia Morales (T├¡os)</h4>
-                      <p className="text-[11px] text-[#7A5B66]">Carlos, Elena, Mateo & Sof├¡a</p>
+                      <h4 className="text-xs font-bold text-[#2B0A18]">Familia Morales (Tíos)</h4>
+                      <p className="text-[11px] text-[#7A5B66]">Carlos, Elena, Mateo & Sofía</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="px-2.5 py-1 rounded-lg bg-emerald-100 text-emerald-800 text-[11px] font-bold border border-emerald-200">
-                      Γ£ô 4 of 4 Confirmed
+                      ✓ 4 of 4 Confirmed
                     </span>
                     <span className="text-[11px] text-[#8A6B76] font-mono">Table 03</span>
                   </div>
@@ -555,7 +517,7 @@ export default function QuinceLandingPage() {
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="px-2.5 py-1 rounded-lg bg-amber-100 text-amber-800 text-[11px] font-bold border border-amber-200">
-                      ΓÅ│ Pending (SMS Sent)
+                      ⏳ Pending (SMS Sent)
                     </span>
                     <span className="text-[11px] text-[#8A6B76] font-mono">Table 05</span>
                   </div>
@@ -580,19 +542,19 @@ export default function QuinceLandingPage() {
               {/* iOS Text Message Bubble */}
               <div className="mt-8 rounded-2xl bg-white border border-[#E7DCC8] p-4 shadow-sm space-y-2">
                 <div className="flex items-center justify-between text-[10px] text-[#8A6B76] font-semibold border-b border-[#F0E6D8] pb-1.5">
-                  <span>Messages ΓÇó Click &amp; Love</span>
+                  <span>Messages • Click &amp; Love</span>
                   <span>Now</span>
                 </div>
                 <div className="bg-[#E9E9EB] text-[#1C1C1E] p-3 rounded-2xl rounded-tl-sm text-xs leading-snug">
-                  ┬íHola Familia Morales! Confirmamos sus <strong>4 pases</strong> para la Quincea├▒era de Valeria el S├íbado
+                  ¡Hola Familia Morales! Confirmamos sus <strong>4 pases</strong> para la Quinceañera de Valeria el Sábado
                   24 de Octubre en The Castaway, Burbank.
                 </div>
                 <div className="flex items-center gap-2 pt-1">
                   <span className="inline-flex items-center gap-1 text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded">
-                    ≡ƒÜù Waze Route
+                    🚗 Waze Route
                   </span>
                   <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">
-                    ≡ƒôì Google Maps
+                    🗺️ Google Maps
                   </span>
                 </div>
               </div>
@@ -615,16 +577,16 @@ export default function QuinceLandingPage() {
               {/* LA Hall Chips */}
               <div className="mt-6 space-y-2">
                 <div className="flex items-center justify-between p-2.5 rounded-xl bg-white border border-[#E7DCC8] text-xs font-medium text-[#2B0A18]">
-                  <span>The Castaway ΓÇó Burbank</span>
-                  <span className="text-[#B08D3C] text-[11px] font-bold">Waze Γåù</span>
+                  <span>The Castaway • Burbank</span>
+                  <span className="text-[#B08D3C] text-[11px] font-bold">Waze →</span>
                 </div>
                 <div className="flex items-center justify-between p-2.5 rounded-xl bg-white border border-[#E7DCC8] text-xs font-medium text-[#2B0A18]">
-                  <span>Brandview Ballroom ΓÇó Glendale</span>
-                  <span className="text-[#B08D3C] text-[11px] font-bold">Maps Γåù</span>
+                  <span>Brandview Ballroom • Glendale</span>
+                  <span className="text-[#B08D3C] text-[11px] font-bold">Maps →</span>
                 </div>
                 <div className="flex items-center justify-between p-2.5 rounded-xl bg-white border border-[#E7DCC8] text-xs font-medium text-[#2B0A18]">
-                  <span>Imperial Palace ΓÇó Pasadena</span>
-                  <span className="text-[#B08D3C] text-[11px] font-bold">Maps Γåù</span>
+                  <span>Imperial Palace • Pasadena</span>
+                  <span className="text-[#B08D3C] text-[11px] font-bold">Maps →</span>
                 </div>
               </div>
             </div>
@@ -654,7 +616,7 @@ export default function QuinceLandingPage() {
                   </div>
                   <div>
                     <h4 className="text-sm font-bold text-white tracking-wide">
-                      Ed Sheeran ΓÇö Photograph (Vals Oficial)
+                      Ed Sheeran — Photograph (Vals Oficial)
                     </h4>
                     <p className="text-xs text-[#E5C158]/80">Plays automatically when guests open the envelope</p>
                   </div>
@@ -698,7 +660,7 @@ export default function QuinceLandingPage() {
                 <span className="font-serif italic text-5xl font-bold text-[#E5C158] block mb-4">01</span>
                 <h3 className="text-xl font-extrabold text-[#2B0A18] mb-2">Pick Your Design</h3>
                 <p className="text-sm text-[#5A3C46] leading-relaxed">
-                  Browse our curated collection of luxury quincea├▒era templates. Test the full live interactive demo with
+                  Browse our curated collection of luxury quinceañera templates. Test the full live interactive demo with
                   audio, envelope, and timeline on your own phone.
                 </p>
               </div>
@@ -715,7 +677,7 @@ export default function QuinceLandingPage() {
                 <h3 className="text-xl font-extrabold text-[#2B0A18] mb-2">We Build It For You</h3>
                 <p className="text-sm text-[#5A3C46] leading-relaxed">
                   Send us your photos, court of honor, dress code, and waltz song via WhatsApp. Our local Los Angeles
-                  designers build and optimize your private link in 24ΓÇô48 hours.
+                  designers build and optimize your private link in 24–48 hours.
                 </p>
               </div>
               <div className="mt-6 pt-4 border-t border-[#F0E6D8] text-xs font-bold text-[#7A002A] flex items-center gap-1">
@@ -749,10 +711,10 @@ export default function QuinceLandingPage() {
           {/* Header */}
           <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
             <span className="font-serif italic text-2xl text-[#B08D3C] block font-normal">
-              Exclusive Quincea├▒era Collection
+              Exclusive Quinceañera Collection
             </span>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#2B0A18] tracking-tight">
-              Designed for the most memorable XV A├▒os.
+              Designed for the most memorable XV Años.
             </h2>
             <p className="text-base text-[#5A3C46]">
               Every template includes custom 3D envelope opening, waltz music player, photo gallery, and strict pass
@@ -769,11 +731,12 @@ export default function QuinceLandingPage() {
               >
                 {/* Image Container with 9:16 mobile aspect feel */}
                 <div className="relative h-72 sm:h-80 overflow-hidden bg-[#2B0A18]">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
+                  <Image
                     src={tpl.image}
                     alt={tpl.name}
-                    className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700"
+                    fill
+                    sizes="(max-width: 640px) 100vw, 50vw"
+                    className="object-cover object-top group-hover:scale-105 transition-transform duration-700"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
@@ -784,7 +747,7 @@ export default function QuinceLandingPage() {
 
                   {/* Palette Pill */}
                   <span className="absolute bottom-3 left-4 text-[11px] font-medium text-white/90 drop-shadow">
-                    ≡ƒÄ¿ {tpl.palette}
+                    🎨 {tpl.palette}
                   </span>
                 </div>
 
@@ -855,7 +818,7 @@ export default function QuinceLandingPage() {
 
                 <div className="flex items-baseline gap-2">
                   <span className="text-5xl font-extrabold text-[#2B0A18]">$99</span>
-                  <span className="text-xs text-[#8A6B76] font-medium">USD ΓÇó One-time fee</span>
+                  <span className="text-xs text-[#8A6B76] font-medium">USD • One-time fee</span>
                 </div>
 
                 <div className="space-y-3 pt-4 border-t border-[#F0E6D8] text-xs sm:text-sm text-[#4A2D37]">
@@ -912,7 +875,7 @@ export default function QuinceLandingPage() {
             <div className="rounded-3xl bg-white border-2 border-[#B08D3C] p-8 sm:p-10 shadow-[0_20px_50px_rgba(176,141,60,0.18)] flex flex-col justify-between relative overflow-hidden">
               {/* Highlight ribbon */}
               <div className="absolute top-0 right-0 bg-[#B08D3C] text-white text-[10px] font-extrabold uppercase tracking-widest py-1.5 px-6 rounded-bl-xl shadow-sm">
-                Γÿà Most Popular in Los Angeles
+                ★ Most Popular in Los Angeles
               </div>
 
               <div className="space-y-6">
@@ -920,15 +883,15 @@ export default function QuinceLandingPage() {
                   <span className="text-xs font-bold uppercase tracking-widest text-[#B08D3C] block mb-1">
                     Complete Concierge Service
                   </span>
-                  <h3 className="text-2xl font-extrabold text-[#2B0A18]">Plan VIP Los ├üngeles</h3>
+                  <h3 className="text-2xl font-extrabold text-[#2B0A18]">Plan VIP Los Ángeles</h3>
                   <p className="text-xs text-[#5A3C46] mt-1">
-                    Designed for large galas (200ΓÇô400+ guests) needing VIP support and printable assets.
+                    Designed for large galas (200–400+ guests) needing VIP support and printable assets.
                   </p>
                 </div>
 
                 <div className="flex items-baseline gap-2">
                   <span className="text-5xl font-extrabold text-[#7A002A]">$199</span>
-                  <span className="text-xs text-[#8A6B76] font-medium">USD ΓÇó One-time fee</span>
+                  <span className="text-xs text-[#8A6B76] font-medium">USD • One-time fee</span>
                 </div>
 
                 <div className="space-y-3 pt-4 border-t border-[#F0E6D8] text-xs sm:text-sm text-[#4A2D37]">
@@ -991,7 +954,7 @@ export default function QuinceLandingPage() {
                   {checkoutLoading === "vip" ? (
                     <Loader2 className="w-4 h-4 animate-spin text-white" />
                   ) : (
-                    <span>Get VIP Los ├üngeles ($199)</span>
+                    <span>Get VIP Los Ángeles ($199)</span>
                   )}
                 </button>
               </div>
@@ -1028,7 +991,7 @@ export default function QuinceLandingPage() {
               Frequently Asked Questions
             </h2>
             <p className="text-base text-[#5A3C46]">
-              Everything you need to know about setting up your digital quincea├▒era invitation.
+              Everything you need to know about setting up your digital quinceañera invitation.
             </p>
           </div>
 
@@ -1078,7 +1041,7 @@ export default function QuinceLandingPage() {
               rel="noopener noreferrer"
               className="text-[#7A002A] font-bold underline hover:text-[#5A0020]"
             >
-              Chat directly with our Los Angeles design team on WhatsApp Γåù
+              Chat directly with our Los Angeles design team on WhatsApp →
             </a>
           </div>
         </div>
@@ -1095,7 +1058,7 @@ export default function QuinceLandingPage() {
         <div className="max-w-5xl mx-auto relative z-10 text-center space-y-8">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-[#E5C158]/40 text-xs font-semibold text-[#E5C158]">
             <Sparkles className="w-3.5 h-3.5 text-[#E5C158]" />
-            <span>Southern California Quincea├▒era Concierge</span>
+            <span>Southern California Quinceañera Concierge</span>
           </div>
 
           <h2 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight max-w-3xl mx-auto leading-[1.12]">
@@ -1104,7 +1067,7 @@ export default function QuinceLandingPage() {
           </h2>
 
           <p className="text-base sm:text-lg text-rose-100/80 max-w-2xl mx-auto font-normal leading-relaxed">
-            Stop worrying about lost paper envelopes and unconfirmed guests. Call, text, or WhatsApp us todayΓÇöwe&rsquo;ll
+            Stop worrying about lost paper envelopes and unconfirmed guests. Call, text, or WhatsApp us today—we&rsquo;ll
             have her custom invitation live in under 48 hours.
           </p>
 
@@ -1140,7 +1103,7 @@ export default function QuinceLandingPage() {
           {/* Local Studio Footer Badge */}
           <div className="pt-8 border-t border-white/10 text-xs text-rose-200/60 max-w-xl mx-auto space-y-1">
             <p className="font-semibold text-rose-100">
-              Handcrafted with love in Los Angeles, California ΓÇó Click &amp; Love Studio
+              Handcrafted with love in Los Angeles, California • Click &amp; Love Studio
             </p>
             <p>Serving Glendale, Burbank, Pasadena, San Fernando Valley, Long Beach &amp; Inland Empire.</p>
           </div>
@@ -1152,17 +1115,17 @@ export default function QuinceLandingPage() {
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <span className="font-bold text-white">Click and Love</span>
-            <span>┬⌐ {new Date().getFullYear()} All rights reserved.</span>
+            <span>© {new Date().getFullYear()} All rights reserved.</span>
           </div>
           <div className="flex items-center gap-6">
             <Link href="/" className="hover:text-white transition">
               Home
             </Link>
             <Link href="/es" className="hover:text-white transition">
-              Espa├▒ol
+              Español
             </Link>
             <a href="#templates" className="hover:text-white transition">
-              Quincea├▒eras
+              Quinceañeras
             </a>
             <a href="#pricing" className="hover:text-white transition">
               Pricing

@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import QuinceLandingPage from "@/components/QuinceLandingPage";
+import { FAQS_LIST } from "@/lib/quince-faqs";
 
 export const metadata: Metadata = {
   title: "Quinceañera Digital Invitations in Los Angeles | Click & Love",
   description:
-    "Luxury 3D interactive Quinceañera invitations in Los Angeles. Custom waltz music, 1-tap SMS RSVP confirmations, direct venue GPS, and strict family pass control. Order today.",
+    "Custom quinceañera digital invitations with 3D animated envelopes, music, and real-time SMS RSVP tracking. Made for Los Angeles families.",
   metadataBase: new URL("https://clickandlove.app"),
   alternates: {
     canonical: "https://clickandlove.app/quince-invitations",
@@ -17,7 +18,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Quinceañera Digital Invitations in Los Angeles | Click & Love",
     description:
-      "Interactive 3D unboxing envelopes with music, SMS RSVPs, and strict pass control for Quinceañeras across Southern California.",
+      "Custom quinceañera digital invitations with 3D animated envelopes, music, and real-time SMS RSVP tracking. Made for Los Angeles families.",
     url: "https://clickandlove.app/quince-invitations",
     siteName: "Click & Love",
     locale: "en_US",
@@ -36,7 +37,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Quinceañera Digital Invitations in Los Angeles | Click & Love",
     description:
-      "Luxury 3D interactive Quinceañera invitations with waltz music, SMS RSVP, and venue GPS in Los Angeles.",
+      "Custom quinceañera digital invitations with 3D animated envelopes, music, and real-time SMS RSVP tracking. Made for Los Angeles families.",
     images: ["https://clickandlove.app/assets/og-banner.png"],
   },
 };
@@ -82,11 +83,28 @@ export default function QuincePage() {
     },
   };
 
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: FAQS_LIST.map((faq) => ({
+      "@type": "Question",
+      name: faq.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: faq.answer,
+      },
+    })),
+  };
+
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
       <QuinceLandingPage />
     </>
