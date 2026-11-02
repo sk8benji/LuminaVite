@@ -2,9 +2,9 @@ import { Metadata } from "next";
 import HomeView from "@/components/home/HomeView";
 
 export const metadata: Metadata = {
-  title: "Click & Love • Invitaciones Digitales Interactivas de Gala en Los Ángeles",
+  title: "Invitaciones Digitales en Los Ángeles con RSVP por SMS | Click & Love",
   description:
-    "Papelería digital de alta costura armada por nuestro equipo en Los Ángeles para bodas y quinceañeras con confirmación directa por SMS, control de mesas y panel en vivo.",
+    "Invitaciones digitales personalizadas en Los Ángeles para bodas, quinceañeras y galas. Incluyen sobres virtuales 3D, música y seguimiento de RSVP por SMS en tiempo real.",
   metadataBase: new URL("https://clickandlove.app"),
   alternates: {
     canonical: "https://clickandlove.app/es/",
@@ -15,9 +15,9 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "Click & Love • Invitaciones Digitales Interactivas de Gala en Los Ángeles",
+    title: "Invitaciones Digitales en Los Ángeles con RSVP por SMS | Click & Love",
     description:
-      "Invitaciones web interactivas de gala con sobre virtual 3D, confirmación por SMS en 1 clic y navegación GPS directa al salón en Los Ángeles, CA.",
+      "Invitaciones digitales personalizadas en Los Ángeles para bodas, quinceañeras y galas. Incluyen sobres virtuales 3D, música y seguimiento de RSVP por SMS en tiempo real.",
     url: "https://clickandlove.app/es/",
     siteName: "Click & Love",
     locale: "es_US",
@@ -34,9 +34,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Click & Love • Invitaciones Digitales Interactivas de Gala",
+    title: "Invitaciones Digitales en Los Ángeles con RSVP por SMS | Click & Love",
     description:
-      "Invitaciones digitales armadas por nuestro equipo en Los Ángeles con sobre 3D y confirmación por SMS.",
+      "Invitaciones digitales personalizadas en Los Ángeles para bodas, quinceañeras y galas. Incluyen sobres virtuales 3D, música y seguimiento de RSVP por SMS en tiempo real.",
     images: ["https://clickandlove.app/assets/og-banner.png"],
   },
 };
@@ -44,7 +44,7 @@ export const metadata: Metadata = {
 export default function SpanishHomePage() {
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "ProfessionalService",
+    "@type": "LocalBusiness",
     name: "Click & Love Invitaciones Digitales",
     url: "https://clickandlove.app/es/",
     logo: "https://clickandlove.app/logo.png",
@@ -52,6 +52,8 @@ export default function SpanishHomePage() {
     description:
       "Papelería digital interactiva para bodas y quinceañeras con confirmación SMS, navegación GPS a salones y panel de anfitrión en Los Ángeles, California.",
     priceRange: "$99 - $199",
+    telephone: "+1-818-299-4882",
+    serviceArea: "Los Angeles, CA",
     address: {
       "@type": "PostalAddress",
       addressLocality: "Los Angeles",
@@ -71,16 +73,14 @@ export default function SpanishHomePage() {
       name: "Servicios de Invitaciones Digitales",
       itemListElement: [
         {
-          "@type": "Offer",
-          name: "Paquete Digital Asistido",
-          price: "99",
-          priceCurrency: "USD",
+          "@type": "Service",
+          name: "Invitaciones de Quinceañera",
+          url: "https://clickandlove.app/es/invitaciones-de-quinceanera",
         },
         {
-          "@type": "Offer",
-          name: "Servicio VIP Los Ángeles",
-          price: "199",
-          priceCurrency: "USD",
+          "@type": "Service",
+          name: "Invitaciones de Boda",
+          url: "https://clickandlove.app/wedding-invitations-los-angeles",
         },
       ],
     },

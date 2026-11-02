@@ -2,9 +2,9 @@ import { Metadata } from "next";
 import HomeView from "@/components/home/HomeView";
 
 export const metadata: Metadata = {
-  title: "Luxury Digital Invitations in Los Angeles | Click & Love",
+  title: "Digital Invitations in Los Angeles with SMS RSVP | Click & Love",
   description:
-    "Luxury digital invitations built in Los Angeles for weddings & quinceañeras. 3D music envelope, SMS RSVP, venue GPS, and live mobile guest list. Order today.",
+    "Custom digital invitations in Los Angeles for weddings, quinceañeras, and galas. Includes 3D virtual envelopes, music, and real-time SMS RSVP tracking.",
   metadataBase: new URL("https://clickandlove.app"),
   alternates: {
     canonical: "https://clickandlove.app/",
@@ -15,9 +15,9 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "Luxury Digital Invitations in Los Angeles | Click & Love",
+    title: "Digital Invitations in Los Angeles with SMS RSVP | Click & Love",
     description:
-      "Luxury digital invitations built in Los Angeles for weddings & quinceañeras. 3D music envelope, SMS RSVP, venue GPS, and live mobile guest list. Order today.",
+      "Custom digital invitations in Los Angeles for weddings, quinceañeras, and galas. Includes 3D virtual envelopes, music, and real-time SMS RSVP tracking.",
     url: "https://clickandlove.app/",
     siteName: "Click & Love",
     locale: "en_US",
@@ -34,9 +34,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Luxury Digital Invitations in Los Angeles | Click & Love",
+    title: "Digital Invitations in Los Angeles with SMS RSVP | Click & Love",
     description:
-      "Luxury digital invitations built in Los Angeles for weddings & quinceañeras. 3D music envelope, SMS RSVP, venue GPS, and live mobile guest list. Order today.",
+      "Custom digital invitations in Los Angeles for weddings, quinceañeras, and galas. Includes 3D virtual envelopes, music, and real-time SMS RSVP tracking.",
     images: ["https://clickandlove.app/assets/og-banner.png"],
   },
 };
@@ -44,14 +44,16 @@ export const metadata: Metadata = {
 export default function Page() {
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "ProfessionalService",
+    "@type": "LocalBusiness",
     name: "Click & Love",
     url: "https://clickandlove.app/",
     logo: "https://clickandlove.app/logo.png",
     image: "https://clickandlove.app/assets/og-banner.png",
     description:
-      "Luxury interactive digital invitations custom-built in Los Angeles for weddings and quinceañeras.",
+      "Custom digital invitations made in Los Angeles for weddings and quinceañeras, with 3D music envelopes and live SMS RSVP tracking.",
     priceRange: "$99 - $199",
+    telephone: "+1-818-299-4882",
+    serviceArea: "Los Angeles, CA",
     address: {
       "@type": "PostalAddress",
       addressLocality: "Los Angeles",
@@ -71,16 +73,14 @@ export default function Page() {
       name: "Digital Invitation Services",
       itemListElement: [
         {
-          "@type": "Offer",
-          name: "Digital Asistido Package",
-          price: "99",
-          priceCurrency: "USD",
+          "@type": "Service",
+          name: "Wedding Invitations",
+          url: "https://clickandlove.app/wedding-invitations-los-angeles",
         },
         {
-          "@type": "Offer",
-          name: "Servicio VIP Los Angeles",
-          price: "199",
-          priceCurrency: "USD",
+          "@type": "Service",
+          name: "Quinceañera Invitations",
+          url: "https://clickandlove.app/quince-invitations",
         },
       ],
     },

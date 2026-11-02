@@ -360,8 +360,8 @@ export const translations: Record<Language, HomeTranslations> = {
     },
     hero: {
       pill: "Invitaciones Digitales Interactivas",
-      title1: "Deja de perseguir a tus invitados",
-      title2: "para saber si van a asistir",
+      title1: "Invitaciones Digitales en Los Ángeles",
+      title2: "con RSVP por SMS instantáneo",
       subtitle:
         "Invitaciones interactivas armadas por nuestro equipo en Los Ángeles con confirmación por SMS, control de mesas y panel en vivo para tu celular.",
       ctaCatalog: "Ver Catálogo de Plantillas",
@@ -810,8 +810,8 @@ export const translations: Record<Language, HomeTranslations> = {
     },
     hero: {
       pill: "Interactive Digital Invitations",
-      title1: "Stop chasing your guests",
-      title2: "to find out if they will attend",
+      title1: "Digital Invitations in Los Angeles",
+      title2: "with Instant SMS RSVP",
       subtitle:
         "Interactive invitations custom-built by our Los Angeles team with SMS RSVPs, guest capacity control, and live phone dashboard.",
       ctaCatalog: "Explore Collections",

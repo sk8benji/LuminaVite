@@ -10,6 +10,7 @@ import {
   ExternalLink,
   Loader2,
   Lock,
+  Menu,
   MessageSquare,
   Phone,
   Star,
@@ -25,9 +26,11 @@ const PHONE_TEL = "tel:+18182994882";
 const PHONE_SMS = "sms:+18182994882";
 
 // Enlaces internos a las landings transaccionales (SEO: las landings eran
-// huérfanas, solo accesibles por URL directa y sitemap). ES enlaza la landing
-// XV en español; el resto aún no tiene versión ES.
-const FOOTER_LANDING_LINKS: Record<Language, { href: string; label: string }[]> = {
+// huérfanas, solo accesibles por URL directa y sitemap). Van en el MENÚ
+// PRINCIPAL, no en el footer (Abraham 2026-11-01). ES enlaza la landing
+// XV en español; el resto aún no tiene versión ES. El panel usa hidden/block
+// (no render condicional) para que los enlaces estén en el HTML inicial.
+const MENU_LANDING_LINKS: Record<Language, { href: string; label: string }[]> = {
   en: [
     { href: "/quince-invitations", label: "Quince Invitations" },
     { href: "/wedding-invitations-los-angeles", label: "Wedding Invitations" },
@@ -46,6 +49,8 @@ const FOOTER_LANDING_LINKS: Record<Language, { href: string; label: string }[]> 
 
 export default function HomeView({ initialLang = "en" }: { initialLang?: Language }) {
   const [lang, setLang] = useState<Language>(initialLang);
+  const [servicesOpen, setServicesOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isDemoModalOpen, setIsDemoModalOpen] = useState(false);
   const [activeDemoSlug, setActiveDemoSlug] = useState("isabella-xv");
   const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null);
@@ -150,6 +155,29 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
             <a href="#reviews" className="hover:text-[#7A002A] transition">
               {b.navReviews}
             </a>
+            <div className="relative">
+              <button
+                onClick={() => setServicesOpen((v) => !v)}
+                className="hover:text-[#7A002A] transition cursor-pointer"
+                aria-expanded={servicesOpen}
+              >
+                {lang === "es" ? "Servicios ▾" : "Services ▾"}
+              </button>
+              <div
+                className={`${servicesOpen ? "block" : "hidden"} absolute right-0 top-full mt-3 w-64 rounded-xl border border-[#E7DCC8] bg-white shadow-xl py-2 z-50`}
+              >
+                {MENU_LANDING_LINKS[lang].map((l) => (
+                  <Link
+                    key={l.href}
+                    href={l.href}
+                    onClick={() => setServicesOpen(false)}
+                    className="block px-4 py-2.5 text-[13px] hover:bg-[#FDFBF8] hover:text-[#7A002A] transition"
+                  >
+                    {l.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
           </nav>
 
           <div className="flex items-center gap-3">
@@ -178,12 +206,61 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
               </Link>
             </div>
 
+            <button
+              onClick={() => setMobileMenuOpen((v) => !v)}
+              className="lg:hidden inline-flex items-center justify-center w-10 h-10 rounded-full border border-[#E7DCC8] text-[#2B0A18] transition"
+              aria-label={lang === "es" ? "Abrir menú" : "Open menu"}
+              aria-expanded={mobileMenuOpen}
+            >
+              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
             <a
               href="#precios"
               className="hidden sm:inline-flex px-5 py-2.5 bg-[#7A002A] hover:bg-[#660025] text-white rounded-full text-[13px] font-['Montserrat'] font-bold shadow-[0_6px_18px_rgba(122,0,42,0.35)] transition active:scale-95"
             >
               {b.createBtn}
             </a>
+          </div>
+        </div>
+        <div className={`${mobileMenuOpen ? "block" : "hidden"} lg:hidden border-t border-[#E7DCC8] bg-[#FDFBF8]`}>
+          <div className="px-4 py-3 flex flex-col font-['Montserrat'] text-[13.5px] font-semibold text-[#2B0A18]">
+            <button
+              onClick={() => {
+                setMobileMenuOpen(false);
+                handleOpenDemo("isabella-xv");
+              }}
+              className="text-left py-2.5 hover:text-[#7A002A] transition cursor-pointer"
+            >
+              {b.navLiveDemo}
+            </button>
+            <a href="#como-funciona" onClick={() => setMobileMenuOpen(false)} className="py-2.5 hover:text-[#7A002A] transition">
+              {t.nav.howItWorks}
+            </a>
+            <a href="#comparativa" onClick={() => setMobileMenuOpen(false)} className="py-2.5 hover:text-[#7A002A] transition">
+              {t.nav.compare}
+            </a>
+            <a href="#plantillas" onClick={() => setMobileMenuOpen(false)} className="py-2.5 hover:text-[#7A002A] transition">
+              {b.navTemplates}
+            </a>
+            <a href="#precios" onClick={() => setMobileMenuOpen(false)} className="py-2.5 hover:text-[#7A002A] transition">
+              {t.nav.pricing}
+            </a>
+            <a href="#reviews" onClick={() => setMobileMenuOpen(false)} className="py-2.5 hover:text-[#7A002A] transition">
+              {b.navReviews}
+            </a>
+            <p className="pt-3 mt-1 border-t border-[#E7DCC8] text-xs font-bold tracking-widest text-[#7A002A]">
+              {lang === "es" ? "SERVICIOS" : "SERVICES"}
+            </p>
+            {MENU_LANDING_LINKS[lang].map((l) => (
+              <Link
+                key={l.href}
+                href={l.href}
+                onClick={() => setMobileMenuOpen(false)}
+                className="py-2.5 hover:text-[#7A002A] transition"
+              >
+                {l.label}
+              </Link>
+            ))}
           </div>
         </div>
       </header>
@@ -757,14 +834,11 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
       <footer className="py-10 px-4 bg-[#FDFBF8]">
         <div className="max-w-7xl mx-auto flex flex-col items-center gap-3 text-center">
           <p className="font-['Montserrat'] text-[13px] text-[#8A6B76]">{b.footerLine}</p>
-          <nav className="flex flex-wrap items-center justify-center gap-x-5 gap-y-1.5 font-['Montserrat'] text-xs text-[#8A6B76]">
-            <span className="font-semibold text-[#7A002A]">{lang === "es" ? "Servicios:" : "Services:"}</span>
-            {FOOTER_LANDING_LINKS[lang].map((l) => (
-              <Link key={l.href} href={l.href} className="hover:text-[#7A002A] hover:underline transition">
-                {l.label}
-              </Link>
-            ))}
-          </nav>
+          <p className="font-['Montserrat'] text-[13px] text-[#8A6B76]">
+            {lang === "es"
+              ? "Sirviendo al condado de Los Ángeles, incluyendo Glendale, Burbank, Pasadena, Van Nuys, Northridge y San Fernando Valley, además de otras áreas del sur de California."
+              : "Serving Los Angeles County, including Glendale, Burbank, Pasadena, Van Nuys, Northridge and the San Fernando Valley, plus surrounding Southern California areas."}
+          </p>
           <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-1.5 font-['Montserrat'] text-xs text-[#8A6B76]">
             <Link href="/dashboard" className="font-semibold text-[#7A002A] hover:text-[#B08D3C] transition">
               {t.footer.adminLink}

@@ -271,7 +271,9 @@ export default function LandingPage(props: LandingPageProps) {
         </section>
         <p className="text-center">
           <Link href={homeUrl} className="text-[#7A002A] font-bold underline">
-            Click &amp; Love
+            {homeUrl === "https://clickandlove.app/es"
+              ? "invitaciones digitales en Los Ángeles"
+              : "digital invitations in Los Angeles"}
           </Link>
         </p>
       </main>
