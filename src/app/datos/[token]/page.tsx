@@ -330,6 +330,11 @@ export default function PortalDatosPage() {
   }
 
   const preguntaTexto = campo ? (idioma === "es" ? campo.pregunta : campo.preguntaEn) : "";
+  const opcionesMostrar = campo
+    ? idioma === "es"
+      ? campo.opciones
+      : campo.opcionesEn || campo.opciones
+    : undefined;
   const ayudaTexto = campo
     ? idioma === "es"
       ? campo.ayuda
@@ -471,9 +476,9 @@ export default function PortalDatosPage() {
               {ayudaTexto && <p className="text-stone-500 mt-2">{ayudaTexto}</p>}
             </div>
 
-            {campo.tipo === "opcion" && campo.opciones && (
+            {campo.tipo === "opcion" && opcionesMostrar && (
               <div className="space-y-3">
-                {campo.opciones.map((op) => (
+                {opcionesMostrar.map((op) => (
                   <button
                     key={op}
                     onClick={() => seleccionarOpcion(op)}

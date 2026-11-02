@@ -49,6 +49,7 @@ export interface DatosField {
   preguntaEn: string;
   tipo: DatosFieldType;
   opciones?: string[];
+  opcionesEn?: string[];
   ayuda?: string;
   ayudaEn?: string;
   /** Si existe, la pregunta muestra un botón "?" que abre este ejemplo en
@@ -183,9 +184,13 @@ export const DATOS_SECCIONES: DatosSection[] = [
       },
       {
         id: "fechaLimiteRsvp",
-        pregunta: "Fecha límite para que tus invitados confirmen",
-        preguntaEn: "For your Guests: Please submit your response no later than...",
-        tipo: "fecha",
+        pregunta: "¿Con cuántos días de anticipación quieres que tus invitados confirmen?",
+        preguntaEn: "How many days before the event should your guests confirm by?",
+        tipo: "opcion",
+        opciones: ["15 días antes", "30 días antes", "45 días antes", "60 días antes", "Sin fecha límite"],
+        opcionesEn: ["15 days before", "30 days before", "45 days before", "60 days before", "No deadline"],
+        ayuda: "Se muestra en tu invitación como la fecha límite para confirmar, calculada desde la fecha de tu evento.",
+        ayudaEn: "This appears on your invitation as the RSVP deadline, counted back from your event date.",
       },
     ],
   },
