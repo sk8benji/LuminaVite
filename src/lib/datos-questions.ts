@@ -51,6 +51,10 @@ export interface DatosField {
   opciones?: string[];
   ayuda?: string;
   ayudaEn?: string;
+  /** Si existe, la pregunta muestra un botón "?" que abre este ejemplo en
+   *  una ventanita sin salir del formulario. */
+  ejemplo?: string;
+  ejemploEn?: string;
   requerido?: boolean;
   /** Si existe, el campo solo se muestra cuando se cumple la condición. */
   mostrarSi?: DatosCondicion;
@@ -197,16 +201,16 @@ export const DATOS_SECCIONES: DatosSection[] = [
         pregunta: "Nombres completos de los papás de la festejada",
         preguntaEn: "Please provide the full names of the Parents of the honoree",
         tipo: "texto_largo",
-        ayuda: "Corte de honor: Solo si tu plantilla incluye esta sección.",
-        ayudaEn: "Court of honor: Only if your template includes this section.",
+        ayuda: "Parte de la corte de honor: solo se muestra si tu plantilla incluye esta sección.",
+        ayudaEn: "Part of the court of honor section: only shown if your template includes it.",
       },
       {
         id: "nombresPadrinos",
         pregunta: "Nombres de los padrinos",
         preguntaEn: "Please list the names of the Godparents (Padrinos)",
         tipo: "texto_largo",
-        ayuda: "Corte de honor: Solo si tu plantilla incluye esta sección.",
-        ayudaEn: "Court of honor: Only if your template includes this section.",
+        ayuda: "Parte de la corte de honor: solo se muestra si tu plantilla incluye esta sección.",
+        ayudaEn: "Part of the court of honor section: only shown if your template includes it.",
       },
       {
         id: "chambelan",
@@ -214,9 +218,9 @@ export const DATOS_SECCIONES: DatosSection[] = [
         preguntaEn: "Name of the chambelan of honor",
         tipo: "texto",
         ayuda:
-          "El chambelán va aparte para que la plantilla lo muestre con su título. Corte de honor: solo si tu plantilla incluye esta sección.",
+          "El chambelán va aparte para que la plantilla lo muestre con su título. Parte de la corte de honor: solo se muestra si tu plantilla incluye esta sección.",
         ayudaEn:
-          "The chambelan goes separately so the template can show it with his title. Court of honor: only if your template includes this section.",
+          "The chambelan goes separately so the template can show it with his title. Part of the court of honor section: only shown if your template includes it.",
       },
       {
         id: "damasCorte",
@@ -225,9 +229,9 @@ export const DATOS_SECCIONES: DatosSection[] = [
           "Damas, chambelanes and mini quinceañera (one per line)",
         tipo: "texto_largo",
         ayuda:
-          "Corte de honor: solo si tu plantilla incluye esta sección.",
+          "Parte de la corte de honor: solo se muestra si tu plantilla incluye esta sección.",
         ayudaEn:
-          "Court of honor: only if your template includes this section.",
+          "Part of the court of honor section: only shown if your template includes it.",
       },
       {
         id: "colorReservado",
@@ -284,7 +288,8 @@ export const DATOS_SECCIONES: DatosSection[] = [
         id: "numInvitados",
         pregunta: "Número aproximado de invitados",
         preguntaEn: "Please select the estimated number of guests for your event",
-        tipo: "texto",
+        tipo: "opcion",
+        opciones: ["50", "100", "150", "200", "250", "300", "300+"],
         ayuda: "Un número aproximado está bien.",
         ayudaEn: "An approximate number is fine.",
       },
@@ -343,6 +348,10 @@ export const DATOS_SECCIONES: DatosSection[] = [
         tipo: "texto_largo",
         ayuda: "Solo si tu plantilla incluye dedicatoria.",
         ayudaEn: "Only if your template includes a dedication section.",
+        ejemplo:
+          "Ejemplo de una dedicatoria real: “Doy gracias a Dios por concederme la dicha de celebrar mis quince primaveras, y a mis padres por guiar cada uno de mis pasos con amor incondicional.” Es el mensaje especial que aparece en su propia sección dentro de tu invitación.",
+        ejemploEn:
+          "Example of a real dedicatory: “I thank God for granting me the joy of celebrating my fifteen years, and my parents for guiding every step with unconditional love.” It is the special message shown in its own section inside your invitation.",
       },
       {
         id: "mensajeAgradecimiento",

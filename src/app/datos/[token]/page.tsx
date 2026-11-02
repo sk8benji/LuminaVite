@@ -109,6 +109,7 @@ export default function PortalDatosPage() {
   >([]);
   const [plantillasError, setPlantillasError] = useState(false);
   const [otroActivo, setOtroActivo] = useState(false);
+  const [ejemploAbierto, setEjemploAbierto] = useState(false);
   const [mensajeRequerida, setMensajeRequerida] = useState(false);
   const [avisoGuardadoSalir, setAvisoGuardadoSalir] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -168,6 +169,7 @@ export default function PortalDatosPage() {
   // Al entrar a una pregunta, precargar su respuesta guardada (si existe).
   useEffect(() => {
     if (vista === "pregunta" && campo) {
+      setEjemploAbierto(false);
       setValorActual(respuestas[campo.id] || "");
       setOtroActivo(
         campo.tipo === "opcion_otro" &&
@@ -431,7 +433,41 @@ export default function PortalDatosPage() {
               <p className="text-xs font-bold uppercase tracking-wider text-[#7A002A]">
                 {seccionTitulo} · {t.preguntaDe} {idx + 1} {t.de} {campos.length}
               </p>
-              <h1 className="text-2xl font-bold leading-snug mt-2">{preguntaTexto}</h1>
+              <div className="flex items-start gap-2 mt-2">
+                <h1 className="text-2xl font-bold leading-snug flex-1">{preguntaTexto}</h1>
+                {(campo.ejemplo || campo.ejemploEn) && (
+                  <button
+                    onClick={() => setEjemploAbierto(true)}
+                    aria-label={idioma === "es" ? "Ver ejemplo" : "See example"}
+                    className="shrink-0 w-8 h-8 rounded-full border-2 border-[#7A002A] text-[#7A002A] font-bold text-base leading-none"
+                  >
+                    ?
+                  </button>
+                )}
+              </div>
+              {ejemploAbierto && (
+                <div
+                  className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-5"
+                  onClick={() => setEjemploAbierto(false)}
+                >
+                  <div
+                    className="bg-white rounded-3xl max-w-md w-full p-6 space-y-4 shadow-2xl"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <p className="text-stone-700 leading-relaxed">
+                      {idioma === "es"
+                        ? campo.ejemplo || campo.ejemploEn
+                        : campo.ejemploEn || campo.ejemplo}
+                    </p>
+                    <button
+                      onClick={() => setEjemploAbierto(false)}
+                      className="w-full py-3 rounded-2xl bg-[#7A002A] text-white font-bold"
+                    >
+                      {idioma === "es" ? "Entendido" : "Got it"}
+                    </button>
+                  </div>
+                </div>
+              )}
               {ayudaTexto && <p className="text-stone-500 mt-2">{ayudaTexto}</p>}
             </div>
 
