@@ -7,7 +7,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: [
       {
         userAgent: "*",
-        allow: ["/", "/es", "/demo", "/demo/*"],
+        allow: ["/", "/es", "/demo", "/demo/*", "/blog", "/blog/*"],
         disallow: [
           "/dashboard",
           "/dashboard/*",
@@ -22,7 +22,7 @@ export default function robots(): MetadataRoute.Robots {
       },
       {
         userAgent: "Googlebot",
-        allow: ["/", "/es", "/demo", "/demo/*"],
+        allow: ["/", "/es", "/demo", "/demo/*", "/blog", "/blog/*"],
         disallow: [
           "/dashboard",
           "/dashboard/*",
