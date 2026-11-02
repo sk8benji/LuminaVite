@@ -24,6 +24,26 @@ const PHONE_DISPLAY = "(818) 299-4882";
 const PHONE_TEL = "tel:+18182994882";
 const PHONE_SMS = "sms:+18182994882";
 
+// Enlaces internos a las landings transaccionales (SEO: las landings eran
+// huérfanas, solo accesibles por URL directa y sitemap). ES enlaza la landing
+// XV en español; el resto aún no tiene versión ES.
+const FOOTER_LANDING_LINKS: Record<Language, { href: string; label: string }[]> = {
+  en: [
+    { href: "/quince-invitations", label: "Quince Invitations" },
+    { href: "/wedding-invitations-los-angeles", label: "Wedding Invitations" },
+    { href: "/text-message-invitations", label: "Text Message Invitations" },
+    { href: "/rsvp-tracking", label: "RSVP Tracking" },
+    { href: "/whatsapp-invitations", label: "WhatsApp Invitations" },
+  ],
+  es: [
+    { href: "/es/invitaciones-de-quinceanera", label: "Invitaciones de Quinceañera" },
+    { href: "/wedding-invitations-los-angeles", label: "Invitaciones de Boda" },
+    { href: "/text-message-invitations", label: "Invitaciones por Mensaje de Texto" },
+    { href: "/rsvp-tracking", label: "Invitaciones con RSVP" },
+    { href: "/whatsapp-invitations", label: "Invitaciones por WhatsApp" },
+  ],
+};
+
 export default function HomeView({ initialLang = "en" }: { initialLang?: Language }) {
   const [lang, setLang] = useState<Language>(initialLang);
   const [isDemoModalOpen, setIsDemoModalOpen] = useState(false);
@@ -737,6 +757,14 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
       <footer className="py-10 px-4 bg-[#FDFBF8]">
         <div className="max-w-7xl mx-auto flex flex-col items-center gap-3 text-center">
           <p className="font-['Montserrat'] text-[13px] text-[#8A6B76]">{b.footerLine}</p>
+          <nav className="flex flex-wrap items-center justify-center gap-x-5 gap-y-1.5 font-['Montserrat'] text-xs text-[#8A6B76]">
+            <span className="font-semibold text-[#7A002A]">{lang === "es" ? "Servicios:" : "Services:"}</span>
+            {FOOTER_LANDING_LINKS[lang].map((l) => (
+              <Link key={l.href} href={l.href} className="hover:text-[#7A002A] hover:underline transition">
+                {l.label}
+              </Link>
+            ))}
+          </nav>
           <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-1.5 font-['Montserrat'] text-xs text-[#8A6B76]">
             <Link href="/dashboard" className="font-semibold text-[#7A002A] hover:text-[#B08D3C] transition">
               {t.footer.adminLink}
