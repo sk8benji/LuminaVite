@@ -158,11 +158,24 @@ export const DATOS_SECCIONES: DatosSection[] = [
         tipo: "texto",
       },
       {
-        id: "ceremoniaIglesia",
-        pregunta: "Ceremonia de iglesia (nombre, dirección y hora; deja en blanco si no hay)",
-        preguntaEn:
-          "Church ceremony details (church name, address and time — leave blank if your event has no church ceremony)",
-        tipo: "texto_largo",
+        id: "nombreIglesia",
+        pregunta: "Nombre de la iglesia",
+        preguntaEn: "Church name",
+        tipo: "texto",
+        ayuda: "Si tu evento no tiene ceremonia de iglesia, deja estos tres campos en blanco.",
+        ayudaEn: "If your event has no church ceremony, leave these three fields blank.",
+      },
+      {
+        id: "direccionIglesia",
+        pregunta: "Dirección de la iglesia",
+        preguntaEn: "Church address",
+        tipo: "texto",
+      },
+      {
+        id: "horaIglesia",
+        pregunta: "Hora de la ceremonia de iglesia",
+        preguntaEn: "Church ceremony time",
+        tipo: "texto",
       },
       {
         id: "fechaLimiteRsvp",
