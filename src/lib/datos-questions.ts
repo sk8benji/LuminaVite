@@ -30,6 +30,7 @@ export type DatosFieldType =
   | "email"
   | "url"
   | "opcion"
+  | "opcion_otro"
   | "plantilla"
   | "foto";
 
@@ -99,7 +100,10 @@ export const DATOS_SECCIONES: DatosSection[] = [
         id: "tipoEvento",
         pregunta: "Tipo de evento",
         preguntaEn: "Type of Event",
-        tipo: "texto",
+        tipo: "opcion_otro",
+        opciones: ["Quinceañera", "Sweet 16", "Wedding", "Other"],
+        ayuda: "Elige de la lista; si es otro tipo, escríbelo.",
+        ayudaEn: "Pick from the list; if it is another type, write it in.",
       },
       {
         id: "fechaEvento",
@@ -113,8 +117,8 @@ export const DATOS_SECCIONES: DatosSection[] = [
         pregunta: "¿A qué hora empieza el evento?",
         preguntaEn: "What time does the event start?",
         tipo: "texto",
-        ayuda: "AGREGADA: en el form no se preguntaba la hora y la invitación la necesita.",
-        ayudaEn: "ADDED: the form did not ask for the time and the invitation needs it.",
+        ayuda: "La hora en que empieza tu evento, así aparece en tu invitación.",
+        ayudaEn: "The time your event starts, as it will appear on your invitation.",
       },
       {
         id: "idiomaInvitacion",
@@ -157,8 +161,6 @@ export const DATOS_SECCIONES: DatosSection[] = [
         preguntaEn:
           "Church ceremony details (church name, address and time — leave blank if your event has no church ceremony)",
         tipo: "texto_largo",
-        ayuda: "FUSIONADA: la pregunta de sí/no y su detalle quedaron en un solo campo.",
-        ayudaEn: "MERGED: the yes/no question and its detail are now a single field.",
       },
       {
         id: "fechaLimiteRsvp",
@@ -197,9 +199,9 @@ export const DATOS_SECCIONES: DatosSection[] = [
         preguntaEn: "Name of the chambelan of honor",
         tipo: "texto",
         ayuda:
-          "DIVIDIDO: las plantillas leen la corte como datos estructurados (chambelán / damas / padrinos), no como un solo texto. El chambelán va aparte para que la plantilla lo muestre con su título. Corte de honor: solo si tu plantilla incluye esta sección.",
+          "El chambelán va aparte para que la plantilla lo muestre con su título. Corte de honor: solo si tu plantilla incluye esta sección.",
         ayudaEn:
-          "SPLIT: templates read the court as structured data (chambelan / damas / padrinos), not a single text. The chambelan goes separately so the template can show it with its title. Court of honor: only if your template includes this section.",
+          "The chambelan goes separately so the template can show it with his title. Court of honor: only if your template includes this section.",
       },
       {
         id: "damasCorte",
@@ -208,9 +210,9 @@ export const DATOS_SECCIONES: DatosSection[] = [
           "Damas, chambelanes and mini quinceañera (one per line)",
         tipo: "texto_largo",
         ayuda:
-          "La pregunta original del form pedía toda la corte junta; separada así, cada nombre cae en su lugar de la plantilla. Corte de honor: solo si tu plantilla incluye esta sección.",
+          "Corte de honor: solo si tu plantilla incluye esta sección.",
         ayudaEn:
-          "The original form asked for the whole court together; split this way, each name lands in its template spot. Court of honor: only if your template includes this section.",
+          "Court of honor: only if your template includes this section.",
       },
       {
         id: "colorReservado",
@@ -218,8 +220,8 @@ export const DATOS_SECCIONES: DatosSection[] = [
         preguntaEn:
           "Which color is reserved for the quinceañera? (leave blank if none)",
         tipo: "texto",
-        ayuda: "FUSIONADA: el Yes / No / What color? del form quedó en un solo campo.",
-        ayudaEn: "MERGED: the form's Yes / No / What color? is now a single field.",
+        ayuda: "Si ningún color está reservado, déjalo en blanco.",
+        ayudaEn: "If no color is reserved, leave it blank.",
       },
     ],
   },
@@ -243,8 +245,8 @@ export const DATOS_SECCIONES: DatosSection[] = [
         preguntaEn:
           "Dress code for your event (e.g., Formal, Black Tie, Theme Party, casual — leave blank if none)",
         tipo: "texto",
-        ayuda: "FUSIONADA: la pregunta de sí/no y su descripción quedaron en un solo campo.",
-        ayudaEn: "MERGED: the yes/no question and its description are now a single field.",
+        ayuda: "Si no hay código de vestimenta, déjalo en blanco.",
+        ayudaEn: "If there is no dress code, leave it blank.",
       },
       {
         id: "cancion",
@@ -260,8 +262,8 @@ export const DATOS_SECCIONES: DatosSection[] = [
         pregunta: "Número aproximado de invitados",
         preguntaEn: "Please select the estimated number of guests for your event",
         tipo: "texto",
-        ayuda: "En el form era un menú sin opciones visibles: quedó abierto hasta que Abraham pase los rangos.",
-        ayudaEn: "The form had a dropdown with no visible options: left open until Abraham shares the ranges.",
+        ayuda: "Un número aproximado está bien.",
+        ayudaEn: "An approximate number is fine.",
       },
       {
         id: "numPases",
@@ -325,8 +327,6 @@ export const DATOS_SECCIONES: DatosSection[] = [
         preguntaEn:
           "Thank You note or final goodbye message for your guests (leave blank if you do not want one)",
         tipo: "texto_largo",
-        ayuda: "FUSIONADA: la pregunta de sí/no y el mensaje quedaron en un solo campo.",
-        ayudaEn: "MERGED: the yes/no question and the message are now a single field.",
       },
       {
         id: "detalleEspecial",

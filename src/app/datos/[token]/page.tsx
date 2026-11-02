@@ -108,6 +108,7 @@ export default function PortalDatosPage() {
     { estilo: string; nombre: string; demoSlug: string; demoUrl: string; imagen: string }[]
   >([]);
   const [plantillasError, setPlantillasError] = useState(false);
+  const [otroActivo, setOtroActivo] = useState(false);
   const [mensajeRequerida, setMensajeRequerida] = useState(false);
   const [avisoGuardadoSalir, setAvisoGuardadoSalir] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -168,6 +169,11 @@ export default function PortalDatosPage() {
   useEffect(() => {
     if (vista === "pregunta" && campo) {
       setValorActual(respuestas[campo.id] || "");
+      setOtroActivo(
+        campo.tipo === "opcion_otro" &&
+          Boolean(respuestas[campo.id]) &&
+          !(campo.opciones || []).includes(respuestas[campo.id] || ""),
+      );
       setMensajeRequerida(false);
       setAvisoGuardadoSalir(false);
     }
@@ -447,6 +453,50 @@ export default function PortalDatosPage() {
               </div>
             )}
 
+            {campo.tipo === "opcion_otro" && campo.opciones && (
+              <div className="space-y-3">
+                {campo.opciones.map((op) => (
+                  <button
+                    key={op}
+                    onClick={() => {
+                      if (op === "Other") {
+                        setOtroActivo(true);
+                        // Al pasar de una opción de la lista a "Other", se
+                        // limpia para escribir el tipo libre.
+                        if ((campo.opciones || []).includes(valorActual)) {
+                          setValorActual("");
+                        }
+                      } else {
+                        setOtroActivo(false);
+                        seleccionarOpcion(op);
+                      }
+                    }}
+                    className={`w-full text-left py-4 px-5 rounded-2xl border-2 font-semibold transition ${
+                      (!otroActivo && valorActual === op) || (otroActivo && op === "Other")
+                        ? "border-[#7A002A] bg-[#FFF5F7]"
+                        : "border-stone-200 bg-white"
+                    }`}
+                  >
+                    {op}
+                  </button>
+                ))}
+                {otroActivo && (
+                  <input
+                    type="text"
+                    value={valorActual}
+                    onChange={(e) => setValorActual(e.target.value)}
+                    placeholder={
+                      idioma === "es"
+                        ? "Escribe qué tipo de evento"
+                        : "Write what type of event"
+                    }
+                    className="w-full py-4 px-5 rounded-2xl border-2 border-stone-200 bg-white text-base focus:outline-none focus:border-[#7A002A]"
+                    autoFocus
+                  />
+                )}
+              </div>
+            )}
+
             {campo.tipo === "plantilla" && (
               <div className="space-y-4">
                 {plantillas.length === 0 && !plantillasError && (
@@ -594,7 +644,8 @@ export default function PortalDatosPage() {
               >
                 {t.anterior}
               </button>
-              {campo.tipo !== "opcion" && (
+              {campo.tipo !== "opcion" &&
+                !(campo.tipo === "opcion_otro" && !otroActivo) && (
                 <button
                   onClick={continuar}
                   className="flex-[2] py-3.5 rounded-2xl bg-[#7A002A] text-white font-bold"
