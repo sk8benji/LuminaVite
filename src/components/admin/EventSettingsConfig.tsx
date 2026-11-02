@@ -403,6 +403,41 @@ export default function EventSettingsConfig({
           </div>
         </div>
 
+        {/* Fotos de invitados */}
+        <div className="rounded-2xl border border-stone-200 bg-white p-4 space-y-2">
+          <p className="text-xs font-bold uppercase tracking-wider text-stone-700">
+            📸 Fotos de invitados
+          </p>
+          <p className="text-xs text-stone-500">
+            Los invitados suben fotos y videos desde un QR o link, sin app ni registro.
+            La galería vive en el panel del anfitrión y queda guardada después de la fiesta.
+          </p>
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={() => updateField("fotosInvitadosActivas", true)}
+              className={`flex-1 py-2.5 rounded-xl text-sm font-bold border-2 ${
+                formData.fotosInvitadosActivas !== false
+                  ? "bg-[#7A002A] text-white border-[#7A002A]"
+                  : "bg-white text-stone-600 border-stone-200"
+              }`}
+            >
+              Activadas
+            </button>
+            <button
+              type="button"
+              onClick={() => updateField("fotosInvitadosActivas", false)}
+              className={`flex-1 py-2.5 rounded-xl text-sm font-bold border-2 ${
+                formData.fotosInvitadosActivas === false
+                  ? "bg-stone-800 text-white border-stone-800"
+                  : "bg-white text-stone-600 border-stone-200"
+              }`}
+            >
+              Desactivadas
+            </button>
+          </div>
+        </div>
+
         {/* Contacto y Notificaciones */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
           {/* Teléfono Móvil / WhatsApp */}

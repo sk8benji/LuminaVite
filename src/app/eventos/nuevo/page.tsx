@@ -166,6 +166,7 @@ function NuevoEventoContent() {
     aforoTotal: 200,
     fechaLimiteRsvp: "15 de Noviembre",
     maxPasesPorInvitado: 4,
+    fotosInvitadosActivas: true,
     ceremoniaNombre: "Parroquia Nuestra Señora",
     ceremoniaDireccion: "Av. Las Flores 123",
     ceremoniaMapUrl: "https://maps.google.com",

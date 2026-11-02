@@ -1,4 +1,4 @@
-import { S3Client, PutObjectCommand, GetObjectCommand, ListObjectsV2Command } from "@aws-sdk/client-s3";
+import { S3Client, PutObjectCommand, GetObjectCommand, ListObjectsV2Command, HeadObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 const endpoint = process.env.AWS_ENDPOINT || process.env.S3_ENDPOINT;
@@ -64,4 +64,51 @@ export async function getPresignedUploadUrl(
   };
 }
 export default s3Client;
+
+/** URL pública de un objeto ya subido (misma regla que getPresignedUploadUrl). */
+export function publicFileUrl(fileKey: string): string {
+  if (process.env.AWS_CLOUDFRONT_URL) {
+    return `${process.env.AWS_CLOUDFRONT_URL}/${fileKey}`;
+  }
+  if (endpoint) {
+    return `${endpoint}/${BUCKET_NAME}/${fileKey}`;
+  }
+  return `https://${BUCKET_NAME}.s3.${process.env.AWS_REGION || "us-east-1"}.amazonaws.com/${fileKey}`;
+}
+
+/** Verifica que un objeto exista y devuelve su tamaño y tipo. null si no existe. */
+export async function headS3Object(
+  fileKey: string
+): Promise<{ size: number; contentType: string } | null> {
+  try {
+    const out = await s3Client.send(
+      new HeadObjectCommand({ Bucket: BUCKET_NAME, Key: fileKey })
+    );
+    return {
+      size: out.ContentLength ?? 0,
+      contentType: out.ContentType ?? "",
+    };
+  } catch {
+    return null;
+  }
+}
+
+/** Borra un objeto de S3 (ignora si ya no existe). */
+export async function deleteS3Object(fileKey: string): Promise<void> {
+  try {
+    await s3Client.send(
+      new DeleteObjectCommand({ Bucket: BUCKET_NAME, Key: fileKey })
+    );
+  } catch {
+    // Borrar es best-effort: el registro en DB ya se eliminó.
+  }
+}
+
+/** Stream de lectura de un objeto (para el ZIP del anfitrión). */
+export async function getS3ObjectBody(fileKey: string) {
+  const out = await s3Client.send(
+    new GetObjectCommand({ Bucket: BUCKET_NAME, Key: fileKey })
+  );
+  return out.Body;
+}
 

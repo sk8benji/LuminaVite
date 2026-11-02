@@ -189,6 +189,20 @@ export async function ensurePostgresTables(): Promise<boolean> {
       `ALTER TABLE "RsvpRegistro" ADD COLUMN IF NOT EXISTS "email" TEXT;`,
       `ALTER TABLE "guests" ADD COLUMN IF NOT EXISTS "email" VARCHAR(255);`,
 
+      // Fotos de invitados (v1): galería por evento, subida pública por link.
+      `ALTER TABLE "Evento" ADD COLUMN IF NOT EXISTS "fotosInvitadosActivas" BOOLEAN DEFAULT true;`,
+      `CREATE TABLE IF NOT EXISTS "FotoInvitado" (
+          "id" TEXT NOT NULL PRIMARY KEY,
+          "eventoId" TEXT NOT NULL REFERENCES "Evento"("id") ON DELETE CASCADE,
+          "url" TEXT NOT NULL DEFAULT '',
+          "fileKey" TEXT NOT NULL DEFAULT '',
+          "tipo" TEXT NOT NULL DEFAULT 'foto',
+          "nombre" TEXT,
+          "mensaje" TEXT,
+          "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
+      );`,
+      `CREATE INDEX IF NOT EXISTS "FotoInvitado_eventoId_createdAt_idx" ON "FotoInvitado"("eventoId", "createdAt");`,
+
       `DO $$ BEGIN
         CREATE TYPE "EstadoPago" AS ENUM ('PENDIENTE', 'PAGADO', 'FALLIDO', 'REEMBOLSADO');
       EXCEPTION WHEN duplicate_object THEN null;

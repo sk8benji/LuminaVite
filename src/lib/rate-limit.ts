@@ -76,6 +76,7 @@ export const RATE_LIMITS = {
   panelAuth: { windowMs: 15 * 60_000, max: 20 }, // 20 intentos / 15 min
   rsvp: { windowMs: 60_000, max: 10 }, // 10 / minuto
   presignedUrl: { windowMs: 60_000, max: 20 }, // 20 / minuto
+  fotosInvitados: { windowMs: 60_000, max: 30 }, // 30 subidas / minuto por IP
   translate: { windowMs: 60_000, max: 30 }, // 30 / minuto
   manualRequest: { windowMs: 60 * 60_000, max: 5 }, // 5 / hora
 } satisfies Record<string, RateLimitOptions>;

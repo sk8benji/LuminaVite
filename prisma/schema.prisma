@@ -197,6 +197,8 @@ model Evento {
   rsvps              RsvpRegistro[]
   guests             Guest[]
   ordenesCompra      OrdenCompra[]
+  fotosInvitados     FotoInvitado[]
+  fotosInvitadosActivas Boolean       @default(true) // Interruptor: invitados pueden subir fotos/videos
 }
 
 model Guest {
@@ -231,6 +233,21 @@ model RsvpRegistro {
   updatedAt      DateTime @default(now()) @updatedAt
 
   @@unique([eventoId, telefono], name: "eventoId_telefono")
+}
+
+model FotoInvitado {
+  id            String   @id @default(uuid())
+  eventoId      String
+  evento        Evento   @relation(fields: [eventoId], references: [id], onDelete: Cascade)
+  // url vacía = text post (mensaje sin foto/video)
+  url           String   @default("")
+  fileKey       String   @default("")
+  tipo          String   @default("foto") // foto | video | mensaje
+  nombre        String?
+  mensaje       String?
+  createdAt     DateTime @default(now())
+
+  @@index([eventoId, createdAt])
 }
 
 model OrdenCompra {

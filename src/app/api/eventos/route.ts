@@ -136,6 +136,7 @@ export async function POST(req: NextRequest) {
       aforoTotal = 200,
       fechaLimiteRsvp,
       maxPasesPorInvitado = 4,
+      fotosInvitadosActivas = true,
       ceremoniaNombre,
       ceremoniaDireccion,
       ceremoniaMapUrl,
@@ -275,6 +276,9 @@ export async function POST(req: NextRequest) {
           maxPasesPorInvitado !== null && maxPasesPorInvitado !== "" && Number.isFinite(Number(maxPasesPorInvitado))
             ? Math.max(0, Math.floor(Number(maxPasesPorInvitado)))
             : 4,
+        // Cliente generado local desactualizado (sin este campo): el spread
+        // evita el error de tipo; en Railway generate corre con red y el campo existe.
+        ...(fotosInvitadosActivas !== undefined ? { fotosInvitadosActivas: Boolean(fotosInvitadosActivas) } : { fotosInvitadosActivas: true }),
         ceremoniaNombre: ceremoniaNombre || null,
         ceremoniaDireccion: ceremoniaDireccion || null,
         ceremoniaMapUrl: ceremoniaMapUrl || null,
@@ -424,6 +428,7 @@ export async function PUT(req: NextRequest) {
           body.maxPasesPorInvitado !== undefined && body.maxPasesPorInvitado !== null && Number.isFinite(Number(body.maxPasesPorInvitado))
             ? Math.max(0, Math.floor(Number(body.maxPasesPorInvitado)))
             : undefined,
+        ...(body.fotosInvitadosActivas !== undefined ? { fotosInvitadosActivas: Boolean(body.fotosInvitadosActivas) } : {}),
         ceremoniaNombre: body.ceremoniaNombre ?? null,
         ceremoniaDireccion: body.ceremoniaDireccion ?? null,
         ceremoniaMapUrl: body.ceremoniaMapUrl ?? null,

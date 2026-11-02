@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import PanelFotosSection from "./PanelFotosSection";
 import {
   Users,
   CheckCircle2,
@@ -1086,6 +1087,11 @@ export default function PanelView({
             </div>
           </div>
         </div>
+
+        {/* ============================================================== */}
+        {/* FOTOS DE INVITADOS (QR, galería, muro, ZIP, borrado) */}
+        {/* ============================================================== */}
+        <PanelFotosSection slug={slug} panelKey={panelKey} lang={lang} />
 
         {/* ============================================================== */}
         {/* FORMULARIO AGREGAR NUEVO INVITADO (PEGADO A LA SECCIÓN DE AFORO) */}

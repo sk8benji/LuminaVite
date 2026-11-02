@@ -44,6 +44,7 @@ export interface InvitationData {
   telefonoWhatsappRsvp: string;
   fechaLimiteRsvp?: string | null;
   maxPasesPorInvitado?: number;
+  fotosInvitadosActivas?: boolean;
 
   ceremoniaNombre?: string | null;
   ceremoniaDireccion?: string | null;
