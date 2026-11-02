@@ -359,12 +359,20 @@ export const DATOS_SECCIONES: DatosSection[] = [
         preguntaEn:
           "Thank You note or final goodbye message for your guests (leave blank if you do not want one)",
         tipo: "texto_largo",
+        ejemplo:
+          "Ejemplo: “¡Hasta pronto! Con amor y gratitud por ser parte de este día de cuento.” Es el mensaje final que aparece al cierre de tu invitación.",
+        ejemploEn:
+          "Example: “See You Soon! With love and gratitude for being part of this fairytale day.” It is the final message shown at the closing of your invitation.",
       },
       {
         id: "detalleEspecial",
         pregunta: "¿Quieres incluir algún detalle especial extra?",
         preguntaEn: "Do you want to include any Special Extra Detail?",
         tipo: "texto_largo",
+        ejemplo:
+          "Ejemplo: “Habrá valet parking en la entrada” o “La fiesta es al aire libre, trae un abrigo ligero.” Cualquier detalle extra que quieras que el equipo tome en cuenta para tu invitación.",
+        ejemploEn:
+          "Example: “Valet parking will be available at the entrance” or “The party is outdoors, bring a light jacket.” Any extra detail you want the team to consider for your invitation.",
       },
     ],
   },

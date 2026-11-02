@@ -709,6 +709,35 @@ export default function PortalDatosPage() {
             <div>
               <h1 className="text-2xl font-bold">{t.revisar}</h1>
               <p className="text-stone-500 mt-1">{t.revisarSub}</p>
+              {(() => {
+                const faltantes = campos.filter((c) => !(respuestas[c.id] || "").trim());
+                const faltanOblig = faltantes.filter((c) => c.requerido);
+                const faltanOpc = faltantes.filter((c) => !c.requerido);
+                const respondidas = campos.length - faltantes.length;
+                return (
+                  <div className="mt-3 rounded-2xl bg-white border border-stone-200 p-4 text-sm space-y-1">
+                    <p className="font-semibold">
+                      {idioma === "es"
+                        ? `Respondiste ${respondidas} de ${campos.length}.`
+                        : `You answered ${respondidas} of ${campos.length}.`}
+                    </p>
+                    {faltanOblig.length > 0 && (
+                      <p className="text-red-700 font-semibold">
+                        {idioma === "es"
+                          ? `Te falta ${faltanOblig.length === 1 ? "esta obligatoria" : "estas obligatorias"}: ${faltanOblig.map((c) => c.pregunta).join(", ")}. Toca Editar en esa fila para responderla.`
+                          : `You still need ${faltanOblig.length === 1 ? "this required one" : "these required ones"}: ${faltanOblig.map((c) => c.preguntaEn).join(", ")}. Tap Edit on that row to answer it.`}
+                      </p>
+                    )}
+                    {faltanOpc.length > 0 && (
+                      <p className="text-stone-500">
+                        {idioma === "es"
+                          ? `Las ${faltanOpc.length} restantes son opcionales: puedes enviar así sin ellas.`
+                          : `The other ${faltanOpc.length} are optional: you can send without them.`}
+                      </p>
+                    )}
+                  </div>
+                );
+              })()}
             </div>
             {DATOS_SECCIONES.map((sec) => (
               <div key={sec.id} className="bg-white rounded-2xl border border-stone-200 p-4 space-y-3">
@@ -722,11 +751,22 @@ export default function PortalDatosPage() {
                         <p className="text-stone-400">{idioma === "es" ? c.pregunta : c.preguntaEn}</p>
                         {c.tipo === "foto" && v ? (
                           <img src={v} alt="" className="w-24 h-24 object-cover rounded-xl mt-1" />
-                        ) : (
+                        ) : v ? (
                           <p className="font-semibold break-words">
                             {c.id === "plantillaElegida"
-                              ? plantillas.find((p) => p.estilo === v)?.nombre || v || t.sinRespuesta
-                              : v || t.sinRespuesta}
+                              ? plantillas.find((p) => p.estilo === v)?.nombre || v
+                              : v}
+                          </p>
+                        ) : (
+                          <p className={c.requerido ? "font-semibold text-red-700" : "italic text-stone-400"}>
+                            {t.sinRespuesta}
+                            {c.requerido
+                              ? idioma === "es"
+                                ? " (obligatoria)"
+                                : " (required)"
+                              : idioma === "es"
+                                ? " (opcional)"
+                                : " (optional)"}
                           </p>
                         )}
                       </div>
