@@ -9,6 +9,7 @@ export type BlogSection = {
   heading: string;
   paragraphs: string[];
   bullets?: string[];
+  table?: { headers: string[]; rows: string[][] };
 };
 
 export type BlogPost = {
@@ -56,6 +57,20 @@ export const BLOG_POSTS: BlogPost[] = [
         paragraphs: [
           "A QR code only works if guests notice it. Put it on the entrance sign, on the tables and on the thank-you cards you hand out at the end. Mention it once during the party, out loud: guests who hear it upload ten times more than guests who only see a sign. Test the code yourself on both iPhone and Android before the event, and make sure the venue has enough signal where guests will scan.",
         ],
+      },
+      {
+        heading: "QR code, group chat or shared album: quick comparison",
+        paragraphs: [
+          "Not every way of collecting photos works the same on the night. A group chat buries photos under messages, a shared album needs accounts, and a QR link opens one gallery for everyone. And because the gallery lives in the same event where guests already confirmed, you can keep [RSVP tracking](https://clickandlove.app/rsvp-tracking) and photos under one roof instead of two tools.",
+        ],
+        table: {
+          headers: ["Method", "App needed?", "Live wall", "Download all"],
+          rows: [
+            ["QR code or link gallery", "No", "Yes", "ZIP in one tap"],
+            ["Group chat", "No", "No", "Save one by one"],
+            ["Shared album (Google Photos)", "Account needed", "No", "Album export"],
+          ],
+        },
       },
       {
         heading: "Show the photos live during the party",
@@ -118,6 +133,14 @@ export const BLOG_POSTS: BlogPost[] = [
         ],
       },
       {
+        heading: "Texts ready to copy and paste",
+        paragraphs: [
+          "Short version for SMS: \"You are invited to Sofia's Quinceañera on Saturday, June 12th, 2027, at 6 PM at Renaissance Banquet Hall, Glendale. Confirm here: [your invitation link]. Formal attire.\"",
+          "Family version for WhatsApp: \"With joy, our family invites you to celebrate Sofia's fifteen years: mass, waltz and dancing on Saturday, June 12th, 2027, at 6 PM. Your presence is the best gift. Please confirm through the invitation link so we can save your seats.\"",
+          "Copy the text, swap the names, date and venue, and paste it into your invitation or your message. Keep the RSVP link in the same message: a text without a link is a text nobody answers.",
+        ],
+      },
+      {
         heading: "What every quinceañera invitation must include",
         paragraphs: [
           "No matter the tone, do not leave these out: the quinceañera's full name, the date and time, the ceremony and reception venues, the RSVP link or instruction, and the dress code. Families also appreciate one extra line: which colors are reserved for the quinceañera, so guests do not show up in the same dress color.",
@@ -131,7 +154,7 @@ export const BLOG_POSTS: BlogPost[] = [
       {
         heading: "English, Spanish, or both?",
         paragraphs: [
-          "In Los Angeles, most quinceañera families have guests in both languages. An invitation that shows both versions avoids the awkward case where half the family guesses the details. If you can only pick one, pick the language your grandparents read, and put the RSVP link somewhere nobody can miss it.",
+          "In Los Angeles, most quinceañera families have guests in both languages. An invitation that shows both versions avoids the awkward case where half the family guesses the details. If you can only pick one, pick the language your grandparents read, and put the RSVP link somewhere nobody can miss it. See the Spanish version on the [Spanish quinceañera invitations page](https://clickandlove.app/es/invitaciones-de-quinceanera).",
         ],
       },
     ],
@@ -187,7 +210,7 @@ export const BLOG_POSTS: BlogPost[] = [
       {
         heading: "Which one fits your event",
         paragraphs: [
-          "If you only need a shared folder and every guest has a Google account, stay with Google Photos. If you want guests uploading from a QR code during the party and photos on a screen the same night, pick a dedicated tool. And if your guests already confirm through a digital invitation, keeping the photos in that same event saves everyone a second link, a second account and a second explanation.",
+          "If you only need a shared folder and every guest has a Google account, stay with Google Photos. If you want guests uploading from a QR code during the party and photos on a screen the same night, pick a dedicated tool. And if your guests already confirm through a digital invitation, keeping the photos in that same event saves everyone a second link, a second account and a second explanation. See how it looks live in the [Fairytale Castle demo](https://clickandlove.app/demo/emma-and-lucas), and share it through [WhatsApp invitations](https://clickandlove.app/whatsapp-invitations) when your family lives in group chats.",
         ],
       },
     ],
@@ -213,7 +236,7 @@ export const BLOG_POSTS: BlogPost[] = [
       {
         heading: "The SMS flow, step by step",
         paragraphs: [
-          "You send the invitation link by text message. The guest opens it, sees the 3D envelope and the event details, and taps to confirm. The confirmation lands in your host panel instantly, with the guest's name and the number of passes they confirmed. No app, no account, no phone tag. You watch the confirmed list grow live from your phone, the same way you watch messages arrive.",
+          "You send the invitation link by text message. The guest opens it, sees the 3D envelope and the event details, and taps to confirm. The confirmation lands in your host panel instantly, with the guest's name and the number of passes they confirmed. No app, no account, no phone tag. You watch the confirmed list grow live from your phone, the same way you watch messages arrive. The sending itself runs on [text message invitations](https://clickandlove.app/text-message-invitations), so the invitation and the tracking live in the same flow.",
         ],
         bullets: [
           "Send: one text with the invitation link per guest or family.",
@@ -236,6 +259,55 @@ export const BLOG_POSTS: BlogPost[] = [
           "Remind only the pending list, never the whole guest list.",
           "One reminder before the venue deadline, one the week of the event.",
           "Call only the guests who ignored every text.",
+        ],
+      },
+    ],
+  },
+  {
+    slug: "how-to-make-guests-rsvp-on-time",
+    title: "How to Make Guests RSVP on Time",
+    description:
+      "Guests ignore deadlines until you remind them where they already look: their phones. Set one deadline, send SMS reminders only to the pending list, and close the count on time.",
+    datePublished: "2026-11-02",
+    readMinutes: 4,
+    landing: {
+      href: "/rsvp-tracking",
+      label: "Online RSVP Tracking",
+    },
+    sections: [
+      {
+        heading: "One deadline, said once, everywhere",
+        paragraphs: [
+          "Guests do not miss RSVP deadlines because they do not care. They miss them because the deadline lived in one place they never reopened: a paper card, an email thread, a group chat buried under memes. Put the same deadline in the invitation itself, in the first message you send, and in every reminder after that. A deadline guests can see is a deadline guests can meet, and it starts with [text message invitations](https://clickandlove.app/text-message-invitations) that put the date right where guests already look.",
+        ],
+      },
+      {
+        heading: "Send the invitation early enough to be ignored once",
+        paragraphs: [
+          "Send invitations six to eight weeks before the event, with the RSVP deadline three to four weeks out. That gap is deliberate: it gives every guest one free pass to forget, and you one clean window to remind them. Send earlier than that and the deadline feels unreal; send later and even a perfect reminder cannot save the count.",
+        ],
+      },
+      {
+        heading: "Remind only the guests who have not replied",
+        paragraphs: [
+          "The reminder that works is the one that goes only to the pending list. A group message to everyone annoys the guests who already confirmed and teaches the rest to ignore you. With [online RSVP tracking](https://clickandlove.app/rsvp-tracking) you see exactly who is still pending, so one text reaches only them: their name, the deadline, and the link to confirm in one tap.",
+        ],
+        bullets: [
+          "First reminder: a few days after the invitations go out, for the guests who never opened the link.",
+          "Second reminder: three to five days before the deadline, with the venue count attached.",
+          "Last call: the morning of the deadline, short and direct, link first.",
+        ],
+      },
+      {
+        heading: "Make replying take ten seconds",
+        paragraphs: [
+          "Every extra step costs replies. No accounts, no passwords, no app to install: the guest taps the link, taps attend or decline, and picks their passes. If confirming takes longer than reading the reminder, guests put it off, and put off means forgotten. Keep the reply inside the invitation link, not in a reply to your text, so every answer lands in the same panel.",
+        ],
+      },
+      {
+        heading: "Close the count and stop chasing",
+        paragraphs: [
+          "When the deadline passes, close it: confirm the final headcount to your venue, and call only the handful who never answered any text. That last call list should be short, because the reminders did the chasing for you. The goal was never a hundred calls. It was a hundred replies before the deadline, with the panel to prove it.",
         ],
       },
     ],

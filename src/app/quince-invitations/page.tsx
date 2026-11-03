@@ -3,7 +3,7 @@ import QuinceLandingPage from "@/components/QuinceLandingPage";
 import { FAQS_LIST } from "@/lib/quince-faqs";
 
 export const metadata: Metadata = {
-  title: "Quinceañera Digital Invitations in Los Angeles | Click & Love",
+  title: "Quinceañera Digital Invitations & Online RSVP | Click & Love",
   description:
     "Custom quinceañera digital invitations with 3D animated envelopes, music, and real-time SMS RSVP tracking. Made for Los Angeles families.",
   metadataBase: new URL("https://clickandlove.app"),
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "Quinceañera Digital Invitations in Los Angeles | Click & Love",
+    title: "Quinceañera Digital Invitations & Online RSVP | Click & Love",
     description:
       "Custom quinceañera digital invitations with 3D animated envelopes, music, and real-time SMS RSVP tracking. Made for Los Angeles families.",
     url: "https://clickandlove.app/quince-invitations",
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Quinceañera Digital Invitations in Los Angeles | Click & Love",
+    title: "Quinceañera Digital Invitations & Online RSVP | Click & Love",
     description:
       "Custom quinceañera digital invitations with 3D animated envelopes, music, and real-time SMS RSVP tracking. Made for Los Angeles families.",
     images: ["https://clickandlove.app/assets/og-banner.png"],

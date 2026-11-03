@@ -2,6 +2,8 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { track } from "@/lib/analytics";
+import Image from "next/image";
 import {
   ArrowRight,
   BarChart3,
@@ -161,9 +163,11 @@ export default function RsvpTrackingLandingPage() {
             className="flex items-center gap-3 group focus:outline-none focus-visible:ring-2 focus-visible:ring-[#7A002A]"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <Image
               src="/logo.png"
               alt="Click & Love"
+              width={1600}
+              height={1600}
               className="h-10 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
             />
             <div className="flex flex-col">
@@ -196,14 +200,14 @@ export default function RsvpTrackingLandingPage() {
 
           <div className="flex items-center gap-3">
             <a
-              href={PHONE_TEL}
+              href={PHONE_TEL} onClick={() => track("click_llamar", { origen: "landing", pagina: "rsvp-tracking" })}
               className="hidden lg:flex items-center gap-2 text-xs font-semibold px-3 py-2 rounded-full border border-[#2B0A18]/15 text-[#2B0A18] hover:border-[#7A002A] hover:text-[#7A002A] transition-colors"
             >
               <Phone className="w-3.5 h-3.5 text-[#B08D3C]" />
               <span>{PHONE_DISPLAY}</span>
             </a>
             <a
-              href={WHATSAPP_URL}
+              href={WHATSAPP_URL} onClick={() => track("click_whatsapp", { origen: "landing", pagina: "rsvp-tracking" })}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#7A002A] text-white text-xs sm:text-sm font-semibold shadow-md shadow-[#7A002A]/20 hover:bg-[#5C0020] active:scale-95 transition-all"
@@ -231,10 +235,7 @@ export default function RsvpTrackingLandingPage() {
               </div>
 
               <h1 className="font-['Playfair_Display',serif] text-4xl sm:text-5xl lg:text-6xl font-bold text-[#2B0A18] leading-[1.12] tracking-tight mb-6">
-                Real-Time RSVP Tracking &amp; Strict Pass Control{" "}
-                <span className="italic font-normal text-[#7A002A] underline decoration-[#B08D3C]/60 decoration-wavy">
-                  on Your Phone
-                </span>
+                Online RSVP Tracking
               </h1>
 
               <p className="text-lg sm:text-xl text-[#2B0A18]/80 leading-relaxed mb-8 max-w-2xl font-light">
@@ -869,7 +870,7 @@ export default function RsvpTrackingLandingPage() {
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-md mx-auto">
             <a
-              href={WHATSAPP_URL}
+              href={WHATSAPP_URL} onClick={() => track("click_whatsapp", { origen: "landing", pagina: "rsvp-tracking" })}
               target="_blank"
               rel="noopener noreferrer"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-gradient-to-r from-[#B08D3C] to-[#E5C158] text-[#2B0A18] font-bold text-sm shadow-xl hover:brightness-105 transition-all"
@@ -878,7 +879,7 @@ export default function RsvpTrackingLandingPage() {
               <span>See Live Dashboard Demo</span>
             </a>
             <a
-              href={PHONE_TEL}
+              href={PHONE_TEL} onClick={() => track("click_llamar", { origen: "landing", pagina: "rsvp-tracking" })}
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl border border-white/20 bg-white/5 text-white font-semibold text-sm hover:bg-white/10 transition-all"
             >
               <Phone className="w-4 h-4 text-[#E5C158]" />
@@ -887,7 +888,7 @@ export default function RsvpTrackingLandingPage() {
           </div>
 
           <div className="mt-8 flex items-center justify-center gap-6 text-xs text-white/50">
-            <a href={PHONE_SMS} className="hover:text-white transition-colors underline">
+            <a href={PHONE_SMS} onClick={() => track("click_sms", { origen: "landing", pagina: "rsvp-tracking" })} className="hover:text-white transition-colors underline">
               Or text us directly: (818) 299-4882
             </a>
           </div>
@@ -899,7 +900,7 @@ export default function RsvpTrackingLandingPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-3">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo.png" alt="Click & Love" className="h-7 w-auto object-contain opacity-80" />
+            <Image src="/logo.png" alt="Click & Love" width={1600} height={1600} className="h-7 w-auto object-contain opacity-80" />
             <span className="font-['Playfair_Display',serif] text-sm font-semibold text-white">
               Click &amp; Love
             </span>

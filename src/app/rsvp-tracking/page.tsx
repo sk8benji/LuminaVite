@@ -4,7 +4,7 @@ import RsvpTrackingLandingPage from "@/components/RsvpTrackingLandingPage";
 export const metadata: Metadata = {
   title: "Live RSVP Tracking & Strict Pass Control | Click & Love",
   description:
-    "Real-time event RSVP tracking and strict family pass control on your phone. Eliminate uninvited plus-ones, view instant meal choices, and export guest lists to Excel.",
+    "Real-time RSVP tracking and strict family pass control on your phone. Stop uninvited plus-ones, see meal choices, export to Excel.",
   metadataBase: new URL("https://clickandlove.app"),
   alternates: {
     canonical: "https://clickandlove.app/rsvp-tracking",

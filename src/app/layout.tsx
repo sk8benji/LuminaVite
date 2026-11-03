@@ -60,6 +60,24 @@ export default function RootLayout({
             __html: `(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window, document, "clarity", "script", "z5n1fd0o9g");`,
           }}
         />
+        {/* Organization schema (Mes 9): marca, logo, área de servicio. Sin sameAs: el sitio no tiene perfiles sociales oficiales todavía. */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              name: "Click & Love",
+              url: "https://clickandlove.app/",
+              logo: "https://clickandlove.app/logo.png",
+              telephone: "+1-818-299-4882",
+              areaServed: [
+                { "@type": "AdministrativeArea", name: "Los Angeles" },
+                { "@type": "AdministrativeArea", name: "Southern California" },
+              ],
+            }),
+          }}
+        />
       </head>
       <body className="antialiased bg-[#FAF8F5] min-h-screen text-[#2C1F1B] selection:bg-[#C5A059]/30 selection:text-[#2C1F1B]">
         {/* Google Tag Manager (noscript) */}
