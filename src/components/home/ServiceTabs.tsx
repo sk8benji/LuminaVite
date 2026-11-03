@@ -12,8 +12,8 @@ export function ServiceTabs({ lang = "en" }: ServiceTabsProps) {
   const [activeTab, setActiveTab] = React.useState(0);
 
   const tabs = isEs
-    ? ["Control de Pases", "RSVP por SMS", "Llegada Google Maps"]
-    : ["Family Pass Control", "Instant SMS RSVP", "Google Maps Arrival"];
+    ? ["Control de Pases", "RSVP por SMS", "Navegación GPS en 1 Toque"]
+    : ["Family Pass Control", "Instant SMS RSVP", "1-Tap GPS Navigation"];
 
   return (
     <section id="comparativa" className="bg-[#FFFFFF] py-[7.5rem] max-[767px]:py-20 text-[#090B10] scroll-mt-24">
@@ -274,7 +274,7 @@ export function ServiceTabs({ lang = "en" }: ServiceTabsProps) {
                 </div>
               )}
 
-              {/* Tab 3: Llegada Google Maps */}
+              {/* Tab 3: Navegación GPS en 1 Toque */}
               {activeTab === 2 && (
                 <div
                   className="grid grid-cols-2 gap-20 grid-rows-[auto] place-items-center max-w-[67.5rem] mx-auto max-[767px]:grid-cols-1 max-[767px]:gap-12"
@@ -287,25 +287,42 @@ export function ServiceTabs({ lang = "en" }: ServiceTabsProps) {
                         <span className="text-xs font-bold text-[#720e26] uppercase tracking-wider">
                           Google Maps Navigation
                         </span>
-                        <span className="text-[10px] text-emerald-700 font-bold">1-Tap Route</span>
+                        <span className="text-[10px] text-emerald-700 font-bold">1-Tap GPS</span>
                       </div>
-                      <div className="rounded-xl border border-neutral-200 p-4 bg-[#FAF8F5] flex flex-col gap-2">
-                        <div className="flex items-center gap-2 text-xs font-bold text-[#090B10]">
-                          <span className="w-2.5 h-2.5 rounded-full bg-emerald-600" />
-                          <span>Brandview Ballroom · Glendale, CA</span>
-                        </div>
-                        <p className="text-[11px] text-neutral-500">
-                          {isEs
-                            ? "Ruta directa al estacionamiento y entrada principal de recepción."
-                            : "Direct driving directions to parking and main venue entrance."}
-                        </p>
+                      <p className="text-xs text-neutral-600 font-medium">
+                        {isEs
+                          ? "Guía directa a los dos lugares del evento:"
+                          : "Direct turn-by-turn guidance to both event venues:"}
+                      </p>
+                      <div className="flex flex-col gap-2.5">
                         <a
                           href="https://maps.google.com"
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="mt-2 inline-flex items-center justify-center gap-2 px-3.5 py-2 rounded-lg bg-[#0F9D58] hover:bg-[#0B8043] text-white font-bold text-xs shadow-sm transition"
+                          className="flex items-center justify-between p-3.5 rounded-xl border border-neutral-200 bg-[#FAF8F5] hover:border-emerald-500 hover:bg-emerald-50/40 transition group cursor-pointer"
                         >
-                          📍 {isEs ? "Abrir en Google Maps" : "Open in Google Maps"}
+                          <div className="flex items-center gap-2.5 text-xs font-bold text-[#090B10]">
+                            <span className="text-base">📍</span>
+                            <span>{isEs ? "Misa / Ceremonia" : "Church / Ceremony"}</span>
+                          </div>
+                          <span className="text-[11px] font-semibold text-emerald-700 group-hover:translate-x-0.5 transition-transform">
+                            {isEs ? "Abrir Ruta →" : "Open Route →"}
+                          </span>
+                        </a>
+
+                        <a
+                          href="https://maps.google.com"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center justify-between p-3.5 rounded-xl border border-neutral-200 bg-[#FAF8F5] hover:border-emerald-500 hover:bg-emerald-50/40 transition group cursor-pointer"
+                        >
+                          <div className="flex items-center gap-2.5 text-xs font-bold text-[#090B10]">
+                            <span className="text-base">📍</span>
+                            <span>{isEs ? "Recepción / Fiesta" : "Reception / Party"}</span>
+                          </div>
+                          <span className="text-[11px] font-semibold text-emerald-700 group-hover:translate-x-0.5 transition-transform">
+                            {isEs ? "Abrir Ruta →" : "Open Route →"}
+                          </span>
                         </a>
                       </div>
                     </div>
@@ -315,25 +332,25 @@ export function ServiceTabs({ lang = "en" }: ServiceTabsProps) {
                   <div className="flex flex-col gap-6 justify-start items-start max-[767px]:gap-5">
                     <div className="flex flex-col gap-2">
                       <div className="font-['Montserrat',sans-serif] text-[0.75rem] leading-3 font-bold uppercase tracking-[0.08rem] text-[#720e26]">
-                        <span className="text-[#090B10]/50">03 //</span> 03 · {isEs ? "Navegación" : "Arrival"}
+                        <span className="text-[#090B10]/50">03 //</span> 03 · {isEs ? "Llegada en 1 Toque" : "1-Tap Arrival"}
                       </div>
                       <h3 className="m-0 font-['Cinzel',serif] text-[1.875rem] leading-[2.375rem] font-bold tracking-[-0.02rem] max-[767px]:text-2xl text-[#090B10]">
-                        {isEs ? "Ruta Directa en Google Maps al Salón" : "Turn-by-Turn Google Maps Arrival"}
+                        {isEs ? "Navegación GPS en 1 Toque" : "1-Tap Church & Reception Navigation"}
                       </h3>
                     </div>
                     <p className="m-0 text-base leading-relaxed font-normal font-['Montserrat',sans-serif] text-[#090B10]">
                       {isEs ? (
                         <>
-                          <strong className="text-[#090B10] font-semibold">Cero llamadas de tíos perdidos:</strong>{" "}
+                          <strong className="text-[#090B10] font-semibold">Misa y recepción sin desvíos:</strong>{" "}
                           <span className="text-[#090B10]/70">
-                            nadie te llamará preguntando la dirección mientras te maquillas o durante el protocolo del vals de entrada.
+                            Tus invitados reciben enlaces directos a Google Maps para la ceremonia religiosa y el banquete. Evita llamadas de familiares perdidos en el tráfico y asegura que todos lleguen a tiempo a la entrada correcta.
                           </span>
                         </>
                       ) : (
                         <>
-                          <strong className="text-[#090B10] font-semibold">Zero lost guests calling:</strong>{" "}
+                          <strong className="text-[#090B10] font-semibold">Direct venue routing:</strong>{" "}
                           <span className="text-[#090B10]/70">
-                            guests tap once to open driving directions while you focus on getting ready and enjoying the celebration.
+                            Guests receive direct Google Maps links for both the religious ceremony and the party reception. Avoid frantic phone calls from relatives stuck in traffic and ensure everyone arrives right on time at the correct entrance.
                           </span>
                         </>
                       )}
@@ -341,16 +358,16 @@ export function ServiceTabs({ lang = "en" }: ServiceTabsProps) {
                     <p className="m-0 text-base leading-relaxed font-normal font-['Montserrat',sans-serif] text-[#090B10]">
                       {isEs ? (
                         <>
-                          <strong className="text-[#090B10] font-semibold">Salones en Los Ángeles:</strong>{" "}
+                          <strong className="text-[#090B10] font-semibold">Cero estrés para el anfitrión:</strong>{" "}
                           <span className="text-[#090B10]/70">
-                            rutas verificadas a venues populares en Glendale, Burbank, Pasadena, Downey y el Valle de San Fernando.
+                            Tus invitados abren la ruta en su teléfono con un solo clic, permitiéndote disfrutar de tu maquillaje, sesión de fotos y entrada triunfal sin interrupciones.
                           </span>
                         </>
                       ) : (
                         <>
-                          <strong className="text-[#090B10] font-semibold">Southern California venues:</strong>{" "}
+                          <strong className="text-[#090B10] font-semibold">Zero stress for the host:</strong>{" "}
                           <span className="text-[#090B10]/70">
-                            pre-mapped to prominent ballrooms across Glendale, Burbank, Pasadena, Downey, and San Fernando.
+                            Guests open turn-by-turn navigation on their phones in 1 tap, so you can enjoy getting ready, taking photos, and celebrating without interruptions.
                           </span>
                         </>
                       )}
