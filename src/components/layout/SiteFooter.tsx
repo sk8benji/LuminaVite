@@ -297,23 +297,12 @@ export default function SiteFooter({ lang = "en" }: SiteFooterProps) {
               </li>
             </ul>
 
-            <div className="pt-3">
-              <span className="inline-block text-[10px] text-emerald-400 bg-emerald-950/60 border border-emerald-800/60 px-2 py-1 rounded-md font-mono">
-                {isEs ? "✓ GPS Verificado en Salones" : "✓ Venue GPS Ready"}
-              </span>
-            </div>
+
           </div>
         </div>
       </div>
 
-      {/* ==================================================================== */}
-      {/* 3. GIANT PARALLAX WORDMARK (Inspirado en kelvin-footer-1 de BYQ) */}
-      {/* ==================================================================== */}
-      <div className="relative w-full overflow-hidden select-none pointer-events-none py-2 border-y border-white/5 bg-black/20">
-        <div className="text-center font-['Playfair_Display',serif] font-bold text-[13vw] leading-none tracking-tight text-white/[0.035] whitespace-nowrap">
-          CLICK &amp; LOVE
-        </div>
-      </div>
+
 
       {/* ==================================================================== */}
       {/* 4. BOTTOM BAR & MICRO-GUARANTEES */}
