@@ -24,19 +24,16 @@ export function ServiceTabs({ lang = "en" }: ServiceTabsProps) {
             <span className="inline-flex items-center px-3.5 py-1.5 rounded-full border border-neutral-200 bg-[#FAF8F5] font-['Montserrat'] text-[11px] tracking-[0.2em] uppercase text-[#720e26] font-bold mb-4">
               {isEs ? "Servicio Completo · No una Plantilla" : "A Complete Service · Not a Template"}
             </span>
-            <h2 className="m-0 font-['Cinzel',serif] text-[2.5rem] leading-[3rem] font-bold tracking-[-0.04rem] max-[767px]:text-[2rem] max-[767px]:leading-[2.5rem] text-[#090B10]">
-              {isEs ? (
-                <>
-                  Click &amp; Love diseña una experiencia completa —{" "}
-                  <span className="text-[#720e26]">eliminando el descontrol, acelerando confirmaciones y cuidando tu presupuesto.</span>
-                </>
-              ) : (
-                <>
-                  Click &amp; Love crafts a complete celebration service —{" "}
-                  <span className="text-[#720e26]">eliminating chaos, accelerating RSVPs, and protecting your budget.</span>
-                </>
-              )}
+            <h2 className="m-0 font-['Playfair_Display',serif] text-3xl sm:text-4xl lg:text-[2.75rem] leading-[1.22] font-bold tracking-tight text-[#090B10]">
+              {isEs
+                ? "Un servicio de gala a tu medida, no una plantilla vacía"
+                : "A Bespoke Celebration Service, Not an Empty Template"}
             </h2>
+            <p className="mt-4 text-base sm:text-lg font-normal leading-relaxed text-[#090B10]/75 font-['Montserrat',sans-serif] max-w-2xl mx-auto">
+              {isEs
+                ? "Diseñamos tu experiencia completa de invitación digital: eliminando el descontrol de invitados, acelerando confirmaciones y cuidando el presupuesto de tu evento."
+                : "We handcraft your entire digital invitation experience—eliminating guest chaos, accelerating RSVPs, and protecting your reception budget."}
+            </p>
           </div>
 
           {/* Tabs */}
@@ -157,7 +154,7 @@ export function ServiceTabs({ lang = "en" }: ServiceTabsProps) {
                       <div className="font-['Montserrat',sans-serif] text-[0.75rem] leading-3 font-bold uppercase tracking-[0.08rem] text-[#720e26]">
                         <span className="text-[#090B10]/50">01 //</span> 03 · {isEs ? "Control de Aforo" : "Capacity"}
                       </div>
-                      <h3 className="m-0 font-['Cinzel',serif] text-[1.875rem] leading-[2.375rem] font-bold tracking-[-0.02rem] max-[767px]:text-2xl text-[#090B10]">
+                      <h3 className="m-0 font-['Playfair_Display',serif] text-[1.875rem] leading-[2.375rem] font-bold tracking-[-0.02rem] max-[767px]:text-2xl text-[#090B10]">
                         {isEs ? "Control Estricto de Pases Familiares" : "Strict Family Pass Allocation"}
                       </h3>
                     </div>
@@ -232,7 +229,7 @@ export function ServiceTabs({ lang = "en" }: ServiceTabsProps) {
                       <div className="font-['Montserrat',sans-serif] text-[0.75rem] leading-3 font-bold uppercase tracking-[0.08rem] text-[#720e26]">
                         <span className="text-[#090B10]/50">02 //</span> 03 · {isEs ? "Apertura Inmediata" : "Instant"}
                       </div>
-                      <h3 className="m-0 font-['Cinzel',serif] text-[1.875rem] leading-[2.375rem] font-bold tracking-[-0.02rem] max-[767px]:text-2xl text-[#090B10]">
+                      <h3 className="m-0 font-['Playfair_Display',serif] text-[1.875rem] leading-[2.375rem] font-bold tracking-[-0.02rem] max-[767px]:text-2xl text-[#090B10]">
                         {isEs ? "RSVP Instantáneo sin Apps ni Contraseñas" : "Instant RSVP Without Apps or Logins"}
                       </h3>
                     </div>
@@ -334,7 +331,7 @@ export function ServiceTabs({ lang = "en" }: ServiceTabsProps) {
                       <div className="font-['Montserrat',sans-serif] text-[0.75rem] leading-3 font-bold uppercase tracking-[0.08rem] text-[#720e26]">
                         <span className="text-[#090B10]/50">03 //</span> 03 · {isEs ? "Llegada en 1 Toque" : "1-Tap Arrival"}
                       </div>
-                      <h3 className="m-0 font-['Cinzel',serif] text-[1.875rem] leading-[2.375rem] font-bold tracking-[-0.02rem] max-[767px]:text-2xl text-[#090B10]">
+                      <h3 className="m-0 font-['Playfair_Display',serif] text-[1.875rem] leading-[2.375rem] font-bold tracking-[-0.02rem] max-[767px]:text-2xl text-[#090B10]">
                         {isEs ? "Navegación GPS en 1 Toque" : "1-Tap Church & Reception Navigation"}
                       </h3>
                     </div>
