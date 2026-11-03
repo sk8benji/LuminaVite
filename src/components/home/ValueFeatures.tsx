@@ -69,7 +69,9 @@ export function ValueFeatures({ lang = "en" }: ValueFeaturesProps) {
       alt: isEs ? "Llegada en Google Maps" : "Google Maps venue arrival",
       tag: isEs ? "GOOGLE MAPS" : "GOOGLE MAPS",
       title: isEs ? "Ruta GPS" : "Turn-by-Turn",
-      subtitle: isEs ? "— Directo al estacionamiento de tu salón en LA." : "— Direct route to venue parking in Southern California.",
+      subtitle: isEs
+        ? "— Ruta directa en 1 toque a la ceremonia religiosa y al salón del evento."
+        : "Direct 1-tap GPS directions to church ceremony and reception venue.",
     },
   ];
 
@@ -89,7 +91,7 @@ export function ValueFeatures({ lang = "en" }: ValueFeaturesProps) {
               {/* Heading */}
               <div
                 ref={headingRef}
-                className={`transition-all duration-700 ease-out ${
+                className={`transition-all duration-700 ease-out max-w-3xl ${
                   headingVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
                 }`}
               >
@@ -97,15 +99,20 @@ export function ValueFeatures({ lang = "en" }: ValueFeaturesProps) {
                   {isEs ? "Experiencia de Gala" : "Bespoke Gala Experience"}
                 </span>
                 <h2
-                  className="m-0 font-['Cinzel',serif] text-[#090B10] font-bold uppercase"
+                  className="m-0 font-['Playfair_Display',serif] text-[#090B10] font-bold"
                   style={{
-                    fontSize: "clamp(36px, 7vw, 84px)",
-                    lineHeight: "1.05",
+                    fontSize: "clamp(32px, 5.5vw, 68px)",
+                    lineHeight: "1.12",
                     letterSpacing: "-0.02em",
                   }}
                 >
-                  {isEs ? "Hecho a Tu Medida" : "Crafted For You"}
+                  {isEs ? "Creado para Celebraciones Inolvidables" : "Crafted for Unforgettable Celebrations"}
                 </h2>
+                <p className="mt-3 text-sm md:text-base text-neutral-500 font-normal leading-relaxed font-['Montserrat',sans-serif]">
+                  {isEs
+                    ? "Cada invitación digital combina arte interactivo 3D con un control de invitados sin esfuerzo."
+                    : "Every digital invitation combines interactive 3D craft with effortless guest management."}
+                </p>
               </div>
 
               {/* CTA Tertiary */}
@@ -156,7 +163,7 @@ export function ValueFeatures({ lang = "en" }: ValueFeaturesProps) {
                       }}
                     >
                       <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M4 16L16 4M16 4H8M16 4V12" stroke="currentColor" strokeWidth="2.2" strokeLinecap="square" />
+                        <path d="M4 16L16 4H8M16 4V12" stroke="currentColor" strokeWidth="2.2" strokeLinecap="square" />
                       </svg>
                     </div>
                   </div>
@@ -189,20 +196,20 @@ export function ValueFeatures({ lang = "en" }: ValueFeaturesProps) {
                     className="absolute inset-0 z-[1] w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                   />
 
-                  {/* Dark overlay for readability */}
-                  <div className="absolute inset-0 z-[2] bg-gradient-to-t from-black/80 via-black/30 to-black/10" />
+                  {/* Dark overlay for readability - deeper gradient */}
+                  <div className="absolute inset-0 z-[2] bg-gradient-to-t from-black/90 via-black/45 to-transparent" />
 
                   {/* Content overlay */}
                   <div
                     className="absolute inset-0 z-[5] flex flex-col justify-between items-stretch max-[767px]:gap-4 p-5 max-[767px]:p-4"
                   >
-                    {/* Tag */}
+                    {/* Tag - Unified translucent white pill */}
                     <div className="flex">
                       <div
-                        className="flex items-center justify-center bg-white/95 text-[#090B10] border border-neutral-200 px-2.5 py-0.5 rounded-full shadow-sm"
+                        className="flex items-center justify-center bg-white/90 text-neutral-900 border border-neutral-200 px-2.5 py-0.5 rounded-full shadow-sm backdrop-blur-[2px]"
                       >
                         <span
-                          className="font-['Montserrat',sans-serif] font-bold uppercase text-[10px] tracking-[0.12em] text-[#720e26]"
+                          className="font-['Montserrat',sans-serif] font-bold uppercase text-[10px] tracking-[0.12em] text-[#090B10]"
                         >
                           {card.tag}
                         </span>
@@ -211,10 +218,10 @@ export function ValueFeatures({ lang = "en" }: ValueFeaturesProps) {
 
                     {/* Bottom tile */}
                     <div className="flex flex-col gap-1 w-full font-['Montserrat']">
-                      <div className="font-['Cinzel',serif] font-bold text-lg text-white leading-tight">
+                      <div className="font-['Playfair_Display',serif] font-bold text-lg text-white leading-tight">
                         {card.title}
                       </div>
-                      <div className="text-white/80 text-xs leading-snug">
+                      <div className="text-white/90 text-xs leading-snug">
                         {card.subtitle}
                       </div>
                     </div>
