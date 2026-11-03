@@ -389,19 +389,25 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
       <ValueFeatures lang={lang} />
 
       {/* ============================================================== */}
-      <section id="plantillas" className="py-20 px-4 sm:px-6 bg-[#F5EDDA] scroll-mt-24">
+      <section id="plantillas" className="py-20 px-4 sm:px-6 bg-[#FAF8F5] border-t border-b border-neutral-200 scroll-mt-24">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center max-w-3xl mx-auto mb-12">
-            <span className="font-vibes text-[32px] text-[#B08D3C] block leading-tight">{b.tplScript}</span>
-            <h2 className="font-['Cinzel'] font-bold text-2xl sm:text-[30px] text-[#2B0A18] mt-2 leading-snug">
-              {b.tplTitle}
+          {/* Header */}
+          <div className="text-center max-w-3xl mx-auto mb-14">
+            <h2 className="font-['Playfair_Display',serif] font-bold text-3xl sm:text-4xl text-neutral-900 tracking-tight">
+              {lang === "es" ? "Explora Diseños Interactivos de Quinceañera" : "Explore Interactive Quince Themes"}
             </h2>
+            <p className="mt-3 text-sm md:text-base text-neutral-600 leading-relaxed font-['Montserrat',sans-serif] max-w-2xl mx-auto">
+              {lang === "es"
+                ? "Vive cada diseño con animación de sobre 3D, música personalizada y confirmación de asistencia instantánea."
+                : "Experience each design with full 3D envelope animations, music, and instant RSVP tracking."}
+            </p>
           </div>
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {b.tplCards.map((card) => (
               <div
                 key={card.slug}
-                className="rounded-3xl bg-white border border-[#E7DCC8] overflow-hidden shadow-[0_12px_28px_rgba(122,0,42,0.08)] hover:shadow-[0_20px_40px_rgba(122,0,42,0.14)] transition-shadow flex flex-col"
+                className="rounded-3xl bg-white border border-neutral-200 overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.05)] hover:shadow-[0_12px_32px_rgba(114,14,38,0.12)] transition-all duration-300 flex flex-col group"
               >
                 <a href={`/demo/${card.slug}`} target="_blank" rel="noopener noreferrer" className="block group relative">
                   <div className="h-64 overflow-hidden">
@@ -417,17 +423,17 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                     />
                   </div>
-                  <span className="absolute top-3.5 left-3.5 px-3 py-1 rounded-full bg-[#2B0A18]/78 backdrop-blur text-white font-['Montserrat'] text-[9.5px] font-extrabold tracking-[0.16em] uppercase">
+                  <span className="absolute top-3.5 left-3.5 px-3 py-1 rounded-full bg-white/95 text-neutral-800 shadow-sm font-['Montserrat'] text-[10px] font-bold tracking-[0.12em] uppercase border border-neutral-200/60 backdrop-blur-sm">
                     {card.tag}
                   </span>
                 </a>
-                <div className="p-6 flex flex-col gap-1.5 flex-1">
-                  <h3 className="font-['Montserrat'] font-extrabold text-lg text-[#2B0A18]">{card.name}</h3>
-                  <p className="font-['Montserrat'] text-[13px] text-[#5A3C46] leading-relaxed">{card.desc}</p>
-                  <ul className="mt-3 space-y-1.5">
+                <div className="p-6 flex flex-col gap-2 flex-1 font-['Montserrat']">
+                  <h3 className="font-['Playfair_Display',serif] font-bold text-xl text-neutral-900">{card.name}</h3>
+                  <p className="text-sm text-neutral-600 leading-relaxed">{card.desc}</p>
+                  <ul className="mt-2 space-y-1.5">
                     {card.bullets.map((bullet) => (
-                      <li key={bullet} className="flex items-center gap-2 font-['Montserrat'] text-[12.5px] font-semibold text-[#45303B]">
-                        <span className="w-1.5 h-1.5 rotate-45 bg-[#B08D3C] shrink-0" />
+                      <li key={bullet} className="flex items-center gap-2 text-xs font-medium text-neutral-700">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#720e26] shrink-0" />
                         {bullet}
                       </li>
                     ))}
@@ -435,9 +441,9 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
                   <div className="mt-auto pt-5">
                     <button
                       onClick={() => handleOpenDemo(card.slug)}
-                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#7A002A] hover:bg-[#660025] text-white font-['Montserrat'] font-bold text-[12.5px] transition active:scale-95 cursor-pointer"
+                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#720e26] hover:bg-[#581825] text-white font-['Montserrat'] font-bold text-xs shadow-sm transition active:scale-95 cursor-pointer"
                     >
-                      {t.collections.viewDemo}
+                      {lang === "es" ? "Probar Demo en Vivo" : "Try Live Demo"}
                       <ArrowRight className="w-3.5 h-3.5" />
                     </button>
                   </div>
@@ -445,10 +451,11 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
               </div>
             ))}
           </div>
-          <div className="text-center mt-10">
+
+          <div className="text-center mt-12">
             <Link
               href={lang === "es" ? "/es/demo" : "/demo"}
-              className="inline-flex items-center gap-2 font-['Montserrat'] font-bold text-sm text-[#7A002A] hover:text-[#B08D3C] transition"
+              className="inline-flex items-center gap-2 font-['Montserrat'] font-bold text-sm text-[#720e26] hover:text-[#581825] transition"
             >
               {b.catalogLink}
               <ExternalLink className="w-4 h-4" />
