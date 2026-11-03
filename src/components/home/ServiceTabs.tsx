@@ -38,22 +38,22 @@ export function ServiceTabs({ lang = "en" }: ServiceTabsProps) {
 
           {/* Tabs */}
           <div className="flex flex-col justify-start items-center">
-            {/* Tab Menu */}
-            <div className="flex mb-12 max-[767px]:flex-col max-[767px]:w-full max-[767px]:max-w-[25rem] max-[767px]:gap-3 max-[767px]:mb-8">
+            {/* Tab Menu - Segmented Pill Bar */}
+            <div className="inline-flex p-1.5 rounded-full bg-neutral-100 border border-neutral-200/90 gap-1.5 max-[767px]:flex-col max-[767px]:w-full max-[767px]:rounded-2xl mb-12 shadow-inner">
               {tabs.map((tab, i) => (
                 <button
                   key={i}
                   onClick={() => setActiveTab(i)}
                   className={[
-                    "min-w-[15.31rem] px-4 pb-3 pt-0 border-b-2 flex justify-center items-center bg-transparent transition-colors duration-200 cursor-pointer",
-                    "font-['Montserrat',sans-serif] text-base leading-6 font-semibold",
-                    "max-[767px]:px-3 max-[767px]:pb-2 max-[767px]:min-w-0",
+                    "px-5 py-2 rounded-full text-sm font-semibold transition-all duration-200 cursor-pointer text-center",
+                    "font-['Montserrat',sans-serif]",
+                    "max-[767px]:w-full max-[767px]:py-2.5",
                     activeTab === i
-                      ? "border-b-[#720e26] text-[#720e26]"
-                      : "border-b-neutral-200 text-neutral-400 hover:text-neutral-700",
+                      ? "bg-[#720e26] text-white shadow-sm font-bold"
+                      : "text-neutral-600 hover:text-[#090B10] hover:bg-white/70",
                   ].join(" ")}
                 >
-                  <div className="text-base leading-6 font-semibold font-['Montserrat',sans-serif]">{tab}</div>
+                  {tab}
                 </button>
               ))}
             </div>
@@ -178,16 +178,16 @@ export function ServiceTabs({ lang = "en" }: ServiceTabsProps) {
                     <p className="m-0 text-base leading-relaxed font-normal font-['Montserrat',sans-serif] text-[#090B10]">
                       {isEs ? (
                         <>
-                          <strong className="text-[#090B10] font-semibold">Ahorro real en banquetes:</strong>{" "}
+                          <strong className="text-[#090B10] font-semibold">Ahorro real en recepción:</strong>{" "}
                           <span className="text-[#090B10]/70">
-                            evita pagar cientos de dólares en platillos desperdiciados o asientos vacíos con el salón de eventos.
+                            Evita pagar por asientos vacíos o invitados sorpresa durante la cena de tu evento.
                           </span>
                         </>
                       ) : (
                         <>
-                          <strong className="text-[#090B10] font-semibold">Real catering savings:</strong>{" "}
+                          <strong className="text-[#090B10] font-semibold">Real reception savings:</strong>{" "}
                           <span className="text-[#090B10]/70">
-                            prevent spending hundreds of dollars on wasted meals or empty chairs at your ballroom.
+                            Prevent paying for empty seats or surprise guests at your reception dinner.
                           </span>
                         </>
                       )}
