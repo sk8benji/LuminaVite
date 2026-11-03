@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { track } from "@/lib/analytics";
 import Image from "next/image";
 import { FAQS_LIST } from "@/lib/quince-faqs";
 import {
@@ -210,7 +211,7 @@ export default function QuinceLandingPage() {
             </a>
 
             <a
-              href={WHATSAPP_URL}
+              href={WHATSAPP_URL} onClick={() => track("click_whatsapp", { origen: "landing", pagina: "quince-invitations" })}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#7A002A] hover:bg-[#600021] text-white rounded-full text-xs font-bold tracking-wide shadow-[0_4px_14px_rgba(122,0,42,0.35)] hover:shadow-[0_6px_20px_rgba(122,0,42,0.45)] transition-all hover:scale-[1.02] active:scale-[0.98]"
@@ -1036,12 +1037,42 @@ export default function QuinceLandingPage() {
           <div className="mt-10 text-center text-sm text-[#7A5B66]">
             Have a custom theme or unique request?{" "}
             <a
-              href={WHATSAPP_URL}
+              href={WHATSAPP_URL} onClick={() => track("click_whatsapp", { origen: "landing", pagina: "quince-invitations" })}
               target="_blank"
               rel="noopener noreferrer"
               className="text-[#7A002A] font-bold underline hover:text-[#5A0020]"
             >
               Chat directly with our Los Angeles design team on WhatsApp →
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Related Services */}
+      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-[#FAF5EC] border-t border-[#E7DCC8]/70">
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-[#2B0A18] mb-2">
+            Related Services
+          </h2>
+          <p className="text-sm text-[#5A3C46] mb-8 max-w-2xl">
+            Everything around your quinceañera invitation, from sending to tracking replies.
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <a href="/wedding-invitations-los-angeles" className="rounded-2xl bg-white border border-[#E7DCC8] p-5 hover:border-[#B08D3C] hover:shadow-md transition-all block">
+              <span className="font-bold text-[#7A002A] block">Wedding Invitations in Los Angeles</span>
+              <span className="text-xs text-[#5A3C46]">3D unboxing, first-dance music and meal selection for weddings.</span>
+            </a>
+            <a href="/text-message-invitations" className="rounded-2xl bg-white border border-[#E7DCC8] p-5 hover:border-[#B08D3C] hover:shadow-md transition-all block">
+              <span className="font-bold text-[#7A002A] block">Text Message Invitations</span>
+              <span className="text-xs text-[#5A3C46]">Send the invitation straight to SMS with 1-tap RSVP.</span>
+            </a>
+            <a href="/rsvp-tracking" className="rounded-2xl bg-white border border-[#E7DCC8] p-5 hover:border-[#B08D3C] hover:shadow-md transition-all block">
+              <span className="font-bold text-[#7A002A] block">Online RSVP Tracking</span>
+              <span className="text-xs text-[#5A3C46]">Live headcount, pass control and Excel export for your venue.</span>
+            </a>
+            <a href="/whatsapp-invitations" className="rounded-2xl bg-white border border-[#E7DCC8] p-5 hover:border-[#B08D3C] hover:shadow-md transition-all block">
+              <span className="font-bold text-[#7A002A] block">WhatsApp Invitations</span>
+              <span className="text-xs text-[#5A3C46]">Rich card previews shared in private chats and groups.</span>
             </a>
           </div>
         </div>
@@ -1074,7 +1105,7 @@ export default function QuinceLandingPage() {
           {/* Action Buttons: Phone & SMS */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
             <a
-              href={PHONE_TEL}
+              href={PHONE_TEL} onClick={() => track("click_llamar", { origen: "landing", pagina: "quince-invitations" })}
               className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 bg-[#E5C158] hover:bg-[#D4AF37] text-[#1A050E] rounded-full text-base font-extrabold tracking-wide shadow-[0_10px_25px_rgba(229,193,88,0.3)] transition-all hover:scale-105 active:scale-95"
             >
               <Phone className="w-5 h-5" />
@@ -1082,7 +1113,7 @@ export default function QuinceLandingPage() {
             </a>
 
             <a
-              href={PHONE_SMS}
+              href={PHONE_SMS} onClick={() => track("click_sms", { origen: "landing", pagina: "quince-invitations" })}
               className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 bg-white/10 hover:bg-white/20 text-white border border-white/30 rounded-full text-base font-bold transition-all hover:scale-105 active:scale-95"
             >
               <MessageSquare className="w-5 h-5 text-[#E5C158]" />
@@ -1090,7 +1121,7 @@ export default function QuinceLandingPage() {
             </a>
 
             <a
-              href={WHATSAPP_URL}
+              href={WHATSAPP_URL} onClick={() => track("click_whatsapp", { origen: "landing", pagina: "quince-invitations" })}
               target="_blank"
               rel="noopener noreferrer"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 bg-[#25D366] hover:bg-[#20BA5A] text-white rounded-full text-base font-bold transition-all hover:scale-105 active:scale-95 shadow-md"

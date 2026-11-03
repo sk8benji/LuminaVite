@@ -74,7 +74,7 @@ export default async function BlogPostPage({
   const canonical = `https://clickandlove.app/blog/${post.slug}`;
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "Article",
+    "@type": "BlogPosting",
     headline: post.title,
     description: post.description,
     datePublished: post.datePublished,
@@ -137,6 +137,32 @@ export default async function BlogPostPage({
                 {renderInline(p, `${slugify(s.heading)}-${i}`)}
               </p>
             ))}
+            {s.table && (
+              <div className="mt-4 overflow-x-auto">
+                <table className="w-full text-sm border-collapse">
+                  <thead>
+                    <tr>
+                      {s.table.headers.map((h) => (
+                        <th key={h} className="border border-[#E7DCC8] bg-[#FDFBF8] px-3 py-2 text-left font-bold text-[#7A002A]">
+                          {h}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {s.table.rows.map((row, i) => (
+                      <tr key={i}>
+                        {row.map((cell, j) => (
+                          <td key={j} className="border border-[#E7DCC8] px-3 py-2 leading-relaxed">
+                            {cell}
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
             {s.bullets && (
               <ul className="mt-3 space-y-2 list-disc pl-5 leading-relaxed">
                 {s.bullets.map((b) => (

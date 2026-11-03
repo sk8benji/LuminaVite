@@ -4,7 +4,7 @@ import SmsLandingPage from "@/components/SmsLandingPage";
 export const metadata: Metadata = {
   title: "Text Message Invitations with Instant 1-Tap RSVP | Click & Love",
   description:
-    "Luxury text message invitations with 98%+ open rate. Send 3D unboxing invitations straight to guests' phones via SMS with zero app downloads, instant confirmations, and automatic GPS routes.",
+    "Luxury text message invitations with 3D unboxing sent straight to guests' phones via SMS: zero app downloads, instant confirmations, GPS routes.",
   metadataBase: new URL("https://clickandlove.app"),
   alternates: {
     canonical: "https://clickandlove.app/text-message-invitations",

@@ -4,7 +4,7 @@ import WhatsAppLandingPage from "@/components/WhatsAppLandingPage";
 export const metadata: Metadata = {
   title: "WhatsApp Invitation Links with 3D Unboxing & Live RSVP | Click & Love",
   description:
-    "Share luxury 3D invitations on WhatsApp. Automatic rich card previews, custom music, 1-tap mobile opening with zero apps, and real-time RSVP sync to your host dashboard.",
+    "Share luxury 3D invitations on WhatsApp with rich card previews, custom music, 1-tap opening with zero apps and live RSVP sync.",
   metadataBase: new URL("https://clickandlove.app"),
   alternates: {
     canonical: "https://clickandlove.app/whatsapp-invitations",

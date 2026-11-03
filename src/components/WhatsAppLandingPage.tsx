@@ -2,6 +2,8 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { track } from "@/lib/analytics";
+import Image from "next/image";
 import {
   ArrowRight,
   Check,
@@ -100,9 +102,11 @@ export default function WhatsAppLandingPage() {
             className="flex items-center gap-3 group focus:outline-none focus-visible:ring-2 focus-visible:ring-[#7A002A]"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <Image
               src="/logo.png"
               alt="Click & Love"
+              width={1600}
+              height={1600}
               className="h-10 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
             />
             <div className="flex flex-col">
@@ -135,14 +139,14 @@ export default function WhatsAppLandingPage() {
 
           <div className="flex items-center gap-3">
             <a
-              href={PHONE_TEL}
+              href={PHONE_TEL} onClick={() => track("click_llamar", { origen: "landing", pagina: "whatsapp-invitations" })}
               className="hidden lg:flex items-center gap-2 text-xs font-semibold px-3 py-2 rounded-full border border-[#2B0A18]/15 text-[#2B0A18] hover:border-[#7A002A] hover:text-[#7A002A] transition-colors"
             >
               <Phone className="w-3.5 h-3.5 text-[#B08D3C]" />
               <span>{PHONE_DISPLAY}</span>
             </a>
             <a
-              href={WHATSAPP_URL}
+              href={WHATSAPP_URL} onClick={() => track("click_whatsapp", { origen: "landing", pagina: "whatsapp-invitations" })}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#25D366] text-[#123820] text-xs sm:text-sm font-bold shadow-md shadow-[#25D366]/20 hover:brightness-105 active:scale-95 transition-all"
@@ -196,7 +200,7 @@ export default function WhatsAppLandingPage() {
 
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full sm:w-auto">
                 <a
-                  href={WHATSAPP_URL}
+                  href={WHATSAPP_URL} onClick={() => track("click_whatsapp", { origen: "landing", pagina: "whatsapp-invitations" })}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center justify-center gap-3 px-8 py-4 rounded-xl bg-gradient-to-r from-[#128C7E] to-[#25D366] text-white text-base font-bold shadow-xl shadow-[#25D366]/25 hover:shadow-2xl hover:brightness-105 active:scale-98 transition-all text-center"
@@ -269,10 +273,11 @@ export default function WhatsAppLandingPage() {
 
                           {/* Rich OpenGraph Card Preview */}
                           <div className="bg-white rounded-xl overflow-hidden shadow-xs border border-black/10">
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img
+                            <Image
                               src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80"
                               alt="Wedding Invitation"
+                              width={800}
+                              height={112}
                               className="w-full h-28 object-cover"
                             />
                             <div className="p-2.5">
@@ -799,7 +804,7 @@ export default function WhatsAppLandingPage() {
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-md mx-auto">
             <a
-              href={WHATSAPP_URL}
+              href={WHATSAPP_URL} onClick={() => track("click_whatsapp", { origen: "landing", pagina: "whatsapp-invitations" })}
               target="_blank"
               rel="noopener noreferrer"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-gradient-to-r from-[#25D366] to-[#128C7E] text-[#072414] font-bold text-sm shadow-xl hover:brightness-105 transition-all"
@@ -808,7 +813,7 @@ export default function WhatsAppLandingPage() {
               <span>Message Us on WhatsApp</span>
             </a>
             <a
-              href={PHONE_TEL}
+              href={PHONE_TEL} onClick={() => track("click_llamar", { origen: "landing", pagina: "whatsapp-invitations" })}
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl border border-white/20 bg-white/5 text-white font-semibold text-sm hover:bg-white/10 transition-all"
             >
               <Phone className="w-4 h-4 text-[#E5C158]" />
@@ -817,7 +822,7 @@ export default function WhatsAppLandingPage() {
           </div>
 
           <div className="mt-8 flex items-center justify-center gap-6 text-xs text-white/50">
-            <a href={PHONE_SMS} className="hover:text-white transition-colors underline">
+            <a href={PHONE_SMS} onClick={() => track("click_sms", { origen: "landing", pagina: "whatsapp-invitations" })} className="hover:text-white transition-colors underline">
               Or text us via SMS: (818) 299-4882
             </a>
           </div>
@@ -829,7 +834,7 @@ export default function WhatsAppLandingPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-3">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo.png" alt="Click & Love" className="h-7 w-auto object-contain opacity-80" />
+            <Image src="/logo.png" alt="Click & Love" width={1600} height={1600} className="h-7 w-auto object-contain opacity-80" />
             <span className="font-['Playfair_Display',serif] text-sm font-semibold text-white">
               Click &amp; Love
             </span>

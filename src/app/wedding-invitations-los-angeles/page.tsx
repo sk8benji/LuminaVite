@@ -2,15 +2,15 @@ import type { Metadata } from "next";
 import WeddingLandingPage from "@/components/WeddingLandingPage";
 
 export const metadata: Metadata = {
-  title: "Wedding Digital Invitations in Los Angeles with Instant SMS RSVP | Click & Love",
+  title: "Wedding Digital Invitations in Los Angeles | Instant SMS RSVP",
   description:
-    "Luxury 3D interactive wedding invitations in Los Angeles. First-dance music, 1-tap SMS RSVP, plated meal selection (beef, salmon, vegan), and direct GPS to iconic LA venues. Order today.",
+    "Luxury 3D wedding invitations in Los Angeles with first-dance music, 1-tap SMS RSVP, meal selection and GPS to LA venues.",
   metadataBase: new URL("https://clickandlove.app"),
   alternates: {
     canonical: "https://clickandlove.app/wedding-invitations-los-angeles",
   },
   openGraph: {
-    title: "Wedding Digital Invitations in Los Angeles with Instant SMS RSVP | Click & Love",
+    title: "Wedding Digital Invitations in Los Angeles | Instant SMS RSVP",
     description:
       "Luxury 3D interactive wedding invitations in Los Angeles with custom wax seal unboxing, instant SMS RSVPs, plated meal tracking, and venue GPS.",
     url: "https://clickandlove.app/wedding-invitations-los-angeles",
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Wedding Digital Invitations in Los Angeles | Click & Love",
+    title: "Wedding Digital Invitations in Los Angeles | Instant SMS RSVP",
     description:
       "Luxury 3D interactive wedding invitations with custom wax seal, SMS RSVP, plated dinner tracking, and GPS to LA venues.",
     images: ["https://clickandlove.app/assets/og-banner.png"],
