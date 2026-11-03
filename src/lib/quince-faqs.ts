@@ -8,14 +8,14 @@ export interface FaqItem {
 
 export const FAQS_LIST: FaqItem[] = [
   {
-    question: "Do our guests need to download an app or sign up to view the invitation?",
+    question: "How do guests RSVP to our quince invitations?",
     answer:
-      "Zero downloads required. Your guests simply tap a private link sent via text, WhatsApp, or Instagram DM. The invitation opens instantly in Safari, Chrome, or any mobile browser with high-definition animations, music, and GPS navigation.",
+      "Guests receive the invitation link via text message or WhatsApp, tap to view the 3D animated envelope, and submit their confirmation directly in their mobile browser without creating an account or downloading an application.",
   },
   {
-    question: "How does the strict pass control per family work?",
+    question: "Can we prevent uninvited guests from adding extra plus-ones?",
     answer:
-      "Unlike paper invitations where guests assume they can bring uninvited plus-ones, our platform locks the RSVP to the exact number of passes you assign (e.g., 'Familia Morales · 4 passes assigned'). When they confirm, they can only confirm up to that limit, saving you thousands on catering headcount.",
+      "Yes. Each invitation link can be pre-configured with a specific number of family passes. Guests can only confirm up to the allocated seat limit.",
   },
   {
     question: "What happens if our mass time, dinner schedule, or venue changes at the last minute?",
