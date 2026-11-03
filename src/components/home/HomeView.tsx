@@ -659,27 +659,27 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
       {/* BANDA DE CONTACTO */}
       {/* ============================================================== */}
       <section className="bg-[#7A002A] py-10 px-4 sm:px-6">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-7 md:gap-10">
-          <div className="flex items-center gap-4 text-center md:text-left flex-col sm:flex-row">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo-white.png" alt="" className="w-16 h-16 object-contain shrink-0" />
-            <div>
-              <h2 className="font-['Cinzel'] font-bold text-2xl sm:text-[28px] text-white">{b.contactTitle}</h2>
-              <p className="font-['Montserrat'] text-sm text-[#F0DCAE] mt-1">{b.contactText}</p>
-            </div>
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-7 md:gap-10">
+          <div className="text-center md:text-left">
+            <h2 className="font-['Playfair_Display',serif] font-bold text-2xl sm:text-[28px] text-white tracking-tight">
+              {b.contactTitle}
+            </h2>
+            <p className="font-['Montserrat'] text-sm text-[#F0DCAE] mt-1.5 font-normal">
+              {b.contactText}
+            </p>
           </div>
-          <div className="md:ml-auto flex flex-col items-center gap-2.5 shrink-0">
+          <div className="flex flex-col items-center md:items-end gap-2.5 shrink-0">
             <div className="flex items-center gap-3">
               <a
                 href={PHONE_TEL}
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white text-[#7A002A] font-['Montserrat'] font-extrabold text-sm hover:bg-[#F5EDDA] transition active:scale-95"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white text-[#7A002A] font-['Montserrat'] font-extrabold text-sm hover:bg-[#F5EDDA] transition active:scale-95 shadow-sm"
               >
                 <Phone className="w-4 h-4" />
                 {b.contactCall}
               </a>
               <a
                 href={PHONE_SMS}
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#FFD166] text-[#2B0A18] font-['Montserrat'] font-extrabold text-sm hover:brightness-105 transition active:scale-95"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#FFD166] text-[#2B0A18] font-['Montserrat'] font-extrabold text-sm hover:brightness-105 transition active:scale-95 shadow-sm"
               >
                 <MessageSquare className="w-4 h-4" />
                 {b.contactSms}

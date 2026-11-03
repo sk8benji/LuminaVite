@@ -5,15 +5,12 @@ import Link from "next/link";
 import {
   ExternalLink,
   Globe,
-  Heart,
   Lock,
-  MapPin,
   MessageCircle,
   MessageSquare,
   Phone,
   ShieldCheck,
   Sparkles,
-  Zap,
 } from "lucide-react";
 
 interface SiteFooterProps {
@@ -36,37 +33,27 @@ export default function SiteFooter({ lang = "en" }: SiteFooterProps) {
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[300px] bg-gradient-to-b from-[#7A002A]/25 via-[#B08D3C]/10 to-transparent blur-3xl rounded-full pointer-events-none -z-0" />
 
       {/* ==================================================================== */}
-      {/* 1. TOP LIVE STUDIO STATUS BAR (Inspirado en BYQ & Jiro) */}
+      {/* 1. TOP STATUS BAR (Refined & Clutter-Free) */}
       {/* ==================================================================== */}
       <div className="relative z-10 border-b border-white/10 bg-white/[0.02]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-wrap items-center justify-between gap-4 text-xs">
-          {/* Live Studio Status */}
+          {/* Status Message */}
           <div className="flex items-center gap-2.5">
-            <span className="relative flex h-2.5 w-2.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500" />
-            </span>
-            <span className="font-semibold text-white tracking-wide text-[11px] sm:text-xs">
+            <span className="w-2 h-2 rounded-full bg-emerald-400" />
+            <span className="font-medium text-white/90 tracking-wide text-[11px] sm:text-xs">
               {isEs
-                ? "Calendario 2026–2027 Abierto"
-                : "Booking Calendar 2026–2027 Open"}
-            </span>
-            <span className="hidden sm:inline text-white/30">•</span>
-            <span className="hidden sm:inline text-white/60 text-[11px]">
-              {isEs
-                ? "Disponibilidad confirmada en Los Ángeles y Sur de California"
-                : "Serving Los Angeles County & Southern California"}
+                ? "Entrega Inmediata · Soporte en Vivo a Invitados · Panel Privado de Anfitrión"
+                : "Instant Delivery · Live Guest Support · Private Host Dashboard"}
             </span>
           </div>
 
-          {/* Concierge Hours & Delivery */}
-          <div className="flex items-center gap-4 text-[11px] text-white/60">
-            <span className="flex items-center gap-1.5 text-[#E5C158] font-medium">
-              <Zap className="w-3.5 h-3.5 fill-current" />
-              <span>{isEs ? "Entrega en 48 Horas" : "Fast 48h Delivery"}</span>
+          {/* Concierge Guarantee & Hours */}
+          <div className="flex items-center gap-3 text-[11px] text-white/60">
+            <span className="text-[#E5C158] font-medium">
+              {isEs ? "Garantía de Entrega 48 Horas" : "48h Delivery Guarantee"}
             </span>
             <span className="text-white/20">•</span>
-            <span className="hidden md:inline">
+            <span className="hidden sm:inline">
               {isEs ? "Lun – Sáb 9:00 AM – 7:00 PM PST" : "Mon – Sat 9AM – 7PM PST"}
             </span>
           </div>
@@ -103,8 +90,8 @@ export default function SiteFooter({ lang = "en" }: SiteFooterProps) {
 
               <p className="mt-4 text-xs sm:text-sm text-white/70 leading-relaxed font-light">
                 {isEs
-                  ? "Diseñamos invitaciones digitales interactivas con sobres 3D, música personalizada, control estricto de pases y confirmación por SMS para Quinceañeras y Bodas en el Sur de California."
-                  : "Crafting bespoke 3D interactive unboxing digital invitations with personalized soundtracks, instant SMS RSVP, and strict family pass control for memorable celebrations across Southern California."}
+                  ? "Diseñamos invitaciones digitales interactivas con sobres 3D, música personalizada, control estricto de pases y confirmación por SMS para celebraciones modernas en todo el país."
+                  : "Crafting bespoke 3D interactive unboxing digital invitations with personalized soundtracks, instant SMS RSVP, and strict family pass control for modern celebrations nationwide."}
               </p>
             </div>
 
@@ -147,7 +134,7 @@ export default function SiteFooter({ lang = "en" }: SiteFooterProps) {
                   href={isEs ? "/es/invitaciones-de-quinceanera" : "/quince-invitations"}
                   className="hover:text-white transition-colors flex items-center justify-between group"
                 >
-                  <span>{isEs ? "Invitaciones de Quinceañera" : "Quinceañera Invitations"}</span>
+                  <span>{isEs ? "Invitaciones de Quince" : "Quince Invitations"}</span>
                   <span className="text-[10px] text-[#E5C158] opacity-0 group-hover:opacity-100 transition-opacity">
                     ★ Top
                   </span>
@@ -158,7 +145,7 @@ export default function SiteFooter({ lang = "en" }: SiteFooterProps) {
                   href="/wedding-invitations-los-angeles"
                   className="hover:text-white transition-colors flex items-center justify-between group"
                 >
-                  <span>{isEs ? "Invitaciones de Boda (LA)" : "Wedding Invitations (LA)"}</span>
+                  <span>{isEs ? "Invitaciones de Boda" : "Wedding Invitations"}</span>
                   <span className="text-[10px] text-[#E5C158] opacity-0 group-hover:opacity-100 transition-opacity">
                     ★
                   </span>
@@ -166,10 +153,26 @@ export default function SiteFooter({ lang = "en" }: SiteFooterProps) {
               </li>
               <li>
                 <Link
+                  href={isEs ? "/es/invitaciones-de-quinceanera" : "/quince-invitations"}
+                  className="hover:text-white transition-colors"
+                >
+                  {isEs ? "Invitaciones Sweet 16" : "Sweet 16 Invitations"}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/demo"
+                  className="hover:text-white transition-colors"
+                >
+                  {isEs ? "Galas y Aniversarios" : "Gala & Anniversaries"}
+                </Link>
+              </li>
+              <li>
+                <Link
                   href="/demo/mariposas-xv"
                   className="hover:text-white transition-colors"
                 >
-                  {isEs ? "Celestial Butterfly (Mariposas)" : "Celestial Butterfly Garden"}
+                  {isEs ? "Celestial Butterfly" : "Celestial Butterfly"}
                 </Link>
               </li>
               <li>
@@ -177,23 +180,7 @@ export default function SiteFooter({ lang = "en" }: SiteFooterProps) {
                   href="/demo/isabella-xv"
                   className="hover:text-white transition-colors"
                 >
-                  {isEs ? "Vintage Quinceañera (Isabella)" : "Vintage Rose (Isabella)"}
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/demo/emma-and-lucas"
-                  className="hover:text-white transition-colors"
-                >
-                  {isEs ? "Fairytale Castle (Emma & Lucas)" : "Fairytale Castle Wedding"}
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/demo/beauty-quince-xv"
-                  className="hover:text-white transition-colors"
-                >
-                  {isEs ? "Beauty Quince (Rosa Encantada)" : "Beauty & Rose Enchantment"}
+                  {isEs ? "Vintage Quinceañera" : "Vintage Rose"}
                 </Link>
               </li>
               <li className="pt-2">
@@ -239,23 +226,32 @@ export default function SiteFooter({ lang = "en" }: SiteFooterProps) {
                 </Link>
               </li>
               <li>
-                <span className="text-white/60">
+                <Link
+                  href="/rsvp-tracking"
+                  className="hover:text-white transition-colors"
+                >
                   {isEs ? "Muro de Fotos por Código QR" : "Live Guest Photo QR Wall"}
-                </span>
+                </Link>
               </li>
               <li>
-                <span className="text-white/60">
+                <Link
+                  href={isEs ? "/es#servicios" : "/#servicios"}
+                  className="hover:text-white transition-colors"
+                >
                   {isEs ? "Ruta GPS con Google Maps" : "1-Tap GPS to Google Maps"}
-                </span>
+                </Link>
               </li>
               <li>
-                <span className="text-white/60">
+                <Link
+                  href={isEs ? "/es#precios" : "/#precios"}
+                  className="hover:text-white transition-colors"
+                >
                   {isEs ? "Mesa de Regalos y Zelle Directo" : "Honeymoon & Zelle Registry"}
-                </span>
+                </Link>
               </li>
               <li className="pt-2">
                 <Link
-                  href="/dashboard"
+                  href="/login"
                   className="inline-flex items-center gap-1.5 text-white/80 hover:text-white font-medium hover:underline"
                 >
                   <Lock className="w-3.5 h-3.5 text-[#B08D3C]" />
@@ -265,70 +261,83 @@ export default function SiteFooter({ lang = "en" }: SiteFooterProps) {
             </ul>
           </div>
 
-          {/* Column 4 (Spans 2 cols): Southern California Venues */}
+          {/* Column 4 (Spans 2 cols): Company & Support (Reemplaza Venues & Areas) */}
           <div className="lg:col-span-2 space-y-4">
             <p className="font-['Playfair_Display',serif] text-sm font-bold text-white tracking-wide uppercase">
-              {isEs ? "Cobertura Local" : "Venues & Areas"}
+              {isEs ? "Empresa y Soporte" : "Company & Support"}
             </p>
-            <ul className="space-y-2 text-xs text-white/60 font-light">
-              <li className="flex items-center gap-1.5">
-                <MapPin className="w-3 h-3 text-[#B08D3C] shrink-0" />
-                <span>Glendale, CA</span>
+            <ul className="space-y-2.5 text-xs text-white/70 font-light">
+              <li>
+                <Link
+                  href={isEs ? "/es#como-funciona" : "/#como-funciona"}
+                  className="hover:text-white transition-colors"
+                >
+                  {isEs ? "Cómo Funciona" : "How It Works"}
+                </Link>
               </li>
-              <li className="flex items-center gap-1.5">
-                <MapPin className="w-3 h-3 text-[#B08D3C] shrink-0" />
-                <span>Burbank, CA</span>
+              <li>
+                <Link
+                  href={isEs ? "/es#precios" : "/#precios"}
+                  className="hover:text-white transition-colors"
+                >
+                  {isEs ? "Planes y Precios" : "Pricing Plans"}
+                </Link>
               </li>
-              <li className="flex items-center gap-1.5">
-                <MapPin className="w-3 h-3 text-[#B08D3C] shrink-0" />
-                <span>Pasadena, CA</span>
+              <li>
+                <Link
+                  href="/demo"
+                  className="hover:text-white transition-colors"
+                >
+                  {isEs ? "Muestras en Vivo" : "Sample Demos"}
+                </Link>
               </li>
-              <li className="flex items-center gap-1.5">
-                <MapPin className="w-3 h-3 text-[#B08D3C] shrink-0" />
-                <span>San Fernando Valley</span>
+              <li>
+                <Link
+                  href="/login"
+                  className="hover:text-white transition-colors"
+                >
+                  {isEs ? "Acceso de Anfitrión" : "Host Login"}
+                </Link>
               </li>
-              <li className="flex items-center gap-1.5">
-                <MapPin className="w-3 h-3 text-[#B08D3C] shrink-0" />
-                <span>Downtown Los Angeles</span>
+              <li>
+                <Link
+                  href="/privacy"
+                  className="hover:text-white transition-colors"
+                >
+                  {isEs ? "Política de Privacidad" : "Privacy Policy"}
+                </Link>
               </li>
-              <li className="flex items-center gap-1.5">
-                <MapPin className="w-3 h-3 text-[#B08D3C] shrink-0" />
-                <span>Downey &amp; Orange Co.</span>
+              <li>
+                <Link
+                  href="/terms"
+                  className="hover:text-white transition-colors"
+                >
+                  {isEs ? "Términos de Servicio" : "Terms of Service"}
+                </Link>
               </li>
             </ul>
-
-
           </div>
         </div>
       </div>
 
-
-
       {/* ==================================================================== */}
-      {/* 4. BOTTOM BAR & MICRO-GUARANTEES */}
+      {/* 3. BOTTOM BAR & REFINED COPYRIGHT */}
       {/* ==================================================================== */}
       <div className="relative z-10 border-t border-white/10 bg-black/40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-white/50">
-          {/* Copyright & Entity */}
+          {/* Copyright */}
           <div className="flex flex-wrap items-center justify-center md:justify-start gap-x-4 gap-y-1">
             <span>© {new Date().getFullYear()} Click &amp; Love LLC.</span>
             <span>{isEs ? "Todos los derechos reservados." : "All rights reserved."}</span>
-            <span className="hidden sm:inline text-white/20">•</span>
-            <span className="text-white/40">
-              {isEs ? "Diseñado en Los Ángeles, CA" : "Designed in Los Angeles, California"}
-            </span>
           </div>
 
-          {/* Trust Guarantees */}
-          <div className="flex items-center gap-4 text-[11px] text-white/60">
-            <span className="flex items-center gap-1">
-              <ShieldCheck className="w-3.5 h-3.5 text-[#B08D3C]" />
-              <span>{isEs ? "Sin Publicidad de Terceros" : "Zero Third-Party Ads"}</span>
-            </span>
-            <span className="text-white/20">•</span>
-            <span className="flex items-center gap-1">
-              <Lock className="w-3.5 h-3.5 text-[#B08D3C]" />
-              <span>{isEs ? "Privacidad 256-bit" : "256-bit Secure"}</span>
+          {/* Micro-guarantee */}
+          <div className="flex items-center gap-2 text-[11px] text-white/60">
+            <ShieldCheck className="w-3.5 h-3.5 text-[#B08D3C]" />
+            <span>
+              {isEs
+                ? "Sin Publicidad de Terceros · Privacidad Garantizada"
+                : "Zero Third-Party Ads · Private & Confidential"}
             </span>
           </div>
 
