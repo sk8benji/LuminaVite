@@ -26,6 +26,14 @@ const config: Config = {
           gold: "#C5A059",
           surface: "#FBF9F5",
         },
+        wine: {
+          DEFAULT: "#6B1D2E",
+          deep: "#4A1220",
+          soft: "#F4E9EA",
+        },
+        ivory: "#FAF7F2",
+        charcoal: "#23201E",
+        champagne: "#B8975A",
         pearl: "#FAF8F5",
         surface: "#FFFFFF",
         sand: "#E8E3D9",
@@ -55,8 +63,18 @@ const config: Config = {
           "0%, 100%": { transform: "translateY(0)" },
           "50%": { transform: "translateY(-6px)" },
         },
+        soundwave: {
+          "0%, 100%": { transform: "scaleY(0.35)" },
+          "50%": { transform: "scaleY(1)" },
+        },
+        drift: {
+          "0%, 100%": { transform: "translateY(0) rotate(-1.5deg)" },
+          "50%": { transform: "translateY(-10px) rotate(-0.5deg)" },
+        },
       },
       animation: {
+        soundwave: "soundwave 1.1s ease-in-out infinite",
+        drift: "drift 7s ease-in-out infinite",
         "pulse-slow": "pulseSlow 3s ease-in-out infinite",
         float: "float 4s ease-in-out infinite",
       },

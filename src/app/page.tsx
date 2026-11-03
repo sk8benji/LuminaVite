@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import HomeView from "@/components/home/HomeView";
+import ClickAndLoveHome from "@/components/landing/ClickAndLoveHome";
 
 export const metadata: Metadata = {
   title: "Digital Invitations in Los Angeles with SMS RSVP | Click & Love",
@@ -92,7 +92,7 @@ export default function Page() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <HomeView initialLang="en" />
+      <ClickAndLoveHome />
     </>
   );
 }
