@@ -254,7 +254,7 @@ export default function QuinceLandingPage() {
 
               {/* Subtitle */}
               <p className="text-lg sm:text-xl text-[#5A3C46] max-w-2xl mx-auto lg:mx-0 leading-relaxed font-normal">
-                Interactive 3D unboxing envelopes with custom waltz music, 1-tap SMS confirmations, and zero apps for
+                Interactive 3D unboxing quince invitations with custom waltz music, 1-tap SMS confirmations, and zero apps for
                 family to download. Handcrafted for Southern California galas.
               </p>
 
@@ -441,7 +441,7 @@ export default function QuinceLandingPage() {
               <span>✪ Modern Quince Platform</span>
             </div>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#2B0A18] tracking-tight">
-              Everything paper invitations can&rsquo;t do—without the chaos.
+              Quince invitations that do everything paper can&rsquo;t — without the chaos.
             </h2>
             <p className="text-base sm:text-lg text-[#5A3C46] leading-relaxed">
               Designed specifically for Los Angeles families managing 150 to 400+ guests. Keep full control of your
@@ -646,7 +646,7 @@ export default function QuinceLandingPage() {
           <div className="text-center max-w-2xl mx-auto mb-16 space-y-3">
             <span className="font-serif italic text-2xl text-[#B08D3C] block font-normal">Simple &amp; Effortless</span>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#2B0A18] tracking-tight">
-              From idea to your guests&rsquo; phones in 3 steps.
+              From idea to your guests&rsquo; phones: quince invitations in 3 steps.
             </h2>
             <p className="text-base text-[#5A3C46]">
               No software to install. We handle all coding, photo formatting, and music setup for you.
@@ -715,7 +715,7 @@ export default function QuinceLandingPage() {
               Exclusive Quinceañera Collection
             </span>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#2B0A18] tracking-tight">
-              Designed for the most memorable XV Años.
+              Quince invitations designed for the most memorable XV Años.
             </h2>
             <p className="text-base text-[#5A3C46]">
               Every template includes custom 3D envelope opening, waltz music player, photo gallery, and strict pass
@@ -798,7 +798,7 @@ export default function QuinceLandingPage() {
               One-time payment. Zero monthly fees.
             </h2>
             <p className="text-base text-[#5A3C46]">
-              Keep your invitation active forever. No subscription traps or unexpected credit charges.
+              Keep your quince invitation active forever. No subscription traps or unexpected credit charges.
             </p>
           </div>
 
@@ -1099,7 +1099,7 @@ export default function QuinceLandingPage() {
 
           <p className="text-base sm:text-lg text-rose-100/80 max-w-2xl mx-auto font-normal leading-relaxed">
             Stop worrying about lost paper envelopes and unconfirmed guests. Call, text, or WhatsApp us today—we&rsquo;ll
-            have her custom invitation live in under 48 hours.
+            have her custom quince invitation live in under 48 hours.
           </p>
 
           {/* Action Buttons: Phone & SMS */}
