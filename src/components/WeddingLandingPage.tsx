@@ -1,4 +1,5 @@
 "use client";
+import SiteFooter from "@/components/layout/SiteFooter";
 
 import React, { useState } from "react";
 import Link from "next/link";
@@ -1114,43 +1115,7 @@ export default function WeddingLandingPage() {
 
       {/* ==================================================================== */}
       {/* FOOTER */}
-      {/* ==================================================================== */}
-      <footer className="py-12 bg-[#120309] text-white/60 text-xs border-t border-white/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-6">
-          <div className="flex items-center gap-3">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <Image src="/logo.png" alt="Click & Love" width={1600} height={1600} className="h-7 w-auto object-contain opacity-80" />
-            <span className="font-['Playfair_Display',serif] text-sm font-semibold text-white">
-              Click &amp; Love
-            </span>
-            <span className="text-white/40">© {new Date().getFullYear()} All Rights Reserved.</span>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-6 text-white/70">
-            <Link href="/" className="hover:text-white transition-colors">
-              Home
-            </Link>
-            <Link href="/quince-invitations" className="hover:text-white transition-colors">
-              Quinceañera Invitations
-            </Link>
-            <Link href="/wedding-invitations-los-angeles" className="hover:text-white text-white font-semibold">
-              Wedding Invitations
-            </Link>
-            <Link href="/text-message-invitations" className="hover:text-white transition-colors">
-              SMS Invitations
-            </Link>
-            <Link href="/rsvp-tracking" className="hover:text-white transition-colors">
-              RSVP Tracking
-            </Link>
-            <Link href="/whatsapp-invitations" className="hover:text-white transition-colors">
-              WhatsApp Invitations
-            </Link>
-            <Link href="/demo" className="hover:text-white transition-colors">
-              Catalog
-            </Link>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter lang="en" />
     </div>
   );
 }

@@ -1,4 +1,5 @@
 "use client";
+import SiteFooter from "@/components/layout/SiteFooter";
 
 import React, { useState } from "react";
 import Link from "next/link";
@@ -1139,29 +1140,7 @@ export default function QuinceLandingPage() {
         </div>
       </section>
 
-      {/* Minimal Footer */}
-      <footer className="bg-[#120309] text-rose-200/50 py-8 px-4 text-center text-xs border-t border-white/5">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <span className="font-bold text-white">Click and Love</span>
-            <span>© {new Date().getFullYear()} All rights reserved.</span>
-          </div>
-          <div className="flex items-center gap-6">
-            <Link href="/" className="hover:text-white transition">
-              Home
-            </Link>
-            <Link href="/es" className="hover:text-white transition">
-              Español
-            </Link>
-            <a href="#templates" className="hover:text-white transition">
-              Quinceañeras
-            </a>
-            <a href="#pricing" className="hover:text-white transition">
-              Pricing
-            </a>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter lang="en" />
     </div>
   );
 }

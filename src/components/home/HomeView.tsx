@@ -20,6 +20,7 @@ import { Language, translations } from "@/lib/home-translations";
 import { track } from "@/lib/analytics";
 import HeroPhones from "@/components/home/HeroPhones";
 import InteractiveDemoModal from "@/components/home/InteractiveDemoModal";
+import SiteFooter from "@/components/layout/SiteFooter";
 
 const PHONE_DISPLAY = "(818) 299-4882";
 const PHONE_TEL = "tel:+18182994882";
@@ -831,26 +832,9 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
       </section>
 
       {/* ============================================================== */}
-      {/* FOOTER SIMPLE */}
+      {/* LUXURY EDITORIAL FOOTER (BYQ / JIRO STYLE) */}
       {/* ============================================================== */}
-      <footer className="py-10 px-4 bg-[#FDFBF8]">
-        <div className="max-w-7xl mx-auto flex flex-col items-center gap-3 text-center">
-          <p className="font-['Montserrat'] text-[13px] text-[#8A6B76]">{b.footerLine}</p>
-          <p className="font-['Montserrat'] text-[13px] text-[#8A6B76]">
-            {lang === "es"
-              ? "Sirviendo al condado de Los Ángeles, incluyendo Glendale, Burbank, Pasadena, Van Nuys, Northridge y San Fernando Valley, además de otras áreas del sur de California."
-              : "Serving Los Angeles County, including Glendale, Burbank, Pasadena, Van Nuys, Northridge and the San Fernando Valley, plus surrounding Southern California areas."}
-          </p>
-          <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-1.5 font-['Montserrat'] text-xs text-[#8A6B76]">
-            <Link href="/dashboard" className="font-semibold text-[#7A002A] hover:text-[#B08D3C] transition">
-              {t.footer.adminLink}
-            </Link>
-            <span>
-              © {new Date().getFullYear()} Click &amp; Love. {t.footer.rights}
-            </span>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter lang={lang} />
 
       {/* ============================================================== */}
       {/* MODAL DE DEMO EN VIVO */}
