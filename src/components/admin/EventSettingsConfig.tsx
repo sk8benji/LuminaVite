@@ -118,6 +118,83 @@ export default function EventSettingsConfig({
     Number(formData.rsvpDiasAntes) || 15
   );
 
+  // Cambiar enlace (URL): solo en modo edición, con endpoint propio (el
+  // guardado normal usa el slug para buscar el evento y no puede cambiarlo).
+  const [nuevoSlug, setNuevoSlug] = React.useState("");
+  const [slugMsg, setSlugMsg] = React.useState("");
+  const [slugBusy, setSlugBusy] = React.useState(false);
+  const [slugNuevoOk, setSlugNuevoOk] = React.useState("");
+
+  function limpiarSlugInput(v: string): string {
+    return v
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9-]/g, "-")
+      .replace(/-+/g, "-")
+      .replace(/^-+|-+$/g, "");
+  }
+
+  async function verificarSlugDisponible() {
+    const candidato = limpiarSlugInput(nuevoSlug);
+    if (!candidato) {
+      setSlugMsg("Escribe el nuevo enlace primero.");
+      return;
+    }
+    setSlugBusy(true);
+    setSlugMsg("");
+    try {
+      const res = await fetch(`/api/eventos?slug=${encodeURIComponent(candidato)}`);
+      if (res.status === 404) {
+        setSlugMsg(`✅ "${candidato}" está libre.`);
+      } else if (res.ok) {
+        setSlugMsg(`❌ "${candidato}" ya está ocupado. Elige otro.`);
+      } else {
+        setSlugMsg("No se pudo verificar. Intenta de nuevo.");
+      }
+    } catch {
+      setSlugMsg("No se pudo verificar. Intenta de nuevo.");
+    }
+    setSlugBusy(false);
+  }
+
+  async function cambiarSlug() {
+    const candidato = limpiarSlugInput(nuevoSlug);
+    if (!candidato) {
+      setSlugMsg("Escribe el nuevo enlace primero.");
+      return;
+    }
+    if (candidato === formData.slug) {
+      setSlugMsg("El nuevo enlace es igual al actual.");
+      return;
+    }
+    if (
+      !window.confirm(
+        `¿Cambiar el enlace de "${formData.slug}" a "${candidato}"?\n\nEl enlace viejo, el QR impreso y el link del panel dejan de funcionar. Solo sigue si la invitación aún no se ha compartido o si aceptas ese quiebre.`
+      )
+    ) {
+      return;
+    }
+    setSlugBusy(true);
+    setSlugMsg("");
+    try {
+      const res = await fetch("/api/admin/eventos/cambiar-slug", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ slugActual: formData.slug, nuevoSlug: candidato }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.ok) {
+        setSlugMsg(`❌ ${data.error || "No se pudo cambiar el enlace."}`);
+        return;
+      }
+      setSlugNuevoOk(data.slugNuevo);
+      setSlugMsg(`✅ Enlace cambiado a "${data.slugNuevo}".`);
+    } catch {
+      setSlugMsg("❌ No se pudo cambiar el enlace. Intenta de nuevo.");
+    }
+    setSlugBusy(false);
+  }
+
   return (
     <div className="space-y-6">
       {/* Cabecera explicativa */}
@@ -402,6 +479,61 @@ export default function EventSettingsConfig({
             </div>
           </div>
         </div>
+
+        {/* Cambiar enlace (URL) — solo en modo edición, con confirmación */}
+        {isEditMode && (
+          <div className="rounded-2xl border-2 border-amber-300 bg-amber-50 p-4 space-y-2">
+            <p className="text-xs font-bold uppercase tracking-wider text-stone-700">
+              🔗 Cambiar enlace (URL) de la invitación
+            </p>
+            <p className="text-xs text-stone-600">
+              URL actual: <span className="font-mono font-bold">clickandlove.app/{formData.slug}</span>
+            </p>
+            <p className="text-xs text-red-700 font-semibold">
+              Ojo: al cambiarla, el enlace viejo, el QR impreso, los SMS ya enviados y el link
+              del panel dejan de funcionar. Solo úsala si la invitación aún no se ha compartido
+              o si aceptas ese quiebre.
+            </p>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={nuevoSlug}
+                onChange={(e) => {
+                  setNuevoSlug(e.target.value);
+                  setSlugMsg("");
+                  setSlugNuevoOk("");
+                }}
+                placeholder="nuevo-enlace"
+                className="flex-1 py-2.5 px-3 rounded-xl border-2 border-stone-200 bg-white text-sm font-mono focus:outline-none focus:border-[#7A002A]"
+              />
+              <button
+                type="button"
+                onClick={verificarSlugDisponible}
+                disabled={slugBusy}
+                className="px-3 py-2.5 rounded-xl bg-white border-2 border-stone-300 text-stone-700 text-sm font-bold disabled:opacity-50"
+              >
+                Verificar
+              </button>
+            </div>
+            <button
+              type="button"
+              onClick={cambiarSlug}
+              disabled={slugBusy || !limpiarSlugInput(nuevoSlug)}
+              className="w-full py-3 rounded-xl bg-[#7A002A] text-white text-sm font-bold disabled:opacity-50"
+            >
+              {slugBusy ? "Procesando…" : "Cambiar URL"}
+            </button>
+            {slugMsg && <p className="text-xs font-semibold text-stone-700">{slugMsg}</p>}
+            {slugNuevoOk && (
+              <a
+                href={`/eventos/nuevo?editar=${encodeURIComponent(slugNuevoOk)}`}
+                className="block text-center text-sm font-bold text-[#7A002A] underline underline-offset-2"
+              >
+                Abrir el editor con la nueva URL →
+              </a>
+            )}
+          </div>
+        )}
 
         {/* Fotos de invitados */}
         <div className="rounded-2xl border border-stone-200 bg-white p-4 space-y-2">
