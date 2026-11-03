@@ -1040,33 +1040,52 @@ function NuevoEventoContent() {
       const subFolder = isAudio ? "audio" : "images";
       const clientFolder = `clientes/invitaciones/${formData.slug || "general"}/${subFolder}`;
 
-      // 1. Pedir presigned URL a la API
-      const res = await fetch("/api/s3/presigned-url", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          filename: uploadName,
-          contentType: uploadType,
-          folder: clientFolder,
-          fileSize: uploadFile.size,
-        }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.error || "Error al generar URL para S3");
+      // 1. Pedir presigned URL a la API. Si ESTE fetch falla con
+      // "Failed to fetch", el pedido ni siquiera llegó al servidor (red o
+      // reinicio); si el servidor responde con error, el mensaje es legible.
+      let data: any;
+      try {
+        const res = await fetch("/api/s3/presigned-url", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            filename: uploadName,
+            contentType: uploadType,
+            folder: clientFolder,
+            fileSize: uploadFile.size,
+          }),
+        });
+        data = await res.json();
+        if (!res.ok) {
+          throw new Error(data.error || "Error al generar URL para S3");
+        }
+      } catch (err: any) {
+        throw new Error(`Falló pidiendo la URL de subida al servidor: ${err.message || "Error de red"}`);
       }
 
-      // 2. Subir binario directo a S3 usando PUT con el Content-Type firmado
-      const uploadRes = await fetch(data.uploadUrl, {
-        method: "PUT",
-        headers: { "Content-Type": uploadType },
-        body: uploadFile,
-      });
-
-      if (!uploadRes.ok) {
-        throw new Error("Falló la subida a S3. Verifica permisos de tu bucket CORS/ACL.");
+      // 2. Subir binario directo a S3 usando PUT con el Content-Type firmado.
+      // Si ESTE fetch falla con "Failed to fetch", el navegador bloqueó el
+      // PUT (CORS del storage o destino no alcanzable desde el navegador).
+      let destino = "";
+      try {
+        destino = new URL(data.uploadUrl).hostname;
+      } catch {}
+      try {
+        const uploadRes = await fetch(data.uploadUrl, {
+          method: "PUT",
+          headers: { "Content-Type": uploadType },
+          body: uploadFile,
+        });
+        if (!uploadRes.ok) {
+          throw new Error("Falló la subida a S3. Verifica permisos de tu bucket CORS/ACL.");
+        }
+      } catch (err: any) {
+        if (err.message === "Failed to fetch") {
+          throw new Error(
+            `El navegador bloqueó la subida a S3 (destino: ${destino || "desconocido"}). Revisa el CORS del storage o si ese destino es alcanzable desde el navegador.`
+          );
+        }
+        throw err;
       }
 
       // 3. Guardar URL final del archivo en el estado
