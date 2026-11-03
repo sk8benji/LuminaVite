@@ -245,7 +245,7 @@ export default function SiteFooter({ lang = "en" }: SiteFooterProps) {
               </li>
               <li>
                 <span className="text-white/60">
-                  {isEs ? "Rutas GPS a Waze y Google Maps" : "1-Tap GPS to Waze & Google Maps"}
+                  {isEs ? "Ruta GPS con Google Maps" : "1-Tap GPS to Google Maps"}
                 </span>
               </li>
               <li>

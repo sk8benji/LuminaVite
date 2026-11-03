@@ -551,7 +551,7 @@ export default function QuinceLandingPage() {
                 </div>
                 <div className="flex items-center gap-2 pt-1">
                   <span className="inline-flex items-center gap-1 text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded">
-                    🚗 Waze Route
+                    📍 Google Maps Route
                   </span>
                   <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">
                     🗺️ Google Maps
@@ -569,7 +569,7 @@ export default function QuinceLandingPage() {
                 </span>
                 <h3 className="text-2xl font-extrabold text-[#2B0A18]">Church Mass and Reception GPS Navigation</h3>
                 <p className="text-sm text-[#5A3C46] leading-relaxed">
-                  No lost abuelitos calling during mass. Seamless deep-linking opens Google Maps, Apple Maps, or Waze
+                  No lost abuelitos calling during mass. Seamless deep-linking opens Google Maps directly
                   directly to your banquet hall or church.
                 </p>
               </div>
@@ -578,7 +578,7 @@ export default function QuinceLandingPage() {
               <div className="mt-6 space-y-2">
                 <div className="flex items-center justify-between p-2.5 rounded-xl bg-white border border-[#E7DCC8] text-xs font-medium text-[#2B0A18]">
                   <span>The Castaway • Burbank</span>
-                  <span className="text-[#B08D3C] text-[11px] font-bold">Waze →</span>
+                  <span className="text-[#B08D3C] text-[11px] font-bold">Google Maps →</span>
                 </div>
                 <div className="flex items-center justify-between p-2.5 rounded-xl bg-white border border-[#E7DCC8] text-xs font-medium text-[#2B0A18]">
                   <span>Brandview Ballroom • Glendale</span>
@@ -838,7 +838,7 @@ export default function QuinceLandingPage() {
                   </div>
                   <div className="flex items-start gap-2.5">
                     <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                    <span>Direct GPS links to church &amp; reception (Waze &amp; Google)</span>
+                    <span>Direct GPS links to church &amp; reception (Google Maps)</span>
                   </div>
                   <div className="flex items-start gap-2.5">
                     <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />

@@ -293,7 +293,7 @@ export default function SmsLandingPage() {
                             Google Maps
                           </span>
                           <span className="text-[9px] px-2 py-0.5 rounded bg-purple-50 text-purple-700 font-semibold">
-                            Waze Route
+                            Google Maps Route
                           </span>
                         </div>
                       </div>
@@ -455,7 +455,7 @@ export default function SmsLandingPage() {
                   Automated GPS Reminders
                 </h3>
                 <p className="text-[#2B0A18]/75 text-sm leading-relaxed mb-6">
-                  Never answer &quot;What was the address again?&quot; while you are getting your hair or makeup done. Confirmed guests receive a reminder with 1-tap route launch into Waze or Google Maps.
+                  Never answer &quot;What was the address again?&quot; while you are getting your hair or makeup done. Confirmed guests receive a reminder with 1-tap route launch into Google Maps.
                 </p>
               </div>
 
@@ -697,7 +697,7 @@ export default function SmsLandingPage() {
                   </li>
                   <li className="flex items-start gap-2.5">
                     <Check className="w-4 h-4 text-[#E5C158] mt-0.5 shrink-0" />
-                    <span>Day-of event GPS directions reminder (Waze &amp; Google Maps)</span>
+                    <span>Day-of event GPS directions reminder (Google Maps)</span>
                   </li>
                   <li className="flex items-start gap-2.5">
                     <Check className="w-4 h-4 text-[#E5C158] mt-0.5 shrink-0" />

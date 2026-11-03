@@ -683,7 +683,7 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
                     {lang === "es" ? "SMS Directo · Tasa de Apertura >98%" : "Direct SMS · >98% Open Rate"}
                   </span>
                   <span className="text-[10.5px] text-[#8A6B76] font-['Montserrat'] font-semibold">
-                    Waze &amp; Google Maps
+                    Google Maps
                   </span>
                 </div>
 
@@ -694,8 +694,8 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
                 </h3>
                 <p className="font-['Montserrat'] text-[14px] text-[#5A3C46] leading-relaxed mt-3">
                   {lang === "es"
-                    ? "Los enlaces sueltos se pierden en el chat familiar y terminan llamándote a la hora del vals. Tus invitados reciben recordatorios automáticos por SMS con su mesa y ruta directa con un solo toque."
-                    : "Loose image links get buried in chaotic group chats. With Click & Love, each guest receives an automated SMS confirmation with their assigned table and 1-tap navigation directly to the ballroom."}
+                    ? "Los enlaces sueltos se pierden en el chat familiar y terminan llamándote a la hora del vals. Tus invitados reciben recordatorios automáticos por SMS con su mesa y ruta directa con un solo toque en Google Maps."
+                    : "Loose image links get buried in chaotic group chats. With Click & Love, each guest receives an automated SMS confirmation with their assigned table and 1-tap navigation directly on Google Maps to the ballroom."}
                 </p>
 
                 {/* SMS & GPS Mockup Bubble */}
@@ -713,20 +713,12 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
                     </p>
                     <div className="mt-3 pt-2.5 border-t border-[#F3E9D7] flex flex-wrap items-center gap-2 font-['Montserrat']">
                       <a
-                        href="https://waze.com"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold text-[11px] shadow-sm transition"
-                      >
-                        🚗 Waze Route
-                      </a>
-                      <a
                         href="https://maps.google.com"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[11px] shadow-sm transition"
+                        className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[11px] shadow-sm transition"
                       >
-                        📍 Google Maps
+                        📍 Google Maps Route
                       </a>
                       <span className="text-[10px] text-[#8A6B76] font-medium ml-auto">
                         Brandview Ballroom · Glendale

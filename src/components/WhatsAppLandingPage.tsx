@@ -484,7 +484,7 @@ export default function WhatsAppLandingPage() {
                     <p className="text-white/70 text-[11px]">Strict seat limits per family link.</p>
                   </div>
                   <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10">
-                    <p className="font-bold text-[#E5C158] mb-1">Waze &amp; Maps Link</p>
+                    <p className="font-bold text-[#E5C158] mb-1">Google Maps Link</p>
                     <p className="text-white/70 text-[11px]">1-Tap navigation to the banquet hall.</p>
                   </div>
                   <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10">

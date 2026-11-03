@@ -329,7 +329,7 @@ export const translations: Record<Language, HomeTranslations> = {
         assisted: [
           "Montaje completo por nuestro equipo",
           "200 confirmaciones SMS incluidas",
-          "Botón de mapas (Waze y Google Maps)",
+          "Botón directo a Google Maps",
           "Panel en vivo de invitados",
           "1 ronda de cambios",
         ],
@@ -478,11 +478,11 @@ export const translations: Record<Language, HomeTranslations> = {
           badge: "Pases Asignados",
         },
         {
-          title: "Ruta directa en Maps y Waze",
+          title: "Ruta directa en Google Maps",
           description:
             "El invitado toca un botón y abre la navegación paso a paso hacia la iglesia o el salón.",
           highlight: "Navegación GPS paso a paso directa sin perderse en el camino.",
-          badge: "Maps & Waze",
+          badge: "Google Maps",
         },
         {
           title: "Organización de Mesas en Vivo",
@@ -544,7 +544,7 @@ export const translations: Record<Language, HomeTranslations> = {
             "Los enlaces y fotos sueltas se pierden en los chats familiares y los invitados terminan llamando perdidos en el tráfico de LA.",
           solutionLabel: "Lo que tú resuelves con Click & Love:",
           solution:
-            "Tus invitados reciben confirmación y recordatorio automático por mensaje de texto SMS con el mapa para llegar con un solo toque en Waze o Google Maps.",
+            "Tus invitados reciben confirmación y recordatorio automático por mensaje de texto SMS con el mapa para llegar con un solo toque en Google Maps.",
         },
       ],
       ctaBox: {
@@ -619,7 +619,7 @@ export const translations: Record<Language, HomeTranslations> = {
             { text: "Sin usar computadora: envíanos los detalles por WhatsApp y nosotros armamos todo", included: true, isBold: true },
             { text: "Configuración completa por nuestro equipo", included: true, isBold: true },
             { text: "200 SMS interactivos incluidos", included: true },
-            { text: "Ubicación GPS con botón directo a Waze / Google Maps", included: true },
+            { text: "Ubicación GPS con botón directo a Google Maps", included: true },
             { text: "Sobre virtual interactivo con música de fondo", included: true },
             { text: "Enlace familiar con panel en tiempo real", included: true },
             { text: "Guardado en calendario del teléfono", included: true },
@@ -779,7 +779,7 @@ export const translations: Record<Language, HomeTranslations> = {
         assisted: [
           "Full setup by our team",
           "200 SMS confirmations included",
-          "Maps button (Waze & Google Maps)",
+          "Google Maps 1-Tap Route",
           "Live guest dashboard",
           "1 round of changes included",
         ],
@@ -928,11 +928,11 @@ export const translations: Record<Language, HomeTranslations> = {
           badge: "Assigned Passes",
         },
         {
-          title: "Direct Route on Maps & Waze",
+          title: "Direct Route on Google Maps",
           description:
             "Guests tap one button to open step-by-step navigation to the church or banquet hall.",
           highlight: "1-tap step-by-step navigation directly to the exact venue.",
-          badge: "Maps & Waze",
+          badge: "Google Maps",
         },
         {
           title: "Live Table Seating Management",
@@ -994,7 +994,7 @@ export const translations: Record<Language, HomeTranslations> = {
             "Loose links and images get buried deep in group chats and guests end up calling lost in Southern California traffic.",
           solutionLabel: "What you get with Click & Love:",
           solution:
-            "Your guests receive automated SMS confirmations and reminders with a 1-tap route map straight to the venue on Waze or Google Maps.",
+            "Your guests receive automated SMS confirmations and reminders with a 1-tap route map straight to the venue on Google Maps.",
         },
       ],
       ctaBox: {
@@ -1069,7 +1069,7 @@ export const translations: Record<Language, HomeTranslations> = {
             { text: "No computer needed: send us your details via WhatsApp and we set up everything", included: true, isBold: true },
             { text: "Full setup by our team", included: true, isBold: true },
             { text: "200 Interactive SMS RSVP confirmations included", included: true },
-            { text: "GPS location button with direct navigation to Waze & Google Maps", included: true },
+            { text: "GPS location button with direct navigation to Google Maps", included: true },
             { text: "Interactive virtual envelope with background music", included: true },
             { text: "Family private link with real-time live dashboard", included: true },
             { text: "Save directly to phone calendar", included: true },

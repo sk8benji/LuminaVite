@@ -530,22 +530,22 @@ export default function QuinceLandingPageEs() {
                   GPS Directo a Salones en LA
                 </h3>
                 <p className="text-[#2B0A18]/75 text-sm leading-relaxed mb-6">
-                  Un solo toque abre la ruta en Google Maps, Apple Maps o Waze hacia salones populares en Glendale, Burbank, Pasadena, Downey y el Valle de San Fernando.
+                  Un solo toque abre la ruta en Google Maps hacia salones populares en Glendale, Burbank, Pasadena, Downey y el Valle de San Fernando.
                 </p>
               </div>
 
               <div className="space-y-2 text-xs">
                 <div className="flex items-center justify-between p-2.5 rounded-xl bg-white border border-[#2B0A18]/10">
                   <span className="font-semibold text-[#2B0A18]">Brandview Ballroom Glendale</span>
-                  <span className="text-[#B08D3C] font-semibold text-[11px]">Waze &amp; Maps</span>
+                  <span className="text-[#B08D3C] font-semibold text-[11px]">Google Maps</span>
                 </div>
                 <div className="flex items-center justify-between p-2.5 rounded-xl bg-white border border-[#2B0A18]/10">
                   <span className="font-semibold text-[#2B0A18]">Castaway Burbank</span>
-                  <span className="text-[#B08D3C] font-semibold text-[11px]">Waze &amp; Maps</span>
+                  <span className="text-[#B08D3C] font-semibold text-[11px]">Google Maps</span>
                 </div>
                 <div className="flex items-center justify-between p-2.5 rounded-xl bg-white border border-[#2B0A18]/10">
                   <span className="font-semibold text-[#2B0A18]">Renaissance Banquet Hall</span>
-                  <span className="text-[#B08D3C] font-semibold text-[11px]">Waze &amp; Maps</span>
+                  <span className="text-[#B08D3C] font-semibold text-[11px]">Google Maps</span>
                 </div>
               </div>
             </div>

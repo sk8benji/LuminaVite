@@ -72,7 +72,7 @@ const WEDDING_TEMPLATES_LIST: WeddingTemplateItem[] = [
     slug: "sofia-y-alejandro",
     image: "https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=800&q=80",
     palette: "Eucalyptus Green • Warm Rose • Ivory",
-    description: "Romantic garden atmosphere with botanical borders, church & reception dual itinerary, gift registry links, and Waze navigation.",
+    description: "Romantic garden atmosphere with botanical borders, church & reception dual itinerary, gift registry links, and Google Maps navigation.",
     highlights: ["Bilingual EN / ES switcher", "Dual-venue itinerary (Church + Reception)", "Honeyfund / Zelle registry"],
   },
   {
@@ -569,22 +569,22 @@ export default function WeddingLasVegasLandingPage() {
                   1-Tap GPS to Iconic Vegas Venues
                 </h3>
                 <p className="text-[#2B0A18]/75 text-sm leading-relaxed mb-6">
-                  Guests open driving directions directly in Google Maps, Apple Maps, or Waze. Pre-mapped with ceremony and reception parking instructions.
+                  Guests open driving directions directly in Google Maps directly. Pre-mapped with ceremony and reception parking instructions.
                 </p>
               </div>
 
               <div className="space-y-2 text-xs">
                 <div className="flex items-center justify-between p-2.5 rounded-xl bg-white border border-[#2B0A18]/10">
                   <span className="font-semibold text-[#2B0A18]">Bellagio</span>
-                  <span className="text-[#B08D3C] font-semibold text-[11px]">Waze &amp; Maps</span>
+                  <span className="text-[#B08D3C] font-semibold text-[11px]">Google Maps</span>
                 </div>
                 <div className="flex items-center justify-between p-2.5 rounded-xl bg-white border border-[#2B0A18]/10">
                   <span className="font-semibold text-[#2B0A18]">Caesars Palace</span>
-                  <span className="text-[#B08D3C] font-semibold text-[11px]">Waze &amp; Maps</span>
+                  <span className="text-[#B08D3C] font-semibold text-[11px]">Google Maps</span>
                 </div>
                 <div className="flex items-center justify-between p-2.5 rounded-xl bg-white border border-[#2B0A18]/10">
                   <span className="font-semibold text-[#2B0A18]">Wynn Las Vegas</span>
-                  <span className="text-[#B08D3C] font-semibold text-[11px]">Waze &amp; Maps</span>
+                  <span className="text-[#B08D3C] font-semibold text-[11px]">Google Maps</span>
                 </div>
               </div>
             </div>

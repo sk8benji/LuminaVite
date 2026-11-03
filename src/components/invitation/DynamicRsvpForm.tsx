@@ -734,7 +734,7 @@ export default function DynamicRsvpForm({
                 className="w-full py-2.5 px-3 rounded-xl bg-stone-50 hover:bg-stone-100 border border-stone-200 text-stone-800 text-xs font-semibold flex items-center justify-center gap-2 transition"
               >
                 <MapPin className="w-3.5 h-3.5 text-stone-600" />
-                <span>{isEn ? "Directions (Google Maps / Waze)" : "Cómo llegar (Google Maps / Waze)"}</span>
+                <span>{isEn ? "Directions (Google Maps)" : "Cómo llegar (Google Maps)"}</span>
               </a>
             ) : ceremoniaMapUrl ? (
               <a

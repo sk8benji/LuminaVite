@@ -856,7 +856,7 @@ export default function TemplatesManager() {
                       />
                       <input
                         type="url"
-                        placeholder="Enlace Google Maps / Waze"
+                        placeholder="Enlace Google Maps"
                         value={editForm.recepcionMapUrl || ""}
                         onChange={(e) => setEditForm({ ...editForm, recepcionMapUrl: e.target.value })}
                         className="w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs font-mono"
