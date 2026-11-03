@@ -109,6 +109,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly",
       priority: 0.9,
     },
+    {
+      url: `${baseUrl}/wedding-invitations-las-vegas`,
+      lastModified,
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
     // Blog (arquitectura 2026-11-02)
     {
       url: `${baseUrl}/blog`,

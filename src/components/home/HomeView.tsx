@@ -34,6 +34,7 @@ const MENU_LANDING_LINKS: Record<Language, { href: string; label: string }[]> = 
   en: [
     { href: "/quince-invitations", label: "Quince Invitations" },
     { href: "/wedding-invitations-los-angeles", label: "Wedding Invitations" },
+    { href: "/wedding-invitations-las-vegas", label: "Wedding Invitations Las Vegas" },
     { href: "/text-message-invitations", label: "Text Message Invitations" },
     { href: "/rsvp-tracking", label: "RSVP Tracking" },
     { href: "/whatsapp-invitations", label: "WhatsApp Invitations" },
@@ -41,6 +42,7 @@ const MENU_LANDING_LINKS: Record<Language, { href: string; label: string }[]> = 
   es: [
     { href: "/es/invitaciones-de-quinceanera", label: "Invitaciones de Quinceañera" },
     { href: "/wedding-invitations-los-angeles", label: "Invitaciones de Boda" },
+    { href: "/wedding-invitations-las-vegas", label: "Invitaciones de Boda Las Vegas" },
     { href: "/text-message-invitations", label: "Invitaciones por Mensaje de Texto" },
     { href: "/rsvp-tracking", label: "Invitaciones con RSVP" },
     { href: "/whatsapp-invitations", label: "Invitaciones por WhatsApp" },
