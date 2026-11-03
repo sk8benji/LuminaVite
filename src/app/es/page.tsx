@@ -53,7 +53,7 @@ export default function SpanishHomePage() {
       "Papelería digital interactiva para bodas y quinceañeras con confirmación SMS, navegación GPS a salones y panel de anfitrión en Los Ángeles, California.",
     priceRange: "$99 - $199",
     telephone: "+1-818-299-4882",
-    serviceArea: "Los Angeles, CA",
+    serviceArea: "United States",
     address: {
       "@type": "PostalAddress",
       addressLocality: "Los Angeles",
@@ -61,11 +61,7 @@ export default function SpanishHomePage() {
       addressCountry: "US",
     },
     areaServed: [
-      { "@type": "City", "name": "Los Angeles" },
-      { "@type": "City", "name": "Glendale" },
-      { "@type": "City", "name": "Burbank" },
-      { "@type": "City", "name": "Pasadena" },
-      { "@type": "AdministrativeArea", "name": "San Fernando Valley" },
+      { "@type": "Country", "name": "United States" },
     ],
     knowsLanguage: ["es", "en"],
     hasOfferCatalog: {

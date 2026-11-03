@@ -55,11 +55,7 @@ const PHONE_TEL = "tel:+18182994882";
 const PHONE_SMS = "sms:+18182994882";
 
 const AREA_SERVED = [
-  { "@type": "City", name: "Los Angeles" },
-  { "@type": "City", name: "Glendale" },
-  { "@type": "City", name: "Burbank" },
-  { "@type": "City", name: "Pasadena" },
-  { "@type": "AdministrativeArea", name: "San Fernando Valley" },
+  { "@type": "Country", name: "United States" },
 ];
 
 export default function LandingPage(props: LandingPageProps) {

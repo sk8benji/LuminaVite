@@ -229,7 +229,7 @@ export default function WeddingLandingPage() {
               {/* LA Badge */}
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#7A002A]/5 border border-[#7A002A]/20 text-[#7A002A] text-xs font-semibold tracking-wide mb-6">
                 <MapPin className="w-3.5 h-3.5 text-[#B08D3C]" />
-                <span>Serving Los Angeles • Pasadena • Glendale • Malibu</span>
+                <span>Instant Delivery • Live Guest Support • Nationwide</span>
               </div>
 
               {/* H1 Headline */}
@@ -566,24 +566,20 @@ export default function WeddingLandingPage() {
                   Zero Lost Guests
                 </span>
                 <h3 className="font-['Playfair_Display',serif] text-2xl font-bold text-[#2B0A18] mt-1 mb-3">
-                  1-Tap GPS to Iconic LA Venues
+                  1-Tap Church &amp; Reception Navigation
                 </h3>
                 <p className="text-[#2B0A18]/75 text-sm leading-relaxed mb-6">
-                  Guests open driving directions directly in Google Maps directly. Pre-mapped with ceremony and reception parking instructions.
+                  Guests receive direct Google Maps links for both the church ceremony and reception venue. Avoid family calls in traffic and ensure everyone arrives at the right entrance.
                 </p>
               </div>
 
               <div className="space-y-2 text-xs">
                 <div className="flex items-center justify-between p-2.5 rounded-xl bg-white border border-[#2B0A18]/10">
-                  <span className="font-semibold text-[#2B0A18]">The Langham Pasadena</span>
+                  <span className="font-semibold text-[#2B0A18]">📍 Church Ceremony</span>
                   <span className="text-[#B08D3C] font-semibold text-[11px]">Google Maps</span>
                 </div>
                 <div className="flex items-center justify-between p-2.5 rounded-xl bg-white border border-[#2B0A18]/10">
-                  <span className="font-semibold text-[#2B0A18]">Brandview Ballroom Glendale</span>
-                  <span className="text-[#B08D3C] font-semibold text-[11px]">Google Maps</span>
-                </div>
-                <div className="flex items-center justify-between p-2.5 rounded-xl bg-white border border-[#2B0A18]/10">
-                  <span className="font-semibold text-[#2B0A18]">Taglyan Cultural Complex</span>
+                  <span className="font-semibold text-[#2B0A18]">📍 Reception &amp; Party</span>
                   <span className="text-[#B08D3C] font-semibold text-[11px]">Google Maps</span>
                 </div>
               </div>

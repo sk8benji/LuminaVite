@@ -527,24 +527,20 @@ export default function QuinceLandingPageEs() {
                   Cero Invitados Perdidos
                 </span>
                 <h3 className="font-['Playfair_Display',serif] text-2xl font-bold text-[#2B0A18] mt-1 mb-3">
-                  GPS Directo a Salones en LA
+                  Navegación GPS en 1 Toque
                 </h3>
                 <p className="text-[#2B0A18]/75 text-sm leading-relaxed mb-6">
-                  Un solo toque abre la ruta en Google Maps hacia salones populares en Glendale, Burbank, Pasadena, Downey y el Valle de San Fernando.
+                  Tus invitados reciben enlaces directos a Google Maps para la ceremonia religiosa y el banquete. Evita llamadas de familiares perdidos en el tráfico y asegura que todos lleguen a tiempo a la entrada correcta.
                 </p>
               </div>
 
               <div className="space-y-2 text-xs">
                 <div className="flex items-center justify-between p-2.5 rounded-xl bg-white border border-[#2B0A18]/10">
-                  <span className="font-semibold text-[#2B0A18]">Brandview Ballroom Glendale</span>
+                  <span className="font-semibold text-[#2B0A18]">📍 Misa / Ceremonia</span>
                   <span className="text-[#B08D3C] font-semibold text-[11px]">Google Maps</span>
                 </div>
                 <div className="flex items-center justify-between p-2.5 rounded-xl bg-white border border-[#2B0A18]/10">
-                  <span className="font-semibold text-[#2B0A18]">Castaway Burbank</span>
-                  <span className="text-[#B08D3C] font-semibold text-[11px]">Google Maps</span>
-                </div>
-                <div className="flex items-center justify-between p-2.5 rounded-xl bg-white border border-[#2B0A18]/10">
-                  <span className="font-semibold text-[#2B0A18]">Renaissance Banquet Hall</span>
+                  <span className="font-semibold text-[#2B0A18]">📍 Recepción / Fiesta</span>
                   <span className="text-[#B08D3C] font-semibold text-[11px]">Google Maps</span>
                 </div>
               </div>

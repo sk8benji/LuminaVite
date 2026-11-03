@@ -567,26 +567,21 @@ export default function QuinceLandingPage() {
                   <Navigation className="w-3.5 h-3.5" />
                   GPS Navigation
                 </span>
-                <h3 className="text-2xl font-extrabold text-[#2B0A18]">Church Mass and Reception GPS Navigation</h3>
+                <h3 className="text-2xl font-extrabold text-[#2B0A18]">1-Tap Church &amp; Reception Navigation</h3>
                 <p className="text-sm text-[#5A3C46] leading-relaxed">
-                  No lost abuelitos calling during mass. Seamless deep-linking opens Google Maps directly
-                  directly to your banquet hall or church.
+                  Your guests receive direct Google Maps links for both the church ceremony and reception party. Avoid phone calls in traffic and ensure everyone arrives right on time.
                 </p>
               </div>
 
-              {/* LA Hall Chips */}
+              {/* Event Navigation Chips */}
               <div className="mt-6 space-y-2">
                 <div className="flex items-center justify-between p-2.5 rounded-xl bg-white border border-[#E7DCC8] text-xs font-medium text-[#2B0A18]">
-                  <span>The Castaway • Burbank</span>
+                  <span>📍 Misa / Church Ceremony</span>
                   <span className="text-[#B08D3C] text-[11px] font-bold">Google Maps →</span>
                 </div>
                 <div className="flex items-center justify-between p-2.5 rounded-xl bg-white border border-[#E7DCC8] text-xs font-medium text-[#2B0A18]">
-                  <span>Brandview Ballroom • Glendale</span>
-                  <span className="text-[#B08D3C] text-[11px] font-bold">Maps →</span>
-                </div>
-                <div className="flex items-center justify-between p-2.5 rounded-xl bg-white border border-[#E7DCC8] text-xs font-medium text-[#2B0A18]">
-                  <span>Imperial Palace • Pasadena</span>
-                  <span className="text-[#B08D3C] text-[11px] font-bold">Maps →</span>
+                  <span>📍 Recepción / Reception Party</span>
+                  <span className="text-[#B08D3C] text-[11px] font-bold">Google Maps →</span>
                 </div>
               </div>
             </div>
@@ -1135,7 +1130,7 @@ export default function QuinceLandingPage() {
             <p className="font-semibold text-rose-100">
               Handcrafted with love in Los Angeles, California • Click &amp; Love Studio
             </p>
-            <p>Serving Glendale, Burbank, Pasadena, San Fernando Valley, Long Beach &amp; Inland Empire.</p>
+            <p>Delivering bespoke digital invitation experiences for celebrations nationwide.</p>
           </div>
         </div>
       </section>

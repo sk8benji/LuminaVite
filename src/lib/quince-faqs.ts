@@ -25,7 +25,7 @@ export const FAQS_LIST: FaqItem[] = [
   {
     question: "Are you locally based in Los Angeles? Can we talk to a real person?",
     answer:
-      "Yes! We are proudly based in Southern California, serving the San Fernando Valley, Glendale, Burbank, Pasadena, Downtown LA, and Orange County. You can call or text us anytime at (818) 299-4882 or message us on WhatsApp.",
+      "Yes! Click & Love is a digital software platform serving celebrations nationwide across the United States. You can call or text our team anytime at (818) 299-4882 or message us on WhatsApp.",
   },
   {
     question: "Can we include my daughter's favorite waltz or entrance song?",

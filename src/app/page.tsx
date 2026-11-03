@@ -53,7 +53,7 @@ export default function Page() {
       "Custom digital invitations made in Los Angeles for weddings and quinceañeras, with 3D music envelopes and live SMS RSVP tracking.",
     priceRange: "$99 - $199",
     telephone: "+1-818-299-4882",
-    serviceArea: "Los Angeles, CA",
+    serviceArea: "United States",
     address: {
       "@type": "PostalAddress",
       addressLocality: "Los Angeles",
@@ -61,11 +61,7 @@ export default function Page() {
       addressCountry: "US",
     },
     areaServed: [
-      { "@type": "City", "name": "Los Angeles" },
-      { "@type": "City", "name": "Glendale" },
-      { "@type": "City", "name": "Burbank" },
-      { "@type": "City", "name": "Pasadena" },
-      { "@type": "AdministrativeArea", "name": "San Fernando Valley" },
+      { "@type": "Country", "name": "United States" },
     ],
     knowsLanguage: ["en", "es"],
     hasOfferCatalog: {
