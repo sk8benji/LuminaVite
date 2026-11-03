@@ -3,9 +3,9 @@ import QuinceLandingPage from "@/components/QuinceLandingPage";
 import { FAQS_LIST } from "@/lib/quince-faqs";
 
 export const metadata: Metadata = {
-  title: "Quinceañera Digital Invitations & Online RSVP | Click & Love",
+  title: "Quince Invitations with 3D Animated Envelopes & Music | Click & Love",
   description:
-    "Custom quinceañera digital invitations with 3D animated envelopes, music, and real-time SMS RSVP tracking. Made for Los Angeles families.",
+    "Interactive quince invitations featuring luxury 3D animated envelopes, custom music, and instant SMS RSVP tracking. Trusted by California families.",
   metadataBase: new URL("https://clickandlove.app"),
   alternates: {
     canonical: "https://clickandlove.app/quince-invitations",
@@ -16,9 +16,9 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "Quinceañera Digital Invitations & Online RSVP | Click & Love",
+    title: "Quince Invitations with 3D Animated Envelopes & Music | Click & Love",
     description:
-      "Custom quinceañera digital invitations with 3D animated envelopes, music, and real-time SMS RSVP tracking. Made for Los Angeles families.",
+      "Interactive quince invitations featuring luxury 3D animated envelopes, custom music, and instant SMS RSVP tracking. Trusted by California families.",
     url: "https://clickandlove.app/quince-invitations",
     siteName: "Click & Love",
     locale: "en_US",
@@ -35,21 +35,20 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Quinceañera Digital Invitations & Online RSVP | Click & Love",
+    title: "Quince Invitations with 3D Animated Envelopes & Music | Click & Love",
     description:
-      "Custom quinceañera digital invitations with 3D animated envelopes, music, and real-time SMS RSVP tracking. Made for Los Angeles families.",
+      "Interactive quince invitations featuring luxury 3D animated envelopes, custom music, and instant SMS RSVP tracking. Trusted by California families.",
     images: ["https://clickandlove.app/assets/og-banner.png"],
   },
 };
 
 export default function QuincePage() {
   const jsonLd = {
-    "@context": "https://schema.org",
     "@type": "Product",
-    name: "Luxury Quinceañera Digital Invitations",
+    name: "Luxury Quince Invitations",
     image: "https://clickandlove.app/assets/og-banner.png",
     description:
-      "Custom 3D unboxing digital invitations for Quinceañeras in Los Angeles with music, SMS RSVP, and real-time pass management.",
+      "Custom interactive digital quince invitations with 3D envelopes, audio tracks, and SMS RSVP tracking.",
     brand: {
       "@type": "Brand",
       name: "Click & Love",
@@ -84,7 +83,6 @@ export default function QuincePage() {
   };
 
   const faqJsonLd = {
-    "@context": "https://schema.org",
     "@type": "FAQPage",
     mainEntity: FAQS_LIST.map((faq) => ({
       "@type": "Question",
@@ -96,15 +94,16 @@ export default function QuincePage() {
     })),
   };
 
+  const graphJsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [jsonLd, faqJsonLd],
+  };
+
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(graphJsonLd) }}
       />
       <QuinceLandingPage />
     </>
