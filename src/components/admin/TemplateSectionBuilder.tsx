@@ -2044,6 +2044,22 @@ export default function TemplateSectionBuilder({
                         </div>
                       </div>
 
+                      <div className="p-4 rounded-xl border border-stone-200 bg-stone-50">
+                        <label className="block text-[11px] font-semibold text-gray-600 mb-1">
+                          Nombre de la canción (se muestra en el reproductor)
+                        </label>
+                        <input
+                          type="text"
+                          value={formData.musicaTitulo || ""}
+                          onChange={(e) => updateField("musicaTitulo", e.target.value)}
+                          placeholder="Ej: Slow Down, Little Heart — Linhy"
+                          className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm text-gray-900"
+                        />
+                        <p className="text-[11px] text-gray-500 mt-1">
+                          Este es el nombre que verán los invitados en el reproductor de la invitación.
+                        </p>
+                      </div>
+
                       <div className="p-3.5 rounded-xl bg-stone-50 border border-stone-200 flex items-center justify-between gap-3">
                         <div>
                           <p className="text-xs font-bold text-[#7A002A]">

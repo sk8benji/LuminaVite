@@ -1067,7 +1067,7 @@ function NuevoEventoContent() {
 
       // 2. Subir binario directo a S3 usando PUT con el Content-Type firmado.
       // Si ESTE fetch falla con "Failed to fetch", el navegador bloqueó el
-      // PUT (CORS del storage o destino no alcanzable desde el navegador).
+      // PUT (CSP connect-src, CORS del storage o destino no alcanzable).
       let destino = "";
       try {
         destino = new URL(data.uploadUrl).hostname;
@@ -1092,6 +1092,13 @@ function NuevoEventoContent() {
 
       // 3. Guardar URL final del archivo en el estado
       updateField(field, data.fileUrl);
+      // Si es audio y aún no hay título, usar el nombre del archivo (sin extensión)
+      if (field === "musicaUrl") {
+        setFormData((prev: any) => {
+          if (prev.musicaTitulo) return prev;
+          return { ...prev, musicaTitulo: uploadFile.name.replace(/\.[^/.]+$/, "") };
+        });
+      }
       setUploadEstado({ field, estado: "ok" });
     } catch (err: any) {
       console.error(err);
