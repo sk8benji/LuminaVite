@@ -1247,6 +1247,7 @@ export default function BlueButterflyTemplate({
         {/* SECCIÓN 8: MAPA Y NAVEGACIÓN (THE LOCATION)             */}
         {/* ======================================================= */}
         <section className="px-6 py-6 text-center z-20">
+          {data.mostrarRecepcion !== false && (<>
           <h3 className="font-serif-roman text-xs tracking-[0.25em] text-[#2F5A84] uppercase mb-2 font-bold">
             {isEn ? "Reception & Location" : "Recepción & Ubicación"}
           </h3>
@@ -1284,9 +1285,10 @@ export default function BlueButterflyTemplate({
             <MapPin className="w-3.5 h-3.5" />
             {isEn ? "Directions / View Map" : "Cómo Llegar / Ver en Mapa"}
           </a>
+          </>)}
 
           {/* CEREMONIA RELIGIOSA (SI EXISTE) */}
-          {data.ceremoniaNombre && (
+          {data.mostrarCeremonia !== false && data.ceremoniaNombre && (
             <div className="mt-8 pt-6 border-t border-[#D8B772]/30 text-center">
               <span className="font-serif-roman text-[10px] tracking-[0.2em] text-[#C5A059] uppercase font-bold block mb-1">
                 {isEn ? "Religious Ceremony / Church" : "Ceremonia Religiosa / Iglesia"}

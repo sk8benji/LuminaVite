@@ -191,6 +191,8 @@ export async function ensurePostgresTables(): Promise<boolean> {
 
       // Fotos de invitados (v1): galería por evento, subida pública por link.
       `ALTER TABLE "Evento" ADD COLUMN IF NOT EXISTS "fotosInvitadosActivas" BOOLEAN DEFAULT true;`,
+      `ALTER TABLE "Evento" ADD COLUMN IF NOT EXISTS "mostrarCeremonia" BOOLEAN DEFAULT true;`,
+      `ALTER TABLE "Evento" ADD COLUMN IF NOT EXISTS "mostrarRecepcion" BOOLEAN DEFAULT true;`,
       `CREATE TABLE IF NOT EXISTS "FotoInvitado" (
           "id" TEXT NOT NULL PRIMARY KEY,
           "eventoId" TEXT NOT NULL REFERENCES "Evento"("id") ON DELETE CASCADE,

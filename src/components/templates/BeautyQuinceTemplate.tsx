@@ -390,7 +390,7 @@ export default function BeautyQuinceTemplate({
           <div className="relative">
             <h2 className="font-script text-5xl text-[#A6192E]">{isEn ? "When & Where" : "Fecha y Lugar"}</h2>
             <p className="font-serif-roman tracking-[0.2em] uppercase text-sm mt-3 font-bold">{formattedDate}</p>
-            {data.ceremoniaNombre && (
+            {data.mostrarCeremonia !== false && data.ceremoniaNombre && (
               <div className="mt-5">
                 <p className="text-xs tracking-[0.25em] uppercase font-bold text-[#C5A059]">{isEn ? "Church Ceremony" : "Ceremonia"}</p>
                 <p className="font-serif-roman text-lg">{data.ceremoniaNombre}</p>
@@ -402,6 +402,7 @@ export default function BeautyQuinceTemplate({
                 )}
               </div>
             )}
+            {data.mostrarRecepcion !== false && (
             <div className="mt-5">
               <p className="text-xs tracking-[0.25em] uppercase font-bold text-[#C5A059]">{isEn ? "Reception" : "Recepción"}</p>
               <p className="font-serif-roman text-lg">{data.recepcionNombre}</p>
@@ -410,6 +411,7 @@ export default function BeautyQuinceTemplate({
                 <MapPin className="w-4 h-4" /> {isEn ? "Directions" : "Cómo llegar"}
               </a>
             </div>
+            )}
             <img src={portada} alt="Portada" className="w-full h-[260px] object-cover rounded-[18px] shadow mt-6 mb-[18px] bg-transparent" />
             {/* Mapa interactivo en lugar del bloque inferior vacío, con
                 filtro dorado/pergamino/azul noche (sin API de Maps). */}

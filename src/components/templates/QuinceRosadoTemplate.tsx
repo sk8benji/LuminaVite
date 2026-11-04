@@ -923,9 +923,10 @@ export default function QuinceRosadoTemplate({
             )}
 
             {/* Ubicaciones de Iglesia y Salón */}
-            {isSectionActive("ubicaciones") && (
+            {isSectionActive("ubicaciones") && (data.mostrarCeremonia !== false || data.mostrarRecepcion !== false) && (
               <div data-preview-section="ubicaciones" className="space-y-4 mb-8">
                 {/* Iglesia */}
+                {data.mostrarCeremonia !== false && (
                 <div className="bg-white p-4 rounded-2xl shadow-md border border-pink-100 text-center">
                   <h4 className="font-['Cinzel',serif] text-xs tracking-widest uppercase text-[#7A002A] font-bold">
                     {isEn ? "RELIGIOUS CEREMONY" : "CEREMONIA RELIGIOSA"}
@@ -948,8 +949,10 @@ export default function QuinceRosadoTemplate({
                     <span>{isEn ? "VIEW MAP" : "VER MAPA"}</span>
                   </a>
                 </div>
+                )}
 
                 {/* Salón de Recepción */}
+                {data.mostrarRecepcion !== false && (
                 <div className="bg-white p-4 rounded-2xl shadow-md border border-pink-100 text-center">
                   <h4 className="font-['Cinzel',serif] text-xs tracking-widest uppercase text-[#7A002A] font-bold">
                     {isEn ? "RECEPTION & PARTY" : "RECEPCIÓN & FIESTA"}
@@ -972,6 +975,7 @@ export default function QuinceRosadoTemplate({
                     <span>{isEn ? "VIEW MAP" : "VER MAPA"}</span>
                   </a>
                 </div>
+                )}
               </div>
             )}
 

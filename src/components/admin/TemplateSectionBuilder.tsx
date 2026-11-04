@@ -1078,6 +1078,15 @@ export default function TemplateSectionBuilder({
                           <MapPin className="w-4 h-4" />
                           <span>Ceremonia Religiosa (Iglesia)</span>
                         </h4>
+                        <label className="flex items-center gap-2 mt-1 mb-1 cursor-pointer select-none">
+                          <input
+                            type="checkbox"
+                            checked={formData.mostrarCeremonia !== false}
+                            onChange={(e) => updateField("mostrarCeremonia", e.target.checked)}
+                            className="w-4 h-4 accent-[#7A002A]"
+                          />
+                          <span className="text-[11px] font-semibold text-gray-600">Mostrar esta subsección en la invitación (apágala si no habrá ceremonia)</span>
+                        </label>
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                           <div>
                             <label className="block text-[11px] font-semibold text-gray-600 mb-1">
@@ -1153,6 +1162,15 @@ export default function TemplateSectionBuilder({
                           <MapPin className="w-4 h-4" />
                           <span>Recepción & Fiesta (Salón)</span>
                         </h4>
+                        <label className="flex items-center gap-2 mt-1 mb-1 cursor-pointer select-none">
+                          <input
+                            type="checkbox"
+                            checked={formData.mostrarRecepcion !== false}
+                            onChange={(e) => updateField("mostrarRecepcion", e.target.checked)}
+                            className="w-4 h-4 accent-[#7A002A]"
+                          />
+                          <span className="text-[11px] font-semibold text-gray-600">Mostrar esta subsección en la invitación (apágala si no habrá recepción)</span>
+                        </label>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                           <div>
                             <label className="block text-[11px] font-semibold text-gray-600 mb-1">

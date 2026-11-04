@@ -714,6 +714,7 @@ export default function ElegantRoseTemplate({
             {/* Contenedor de Itinerario */}
             <div className="w-full max-w-[310px] space-y-6 mt-2">
               {/* ────────────────────────────────────────────────────────── */}
+              {data.mostrarCeremonia !== false && (<>
               {/* 1. MASS (4:PM) - Izquierda: Texto | Derecha: Iglesia SVG  */}
               {/* ────────────────────────────────────────────────────────── */}
               <div className="flex flex-col items-center w-full">
@@ -766,6 +767,8 @@ export default function ElegantRoseTemplate({
               </div>
 
               {/* ────────────────────────────────────────────────────────── */}
+              </>)}
+              {data.mostrarRecepcion !== false && (<>
               {/* 2. ENTRANCE (5:PM) - Izquierda: Vestido | Derecha: Texto   */}
               {/* ────────────────────────────────────────────────────────── */}
               <div className="flex flex-col items-center w-full pt-2">
@@ -818,6 +821,7 @@ export default function ElegantRoseTemplate({
               </div>
 
               {/* ────────────────────────────────────────────────────────── */}
+              </>)}
               {/* 3. WALTZ (6:00 PM) - Pareja | Divisor Vertical Oro | Texto */}
               {/* ────────────────────────────────────────────────────────── */}
               <div className="flex items-center justify-between w-full pt-4">

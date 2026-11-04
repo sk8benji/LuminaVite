@@ -49,10 +49,12 @@ export interface InvitationData {
   ceremoniaNombre?: string | null;
   ceremoniaDireccion?: string | null;
   ceremoniaMapUrl?: string | null;
+  mostrarCeremonia?: boolean;
 
   recepcionNombre: string;
   recepcionDireccion: string;
   recepcionMapUrl: string;
+  mostrarRecepcion?: boolean;
 
   // Placa de Fecha & Recinto (Paso 3)
   fechaPlacaMes?: string | null;
@@ -481,6 +483,7 @@ export default function InvitationMobileView({
           </div>
 
           {/* Salón de Recepción */}
+          {data.mostrarRecepcion !== false && (
           <div
             className="p-6 rounded-3xl border border-pink-100 shadow-sm text-center bg-white"
           >
@@ -525,9 +528,10 @@ export default function InvitationMobileView({
               Directions / Ver en Mapa
             </a>
           </div>
+          )}
 
           {/* Ceremonia religiosa si existe */}
-          {data.ceremoniaNombre && (
+          {data.mostrarCeremonia !== false && data.ceremoniaNombre && (
             <div
               className="p-5 rounded-2xl border border-pink-100 shadow-sm text-center bg-white/70"
             >

@@ -130,11 +130,13 @@ model Evento {
   ceremoniaNombre    String?
   ceremoniaDireccion String?
   ceremoniaMapUrl    String?
+  mostrarCeremonia    Boolean         @default(true) // Subsección iglesia activa
 
   // Ubicación Recepción (Salón / Castillo)
   recepcionNombre    String
   recepcionDireccion String
   recepcionMapUrl    String          // Enlace directo a Google Maps o Waze
+  mostrarRecepcion    Boolean         @default(true) // Subsección salón activa
 
   // Placa de Fecha & Recinto (Paso 3)
   fechaPlacaMes      String?         // Ej: "OCTUBRE" / "OCTOBER"

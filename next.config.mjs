@@ -53,7 +53,7 @@ const nextConfig = {
               "img-src 'self' data: blob: https://*.amazonaws.com https://*.cloudfront.net https://images.unsplash.com",
               "media-src 'self' blob: https://*.amazonaws.com https://*.cloudfront.net https://cdn.pixabay.com",
               "frame-src 'self' https://www.youtube.com https://www.google.com https://maps.google.com",
-              "connect-src 'self'",
+              "connect-src 'self' https://*.amazonaws.com",
               "object-src 'none'",
               "base-uri 'self'",
               "form-action 'self'",

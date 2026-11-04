@@ -691,7 +691,7 @@ export default function QuinceEraPinkTemplate({
           </div>
 
           <div className="max-w-md mx-auto mt-8 space-y-6">
-            {data.ceremoniaNombre && (
+            {data.mostrarCeremonia !== false && data.ceremoniaNombre && (
               <div className="bg-[#F6D3DA] rounded-[2rem] shadow-lg p-7 text-center border border-white/60">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={ERA_ASSETS.photoChurch} alt="" className="w-28 h-28 rounded-full object-cover border-4 border-white shadow-md mx-auto" />
@@ -711,6 +711,7 @@ export default function QuinceEraPinkTemplate({
               </div>
             )}
 
+            {data.mostrarRecepcion !== false && (
             <div className="bg-[#F6D3DA] rounded-[2rem] shadow-lg p-7 text-center border border-white/60">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={ERA_ASSETS.photoVenue} alt="" className="w-28 h-28 rounded-full object-cover border-4 border-white shadow-md mx-auto" />
@@ -726,6 +727,7 @@ export default function QuinceEraPinkTemplate({
                 <MapPin className="w-3.5 h-3.5" /> Google Maps
               </a>
             </div>
+            )}
           </div>
         </section>
 

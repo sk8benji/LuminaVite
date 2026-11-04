@@ -140,6 +140,8 @@ async function getEventoData(rawSlug: string): Promise<InvitationData | null> {
       ),
       maxPasesPorInvitado: dbEvento.maxPasesPorInvitado,
       fotosInvitadosActivas: (dbEvento as any).fotosInvitadosActivas !== false,
+      mostrarCeremonia: (dbEvento as any).mostrarCeremonia !== false,
+      mostrarRecepcion: (dbEvento as any).mostrarRecepcion !== false,
       ceremoniaNombre: dbEvento.ceremoniaNombre,
       ceremoniaDireccion: dbEvento.ceremoniaDireccion,
       ceremoniaMapUrl: dbEvento.ceremoniaMapUrl,

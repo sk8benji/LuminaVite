@@ -782,7 +782,7 @@ export default function BlushPrincessTemplate({
             {isEn ? "The Details" : "Los Detalles"}
           </h3>
           <div className="max-w-md mx-auto space-y-5">
-            {data.ceremoniaNombre && (
+            {data.mostrarCeremonia !== false && data.ceremoniaNombre && (
               <div className="bg-white/90 backdrop-blur-sm rounded-3xl border border-[#B08D3C]/40 shadow-lg p-6 text-center">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={BLUSH_ASSETS.cross} alt="" className="w-10 h-auto mx-auto mb-2" />
@@ -807,6 +807,7 @@ export default function BlushPrincessTemplate({
               </div>
             )}
 
+            {data.mostrarRecepcion !== false && (
             <div className="bg-white/90 backdrop-blur-sm rounded-3xl border border-[#B08D3C]/40 shadow-lg p-6 text-center">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={BLUSH_ASSETS.chandelier} alt="" className="w-14 h-auto mx-auto mb-1" />
@@ -826,6 +827,7 @@ export default function BlushPrincessTemplate({
                 <MapPin className="w-3.5 h-3.5" /> {isEn ? "View Map" : "Ver Mapa"}
               </a>
             </div>
+            )}
           </div>
 
           {/* Then / Now */}

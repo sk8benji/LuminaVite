@@ -592,7 +592,7 @@ export default function BabyBlueTemplate({
         {/* ======================================================= */}
         {/* MASS VENUE: POSTAL                                      */}
         {/* ======================================================= */}
-        {data.ceremoniaNombre && (
+        {data.mostrarCeremonia !== false && data.ceremoniaNombre && (
           <section className="px-6 py-10 text-center">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={BABY_BLUE_ASSETS.envelopeOpen} alt="" className="w-64 sm:w-72 h-auto mx-auto" />

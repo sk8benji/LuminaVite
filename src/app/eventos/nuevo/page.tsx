@@ -167,6 +167,8 @@ function NuevoEventoContent() {
     fechaLimiteRsvp: "15 de Noviembre",
     maxPasesPorInvitado: 4,
     fotosInvitadosActivas: true,
+    mostrarCeremonia: true,
+    mostrarRecepcion: true,
     ceremoniaNombre: "Parroquia Nuestra Señora",
     ceremoniaDireccion: "Av. Las Flores 123",
     ceremoniaMapUrl: "https://maps.google.com",
@@ -1082,7 +1084,7 @@ function NuevoEventoContent() {
       } catch (err: any) {
         if (err.message === "Failed to fetch") {
           throw new Error(
-            `El navegador bloqueó la subida a S3 (destino: ${destino || "desconocido"}). Revisa el CORS del storage o si ese destino es alcanzable desde el navegador.`
+            `El navegador bloqueó la subida a S3 (destino: ${destino || "desconocido"}). Revisa la política de seguridad del sitio (CSP connect-src) o el CORS del storage.`
           );
         }
         throw err;
