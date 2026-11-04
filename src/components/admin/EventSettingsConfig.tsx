@@ -280,6 +280,61 @@ export default function EventSettingsConfig({
           </div>
         </div>
 
+        {/* Cambiar enlace (URL) — solo en modo edición, con confirmación */}
+        {isEditMode && (
+          <div className="rounded-2xl border-2 border-amber-300 bg-amber-50 p-4 space-y-2">
+            <p className="text-xs font-bold uppercase tracking-wider text-stone-700">
+              🔗 Cambiar enlace (URL) de la invitación
+            </p>
+            <p className="text-xs text-stone-600">
+              URL actual: <span className="font-mono font-bold">clickandlove.app/{formData.slug}</span>
+            </p>
+            <p className="text-xs text-red-700 font-semibold">
+              Ojo: al cambiarla, el enlace viejo, el QR impreso, los SMS ya enviados y el link
+              del panel dejan de funcionar. Solo úsala si la invitación aún no se ha compartido
+              o si aceptas ese quiebre.
+            </p>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={nuevoSlug}
+                onChange={(e) => {
+                  setNuevoSlug(e.target.value);
+                  setSlugMsg("");
+                  setSlugNuevoOk("");
+                }}
+                placeholder="nuevo-enlace"
+                className="flex-1 py-2.5 px-3 rounded-xl border-2 border-stone-200 bg-white text-sm font-mono focus:outline-none focus:border-[#7A002A]"
+              />
+              <button
+                type="button"
+                onClick={verificarSlugDisponible}
+                disabled={slugBusy}
+                className="px-3 py-2.5 rounded-xl bg-white border-2 border-stone-300 text-stone-700 text-sm font-bold disabled:opacity-50"
+              >
+                Verificar
+              </button>
+            </div>
+            <button
+              type="button"
+              onClick={cambiarSlug}
+              disabled={slugBusy || !limpiarSlugInput(nuevoSlug)}
+              className="w-full py-3 rounded-xl bg-[#7A002A] text-white text-sm font-bold disabled:opacity-50"
+            >
+              {slugBusy ? "Procesando…" : "Cambiar URL"}
+            </button>
+            {slugMsg && <p className="text-xs font-semibold text-stone-700">{slugMsg}</p>}
+            {slugNuevoOk && (
+              <a
+                href={`/eventos/nuevo?editar=${encodeURIComponent(slugNuevoOk)}`}
+                className="block text-center text-sm font-bold text-[#7A002A] underline underline-offset-2"
+              >
+                Abrir el editor con la nueva URL →
+              </a>
+            )}
+          </div>
+        )}
+
         {/* Idioma de la Invitación */}
         <div>
           <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-2">
@@ -479,61 +534,6 @@ export default function EventSettingsConfig({
             </div>
           </div>
         </div>
-
-        {/* Cambiar enlace (URL) — solo en modo edición, con confirmación */}
-        {isEditMode && (
-          <div className="rounded-2xl border-2 border-amber-300 bg-amber-50 p-4 space-y-2">
-            <p className="text-xs font-bold uppercase tracking-wider text-stone-700">
-              🔗 Cambiar enlace (URL) de la invitación
-            </p>
-            <p className="text-xs text-stone-600">
-              URL actual: <span className="font-mono font-bold">clickandlove.app/{formData.slug}</span>
-            </p>
-            <p className="text-xs text-red-700 font-semibold">
-              Ojo: al cambiarla, el enlace viejo, el QR impreso, los SMS ya enviados y el link
-              del panel dejan de funcionar. Solo úsala si la invitación aún no se ha compartido
-              o si aceptas ese quiebre.
-            </p>
-            <div className="flex gap-2">
-              <input
-                type="text"
-                value={nuevoSlug}
-                onChange={(e) => {
-                  setNuevoSlug(e.target.value);
-                  setSlugMsg("");
-                  setSlugNuevoOk("");
-                }}
-                placeholder="nuevo-enlace"
-                className="flex-1 py-2.5 px-3 rounded-xl border-2 border-stone-200 bg-white text-sm font-mono focus:outline-none focus:border-[#7A002A]"
-              />
-              <button
-                type="button"
-                onClick={verificarSlugDisponible}
-                disabled={slugBusy}
-                className="px-3 py-2.5 rounded-xl bg-white border-2 border-stone-300 text-stone-700 text-sm font-bold disabled:opacity-50"
-              >
-                Verificar
-              </button>
-            </div>
-            <button
-              type="button"
-              onClick={cambiarSlug}
-              disabled={slugBusy || !limpiarSlugInput(nuevoSlug)}
-              className="w-full py-3 rounded-xl bg-[#7A002A] text-white text-sm font-bold disabled:opacity-50"
-            >
-              {slugBusy ? "Procesando…" : "Cambiar URL"}
-            </button>
-            {slugMsg && <p className="text-xs font-semibold text-stone-700">{slugMsg}</p>}
-            {slugNuevoOk && (
-              <a
-                href={`/eventos/nuevo?editar=${encodeURIComponent(slugNuevoOk)}`}
-                className="block text-center text-sm font-bold text-[#7A002A] underline underline-offset-2"
-              >
-                Abrir el editor con la nueva URL →
-              </a>
-            )}
-          </div>
-        )}
 
         {/* Fotos de invitados */}
         <div className="rounded-2xl border border-stone-200 bg-white p-4 space-y-2">
