@@ -82,22 +82,16 @@ export function BenefitsBento({ lang = "en" }: BenefitsBentoProps) {
 
         {/* Bento Grid */}
         <div
-          className="grid gap-6 max-[767px]:grid-cols-1"
-          style={{
-            gridTemplateColumns: "repeat(3, 1fr)",
-            gridTemplateRows: "auto auto",
-          }}
+          className="grid gap-6 grid-cols-1 md:grid-cols-3"
         >
           {/* Card 1 — Captura del Pase Familiar Digital (spans 2 rows, col 1) */}
           <div
             ref={card1Ref}
             id="w-node-card1"
-            className={`bg-[#FFFFFF] border border-neutral-200 rounded-xl flex flex-col items-stretch gap-6 p-8 max-[991px]:p-6 shadow-[0_2px_40px_rgba(142,142,148,0.08)] transition-all duration-700 ease-out ${
+            className={`bg-[#FFFFFF] border border-neutral-200 rounded-xl flex flex-col items-stretch gap-6 p-8 max-[991px]:p-6 md:row-span-2 min-w-0 shadow-[0_2px_40px_rgba(142,142,148,0.08)] transition-all duration-700 ease-out ${
               card1Visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
             }`}
             style={{
-              gridRow: "1 / 3",
-              gridColumn: "1 / 2",
               transitionDelay: "100ms",
             }}
           >
@@ -162,12 +156,10 @@ export function BenefitsBento({ lang = "en" }: BenefitsBentoProps) {
           <div
             ref={card2Ref}
             id="w-node-card2"
-            className={`bg-[#FFFFFF] border border-neutral-200 rounded-xl flex flex-row max-[767px]:flex-col items-center max-[767px]:items-stretch gap-8 p-8 max-[991px]:p-6 shadow-[0_2px_40px_rgba(142,142,148,0.08)] transition-all duration-700 ease-out ${
+            className={`bg-[#FFFFFF] border border-neutral-200 rounded-xl flex flex-row max-[767px]:flex-col items-center max-[767px]:items-stretch gap-8 p-8 max-[991px]:p-6 md:col-span-2 min-w-0 shadow-[0_2px_40px_rgba(142,142,148,0.08)] transition-all duration-700 ease-out ${
               card2Visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
             }`}
             style={{
-              gridRow: "1 / 2",
-              gridColumn: "2 / 4",
               transitionDelay: "200ms",
             }}
           >
@@ -222,12 +214,10 @@ export function BenefitsBento({ lang = "en" }: BenefitsBentoProps) {
           <div
             ref={card3Ref}
             id="w-node-card3"
-            className={`bg-[#FFFFFF] border border-neutral-200 rounded-xl flex flex-col items-center gap-5 p-7 max-[991px]:p-6 shadow-[0_2px_40px_rgba(142,142,148,0.08)] transition-all duration-700 ease-out ${
+            className={`bg-[#FFFFFF] border border-neutral-200 rounded-xl flex flex-col items-center gap-5 p-7 max-[991px]:p-6 min-w-0 shadow-[0_2px_40px_rgba(142,142,148,0.08)] transition-all duration-700 ease-out ${
               card3Visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
             }`}
             style={{
-              gridRow: "2 / 3",
-              gridColumn: "2 / 3",
               transitionDelay: "300ms",
             }}
           >
@@ -290,12 +280,10 @@ export function BenefitsBento({ lang = "en" }: BenefitsBentoProps) {
             src="/assets/home-real/elegant-rose-real.webp"
             loading="lazy"
             alt={isEs ? "Celebración de gala" : "Bespoke celebration"}
-            className={`object-cover rounded-xl w-full h-full border border-neutral-200 transition-all duration-700 ease-out ${
+            className={`object-cover rounded-xl w-full h-full max-[767px]:h-auto border border-neutral-200 transition-all duration-700 ease-out ${
               img4Visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
             }`}
             style={{
-              gridRow: "2 / 3",
-              gridColumn: "3 / 4",
               transitionDelay: "400ms",
             }}
           />
