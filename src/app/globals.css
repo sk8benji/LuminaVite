@@ -255,3 +255,21 @@ iframe::-webkit-scrollbar,
   pointer-events: none;
 }
 
+
+.envelope-wrapper,
+.envelope-container,
+.card-transition-container {
+  overflow: visible !important;
+  width: auto !important;
+  max-width: 100% !important;
+}
+
+.envelope-image,
+.envelope-wrapper img {
+  width: 100% !important;
+  max-width: 460px !important;
+  height: auto !important;
+  display: block !important;
+  margin: 0 auto !important;
+  object-fit: contain !important;
+}
