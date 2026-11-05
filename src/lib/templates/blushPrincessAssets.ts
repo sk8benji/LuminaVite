@@ -18,7 +18,7 @@ export const BLUSH_ASSETS = {
   floralWide: A("fondo-floral-ancho.webp"),
 
   // Sobre interactivo
-  envelopeClosed: A("sobre-cerrado.webp"),
+  envelopeClosed: A("sobre-cerrado.png"),
   envelopeOpen: A("sobre-abierto.webp"),
   letterPaper: A("carta-papel.webp"),
   bowCard: A("tarjeta-mono.webp"),

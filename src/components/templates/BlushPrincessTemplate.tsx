@@ -485,13 +485,15 @@ export default function BlushPrincessTemplate({
             {/* Escenario del sobre: 100% transparente sin bordes ni fondos heredados */}
             <div
               id="envelopeContainer"
-              className={`envelope-container card-wrapper relative w-[min(94vw,430px)] sm:w-[500px] aspect-[787/646] cursor-pointer bg-transparent border-0 shadow-none ${
+              className={`envelope-container card-wrapper relative w-[min(94vw,430px)] sm:w-[500px] aspect-[780/646] cursor-pointer bg-transparent border-0 shadow-none ${
                 isEnvelopeOpen ? "animate-envelope-pulse" : ""
               }`}
               style={{
+                overflow: "visible",
+                border: "none",
+                outline: "none",
                 background: "transparent",
                 backgroundColor: "transparent",
-                border: "none",
                 boxShadow: "none",
               }}
             >
@@ -538,15 +540,17 @@ export default function BlushPrincessTemplate({
                 </div>
               </div>
 
-              {/* Sobre CERRADO: drop-shadow siguiendo la silueta de la imagen (sin box-shadow rectangular) */}
+              {/* Sobre CERRADO: estructura limpia original sin adornos superpuestos y con sombra directa a la silueta */}
               <div
                 className={`absolute inset-0 z-40 pointer-events-none transition-opacity duration-200 bg-transparent border-0 ${
                   isEnvelopeOpen ? "opacity-0" : "opacity-100"
                 }`}
                 style={{
+                  overflow: "visible",
+                  border: "none",
+                  outline: "none",
                   background: "transparent",
                   backgroundColor: "transparent",
-                  border: "none",
                   boxShadow: "none",
                 }}
               >
@@ -556,22 +560,11 @@ export default function BlushPrincessTemplate({
                   alt="Sobre Cerrado"
                   className="envelope-image w-full h-full object-contain bg-transparent border-0"
                   style={{
-                    filter: "drop-shadow(0 15px 25px rgba(0, 0, 0, 0.25)) drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15))",
+                    overflow: "visible",
+                    border: "none",
+                    outline: "none",
+                    filter: "drop-shadow(0 18px 28px rgba(0, 0, 0, 0.25)) drop-shadow(0 4px 10px rgba(0, 0, 0, 0.12))",
                   }}
-                />
-                {/* Tiara dorada descansando sobre el sobre (como en Canva) */}
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={BLUSH_ASSETS.crown}
-                  alt=""
-                  className="absolute -top-10 sm:-top-12 right-4 sm:right-8 w-24 sm:w-32 h-auto object-contain rotate-[10deg] drop-shadow-md"
-                />
-                {/* Mariposa rosa perchada */}
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={BLUSH_ASSETS.butterflyB}
-                  alt=""
-                  className="absolute -bottom-5 -left-3 sm:-left-5 w-16 sm:w-20 h-auto object-contain rotate-[18deg] drop-shadow-md animate-flutter"
                 />
               </div>
 
@@ -615,7 +608,7 @@ export default function BlushPrincessTemplate({
                     fontWeight: 600,
                   }}
                 >
-                  Choose language / Elige tu idioma
+                  CHOOSE LANGUAGE / ELIGE TU IDIOMA
                 </p>
                 <div className="flex items-center justify-center gap-3 sm:gap-5">
                   <button
