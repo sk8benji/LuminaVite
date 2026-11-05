@@ -445,12 +445,16 @@ export default function BlushPrincessTemplate({
             isEnvelopeExiting ? "pointer-events-none" : ""
           }`}
         >
-          {/* Fondo floral acuarela (el mismo motivo de la invitación) */}
+          {/* Fondo floral acuarela con filtro de profundidad */}
           <div
             aria-hidden="true"
             className={`absolute inset-0 bg-[#FBF1EA] bg-[url('/assets/template-blush/fondo-floral-ancho.webp')] bg-cover bg-center transition-opacity duration-200 ${
               isEnvelopeFading ? "opacity-0" : "opacity-100"
             }`}
+            style={{
+              filter: "blur(1.5px) brightness(0.95)",
+              transform: "scale(1.02)",
+            }}
           />
 
           {/* Grupo de la intro: sale en cortina al abrir */}
@@ -481,7 +485,7 @@ export default function BlushPrincessTemplate({
             {/* Escenario del sobre */}
             <div
               id="envelopeContainer"
-              className={`relative w-[min(94vw,430px)] sm:w-[500px] aspect-[799/654] cursor-pointer ${
+              className={`relative w-[min(94vw,430px)] sm:w-[500px] aspect-[787/646] cursor-pointer ${
                 isEnvelopeOpen ? "animate-envelope-pulse" : ""
               }`}
             >
@@ -497,7 +501,10 @@ export default function BlushPrincessTemplate({
                 <img
                   src={BLUSH_ASSETS.envelopeOpen}
                   alt="Sobre abierto"
-                  className="absolute inset-0 w-full h-full object-contain drop-shadow-2xl"
+                  className="absolute inset-0 w-full h-full object-contain"
+                  style={{
+                    filter: "drop-shadow(0 15px 35px rgba(0, 0, 0, 0.25)) drop-shadow(0 5px 15px rgba(0, 0, 0, 0.15))",
+                  }}
                 />
                 {/* Texto impreso sobre la carta del arte (zona medida) */}
                 <div
@@ -517,9 +524,9 @@ export default function BlushPrincessTemplate({
                 </div>
               </div>
 
-              {/* Sobre CERRADO: encima mientras está cerrado */}
+              {/* Sobre CERRADO: encima mientras está cerrado con relieve perimetral y esquinas redondeadas */}
               <div
-                className={`absolute inset-0 z-40 pointer-events-none drop-shadow-xl transition-opacity duration-200 ${
+                className={`absolute inset-0 z-40 pointer-events-none transition-opacity duration-200 ${
                   isEnvelopeOpen ? "opacity-0" : "opacity-100"
                 }`}
               >
@@ -527,7 +534,10 @@ export default function BlushPrincessTemplate({
                 <img
                   src={BLUSH_ASSETS.envelopeClosed}
                   alt="Sobre Cerrado"
-                  className="w-full h-full object-contain"
+                  className="w-full h-full object-cover rounded-[4px]"
+                  style={{
+                    boxShadow: "0 15px 35px rgba(0, 0, 0, 0.25), 0 5px 15px rgba(0, 0, 0, 0.15)",
+                  }}
                 />
                 {/* Tiara dorada descansando sobre el sobre (como en Canva) */}
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -564,14 +574,24 @@ export default function BlushPrincessTemplate({
               )}
             </div>
 
-            {/* Selector de idioma / pista de toque */}
+            {/* Selector de idioma / pista de toque con degradado de legibilidad */}
             {isBilingual ? (
               <div
-                className={`mt-7 sm:mt-9 flex flex-col items-center gap-3 z-30 transition-opacity duration-300 ${
+                className={`mt-6 sm:mt-8 flex flex-col items-center gap-3 z-30 transition-opacity duration-300 w-full max-w-lg mx-auto rounded-2xl ${
                   isEnvelopeOpen ? "opacity-0 pointer-events-none" : "opacity-100"
                 }`}
+                style={{
+                  background: "linear-gradient(to top, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0) 100%)",
+                  padding: "20px 0",
+                }}
               >
-                <p className="font-serif-roman text-[11px] sm:text-xs tracking-[0.3em] uppercase text-[#4A3436] font-semibold">
+                <p
+                  className="font-serif-roman text-[11px] sm:text-xs tracking-[0.25em] uppercase font-semibold"
+                  style={{
+                    color: "#4a3728",
+                    fontWeight: 600,
+                  }}
+                >
                   Choose language / Elige tu idioma
                 </p>
                 <div className="flex items-center justify-center gap-3 sm:gap-5">
@@ -581,7 +601,14 @@ export default function BlushPrincessTemplate({
                       e.stopPropagation();
                       handleOpenEnvelope("en");
                     }}
-                    className="inline-flex items-center justify-center w-36 sm:w-44 h-12 sm:h-14 rounded-full bg-gradient-to-b from-[#DCC084] via-[#B08D3C] to-[#96762E] text-white font-serif-roman text-xs sm:text-sm tracking-[0.25em] uppercase font-bold shadow-lg transition-transform duration-300 hover:scale-105 active:scale-95 cursor-pointer"
+                    className="inline-flex items-center justify-center w-36 sm:w-44 h-12 sm:h-14 rounded-full font-serif-roman text-xs sm:text-sm uppercase transition-transform duration-300 hover:scale-105 active:scale-95 cursor-pointer shadow-md"
+                    style={{
+                      background: "#a37c3f",
+                      color: "#ffffff",
+                      textShadow: "0 1px 2px rgba(0, 0, 0, 0.4)",
+                      fontWeight: "bold",
+                      letterSpacing: "1px",
+                    }}
                   >
                     English
                   </button>
@@ -591,7 +618,14 @@ export default function BlushPrincessTemplate({
                       e.stopPropagation();
                       handleOpenEnvelope("es");
                     }}
-                    className="inline-flex items-center justify-center w-36 sm:w-44 h-12 sm:h-14 rounded-full bg-gradient-to-b from-[#DCC084] via-[#B08D3C] to-[#96762E] text-white font-serif-roman text-xs sm:text-sm tracking-[0.25em] uppercase font-bold shadow-lg transition-transform duration-300 hover:scale-105 active:scale-95 cursor-pointer"
+                    className="inline-flex items-center justify-center w-36 sm:w-44 h-12 sm:h-14 rounded-full font-serif-roman text-xs sm:text-sm uppercase transition-transform duration-300 hover:scale-105 active:scale-95 cursor-pointer shadow-md"
+                    style={{
+                      background: "#a37c3f",
+                      color: "#ffffff",
+                      textShadow: "0 1px 2px rgba(0, 0, 0, 0.4)",
+                      fontWeight: "bold",
+                      letterSpacing: "1px",
+                    }}
                   >
                     Español
                   </button>
@@ -603,16 +637,26 @@ export default function BlushPrincessTemplate({
                   e.stopPropagation();
                   handleOpenEnvelope(isEn ? "en" : "es");
                 }}
-                className={`mt-7 sm:mt-9 flex flex-col items-center justify-center z-30 cursor-pointer group transition-all duration-300 hover:scale-105 active:scale-95 ${
+                className={`mt-6 sm:mt-8 flex flex-col items-center justify-center z-30 cursor-pointer group transition-all duration-300 hover:scale-105 active:scale-95 w-full max-w-lg mx-auto rounded-2xl ${
                   isEnvelopeOpen ? "opacity-0 pointer-events-none" : "opacity-100"
                 }`}
+                style={{
+                  background: "linear-gradient(to top, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0) 100%)",
+                  padding: "16px 0",
+                }}
               >
-                <p className="font-serif-roman text-xs sm:text-sm tracking-[0.25em] uppercase text-[#9D2C4A] font-semibold drop-shadow-sm flex items-center gap-2">
+                <p
+                  className="font-serif-roman text-xs sm:text-sm tracking-[0.25em] uppercase font-bold flex items-center gap-2"
+                  style={{
+                    color: "#4a3728",
+                    fontWeight: 600,
+                  }}
+                >
                   <span className="inline-block animate-bounce text-sm">✨</span>
                   {isEn ? "Tap the envelope to open" : "Toca el sobre para abrir"}
                   <span className="inline-block animate-bounce text-sm">✨</span>
                 </p>
-                <div className="w-16 h-0.5 bg-[#B08D3C]/60 mt-1.5 transition-all duration-300 group-hover:w-28 group-hover:bg-[#B08D3C]" />
+                <div className="w-16 h-0.5 bg-[#a37c3f]/80 mt-1.5 transition-all duration-300 group-hover:w-28 group-hover:bg-[#a37c3f]" />
               </div>
             )}
           </div>
