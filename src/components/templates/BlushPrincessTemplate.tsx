@@ -485,13 +485,13 @@ export default function BlushPrincessTemplate({
             {/* Escenario del sobre: overflow visible, escalado proporcional natural sin recortes */}
             <div
               id="envelopeContainer"
-              className={`envelope-container card-wrapper card-transition-container relative cursor-pointer bg-transparent border-0 shadow-none mx-auto w-full max-w-[500px] ${
+              className={`envelope-container card-wrapper card-transition-container relative cursor-pointer bg-transparent border-0 shadow-none mx-auto w-full max-w-[520px] ${
                 isEnvelopeOpen ? "animate-envelope-pulse" : ""
               }`}
               style={{
                 overflow: "visible",
                 width: "auto",
-                maxWidth: "500px",
+                maxWidth: "520px",
                 margin: "0 auto",
                 background: "transparent",
                 backgroundColor: "transparent",
@@ -499,7 +499,7 @@ export default function BlushPrincessTemplate({
                 boxShadow: "none",
               }}
             >
-              {/* Sobre ABIERTO: escala proporcional a max-width 500px sin recortar solapas laterales */}
+              {/* Sobre ABIERTO: escala proporcional a max-width 520px sin recortar solapas laterales */}
               <div
                 className={`envelope-wrapper relative mx-auto transition-all duration-500 bg-transparent border-0 ${
                   isEnvelopeOpen
@@ -509,7 +509,7 @@ export default function BlushPrincessTemplate({
                 style={{
                   overflow: "visible",
                   width: "auto",
-                  maxWidth: "500px",
+                  maxWidth: "520px",
                   margin: "0 auto",
                   background: "transparent",
                   backgroundColor: "transparent",
@@ -524,7 +524,7 @@ export default function BlushPrincessTemplate({
                   className="envelope-image w-full h-auto object-contain bg-transparent border-0 shadow-none block mx-auto"
                   style={{
                     width: "100%",
-                    maxWidth: "500px",
+                    maxWidth: "520px",
                     height: "auto",
                     objectFit: "contain",
                     margin: "0 auto",
@@ -562,7 +562,7 @@ export default function BlushPrincessTemplate({
                 style={{
                   overflow: "visible",
                   width: "auto",
-                  maxWidth: "500px",
+                  maxWidth: "520px",
                   margin: "0 auto",
                   background: "transparent",
                   backgroundColor: "transparent",
@@ -577,7 +577,7 @@ export default function BlushPrincessTemplate({
                   className="envelope-image w-full h-auto object-contain bg-transparent border-0 block mx-auto"
                   style={{
                     width: "100%",
-                    maxWidth: "500px",
+                    maxWidth: "520px",
                     height: "auto",
                     objectFit: "contain",
                     margin: "0 auto",
