@@ -176,8 +176,13 @@ export default function EnvelopeIntro({
                 className="text-[11px] uppercase tracking-widest text-[#5A3E44]/90 font-serif leading-tight"
                 style={{ fontFamily: "'Cinzel', serif" }}
               >
-                Select your language<br />
-                <span className="text-[10px] opacity-80">Selecciona tu idioma</span>
+                {isOpen ? (
+                  <>Abriendo…<br />
+                  <span className="text-[10px] opacity-80">Opening…</span></>
+                ) : (
+                  <>Select your language<br />
+                  <span className="text-[10px] opacity-80">Selecciona tu idioma</span></>
+                )}
               </p>
               <div className="flex items-center justify-center gap-3 w-full pt-1">
                 <button
