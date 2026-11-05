@@ -210,6 +210,13 @@ iframe::-webkit-scrollbar,
   margin: 0 auto !important;
 }
 
+/* Contenedor del sobre a 520px (la regla compartida lo capa en 500px) */
+.envelope-container,
+.envelope-wrapper,
+#envelopeContainer {
+  max-width: 520px !important;
+}
+
 .language-selector-container,
 .language-modal-box {
   background: transparent !important;
@@ -223,7 +230,7 @@ iframe::-webkit-scrollbar,
 .envelope-wrapper img,
 .envelope-container img {
   width: 100% !important;
-  max-width: 500px !important;
+  max-width: 520px !important;
   height: auto !important;
   display: block !important;
   margin: 0 auto !important;
