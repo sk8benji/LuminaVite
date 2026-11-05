@@ -190,3 +190,16 @@ iframe::-webkit-scrollbar,
 }
 
 
+
+/* Asegurar transparencia estricta en todas las capas intermedias del sobre interactivo */
+.modal-content,
+.card-wrapper,
+.invitation-container,
+.envelope-container,
+#envelopeContainer,
+#envelopeOverlay {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}

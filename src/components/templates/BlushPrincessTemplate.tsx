@@ -482,35 +482,49 @@ export default function BlushPrincessTemplate({
               )}
             </div>
 
-            {/* Escenario del sobre */}
+            {/* Escenario del sobre: 100% transparente sin bordes ni fondos heredados */}
             <div
               id="envelopeContainer"
-              className={`relative w-[min(94vw,430px)] sm:w-[500px] aspect-[787/646] cursor-pointer ${
+              className={`envelope-container card-wrapper relative w-[min(94vw,430px)] sm:w-[500px] aspect-[787/646] cursor-pointer bg-transparent border-0 shadow-none ${
                 isEnvelopeOpen ? "animate-envelope-pulse" : ""
               }`}
+              style={{
+                background: "transparent",
+                backgroundColor: "transparent",
+                border: "none",
+                boxShadow: "none",
+              }}
             >
-              {/* Sobre ABIERTO (retrato, con su carta): entra al abrir */}
+              {/* Sobre ABIERTO: transparente con drop-shadow que sigue la silueta del sobre */}
               <div
-                className={`absolute left-1/2 top-1/2 z-10 w-[min(78vw,320px)] sm:w-[350px] aspect-[1404/1600] -translate-x-1/2 -translate-y-1/2 transition-all duration-500 ${
+                className={`absolute left-1/2 top-1/2 z-10 w-[min(78vw,320px)] sm:w-[350px] aspect-[1404/1600] -translate-x-1/2 -translate-y-1/2 transition-all duration-500 bg-transparent border-0 ${
                   isEnvelopeOpen
                     ? "opacity-100 scale-100"
                     : "opacity-0 scale-95 pointer-events-none"
                 }`}
+                style={{
+                  background: "transparent",
+                  backgroundColor: "transparent",
+                  border: "none",
+                  boxShadow: "none",
+                  filter: "drop-shadow(0 15px 30px rgba(0, 0, 0, 0.22)) drop-shadow(0 5px 12px rgba(0, 0, 0, 0.12))",
+                }}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={BLUSH_ASSETS.envelopeOpen}
                   alt="Sobre abierto"
-                  className="absolute inset-0 w-full h-full object-contain"
-                  style={{
-                    filter: "drop-shadow(0 15px 35px rgba(0, 0, 0, 0.25)) drop-shadow(0 5px 15px rgba(0, 0, 0, 0.15))",
-                  }}
+                  className="absolute inset-0 w-full h-full object-contain bg-transparent border-0 shadow-none"
                 />
                 {/* Texto impreso sobre la carta del arte (zona medida) */}
                 <div
-                  className={`absolute left-[21%] right-[21%] top-[26%] text-center transition-opacity duration-500 ${
+                  className={`absolute left-[21%] right-[21%] top-[26%] text-center transition-opacity duration-500 bg-transparent ${
                     isLetterOut ? "opacity-100" : "opacity-0"
                   }`}
+                  style={{
+                    background: "transparent",
+                    backgroundColor: "transparent",
+                  }}
                 >
                   <p className="font-serif-roman text-[9px] sm:text-[10px] tracking-[0.3em] uppercase text-[#B08D3C] font-semibold">
                     My Quinceañera
@@ -524,19 +538,25 @@ export default function BlushPrincessTemplate({
                 </div>
               </div>
 
-              {/* Sobre CERRADO: encima mientras está cerrado con relieve perimetral y esquinas redondeadas */}
+              {/* Sobre CERRADO: drop-shadow siguiendo la silueta de la imagen (sin box-shadow rectangular) */}
               <div
-                className={`absolute inset-0 z-40 pointer-events-none transition-opacity duration-200 ${
+                className={`absolute inset-0 z-40 pointer-events-none transition-opacity duration-200 bg-transparent border-0 ${
                   isEnvelopeOpen ? "opacity-0" : "opacity-100"
                 }`}
+                style={{
+                  background: "transparent",
+                  backgroundColor: "transparent",
+                  border: "none",
+                  boxShadow: "none",
+                }}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={BLUSH_ASSETS.envelopeClosed}
                   alt="Sobre Cerrado"
-                  className="w-full h-full object-cover rounded-[4px]"
+                  className="w-full h-full object-contain bg-transparent border-0"
                   style={{
-                    boxShadow: "0 15px 35px rgba(0, 0, 0, 0.25), 0 5px 15px rgba(0, 0, 0, 0.15)",
+                    filter: "drop-shadow(0 15px 30px rgba(0, 0, 0, 0.22)) drop-shadow(0 5px 12px rgba(0, 0, 0, 0.12))",
                   }}
                 />
                 {/* Tiara dorada descansando sobre el sobre (como en Canva) */}
