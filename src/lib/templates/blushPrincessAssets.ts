@@ -19,7 +19,7 @@ export const BLUSH_ASSETS = {
 
   // Sobre interactivo
   envelopeClosed: A("sobre-cerrado.png"),
-  envelopeOpen: A("sobre-abierto.webp"),
+  envelopeOpen: A("sobre-abierto.png"),
   letterPaper: A("carta-papel.webp"),
   bowCard: A("tarjeta-mono.webp"),
   seal: A("sello-corona.webp"),

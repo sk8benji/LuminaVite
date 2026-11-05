@@ -505,9 +505,11 @@ export default function BlushPrincessTemplate({
                     : "opacity-0 scale-95 pointer-events-none"
                 }`}
                 style={{
+                  overflow: "visible",
+                  border: "none",
+                  outline: "none",
                   background: "transparent",
                   backgroundColor: "transparent",
-                  border: "none",
                   boxShadow: "none",
                   filter: "drop-shadow(0 15px 30px rgba(0, 0, 0, 0.22)) drop-shadow(0 5px 12px rgba(0, 0, 0, 0.12))",
                 }}
@@ -516,7 +518,12 @@ export default function BlushPrincessTemplate({
                 <img
                   src={BLUSH_ASSETS.envelopeOpen}
                   alt="Sobre abierto"
-                  className="absolute inset-0 w-full h-full object-contain bg-transparent border-0 shadow-none"
+                  className="absolute inset-0 w-full h-full object-contain bg-transparent border-0 shadow-none block"
+                  style={{
+                    overflow: "visible",
+                    border: "none",
+                    outline: "none",
+                  }}
                 />
                 {/* Texto impreso sobre la carta del arte (zona medida) */}
                 <div
