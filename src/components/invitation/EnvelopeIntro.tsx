@@ -77,14 +77,14 @@ export default function EnvelopeIntro({
       } catch {}
     }, 380);
 
-    // 3. Fundido (fade-out) tras 2.6s para apreciar la carta con elegancia
+    // 3. Fundido (fade-out) tras 1.1s: la espera larga sin feedback parecía que no hacía nada
     setTimeout(() => {
       setIsFading(true);
       // 4. Remover completamente del DOM tras la transición
       setTimeout(() => {
         setIsRemoved(true);
       }, 750);
-    }, 2600);
+    }, 1100);
   };
 
   if (isRemoved) return null;
@@ -171,7 +171,7 @@ export default function EnvelopeIntro({
 
           {/* Selector de idioma o botón de apertura */}
           {idiomaDefault === "bilingual" ? (
-            <div className="mt-4 flex flex-col items-center gap-2.5 w-full" onClick={(e) => e.stopPropagation()}>
+            <div className={`mt-4 flex flex-col items-center gap-2.5 w-full transition-opacity duration-300 ${isOpen ? "opacity-50" : ""}`} onClick={(e) => e.stopPropagation()}>
               <p
                 className="text-[11px] uppercase tracking-widest text-[#5A3E44]/90 font-serif leading-tight"
                 style={{ fontFamily: "'Cinzel', serif" }}
@@ -210,10 +210,10 @@ export default function EnvelopeIntro({
                 type="button"
                 onClick={() => handleOpen(isEnDefault ? "en" : "es")}
                 disabled={isOpen}
-                className="w-full py-2.5 px-4 rounded-full text-[11px] font-bold tracking-widest uppercase transition-all duration-300 border border-white/80 bg-white/60 hover:bg-white/90 text-[#5A3E44] shadow-lg flex items-center justify-center gap-2 hover:scale-105 active:scale-95 animate-pulse cursor-pointer"
+                className={`w-full py-2.5 px-4 rounded-full text-[11px] font-bold tracking-widest uppercase transition-all duration-300 border border-white/80 bg-white/60 hover:bg-white/90 text-[#5A3E44] shadow-lg flex items-center justify-center gap-2 hover:scale-105 active:scale-95 cursor-pointer ${isOpen ? "" : "animate-pulse"}`}
                 style={{ fontFamily: "'Cinzel', serif" }}
               >
-                <span>{isEnDefault ? "Tap envelope to open" : "Toca el sobre para abrir"}</span>
+                <span>{isOpen ? (isEnDefault ? "Opening…" : "Abriendo…") : (isEnDefault ? "Tap envelope to open" : "Toca el sobre para abrir")}</span>
                 <Sparkles className="w-3.5 h-3.5 text-[#CE8486]" />
               </button>
             </div>
