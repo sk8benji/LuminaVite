@@ -573,23 +573,29 @@ export default function BlushPrincessTemplate({
                     filter: "drop-shadow(0 18px 28px rgba(0, 0, 0, 0.25)) drop-shadow(0 4px 10px rgba(0, 0, 0, 0.12))",
                   }}
                 />
-                {/* Mariposa decorativa aleteando en la esquina inferior izquierda */}
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={BLUSH_ASSETS.butterflyB}
-                  alt=""
-                  className="envelope-butterfly-accent animate-flutter"
+                {/* Mariposa dorada decorativa en la esquina inferior izquierda con efecto de movimiento/aleteo flotante */}
+                <div
+                  className="envelope-butterfly-accent animate-float pointer-events-none"
                   style={{
                     position: "absolute",
                     bottom: "-10px",
                     left: "-12px",
                     width: "46px",
                     height: "auto",
-                    zIndex: 3,
+                    zIndex: 50,
                     pointerEvents: "none",
-                    filter: "drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2))",
                   }}
-                />
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={BLUSH_ASSETS.butterflyB}
+                    alt=""
+                    className="w-full h-auto object-contain animate-flutter block"
+                    style={{
+                      filter: "drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2))",
+                    }}
+                  />
+                </div>
               </div>
 
               {/* Mariposas que salen volando al abrir */}
