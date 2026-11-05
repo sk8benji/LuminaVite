@@ -206,7 +206,8 @@ iframe::-webkit-scrollbar,
   box-shadow: none !important;
   overflow: visible !important;
   width: auto !important;
-  max-width: 100% !important;
+  max-width: 500px !important;
+  margin: 0 auto !important;
 }
 
 .language-selector-container,
@@ -221,12 +222,12 @@ iframe::-webkit-scrollbar,
 .envelope-image,
 .envelope-wrapper img,
 .envelope-container img {
-  width: 100%;
-  max-width: 460px;
-  height: auto;
-  display: block;
-  margin: 0 auto;
-  object-fit: contain;
+  width: 100% !important;
+  max-width: 500px !important;
+  height: auto !important;
+  display: block !important;
+  margin: 0 auto !important;
+  object-fit: contain !important;
   border: none !important;
   outline: none !important;
   box-shadow: none !important;
