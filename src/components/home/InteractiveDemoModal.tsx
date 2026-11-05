@@ -301,14 +301,6 @@ export default function InteractiveDemoModal({
                 allow="autoplay; clipboard-write"
               />
 
-              {/* Indicación Flotante Pulsante: TOCA EL SOBRE PARA ABRIR (pointer-events-none para permitir clic directo) */}
-              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-30 pointer-events-none w-max max-w-[90%]">
-                <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#2C1F1B]/90 backdrop-blur-md border border-[#C5A059]/60 text-[#FAF8F5] text-[10px] sm:text-xs font-['Cinzel'] tracking-wider uppercase font-bold shadow-lg animate-pulse whitespace-nowrap">
-                  <span>✨</span>
-                  <span>{lang === "es" ? "Toca el sobre para abrir" : "Tap envelope to open"}</span>
-                  <span>👆</span>
-                </div>
-              </div>
             </div>
 
             {/* Barra inferior del iPhone (Solo visible con marco) */}
