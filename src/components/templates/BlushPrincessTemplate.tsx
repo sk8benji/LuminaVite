@@ -786,11 +786,16 @@ export default function BlushPrincessTemplate({
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={BLUSH_ASSETS.monogramST || BLUSH_ASSETS.crownFrame}
+              src={BLUSH_ASSETS.crownFrame}
               alt="Monograma Quinceañera"
               className="w-full h-auto drop-shadow-sm mx-auto block bg-transparent border-0"
               style={{ background: "transparent", backgroundColor: "transparent" }}
             />
+            <div className="absolute inset-0 flex items-center justify-center pt-3 sm:pt-4 pointer-events-none select-none">
+              <span className="font-script text-4xl sm:text-5xl text-[#B08D3C] font-normal drop-shadow-sm">
+                {monograma.replace(/\s+/g, "") || "ST"}
+              </span>
+            </div>
           </div>
 
           {/* Polaroid principal con encuadre armónico y elementos decorativos */}
@@ -802,25 +807,6 @@ export default function BlushPrincessTemplate({
                 boxShadow: "0 10px 25px rgba(0, 0, 0, 0.15)",
               }}
             >
-              {/* Moño rosa en esquina superior derecha */}
-              {BLUSH_ASSETS.bowPink && (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={BLUSH_ASSETS.bowPink}
-                  alt=""
-                  className="polaroid-bow-accent pointer-events-none"
-                  style={{
-                    position: "absolute",
-                    top: "-12px",
-                    right: "-12px",
-                    width: "50px",
-                    height: "auto",
-                    zIndex: 3,
-                    filter: "drop-shadow(0 4px 6px rgba(0, 0, 0, 0.18))",
-                  }}
-                />
-              )}
-
               {/* Contenedor de la foto con object-fit: cover */}
               <div className="relative w-full aspect-[4/5] max-h-[260px] sm:max-h-[300px] overflow-hidden bg-rose-50 rounded-[2px]">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -844,12 +830,13 @@ export default function BlushPrincessTemplate({
                 className="polaroid-flower-accent pointer-events-none"
                 style={{
                   position: "absolute",
-                  bottom: "-15px",
-                  left: "-20px",
-                  width: "95px",
+                  bottom: "-22px",
+                  left: "-32px",
+                  width: "78px",
                   height: "auto",
-                  zIndex: 3,
-                  filter: "drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2))",
+                  zIndex: 2,
+                  filter: "drop-shadow(0 4px 8px rgba(0, 0, 0, 0.18))",
+                  pointerEvents: "none",
                 }}
               />
             </div>

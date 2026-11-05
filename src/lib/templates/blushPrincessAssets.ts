@@ -54,7 +54,7 @@ export const BLUSH_ASSETS = {
 
   // Adornos florales y lazos Quince Glamour
   monogramST: A("3e1051459899aa8daa665e1b97b64d87.png"),
-  flowerCorner: A("f30fb73638774030da3d5d012f6f8810.png"),
+  flowerCorner: A("ramillete-polaroid.png"),
   flowerCornerAlt: A("ddeaa00850e071459546b0aeaff0c4ee.png"),
   bowPink: A("34198773bf15aee1f3707882466e0db8.png"),
   wingsGold: A("18519ee7d320738ed143ab6aec0b1543.png"),
