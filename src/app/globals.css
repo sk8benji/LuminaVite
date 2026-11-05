@@ -191,30 +191,17 @@ iframe::-webkit-scrollbar,
 
 
 
-/* Asegurar transparencia estricta y desactivar recorte en el sobre interactivo */
+/* Asegurar transparencia estricta en todas las capas intermedias del sobre interactivo */
 .modal-content,
 .card-wrapper,
-.card-transition-container,
 .invitation-container,
 .envelope-container,
-.envelope-wrapper,
 #envelopeContainer,
 #envelopeOverlay {
   background: transparent !important;
   background-color: transparent !important;
   border: none !important;
   box-shadow: none !important;
-  overflow: visible !important;
-  width: auto !important;
-  max-width: 500px !important;
-  margin: 0 auto !important;
-}
-
-/* Contenedor del sobre a 520px (la regla compartida lo capa en 500px) */
-.envelope-container,
-.envelope-wrapper,
-#envelopeContainer {
-  max-width: 520px !important;
 }
 
 .language-selector-container,
@@ -225,22 +212,9 @@ iframe::-webkit-scrollbar,
   border: none !important;
 }
 
-/* Escalar la imagen del sobre proporcionalmente sin recortar solapas laterales */
-.envelope-image,
-.envelope-wrapper img,
-.envelope-container img {
-  width: 100% !important;
-  max-width: 520px !important;
-  height: auto !important;
-  display: block !important;
-  margin: 0 auto !important;
-  object-fit: contain !important;
-  border: none !important;
-  outline: none !important;
-  box-shadow: none !important;
+.envelope-image {
   filter: drop-shadow(0 15px 25px rgba(0, 0, 0, 0.25)) drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15)) !important;
 }
-
 
 /* Monograma y escudo superior transparente */
 .monogram-container {
@@ -261,35 +235,23 @@ iframe::-webkit-scrollbar,
 
 .polaroid-flower-accent {
   position: absolute;
-  bottom: -22px !important;
-  left: -32px !important;
-  width: 78px !important;
-  height: auto !important;
-  z-index: 2 !important;
-  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.18)) !important;
-  pointer-events: none !important;
+  bottom: -15px;
+  left: -20px;
+  width: 95px;
+  height: auto;
+  z-index: 2;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+  pointer-events: none;
 }
 
-.polaroid-bow-accent,
-.polaroid-envelope-badge {
-  display: none !important;
+.polaroid-bow-accent {
+  position: absolute;
+  top: -12px;
+  right: -12px;
+  width: 52px;
+  height: auto;
+  z-index: 2;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.15));
+  pointer-events: none;
 }
 
-
-.envelope-wrapper,
-.envelope-container,
-.card-transition-container {
-  overflow: visible !important;
-  width: auto !important;
-  max-width: 100% !important;
-}
-
-.envelope-image,
-.envelope-wrapper img {
-  width: 100% !important;
-  max-width: 460px !important;
-  height: auto !important;
-  display: block !important;
-  margin: 0 auto !important;
-  object-fit: contain !important;
-}
