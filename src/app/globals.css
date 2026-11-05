@@ -203,3 +203,15 @@ iframe::-webkit-scrollbar,
   border: none !important;
   box-shadow: none !important;
 }
+
+.language-selector-container,
+.language-modal-box {
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+.envelope-image {
+  filter: drop-shadow(0 15px 25px rgba(0, 0, 0, 0.25)) drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15)) !important;
+}

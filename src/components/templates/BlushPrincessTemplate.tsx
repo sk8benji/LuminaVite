@@ -554,9 +554,9 @@ export default function BlushPrincessTemplate({
                 <img
                   src={BLUSH_ASSETS.envelopeClosed}
                   alt="Sobre Cerrado"
-                  className="w-full h-full object-contain bg-transparent border-0"
+                  className="envelope-image w-full h-full object-contain bg-transparent border-0"
                   style={{
-                    filter: "drop-shadow(0 15px 30px rgba(0, 0, 0, 0.22)) drop-shadow(0 5px 12px rgba(0, 0, 0, 0.12))",
+                    filter: "drop-shadow(0 15px 25px rgba(0, 0, 0, 0.25)) drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15))",
                   }}
                 />
                 {/* Tiara dorada descansando sobre el sobre (como en Canva) */}
@@ -594,15 +594,18 @@ export default function BlushPrincessTemplate({
               )}
             </div>
 
-            {/* Selector de idioma / pista de toque con degradado de legibilidad */}
+            {/* Selector de idioma / pista de toque con fondo 100% transparente */}
             {isBilingual ? (
               <div
-                className={`mt-6 sm:mt-8 flex flex-col items-center gap-3 z-30 transition-opacity duration-300 w-full max-w-lg mx-auto rounded-2xl ${
+                className={`language-selector-container language-modal-box mt-6 sm:mt-8 flex flex-col items-center gap-3 z-30 transition-opacity duration-300 w-full max-w-lg mx-auto bg-transparent border-0 shadow-none ${
                   isEnvelopeOpen ? "opacity-0 pointer-events-none" : "opacity-100"
                 }`}
                 style={{
-                  background: "linear-gradient(to top, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0) 100%)",
-                  padding: "20px 0",
+                  background: "transparent",
+                  backgroundColor: "transparent",
+                  boxShadow: "none",
+                  border: "none",
+                  padding: "10px 0",
                 }}
               >
                 <p
@@ -657,12 +660,15 @@ export default function BlushPrincessTemplate({
                   e.stopPropagation();
                   handleOpenEnvelope(isEn ? "en" : "es");
                 }}
-                className={`mt-6 sm:mt-8 flex flex-col items-center justify-center z-30 cursor-pointer group transition-all duration-300 hover:scale-105 active:scale-95 w-full max-w-lg mx-auto rounded-2xl ${
+                className={`language-selector-container language-modal-box mt-6 sm:mt-8 flex flex-col items-center justify-center z-30 cursor-pointer group transition-all duration-300 hover:scale-105 active:scale-95 w-full max-w-lg mx-auto bg-transparent border-0 shadow-none ${
                   isEnvelopeOpen ? "opacity-0 pointer-events-none" : "opacity-100"
                 }`}
                 style={{
-                  background: "linear-gradient(to top, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0) 100%)",
-                  padding: "16px 0",
+                  background: "transparent",
+                  backgroundColor: "transparent",
+                  boxShadow: "none",
+                  border: "none",
+                  padding: "10px 0",
                 }}
               >
                 <p
