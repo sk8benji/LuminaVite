@@ -369,17 +369,6 @@ export default async function InvitationPage(props: PageProps) {
       <TemplateDispatcher data={data} />
       {/* Barra fija comercial (solo si el evento la activó en Ajustes) */}
       <ContactBanner data={data} />
-      {/* Fotos de invitados: botón a la página de subida (sin login) */}
-      {data.fotosInvitadosActivas !== false && (
-        <div className="flex justify-center px-5 pb-10 -mt-2">
-          <a
-            href={`/${data.slug}/fotos`}
-            className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-[#7A002A] text-white font-bold shadow-lg"
-          >
-            📸 Subir fotos de la fiesta
-          </a>
-        </div>
-      )}
     </>
   );
 }
