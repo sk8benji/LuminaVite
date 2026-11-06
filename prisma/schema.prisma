@@ -155,6 +155,12 @@ model Evento {
   regalosZelle       String?         // Cuenta o teléfono de Zelle
   regalosCashApp     String?         // $Cashtag o cuenta opcional
   rsvpFechaLimite    String?         // Ej: "Favor de confirmar antes del 20 de Octubre"
+  rsvpTitulo         String?         // Título RSVP ES (ej: "¿SERÁS PARTE DE") — vacío = texto de la plantilla
+  rsvpTituloEn       String?         // Título RSVP EN (ej: "WILL YOU JOIN US?")
+  rsvpSubtitulo      String?         // Subtítulo RSVP ES (ej: "Mi Celebración?")
+  rsvpSubtituloEn    String?         // Subtítulo RSVP EN (ej: "Our Celebration?")
+  rsvpTelefonoTitulo String?         // Línea "confirmar por teléfono" ES — vacío = texto de la plantilla
+  rsvpTelefonoTituloEn String?       // Línea "confirmar por teléfono" EN
   rsvpDiasAntes      Int?            @default(15) // Días de anticipación para confirmar RSVP
   autorBendicion     String?         // Autor o firma de la bendición
   textoDisco         String?         // Texto sobre el vinilo giratorio

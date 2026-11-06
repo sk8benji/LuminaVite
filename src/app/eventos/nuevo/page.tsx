@@ -116,6 +116,9 @@ function NuevoEventoContent() {
   const [showMobilePreview, setShowMobilePreview] = useState(false);
   // Título tecleado (o venido por ?nombre=): la invitación ya es de un cliente real
   const [tituloEditado, setTituloEditado] = useState(false);
+  // La frase de fecha límite del RSVP: true si el usuario la escribió a mano
+  // en la sección RSVP (entonces fecha/días/idioma ya no la sobreescriben).
+  const [rsvpFraseManual, setRsvpFraseManual] = useState(false);
   const [editorMode, setEditorMode] = useState<"sections" | "settings">("sections");
   // Sección activa del editor: se comparte con el preview del teléfono para
   // que al elegir una sección el teléfono se mueva a esa parte.
@@ -187,6 +190,12 @@ function NuevoEventoContent() {
     regalosZelle: "",
     regalosCashApp: "",
     rsvpFechaLimite: "Favor de confirmar antes del 15 de Noviembre",
+    rsvpTitulo: "",
+    rsvpTituloEn: "",
+    rsvpSubtitulo: "",
+    rsvpSubtituloEn: "",
+    rsvpTelefonoTitulo: "",
+    rsvpTelefonoTituloEn: "",
     rsvpDiasAntes: 15,
     coloresReservados: ["#FCECEE", "#FFFFFF"],
     itinerarioJson: DEMO_ITINERARIO,
@@ -599,6 +608,8 @@ function NuevoEventoContent() {
   const updateField = (field: keyof InvitationData, value: any) => {
     // El título tecleado marca la invitación como personalizada (ver handleSelectTemplate)
     if (field === "titulo") setTituloEditado(true);
+    // La frase de fecha límite escrita a mano ya no se sobreescribe sola.
+    if (field === "rsvpFechaLimite") setRsvpFraseManual(true);
     if (field === "slug") setSlugError(false);
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
@@ -795,7 +806,10 @@ function NuevoEventoContent() {
       ...prev,
       rsvpDiasAntes: val,
       fechaLimiteRsvp: rsvpCalc.fechaLimiteIso,
-      rsvpFechaLimite: prev.idiomaDefault === "en" ? rsvpCalc.fraseEn : rsvpCalc.fraseEs,
+      // Si el usuario escribió la frase a mano en la sección RSVP, no sobreescribirla.
+      ...(rsvpFraseManual
+        ? {}
+        : { rsvpFechaLimite: prev.idiomaDefault === "en" ? rsvpCalc.fraseEn : rsvpCalc.fraseEs }),
     }));
   };
 
@@ -811,7 +825,10 @@ function NuevoEventoContent() {
       fechaPlacaMes: formatted.mes,
       fechaPlacaHora: formatted.horaPlaca,
       fechaLimiteRsvp: rsvpCalc.fechaLimiteIso,
-      rsvpFechaLimite: prev.idiomaDefault === "en" ? rsvpCalc.fraseEn : rsvpCalc.fraseEs,
+      // Si el usuario escribió la frase a mano en la sección RSVP, no sobreescribirla.
+      ...(rsvpFraseManual
+        ? {}
+        : { rsvpFechaLimite: prev.idiomaDefault === "en" ? rsvpCalc.fraseEn : rsvpCalc.fraseEs }),
     }));
   };
 
@@ -840,7 +857,8 @@ function NuevoEventoContent() {
       fechaPlacaHora: formatted.horaPlaca,
       subtitulo: newLang === "en" ? (prev.subtitulo === "Mis Quince Años" ? "My Quinceañera" : prev.subtitulo) : prev.subtitulo,
       countdownEncabezado: newLang === "en" ? "Counting down..." : "Faltan sólo...",
-      rsvpFechaLimite: newLang === "en" ? rsvpCalc.fraseEn : rsvpCalc.fraseEs,
+      // Si el usuario escribió la frase a mano en la sección RSVP, no sobreescribirla.
+      ...(rsvpFraseManual ? {} : { rsvpFechaLimite: newLang === "en" ? rsvpCalc.fraseEn : rsvpCalc.fraseEs }),
     }));
   };
 
@@ -898,6 +916,8 @@ function NuevoEventoContent() {
       }
     } catch {}
     if (preset) {
+      // El preset trae su frase de ejemplo: vuelve a ser automática.
+      setRsvpFraseManual(false);
       setFormData((prev) => {
         const isCustomName =
           isEditMode ||
@@ -1160,6 +1180,13 @@ function NuevoEventoContent() {
             configPlantilla: parsedConfig,
             fechaEvento: fechaEventoLocal ?? prev.fechaEvento,
           }));
+          // Si la frase guardada no es la automática de su fecha/días, el
+          // usuario la escribió a mano: que un cambio de fecha no la borre.
+          const autoFrase = computeRsvpPhrases(ev.fechaEvento, Number(ev.rsvpDiasAntes) || 15);
+          const fraseGuardada = (ev.rsvpFechaLimite || "").trim();
+          setRsvpFraseManual(
+            fraseGuardada !== "" && fraseGuardada !== autoFrase.fraseEs && fraseGuardada !== autoFrase.fraseEn
+          );
         }
       })
       .catch((err) => {
@@ -1208,9 +1235,14 @@ function NuevoEventoContent() {
           limiteParsed && !isNaN(limiteParsed.getTime())
             ? limiteParsed.toISOString()
             : rsvpCalc.fechaLimiteIso,
-        rsvpFechaLimite:
-          formData.rsvpFechaLimite ||
-          (formData.idiomaDefault === "en" ? rsvpCalc.fraseEn : rsvpCalc.fraseEs),
+        // Frase manual (escrita en la sección RSVP) se respeta; si no, se
+        // recalcula siempre desde fecha + días para no guardar una vieja.
+        rsvpFechaLimite: rsvpFraseManual
+          ? formData.rsvpFechaLimite ||
+            (formData.idiomaDefault === "en" ? rsvpCalc.fraseEn : rsvpCalc.fraseEs)
+          : formData.idiomaDefault === "en"
+            ? rsvpCalc.fraseEn
+            : rsvpCalc.fraseEs,
       };
 
       // En modo crear, un slug existente BLOQUEA: nunca se pisa en silencio

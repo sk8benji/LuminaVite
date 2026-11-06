@@ -886,7 +886,7 @@ export default function QuinceRosadoTemplate({
           <div className="max-w-[360px] mx-auto">
             {/* Tarjeta de Confirmación de Asistencia Dinámica con Búsqueda de Invitados */}
             {isSectionActive("rsvp") && (
-              <div className="mb-8">
+              <div data-preview-section="rsvp" className="mb-8">
                 <DynamicRsvpForm
                   slug={data.slug || "demo"}
                   eventTitle={data.titulo}
@@ -897,6 +897,12 @@ export default function QuinceRosadoTemplate({
                   primaryColor="#7A002A"
                   accentBgColor="bg-white/95"
                   deadlineText={data.rsvpFechaLimite || (isEn ? "PLEASE CONFIRM YOUR ATTENDANCE BEFORE NOVEMBER 15." : "POR FAVOR, CONFIRMA TU ASISTENCIA ANTES DEL 20 DE OCTUBRE.")}
+                  rsvpTitulo={data.rsvpTitulo}
+                  rsvpTituloEn={data.rsvpTituloEn}
+                  rsvpSubtitulo={data.rsvpSubtitulo}
+                  rsvpSubtituloEn={data.rsvpSubtituloEn}
+                  rsvpTelefonoTitulo={data.rsvpTelefonoTitulo}
+                  rsvpTelefonoTituloEn={data.rsvpTelefonoTituloEn}
                   lang={currentLang}
                   permiteSms={data.permiteSms}
                   tipoPlan={data.tipoPlan}

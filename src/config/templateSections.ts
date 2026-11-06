@@ -59,8 +59,16 @@ export const SECCIONES_QUINCE_ROSADO: SeccionMeta[] = [
     legacyColumn: 'mostrarFrasePersonalizada',
   },
   {
-    id: 'fotoZapatos1',
+    id: 'rsvp',
     numero: 4,
+    label: 'RSVP',
+    descripcion: 'Títulos de la tarjeta de confirmación en español e inglés y la frase de fecha límite.',
+    icono: 'Users',
+    defaultEnabled: true,
+  },
+  {
+    id: 'fotoZapatos1',
+    numero: 5,
     label: 'Zapato Cristal',
     descripcion: 'Fotografía vertical de transición hacia los templos y recepciones.',
     icono: 'Image',
@@ -68,7 +76,7 @@ export const SECCIONES_QUINCE_ROSADO: SeccionMeta[] = [
   },
   {
     id: 'ubicaciones',
-    numero: 5,
+    numero: 6,
     label: 'Ubicaciones',
     descripcion: 'Detalles de la iglesia y salón de fiesta con botones directos hacia Google Maps.',
     icono: 'MapPin',
@@ -76,7 +84,7 @@ export const SECCIONES_QUINCE_ROSADO: SeccionMeta[] = [
   },
   {
     id: 'dressCode',
-    numero: 6,
+    numero: 7,
     label: 'Vestimenta',
     descripcion: 'Etiqueta formal o de gala y especificación de colores reservados para la festejada.',
     icono: 'Sliders',
@@ -85,7 +93,7 @@ export const SECCIONES_QUINCE_ROSADO: SeccionMeta[] = [
   },
   {
     id: 'mesaRegalos',
-    numero: 7,
+    numero: 8,
     label: 'Mesa de Regalos',
     descripcion: 'Aviso de cofre en recepción, enlaces de wishlist y cuentas Zelle, Venmo, PayPal.',
     icono: 'Gift',
@@ -94,7 +102,7 @@ export const SECCIONES_QUINCE_ROSADO: SeccionMeta[] = [
   },
   {
     id: 'itinerario',
-    numero: 8,
+    numero: 9,
     label: 'Plan de la Fiesta',
     descripcion: 'Línea de tiempo vertical con rosas decorativas e hitos de la fiesta (ES / EN).',
     icono: 'Clock',
@@ -102,7 +110,7 @@ export const SECCIONES_QUINCE_ROSADO: SeccionMeta[] = [
   },
   {
     id: 'fotoZapatos2',
-    numero: 9,
+    numero: 10,
     label: 'Foto en Cojín',
     descripcion: 'Fotografía en cojín, mensaje de despedida y pautas para pequeños invitados.',
     icono: 'Image',
@@ -110,7 +118,7 @@ export const SECCIONES_QUINCE_ROSADO: SeccionMeta[] = [
   },
   {
     id: 'corteHonor',
-    numero: 10,
+    numero: 11,
     label: 'Corte de Honor',
     descripcion: 'Quinceañera, Chambelanes, Damiselas, Damitas de Hojitas, Padres, Padrinos y Agradecimiento.',
     icono: 'Crown',
@@ -118,7 +126,7 @@ export const SECCIONES_QUINCE_ROSADO: SeccionMeta[] = [
   },
   {
     id: 'cuentaRegresiva',
-    numero: 11,
+    numero: 12,
     label: 'Cuenta Regresiva',
     descripcion: 'Cronómetro en vivo hacia el evento y calendario mensual con lazo de seda en el día de la fiesta.',
     icono: 'Hourglass',
@@ -126,7 +134,7 @@ export const SECCIONES_QUINCE_ROSADO: SeccionMeta[] = [
   },
   {
     id: 'videoDespedida',
-    numero: 12,
+    numero: 13,
     label: 'Video',
     descripcion: 'Reproductor de video (YouTube o MP4) y foto final arqueada de despedida.',
     icono: 'Video',
@@ -134,7 +142,7 @@ export const SECCIONES_QUINCE_ROSADO: SeccionMeta[] = [
   },
   {
     id: 'musica',
-    numero: 13,
+    numero: 14,
     label: 'Música',
     descripcion: 'Reproductor de audio flotante y música instrumental de fondo.',
     icono: 'Music',
@@ -150,13 +158,14 @@ export const SECCIONES_QUINCE_ROSADO: SeccionMeta[] = [
  * en el editor pero la plantilla nunca los muestra. BabyBlue tampoco tiene
  * dedicatoria; ElegantRose tampoco; Coraline no tiene mesa de regalos ni
  * corte; Fairytale (boda) no tiene dedicatoria ni corte. QuinceRosado es
- * la única con las 13. Si una plantilla no está aquí, se listan las 13
+ * la única con las 14. Si una plantilla no está aquí, se listan las 14
  * (comportamiento anterior) para no desactivar nada sin evidencia.
  */
 const TODAS_MENOS_ZAPATOS_VIDEO: SeccionId[] = [
   'portada',
   'medallonFecha',
   'dedicatoria',
+  'rsvp',
   'ubicaciones',
   'dressCode',
   'mesaRegalos',
@@ -171,6 +180,7 @@ export const SECCIONES_POR_PLANTILLA: Record<string, SeccionId[]> = {
     'portada',
     'medallonFecha',
     'dedicatoria',
+    'rsvp',
     'fotoZapatos1',
     'ubicaciones',
     'dressCode',
@@ -195,6 +205,7 @@ export const SECCIONES_POR_PLANTILLA: Record<string, SeccionId[]> = {
   BABY_BLUE: [
     'portada',
     'medallonFecha',
+    'rsvp',
     'ubicaciones',
     'dressCode',
     'mesaRegalos',
@@ -206,6 +217,7 @@ export const SECCIONES_POR_PLANTILLA: Record<string, SeccionId[]> = {
   ELEGANT_ROSE: [
     'portada',
     'medallonFecha',
+    'rsvp',
     'ubicaciones',
     'dressCode',
     'mesaRegalos',
@@ -218,6 +230,7 @@ export const SECCIONES_POR_PLANTILLA: Record<string, SeccionId[]> = {
     'portada',
     'medallonFecha',
     'dedicatoria',
+    'rsvp',
     'ubicaciones',
     'dressCode',
     'itinerario',
@@ -227,6 +240,7 @@ export const SECCIONES_POR_PLANTILLA: Record<string, SeccionId[]> = {
   FAIRYTALE_CHATEAU: [
     'portada',
     'medallonFecha',
+    'rsvp',
     'ubicaciones',
     'dressCode',
     'mesaRegalos',

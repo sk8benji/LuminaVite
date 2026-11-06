@@ -227,6 +227,12 @@ export default function CoralineThemedTemplate({
           eventoId={data.id}
           eventoTitulo={data.titulo}
           telefonoWhatsapp={data.telefonoWhatsappRsvp}
+          rsvpTitulo={data.rsvpTitulo}
+          rsvpTituloEn={data.rsvpTituloEn}
+          rsvpSubtitulo={data.rsvpSubtitulo}
+          rsvpSubtituloEn={data.rsvpSubtituloEn}
+          rsvpTelefonoTitulo={data.rsvpTelefonoTitulo}
+          rsvpTelefonoTituloEn={data.rsvpTelefonoTituloEn}
           maxPases={data.maxPasesPorInvitado ?? 2}
           fechaLimite={data.fechaLimiteRsvp}
           template={template}

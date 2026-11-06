@@ -1121,6 +1121,12 @@ export default function ElegantRoseTemplate({
                 primaryColor="#8B4513"
                 accentBgColor="bg-white/95"
                 deadlineText={data.rsvpFechaLimite || formatFechaLimiteRsvp(data.fechaLimiteRsvp, isEn ? "en" : "es") || (isEn ? "BY JUNE 20TH" : "ANTES DEL 20 DE JUNIO")}
+                rsvpTitulo={data.rsvpTitulo}
+                rsvpTituloEn={data.rsvpTituloEn}
+                rsvpSubtitulo={data.rsvpSubtitulo}
+                rsvpSubtituloEn={data.rsvpSubtituloEn}
+                rsvpTelefonoTitulo={data.rsvpTelefonoTitulo}
+                rsvpTelefonoTituloEn={data.rsvpTelefonoTituloEn}
                 lang={lang}
                 permiteSms={data.permiteSms}
                 tipoPlan={data.tipoPlan}

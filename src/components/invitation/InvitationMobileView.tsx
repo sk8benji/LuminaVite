@@ -73,6 +73,12 @@ export interface InvitationData {
   regalosZelle?: string | null;
   regalosCashApp?: string | null;
   rsvpFechaLimite?: string | null;
+  rsvpTitulo?: string | null;
+  rsvpTituloEn?: string | null;
+  rsvpSubtitulo?: string | null;
+  rsvpSubtituloEn?: string | null;
+  rsvpTelefonoTitulo?: string | null;
+  rsvpTelefonoTituloEn?: string | null;
   rsvpDiasAntes?: number | null;
   emailOrganizador?: string | null;
   aforoTotal?: number;
@@ -420,6 +426,12 @@ export default function InvitationMobileView({
           eventoId={data.id}
           eventoTitulo={data.titulo}
           telefonoWhatsapp={data.telefonoWhatsappRsvp}
+          rsvpTitulo={data.rsvpTitulo}
+          rsvpTituloEn={data.rsvpTituloEn}
+          rsvpSubtitulo={data.rsvpSubtitulo}
+          rsvpSubtituloEn={data.rsvpSubtituloEn}
+          rsvpTelefonoTitulo={data.rsvpTelefonoTitulo}
+          rsvpTelefonoTituloEn={data.rsvpTelefonoTituloEn}
           maxPases={data.maxPasesPorInvitado ?? 4}
           fechaLimite={data.fechaLimiteRsvp}
           template={template}

@@ -692,7 +692,7 @@ export default function Miss15Template({
 
           <div className="bg-white/95 backdrop-blur-sm p-6 pt-10 rounded-3xl border border-[#D8B772]/60 shadow-xl text-center relative z-10">
             <h3 className="font-script text-4xl text-[#9A6A30] my-1">
-              {isEn ? "RSVP" : "Confirmar Asistencia"}
+              {isEn ? (data.rsvpTituloEn || "RSVP") : (data.rsvpTitulo || "Confirmar Asistencia")}
             </h3>
             <p className="text-[11px] text-slate-500 mb-5 uppercase tracking-wider font-serif-roman font-semibold">
               {(data.fechaLimiteRsvp && isEn) ? `Please confirm by ${data.fechaLimiteRsvp}` : rsvpDeadlinePhrase}

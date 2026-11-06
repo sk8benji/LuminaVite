@@ -35,6 +35,13 @@ interface DynamicRsvpFormProps {
   primaryColor?: string; // Ej: "#7A002A" para rosa o "#C5A059" para dorado
   accentBgColor?: string;
   deadlineText?: string;
+  // Títulos personalizables (sección RSVP del editor). Vacío = texto original.
+  rsvpTitulo?: string | null;
+  rsvpTituloEn?: string | null;
+  rsvpSubtitulo?: string | null;
+  rsvpSubtituloEn?: string | null;
+  rsvpTelefonoTitulo?: string | null;
+  rsvpTelefonoTituloEn?: string | null;
   lang?: "es" | "en";
   permiteSms?: boolean;
   tipoPlan?: string | null;
@@ -53,6 +60,12 @@ export default function DynamicRsvpForm({
   primaryColor = "#7A002A",
   accentBgColor = "bg-white",
   deadlineText = "Favor de confirmar antes de la fecha límite",
+  rsvpTitulo,
+  rsvpTituloEn,
+  rsvpSubtitulo,
+  rsvpSubtituloEn,
+  rsvpTelefonoTitulo,
+  rsvpTelefonoTituloEn,
   lang = "es",
   permiteSms,
   tipoPlan,
@@ -375,13 +388,13 @@ export default function DynamicRsvpForm({
               className="text-xs font-bold uppercase tracking-[0.2em] mt-1"
               style={{ color: primaryColor }}
             >
-              {isEn ? "WILL YOU JOIN US?" : "¿SERÁS PARTE DE"}
+              {isEn ? (rsvpTituloEn || "WILL YOU JOIN US?") : (rsvpTitulo || "¿SERÁS PARTE DE")}
             </h3>
             <h2
               className="text-3xl font-serif italic mt-0.5"
               style={{ color: primaryColor }}
             >
-              {isEn ? "Our Celebration?" : "Mi Celebración?"}
+              {isEn ? (rsvpSubtituloEn || "Our Celebration?") : (rsvpSubtitulo || "Mi Celebración?")}
             </h2>
             <p className="text-[10px] font-semibold tracking-wider uppercase text-stone-500 mt-2">
               {deadlineText}
@@ -488,7 +501,7 @@ export default function DynamicRsvpForm({
             <div className="pt-3.5 mt-2 border-t border-pink-100/90 text-center animate-fade-in">
               <p className="text-[10px] uppercase font-bold tracking-wider text-stone-400 mb-1.5 flex items-center justify-center gap-1.5">
                 <Phone className="w-3 h-3 text-[#B74F5F]" />
-                <span>{isEn ? "¿Prefer to RSVP by phone?" : "¿Prefieres confirmar por teléfono?"}</span>
+                <span>{isEn ? (rsvpTelefonoTituloEn || "¿Prefer to RSVP by phone?") : (rsvpTelefonoTitulo || "¿Prefieres confirmar por teléfono?")}</span>
               </p>
               <a
                 href={`tel:${dialPhone}`}
@@ -811,13 +824,13 @@ export default function DynamicRsvpForm({
                 className="text-xs font-bold uppercase tracking-[0.2em] mt-1"
                 style={{ color: primaryColor }}
               >
-                {isEn ? "WILL YOU JOIN US?" : "CONFIRMA TU ASISTENCIA"}
+                {isEn ? (rsvpTituloEn || "WILL YOU JOIN US?") : (rsvpTitulo || "CONFIRMA TU ASISTENCIA")}
               </h3>
               <h2
                 className="text-3xl font-serif italic mt-0.5"
                 style={{ color: primaryColor }}
               >
-                {isEn ? "Our Celebration" : "Nuestra Celebración"}
+                {isEn ? (rsvpSubtituloEn || "Our Celebration") : (rsvpSubtitulo || "Nuestra Celebración")}
               </h2>
               <p className="text-[10px] font-semibold tracking-wider uppercase text-stone-500 mt-2">
                 {deadlineText}
@@ -963,7 +976,7 @@ export default function DynamicRsvpForm({
             <div className="pt-3 mt-1 border-t border-pink-100/90 text-center animate-fade-in">
               <p className="text-[10px] uppercase font-bold tracking-wider text-stone-400 mb-1.5 flex items-center justify-center gap-1.5">
                 <Phone className="w-3 h-3 text-[#B74F5F]" />
-                <span>{isEn ? "¿Prefer to RSVP by phone?" : "¿Prefieres confirmar por teléfono?"}</span>
+                <span>{isEn ? (rsvpTelefonoTituloEn || "¿Prefer to RSVP by phone?") : (rsvpTelefonoTitulo || "¿Prefieres confirmar por teléfono?")}</span>
               </p>
               <a
                 href={`tel:${dialPhone}`}

@@ -1012,7 +1012,191 @@ export default function TemplateSectionBuilder({
                   )}
 
                   {/* ──────────────────────────────────────────────────────────
-                      SECCIÓN 4: FOTO ZAPATILLAS 1
+                      SECCIÓN 4: RSVP (CONFIRMACIÓN DE ASISTENCIA)
+                  ────────────────────────────────────────────────────────── */}
+                  {sec.id === "rsvp" && (
+                    <div className="space-y-4">
+                      <p className="text-xs text-stone-500">
+                        Personaliza los títulos de la tarjeta de confirmación. Si un campo queda vacío, la invitación usa el título original de la plantilla.
+                      </p>
+                      {/* Título ES y EN */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+                            Título en Español (🇲🇽 ES)
+                          </label>
+                          <input
+                            type="text"
+                            value={formData.rsvpTitulo || ""}
+                            onChange={(e) => updateField("rsvpTitulo", e.target.value)}
+                            placeholder="¿SERÁS PARTE DE"
+                            className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
+                          />
+                        </div>
+                        <div>
+                          <div className="flex items-center justify-between mb-1">
+                            <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider">
+                              Título en Inglés (🇺🇸 EN)
+                            </label>
+                            <button
+                              type="button"
+                              onClick={() =>
+                                translateWithAi(
+                                  formData.rsvpTitulo || "",
+                                  "rsvpTituloEn",
+                                  "en"
+                                )
+                              }
+                              disabled={translatingField === "rsvpTituloEn"}
+                              className="inline-flex items-center gap-1 text-[11px] font-bold text-[#7A002A] hover:underline cursor-pointer disabled:opacity-50"
+                            >
+                              {translatingField === "rsvpTituloEn" ? (
+                                <Loader2 className="w-3 h-3 animate-spin" />
+                              ) : (
+                                <Sparkles className="w-3 h-3" />
+                              )}
+                              <span>
+                                {translatingField === "rsvpTituloEn"
+                                  ? "Traduciendo..."
+                                  : "Traducir con IA"}
+                              </span>
+                            </button>
+                          </div>
+                          <input
+                            type="text"
+                            value={formData.rsvpTituloEn || ""}
+                            onChange={(e) => updateField("rsvpTituloEn", e.target.value)}
+                            placeholder="WILL YOU JOIN US?"
+                            className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
+                          />
+                        </div>
+                      </div>
+                      {/* Subtítulo ES y EN */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+                            Subtítulo en Español (🇲🇽 ES)
+                          </label>
+                          <input
+                            type="text"
+                            value={formData.rsvpSubtitulo || ""}
+                            onChange={(e) => updateField("rsvpSubtitulo", e.target.value)}
+                            placeholder="Mi Celebración?"
+                            className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
+                          />
+                        </div>
+                        <div>
+                          <div className="flex items-center justify-between mb-1">
+                            <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider">
+                              Subtítulo en Inglés (🇺🇸 EN)
+                            </label>
+                            <button
+                              type="button"
+                              onClick={() =>
+                                translateWithAi(
+                                  formData.rsvpSubtitulo || "",
+                                  "rsvpSubtituloEn",
+                                  "en"
+                                )
+                              }
+                              disabled={translatingField === "rsvpSubtituloEn"}
+                              className="inline-flex items-center gap-1 text-[11px] font-bold text-[#7A002A] hover:underline cursor-pointer disabled:opacity-50"
+                            >
+                              {translatingField === "rsvpSubtituloEn" ? (
+                                <Loader2 className="w-3 h-3 animate-spin" />
+                              ) : (
+                                <Sparkles className="w-3 h-3" />
+                              )}
+                              <span>
+                                {translatingField === "rsvpSubtituloEn"
+                                  ? "Traduciendo..."
+                                  : "Traducir con IA"}
+                              </span>
+                            </button>
+                          </div>
+                          <input
+                            type="text"
+                            value={formData.rsvpSubtituloEn || ""}
+                            onChange={(e) => updateField("rsvpSubtituloEn", e.target.value)}
+                            placeholder="Our Celebration?"
+                            className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
+                          />
+                        </div>
+                      </div>
+                      {/* Frase de fecha límite */}
+                      <div>
+                        <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+                          Frase de fecha límite
+                        </label>
+                        <input
+                          type="text"
+                          value={formData.rsvpFechaLimite || ""}
+                          onChange={(e) => updateField("rsvpFechaLimite", e.target.value)}
+                          placeholder="Favor de confirmar antes del 24 de Febrero"
+                          className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
+                        />
+                        <p className="text-[11px] text-stone-500 mt-1">
+                          Se genera sola desde la fecha del evento y los días de anticipación. Si la escribes a mano, ya no se sobreescribe al cambiar la fecha o los días.
+                        </p>
+                      </div>
+                      {/* Línea "confirmar por teléfono" ES y EN */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+                            Confirmar por teléfono ES (🇲🇽 ES)
+                          </label>
+                          <input
+                            type="text"
+                            value={formData.rsvpTelefonoTitulo || ""}
+                            onChange={(e) => updateField("rsvpTelefonoTitulo", e.target.value)}
+                            placeholder="¿Prefieres confirmar por teléfono?"
+                            className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
+                          />
+                        </div>
+                        <div>
+                          <div className="flex items-center justify-between mb-1">
+                            <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider">
+                              Confirmar por teléfono EN (🇺🇸 EN)
+                            </label>
+                            <button
+                              type="button"
+                              onClick={() =>
+                                translateWithAi(
+                                  formData.rsvpTelefonoTitulo || "",
+                                  "rsvpTelefonoTituloEn",
+                                  "en"
+                                )
+                              }
+                              disabled={translatingField === "rsvpTelefonoTituloEn"}
+                              className="inline-flex items-center gap-1 text-[11px] font-bold text-[#7A002A] hover:underline cursor-pointer disabled:opacity-50"
+                            >
+                              {translatingField === "rsvpTelefonoTituloEn" ? (
+                                <Loader2 className="w-3 h-3 animate-spin" />
+                              ) : (
+                                <Sparkles className="w-3 h-3" />
+                              )}
+                              <span>
+                                {translatingField === "rsvpTelefonoTituloEn"
+                                  ? "Traduciendo..."
+                                  : "Traducir con IA"}
+                              </span>
+                            </button>
+                          </div>
+                          <input
+                            type="text"
+                            value={formData.rsvpTelefonoTituloEn || ""}
+                            onChange={(e) => updateField("rsvpTelefonoTituloEn", e.target.value)}
+                            placeholder="Prefer to RSVP by phone?"
+                            className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+
+                  {/* ──────────────────────────────────────────────────────────
+                      SECCIÓN 5: FOTO ZAPATILLAS 1
                   ────────────────────────────────────────────────────────── */}
                   {sec.id === "fotoZapatos1" && (
                     <div className="space-y-4">
