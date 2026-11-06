@@ -785,10 +785,15 @@ export default function QuinceEraPinkTemplate({
               <h4 className="font-serif-roman text-sm tracking-[0.35em] uppercase text-[#C4667D] font-bold">
                 {isEn ? "Dress Code" : "Código de Vestimenta"}
               </h4>
-              <p className="font-serif-roman text-xs sm:text-sm tracking-[0.2em] uppercase text-[#3E2A2E] mt-2 leading-relaxed">
-                {(isEn ? data.dressCodeNotaEn : data.dressCodeNota) ||
-                  (isEn ? "Soft pastels & semi-formal elegant" : "Pasteles suaves y semiformal elegante")}
-              </p>
+              {(() => {
+                const note = (isEn ? data.dressCodeNotaEn : data.dressCodeNota) || null;
+                if (!note) return null;
+                return (
+                  <p className="font-serif-roman text-xs sm:text-sm tracking-[0.2em] uppercase text-[#3E2A2E] mt-2 leading-relaxed">
+                    {note}
+                  </p>
+                );
+              })()}
               <div className="flex items-center justify-center gap-3 mt-4">
                 {swatches.map((c: string, i: number) => (
                   <span key={i} className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-white shadow-md" style={{ backgroundColor: c }} />

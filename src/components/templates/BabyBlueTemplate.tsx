@@ -992,11 +992,7 @@ export default function BabyBlueTemplate({
               {
                 n: "01",
                 q: isEn ? "What is the dress code?" : "¿Cuál es el código de vestimenta?",
-                a:
-                  (isEn ? data.dressCodeNotaEn : data.dressCodeNota) ||
-                  (isEn
-                    ? "Guests are encouraged to dress in formal attire in harmony with the event's theme."
-                    : "Se invita a los invitados a vestir formal, en armonía con el tema del evento."),
+                a: (isEn ? data.dressCodeNotaEn : data.dressCodeNota) || null,
               },
               {
                 n: "02",
@@ -1012,7 +1008,7 @@ export default function BabyBlueTemplate({
                   ? "Your presence is the greatest gift of all. If you wish to give something extra, registry details are provided above."
                   : "Tu presencia es el regalo más grande. Si deseas dar algo extra, arriba están los detalles del registro.",
               },
-            ].map((f) => (
+            ].filter((f) => f.a).map((f) => (
               <div key={f.n} className="bg-white rounded-3xl border border-[#E4EEF6] shadow-md px-6 py-5 text-left">
                 <p className="font-serif-roman text-[10px] tracking-[0.3em] text-[#7FA8C9] font-bold">{f.n}</p>
                 <h5 className="font-serif-roman text-sm sm:text-base font-bold text-[#22344A] mt-1">{f.q}</h5>

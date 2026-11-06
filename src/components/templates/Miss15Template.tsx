@@ -607,12 +607,15 @@ export default function Miss15Template({
               <h4 className="font-serif-roman text-sm tracking-[0.35em] uppercase text-[#B0703C] font-bold">
                 {isEn ? "Dress Code" : "Código de Vestimenta"}
               </h4>
-              <p className="text-sm text-[#2B2118]/85 leading-relaxed mt-2 font-serif-roman">
-                {(isEn ? data.dressCodeNotaEn : data.dressCodeNota) ||
-                  (isEn
-                    ? "Elegant & Semi-Formal. Guests are encouraged to wear pastel or soft colors to match the theme."
-                    : "Elegante y semiformal. Se invita a los invitados a usar colores pastel o suaves a tono con el tema.")}
-              </p>
+              {(() => {
+                const note = (isEn ? data.dressCodeNotaEn : data.dressCodeNota) || null;
+                if (!note) return null;
+                return (
+                  <p className="text-sm text-[#2B2118]/85 leading-relaxed mt-2 font-serif-roman">
+                    {note}
+                  </p>
+                );
+              })()}
             </div>
 
             {data.mostrarMesaRegalos !== false && (

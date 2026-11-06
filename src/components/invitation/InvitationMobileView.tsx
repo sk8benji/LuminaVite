@@ -616,12 +616,13 @@ export default function InvitationMobileView({
               {isEn && data.dressCodeTituloEn ? data.dressCodeTituloEn : data.dressCodeTitulo || (isEn ? "DRESS CODE: ELEGANT & FORMAL" : "CÓDIGO DE VESTIMENTA: ELEGANTE Y FORMAL")}
             </p>
 
-            <p className="text-xs text-stone-600 mt-2 leading-relaxed font-light">
-              {isEn && data.dressCodeNotaEn ? data.dressCodeNotaEn : data.dressCodeNota ||
-                (isEn
-                  ? "Guests are encouraged to wear shades of white/formal to match the celebration."
-                  : "Se recomienda vestir de blanco o formal para acompañar la celebración.")}
-            </p>
+            {(() => {
+              const note = isEn
+                ? data.dressCodeNotaEn || data.dressCodeNota || null
+                : data.dressCodeNota || null;
+              if (!note) return null;
+              return <p className="text-xs text-stone-600 mt-2 leading-relaxed font-light">{note}</p>;
+            })()}
 
             {/* Muestra de colores reservados */}
             {data.coloresReservados && data.coloresReservados.length > 0 && (

@@ -1212,13 +1212,18 @@ export default function BlueButterflyTemplate({
               <p className="font-serif-roman text-xs sm:text-[13px] font-bold text-[#2F5A84] tracking-[0.15em] uppercase mt-1">
                 {isEn ? (data.dressCodeTituloEn || data.dressCodeEtiqueta || data.dressCodeTitulo || "Formal Attire") : (data.dressCodeEtiqueta || data.dressCodeTitulo || "Formal & Rigurosa Etiqueta")}
               </p>
-              <p className="font-cormorant italic text-[11px] sm:text-xs text-slate-600 leading-relaxed mt-2 max-w-[175px] mx-auto">
-                {data.dressCodeColoresReservados ||
+              {(() => {
+                const note =
+                  data.dressCodeColoresReservados ||
                   (isEn && data.dressCodeNotaEn ? data.dressCodeNotaEn : data.dressCodeNota) ||
-                  (isEn
-                    ? "Please join us in your finest formal attire. Shades of sky blue and white are exclusively reserved for the quinceañera."
-                    : "Acompáñanos luciendo tu mejor atuendo formal. Tonos azul celeste y blanco reservados exclusivamente para la quinceañera.")}
-              </p>
+                  null;
+                if (!note) return null;
+                return (
+                  <p className="font-cormorant italic text-[11px] sm:text-xs text-slate-600 leading-relaxed mt-2 max-w-[175px] mx-auto">
+                    {note}
+                  </p>
+                );
+              })()}
             </div>
 
             {/* 3. Maniquí Traje Formal Masculino (Derecha - Proporción equilibrada) */}
