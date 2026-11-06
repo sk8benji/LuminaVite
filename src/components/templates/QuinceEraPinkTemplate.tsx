@@ -276,8 +276,8 @@ export default function QuinceEraPinkTemplate({
   const deadlineMonthEn = rawMonthEn.charAt(0).toUpperCase() + rawMonthEn.slice(1);
 
   const rsvpDeadlinePhrase = isEn
-    ? `Please confirm before ${deadlineMonthEn} ${deadlineDay}`
-    : `Favor de confirmar antes del ${deadlineDay} de ${deadlineMonthEs}`;
+    ? (data.rsvpFechaLimiteEn || `Please confirm before ${deadlineMonthEn} ${deadlineDay}`)
+    : (data.rsvpFechaLimite || `Favor de confirmar antes del ${deadlineDay} de ${deadlineMonthEs}`);
 
   // Itinerario dinámico con los iconos ilustrados del set Era Pink
   const getItineraryIcon = (item: any, idx: number) => {
@@ -919,11 +919,17 @@ export default function QuinceEraPinkTemplate({
           </div>
 
           <div className="bg-white/95 backdrop-blur-sm p-6 pt-10 rounded-3xl border border-[#D8B772]/60 shadow-xl text-center relative z-10">
-            <h3 className="font-script text-4xl text-[#A63D57] my-1">
-              {isEn ? (data.rsvpTituloEn || "RSVP") : (data.rsvpTitulo || "Confirmar Asistencia")}
-            </h3>
+            {(() => {
+              const t = isEn ? data.rsvpTituloEn : data.rsvpTitulo;
+              if (t === "") return null;
+              return (
+                <h3 className="font-script text-4xl text-[#A63D57] my-1">
+                  {isEn ? (data.rsvpTituloEn || "RSVP") : (data.rsvpTitulo || "Confirmar Asistencia")}
+                </h3>
+              );
+            })()}
             <p className="text-[11px] text-slate-500 mb-5 uppercase tracking-wider font-serif-roman font-semibold">
-              {(data.fechaLimiteRsvp && isEn) ? `Please confirm by ${data.fechaLimiteRsvp}` : rsvpDeadlinePhrase}
+              {rsvpDeadlinePhrase}
             </p>
 
             {/* Alerta de confirmación previa / actualización de pases */}

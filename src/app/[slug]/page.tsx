@@ -162,6 +162,7 @@ async function getEventoData(rawSlug: string): Promise<InvitationData | null> {
       regalosZelle: (dbEvento as any).regalosZelle,
       regalosCashApp: (dbEvento as any).regalosCashApp,
       rsvpFechaLimite: (dbEvento as any).rsvpFechaLimite,
+      rsvpFechaLimiteEn: (dbEvento as any).rsvpFechaLimiteEn,
       rsvpTitulo: (dbEvento as any).rsvpTitulo ?? null,
       rsvpTituloEn: (dbEvento as any).rsvpTituloEn ?? null,
       rsvpSubtitulo: (dbEvento as any).rsvpSubtitulo ?? null,

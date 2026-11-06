@@ -1017,7 +1017,7 @@ export default function TemplateSectionBuilder({
                   {sec.id === "rsvp" && (
                     <div className="space-y-4">
                       <p className="text-xs text-stone-500">
-                        Personaliza los títulos de la tarjeta de confirmación. Si un campo queda vacío, la invitación usa el título original de la plantilla.
+                        Personaliza los títulos de la tarjeta de confirmación. Si un campo queda vacío, ese texto no aparece en la invitación.
                       </p>
                       {/* Título ES y EN */}
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -1027,9 +1027,9 @@ export default function TemplateSectionBuilder({
                           </label>
                           <input
                             type="text"
-                            value={formData.rsvpTitulo || ""}
+                            value={formData.rsvpTitulo ?? "¿SERÁS PARTE DE"}
                             onChange={(e) => updateField("rsvpTitulo", e.target.value)}
-                            placeholder="¿SERÁS PARTE DE"
+                            placeholder="Ej. ¡Te esperamos!"
                             className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
                           />
                         </div>
@@ -1042,7 +1042,7 @@ export default function TemplateSectionBuilder({
                               type="button"
                               onClick={() =>
                                 translateWithAi(
-                                  formData.rsvpTitulo || "",
+                                  formData.rsvpTitulo ?? "¿SERÁS PARTE DE",
                                   "rsvpTituloEn",
                                   "en"
                                 )
@@ -1064,9 +1064,9 @@ export default function TemplateSectionBuilder({
                           </div>
                           <input
                             type="text"
-                            value={formData.rsvpTituloEn || ""}
+                            value={formData.rsvpTituloEn ?? "WILL YOU JOIN US?"}
                             onChange={(e) => updateField("rsvpTituloEn", e.target.value)}
-                            placeholder="WILL YOU JOIN US?"
+                            placeholder="Eg. We can't wait!"
                             className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
                           />
                         </div>
@@ -1079,9 +1079,9 @@ export default function TemplateSectionBuilder({
                           </label>
                           <input
                             type="text"
-                            value={formData.rsvpSubtitulo || ""}
+                            value={formData.rsvpSubtitulo ?? "Mi Celebración?"}
                             onChange={(e) => updateField("rsvpSubtitulo", e.target.value)}
-                            placeholder="Mi Celebración?"
+                            placeholder="Ej. ¡Celebra con nosotros!"
                             className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
                           />
                         </div>
@@ -1094,7 +1094,7 @@ export default function TemplateSectionBuilder({
                               type="button"
                               onClick={() =>
                                 translateWithAi(
-                                  formData.rsvpSubtitulo || "",
+                                  formData.rsvpSubtitulo ?? "Mi Celebración?",
                                   "rsvpSubtituloEn",
                                   "en"
                                 )
@@ -1116,29 +1116,68 @@ export default function TemplateSectionBuilder({
                           </div>
                           <input
                             type="text"
-                            value={formData.rsvpSubtituloEn || ""}
+                            value={formData.rsvpSubtituloEn ?? "Our Celebration?"}
                             onChange={(e) => updateField("rsvpSubtituloEn", e.target.value)}
-                            placeholder="Our Celebration?"
+                            placeholder="Eg. Join the celebration!"
                             className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
                           />
                         </div>
                       </div>
-                      {/* Frase de fecha límite */}
-                      <div>
-                        <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
-                          Frase de fecha límite
-                        </label>
-                        <input
-                          type="text"
-                          value={formData.rsvpFechaLimite || ""}
-                          onChange={(e) => updateField("rsvpFechaLimite", e.target.value)}
-                          placeholder="Favor de confirmar antes del 24 de Febrero"
-                          className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
-                        />
-                        <p className="text-[11px] text-stone-500 mt-1">
-                          Se genera sola desde la fecha del evento y los días de anticipación. Si la escribes a mano, ya no se sobreescribe al cambiar la fecha o los días.
-                        </p>
+                      {/* Frase de fecha límite ES y EN */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+                            Frase de fecha límite (🇲🇽 ES)
+                          </label>
+                          <input
+                            type="text"
+                            value={formData.rsvpFechaLimite || ""}
+                            onChange={(e) => updateField("rsvpFechaLimite", e.target.value)}
+                            placeholder="Favor de confirmar antes del 24 de Febrero"
+                            className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
+                          />
+                        </div>
+                        <div>
+                          <div className="flex items-center justify-between mb-1">
+                            <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider">
+                              Frase de fecha límite (🇺🇸 EN)
+                            </label>
+                            <button
+                              type="button"
+                              onClick={() =>
+                                translateWithAi(
+                                  formData.rsvpFechaLimite || "",
+                                  "rsvpFechaLimiteEn",
+                                  "en"
+                                )
+                              }
+                              disabled={translatingField === "rsvpFechaLimiteEn"}
+                              className="inline-flex items-center gap-1 text-[11px] font-bold text-[#7A002A] hover:underline cursor-pointer disabled:opacity-50"
+                            >
+                              {translatingField === "rsvpFechaLimiteEn" ? (
+                                <Loader2 className="w-3 h-3 animate-spin" />
+                              ) : (
+                                <Sparkles className="w-3 h-3" />
+                              )}
+                              <span>
+                                {translatingField === "rsvpFechaLimiteEn"
+                                  ? "Traduciendo..."
+                                  : "Traducir con IA"}
+                              </span>
+                            </button>
+                          </div>
+                          <input
+                            type="text"
+                            value={formData.rsvpFechaLimiteEn || ""}
+                            onChange={(e) => updateField("rsvpFechaLimiteEn", e.target.value)}
+                            placeholder="Please confirm before February 24"
+                            className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
+                          />
+                        </div>
                       </div>
+                      <p className="text-[11px] text-stone-500 mt-1">
+                        Se generan solas desde la fecha del evento y los días de anticipación. Si las escribes a mano, ya no se sobreescriben al cambiar la fecha o los días.
+                      </p>
                       {/* Línea "confirmar por teléfono" ES y EN */}
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
@@ -1147,9 +1186,9 @@ export default function TemplateSectionBuilder({
                           </label>
                           <input
                             type="text"
-                            value={formData.rsvpTelefonoTitulo || ""}
+                            value={formData.rsvpTelefonoTitulo ?? "¿Prefieres confirmar por teléfono?"}
                             onChange={(e) => updateField("rsvpTelefonoTitulo", e.target.value)}
-                            placeholder="¿Prefieres confirmar por teléfono?"
+                            placeholder="Ej. ¿Prefieres llamar?"
                             className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
                           />
                         </div>
@@ -1162,7 +1201,7 @@ export default function TemplateSectionBuilder({
                               type="button"
                               onClick={() =>
                                 translateWithAi(
-                                  formData.rsvpTelefonoTitulo || "",
+                                  formData.rsvpTelefonoTitulo ?? "¿Prefieres confirmar por teléfono?",
                                   "rsvpTelefonoTituloEn",
                                   "en"
                                 )
@@ -1184,9 +1223,9 @@ export default function TemplateSectionBuilder({
                           </div>
                           <input
                             type="text"
-                            value={formData.rsvpTelefonoTituloEn || ""}
+                            value={formData.rsvpTelefonoTituloEn ?? "Prefer to RSVP by phone?"}
                             onChange={(e) => updateField("rsvpTelefonoTituloEn", e.target.value)}
-                            placeholder="Prefer to RSVP by phone?"
+                            placeholder="Eg. Prefer to call?"
                             className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
                           />
                         </div>

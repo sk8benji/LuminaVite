@@ -1276,9 +1276,15 @@ export default function BlushPrincessTemplate({
           </div>
 
           <div className="bg-white/95 backdrop-blur-sm p-6 pt-10 rounded-3xl border border-[#D8B772]/60 shadow-xl text-center relative z-10">
-            <h3 className="font-script text-4xl text-[#9D2C4A] my-1">
-              {isEn ? (data.rsvpTituloEn || "RSVP") : (data.rsvpTitulo || "Confirmar Asistencia")}
-            </h3>
+            {(() => {
+              const t = isEn ? data.rsvpTituloEn : data.rsvpTitulo;
+              if (t === "") return null;
+              return (
+                <h3 className="font-script text-4xl text-[#9D2C4A] my-1">
+                  {isEn ? (data.rsvpTituloEn || "RSVP") : (data.rsvpTitulo || "Confirmar Asistencia")}
+                </h3>
+              );
+            })()}
             <p className="text-[11px] text-slate-500 mb-5 uppercase tracking-wider font-serif-roman font-semibold">
               {rsvpDeadlinePhrase}
             </p>

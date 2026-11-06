@@ -27,7 +27,7 @@ interface RsvpSectionProps {
   // tope de sanidad 200). Nunca aplicar `|| N` antes de pasar este valor.
   maxPases: number;
   fechaLimite?: string | null;
-  // Títulos personalizables (sección RSVP del editor). Vacío = texto original.
+  // Títulos personalizables (sección RSVP del editor). "" = se oculta, sin definir = texto original.
   rsvpTitulo?: string | null;
   rsvpTituloEn?: string | null;
   rsvpSubtitulo?: string | null;
@@ -68,6 +68,10 @@ export default function RsvpSection({
 }: RsvpSectionProps) {
   // La fecha límite puede llegar como ISO (guardado nuevo): se muestra legible, nunca cruda.
   const fechaLimiteLegible = formatFechaLimiteRsvp(fechaLimite, isEn ? "en" : "es");
+  // Blanco = se oculta (""), sin definir = título original de la plantilla.
+  const tituloOculto = (isEn ? rsvpTituloEn : rsvpTitulo) === "";
+  const subtituloOculto = (isEn ? rsvpSubtituloEn : rsvpSubtitulo) === "";
+  const telefonoOculto = (isEn ? rsvpTelefonoTituloEn : rsvpTelefonoTitulo) === "";
   const [nombre, setNombre] = useState("");
   const [asistencia, setAsistencia] = useState<"SI" | "NO">("SI");
   const [pases, setPases] = useState(1);
@@ -212,15 +216,21 @@ export default function RsvpSection({
       >
         {royal ? (
           <div className="text-center" style={{ marginBottom: "24px" }}>
-            <h3 style={{ fontFamily: "'Alex Brush', cursive", fontSize: "2.7rem", color: "#a81c1c", lineHeight: 0.9, margin: 0 }}>
-              {isEn ? (rsvpTituloEn || "Will You Be Part") : (rsvpTitulo || "¿Serás Parte")}
-            </h3>
-            <h4 style={{ fontFamily: "'Cinzel', serif", fontSize: "0.95rem", letterSpacing: "0.25em", fontWeight: 700, color: "#0b1736", margin: "6px 0 8px" }}>
-              {isEn ? (rsvpSubtituloEn || "OF MY SPECIAL DAY?") : (rsvpSubtitulo || "DE MI DÍA ESPECIAL?")}
-            </h4>
-            <p style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontSize: "0.85rem", color: "#555", margin: "0 0 6px" }}>
-              {isEn ? (rsvpSubtituloEn || "Save Your Seat for the Celebration!") : (rsvpSubtitulo || "¡Aparta tu lugar para la celebración!")}
-            </p>
+            {!tituloOculto && (
+              <h3 style={{ fontFamily: "'Alex Brush', cursive", fontSize: "2.7rem", color: "#a81c1c", lineHeight: 0.9, margin: 0 }}>
+                {isEn ? (rsvpTituloEn || "Will You Be Part") : (rsvpTitulo || "¿Serás Parte")}
+              </h3>
+            )}
+            {!subtituloOculto && (
+              <h4 style={{ fontFamily: "'Cinzel', serif", fontSize: "0.95rem", letterSpacing: "0.25em", fontWeight: 700, color: "#0b1736", margin: "6px 0 8px" }}>
+                {isEn ? (rsvpSubtituloEn || "OF MY SPECIAL DAY?") : (rsvpSubtitulo || "DE MI DÍA ESPECIAL?")}
+              </h4>
+            )}
+            {!subtituloOculto && (
+              <p style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontSize: "0.85rem", color: "#555", margin: "0 0 6px" }}>
+                {isEn ? (rsvpSubtituloEn || "Save Your Seat for the Celebration!") : (rsvpSubtitulo || "¡Aparta tu lugar para la celebración!")}
+              </p>
+            )}
             {fechaLimiteLegible && (
               <p style={{ fontFamily: "'Cinzel', serif", fontSize: "0.72rem", letterSpacing: "0.08em", color: "#a81c1c", fontWeight: 600, margin: 0 }}>
                 {isEn ? "Please confirm your seat before" : "Por favor confirma tu lugar antes del"} {fechaLimiteLegible}
@@ -230,20 +240,24 @@ export default function RsvpSection({
         ) : (
           <>
             <span className="text-2xl">💌</span>
-            <h3
-              className="text-xs sm:text-sm uppercase tracking-widest font-bold mt-2"
-              style={{
-                color: "#9E2A4B",
-                fontFamily: template.fontSubheading,
-              }}
-            >
-              {isEn ? (rsvpTituloEn || "WILL YOU BE PART OF My Special Day?") : (rsvpTitulo || "¿SERÁS PARTE DE Mi Día Especial?")}
-            </h3>
-            <p
-              className="text-xs mt-1 mb-5 font-serif italic text-stone-600"
-            >
-              {isEn ? (rsvpSubtituloEn || "Save Your Seat for the Celebration!") : (rsvpSubtitulo || "¡Aparta tu lugar para la celebración!")}
-            </p>
+            {!tituloOculto && (
+              <h3
+                className="text-xs sm:text-sm uppercase tracking-widest font-bold mt-2"
+                style={{
+                  color: "#9E2A4B",
+                  fontFamily: template.fontSubheading,
+                }}
+              >
+                {isEn ? (rsvpTituloEn || "WILL YOU BE PART OF My Special Day?") : (rsvpTitulo || "¿SERÁS PARTE DE Mi Día Especial?")}
+              </h3>
+            )}
+            {!subtituloOculto && (
+              <p
+                className="text-xs mt-1 mb-5 font-serif italic text-stone-600"
+              >
+                {isEn ? (rsvpSubtituloEn || "Save Your Seat for the Celebration!") : (rsvpSubtitulo || "¡Aparta tu lugar para la celebración!")}
+              </p>
+            )}
 
             {fechaLimiteLegible && (
               <p
@@ -499,10 +513,12 @@ export default function RsvpSection({
         {permitirConfirmacionTelefono !== false && telefonoWhatsapp && (
           royal ? (
             <div className="text-center" style={{ paddingTop: "14px", marginTop: "8px", borderTop: "1px solid rgba(212,175,55,0.45)" }}>
-              <p className="flex items-center justify-center" style={{ gap: "6px", fontFamily: "'Cinzel', serif", fontSize: "0.62rem", letterSpacing: "0.15em", fontWeight: 700, color: "#64748b", margin: "0 0 6px", textTransform: "uppercase" }}>
-                <Phone className="w-3 h-3" style={{ color: "#a88338" }} />
-                <span>{isEn ? (rsvpTelefonoTituloEn || "Prefer to confirm by phone?") : (rsvpTelefonoTitulo || "¿Prefieres confirmar por teléfono?")}</span>
-              </p>
+              {!telefonoOculto && (
+                <p className="flex items-center justify-center" style={{ gap: "6px", fontFamily: "'Cinzel', serif", fontSize: "0.62rem", letterSpacing: "0.15em", fontWeight: 700, color: "#64748b", margin: "0 0 6px", textTransform: "uppercase" }}>
+                  <Phone className="w-3 h-3" style={{ color: "#a88338" }} />
+                  <span>{isEn ? (rsvpTelefonoTituloEn || "Prefer to confirm by phone?") : (rsvpTelefonoTitulo || "¿Prefieres confirmar por teléfono?")}</span>
+                </p>
+              )}
               <a
                 href={`tel:${telefonoWhatsapp.replace(/[^0-9+]/g, "")}`}
                 className="inline-flex items-center justify-center"
@@ -519,7 +535,7 @@ export default function RsvpSection({
                 </span>
               </a>
             </div>
-          ) : (
+          ) : telefonoOculto ? null : (
             <a
               href={`tel:${telefonoWhatsapp.replace(/[^0-9+]/g, "")}`}
               className="mt-4 flex items-center justify-center gap-2 w-full py-2 text-[11px] font-bold uppercase tracking-widest opacity-80 hover:opacity-100 transition"

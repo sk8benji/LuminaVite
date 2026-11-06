@@ -1107,7 +1107,9 @@ export default function ElegantRoseTemplate({
             </h2>
 
             <p className="font-['Cinzel'] text-xs sm:text-[13px] tracking-widest uppercase text-rose-100 mb-6 font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
-              {data.rsvpFechaLimite || formatFechaLimiteRsvp(data.fechaLimiteRsvp, isEn ? "en" : "es") || (isEn ? "BY JUNE 20TH" : "ANTES DEL 20 DE JUNIO")}
+              {isEn
+                ? (data.rsvpFechaLimiteEn || formatFechaLimiteRsvp(data.fechaLimiteRsvp, "en") || "BY JUNE 20TH")
+                : (data.rsvpFechaLimite || formatFechaLimiteRsvp(data.fechaLimiteRsvp, "es") || "ANTES DEL 20 DE JUNIO")}
             </p>
 
             <div className="w-full max-w-[320px]">
@@ -1120,7 +1122,8 @@ export default function ElegantRoseTemplate({
                 telefonoWhatsapp={data.telefonoWhatsappRsvp}
                 primaryColor="#8B4513"
                 accentBgColor="bg-white/95"
-                deadlineText={data.rsvpFechaLimite || formatFechaLimiteRsvp(data.fechaLimiteRsvp, isEn ? "en" : "es") || (isEn ? "BY JUNE 20TH" : "ANTES DEL 20 DE JUNIO")}
+                deadlineText={data.rsvpFechaLimite || formatFechaLimiteRsvp(data.fechaLimiteRsvp, "es") || "ANTES DEL 20 DE JUNIO"}
+                deadlineTextEn={data.rsvpFechaLimiteEn || formatFechaLimiteRsvp(data.fechaLimiteRsvp, "en") || "BY JUNE 20TH"}
                 rsvpTitulo={data.rsvpTitulo}
                 rsvpTituloEn={data.rsvpTituloEn}
                 rsvpSubtitulo={data.rsvpSubtitulo}

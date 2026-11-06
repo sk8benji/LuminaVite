@@ -126,6 +126,7 @@ export async function ensurePostgresTables(): Promise<boolean> {
           "regalosZelle" TEXT,
           "regalosCashApp" TEXT,
           "rsvpFechaLimite" TEXT,
+          "rsvpFechaLimiteEn" TEXT,
           "rsvpTitulo" TEXT,
           "rsvpTituloEn" TEXT,
           "rsvpSubtitulo" TEXT,
@@ -205,6 +206,7 @@ export async function ensurePostgresTables(): Promise<boolean> {
       `ALTER TABLE "Evento" ADD COLUMN IF NOT EXISTS "rsvpSubtituloEn" TEXT;`,
       `ALTER TABLE "Evento" ADD COLUMN IF NOT EXISTS "rsvpTelefonoTitulo" TEXT;`,
       `ALTER TABLE "Evento" ADD COLUMN IF NOT EXISTS "rsvpTelefonoTituloEn" TEXT;`,
+      `ALTER TABLE "Evento" ADD COLUMN IF NOT EXISTS "rsvpFechaLimiteEn" TEXT;`,
       `CREATE TABLE IF NOT EXISTS "FotoInvitado" (
           "id" TEXT NOT NULL PRIMARY KEY,
           "eventoId" TEXT NOT NULL REFERENCES "Evento"("id") ON DELETE CASCADE,

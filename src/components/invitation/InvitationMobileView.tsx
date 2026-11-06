@@ -73,6 +73,7 @@ export interface InvitationData {
   regalosZelle?: string | null;
   regalosCashApp?: string | null;
   rsvpFechaLimite?: string | null;
+  rsvpFechaLimiteEn?: string | null;
   rsvpTitulo?: string | null;
   rsvpTituloEn?: string | null;
   rsvpSubtitulo?: string | null;

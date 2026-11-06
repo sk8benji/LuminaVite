@@ -35,7 +35,8 @@ interface DynamicRsvpFormProps {
   primaryColor?: string; // Ej: "#7A002A" para rosa o "#C5A059" para dorado
   accentBgColor?: string;
   deadlineText?: string;
-  // Títulos personalizables (sección RSVP del editor). Vacío = texto original.
+  deadlineTextEn?: string;
+  // Títulos personalizables (sección RSVP del editor). "" = se oculta, sin definir = texto original.
   rsvpTitulo?: string | null;
   rsvpTituloEn?: string | null;
   rsvpSubtitulo?: string | null;
@@ -60,6 +61,7 @@ export default function DynamicRsvpForm({
   primaryColor = "#7A002A",
   accentBgColor = "bg-white",
   deadlineText = "Favor de confirmar antes de la fecha límite",
+  deadlineTextEn = "Please confirm before the deadline",
   rsvpTitulo,
   rsvpTituloEn,
   rsvpSubtitulo,
@@ -74,6 +76,10 @@ export default function DynamicRsvpForm({
   permitirConfirmacionTelefono = true,
 }: DynamicRsvpFormProps) {
   const isEn = lang === "en";
+  // Blanco = se oculta (""), sin definir = título original de la plantilla.
+  const tituloOculto = (isEn ? rsvpTituloEn : rsvpTitulo) === "";
+  const subtituloOculto = (isEn ? rsvpSubtituloEn : rsvpSubtitulo) === "";
+  const telefonoOculto = (isEn ? rsvpTelefonoTituloEn : rsvpTelefonoTitulo) === "";
   const isSmsEnabled = permiteSms ?? (!tipoPlan || !tipoPlan.toLowerCase().includes("basic"));
   const searchParams = useSearchParams();
 
@@ -384,20 +390,24 @@ export default function DynamicRsvpForm({
         <div className="space-y-4">
           <div>
             <span className="text-2xl">💌</span>
-            <h3
-              className="text-xs font-bold uppercase tracking-[0.2em] mt-1"
-              style={{ color: primaryColor }}
-            >
-              {isEn ? (rsvpTituloEn || "WILL YOU JOIN US?") : (rsvpTitulo || "¿SERÁS PARTE DE")}
-            </h3>
-            <h2
-              className="text-3xl font-serif italic mt-0.5"
-              style={{ color: primaryColor }}
-            >
-              {isEn ? (rsvpSubtituloEn || "Our Celebration?") : (rsvpSubtitulo || "Mi Celebración?")}
-            </h2>
+            {!tituloOculto && (
+              <h3
+                className="text-xs font-bold uppercase tracking-[0.2em] mt-1"
+                style={{ color: primaryColor }}
+              >
+                {isEn ? (rsvpTituloEn || "WILL YOU JOIN US?") : (rsvpTitulo || "¿SERÁS PARTE DE")}
+              </h3>
+            )}
+            {!subtituloOculto && (
+              <h2
+                className="text-3xl font-serif italic mt-0.5"
+                style={{ color: primaryColor }}
+              >
+                {isEn ? (rsvpSubtituloEn || "Our Celebration?") : (rsvpSubtitulo || "Mi Celebración?")}
+              </h2>
+            )}
             <p className="text-[10px] font-semibold tracking-wider uppercase text-stone-500 mt-2">
-              {deadlineText}
+              {isEn ? deadlineTextEn : deadlineText}
             </p>
           </div>
 
@@ -499,10 +509,12 @@ export default function DynamicRsvpForm({
           {/* Mini sección de confirmación telefónica directa */}
           {permitirConfirmacionTelefono && Boolean(telefonoWhatsapp) && (
             <div className="pt-3.5 mt-2 border-t border-pink-100/90 text-center animate-fade-in">
-              <p className="text-[10px] uppercase font-bold tracking-wider text-stone-400 mb-1.5 flex items-center justify-center gap-1.5">
-                <Phone className="w-3 h-3 text-[#B74F5F]" />
-                <span>{isEn ? (rsvpTelefonoTituloEn || "¿Prefer to RSVP by phone?") : (rsvpTelefonoTitulo || "¿Prefieres confirmar por teléfono?")}</span>
-              </p>
+              {!telefonoOculto && (
+                <p className="text-[10px] uppercase font-bold tracking-wider text-stone-400 mb-1.5 flex items-center justify-center gap-1.5">
+                  <Phone className="w-3 h-3 text-[#B74F5F]" />
+                  <span>{isEn ? (rsvpTelefonoTituloEn || "Prefer to RSVP by phone?") : (rsvpTelefonoTitulo || "¿Prefieres confirmar por teléfono?")}</span>
+                </p>
+              )}
               <a
                 href={`tel:${dialPhone}`}
                 className="inline-flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-full bg-pink-50 hover:bg-pink-100/90 text-[#7A002A] text-xs font-semibold border border-pink-200/80 transition shadow-xs active:scale-95"
@@ -820,20 +832,24 @@ export default function DynamicRsvpForm({
           {isAbierto && (
             <div className="text-center pb-1">
               <span className="text-2xl">💌</span>
-              <h3
-                className="text-xs font-bold uppercase tracking-[0.2em] mt-1"
-                style={{ color: primaryColor }}
-              >
-                {isEn ? (rsvpTituloEn || "WILL YOU JOIN US?") : (rsvpTitulo || "CONFIRMA TU ASISTENCIA")}
-              </h3>
-              <h2
-                className="text-3xl font-serif italic mt-0.5"
-                style={{ color: primaryColor }}
-              >
-                {isEn ? (rsvpSubtituloEn || "Our Celebration") : (rsvpSubtitulo || "Nuestra Celebración")}
-              </h2>
+              {!tituloOculto && (
+                <h3
+                  className="text-xs font-bold uppercase tracking-[0.2em] mt-1"
+                  style={{ color: primaryColor }}
+                >
+                  {isEn ? (rsvpTituloEn || "WILL YOU JOIN US?") : (rsvpTitulo || "CONFIRMA TU ASISTENCIA")}
+                </h3>
+              )}
+              {!subtituloOculto && (
+                <h2
+                  className="text-3xl font-serif italic mt-0.5"
+                  style={{ color: primaryColor }}
+                >
+                  {isEn ? (rsvpSubtituloEn || "Our Celebration") : (rsvpSubtitulo || "Nuestra Celebración")}
+                </h2>
+              )}
               <p className="text-[10px] font-semibold tracking-wider uppercase text-stone-500 mt-2">
-                {deadlineText}
+                {isEn ? deadlineTextEn : deadlineText}
               </p>
             </div>
           )}
@@ -974,10 +990,12 @@ export default function DynamicRsvpForm({
           {/* Mini sección de confirmación telefónica directa */}
           {permitirConfirmacionTelefono && Boolean(telefonoWhatsapp) && (
             <div className="pt-3 mt-1 border-t border-pink-100/90 text-center animate-fade-in">
-              <p className="text-[10px] uppercase font-bold tracking-wider text-stone-400 mb-1.5 flex items-center justify-center gap-1.5">
-                <Phone className="w-3 h-3 text-[#B74F5F]" />
-                <span>{isEn ? (rsvpTelefonoTituloEn || "¿Prefer to RSVP by phone?") : (rsvpTelefonoTitulo || "¿Prefieres confirmar por teléfono?")}</span>
-              </p>
+              {!telefonoOculto && (
+                <p className="text-[10px] uppercase font-bold tracking-wider text-stone-400 mb-1.5 flex items-center justify-center gap-1.5">
+                  <Phone className="w-3 h-3 text-[#B74F5F]" />
+                  <span>{isEn ? (rsvpTelefonoTituloEn || "Prefer to RSVP by phone?") : (rsvpTelefonoTitulo || "¿Prefieres confirmar por teléfono?")}</span>
+                </p>
+              )}
               <a
                 href={`tel:${dialPhone}`}
                 className="inline-flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-full bg-pink-50 hover:bg-pink-100/90 text-[#7A002A] text-xs font-semibold border border-pink-200/80 transition shadow-xs active:scale-95"

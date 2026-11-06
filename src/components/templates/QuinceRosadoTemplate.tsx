@@ -896,7 +896,8 @@ export default function QuinceRosadoTemplate({
                   telefonoWhatsapp={data.telefonoWhatsappRsvp}
                   primaryColor="#7A002A"
                   accentBgColor="bg-white/95"
-                  deadlineText={data.rsvpFechaLimite || (isEn ? "PLEASE CONFIRM YOUR ATTENDANCE BEFORE NOVEMBER 15." : "POR FAVOR, CONFIRMA TU ASISTENCIA ANTES DEL 20 DE OCTUBRE.")}
+                  deadlineText={data.rsvpFechaLimite || "POR FAVOR, CONFIRMA TU ASISTENCIA ANTES DEL 20 DE OCTUBRE."}
+                  deadlineTextEn={data.rsvpFechaLimiteEn || "PLEASE CONFIRM YOUR ATTENDANCE BEFORE NOVEMBER 15."}
                   rsvpTitulo={data.rsvpTitulo}
                   rsvpTituloEn={data.rsvpTituloEn}
                   rsvpSubtitulo={data.rsvpSubtitulo}
