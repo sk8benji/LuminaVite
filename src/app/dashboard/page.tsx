@@ -12,6 +12,7 @@ import {
   Sparkles,
   Copy,
   Check,
+  ChevronDown,
   MessageCircle,
   Edit3,
   LogOut,
@@ -107,6 +108,7 @@ export default function DashboardPage() {
   const [actualizandoId, setActualizandoId] = useState<string | null>(null);
   // Rotación de panel key
   const [rotatingSlug, setRotatingSlug] = useState<string | null>(null);
+  const [expandedCard, setExpandedCard] = useState<string | null>(null);
   const [rotatedKey, setRotatedKey] = useState<{ slug: string; titulo: string; key: string } | null>(null);
   const [copiedKey, setCopiedKey] = useState(false);
   // Link corto del panel (/m/<code>)
@@ -1107,7 +1109,7 @@ export default function DashboardPage() {
                           </div>
                         </div>
 
-                        {/* Acciones de la tarjeta */}
+                        {/* Acciones de la tarjeta: solo Editar + Ver en vivo visibles; el resto detrás de "Más acciones" */}
                         <div className="space-y-2 mt-4 pt-4 border-t border-stone-100">
                           <Link
                             href={`/eventos/nuevo?editar=${encodeURIComponent(ev.slug)}`}
@@ -1117,107 +1119,119 @@ export default function DashboardPage() {
                             Editar Invitación
                           </Link>
 
-                          <button
-                            onClick={() => toggleEsDemo(ev)}
-                            className="w-full flex items-center justify-center gap-1.5 py-2 px-3 bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 rounded-xl text-xs font-semibold transition cursor-pointer"
-                          >
-                            {ev.esDemo ? "Es demo · Mostrar como cliente" : "Marcar como demo"}
-                          </button>
-
-                          <div className="grid grid-cols-2 gap-2">
-                            <Link
-                              href={getPublicEventUrl(ev.slug)}
-                              target="_blank"
-                              className="flex items-center justify-center gap-1.5 py-2 px-3 bg-stone-100 hover:bg-stone-200 text-stone-800 rounded-xl text-xs font-semibold transition"
-                            >
-                              <ExternalLink className="w-3.5 h-3.5" />
-                              Invitados
-                            </Link>
-
-                            <button
-                              onClick={() => handleCopyLink(ev.slug)}
-                              className="flex items-center justify-center gap-1.5 py-2 px-3 bg-[#7A002A] hover:bg-[#5e0020] text-white rounded-xl text-xs font-semibold shadow-sm transition cursor-pointer"
-                            >
-                              {copiedSlug === ev.slug ? (
-                                <>
-                                  <Check className="w-3.5 h-3.5" />
-                                  ¡Copiado!
-                                </>
-                              ) : (
-                                <>
-                                  <Share2 className="w-3.5 h-3.5" />
-                                  WhatsApp
-                                </>
-                              )}
-                            </button>
-                          </div>
-
                           <Link
-                            href={getPublicEventUrl(`${ev.slug}/panel?key=${ev.panelToken || "demo"}`)}
+                            href={getPublicEventUrl(ev.slug)}
                             target="_blank"
-                            className="w-full flex items-center justify-center gap-1.5 py-2 px-3 bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-900 rounded-xl text-xs font-semibold transition"
+                            className="w-full flex items-center justify-center gap-1.5 py-2 px-3 bg-stone-100 hover:bg-stone-200 text-stone-800 rounded-xl text-xs font-semibold transition"
                           >
-                            <Sparkles className="w-3.5 h-3.5 text-amber-600" />
-                            Magic Link (Panel de la Mamá)
+                            <ExternalLink className="w-3.5 h-3.5" />
+                            Ver en vivo
                           </Link>
 
-                          {/* Link corto del panel: /m/<code> — fácil de mandar a la mamá */}
-                          {ev.panelShortCode ? (
-                            <>
-                              <div className="p-2 bg-amber-50 rounded-xl text-xs font-mono text-amber-900 truncate border border-amber-200 flex items-center justify-between">
-                                <span className="truncate flex items-center gap-1.5">
-                                  <Link2 className="w-3.5 h-3.5 shrink-0 text-amber-600" />
-                                  /m/{ev.panelShortCode}
-                                </span>
-                                <button
-                                  onClick={() => handleCopyShortLink(ev.slug, ev.panelShortCode!)}
-                                  title="Copiar link corto del panel"
-                                  className="p-1 hover:bg-amber-100 rounded-lg transition text-amber-800 ml-1 cursor-pointer"
-                                >
-                                  {copiedShortSlug === ev.slug ? (
-                                    <Check className="w-3.5 h-3.5 text-emerald-600" />
-                                  ) : (
-                                    <Copy className="w-3.5 h-3.5" />
-                                  )}
-                                </button>
-                              </div>
-                              <button
-                                onClick={() => handleRegenerateShortLink(ev.slug, ev.titulo)}
-                                disabled={shortLinkBusy?.slug === ev.slug}
-                                className="w-full flex items-center justify-center gap-1.5 py-1.5 px-3 text-amber-800 hover:text-amber-950 hover:bg-amber-50 rounded-xl text-[11px] font-semibold transition cursor-pointer disabled:opacity-50"
-                                title="Emite un link corto nuevo; el anterior deja de funcionar. El Magic Link largo no cambia."
-                              >
-                                <RefreshCw
-                                  className={`w-3 h-3 ${shortLinkBusy?.slug === ev.slug && shortLinkBusy.action === "regenerate" ? "animate-spin" : ""}`}
-                                />
-                                {shortLinkBusy?.slug === ev.slug && shortLinkBusy.action === "regenerate"
-                                  ? "Regenerando..."
-                                  : "Regenerar link corto"}
-                              </button>
-                            </>
-                          ) : (
-                            <button
-                              onClick={() => handleEnsureShortLink(ev.slug)}
-                              disabled={shortLinkBusy?.slug === ev.slug}
-                              className="w-full flex items-center justify-center gap-1.5 py-2 px-3 bg-white hover:bg-amber-50 border border-dashed border-amber-300 text-amber-900 rounded-xl text-xs font-semibold transition cursor-pointer disabled:opacity-50"
-                              title="Genera un link corto (clickandlove.app/m/...) que abre el panel de la mamá"
-                            >
-                              <Link2 className="w-3.5 h-3.5 text-amber-600" />
-                              {shortLinkBusy?.slug === ev.slug
-                                ? "Generando..."
-                                : "Generar link corto del panel"}
-                            </button>
-                          )}
-
                           <button
-                            onClick={() => handleRotateKey(ev.slug, ev.titulo)}
-                            disabled={rotatingSlug === ev.slug}
-                            className="w-full flex items-center justify-center gap-1.5 py-2 px-3 bg-red-50 hover:bg-red-100 border border-red-200 text-red-900 rounded-xl text-xs font-semibold transition cursor-pointer disabled:opacity-50"
-                            title="Genera una clave nueva para el panel. La URL anterior deja de funcionar."
+                            onClick={() => setExpandedCard(expandedCard === ev.slug ? null : ev.slug)}
+                            className="w-full flex items-center justify-center gap-1.5 py-2 px-3 bg-white hover:bg-stone-50 border border-stone-200 text-stone-700 rounded-xl text-xs font-semibold transition cursor-pointer"
                           >
-                            <RefreshCw className={`w-3.5 h-3.5 ${rotatingSlug === ev.slug ? "animate-spin" : ""}`} />
-                            {rotatingSlug === ev.slug ? "Rotando..." : "Rotar key del panel"}
+                            Más acciones
+                            <ChevronDown
+                              className={`w-3.5 h-3.5 transition-transform ${expandedCard === ev.slug ? "rotate-180" : ""}`}
+                            />
                           </button>
+
+                          {expandedCard === ev.slug && (
+                            <div className="space-y-2 pt-1">
+                              <button
+                                onClick={() => toggleEsDemo(ev)}
+                                className="w-full flex items-center justify-center gap-1.5 py-2 px-3 bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 rounded-xl text-xs font-semibold transition cursor-pointer"
+                              >
+                                {ev.esDemo ? "Es demo · Mostrar como cliente" : "Marcar como demo"}
+                              </button>
+
+                              <button
+                                onClick={() => handleCopyLink(ev.slug)}
+                                className="w-full flex items-center justify-center gap-1.5 py-2 px-3 bg-[#7A002A] hover:bg-[#5e0020] text-white rounded-xl text-xs font-semibold shadow-sm transition cursor-pointer"
+                              >
+                                {copiedSlug === ev.slug ? (
+                                  <>
+                                    <Check className="w-3.5 h-3.5" />
+                                    ¡Copiado!
+                                  </>
+                                ) : (
+                                  <>
+                                    <Share2 className="w-3.5 h-3.5" />
+                                    Copiar link
+                                  </>
+                                )}
+                              </button>
+
+                              <Link
+                                href={getPublicEventUrl(`${ev.slug}/panel?key=${ev.panelToken || "demo"}`)}
+                                target="_blank"
+                                className="w-full flex items-center justify-center gap-1.5 py-2 px-3 bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-900 rounded-xl text-xs font-semibold transition"
+                              >
+                                <Sparkles className="w-3.5 h-3.5 text-amber-600" />
+                                Magic Link (Panel de la Mamá)
+                              </Link>
+
+                              {/* Link corto del panel: /m/<code> — fácil de mandar a la mamá */}
+                              {ev.panelShortCode ? (
+                                <>
+                                  <div className="p-2 bg-amber-50 rounded-xl text-xs font-mono text-amber-900 truncate border border-amber-200 flex items-center justify-between">
+                                    <span className="truncate flex items-center gap-1.5">
+                                      <Link2 className="w-3.5 h-3.5 shrink-0 text-amber-600" />
+                                      /m/{ev.panelShortCode}
+                                    </span>
+                                    <button
+                                      onClick={() => handleCopyShortLink(ev.slug, ev.panelShortCode!)}
+                                      title="Copiar link corto del panel"
+                                      className="p-1 hover:bg-amber-100 rounded-lg transition text-amber-800 ml-1 cursor-pointer"
+                                    >
+                                      {copiedShortSlug === ev.slug ? (
+                                        <Check className="w-3.5 h-3.5 text-emerald-600" />
+                                      ) : (
+                                        <Copy className="w-3.5 h-3.5" />
+                                      )}
+                                    </button>
+                                  </div>
+                                  <button
+                                    onClick={() => handleRegenerateShortLink(ev.slug, ev.titulo)}
+                                    disabled={shortLinkBusy?.slug === ev.slug}
+                                    className="w-full flex items-center justify-center gap-1.5 py-1.5 px-3 text-amber-800 hover:text-amber-950 hover:bg-amber-50 rounded-xl text-[11px] font-semibold transition cursor-pointer disabled:opacity-50"
+                                    title="Emite un link corto nuevo; el anterior deja de funcionar. El Magic Link largo no cambia."
+                                  >
+                                    <RefreshCw
+                                      className={`w-3 h-3 ${shortLinkBusy?.slug === ev.slug && shortLinkBusy.action === "regenerate" ? "animate-spin" : ""}`}
+                                    />
+                                    {shortLinkBusy?.slug === ev.slug && shortLinkBusy.action === "regenerate"
+                                      ? "Regenerando..."
+                                      : "Regenerar link corto"}
+                                  </button>
+                                </>
+                              ) : (
+                                <button
+                                  onClick={() => handleEnsureShortLink(ev.slug)}
+                                  disabled={shortLinkBusy?.slug === ev.slug}
+                                  className="w-full flex items-center justify-center gap-1.5 py-2 px-3 bg-white hover:bg-amber-50 border border-dashed border-amber-300 text-amber-900 rounded-xl text-xs font-semibold transition cursor-pointer disabled:opacity-50"
+                                  title="Genera un link corto (clickandlove.app/m/...) que abre el panel de la mamá"
+                                >
+                                  <Link2 className="w-3.5 h-3.5 text-amber-600" />
+                                  {shortLinkBusy?.slug === ev.slug
+                                    ? "Generando..."
+                                    : "Generar link corto del panel"}
+                                </button>
+                              )}
+
+                              <button
+                                onClick={() => handleRotateKey(ev.slug, ev.titulo)}
+                                disabled={rotatingSlug === ev.slug}
+                                className="w-full flex items-center justify-center gap-1.5 py-2 px-3 bg-red-50 hover:bg-red-100 border border-red-200 text-red-900 rounded-xl text-xs font-semibold transition cursor-pointer disabled:opacity-50"
+                                title="Genera una clave nueva para el panel. La URL anterior deja de funcionar."
+                              >
+                                <RefreshCw className={`w-3.5 h-3.5 ${rotatingSlug === ev.slug ? "animate-spin" : ""}`} />
+                                {rotatingSlug === ev.slug ? "Rotando..." : "Rotar key del panel"}
+                              </button>
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>
