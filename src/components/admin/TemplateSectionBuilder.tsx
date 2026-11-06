@@ -1468,7 +1468,7 @@ export default function TemplateSectionBuilder({
                             rows={3}
                             value={formData.dressCodeNota || ""}
                             onChange={(e) => updateField("dressCodeNota", e.target.value)}
-                            placeholder="Acompáñanos en esta hermosa celebración... Por favor, NO usar atuendos ROSADOS..."
+                            placeholder="Ej. Por favor, no usar tonos rosados ni blancos (opcional)"
                             className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
                           />
                         </div>
@@ -1502,7 +1502,7 @@ export default function TemplateSectionBuilder({
                             rows={3}
                             value={formData.dressCodeNotaEn || ""}
                             onChange={(e) => updateField("dressCodeNotaEn", e.target.value)}
-                            placeholder="Join us in this wonderful celebration... Blush pink tones reserved exclusively..."
+                            placeholder="E.g. Please, no pink or white attire (optional)"
                             className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
                           />
                         </div>
@@ -2083,6 +2083,43 @@ export default function TemplateSectionBuilder({
                           className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
                         />
                       </div>
+
+                      {/* Título del Agradecimiento Especial */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+                            Título del Agradecimiento (🇲🇽 ES)
+                          </label>
+                          <input
+                            type="text"
+                            value={formData.corteHonorJson?.agradecimientoTitulo ?? "Un agradecimiento especial"}
+                            onChange={(e) => {
+                              const c = { ...(formData.corteHonorJson || {}) };
+                              c.agradecimientoTitulo = e.target.value;
+                              updateField("corteHonorJson", c);
+                            }}
+                            className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+                            Título del Agradecimiento (🇺🇸 EN)
+                          </label>
+                          <input
+                            type="text"
+                            value={formData.corteHonorJson?.agradecimientoTituloEn ?? formData.corteHonorJson?.agradecimientoTitulo ?? "A special thank you"}
+                            onChange={(e) => {
+                              const c = { ...(formData.corteHonorJson || {}) };
+                              c.agradecimientoTituloEn = e.target.value;
+                              updateField("corteHonorJson", c);
+                            }}
+                            className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
+                          />
+                        </div>
+                      </div>
+                      <p className="text-[11px] text-gray-400">
+                        Déjalo en blanco para quitar el título: el texto de agradecimiento sube y no queda hueco.
+                      </p>
                     </div>
                   )}
 
