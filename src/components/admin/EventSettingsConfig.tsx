@@ -705,7 +705,7 @@ export default function EventSettingsConfig({
               Permitir Confirmación por Llamada / Teléfono Directo
             </p>
             <p className="text-[11px] text-stone-500">
-              Muestra en la tarjeta RSVP el botón "¿Prefieres confirmar por teléfono? Llamar a la anfitriona".
+              Muestra en la tarjeta RSVP el botón "¿Prefieres confirmar por teléfono? Llamar".
             </p>
           </div>
           <button

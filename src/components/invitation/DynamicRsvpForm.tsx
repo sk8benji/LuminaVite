@@ -519,7 +519,7 @@ export default function DynamicRsvpForm({
                 href={`tel:${dialPhone}`}
                 className="inline-flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-full bg-pink-50 hover:bg-pink-100/90 text-[#7A002A] text-xs font-semibold border border-pink-200/80 transition shadow-xs active:scale-95"
               >
-                <span>{isEn ? "Call Host:" : "Llamar a la anfitriona:"}</span>
+                <span>{isEn ? "Call" : "Llamar"}</span>
                 <span className="font-bold underline underline-offset-2">{formattedPhone}</span>
               </a>
             </div>
@@ -1000,7 +1000,7 @@ export default function DynamicRsvpForm({
                 href={`tel:${dialPhone}`}
                 className="inline-flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-full bg-pink-50 hover:bg-pink-100/90 text-[#7A002A] text-xs font-semibold border border-pink-200/80 transition shadow-xs active:scale-95"
               >
-                <span>{isEn ? "Call Host:" : "Llamar a la anfitriona:"}</span>
+                <span>{isEn ? "Call" : "Llamar"}</span>
                 <span className="font-bold underline underline-offset-2">{formattedPhone}</span>
               </a>
             </div>

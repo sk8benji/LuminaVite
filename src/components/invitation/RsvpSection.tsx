@@ -524,7 +524,7 @@ export default function RsvpSection({
                 className="inline-flex items-center justify-center"
                 style={{ gap: "6px", padding: "6px 14px", borderRadius: "999px", backgroundColor: "#f7eedb", color: "#0b1736", fontSize: "0.75rem", fontWeight: 600, border: "1px solid #d4af37", textDecoration: "none" }}
               >
-                <span>{isEn ? "Call Host:" : "Llamar a la anfitriona:"}</span>
+                <span>{isEn ? "Call" : "Llamar"}</span>
                 <span style={{ fontWeight: 700, textDecoration: "underline", textUnderlineOffset: "2px" }}>
                   {(() => {
                     const digits = telefonoWhatsapp.replace(/\D/g, "");
