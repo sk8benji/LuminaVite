@@ -1213,8 +1213,10 @@ export default function BlueButterflyTemplate({
                 {isEn ? (data.dressCodeTituloEn || data.dressCodeEtiqueta || data.dressCodeTitulo || "Formal Attire") : (data.dressCodeEtiqueta || data.dressCodeTitulo || "Formal & Rigurosa Etiqueta")}
               </p>
               {(() => {
+                // La nota editable del editor (dressCodeNota/NotaEn) es la unica
+                // fuente: dressCodeColoresReservados no tiene campo en el editor
+                // y por eso se comportaba como un texto por defecto imposible de borrar.
                 const note =
-                  data.dressCodeColoresReservados ||
                   (isEn && data.dressCodeNotaEn ? data.dressCodeNotaEn : data.dressCodeNota) ||
                   null;
                 if (!note) return null;
