@@ -266,39 +266,41 @@ export default function QuinceRosadoSaveTheDate({
       )}
 
       {/* ============================================================== */}
-      {/* 1. PRIMERA SECCIÓN: FOTO DE LA QUINCEAÑERA + SOBRE (MIS XV AÑOS - MARÍA) */}
+      {/* 1. PRIMERA SECCIÓN: FOTO DE LA QUINCEAÑERA + SOBRE ANIDADO */}
       {/* ============================================================== */}
-      <section className="relative min-h-screen flex flex-col justify-between items-center px-0 pt-0 pb-6 overflow-hidden">
-        {/* PARTE SUPERIOR: FOTO PRINCIPAL CON DESVANECIMIENTO HACIA EL FONDO */}
-        <div className="w-full max-w-md flex flex-col items-center relative pt-0">
+      <section className="relative min-h-screen flex flex-col items-center px-0 pt-0 pb-8 overflow-hidden">
+        {/* PARTE SUPERIOR: FOTO PRINCIPAL CON DESVANECIMIENTO PROGRESIVO Y AIRE ARRIBA */}
+        <div className="w-full max-w-md flex flex-col items-center relative pt-3">
           <div
             className="relative w-full aspect-[4/4.6] overflow-hidden"
             style={{
               WebkitMaskImage:
-                "linear-gradient(to bottom, black 55%, transparent 98%)",
+                "linear-gradient(to bottom, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 95%)",
               maskImage:
-                "linear-gradient(to bottom, black 55%, transparent 98%)",
+                "linear-gradient(to bottom, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 95%)",
             }}
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={fotoPrincipal}
               alt={nombreFestejada}
-              className="w-full h-full object-cover object-top"
+              className="w-full h-full object-cover object-top scale-[0.98] origin-top transition-transform duration-700"
             />
           </div>
 
-          {/* Caligrafía "Save the Date" en dorado oscuro con relieve */}
+          {/* Caligrafía "Save the Date" anidada sobre el difuminado */}
           <div
             className="text-center relative z-10 px-4"
-            style={{ marginTop: "-35px" }}
+            style={{
+              marginTop: "-60px",
+              textShadow: "0px 2px 10px rgba(255, 248, 240, 0.9)",
+            }}
           >
             <h2
-              className="text-[2.4rem] font-normal tracking-wide"
+              className="text-[2.8rem] leading-none font-normal tracking-wide"
               style={{
                 fontFamily: "'Great Vibes', cursive",
-                color: "#7a5c32",
-                textShadow: "0 2px 6px rgba(255,255,255,0.8)",
+                color: "#4a3b32",
               }}
             >
               Save the Date
@@ -306,21 +308,29 @@ export default function QuinceRosadoSaveTheDate({
           </div>
         </div>
 
-        {/* PARTE INFERIOR: SOBRE (CERRADO O ABIERTO CON "MIS XV AÑOS" Y NOMBRE) */}
-        <div className="w-full max-w-sm flex flex-col items-center justify-center my-auto pb-4 px-4 relative z-10">
+        {/* PARTE INFERIOR: SOBRE ANIDADO (SUBIENDO PARA ENCIMAR LA PARTE BAJA DE LA FOTO) */}
+        <div
+          className="w-full flex flex-col items-center justify-center relative px-4"
+          style={{
+            maxWidth: "82%",
+            marginTop: "-30px",
+            zIndex: 15,
+            transition: "all 0.6s cubic-bezier(0.25, 1, 0.50, 1)",
+          }}
+        >
           <div
             onClick={!sobreAbierto ? abrirSobre : undefined}
-            className={`relative transition-all duration-700 transform flex flex-col items-center ${
+            className={`w-full relative transition-all duration-700 transform flex flex-col items-center ${
               !sobreAbierto ? "cursor-pointer hover:scale-102 active:scale-98" : ""
-            } ${animandoSobre ? "scale-105 -translate-y-3" : ""}`}
+            } ${animandoSobre ? "scale-105 -translate-y-2" : ""}`}
           >
-            {/* SOBRE CERRADO */}
+            {/* SOBRE CERRADO (LIMPIO, SIN ETIQUETA RECTANGULAR, SOLO EL SELLO) */}
             {!sobreAbierto ? (
-              <div className="relative flex flex-col items-center">
+              <div className="w-full relative flex flex-col items-center animate-in fade-in slide-in-from-bottom-4 duration-700">
                 {/* Pulso brillante sobre el sello dorado */}
                 <div
                   className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 pointer-events-none"
-                  style={{ top: "calc(50% - 12px)" }}
+                  style={{ top: "50%" }}
                 >
                   <span className="relative flex h-8 w-8 items-center justify-center">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-60"></span>
@@ -328,18 +338,19 @@ export default function QuinceRosadoSaveTheDate({
                   </span>
                 </div>
 
+                {/* Sobre cerrado limpio sin etiqueta */}
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src="/assets/save-the-date/sobre-cerrado.png"
+                  src="/assets/save-the-date/sobre-cerrado-plain.png"
                   alt="Sobre cerrado"
-                  className="max-w-[82%] sm:max-w-[310px] w-full h-auto transition-all duration-500 mb-6"
+                  className="w-full max-w-[320px] h-auto transition-all duration-500 mb-5"
                   style={{
                     filter:
                       "contrast(1.06) drop-shadow(0 12px 20px rgba(90, 60, 45, 0.22))",
                   }}
                 />
 
-                {/* Prompt para abrir con buen aire */}
+                {/* Prompt para abrir */}
                 <div className="text-center animate-bounce">
                   <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-white/90 backdrop-blur-md text-xs font-semibold text-[#5D1F2D] shadow-md border border-white/70">
                     <Sparkles className="w-3.5 h-3.5 text-amber-500" />
@@ -348,23 +359,26 @@ export default function QuinceRosadoSaveTheDate({
                 </div>
               </div>
             ) : (
-              /* SOBRE ABIERTO CON LA TARJETA QUE DICE "MIS XV AÑOS" + NOMBRE DE LA NIÑA */
-              <div className="relative animate-in zoom-in-95 duration-500 flex flex-col items-center">
+              /* SOBRE ABIERTO CON LA TARJETA QUE SUBE Y DICE "MIS XV AÑOS - MARÍA" */
+              <div className="w-full relative animate-in zoom-in-95 duration-500 flex flex-col items-center">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src="/assets/save-the-date/sobre-abierto.png"
                   alt="Sobre abierto"
-                  className="max-w-[82%] sm:max-w-[310px] w-full h-auto mb-6"
+                  className="w-full max-w-[320px] h-auto mb-5"
                   style={{
                     filter:
                       "contrast(1.06) drop-shadow(0 12px 20px rgba(90, 60, 45, 0.22))",
                   }}
                 />
 
-                {/* TEXTO EXACTO DENTRO DE LA TARJETA DEL SOBRE ABIERTO */}
+                {/* TEXTO EXACTO DENTRO DE LA TARJETA CON ANIMACIÓN DE REVELACIÓN HACIA ARRIBA */}
                 <div
-                  className="absolute left-1/2 -translate-x-1/2 w-[60%] text-center pointer-events-none flex flex-col items-center justify-center"
-                  style={{ top: "35%" }}
+                  className="absolute left-1/2 -translate-x-1/2 w-[62%] text-center pointer-events-none flex flex-col items-center justify-center transition-all duration-700 ease-out"
+                  style={{
+                    top: "35%",
+                    transform: "translate(-50%, 0)",
+                  }}
                 >
                   <span className="font-serif text-[12px] sm:text-[14px] uppercase tracking-[0.24em] text-[#2A1B16] font-semibold block leading-tight">
                     MIS XV AÑOS
