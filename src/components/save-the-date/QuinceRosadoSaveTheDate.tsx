@@ -273,7 +273,7 @@ export default function QuinceRosadoSaveTheDate({
       {/* 1. PRIMERA SECCIÓN: FOTO DE LA QUINCEAÑERA + SOBRE (100% VIEWPORT EN MÓVIL) */}
       {/* ============================================================== */}
       <section className="relative h-[100dvh] max-h-[100dvh] flex flex-col justify-between items-center px-0 pt-0 pb-3 overflow-hidden">
-        {/* PARTE SUPERIOR: FOTO COMPLETA DE BORDE A BORDE SIN ESPACIOS */}
+        {/* PARTE SUPERIOR: FOTO COMPLETA DE BORDE A BORDE CON TRANSICIÓN SUAVE */}
         <div className="w-full max-w-md flex flex-col items-center relative pt-0">
           <div
             className="relative w-full h-[47dvh] overflow-hidden"
@@ -284,11 +284,24 @@ export default function QuinceRosadoSaveTheDate({
                 "linear-gradient(to bottom, rgba(0,0,0,1) 48%, rgba(0,0,0,0) 96%)",
             }}
           >
+            {/* Foto 1: Estado Sobre Cerrado (principal.jpeg) */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={fotoPrincipal}
               alt={nombreFestejada}
-              className="w-full h-full object-cover object-top"
+              className={`w-full h-full object-cover object-top absolute inset-0 transition-opacity duration-1000 ${
+                sobreAbierto ? "opacity-0 pointer-events-none" : "opacity-100"
+              }`}
+            />
+
+            {/* Foto 2: Estado Sobre Abierto (images2.webp) */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/assets/save-the-date/images2.webp"
+              alt={nombreFestejada}
+              className={`w-full h-full object-cover object-top absolute inset-0 transition-opacity duration-1000 ${
+                sobreAbierto ? "opacity-100" : "opacity-0 pointer-events-none"
+              }`}
             />
           </div>
 
