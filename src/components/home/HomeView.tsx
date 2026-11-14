@@ -25,6 +25,7 @@ import SiteFooter from "@/components/layout/SiteFooter";
 import BenefitsBento from "@/components/home/BenefitsBento";
 import ServiceTabs from "@/components/home/ServiceTabs";
 import ValueFeatures from "@/components/home/ValueFeatures";
+import BlackFridayModal from "@/components/home/BlackFridayModal";
 
 const PHONE_DISPLAY = "(818) 299-4882";
 const PHONE_TEL = "tel:+18182994882";
@@ -81,7 +82,7 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
     setIsDemoModalOpen(true);
   };
 
-  const handleCheckout = async (plan: "assisted" | "vip" | string) => {
+  const handleCheckout = async (plan: "express" | "assisted" | "vip" | string) => {
     // Semana 1: inicio de checkout como evento (antes de salir a Stripe).
     track("begin_checkout", { paquete: plan });
     setCheckoutLoading(plan);
@@ -110,8 +111,9 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
   };
 
   const plans = [
-    { key: "assisted" as const, dict: t.pricing.plans[0], hot: false },
-    { key: "vip" as const, dict: t.pricing.plans[1], hot: true },
+    { key: "express" as const, dict: t.pricing.plans[0], hot: false },
+    { key: "assisted" as const, dict: t.pricing.plans[1], hot: true },
+    { key: "vip" as const, dict: t.pricing.plans[2], hot: false },
   ];
 
   return (
@@ -468,19 +470,19 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
       {/* PRECIOS */}
       {/* ============================================================== */}
       <section id="precios" className="py-20 px-4 sm:px-6 scroll-mt-24">
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-7xl mx-auto">
           <div className="text-center max-w-2xl mx-auto mb-12">
             <h2 className="font-['Cinzel'] font-bold text-3xl sm:text-4xl text-[#2B0A18]">{b.pricingTitle}</h2>
             <p className="font-['Montserrat'] text-[15px] text-[#5A3C46] mt-3">{b.pricingSubtitle}</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
             {plans.map((plan) => (
               <div
                 key={plan.key}
                 className={
                   plan.hot
-                    ? "relative rounded-3xl bg-[#7A002A] text-white p-8 flex flex-col shadow-[0_22px_45px_rgba(122,0,42,0.35)]"
+                    ? "relative rounded-3xl bg-[#7A002A] text-white p-8 flex flex-col shadow-[0_22px_45px_rgba(122,0,42,0.35)] md:-translate-y-2 border-2 border-[#FFD166]/40"
                     : "relative rounded-3xl bg-white border border-[#E7DCC8] p-8 flex flex-col shadow-[0_12px_28px_rgba(122,0,42,0.07)]"
                 }
               >
@@ -704,6 +706,10 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
         initialSlug={activeDemoSlug}
         lang={lang}
       />
+      {/* ============================================================== */}
+      {/* POP-UP BLACK FRIDAY */}
+      {/* ============================================================== */}
+      <BlackFridayModal lang={lang} />
     </div>
   );
 }

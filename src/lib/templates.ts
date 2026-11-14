@@ -5,6 +5,7 @@ export type TemplateId =
   | "FAIRYTALE_CHATEAU"
   | "BLUE_BUTTERFLY"
   | "BLUSH_PRINCESS"
+  | "BLUSH_ENVELOPE"
   | "BEAUTY_QUINCE"
   | "QUINCE_ERA_PINK"
   | "MISS_15"
@@ -116,6 +117,26 @@ export const TEMPLATES: Record<TemplateId, TemplateConfig> = {
     ribbonGradient: "from-sky-300 via-blue-200 to-purple-200",
     badgeBg: "#E8EFF8",
     description: "Mariposas celestiales flotantes en CSS, arco celestial, carta emotiva de los padres e itinerario de cuento.",
+  },
+  BLUSH_ENVELOPE: {
+    id: "BLUSH_ENVELOPE",
+    name: "Blush Envelope XV",
+    category: "QUINCEANERA",
+    bgColor: "#FDF8F4",
+    cardBg: "#FFFFFF",
+    textPrimary: "#0D0C0B",
+    textSecondary: "#8C6D3F",
+    accentColor: "#C58424",
+    accentSoft: "#FDF3F5",
+    borderSoft: "#EFC3D0",
+    buttonBg: "#C58424",
+    buttonText: "#FFFFFF",
+    fontHeading: "'Great Vibes', cursive",
+    fontSubheading: "'Cinzel', serif",
+    fontBody: "'Montserrat', sans-serif",
+    ribbonGradient: "from-rose-200 via-amber-100 to-rose-300",
+    badgeBg: "#FDF3F5",
+    description: "Sobre interactivo 3D con solapas y lazo de satén, polaroid superpuesta, ramilletes florales en esquinas limpias y tipografía editorial dorada.",
   },
   BLUSH_PRINCESS: {
     id: "BLUSH_PRINCESS",

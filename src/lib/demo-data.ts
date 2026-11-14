@@ -427,6 +427,16 @@ export const DEMO_BLUSH: InvitationData = {
 
 
 // =========================================================================
+// =========================================================================
+// 7b. BLUSH ENVELOPE XV (Isabella Sofia Hernandez - Canva CouCou Envelope & Polaroid)
+// =========================================================================
+export const DEMO_BLUSH_ENVELOPE: InvitationData = {
+  ...DEMO_BLUSH,
+  id: "demo-blush-envelope",
+  slug: "blush-envelope-xv",
+  estiloPlantilla: "BLUSH_ENVELOPE",
+};
+
 // 8. QUINCE ERA PINK (Issabella Gonzales - Replica Canva The Hanger PH)
 // =========================================================================
 export const DEMO_ERA: InvitationData = {
@@ -651,6 +661,8 @@ export const DEMO_BEAUTY: InvitationData = {
 
 // Diccionario centralizado de los 8+ Demos del Sistema
 export const ALL_SYSTEM_DEMOS: Record<string, InvitationData> = {
+  "blush-envelope-xv": DEMO_BLUSH_ENVELOPE,
+  "blush-envelope": DEMO_BLUSH_ENVELOPE,
   "mariposas-xv": DEMO_BUTTERFLY,
   "blue-butterfly": DEMO_BUTTERFLY,
   "blush-princess-xv": DEMO_BLUSH,

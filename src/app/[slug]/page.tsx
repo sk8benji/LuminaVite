@@ -218,6 +218,18 @@ async function getEventoData(rawSlug: string): Promise<InvitationData | null> {
   if (cleanSlug === "mariposas-xv") return DEMO_BUTTERFLY;
   if (cleanSlug === "coraline-party") return DEMO_CORALINE;
   if (cleanSlug === "sofia-y-alejandro") return DEMO_BODA;
+  if (cleanSlug === "sofia-tapia") {
+    const { getMergedDemo } = await import("@/lib/template-demo-merge");
+    const demo = await getMergedDemo("blush-princess-xv");
+    if (demo) {
+      return {
+        ...demo,
+        slug: "sofia-tapia",
+        titulo: "Sofia Marie Tapia",
+        subtitulo: "Mis Quince",
+      };
+    }
+  }
 
   return null;
 }

@@ -208,6 +208,7 @@ model Evento {
   ordenesCompra      OrdenCompra[]
   fotosInvitados     FotoInvitado[]
   fotosInvitadosActivas Boolean       @default(true) // Interruptor: invitados pueden subir fotos/videos
+  saveTheDates       SaveTheDate[]
 }
 
 model Guest {
@@ -364,6 +365,70 @@ model MasterTemplate {
 
   createdAt          DateTime        @default(now())
   updatedAt          DateTime        @updatedAt
+}
+
+model SaveTheDate {
+  id                 String          @id @default(uuid())
+  slug               String          @unique // Ruta pública: clickandlove.app/save-the-date/[slug]
+  eventoId           String?         // Invitación principal vinculada
+  evento             Evento?         @relation(fields: [eventoId], references: [id], onDelete: SetNull)
+
+  // Datos Principales
+  titulo             String          // Nombre de la festejada o pareja (ej: "Valeria Sofía")
+  subtitulo          String?         @default("Save Our Date") // Ej: "Mis XV Años" / "Nuestra Boda"
+  mensaje            String?         // Frase corta introductoria
+  fechaEvento        DateTime        // Fecha y hora del evento
+  fechaTextoPersonalizada String?    // Texto formal visible (ej: "SÁBADO 15 DE MAYO, 2027")
+  ciudad             String?         // Ciudad o estado del evento (ej: "Los Ángeles, California")
+
+  // Estilo y Plantilla
+  estiloPlantilla    String          @default("QUINCE_ROSADO") // "QUINCE_ROSADO", "BLUE_BUTTERFLY", "ELEGANT_ROSE", etc.
+  colorSobre         String?         @default("#FFF0F3")
+  colorSello         String?         @default("#C5A059")
+  tipoLetra          String?         @default("Cinzel")
+
+  // Multimedia
+  fotoPortadaUrl     String          // Foto vertical protagonista
+  galeriaFotosUrls   String[]        @default([]) // Galería de fotos en vertical
+  musicaUrl          String?         // Audio MP3 en S3
+  musicaTitulo       String?         // Título de la pista musical
+
+  // Visibilidad de Secciones
+  mostrarSobre       Boolean         @default(true) // Sobre interactivo 3D con transición
+  mostrarGaleria     Boolean         @default(true) // Galería vertical
+  mostrarContador    Boolean         @default(true) // Cuenta regresiva
+  mostrarCalendario  Boolean         @default(true) // Calendario del mes con día marcado y Add to Calendar
+  mostrarPreRsvp     Boolean         @default(true) // Pre-confirmación conectada
+
+  // Pre-RSVP
+  textoPreRsvp       String?         @default("¿Crees que podrás acompañarnos?")
+  telefonoWhatsapp   String?         // Teléfono de la quinceañera / mamá
+
+  // Métricas y Estado
+  vistasContador     Int             @default(0)
+  activo             Boolean         @default(true)
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
+
+  preRsvps           PreRsvpRegistro[]
+
+  @@index([eventoId])
+  @@index([slug])
+}
+
+model PreRsvpRegistro {
+  id                 String          @id @default(uuid())
+  saveTheDateId      String
+  saveTheDate        SaveTheDate     @relation(fields: [saveTheDateId], references: [id], onDelete: Cascade)
+  nombre             String
+  telefono           String?
+  email              String?
+  respuesta          String          @default("SI") // "SI" | "TAL_VEZ" | "NO"
+  pasesTentativos    Int             @default(1)
+  notas              String?
+  createdAt          DateTime        @default(now())
+
+  @@index([saveTheDateId])
 }
 
 

@@ -31,11 +31,13 @@ import {
   Palette,
   QrCode,
   Link2,
+  CalendarHeart,
 } from "lucide-react";
 import { OrderData } from "@/lib/order-store";
 import { DATOS_SECCIONES, calcularProgresoDatos, campoVisible } from "@/lib/datos-questions";
 import TemplatesManager from "@/components/dashboard/TemplatesManager";
 import QrManager from "@/components/dashboard/QrManager";
+import SaveTheDateManager from "@/components/dashboard/SaveTheDateManager";
 import MigrateAssetsCard from "@/components/dashboard/MigrateAssetsCard";
 
 interface EventoItem {
@@ -58,13 +60,13 @@ interface EventoItem {
 }
 
 export default function DashboardPage() {
-  const [activeTab, setActiveTab] = useState<"eventos" | "ordenes" | "templates" | "qr" | "abandonados">("ordenes");
+  const [activeTab, setActiveTab] = useState<"eventos" | "ordenes" | "templates" | "qr" | "abandonados" | "savedate">("ordenes");
   // La pestana vive en la URL (?tab=...): al recargar o compartir el enlace sigues en el mismo paso
   useEffect(() => {
     try {
       const t = new URLSearchParams(window.location.search).get("tab");
-      if (t && ["eventos", "ordenes", "templates", "qr", "abandonados"].includes(t)) {
-        setActiveTab(t as "eventos" | "ordenes" | "templates" | "qr" | "abandonados");
+      if (t && ["eventos", "ordenes", "templates", "qr", "abandonados", "savedate"].includes(t)) {
+        setActiveTab(t as "eventos" | "ordenes" | "templates" | "qr" | "abandonados" | "savedate");
       }
     } catch {}
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -479,6 +481,18 @@ export default function DashboardPage() {
           >
             <QrCode className="w-3.5 h-3.5" />
             <span>Códigos QR</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab("savedate")}
+            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg transition cursor-pointer ${
+              activeTab === "savedate"
+                ? "bg-white text-[#7A002A] shadow-xs font-bold"
+                : "text-stone-600 hover:text-stone-900"
+            }`}
+          >
+            <CalendarHeart className="w-3.5 h-3.5 text-pink-600" />
+            <span>Save the Date</span>
           </button>
         </div>
 
@@ -1251,6 +1265,11 @@ export default function DashboardPage() {
         {/* VISTA 4: CÓDIGOS QR CON TRACKING DE ESCANEOS */}
         {/* ============================================================== */}
         {activeTab === "qr" && <QrManager />}
+
+        {/* ============================================================== */}
+        {/* VISTA 5: SAVE THE DATE DIGITAL (PRE-INVITACIONES) */}
+        {/* ============================================================== */}
+        {activeTab === "savedate" && <SaveTheDateManager />}
 
         {/* Herramienta de mantenimiento: migración de assets a AWS (una vez) */}
         <MigrateAssetsCard />
