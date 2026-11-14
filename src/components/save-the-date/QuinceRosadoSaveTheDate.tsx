@@ -235,7 +235,7 @@ export default function QuinceRosadoSaveTheDate({
     <div
       className="min-h-screen text-[#2C1F1B] font-sans antialiased relative overflow-x-hidden selection:bg-[#7A002A] selection:text-white pb-20"
       style={{
-        backgroundImage: "url('/assets/save-the-date/background.jpeg')",
+        backgroundImage: "url('/assets/save-the-date/background.webp')",
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundAttachment: "fixed",
@@ -343,7 +343,7 @@ export default function QuinceRosadoSaveTheDate({
                 {/* Sobre cerrado limpio sin etiqueta */}
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src="/assets/save-the-date/sobre-cerrado-plain.png"
+                  src="/assets/save-the-date/sobre-cerrado-plain.webp"
                   alt="Sobre cerrado"
                   className="w-full max-w-[320px] h-auto transition-all duration-500 mb-5"
                   style={{
@@ -365,7 +365,7 @@ export default function QuinceRosadoSaveTheDate({
               <div className="w-full relative animate-in zoom-in-95 duration-500 flex flex-col items-center">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src="/assets/save-the-date/sobre-abierto.png"
+                  src="/assets/save-the-date/sobre-abierto.webp"
                   alt="Sobre abierto"
                   className="w-full max-w-[320px] h-auto mb-5"
                   style={{
@@ -546,7 +546,7 @@ export default function QuinceRosadoSaveTheDate({
               <div
                 className="absolute inset-0 -z-10"
                 style={{
-                  backgroundImage: "url('/assets/save-the-date/calendario.png')",
+                  backgroundImage: "url('/assets/save-the-date/calendario.webp')",
                   backgroundSize: "100% 100%",
                   backgroundPosition: "center",
                 }}
