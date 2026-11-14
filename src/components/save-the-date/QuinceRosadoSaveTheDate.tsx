@@ -437,7 +437,7 @@ export default function QuinceRosadoSaveTheDate({
           {/* SECCIÓN 2: GALERÍA DE FOTOS + REPRODUCTOR + CORONA + FLORES */}
           {/* ============================================================ */}
           <section
-            className="galeria-section relative w-full flex flex-col items-center"
+            className="galeria-section relative w-full flex flex-col items-center overflow-x-hidden"
             style={{
               paddingTop: "32px",
               paddingBottom: "16px",
@@ -594,13 +594,16 @@ export default function QuinceRosadoSaveTheDate({
               </div>
             </div>
 
-            {/* 4. CIERRE INFERIOR CON GUIRNALDA FLORAL (PUENTE NATURAL DE TRANSICIÓN) */}
-            <div className="w-[94%] max-w-[440px] mx-auto flex justify-center mt-3.5 sm:mt-4 -mb-7 sm:-mb-9 relative z-20">
+            {/* 4. CIERRE INFERIOR CON GUIRNALDA FLORAL DE BORDE A BORDE */}
+            <div className="w-full overflow-hidden flex justify-center mt-3 sm:mt-4 -mb-6 sm:-mb-8 relative z-20 pointer-events-none">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/assets/save-the-date/flores.webp"
                 alt="Divisor Floral"
-                className="w-full h-auto object-contain opacity-95 drop-shadow-md"
+                className="galeria-flores w-[104%] max-w-none -ml-[2%] block object-cover"
+                style={{
+                  filter: "drop-shadow(0 6px 12px rgba(60, 40, 35, 0.14))",
+                }}
               />
             </div>
           </section>
