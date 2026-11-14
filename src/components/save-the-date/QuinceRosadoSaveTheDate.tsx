@@ -431,130 +431,129 @@ export default function QuinceRosadoSaveTheDate({
       {sobreAbierto && (
         <div
           ref={contenidoRef}
-          className="w-full relative z-10 animate-in fade-in duration-700 space-y-4"
+          className="w-full relative z-10 animate-in fade-in duration-700"
         >
           {/* ============================================================ */}
-          {/* REPRODUCTOR DE MÚSICA SUPERIOR (SATÉN CONTINUO) */}
-          {/* ============================================================ */}
-          <div className="w-full max-w-md mx-auto px-4 pt-6 pb-2 flex flex-col items-center">
-            {/* Controles de música con filigranas doradas */}
-            <div className="flex items-center justify-center gap-3 sm:gap-4 w-full">
-              {/* Filigrana izquierda */}
-              <div className="flex items-center flex-1 justify-end">
-                <svg
-                  className="w-16 sm:w-24 h-5 text-[#C5A059]"
-                  viewBox="0 0 100 20"
-                  fill="none"
-                  stroke="currentColor"
-                >
-                  <path
-                    d="M10 10h60M70 10c4 0 7-3 9-5s4-3 6-3 4 2 4 4-2 5-5 5c-3 0-5-2-6-4M70 10c4 0 7 3 9 5s4 3 6 3 4-2 4-4-2-5-5-5c-3 0-5 2-6 4"
-                    strokeWidth="1.2"
-                    strokeLinecap="round"
-                  />
-                  <circle cx="95" cy="10" r="2" fill="#C5A059" />
-                  <circle cx="5" cy="10" r="1.5" fill="#C5A059" />
-                </svg>
-              </div>
-
-              {/* Botón Anterior */}
-              <button
-                type="button"
-                onClick={() => {
-                  if (audioRef.current) {
-                    audioRef.current.currentTime = 0;
-                    if (!reproduciendo) {
-                      audioRef.current.play().then(() => setReproduciendo(true)).catch(() => {});
-                    }
-                  }
-                }}
-                className="p-1.5 text-[#B89356] hover:text-[#9A7432] active:scale-90 transition cursor-pointer"
-                title="Reiniciar canción"
-                aria-label="Canción anterior"
-              >
-                <SkipBack className="w-5 h-5 fill-current" />
-              </button>
-
-              {/* Botón Central Play / Pause */}
-              <button
-                type="button"
-                onClick={toggleMusica}
-                className="w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center relative cursor-pointer shadow-[0_4px_14px_rgba(90,60,45,0.25)] transition transform hover:scale-105 active:scale-95 group"
-                style={{
-                  background:
-                    "radial-gradient(circle at 35% 35%, #8F1437 0%, #5E0820 60%, #380413 100%)",
-                  boxShadow:
-                    "0 0 0 2px rgba(255, 255, 255, 0.9), 0 0 0 3.5px #C5A059, 0 6px 16px rgba(60, 20, 30, 0.35)",
-                }}
-                title={reproduciendo ? "Pausar música" : "Reproducir música"}
-                aria-label="Play / Pausa"
-              >
-                {reproduciendo ? (
-                  <Pause className="w-5 h-5 sm:w-6 sm:h-6 text-[#F9E8B2] fill-current" />
-                ) : (
-                  <Play className="w-5 h-5 sm:w-6 sm:h-6 text-[#F9E8B2] fill-current ml-0.5" />
-                )}
-              </button>
-
-              {/* Botón Siguiente */}
-              <button
-                type="button"
-                onClick={() => {
-                  if (audioRef.current) {
-                    audioRef.current.currentTime = 0;
-                    if (!reproduciendo) {
-                      audioRef.current.play().then(() => setReproduciendo(true)).catch(() => {});
-                    }
-                  }
-                }}
-                className="p-1.5 text-[#B89356] hover:text-[#9A7432] active:scale-90 transition cursor-pointer"
-                title="Siguiente pista"
-                aria-label="Siguiente pista"
-              >
-                <SkipForward className="w-5 h-5 fill-current" />
-              </button>
-
-              {/* Filigrana derecha */}
-              <div className="flex items-center flex-1 justify-start">
-                <svg
-                  className="w-16 sm:w-24 h-5 text-[#C5A059] transform -scale-x-100"
-                  viewBox="0 0 100 20"
-                  fill="none"
-                  stroke="currentColor"
-                >
-                  <path
-                    d="M10 10h60M70 10c4 0 7-3 9-5s4-3 6-3 4 2 4 4-2 5-5 5c-3 0-5-2-6-4M70 10c4 0 7 3 9 5s4 3 6 3 4-2 4-4-2-5-5-5c-3 0-5 2-6 4"
-                    strokeWidth="1.2"
-                    strokeLinecap="round"
-                  />
-                  <circle cx="95" cy="10" r="2" fill="#C5A059" />
-                  <circle cx="5" cy="10" r="1.5" fill="#C5A059" />
-                </svg>
-              </div>
-            </div>
-
-            {/* Texto de llamada a la acción */}
-            <p
-              className="mt-2.5 text-[11px] sm:text-xs uppercase tracking-[0.25em] font-semibold text-[#8C6B38] text-center"
-              style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
-            >
-              {reproduciendo ? "MÚSICA REPRODUCIENDO" : 'PRESIONA "PLAY"'}
-            </p>
-          </div>
-
-          {/* ============================================================ */}
-          {/* SECCIÓN 2: GALERÍA DE FOTOS + CORONA + DIVISOR FLORAL */}
+          {/* SECCIÓN 2: GALERÍA DE FOTOS + REPRODUCTOR + CORONA + FLORES */}
           {/* ============================================================ */}
           <section
-            className="galeria-section relative w-full flex flex-col items-center py-7 sm:py-8"
+            className="galeria-section relative w-full flex flex-col items-center"
             style={{
+              paddingTop: "32px",
+              paddingBottom: "16px",
               background:
-                "linear-gradient(180deg, rgba(235, 206, 209, 0.45) 0%, rgba(232, 198, 202, 0.75) 50%, rgba(235, 206, 209, 0.45) 100%)",
+                "linear-gradient(180deg, rgba(235, 206, 209, 0.45) 0%, rgba(232, 198, 202, 0.75) 45%, rgba(235, 206, 209, 0.4) 85%, transparent 100%)",
               borderTop: "1px solid rgba(197, 160, 89, 0.4)",
-              borderBottom: "1px solid rgba(197, 160, 89, 0.4)",
             }}
           >
-            {/* La Corona Centrada */}
+            {/* 1. REPRODUCTOR DE MÚSICA SUPERIOR (JUSTO ENCIMA DE LA CORONA) */}
+            <div className="w-full max-w-md mx-auto px-4 pb-4 flex flex-col items-center">
+              {/* Controles de música con filigranas doradas */}
+              <div className="flex items-center justify-center gap-3 sm:gap-4 w-full">
+                {/* Filigrana izquierda */}
+                <div className="flex items-center flex-1 justify-end">
+                  <svg
+                    className="w-16 sm:w-24 h-5 text-[#C5A059]"
+                    viewBox="0 0 100 20"
+                    fill="none"
+                    stroke="currentColor"
+                  >
+                    <path
+                      d="M10 10h60M70 10c4 0 7-3 9-5s4-3 6-3 4 2 4 4-2 5-5 5c-3 0-5-2-6-4M70 10c4 0 7 3 9 5s4 3 6 3 4-2 4-4-2-5-5-5c-3 0-5 2-6 4"
+                      strokeWidth="1.2"
+                      strokeLinecap="round"
+                    />
+                    <circle cx="95" cy="10" r="2" fill="#C5A059" />
+                    <circle cx="5" cy="10" r="1.5" fill="#C5A059" />
+                  </svg>
+                </div>
+
+                {/* Botón Anterior */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (audioRef.current) {
+                      audioRef.current.currentTime = 0;
+                      if (!reproduciendo) {
+                        audioRef.current.play().then(() => setReproduciendo(true)).catch(() => {});
+                      }
+                    }
+                  }}
+                  className="p-1.5 text-[#B89356] hover:text-[#9A7432] active:scale-90 transition cursor-pointer"
+                  title="Reiniciar canción"
+                  aria-label="Canción anterior"
+                >
+                  <SkipBack className="w-5 h-5 fill-current" />
+                </button>
+
+                {/* Botón Central Play / Pause (Dorado Metálico & Palo de Rosa Suave) */}
+                <button
+                  type="button"
+                  onClick={toggleMusica}
+                  className="w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center relative cursor-pointer shadow-[0_4px_14px_rgba(90,60,45,0.22)] transition transform hover:scale-105 active:scale-95 group"
+                  style={{
+                    background:
+                      "linear-gradient(135deg, #E6C786 0%, #C5A059 45%, #B87C82 100%)",
+                    boxShadow:
+                      "0 0 0 2px rgba(255, 255, 255, 0.95), 0 0 0 3.5px #C5A059, 0 6px 16px rgba(197, 160, 89, 0.35)",
+                  }}
+                  title={reproduciendo ? "Pausar música" : "Reproducir música"}
+                  aria-label="Play / Pausa"
+                >
+                  {reproduciendo ? (
+                    <Pause className="w-5 h-5 sm:w-6 sm:h-6 text-white fill-current drop-shadow-sm" />
+                  ) : (
+                    <Play className="w-5 h-5 sm:w-6 sm:h-6 text-white fill-current ml-0.5 drop-shadow-sm" />
+                  )}
+                </button>
+
+                {/* Botón Siguiente */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (audioRef.current) {
+                      audioRef.current.currentTime = 0;
+                      if (!reproduciendo) {
+                        audioRef.current.play().then(() => setReproduciendo(true)).catch(() => {});
+                      }
+                    }
+                  }}
+                  className="p-1.5 text-[#B89356] hover:text-[#9A7432] active:scale-90 transition cursor-pointer"
+                  title="Siguiente pista"
+                  aria-label="Siguiente pista"
+                >
+                  <SkipForward className="w-5 h-5 fill-current" />
+                </button>
+
+                {/* Filigrana derecha */}
+                <div className="flex items-center flex-1 justify-start">
+                  <svg
+                    className="w-16 sm:w-24 h-5 text-[#C5A059] transform -scale-x-100"
+                    viewBox="0 0 100 20"
+                    fill="none"
+                    stroke="currentColor"
+                  >
+                    <path
+                      d="M10 10h60M70 10c4 0 7-3 9-5s4-3 6-3 4 2 4 4-2 5-5 5c-3 0-5-2-6-4M70 10c4 0 7 3 9 5s4 3 6 3 4-2 4-4-2-5-5-5c-3 0-5 2-6 4"
+                      strokeWidth="1.2"
+                      strokeLinecap="round"
+                    />
+                    <circle cx="95" cy="10" r="2" fill="#C5A059" />
+                    <circle cx="5" cy="10" r="1.5" fill="#C5A059" />
+                  </svg>
+                </div>
+              </div>
+
+              {/* Texto de llamada a la acción */}
+              <p
+                className="mt-2.5 text-[11px] sm:text-xs uppercase tracking-[0.25em] font-semibold text-[#8C6B38] text-center"
+                style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
+              >
+                {reproduciendo ? "MÚSICA REPRODUCIENDO" : 'PRESIONA "PLAY"'}
+              </p>
+            </div>
+
+            {/* 2. LA CORONA CENTRADA */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/assets/save-the-date/corona.webp"
@@ -565,7 +564,7 @@ export default function QuinceRosadoSaveTheDate({
               }}
             />
 
-            {/* Grid de 3 Fotos Verticales */}
+            {/* 3. GRID DE 3 FOTOS VERTICALES */}
             <div className="galeria-grid grid grid-cols-3 gap-[5px] w-[94%] max-w-[440px] mx-auto">
               <div className="relative aspect-[3/5] overflow-hidden rounded-[2px] border border-[rgba(197,160,89,0.55)] shadow-[0_6px_14px_rgba(60,40,35,0.15)] group bg-white/40">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -595,173 +594,176 @@ export default function QuinceRosadoSaveTheDate({
               </div>
             </div>
 
-            {/* Cierre inferior con guirnalda floral de borde a borde */}
-            <div className="w-[94%] max-w-[440px] mx-auto flex justify-center mt-3.5 sm:mt-4">
+            {/* 4. CIERRE INFERIOR CON GUIRNALDA FLORAL (PUENTE NATURAL DE TRANSICIÓN) */}
+            <div className="w-[94%] max-w-[440px] mx-auto flex justify-center mt-3.5 sm:mt-4 -mb-7 sm:-mb-9 relative z-20">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/assets/save-the-date/flores.webp"
                 alt="Divisor Floral"
-                className="w-full h-auto object-contain opacity-95 drop-shadow-sm"
+                className="w-full h-auto object-contain opacity-95 drop-shadow-md"
               />
             </div>
           </section>
 
           {/* ============================================================ */}
-          {/* SECCIONES POSTERIORES (CUENTA REGRESIVA, CALENDARIO, PRE-RSVP) */}
+          {/* SECCIONES POSTERIORES: CALENDARIO (SECCIÓN 3) -> COUNTDOWN -> RSVP */}
           {/* ============================================================ */}
-          <div className="max-w-md mx-auto px-4 space-y-10 pt-4">
+          <div className="max-w-md mx-auto px-4 space-y-10 pt-10 sm:pt-12">
+            {/* ============================================================ */}
+            {/* SECCIÓN 3: CALENDARIO CON MARCO ELEGANTE (calendario.webp) */}
+            {/* ARRANCA INMEDIATAMENTE DEBAJO DE LA GUIRNALDA FLORAL */}
+            {/* ============================================================ */}
+            {data.mostrarCalendario && (
+              <section className="relative rounded-[32px] overflow-hidden shadow-2xl p-6 sm:p-8 flex flex-col items-center">
+                {/* Marco gráfico de fondo decorativo */}
+                <div
+                  className="absolute inset-0 -z-10"
+                  style={{
+                    backgroundImage: "url('/assets/save-the-date/calendario.webp')",
+                    backgroundSize: "100% 100%",
+                    backgroundPosition: "center",
+                  }}
+                />
 
-          {/* ============================================================ */}
-          {/* SECCIÓN CUENTA REGRESIVA */}
-          {/* ============================================================ */}
-          {data.mostrarContador && (
-            <section className="bg-gradient-to-br from-[#7A002A] to-[#4A0319] text-white rounded-[32px] p-6 shadow-xl text-center space-y-4">
-              <div className="space-y-1">
-                <span className="text-[10px] uppercase font-bold tracking-widest text-amber-300 block">
-                  Tiempo Restante
-                </span>
-                <h3 className="font-serif text-2xl font-bold text-pink-50">
-                  La Cuenta Regresiva
-                </h3>
-              </div>
-
-              <div className="grid grid-cols-4 gap-2 pt-2">
-                <div className="bg-white/10 backdrop-blur-md rounded-2xl p-2.5 border border-white/15">
-                  <span className="block font-serif text-2xl sm:text-3xl font-bold text-amber-200">
-                    {tiempo.dias}
+                <div className="w-full text-center space-y-1 pt-2">
+                  <span
+                    className="text-xs sm:text-sm uppercase tracking-[0.25em] text-[#C5A059] font-bold block"
+                    style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
+                  >
+                    Reserva La Fecha
                   </span>
-                  <span className="text-[9px] uppercase tracking-wider text-pink-100">
-                    Días
-                  </span>
-                </div>
-                <div className="bg-white/10 backdrop-blur-md rounded-2xl p-2.5 border border-white/15">
-                  <span className="block font-serif text-2xl sm:text-3xl font-bold text-amber-200">
-                    {tiempo.horas}
-                  </span>
-                  <span className="text-[9px] uppercase tracking-wider text-pink-100">
-                    Horas
-                  </span>
-                </div>
-                <div className="bg-white/10 backdrop-blur-md rounded-2xl p-2.5 border border-white/15">
-                  <span className="block font-serif text-2xl sm:text-3xl font-bold text-amber-200">
-                    {tiempo.minutos}
-                  </span>
-                  <span className="text-[9px] uppercase tracking-wider text-pink-100">
-                    Min
-                  </span>
-                </div>
-                <div className="bg-white/10 backdrop-blur-md rounded-2xl p-2.5 border border-white/15">
-                  <span className="block font-serif text-2xl sm:text-3xl font-bold text-amber-200">
-                    {tiempo.segundos}
-                  </span>
-                  <span className="text-[9px] uppercase tracking-wider text-pink-100">
-                    Seg
-                  </span>
-                </div>
-              </div>
-            </section>
-          )}
-
-          {/* ============================================================ */}
-          {/* SECCIÓN CALENDARIO CON MARCO ELEGANTE (calendario.png) */}
-          {/* ============================================================ */}
-          {data.mostrarCalendario && (
-            <section className="relative rounded-[32px] overflow-hidden shadow-2xl p-6 sm:p-8 flex flex-col items-center">
-              {/* Marco gráfico de fondo decorativo */}
-              <div
-                className="absolute inset-0 -z-10"
-                style={{
-                  backgroundImage: "url('/assets/save-the-date/calendario.webp')",
-                  backgroundSize: "100% 100%",
-                  backgroundPosition: "center",
-                }}
-              />
-
-              <div className="w-full text-center space-y-1 pt-2">
-                <span className="text-[10px] uppercase tracking-widest text-[#C5A059] font-bold block">
-                  Reserva La Fecha
-                </span>
-                <h3 className="font-serif text-2xl font-bold text-[#7A002A]">
-                  {nombreMes} {anio}
-                </h3>
-              </div>
-
-              {/* Cuadrícula interactiva del mes */}
-              <div className="w-full max-w-[300px] mt-4">
-                <div className="grid grid-cols-7 gap-1 text-center font-bold text-[10px] text-stone-500 mb-2 uppercase">
-                  <span>L</span>
-                  <span>M</span>
-                  <span>M</span>
-                  <span>J</span>
-                  <span>V</span>
-                  <span>S</span>
-                  <span>D</span>
+                  <h3 className="font-serif text-2xl font-bold text-[#7A002A]">
+                    {nombreMes} {anio}
+                  </h3>
                 </div>
 
-                <div className="grid grid-cols-7 gap-1.5 text-center text-xs">
-                  {matrizDias.map((dia, idx) => {
-                    if (dia === null) {
-                      return <div key={`empty-${idx}`} className="h-8" />;
-                    }
+                {/* Cuadrícula interactiva del mes */}
+                <div className="w-full max-w-[300px] mt-4">
+                  <div className="grid grid-cols-7 gap-1 text-center font-bold text-[10px] text-stone-500 mb-2 uppercase">
+                    <span>L</span>
+                    <span>M</span>
+                    <span>M</span>
+                    <span>J</span>
+                    <span>V</span>
+                    <span>S</span>
+                    <span>D</span>
+                  </div>
 
-                    const esElDia = dia === diaEvento;
+                  <div className="grid grid-cols-7 gap-1.5 text-center text-xs">
+                    {matrizDias.map((dia, idx) => {
+                      if (dia === null) {
+                        return <div key={`empty-${idx}`} className="h-8" />;
+                      }
 
-                    return (
-                      <div
-                        key={`dia-${dia}`}
-                        className={`h-8 flex items-center justify-center rounded-full text-xs font-semibold transition relative ${
-                          esElDia
-                            ? "bg-[#7A002A] text-white shadow-md ring-2 ring-[#C5A059] font-bold scale-110"
-                            : "text-stone-700 hover:bg-stone-100/60"
-                        }`}
-                      >
-                        {dia}
-                        {esElDia && (
-                          <span className="absolute -top-1 -right-1 text-[10px]">
-                            👑
-                          </span>
-                        )}
-                      </div>
-                    );
-                  })}
+                      const esElDia = dia === diaEvento;
+
+                      return (
+                        <div
+                          key={`dia-${dia}`}
+                          className={`h-8 flex items-center justify-center rounded-full text-xs font-semibold transition relative ${
+                            esElDia
+                              ? "bg-[#7A002A] text-white shadow-md ring-2 ring-[#C5A059] font-bold scale-110"
+                              : "text-stone-700 hover:bg-stone-100/60"
+                          }`}
+                        >
+                          {dia}
+                          {esElDia && (
+                            <span className="absolute -top-1 -right-1 text-[10px]">
+                              👑
+                            </span>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
 
-              {/* Botones de acción: Agregar a Google / Apple Calendar */}
-              <div className="w-full max-w-[300px] pt-6 flex flex-col gap-2.5">
-                <a
-                  href={generateGoogleCalendarUrl({
-                    titulo: `Save the Date · ${nombreFestejada}`,
-                    descripcion: `Reserva la fecha para los quince años de ${nombreFestejada}.`,
-                    fechaInicio: fechaObj,
-                    ciudad: data.ciudad || "Salón de Eventos",
-                  })}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-[#7A002A] text-white font-semibold text-xs shadow-md hover:bg-[#5E0020] transition active:scale-95"
-                >
-                  <CalendarPlus className="w-4 h-4 text-amber-200" />
-                  <span>Agregar a Google Calendar</span>
-                </a>
-
-                <button
-                  type="button"
-                  onClick={() =>
-                    downloadIcsFile({
+                {/* Botones de acción: Agregar a Google / Apple Calendar */}
+                <div className="w-full max-w-[300px] pt-6 flex flex-col gap-2.5">
+                  <a
+                    href={generateGoogleCalendarUrl({
                       titulo: `Save the Date · ${nombreFestejada}`,
                       descripcion: `Reserva la fecha para los quince años de ${nombreFestejada}.`,
                       fechaInicio: fechaObj,
                       ciudad: data.ciudad || "Salón de Eventos",
-                    })
-                  }
-                  className="w-full inline-flex items-center justify-center gap-2 py-2 px-4 rounded-xl bg-white/90 text-stone-700 font-medium text-xs border border-stone-200 shadow-xs hover:bg-white transition active:scale-95 cursor-pointer"
-                >
-                  <Calendar className="w-3.5 h-3.5 text-stone-500" />
-                  <span>Apple / Outlook Calendar (.ics)</span>
-                </button>
-              </div>
-            </section>
-          )}
+                    })}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-[#7A002A] text-white font-semibold text-xs shadow-md hover:bg-[#5E0020] transition active:scale-95"
+                  >
+                    <CalendarPlus className="w-4 h-4 text-amber-200" />
+                    <span>Agregar a Google Calendar</span>
+                  </a>
+
+                  <button
+                    type="button"
+                    onClick={() =>
+                      downloadIcsFile({
+                        titulo: `Save the Date · ${nombreFestejada}`,
+                        descripcion: `Reserva la fecha para los quince años de ${nombreFestejada}.`,
+                        fechaInicio: fechaObj,
+                        ciudad: data.ciudad || "Salón de Eventos",
+                      })
+                    }
+                    className="w-full inline-flex items-center justify-center gap-2 py-2 px-4 rounded-xl bg-white/90 text-stone-700 font-medium text-xs border border-stone-200 shadow-xs hover:bg-white transition active:scale-95 cursor-pointer"
+                  >
+                    <Calendar className="w-3.5 h-3.5 text-stone-500" />
+                    <span>Apple / Outlook Calendar (.ics)</span>
+                  </button>
+                </div>
+              </section>
+            )}
+
+            {/* ============================================================ */}
+            {/* SECCIÓN CUENTA REGRESIVA */}
+            {/* ============================================================ */}
+            {data.mostrarContador && (
+              <section className="bg-gradient-to-br from-[#7A002A] to-[#4A0319] text-white rounded-[32px] p-6 shadow-xl text-center space-y-4">
+                <div className="space-y-1">
+                  <span className="text-[10px] uppercase font-bold tracking-widest text-amber-300 block">
+                    Tiempo Restante
+                  </span>
+                  <h3 className="font-serif text-2xl font-bold text-pink-50">
+                    La Cuenta Regresiva
+                  </h3>
+                </div>
+
+                <div className="grid grid-cols-4 gap-2 pt-2">
+                  <div className="bg-white/10 backdrop-blur-md rounded-2xl p-2.5 border border-white/15">
+                    <span className="block font-serif text-2xl sm:text-3xl font-bold text-amber-200">
+                      {tiempo.dias}
+                    </span>
+                    <span className="text-[9px] uppercase tracking-wider text-pink-100">
+                      Días
+                    </span>
+                  </div>
+                  <div className="bg-white/10 backdrop-blur-md rounded-2xl p-2.5 border border-white/15">
+                    <span className="block font-serif text-2xl sm:text-3xl font-bold text-amber-200">
+                      {tiempo.horas}
+                    </span>
+                    <span className="text-[9px] uppercase tracking-wider text-pink-100">
+                      Horas
+                    </span>
+                  </div>
+                  <div className="bg-white/10 backdrop-blur-md rounded-2xl p-2.5 border border-white/15">
+                    <span className="block font-serif text-2xl sm:text-3xl font-bold text-amber-200">
+                      {tiempo.minutos}
+                    </span>
+                    <span className="text-[9px] uppercase tracking-wider text-pink-100">
+                      Min
+                    </span>
+                  </div>
+                  <div className="bg-white/10 backdrop-blur-md rounded-2xl p-2.5 border border-white/15">
+                    <span className="block font-serif text-2xl sm:text-3xl font-bold text-amber-200">
+                      {tiempo.segundos}
+                    </span>
+                    <span className="text-[9px] uppercase tracking-wider text-pink-100">
+                      Seg
+                    </span>
+                  </div>
+                </div>
+              </section>
+            )}
 
 
           {/* ============================================================ */}
