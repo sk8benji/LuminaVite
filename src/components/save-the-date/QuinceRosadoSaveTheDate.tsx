@@ -80,8 +80,8 @@ export default function QuinceRosadoSaveTheDate({
   const [rsvpCompletado, setRsvpCompletado] = useState(false);
   const [rsvpError, setRsvpError] = useState<string | null>(null);
 
-  // Nombre de la niña (por defecto "María")
-  const nombreFestejada = data.titulo || "María";
+  // Nombre de la niña (por defecto "Melissa")
+  const nombreFestejada = data.titulo || "Melissa";
   const fotoPrincipal =
     data.fotoPortadaUrl || "/assets/save-the-date/principal.jpeg";
 

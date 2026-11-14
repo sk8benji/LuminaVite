@@ -14,12 +14,12 @@ interface PageProps {
 
 export const DEMO_SAVE_THE_DATE = {
   slug: "demo",
-  titulo: "María",
+  titulo: "Melissa",
   subtitulo: "Mis Quince Años",
   mensaje:
     "Guarda esta fecha especial en tu calendario. Muy pronto compartiremos todos los detalles y la invitación formal.",
-  fechaEvento: new Date("2026-12-05T22:38:00Z"),
-  fechaTextoPersonalizada: "Sábado 5 de Diciembre, 2026",
+  fechaEvento: new Date("2026-09-18T20:00:00Z"),
+  fechaTextoPersonalizada: "Viernes 18 de Septiembre, 2026",
   ciudad: "Los Ángeles, California",
   estiloPlantilla: "QUINCE_ROSADO",
   colorSobre: "#FFE8EE",
