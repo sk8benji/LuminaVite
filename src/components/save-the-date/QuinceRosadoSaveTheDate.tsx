@@ -270,18 +270,18 @@ export default function QuinceRosadoSaveTheDate({
       )}
 
       {/* ============================================================== */}
-      {/* 1. PRIMERA SECCIÓN: FOTO DE LA QUINCEAÑERA + SOBRE (100% VIEWPORT EN MÓVIL) */}
+      {/* 1. PRIMERA SECCIÓN: FOTO DE LA QUINCEAÑERA (60svh) + SOBRE COMPACTO (78%) */}
       {/* ============================================================== */}
-      <section className="relative h-[100dvh] max-h-[100dvh] flex flex-col justify-between items-center px-0 pt-0 pb-3 overflow-hidden">
-        {/* PARTE SUPERIOR: FOTO COMPLETA DE BORDE A BORDE CON TRANSICIÓN SUAVE */}
+      <section className="relative h-[100dvh] max-h-[100dvh] flex flex-col justify-between items-center px-0 pt-0 pb-4 overflow-hidden">
+        {/* PARTE SUPERIOR: FOTO CON MÁS ALTURA (60svh) Y MÁSCARA AL 68% */}
         <div className="w-full max-w-md flex flex-col items-center relative pt-0">
           <div
-            className="relative w-full h-[47dvh] overflow-hidden"
+            className="relative w-full h-[58svh] sm:h-[60svh] overflow-hidden"
             style={{
               WebkitMaskImage:
-                "linear-gradient(to bottom, rgba(0,0,0,1) 48%, rgba(0,0,0,0) 96%)",
+                "linear-gradient(to bottom, black 68%, transparent 100%)",
               maskImage:
-                "linear-gradient(to bottom, rgba(0,0,0,1) 48%, rgba(0,0,0,0) 96%)",
+                "linear-gradient(to bottom, black 68%, transparent 100%)",
             }}
           >
             {/* Foto 1: Estado Sobre Cerrado (principal.jpeg) */}
@@ -289,9 +289,12 @@ export default function QuinceRosadoSaveTheDate({
             <img
               src={fotoPrincipal}
               alt={nombreFestejada}
-              className={`w-full h-full object-cover object-top absolute inset-0 transition-opacity duration-1000 ${
+              className={`w-full h-full object-cover object-[center_20%] absolute inset-0 transition-opacity duration-1000 ${
                 sobreAbierto ? "opacity-0 pointer-events-none" : "opacity-100"
               }`}
+              style={{
+                filter: "contrast(1.06) saturate(1.08)",
+              }}
             />
 
             {/* Foto 2: Estado Sobre Abierto (images2.webp) */}
@@ -299,13 +302,16 @@ export default function QuinceRosadoSaveTheDate({
             <img
               src="/assets/save-the-date/images2.webp"
               alt={nombreFestejada}
-              className={`w-full h-full object-cover object-top absolute inset-0 transition-opacity duration-1000 ${
+              className={`w-full h-full object-cover object-[center_20%] absolute inset-0 transition-opacity duration-1000 ${
                 sobreAbierto ? "opacity-100" : "opacity-0 pointer-events-none"
               }`}
+              style={{
+                filter: "contrast(1.06) saturate(1.08)",
+              }}
             />
           </div>
 
-          {/* Caligrafía "Save the Date" SOLO EN SOBRE CERRADO, SIN TAPAR EL SOBRE */}
+          {/* Caligrafía "Save the Date" SOLO EN SOBRE CERRADO */}
           {!sobreAbierto && (
             <div
               className="text-center relative z-10 px-4 -mt-10 sm:-mt-12 animate-in fade-in duration-500"
@@ -314,7 +320,7 @@ export default function QuinceRosadoSaveTheDate({
               }}
             >
               <h2
-                className="text-[2.5rem] sm:text-[2.8rem] leading-none font-normal tracking-wide"
+                className="text-[2.4rem] sm:text-[2.7rem] leading-none font-normal tracking-wide"
                 style={{
                   fontFamily: "'Great Vibes', cursive",
                   color: "#4a3b32",
@@ -326,15 +332,20 @@ export default function QuinceRosadoSaveTheDate({
           )}
         </div>
 
-        {/* PARTE INFERIOR: SOBRE CENTRADO EN EL ESPACIO RESTANTE (SIN OVERLAP NI SCROLL) */}
-        <div className="w-full max-w-[320px] flex-1 flex flex-col items-center justify-center relative px-4 z-10 my-auto">
+        {/* PARTE INFERIOR: SOBRE COMPACTO (78%) Y UBICADO ABAJO */}
+        <div
+          className="w-full flex flex-col items-center justify-end relative px-4 z-10 pb-4 sm:pb-6"
+          style={{
+            maxWidth: "78%",
+          }}
+        >
           <div
             onClick={!sobreAbierto ? abrirSobre : undefined}
             className={`w-full relative transition-all duration-700 transform flex flex-col items-center ${
               !sobreAbierto ? "cursor-pointer hover:scale-102 active:scale-98" : ""
             } ${animandoSobre ? "scale-105 -translate-y-2" : ""}`}
           >
-            {/* SOBRE CERRADO (LIMPIO, SIN ETIQUETAS NI BOTÓN DE INSTRUCCIÓN) */}
+            {/* SOBRE CERRADO (COMPACTO) */}
             {!sobreAbierto ? (
               <div className="w-full relative flex flex-col items-center animate-in fade-in slide-in-from-bottom-4 duration-700">
                 {/* Pulso brillante sobre el sello dorado */}
@@ -348,12 +359,12 @@ export default function QuinceRosadoSaveTheDate({
                   </span>
                 </div>
 
-                {/* Sobre cerrado limpio sin etiqueta */}
+                {/* Sobre cerrado compacto */}
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src="/assets/save-the-date/sobre-cerrado-plain.webp"
                   alt="Sobre cerrado"
-                  className="w-full max-w-[270px] sm:max-w-[300px] max-h-[38dvh] object-contain transition-all duration-500"
+                  className="w-full max-w-[260px] sm:max-w-[280px] max-h-[32svh] object-contain transition-all duration-500"
                   style={{
                     filter:
                       "contrast(1.06) drop-shadow(0 12px 20px rgba(90, 60, 45, 0.22))",
@@ -367,7 +378,7 @@ export default function QuinceRosadoSaveTheDate({
                 <img
                   src="/assets/save-the-date/sobre-abierto.webp"
                   alt="Sobre abierto"
-                  className="w-full max-w-[275px] sm:max-w-[305px] max-h-[42dvh] object-contain"
+                  className="w-full max-w-[265px] sm:max-w-[285px] max-h-[35svh] object-contain"
                   style={{
                     filter:
                       "contrast(1.06) drop-shadow(0 12px 20px rgba(90, 60, 45, 0.22))",
@@ -379,11 +390,11 @@ export default function QuinceRosadoSaveTheDate({
                   className="absolute left-1/2 -translate-x-1/2 w-[62%] text-center pointer-events-none flex flex-col items-center justify-center"
                   style={{ top: "35%" }}
                 >
-                  <span className="font-serif text-[12px] sm:text-[14px] uppercase tracking-[0.24em] text-[#2A1B16] font-semibold block leading-tight">
+                  <span className="font-serif text-[11px] sm:text-[13px] uppercase tracking-[0.24em] text-[#2A1B16] font-semibold block leading-tight">
                     MIS XV AÑOS
                   </span>
                   <span
-                    className="text-3xl sm:text-4xl text-[#3E2723] font-normal leading-tight mt-1"
+                    className="text-2xl sm:text-3xl text-[#3E2723] font-normal leading-tight mt-1"
                     style={{ fontFamily: "'Great Vibes', cursive" }}
                   >
                     {nombreFestejada}
@@ -391,7 +402,7 @@ export default function QuinceRosadoSaveTheDate({
                 </div>
 
                 {/* Indicador discreto para deslizar hacia abajo una vez abierto */}
-                <div className="mt-2 text-center animate-bounce">
+                <div className="mt-1 text-center animate-bounce">
                   <button
                     type="button"
                     onClick={scrollHaciaDetalles}
