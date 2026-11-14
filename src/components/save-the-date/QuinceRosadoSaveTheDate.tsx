@@ -287,14 +287,35 @@ export default function QuinceRosadoSaveTheDate({
               className="w-full h-full object-cover object-top scale-[0.98] origin-top transition-transform duration-700"
             />
           </div>
+
+          {/* Caligrafía "Save the Date" EXCLUSIVA DE LA PANTALLA CON SOBRE CERRADO */}
+          {!sobreAbierto && (
+            <div
+              className="text-center relative z-10 px-4 animate-in fade-in duration-500"
+              style={{
+                marginTop: "-60px",
+                textShadow: "0px 2px 10px rgba(255, 248, 240, 0.9)",
+              }}
+            >
+              <h2
+                className="text-[2.8rem] leading-none font-normal tracking-wide"
+                style={{
+                  fontFamily: "'Great Vibes', cursive",
+                  color: "#4a3b32",
+                }}
+              >
+                Save the Date
+              </h2>
+            </div>
+          )}
         </div>
 
-        {/* PARTE INFERIOR: SOBRE ANIDADO (SUBIENDO PARA ENCIMAR EL DIFUMINADO DE LA FOTO) */}
+        {/* PARTE INFERIOR: SOBRE ANIDADO */}
         <div
           className="w-full flex flex-col items-center justify-center relative px-4"
           style={{
             maxWidth: "82%",
-            marginTop: "-45px",
+            marginTop: !sobreAbierto ? "-30px" : "-45px",
             zIndex: 15,
             transition: "all 0.6s cubic-bezier(0.25, 1, 0.50, 1)",
           }}
