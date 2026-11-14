@@ -288,19 +288,14 @@ export default function QuinceRosadoSaveTheDate({
             />
           </div>
 
-          {/* Caligrafía "Save the Date" (sutilmente superpuesta al desvanecimiento) */}
-          <div className="-mt-12 text-center relative z-10 px-4 space-y-0.5">
+          {/* Caligrafía "Save the Date" limpia y elegante */}
+          <div className="-mt-10 sm:-mt-12 text-center relative z-10 px-4">
             <h2
               className="text-5xl sm:text-6xl font-normal text-[#2A1B16] drop-shadow-sm tracking-wide"
               style={{ fontFamily: "'Great Vibes', cursive" }}
             >
               Save the Date
             </h2>
-            {data.fechaTextoPersonalizada && (
-              <p className="text-[11px] font-sans tracking-widest uppercase text-stone-600 font-medium">
-                {data.fechaTextoPersonalizada}
-              </p>
-            )}
           </div>
         </div>
 
