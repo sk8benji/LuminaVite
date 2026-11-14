@@ -49,16 +49,16 @@ export default function QuinceRosadoSaveTheDate({
   data,
   skipIntro = false,
 }: SaveTheDateProps) {
-  // Estado del sobre
+  // Estado del sobre (abierto o cerrado)
   const [sobreAbierto, setSobreAbierto] = useState(
     skipIntro || !data.mostrarSobre
   );
   const [animandoSobre, setAnimandoSobre] = useState(false);
-  const [mostrarSobreAbiertoImg, setMostrarSobreAbiertoImg] = useState(false);
 
   // Música
   const [reproduciendo, setReproduciendo] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const contenidoRef = useRef<HTMLDivElement | null>(null);
 
   // Cuenta regresiva
   const fechaObj = new Date(data.fechaEvento);
@@ -82,6 +82,8 @@ export default function QuinceRosadoSaveTheDate({
 
   // Nombre de la niña (por defecto "María")
   const nombreFestejada = data.titulo || "María";
+  const fotoPrincipal =
+    data.fotoPortadaUrl || "/assets/save-the-date/principal.jpeg";
 
   // Actualizar cuenta regresiva en tiempo real
   useEffect(() => {
@@ -134,24 +136,26 @@ export default function QuinceRosadoSaveTheDate({
         .catch(() => {});
     }
 
-    // Cambiar a imagen de sobre abierto a mitad de animación
-    setTimeout(() => {
-      setMostrarSobreAbiertoImg(true);
-      try {
-        confetti({
-          particleCount: 65,
-          spread: 70,
-          origin: { y: 0.65 },
-          colors: ["#C5A059", "#D4AF37", "#F8D7DA", "#FFFFFF", "#7A002A"],
-        });
-      } catch {}
-    }, 450);
-
-    // Finalizar animación y mostrar contenido completo
+    // Efecto de apertura con confeti dorado y rosa
     setTimeout(() => {
       setSobreAbierto(true);
       setAnimandoSobre(false);
-    }, 1100);
+
+      try {
+        confetti({
+          particleCount: 70,
+          spread: 75,
+          origin: { y: 0.6 },
+          colors: ["#D4AF37", "#C5A059", "#F8D7DA", "#FFFFFF", "#7A002A"],
+        });
+      } catch {}
+    }, 400);
+  };
+
+  const scrollHaciaDetalles = () => {
+    if (contenidoRef.current) {
+      contenidoRef.current.scrollIntoView({ behavior: "smooth" });
+    }
   };
 
   // Enviar Pre-RSVP
@@ -237,8 +241,8 @@ export default function QuinceRosadoSaveTheDate({
         backgroundAttachment: "fixed",
       }}
     >
-      {/* Capa de velo semitransparente para legibilidad y elegancia */}
-      <div className="fixed inset-0 bg-white/40 pointer-events-none backdrop-blur-[2px]" />
+      {/* Capa de velo suave para unificar el fondo satinado */}
+      <div className="fixed inset-0 bg-white/35 pointer-events-none backdrop-blur-[1px]" />
 
       {/* Audio Element Oculto */}
       {data.musicaUrl && (
@@ -262,112 +266,129 @@ export default function QuinceRosadoSaveTheDate({
       )}
 
       {/* ============================================================== */}
-      {/* 1. VISTA INICIAL: FOTO PRINCIPAL + "SAVE THE DATE" + SOBRE */}
+      {/* 1. PRIMERA SECCIÓN: FOTO DE LA QUINCEAÑERA + SOBRE (MIS XV AÑOS - MARÍA) */}
       {/* ============================================================== */}
-      {!sobreAbierto && (
-        <div className="fixed inset-0 z-50 flex flex-col justify-between items-center px-0 pt-0 pb-5 overflow-hidden">
-          {/* Fondo sedoso con degradado de iluminación */}
+      <section className="relative min-h-screen flex flex-col justify-between items-center px-0 pt-0 pb-6 overflow-hidden">
+        {/* PARTE SUPERIOR: FOTO PRINCIPAL CON DESVANECIMIENTO HACIA EL FONDO */}
+        <div className="w-full max-w-md flex flex-col items-center relative pt-0">
           <div
-            className="absolute inset-0 -z-10"
+            className="relative w-full aspect-[4/4.6] overflow-hidden"
             style={{
-              backgroundImage: "url('/assets/save-the-date/background.jpeg')",
-              backgroundSize: "cover",
-              backgroundPosition: "center",
+              WebkitMaskImage:
+                "linear-gradient(to bottom, rgba(0,0,0,1) 55%, rgba(0,0,0,0) 100%)",
+              maskImage:
+                "linear-gradient(to bottom, rgba(0,0,0,1) 55%, rgba(0,0,0,0) 100%)",
             }}
           >
-            <div className="absolute inset-0 bg-gradient-to-b from-stone-900/30 via-transparent to-amber-950/20" />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={fotoPrincipal}
+              alt={nombreFestejada}
+              className="w-full h-full object-cover object-top"
+            />
           </div>
 
-          {/* PARTE SUPERIOR: FOTO PRINCIPAL DE LA QUINCEAÑERA CON DESVANECIMIENTO */}
-          <div className="w-full max-w-md flex flex-col items-center relative animate-in fade-in duration-700 pt-0">
-            {/* Foto con máscara suave en degradado inferior directo al fondo */}
-            <div
-              className="relative w-full aspect-[4/4.5] overflow-hidden"
-              style={{
-                WebkitMaskImage:
-                  "linear-gradient(to bottom, rgba(0,0,0,1) 55%, rgba(0,0,0,0) 100%)",
-                maskImage:
-                  "linear-gradient(to bottom, rgba(0,0,0,1) 55%, rgba(0,0,0,0) 100%)",
-              }}
+          {/* Caligrafía "Save the Date" (sutilmente superpuesta al desvanecimiento) */}
+          <div className="-mt-12 text-center relative z-10 px-4 space-y-0.5">
+            <h2
+              className="text-5xl sm:text-6xl font-normal text-[#2A1B16] drop-shadow-sm tracking-wide"
+              style={{ fontFamily: "'Great Vibes', cursive" }}
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={data.fotoPortadaUrl || "/assets/save-the-date/xv.webp"}
-                alt={nombreFestejada}
-                className="w-full h-full object-cover object-top"
-              />
-            </div>
-
-            {/* TEXTO CALIGRÁFICO ELEGANTE: "Save the Date" & Nombre */}
-            <div className="-mt-12 text-center relative z-10 px-4 space-y-0.5">
-              <h2
-                className="text-5xl sm:text-6xl font-normal text-[#2A1B16] drop-shadow-sm tracking-wide"
-                style={{ fontFamily: "'Great Vibes', cursive" }}
-              >
-                Save the Date
-              </h2>
-              <p className="font-serif uppercase tracking-[0.28em] text-xs sm:text-sm font-semibold text-[#5D1F2D]">
-                {nombreFestejada}
+              Save the Date
+            </h2>
+            {data.fechaTextoPersonalizada && (
+              <p className="text-[11px] font-sans tracking-widest uppercase text-stone-600 font-medium">
+                {data.fechaTextoPersonalizada}
               </p>
-              {data.fechaTextoPersonalizada && (
-                <p className="text-[11px] font-sans tracking-widest uppercase text-stone-600 font-medium">
-                  {data.fechaTextoPersonalizada}
-                </p>
-              )}
-            </div>
+            )}
           </div>
+        </div>
 
-          {/* PARTE INFERIOR: SOBRE REALISTA INTERACTIVO CON SELLO */}
-          <div className="w-full max-w-sm flex flex-col items-center justify-center my-auto pb-2 px-4 relative z-10">
-            <div
-              onClick={abrirSobre}
-              className={`relative cursor-pointer transition-all duration-700 transform group ${
-                animandoSobre
-                  ? "scale-105 -translate-y-4"
-                  : "hover:scale-102 active:scale-98"
-              }`}
-            >
-              {/* Indicador brillante sobre el sello */}
-              {!animandoSobre && (
+        {/* PARTE INFERIOR: SOBRE (CERRADO O ABIERTO CON "MIS XV AÑOS" Y NOMBRE) */}
+        <div className="w-full max-w-sm flex flex-col items-center justify-center my-auto pb-2 px-4 relative z-10">
+          <div
+            onClick={!sobreAbierto ? abrirSobre : undefined}
+            className={`relative transition-all duration-700 transform ${
+              !sobreAbierto ? "cursor-pointer hover:scale-102 active:scale-98" : ""
+            } ${animandoSobre ? "scale-105 -translate-y-3" : ""}`}
+          >
+            {/* SOBRE CERRADO */}
+            {!sobreAbierto ? (
+              <div className="relative">
+                {/* Pulso brillante sobre el sello dorado */}
                 <div className="absolute top-[48%] left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 pointer-events-none">
                   <span className="relative flex h-8 w-8 items-center justify-center">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-60"></span>
                     <span className="relative inline-flex rounded-full h-4 w-4 bg-amber-300/80 shadow-md"></span>
                   </span>
                 </div>
-              )}
 
-              {/* Render del sobre cerrado o abierto según el momento de la animación */}
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={
-                  mostrarSobreAbiertoImg
-                    ? "/assets/save-the-date/sobre-abierto.png"
-                    : "/assets/save-the-date/sobre-cerrado.png"
-                }
-                alt="Sobre de Save the Date"
-                className={`w-[310px] sm:w-[340px] max-w-full drop-shadow-[0_20px_35px_rgba(0,0,0,0.25)] transition-all duration-500 ${
-                  mostrarSobreAbiertoImg ? "scale-105" : ""
-                }`}
-              />
-            </div>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/assets/save-the-date/sobre-cerrado.png"
+                  alt="Sobre cerrado"
+                  className="w-[310px] sm:w-[340px] max-w-full drop-shadow-[0_20px_35px_rgba(0,0,0,0.25)] transition-all duration-500"
+                />
 
-            {/* Prompt de invitación a pulsar */}
-            <div className="mt-2 text-center animate-bounce">
-              <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-white/80 backdrop-blur-md text-xs font-semibold text-[#5D1F2D] shadow-md border border-white/60">
-                <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-                Toca el sobre para abrir
-              </span>
-            </div>
+                {/* Prompt para abrir */}
+                <div className="mt-3 text-center animate-bounce">
+                  <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-white/85 backdrop-blur-md text-xs font-semibold text-[#5D1F2D] shadow-md border border-white/60">
+                    <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                    Toca el sobre para abrir
+                  </span>
+                </div>
+              </div>
+            ) : (
+              /* SOBRE ABIERTO CON LA TARJETA QUE DICE "MIS XV AÑOS" + NOMBRE DE LA NIÑA */
+              <div className="relative animate-in zoom-in-95 duration-500">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/assets/save-the-date/sobre-abierto.png"
+                  alt="Sobre abierto"
+                  className="w-[310px] sm:w-[340px] max-w-full drop-shadow-[0_20px_35px_rgba(0,0,0,0.25)]"
+                />
+
+                {/* TEXTO EXACTO DENTRO DE LA TARJETA DEL SOBRE ABIERTO */}
+                <div
+                  className="absolute left-1/2 -translate-x-1/2 w-[72%] text-center pointer-events-none flex flex-col items-center justify-center"
+                  style={{ top: "37%" }}
+                >
+                  <span className="font-serif text-[13px] sm:text-[15px] uppercase tracking-[0.24em] text-[#2A1B16] font-semibold block leading-tight">
+                    MIS XV AÑOS
+                  </span>
+                  <span
+                    className="text-4xl sm:text-5xl text-[#3E2723] font-normal leading-tight mt-1"
+                    style={{ fontFamily: "'Great Vibes', cursive" }}
+                  >
+                    {nombreFestejada}
+                  </span>
+                </div>
+
+                {/* Indicador para deslizar hacia abajo una vez abierto */}
+                <div className="mt-3 text-center animate-bounce">
+                  <button
+                    type="button"
+                    onClick={scrollHaciaDetalles}
+                    className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-white/90 backdrop-blur-md text-xs font-semibold text-[#7A002A] shadow-md border border-white/70 hover:bg-white cursor-pointer transition active:scale-95"
+                  >
+                    <span>Ver detalles del evento</span>
+                    <ChevronDown className="w-3.5 h-3.5 text-[#C5A059]" />
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
-      )}
+      </section>
 
       {/* ============================================================== */}
       {/* 2. CONTENIDO COMPLETO REVELADO AL ABRIR EL SOBRE */}
       {/* ============================================================== */}
       {sobreAbierto && (
-        <main className="max-w-md mx-auto px-4 pt-6 space-y-10 relative z-10 animate-in fade-in duration-700">
+        <div
+          ref={contenidoRef}
+          className="max-w-md mx-auto px-4 pt-4 space-y-10 relative z-10 animate-in fade-in duration-700"
+        >
           {/* ============================================================ */}
           {/* SECCIÓN HERO / CORONA / TÍTULO */}
           {/* ============================================================ */}
@@ -408,7 +429,7 @@ export default function QuinceRosadoSaveTheDate({
             <div className="relative mx-auto w-full aspect-[9/13] max-w-[310px] rounded-t-full rounded-b-3xl overflow-hidden shadow-lg border-4 border-white ring-1 ring-pink-200">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={data.fotoPortadaUrl || "/assets/save-the-date/xv.webp"}
+                src={fotoPrincipal}
                 alt={nombreFestejada}
                 className="w-full h-full object-cover object-center"
               />
@@ -797,7 +818,7 @@ export default function QuinceRosadoSaveTheDate({
               Invitación creada con amor en Click & Love
             </p>
           </footer>
-        </main>
+        </div>
       )}
     </div>
   );

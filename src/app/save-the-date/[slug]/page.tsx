@@ -25,9 +25,9 @@ export const DEMO_SAVE_THE_DATE = {
   colorSobre: "#FFE8EE",
   colorSello: "#D4AF37",
   tipoLetra: "SERIF_ELEGANTE",
-  fotoPortadaUrl: "/assets/save-the-date/xv.webp",
+  fotoPortadaUrl: "/assets/save-the-date/principal.jpeg",
   galeriaFotosUrls: [
-    "/assets/save-the-date/xv.webp",
+    "/assets/save-the-date/principal.jpeg",
     "/assets/template-rose/722d78548334333072ad7200e4f8233e.webp",
     "/assets/template-quince-rosado/90043c428c5ec72c7adb26dce69dedd2.webp",
   ],
