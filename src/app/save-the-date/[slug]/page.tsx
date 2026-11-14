@@ -14,8 +14,8 @@ interface PageProps {
 
 export const DEMO_SAVE_THE_DATE = {
   slug: "demo",
-  titulo: "Maydelin Mendez",
-  subtitulo: "Save Our Date · Mis XV Años",
+  titulo: "María",
+  subtitulo: "Mis Quince Años",
   mensaje:
     "Guarda esta fecha especial en tu calendario. Muy pronto compartiremos todos los detalles y la invitación formal.",
   fechaEvento: new Date("2026-12-05T22:38:00Z"),
@@ -25,10 +25,9 @@ export const DEMO_SAVE_THE_DATE = {
   colorSobre: "#FFE8EE",
   colorSello: "#D4AF37",
   tipoLetra: "SERIF_ELEGANTE",
-  fotoPortadaUrl:
-    "/assets/template-quince-rosado/90043c428c5ec72c7adb26dce69dedd2.webp",
+  fotoPortadaUrl: "/assets/save-the-date/xv.webp",
   galeriaFotosUrls: [
-    "/assets/template-quince-rosado/90043c428c5ec72c7adb26dce69dedd2.webp",
+    "/assets/save-the-date/xv.webp",
     "/assets/template-rose/722d78548334333072ad7200e4f8233e.webp",
     "/assets/template-quince-rosado/90043c428c5ec72c7adb26dce69dedd2.webp",
   ],

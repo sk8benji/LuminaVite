@@ -9,11 +9,9 @@ import {
   MapPin,
   CheckCircle2,
   CalendarPlus,
-  Music,
   Volume2,
   VolumeX,
   Share2,
-  Users,
   Send,
   Loader2,
   ChevronDown,
@@ -47,10 +45,16 @@ export interface SaveTheDateProps {
   skipIntro?: boolean;
 }
 
-export default function QuinceRosadoSaveTheDate({ data, skipIntro = false }: SaveTheDateProps) {
+export default function QuinceRosadoSaveTheDate({
+  data,
+  skipIntro = false,
+}: SaveTheDateProps) {
   // Estado del sobre
-  const [sobreAbierto, setSobreAbierto] = useState(skipIntro || !data.mostrarSobre);
+  const [sobreAbierto, setSobreAbierto] = useState(
+    skipIntro || !data.mostrarSobre
+  );
   const [animandoSobre, setAnimandoSobre] = useState(false);
+  const [mostrarSobreAbiertoImg, setMostrarSobreAbiertoImg] = useState(false);
 
   // Música
   const [reproduciendo, setReproduciendo] = useState(false);
@@ -58,7 +62,12 @@ export default function QuinceRosadoSaveTheDate({ data, skipIntro = false }: Sav
 
   // Cuenta regresiva
   const fechaObj = new Date(data.fechaEvento);
-  const [tiempo, setTiempo] = useState({ dias: 0, horas: 0, minutos: 0, segundos: 0 });
+  const [tiempo, setTiempo] = useState({
+    dias: 0,
+    horas: 0,
+    minutos: 0,
+    segundos: 0,
+  });
 
   // Formulario Pre-RSVP
   const [nombre, setNombre] = useState("");
@@ -70,6 +79,9 @@ export default function QuinceRosadoSaveTheDate({ data, skipIntro = false }: Sav
   const [enviandoRsvp, setEnviandoRsvp] = useState(false);
   const [rsvpCompletado, setRsvpCompletado] = useState(false);
   const [rsvpError, setRsvpError] = useState<string | null>(null);
+
+  // Nombre de la niña (por defecto "María")
+  const nombreFestejada = data.titulo || "María";
 
   // Actualizar cuenta regresiva en tiempo real
   useEffect(() => {
@@ -83,9 +95,11 @@ export default function QuinceRosadoSaveTheDate({ data, skipIntro = false }: Sav
       }
 
       const dias = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const horas = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutos = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-      const segundos = Math.floor((diff % (1000 * 60)) / 1000);
+      const horas = Math.floor(
+        (diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+      );
+      const minutos = Math.floor((diff % (1000 * 60)) / (1000 * 60));
+      const segundos = Math.floor((diff % 1000) / 1000);
 
       setTiempo({ dias, horas, minutos, segundos });
     };
@@ -102,30 +116,42 @@ export default function QuinceRosadoSaveTheDate({ data, skipIntro = false }: Sav
       audioRef.current.pause();
       setReproduciendo(false);
     } else {
-      audioRef.current.play().then(() => setReproduciendo(true)).catch(() => {});
+      audioRef.current
+        .play()
+        .then(() => setReproduciendo(true))
+        .catch(() => {});
     }
   };
 
   const abrirSobre = () => {
-    if (animandoSobre) return;
+    if (animandoSobre || sobreAbierto) return;
     setAnimandoSobre(true);
 
     if (data.musicaUrl && audioRef.current) {
-      audioRef.current.play().then(() => setReproduciendo(true)).catch(() => {});
+      audioRef.current
+        .play()
+        .then(() => setReproduciendo(true))
+        .catch(() => {});
     }
 
+    // Cambiar a imagen de sobre abierto a mitad de animación
+    setTimeout(() => {
+      setMostrarSobreAbiertoImg(true);
+      try {
+        confetti({
+          particleCount: 65,
+          spread: 70,
+          origin: { y: 0.65 },
+          colors: ["#C5A059", "#D4AF37", "#F8D7DA", "#FFFFFF", "#7A002A"],
+        });
+      } catch {}
+    }, 450);
+
+    // Finalizar animación y mostrar contenido completo
     setTimeout(() => {
       setSobreAbierto(true);
       setAnimandoSobre(false);
-      try {
-        confetti({
-          particleCount: 50,
-          spread: 60,
-          origin: { y: 0.7 },
-          colors: ["#7A002A", "#E8A598", "#C5A059", "#FFFFFF"],
-        });
-      } catch {}
-    }, 900);
+    }, 1100);
   };
 
   // Enviar Pre-RSVP
@@ -177,22 +203,43 @@ export default function QuinceRosadoSaveTheDate({ data, skipIntro = false }: Sav
   const diaEvento = fechaObj.getDate();
 
   const mesesNombres = [
-    "ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO",
-    "JULIO", "AGOSTO", "SEPTIEMBRE", "OCTUBRE", "NOVIEMBRE", "DICIEMBRE"
+    "ENERO",
+    "FEBRERO",
+    "MARZO",
+    "ABRIL",
+    "MAYO",
+    "JUNIO",
+    "JULIO",
+    "AGOSTO",
+    "SEPTIEMBRE",
+    "OCTUBRE",
+    "NOVIEMBRE",
+    "DICIEMBRE",
   ];
   const nombreMes = mesesNombres[mesIdx];
 
-  // Generar cuadrícula del calendario
+  // Generar cuadrícula del calendario (Lunes = 0)
   const primerDiaSemana = new Date(anio, mesIdx, 1).getDay(); // 0 = Domingo
   const diasEnMes = new Date(anio, mesIdx + 1, 0).getDate();
-  const offsetDias = (primerDiaSemana + 6) % 7; // Ajustar a Lunes = 0
+  const offsetDias = (primerDiaSemana + 6) % 7; // Ajuste a semana iniciando en Lunes
 
   const matrizDias: (number | null)[] = [];
   for (let i = 0; i < offsetDias; i++) matrizDias.push(null);
   for (let d = 1; d <= diasEnMes; d++) matrizDias.push(d);
 
   return (
-    <div className="min-h-screen bg-[#FFF9FA] text-[#2C1F1B] font-sans antialiased relative overflow-x-hidden selection:bg-[#7A002A] selection:text-white pb-16">
+    <div
+      className="min-h-screen text-[#2C1F1B] font-sans antialiased relative overflow-x-hidden selection:bg-[#7A002A] selection:text-white pb-20"
+      style={{
+        backgroundImage: "url('/assets/save-the-date/background.jpeg')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundAttachment: "fixed",
+      }}
+    >
+      {/* Capa de velo semitransparente para legibilidad y elegancia */}
+      <div className="fixed inset-0 bg-white/40 pointer-events-none backdrop-blur-[2px]" />
+
       {/* Audio Element Oculto */}
       {data.musicaUrl && (
         <audio ref={audioRef} src={data.musicaUrl} preload="auto" loop />
@@ -202,436 +249,556 @@ export default function QuinceRosadoSaveTheDate({ data, skipIntro = false }: Sav
       {data.musicaUrl && sobreAbierto && (
         <button
           onClick={toggleMusica}
-          className="fixed top-4 right-4 z-40 p-3 rounded-full bg-white/90 backdrop-blur-md shadow-md border border-pink-200 text-[#7A002A] hover:scale-105 transition cursor-pointer"
+          className="fixed top-4 right-4 z-40 p-3 rounded-full bg-white/95 backdrop-blur-md shadow-lg border border-pink-200 text-[#7A002A] hover:scale-105 active:scale-95 transition cursor-pointer"
           title={reproduciendo ? "Pausar música" : "Reproducir música"}
+          aria-label="Control de música"
         >
           {reproduciendo ? (
-            <Volume2 className="w-4 h-4 animate-pulse" />
+            <Volume2 className="w-5 h-5 animate-pulse text-[#7A002A]" />
           ) : (
-            <VolumeX className="w-4 h-4 text-stone-400" />
+            <VolumeX className="w-5 h-5 text-stone-400" />
           )}
         </button>
       )}
 
       {/* ============================================================== */}
-      {/* 1. SOBRE INTERACTIVO 3D CON APERTURA */}
+      {/* 1. VISTA INICIAL: FOTO PRINCIPAL + "SAVE THE DATE" + SOBRE */}
       {/* ============================================================== */}
       {!sobreAbierto && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gradient-to-b from-[#2A0815]/95 via-[#3D0A1C]/95 to-[#1F040E]/95 backdrop-blur-md animate-in fade-in duration-500">
-          <div className="w-full max-w-sm flex flex-col items-center text-center space-y-6">
-            <div className="space-y-1.5 text-white">
-              <span className="text-[11px] uppercase tracking-widest text-amber-200 font-bold block">
-                {data.subtitulo || "Save Our Date"}
-              </span>
-              <h1 className="font-serif text-2xl sm:text-3xl font-bold tracking-tight text-pink-50">
-                {data.titulo}
-              </h1>
-              <p className="text-xs text-pink-200/80">
-                Tienes una invitación especial previa por abrir
-              </p>
-            </div>
+        <div className="fixed inset-0 z-50 flex flex-col justify-between items-center px-0 pt-0 pb-5 overflow-hidden">
+          {/* Fondo sedoso con degradado de iluminación */}
+          <div
+            className="absolute inset-0 -z-10"
+            style={{
+              backgroundImage: "url('/assets/save-the-date/background.jpeg')",
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }}
+          >
+            <div className="absolute inset-0 bg-gradient-to-b from-stone-900/30 via-transparent to-amber-950/20" />
+          </div>
 
-            {/* Ilustración de Sobre 3D Elegante */}
+          {/* PARTE SUPERIOR: FOTO PRINCIPAL DE LA QUINCEAÑERA CON DESVANECIMIENTO */}
+          <div className="w-full max-w-md flex flex-col items-center relative animate-in fade-in duration-700 pt-0">
+            {/* Foto con máscara suave en degradado inferior directo al fondo */}
             <div
-              onClick={abrirSobre}
-              className={`relative w-72 h-48 rounded-2xl shadow-2xl cursor-pointer group transition-all duration-700 transform ${
-                animandoSobre ? "-translate-y-6 scale-95 opacity-0" : "hover:scale-102"
-              }`}
+              className="relative w-full aspect-[4/4.5] overflow-hidden"
               style={{
-                backgroundColor: data.colorSobre || "#FCECEE",
-                border: "2px solid rgba(255,255,255,0.8)",
+                WebkitMaskImage:
+                  "linear-gradient(to bottom, rgba(0,0,0,1) 55%, rgba(0,0,0,0) 100%)",
+                maskImage:
+                  "linear-gradient(to bottom, rgba(0,0,0,1) 55%, rgba(0,0,0,0) 100%)",
               }}
             >
-              {/* Solapa superior triangular */}
-              <div
-                className={`absolute top-0 left-0 right-0 h-24 origin-top transition-transform duration-700 rounded-t-2xl flex items-center justify-center ${
-                  animandoSobre ? "-rotate-x-180" : ""
-                }`}
-                style={{
-                  background: "linear-gradient(180deg, #FADCE0 0%, #F5C6CE 100%)",
-                  clipPath: "polygon(0 0, 100% 0, 50% 100%)",
-                }}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={data.fotoPortadaUrl || "/assets/save-the-date/xv.webp"}
+                alt={nombreFestejada}
+                className="w-full h-full object-cover object-top"
               />
-
-              {/* Sello de cera dorado central con corona / corazón */}
-              <div
-                className="absolute top-16 left-1/2 -translate-x-1/2 w-14 h-14 rounded-full shadow-lg flex items-center justify-center text-white font-serif font-bold text-lg border-2 border-amber-300 group-hover:scale-110 transition-transform"
-                style={{
-                  backgroundColor: data.colorSello || "#C5A059",
-                  boxShadow: "0 4px 15px rgba(197, 160, 89, 0.5)",
-                }}
-              >
-                <Sparkles className="w-6 h-6 text-amber-100" />
-              </div>
-
-              {/* Destello de lazo decorativo */}
-              <div className="absolute bottom-4 left-0 right-0 text-center">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-[#7A002A] bg-white/80 backdrop-blur-xs px-3 py-1 rounded-full shadow-xs">
-                  Toca para abrir 💌
-                </span>
-              </div>
             </div>
 
-            <p className="text-[11px] text-pink-200/60 italic">
-              Pulsa sobre el sobre para revelar la fecha
-            </p>
+            {/* TEXTO CALIGRÁFICO ELEGANTE: "Save the Date" & Nombre */}
+            <div className="-mt-12 text-center relative z-10 px-4 space-y-0.5">
+              <h2
+                className="text-5xl sm:text-6xl font-normal text-[#2A1B16] drop-shadow-sm tracking-wide"
+                style={{ fontFamily: "'Great Vibes', cursive" }}
+              >
+                Save the Date
+              </h2>
+              <p className="font-serif uppercase tracking-[0.28em] text-xs sm:text-sm font-semibold text-[#5D1F2D]">
+                {nombreFestejada}
+              </p>
+              {data.fechaTextoPersonalizada && (
+                <p className="text-[11px] font-sans tracking-widest uppercase text-stone-600 font-medium">
+                  {data.fechaTextoPersonalizada}
+                </p>
+              )}
+            </div>
+          </div>
+
+          {/* PARTE INFERIOR: SOBRE REALISTA INTERACTIVO CON SELLO */}
+          <div className="w-full max-w-sm flex flex-col items-center justify-center my-auto pb-2 px-4 relative z-10">
+            <div
+              onClick={abrirSobre}
+              className={`relative cursor-pointer transition-all duration-700 transform group ${
+                animandoSobre
+                  ? "scale-105 -translate-y-4"
+                  : "hover:scale-102 active:scale-98"
+              }`}
+            >
+              {/* Indicador brillante sobre el sello */}
+              {!animandoSobre && (
+                <div className="absolute top-[48%] left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 pointer-events-none">
+                  <span className="relative flex h-8 w-8 items-center justify-center">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-60"></span>
+                    <span className="relative inline-flex rounded-full h-4 w-4 bg-amber-300/80 shadow-md"></span>
+                  </span>
+                </div>
+              )}
+
+              {/* Render del sobre cerrado o abierto según el momento de la animación */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={
+                  mostrarSobreAbiertoImg
+                    ? "/assets/save-the-date/sobre-abierto.png"
+                    : "/assets/save-the-date/sobre-cerrado.png"
+                }
+                alt="Sobre de Save the Date"
+                className={`w-[310px] sm:w-[340px] max-w-full drop-shadow-[0_20px_35px_rgba(0,0,0,0.25)] transition-all duration-500 ${
+                  mostrarSobreAbiertoImg ? "scale-105" : ""
+                }`}
+              />
+            </div>
+
+            {/* Prompt de invitación a pulsar */}
+            <div className="mt-2 text-center animate-bounce">
+              <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-white/80 backdrop-blur-md text-xs font-semibold text-[#5D1F2D] shadow-md border border-white/60">
+                <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                Toca el sobre para abrir
+              </span>
+            </div>
           </div>
         </div>
       )}
 
       {/* ============================================================== */}
-      {/* CUERPO PRINCIPAL DEL SAVE THE DATE */}
+      {/* 2. CONTENIDO COMPLETO REVELADO AL ABRIR EL SOBRE */}
       {/* ============================================================== */}
-      <main className="max-w-md mx-auto px-4 pt-6 space-y-8 animate-in fade-in zoom-in-95 duration-500">
-        {/* ============================================================== */}
-        {/* 2. PORTADA & HERO DE LA FESTEJADA */}
-        {/* ============================================================== */}
-        <section className="bg-white rounded-[32px] p-5 shadow-sm border border-pink-100 text-center space-y-4">
-          <div className="space-y-1">
-            <span className="text-[10px] uppercase font-bold tracking-[0.25em] text-[#C5A059] block">
-              — {data.subtitulo || "Save Our Date"} —
-            </span>
-            <h1 className="font-serif text-3xl sm:text-4xl font-bold text-[#7A002A] leading-tight">
-              {data.titulo}
-            </h1>
-          </div>
+      {sobreAbierto && (
+        <main className="max-w-md mx-auto px-4 pt-6 space-y-10 relative z-10 animate-in fade-in duration-700">
+          {/* ============================================================ */}
+          {/* SECCIÓN HERO / CORONA / TÍTULO */}
+          {/* ============================================================ */}
+          <section className="bg-white/85 backdrop-blur-md rounded-[36px] p-6 shadow-xl border border-white/90 text-center space-y-4">
+            {/* Corona Real decorativa */}
+            <div className="flex justify-center -mt-2">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/assets/save-the-date/corona.png"
+                alt="Corona Quinceañera"
+                className="w-20 h-auto object-contain drop-shadow-md animate-pulse"
+              />
+            </div>
 
-          {/* Fotografía Protagonista Vertical en Marco Arco */}
-          <div className="relative mx-auto w-full aspect-[9/13] max-w-[320px] rounded-t-full rounded-b-3xl overflow-hidden shadow-md border-4 border-white ring-1 ring-pink-100">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={data.fotoPortadaUrl}
-              alt={data.titulo}
-              className="w-full h-full object-cover object-center"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
-
-            <div className="absolute bottom-3 left-3 right-3 text-white text-center">
-              <span className="text-[11px] font-bold uppercase tracking-widest text-amber-200 drop-shadow">
-                {data.fechaTextoPersonalizada || "Fecha muy pronto"}
+            <div className="space-y-1">
+              <span className="text-[11px] uppercase tracking-[0.3em] text-[#C5A059] font-bold block">
+                {data.subtitulo || "Mis Quince Años"}
               </span>
-            </div>
-          </div>
-
-          {/* Frase Introductoria */}
-          {data.mensaje && (
-            <p className="text-xs text-stone-600 italic px-3 leading-relaxed">
-              &quot;{data.mensaje}&quot;
-            </p>
-          )}
-
-          {data.ciudad && (
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-pink-50 text-xs font-semibold text-[#7A002A]">
-              <MapPin className="w-3.5 h-3.5 text-[#C5A059]" />
-              <span>{data.ciudad}</span>
-            </div>
-          )}
-        </section>
-
-        {/* ============================================================== */}
-        {/* 3. GALERÍA DE FOTOS VERTICAL */}
-        {/* ============================================================== */}
-        {data.mostrarGaleria && data.galeriaFotosUrls && data.galeriaFotosUrls.length > 0 && (
-          <section className="space-y-3">
-            <div className="text-center space-y-0.5">
-              <span className="text-[10px] uppercase tracking-widest text-[#C5A059] font-bold">
-                Sesión Especial
-              </span>
-              <h2 className="font-serif text-xl font-bold text-[#7A002A]">
-                Momentos Inolvidables
-              </h2>
+              <h1
+                className="text-5xl sm:text-6xl text-[#7A002A] leading-tight"
+                style={{ fontFamily: "'Great Vibes', cursive" }}
+              >
+                {nombreFestejada}
+              </h1>
             </div>
 
-            <div className="space-y-4">
-              {data.galeriaFotosUrls.map((url, idx) => (
-                <div
-                  key={idx}
-                  className="rounded-3xl overflow-hidden shadow-xs border-2 border-white aspect-[9/13] bg-stone-100"
-                >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={url}
-                    alt={`Foto ${idx + 1}`}
-                    className="w-full h-full object-cover object-center hover:scale-102 transition-transform duration-500"
-                  />
-                </div>
-              ))}
-            </div>
-          </section>
-        )}
-
-        {/* ============================================================== */}
-        {/* 4. CUENTA REGRESIVA + CALENDARIO INTERACTIVO */}
-        {/* ============================================================== */}
-        {data.mostrarContador && (
-          <section className="bg-white rounded-[32px] p-6 shadow-sm border border-pink-100 text-center space-y-5">
-            <div className="space-y-0.5">
-              <span className="text-[10px] uppercase tracking-widest text-[#C5A059] font-bold">
-                Faltan Sólo
-              </span>
-              <h2 className="font-serif text-xl font-bold text-[#7A002A]">
-                Cuenta Regresiva
-              </h2>
+            {/* Guirnalda Floral de Separación */}
+            <div className="flex justify-center py-1">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/assets/save-the-date/flores.png"
+                alt="Flores"
+                className="w-56 h-auto object-contain opacity-90"
+              />
             </div>
 
-            {/* Reloj Digital Cuadrícula */}
-            <div className="grid grid-cols-4 gap-2">
-              {[
-                { val: tiempo.dias, label: "DÍAS" },
-                { val: tiempo.horas, label: "HORAS" },
-                { val: tiempo.minutos, label: "MIN" },
-                { val: tiempo.segundos, label: "SEG" },
-              ].map((box, i) => (
-                <div
-                  key={i}
-                  className="p-3 rounded-2xl bg-gradient-to-b from-[#FFF5F7] to-[#FDE8EC] border border-pink-200/80 shadow-2xs"
-                >
-                  <span className="font-serif font-bold text-xl sm:text-2xl text-[#7A002A] block leading-none">
-                    {box.val}
-                  </span>
-                  <span className="text-[9px] font-bold uppercase tracking-wider text-stone-500 mt-1 block">
-                    {box.label}
-                  </span>
-                </div>
-              ))}
+            {/* Fotografía Protagonista Vertical en Marco Arco */}
+            <div className="relative mx-auto w-full aspect-[9/13] max-w-[310px] rounded-t-full rounded-b-3xl overflow-hidden shadow-lg border-4 border-white ring-1 ring-pink-200">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={data.fotoPortadaUrl || "/assets/save-the-date/xv.webp"}
+                alt={nombreFestejada}
+                className="w-full h-full object-cover object-center"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+
+              <div className="absolute bottom-3 left-3 right-3 text-white text-center">
+                <span className="text-xs font-bold uppercase tracking-widest text-amber-200 drop-shadow">
+                  {data.fechaTextoPersonalizada || "Fecha muy pronto"}
+                </span>
+              </div>
             </div>
 
-            {/* Cuadrícula del Calendario del Mes */}
-            {data.mostrarCalendario && (
-              <div className="pt-4 border-t border-pink-100 space-y-3">
-                <div className="flex items-center justify-between px-2">
-                  <span className="font-serif font-bold text-sm text-[#7A002A]">
-                    {nombreMes} {anio}
-                  </span>
-                  <span className="text-[11px] font-semibold text-[#C5A059] flex items-center gap-1">
-                    <Heart className="w-3 h-3 fill-current" />
-                    <span>Día {diaEvento}</span>
-                  </span>
-                </div>
+            {/* Frase / Mensaje de Save the Date */}
+            {data.mensaje && (
+              <p className="text-xs text-stone-700 italic px-4 leading-relaxed font-serif">
+                &quot;{data.mensaje}&quot;
+              </p>
+            )}
 
-                <div className="bg-[#FFF9FA] p-3 rounded-2xl border border-pink-100">
-                  {/* Encabezado Días Semana */}
-                  <div className="grid grid-cols-7 gap-1 text-[10px] font-bold text-stone-400 uppercase text-center mb-1">
-                    <span>L</span>
-                    <span>M</span>
-                    <span>M</span>
-                    <span>J</span>
-                    <span>V</span>
-                    <span>S</span>
-                    <span>D</span>
-                  </div>
-
-                  {/* Días */}
-                  <div className="grid grid-cols-7 gap-1 text-xs text-center font-medium">
-                    {matrizDias.map((d, idx) => {
-                      if (d === null) return <div key={idx} className="h-7" />;
-                      const esElDia = d === diaEvento;
-
-                      return (
-                        <div
-                          key={idx}
-                          className={`h-7 rounded-lg flex items-center justify-center transition ${
-                            esElDia
-                              ? "bg-[#7A002A] text-white font-bold shadow-xs scale-110 ring-2 ring-amber-300"
-                              : "text-stone-700 hover:bg-pink-100/50"
-                          }`}
-                        >
-                          {d}
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* Botones Agregar a Calendario */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
-                  <a
-                    href={generateGoogleCalendarUrl({
-                      titulo: data.titulo,
-                      descripcion: data.mensaje || `Save The Date para ${data.titulo}`,
-                      ciudad: data.ciudad || undefined,
-                      fechaInicio: fechaObj,
-                    })}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="py-2.5 px-3 rounded-xl bg-pink-50 hover:bg-pink-100 text-[#7A002A] text-xs font-bold transition flex items-center justify-center gap-1.5 border border-pink-200 shadow-2xs"
-                  >
-                    <CalendarPlus className="w-3.5 h-3.5" />
-                    <span>Google Calendar</span>
-                  </a>
-
-                  <button
-                    type="button"
-                    onClick={() =>
-                      downloadIcsFile({
-                        titulo: data.titulo,
-                        descripcion: data.mensaje || `Save The Date para ${data.titulo}`,
-                        ciudad: data.ciudad || undefined,
-                        fechaInicio: fechaObj,
-                      })
-                    }
-                    className="py-2.5 px-3 rounded-xl bg-stone-900 hover:bg-black text-white text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-2xs cursor-pointer"
-                  >
-                    <Calendar className="w-3.5 h-3.5" />
-                    <span>Apple / iCal (.ics)</span>
-                  </button>
-                </div>
+            {data.ciudad && (
+              <div className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-pink-50/90 text-xs font-semibold text-[#7A002A] border border-pink-100 shadow-xs">
+                <MapPin className="w-3.5 h-3.5 text-[#C5A059]" />
+                <span>{data.ciudad}</span>
               </div>
             )}
           </section>
-        )}
 
-        {/* ============================================================== */}
-        {/* 5. PRE-RSVP / CONFIRMACIÓN CONECTADA */}
-        {/* ============================================================== */}
-        {data.mostrarPreRsvp && (
-          <section className="bg-white rounded-[32px] p-6 shadow-sm border border-pink-100 space-y-4">
-            <div className="text-center space-y-1">
-              <span className="text-[10px] uppercase tracking-widest text-[#C5A059] font-bold block">
-                Pre-Confirmación
-              </span>
-              <h2 className="font-serif text-xl font-bold text-[#7A002A]">
-                {data.textoPreRsvp || "¿Crees que podrás acompañarnos?"}
-              </h2>
-              <p className="text-xs text-stone-500">
-                Tu respuesta tentativa nos ayuda a planear los detalles preliminares con el salón.
-              </p>
-            </div>
-
-            {rsvpCompletado ? (
-              <div className="p-5 rounded-2xl bg-emerald-50 border border-emerald-200 text-center space-y-2">
-                <CheckCircle2 className="w-8 h-8 text-emerald-600 mx-auto" />
-                <h4 className="font-bold text-sm text-emerald-900">
-                  ¡Muchas gracias por confirmar, {nombre}!
-                </h4>
-                <p className="text-xs text-emerald-700">
-                  Hemos registrado tu respuesta. Te enviaremos la invitación oficial con todos los detalles cuando esté lista.
-                </p>
+          {/* ============================================================ */}
+          {/* SECCIÓN CUENTA REGRESIVA */}
+          {/* ============================================================ */}
+          {data.mostrarContador && (
+            <section className="bg-gradient-to-br from-[#7A002A] to-[#4A0319] text-white rounded-[32px] p-6 shadow-xl text-center space-y-4">
+              <div className="space-y-1">
+                <span className="text-[10px] uppercase font-bold tracking-widest text-amber-300 block">
+                  Tiempo Restante
+                </span>
+                <h3 className="font-serif text-2xl font-bold text-pink-50">
+                  La Cuenta Regresiva
+                </h3>
               </div>
-            ) : (
-              <form onSubmit={handleEnviarPreRsvp} className="space-y-4 text-xs">
-                {rsvpError && (
-                  <div className="p-3 bg-rose-50 border border-rose-200 rounded-xl text-rose-800 font-medium">
-                    {rsvpError}
-                  </div>
-                )}
 
-                {/* Selector de Respuesta */}
-                <div className="grid grid-cols-3 gap-2">
-                  {[
-                    { id: "SI", label: "¡Sí, asistiré!", icon: "🎉" },
-                    { id: "TAL_VEZ", label: "Tal vez", icon: "🤔" },
-                    { id: "NO", label: "No podré", icon: "💔" },
-                  ].map((btn) => (
-                    <button
-                      key={btn.id}
-                      type="button"
-                      onClick={() => setRespuesta(btn.id as any)}
-                      className={`p-2.5 rounded-2xl border text-center font-bold transition cursor-pointer flex flex-col items-center gap-1 ${
-                        respuesta === btn.id
-                          ? "bg-[#7A002A] text-white border-[#7A002A] shadow-xs"
-                          : "bg-[#FFF9FA] text-stone-700 border-pink-200 hover:bg-pink-100/50"
-                      }`}
-                    >
-                      <span className="text-sm">{btn.icon}</span>
-                      <span className="text-[11px]">{btn.label}</span>
-                    </button>
-                  ))}
+              <div className="grid grid-cols-4 gap-2 pt-2">
+                <div className="bg-white/10 backdrop-blur-md rounded-2xl p-2.5 border border-white/15">
+                  <span className="block font-serif text-2xl sm:text-3xl font-bold text-amber-200">
+                    {tiempo.dias}
+                  </span>
+                  <span className="text-[9px] uppercase tracking-wider text-pink-100">
+                    Días
+                  </span>
+                </div>
+                <div className="bg-white/10 backdrop-blur-md rounded-2xl p-2.5 border border-white/15">
+                  <span className="block font-serif text-2xl sm:text-3xl font-bold text-amber-200">
+                    {tiempo.horas}
+                  </span>
+                  <span className="text-[9px] uppercase tracking-wider text-pink-100">
+                    Horas
+                  </span>
+                </div>
+                <div className="bg-white/10 backdrop-blur-md rounded-2xl p-2.5 border border-white/15">
+                  <span className="block font-serif text-2xl sm:text-3xl font-bold text-amber-200">
+                    {tiempo.minutos}
+                  </span>
+                  <span className="text-[9px] uppercase tracking-wider text-pink-100">
+                    Min
+                  </span>
+                </div>
+                <div className="bg-white/10 backdrop-blur-md rounded-2xl p-2.5 border border-white/15">
+                  <span className="block font-serif text-2xl sm:text-3xl font-bold text-amber-200">
+                    {tiempo.segundos}
+                  </span>
+                  <span className="text-[9px] uppercase tracking-wider text-pink-100">
+                    Seg
+                  </span>
+                </div>
+              </div>
+            </section>
+          )}
+
+          {/* ============================================================ */}
+          {/* SECCIÓN CALENDARIO CON MARCO ELEGANTE (calendario.png) */}
+          {/* ============================================================ */}
+          {data.mostrarCalendario && (
+            <section className="relative rounded-[32px] overflow-hidden shadow-2xl p-6 sm:p-8 flex flex-col items-center">
+              {/* Marco gráfico de fondo decorativo */}
+              <div
+                className="absolute inset-0 -z-10"
+                style={{
+                  backgroundImage: "url('/assets/save-the-date/calendario.png')",
+                  backgroundSize: "100% 100%",
+                  backgroundPosition: "center",
+                }}
+              />
+
+              <div className="w-full text-center space-y-1 pt-2">
+                <span className="text-[10px] uppercase tracking-widest text-[#C5A059] font-bold block">
+                  Reserva La Fecha
+                </span>
+                <h3 className="font-serif text-2xl font-bold text-[#7A002A]">
+                  {nombreMes} {anio}
+                </h3>
+              </div>
+
+              {/* Cuadrícula interactiva del mes */}
+              <div className="w-full max-w-[300px] mt-4">
+                <div className="grid grid-cols-7 gap-1 text-center font-bold text-[10px] text-stone-500 mb-2 uppercase">
+                  <span>L</span>
+                  <span>M</span>
+                  <span>M</span>
+                  <span>J</span>
+                  <span>V</span>
+                  <span>S</span>
+                  <span>D</span>
                 </div>
 
-                {/* Campos de Contacto */}
-                <div className="space-y-3">
-                  <div>
-                    <label className="block text-[11px] font-bold text-stone-700 uppercase mb-1">
-                      Tu Nombre y Apellido *
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      value={nombre}
-                      onChange={(e) => setNombre(e.target.value)}
-                      placeholder="Ej. Familia Rodríguez"
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-stone-200 bg-stone-50/50 text-stone-900 focus:outline-none focus:border-[#7A002A]"
-                    />
+                <div className="grid grid-cols-7 gap-1.5 text-center text-xs">
+                  {matrizDias.map((dia, idx) => {
+                    if (dia === null) {
+                      return <div key={`empty-${idx}`} className="h-8" />;
+                    }
+
+                    const esElDia = dia === diaEvento;
+
+                    return (
+                      <div
+                        key={`dia-${dia}`}
+                        className={`h-8 flex items-center justify-center rounded-full text-xs font-semibold transition relative ${
+                          esElDia
+                            ? "bg-[#7A002A] text-white shadow-md ring-2 ring-[#C5A059] font-bold scale-110"
+                            : "text-stone-700 hover:bg-stone-100/60"
+                        }`}
+                      >
+                        {dia}
+                        {esElDia && (
+                          <span className="absolute -top-1 -right-1 text-[10px]">
+                            👑
+                          </span>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Botones de acción: Agregar a Google / Apple Calendar */}
+              <div className="w-full max-w-[300px] pt-6 flex flex-col gap-2.5">
+                <a
+                  href={generateGoogleCalendarUrl({
+                    titulo: `Save the Date · ${nombreFestejada}`,
+                    descripcion: `Reserva la fecha para los quince años de ${nombreFestejada}.`,
+                    fechaInicio: fechaObj,
+                    ciudad: data.ciudad || "Salón de Eventos",
+                  })}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-[#7A002A] text-white font-semibold text-xs shadow-md hover:bg-[#5E0020] transition active:scale-95"
+                >
+                  <CalendarPlus className="w-4 h-4 text-amber-200" />
+                  <span>Agregar a Google Calendar</span>
+                </a>
+
+                <button
+                  type="button"
+                  onClick={() =>
+                    downloadIcsFile({
+                      titulo: `Save the Date · ${nombreFestejada}`,
+                      descripcion: `Reserva la fecha para los quince años de ${nombreFestejada}.`,
+                      fechaInicio: fechaObj,
+                      ciudad: data.ciudad || "Salón de Eventos",
+                    })
+                  }
+                  className="w-full inline-flex items-center justify-center gap-2 py-2 px-4 rounded-xl bg-white/90 text-stone-700 font-medium text-xs border border-stone-200 shadow-xs hover:bg-white transition active:scale-95 cursor-pointer"
+                >
+                  <Calendar className="w-3.5 h-3.5 text-stone-500" />
+                  <span>Apple / Outlook Calendar (.ics)</span>
+                </button>
+              </div>
+            </section>
+          )}
+
+          {/* ============================================================ */}
+          {/* SECCIÓN GALERÍA DE FOTOS VERTICAL */}
+          {/* ============================================================ */}
+          {data.mostrarGaleria &&
+            data.galeriaFotosUrls &&
+            data.galeriaFotosUrls.length > 0 && (
+              <section className="space-y-4">
+                <div className="text-center space-y-0.5">
+                  <span className="text-[10px] uppercase tracking-widest text-[#C5A059] font-bold">
+                    Sesión Especial
+                  </span>
+                  <h3 className="font-serif text-2xl font-bold text-[#7A002A]">
+                    Galería de Recuerdos
+                  </h3>
+                </div>
+
+                <div className="space-y-4">
+                  {data.galeriaFotosUrls.map((url, idx) => (
+                    <div
+                      key={idx}
+                      className="rounded-3xl overflow-hidden shadow-md border-2 border-white aspect-[9/13] bg-stone-100"
+                    >
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={url}
+                        alt={`Foto sesión ${idx + 1}`}
+                        className="w-full h-full object-cover object-center"
+                        loading="lazy"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
+
+          {/* ============================================================ */}
+          {/* SECCIÓN PRE-RSVP / CONFIRMACIÓN */}
+          {/* ============================================================ */}
+          {data.mostrarPreRsvp && (
+            <section className="bg-white/90 backdrop-blur-md rounded-[32px] p-6 shadow-xl border border-white space-y-5">
+              <div className="text-center space-y-1">
+                <span className="text-[10px] uppercase font-bold tracking-widest text-[#C5A059] block">
+                  Confirmación Anticipada
+                </span>
+                <h3 className="font-serif text-2xl font-bold text-[#7A002A]">
+                  ¿Podrás Acompañarnos?
+                </h3>
+                <p className="text-xs text-stone-600 px-2 leading-relaxed">
+                  {data.textoPreRsvp ||
+                    "Ayúdanos confirmando tu asistencia tentativa para apartar tu lugar con anticipación."}
+                </p>
+              </div>
+
+              {rsvpCompletado ? (
+                <div className="rounded-2xl bg-emerald-50 border border-emerald-200 p-5 text-center space-y-2 animate-in zoom-in-95">
+                  <div className="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto shadow-xs">
+                    <CheckCircle2 className="w-7 h-7" />
+                  </div>
+                  <h4 className="font-serif text-lg font-bold text-emerald-900">
+                    ¡Gracias por responder!
+                  </h4>
+                  <p className="text-xs text-emerald-700">
+                    Registramos tu respuesta. Muy pronto recibirás todos los
+                    detalles oficiales de la invitación.
+                  </p>
+                </div>
+              ) : (
+                <form onSubmit={handleEnviarPreRsvp} className="space-y-4">
+                  {rsvpError && (
+                    <div className="p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs">
+                      {rsvpError}
+                    </div>
+                  )}
+
+                  {/* Selector de respuesta */}
+                  <div className="grid grid-cols-3 gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setRespuesta("SI")}
+                      className={`py-3 px-2 rounded-2xl text-xs font-semibold border text-center transition cursor-pointer flex flex-col items-center gap-1 ${
+                        respuesta === "SI"
+                          ? "bg-emerald-600 text-white border-emerald-600 shadow-md"
+                          : "bg-white text-stone-700 border-stone-200 hover:bg-stone-50"
+                      }`}
+                    >
+                      <span className="text-base">✨</span>
+                      <span>¡Sí asistiré!</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => setRespuesta("TAL_VEZ")}
+                      className={`py-3 px-2 rounded-2xl text-xs font-semibold border text-center transition cursor-pointer flex flex-col items-center gap-1 ${
+                        respuesta === "TAL_VEZ"
+                          ? "bg-amber-600 text-white border-amber-600 shadow-md"
+                          : "bg-white text-stone-700 border-stone-200 hover:bg-stone-50"
+                      }`}
+                    >
+                      <span className="text-base">⏳</span>
+                      <span>Tal vez</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => setRespuesta("NO")}
+                      className={`py-3 px-2 rounded-2xl text-xs font-semibold border text-center transition cursor-pointer flex flex-col items-center gap-1 ${
+                        respuesta === "NO"
+                          ? "bg-stone-700 text-white border-stone-700 shadow-md"
+                          : "bg-white text-stone-700 border-stone-200 hover:bg-stone-50"
+                      }`}
+                    >
+                      <span className="text-base">💌</span>
+                      <span>No podré</span>
+                    </button>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {/* Campos de contacto */}
+                  <div className="space-y-3 pt-1">
                     <div>
-                      <label className="block text-[11px] font-bold text-stone-700 uppercase mb-1">
-                        Teléfono / WhatsApp
+                      <label className="block text-[11px] font-bold uppercase tracking-wider text-stone-600 mb-1">
+                        Tu Nombre Completo *
                       </label>
                       <input
-                        type="tel"
-                        value={telefono}
-                        onChange={(e) => setTelefono(e.target.value)}
-                        placeholder="(818) 123-4567"
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-stone-200 bg-stone-50/50 text-stone-900 focus:outline-none focus:border-[#7A002A]"
+                        type="text"
+                        required
+                        value={nombre}
+                        onChange={(e) => setNombre(e.target.value)}
+                        placeholder="Ej. Familia Rodríguez o Nombre"
+                        className="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 text-xs focus:ring-2 focus:ring-[#7A002A] focus:border-transparent outline-none bg-white/95"
                       />
                     </div>
 
+                    <div className="grid grid-cols-2 gap-2">
+                      <div>
+                        <label className="block text-[11px] font-bold uppercase tracking-wider text-stone-600 mb-1">
+                          Teléfono / WhatsApp
+                        </label>
+                        <input
+                          type="tel"
+                          value={telefono}
+                          onChange={(e) => setTelefono(e.target.value)}
+                          placeholder="+1 (555) 000-0000"
+                          className="w-full px-3 py-2.5 rounded-xl border border-stone-300 text-xs focus:ring-2 focus:ring-[#7A002A] outline-none bg-white/95"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-[11px] font-bold uppercase tracking-wider text-stone-600 mb-1">
+                          Pases Estimados
+                        </label>
+                        <select
+                          value={pases}
+                          onChange={(e) => setPases(Number(e.target.value))}
+                          className="w-full px-3 py-2.5 rounded-xl border border-stone-300 text-xs focus:ring-2 focus:ring-[#7A002A] outline-none bg-white/95"
+                        >
+                          {[1, 2, 3, 4, 5, 6, 7, 8].map((num) => (
+                            <option key={num} value={num}>
+                              {num} {num === 1 ? "pase" : "pases"}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+
                     <div>
-                      <label className="block text-[11px] font-bold text-stone-700 uppercase mb-1">
-                        Pases Tentativos
+                      <label className="block text-[11px] font-bold uppercase tracking-wider text-stone-600 mb-1">
+                        Nota o mensaje para {nombreFestejada}
                       </label>
-                      <select
-                        value={pases}
-                        onChange={(e) => setPases(Number(e.target.value))}
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-stone-200 bg-stone-50/50 text-stone-900 font-semibold"
-                      >
-                        {[1, 2, 3, 4, 5, 6].map((n) => (
-                          <option key={n} value={n}>
-                            {n} {n === 1 ? "Pase" : "Pases"}
-                          </option>
-                        ))}
-                      </select>
+                      <textarea
+                        rows={2}
+                        value={notas}
+                        onChange={(e) => setNotas(e.target.value)}
+                        placeholder="¡Felicidades, te queremos mucho!"
+                        className="w-full px-3.5 py-2 rounded-xl border border-stone-300 text-xs focus:ring-2 focus:ring-[#7A002A] outline-none bg-white/95"
+                      />
                     </div>
                   </div>
 
-                  <div>
-                    <label className="block text-[11px] font-bold text-stone-700 uppercase mb-1">
-                      Mensaje o Buenos Deseos (Opcional)
-                    </label>
-                    <input
-                      type="text"
-                      value={notas}
-                      onChange={(e) => setNotas(e.target.value)}
-                      placeholder="¡Estamos muy emocionados por acompañarte!"
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-stone-200 bg-stone-50/50 text-stone-900 focus:outline-none focus:border-[#7A002A]"
-                    />
-                  </div>
-                </div>
+                  <button
+                    type="submit"
+                    disabled={enviandoRsvp}
+                    className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-[#7A002A] to-[#990F3D] text-white font-bold text-xs uppercase tracking-wider shadow-lg hover:brightness-110 active:scale-95 transition disabled:opacity-60 flex items-center justify-center gap-2 cursor-pointer"
+                  >
+                    {enviandoRsvp ? (
+                      <>
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        <span>Enviando respuesta...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Send className="w-4 h-4" />
+                        <span>Confirmar Pre-Registro</span>
+                      </>
+                    )}
+                  </button>
+                </form>
+              )}
+            </section>
+          )}
 
-                <button
-                  type="submit"
-                  disabled={enviandoRsvp || !nombre.trim()}
-                  className="w-full py-3 px-4 rounded-xl bg-[#7A002A] hover:bg-[#5e0020] text-white font-bold transition shadow-sm flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer"
-                >
-                  {enviandoRsvp ? (
-                    <>
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                      <span>Enviando confirmación...</span>
-                    </>
-                  ) : (
-                    <>
-                      <Send className="w-4 h-4" />
-                      <span>Enviar Pre-Confirmación</span>
-                    </>
-                  )}
-                </button>
-              </form>
-            )}
-          </section>
-        )}
-
-        {/* Footer Click and Love */}
-        <footer className="text-center space-y-1 text-stone-400 text-[11px] pt-4">
-          <p className="flex items-center justify-center gap-1">
-            <span>Hecho con</span>
-            <Heart className="w-3 h-3 text-pink-400 fill-current" />
-            <span>en Click and Love</span>
-          </p>
-        </footer>
-      </main>
+          {/* Pie de página sutil */}
+          <footer className="text-center pb-8 pt-4 space-y-1 text-stone-500">
+            <p className="text-[11px] uppercase tracking-widest font-semibold text-stone-600">
+              {nombreFestejada} · Mis Quince Años
+            </p>
+            <p className="text-[10px]">
+              Invitación creada con amor en Click & Love
+            </p>
+          </footer>
+        </main>
+      )}
     </div>
   );
 }
