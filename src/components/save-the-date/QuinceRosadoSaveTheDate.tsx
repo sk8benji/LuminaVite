@@ -15,6 +15,10 @@ import {
   Send,
   Loader2,
   ChevronDown,
+  Play,
+  Pause,
+  SkipBack,
+  SkipForward,
 } from "lucide-react";
 import confetti from "canvas-confetti";
 import { generateGoogleCalendarUrl, downloadIcsFile } from "@/lib/calendar-generator";
@@ -427,75 +431,185 @@ export default function QuinceRosadoSaveTheDate({
       {sobreAbierto && (
         <div
           ref={contenidoRef}
-          className="max-w-md mx-auto px-4 pt-4 space-y-10 relative z-10 animate-in fade-in duration-700"
+          className="w-full relative z-10 animate-in fade-in duration-700 space-y-4"
         >
           {/* ============================================================ */}
-          {/* SECCIÓN HERO / CORONA / TÍTULO */}
+          {/* REPRODUCTOR DE MÚSICA SUPERIOR (SATÉN CONTINUO) */}
           {/* ============================================================ */}
-          <section className="bg-white/85 backdrop-blur-md rounded-[36px] p-6 shadow-xl border border-white/90 text-center space-y-4">
-            {/* Corona Real decorativa */}
-            <div className="flex justify-center -mt-2">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/assets/save-the-date/corona.png"
-                alt="Corona Quinceañera"
-                className="w-20 h-auto object-contain drop-shadow-md animate-pulse"
-              />
-            </div>
+          <div className="w-full max-w-md mx-auto px-4 pt-6 pb-2 flex flex-col items-center">
+            {/* Controles de música con filigranas doradas */}
+            <div className="flex items-center justify-center gap-3 sm:gap-4 w-full">
+              {/* Filigrana izquierda */}
+              <div className="flex items-center flex-1 justify-end">
+                <svg
+                  className="w-16 sm:w-24 h-5 text-[#C5A059]"
+                  viewBox="0 0 100 20"
+                  fill="none"
+                  stroke="currentColor"
+                >
+                  <path
+                    d="M10 10h60M70 10c4 0 7-3 9-5s4-3 6-3 4 2 4 4-2 5-5 5c-3 0-5-2-6-4M70 10c4 0 7 3 9 5s4 3 6 3 4-2 4-4-2-5-5-5c-3 0-5 2-6 4"
+                    strokeWidth="1.2"
+                    strokeLinecap="round"
+                  />
+                  <circle cx="95" cy="10" r="2" fill="#C5A059" />
+                  <circle cx="5" cy="10" r="1.5" fill="#C5A059" />
+                </svg>
+              </div>
 
-            <div className="space-y-1">
-              <span className="text-[11px] uppercase tracking-[0.3em] text-[#C5A059] font-bold block">
-                {data.subtitulo || "Mis Quince Años"}
-              </span>
-              <h1
-                className="text-5xl sm:text-6xl text-[#7A002A] leading-tight"
-                style={{ fontFamily: "'Great Vibes', cursive" }}
+              {/* Botón Anterior */}
+              <button
+                type="button"
+                onClick={() => {
+                  if (audioRef.current) {
+                    audioRef.current.currentTime = 0;
+                    if (!reproduciendo) {
+                      audioRef.current.play().then(() => setReproduciendo(true)).catch(() => {});
+                    }
+                  }
+                }}
+                className="p-1.5 text-[#B89356] hover:text-[#9A7432] active:scale-90 transition cursor-pointer"
+                title="Reiniciar canción"
+                aria-label="Canción anterior"
               >
-                {nombreFestejada}
-              </h1>
-            </div>
+                <SkipBack className="w-5 h-5 fill-current" />
+              </button>
 
-            {/* Guirnalda Floral de Separación */}
-            <div className="flex justify-center py-1">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/assets/save-the-date/flores.png"
-                alt="Flores"
-                className="w-56 h-auto object-contain opacity-90"
-              />
-            </div>
+              {/* Botón Central Play / Pause */}
+              <button
+                type="button"
+                onClick={toggleMusica}
+                className="w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center relative cursor-pointer shadow-[0_4px_14px_rgba(90,60,45,0.25)] transition transform hover:scale-105 active:scale-95 group"
+                style={{
+                  background:
+                    "radial-gradient(circle at 35% 35%, #8F1437 0%, #5E0820 60%, #380413 100%)",
+                  boxShadow:
+                    "0 0 0 2px rgba(255, 255, 255, 0.9), 0 0 0 3.5px #C5A059, 0 6px 16px rgba(60, 20, 30, 0.35)",
+                }}
+                title={reproduciendo ? "Pausar música" : "Reproducir música"}
+                aria-label="Play / Pausa"
+              >
+                {reproduciendo ? (
+                  <Pause className="w-5 h-5 sm:w-6 sm:h-6 text-[#F9E8B2] fill-current" />
+                ) : (
+                  <Play className="w-5 h-5 sm:w-6 sm:h-6 text-[#F9E8B2] fill-current ml-0.5" />
+                )}
+              </button>
 
-            {/* Fotografía Protagonista Vertical en Marco Arco */}
-            <div className="relative mx-auto w-full aspect-[9/13] max-w-[310px] rounded-t-full rounded-b-3xl overflow-hidden shadow-lg border-4 border-white ring-1 ring-pink-200">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={fotoPrincipal}
-                alt={nombreFestejada}
-                className="w-full h-full object-cover object-center"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+              {/* Botón Siguiente */}
+              <button
+                type="button"
+                onClick={() => {
+                  if (audioRef.current) {
+                    audioRef.current.currentTime = 0;
+                    if (!reproduciendo) {
+                      audioRef.current.play().then(() => setReproduciendo(true)).catch(() => {});
+                    }
+                  }
+                }}
+                className="p-1.5 text-[#B89356] hover:text-[#9A7432] active:scale-90 transition cursor-pointer"
+                title="Siguiente pista"
+                aria-label="Siguiente pista"
+              >
+                <SkipForward className="w-5 h-5 fill-current" />
+              </button>
 
-              <div className="absolute bottom-3 left-3 right-3 text-white text-center">
-                <span className="text-xs font-bold uppercase tracking-widest text-amber-200 drop-shadow">
-                  {data.fechaTextoPersonalizada || "Fecha muy pronto"}
-                </span>
+              {/* Filigrana derecha */}
+              <div className="flex items-center flex-1 justify-start">
+                <svg
+                  className="w-16 sm:w-24 h-5 text-[#C5A059] transform -scale-x-100"
+                  viewBox="0 0 100 20"
+                  fill="none"
+                  stroke="currentColor"
+                >
+                  <path
+                    d="M10 10h60M70 10c4 0 7-3 9-5s4-3 6-3 4 2 4 4-2 5-5 5c-3 0-5-2-6-4M70 10c4 0 7 3 9 5s4 3 6 3 4-2 4-4-2-5-5-5c-3 0-5 2-6 4"
+                    strokeWidth="1.2"
+                    strokeLinecap="round"
+                  />
+                  <circle cx="95" cy="10" r="2" fill="#C5A059" />
+                  <circle cx="5" cy="10" r="1.5" fill="#C5A059" />
+                </svg>
               </div>
             </div>
 
-            {/* Frase / Mensaje de Save the Date */}
-            {data.mensaje && (
-              <p className="text-xs text-stone-700 italic px-4 leading-relaxed font-serif">
-                &quot;{data.mensaje}&quot;
-              </p>
-            )}
+            {/* Texto de llamada a la acción */}
+            <p
+              className="mt-2.5 text-[11px] sm:text-xs uppercase tracking-[0.25em] font-semibold text-[#8C6B38] text-center"
+              style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
+            >
+              {reproduciendo ? "MÚSICA REPRODUCIENDO" : 'PRESIONA "PLAY"'}
+            </p>
+          </div>
 
-            {data.ciudad && (
-              <div className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-pink-50/90 text-xs font-semibold text-[#7A002A] border border-pink-100 shadow-xs">
-                <MapPin className="w-3.5 h-3.5 text-[#C5A059]" />
-                <span>{data.ciudad}</span>
+          {/* ============================================================ */}
+          {/* SECCIÓN 2: GALERÍA DE FOTOS + CORONA + DIVISOR FLORAL */}
+          {/* ============================================================ */}
+          <section
+            className="galeria-section relative w-full flex flex-col items-center py-7 sm:py-8"
+            style={{
+              background:
+                "linear-gradient(180deg, rgba(235, 206, 209, 0.45) 0%, rgba(232, 198, 202, 0.75) 50%, rgba(235, 206, 209, 0.45) 100%)",
+              borderTop: "1px solid rgba(197, 160, 89, 0.4)",
+              borderBottom: "1px solid rgba(197, 160, 89, 0.4)",
+            }}
+          >
+            {/* La Corona Centrada */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/assets/save-the-date/corona.webp"
+              alt="Corona Real"
+              className="galeria-corona w-[120px] h-auto object-contain mb-3.5"
+              style={{
+                filter: "drop-shadow(0 4px 8px rgba(90, 60, 45, 0.18))",
+              }}
+            />
+
+            {/* Grid de 3 Fotos Verticales */}
+            <div className="galeria-grid grid grid-cols-3 gap-[5px] w-[94%] max-w-[440px] mx-auto">
+              <div className="relative aspect-[3/5] overflow-hidden rounded-[2px] border border-[rgba(197,160,89,0.55)] shadow-[0_6px_14px_rgba(60,40,35,0.15)] group bg-white/40">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/assets/save-the-date/save1.webp"
+                  alt={`${nombreFestejada} - 1`}
+                  className="galeria-foto w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
+                />
               </div>
-            )}
+
+              <div className="relative aspect-[3/5] overflow-hidden rounded-[2px] border border-[rgba(197,160,89,0.55)] shadow-[0_6px_14px_rgba(60,40,35,0.15)] group bg-white/40">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/assets/save-the-date/save2.webp"
+                  alt={`${nombreFestejada} - 2`}
+                  className="galeria-foto w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
+                />
+              </div>
+
+              <div className="relative aspect-[3/5] overflow-hidden rounded-[2px] border border-[rgba(197,160,89,0.55)] shadow-[0_6px_14px_rgba(60,40,35,0.15)] group bg-white/40">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/assets/save-the-date/save3.webp"
+                  alt={`${nombreFestejada} - 3`}
+                  className="galeria-foto w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
+                />
+              </div>
+            </div>
+
+            {/* Cierre inferior con guirnalda floral de borde a borde */}
+            <div className="w-[94%] max-w-[440px] mx-auto flex justify-center mt-3.5 sm:mt-4">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/assets/save-the-date/flores.webp"
+                alt="Divisor Floral"
+                className="w-full h-auto object-contain opacity-95 drop-shadow-sm"
+              />
+            </div>
           </section>
+
+          {/* ============================================================ */}
+          {/* SECCIONES POSTERIORES (CUENTA REGRESIVA, CALENDARIO, PRE-RSVP) */}
+          {/* ============================================================ */}
+          <div className="max-w-md mx-auto px-4 space-y-10 pt-4">
 
           {/* ============================================================ */}
           {/* SECCIÓN CUENTA REGRESIVA */}
@@ -649,40 +763,6 @@ export default function QuinceRosadoSaveTheDate({
             </section>
           )}
 
-          {/* ============================================================ */}
-          {/* SECCIÓN GALERÍA DE FOTOS VERTICAL */}
-          {/* ============================================================ */}
-          {data.mostrarGaleria &&
-            data.galeriaFotosUrls &&
-            data.galeriaFotosUrls.length > 0 && (
-              <section className="space-y-4">
-                <div className="text-center space-y-0.5">
-                  <span className="text-[10px] uppercase tracking-widest text-[#C5A059] font-bold">
-                    Sesión Especial
-                  </span>
-                  <h3 className="font-serif text-2xl font-bold text-[#7A002A]">
-                    Galería de Recuerdos
-                  </h3>
-                </div>
-
-                <div className="space-y-4">
-                  {data.galeriaFotosUrls.map((url, idx) => (
-                    <div
-                      key={idx}
-                      className="rounded-3xl overflow-hidden shadow-md border-2 border-white aspect-[9/13] bg-stone-100"
-                    >
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={url}
-                        alt={`Foto sesión ${idx + 1}`}
-                        className="w-full h-full object-cover object-center"
-                        loading="lazy"
-                      />
-                    </div>
-                  ))}
-                </div>
-              </section>
-            )}
 
           {/* ============================================================ */}
           {/* SECCIÓN PRE-RSVP / CONFIRMACIÓN */}
@@ -858,6 +938,7 @@ export default function QuinceRosadoSaveTheDate({
               Invitación creada con amor en Click & Love
             </p>
           </footer>
+        </div>
         </div>
       )}
     </div>
