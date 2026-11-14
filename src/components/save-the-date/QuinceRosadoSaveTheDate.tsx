@@ -297,12 +297,12 @@ export default function QuinceRosadoSaveTheDate({
               }}
             />
 
-            {/* Foto 2: Estado Sobre Abierto (images2.webp) */}
+            {/* Foto 2: Estado Sobre Abierto (f291897753a9fc56f20003d177749b21.webp) */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/assets/save-the-date/images2.webp"
+              src="/assets/save-the-date/f291897753a9fc56f20003d177749b21.webp"
               alt={nombreFestejada}
-              className={`w-full h-full object-cover object-[center_20%] absolute inset-0 transition-opacity duration-1000 ${
+              className={`w-full h-full object-cover object-[center_15%] absolute inset-0 transition-opacity duration-1000 ${
                 sobreAbierto ? "opacity-100" : "opacity-0 pointer-events-none"
               }`}
               style={{

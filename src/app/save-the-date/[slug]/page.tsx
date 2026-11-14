@@ -27,9 +27,9 @@ export const DEMO_SAVE_THE_DATE = {
   tipoLetra: "SERIF_ELEGANTE",
   fotoPortadaUrl: "/assets/save-the-date/principal.jpeg",
   galeriaFotosUrls: [
+    "/assets/save-the-date/f291897753a9fc56f20003d177749b21.webp",
     "/assets/save-the-date/principal.jpeg",
     "/assets/template-rose/722d78548334333072ad7200e4f8233e.webp",
-    "/assets/template-quince-rosado/90043c428c5ec72c7adb26dce69dedd2.webp",
   ],
   musicaUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
   musicaTitulo: "A Thousand Years (Instrumental)",
