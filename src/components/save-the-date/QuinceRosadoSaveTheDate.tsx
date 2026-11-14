@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import {
   Calendar,
   Clock,
@@ -61,7 +61,7 @@ export default function QuinceRosadoSaveTheDate({
   const contenidoRef = useRef<HTMLDivElement | null>(null);
 
   // Cuenta regresiva
-  const fechaObj = new Date(data.fechaEvento);
+  const fechaObj = useMemo(() => new Date(data.fechaEvento), [data.fechaEvento]);
   const [tiempo, setTiempo] = useState({
     dias: 0,
     horas: 0,
@@ -87,12 +87,16 @@ export default function QuinceRosadoSaveTheDate({
 
   // Actualizar cuenta regresiva en tiempo real
   useEffect(() => {
+    const target = fechaObj.getTime();
     const calcular = () => {
-      const ahora = new Date().getTime();
-      const diff = fechaObj.getTime() - ahora;
+      const ahora = Date.now();
+      const diff = target - ahora;
 
       if (diff <= 0) {
-        setTiempo({ dias: 0, horas: 0, minutos: 0, segundos: 0 });
+        setTiempo((prev) => {
+          if (prev.dias === 0 && prev.horas === 0 && prev.minutos === 0 && prev.segundos === 0) return prev;
+          return { dias: 0, horas: 0, minutos: 0, segundos: 0 };
+        });
         return;
       }
 
@@ -101,7 +105,7 @@ export default function QuinceRosadoSaveTheDate({
         (diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
       );
       const minutos = Math.floor((diff % (1000 * 60)) / (1000 * 60));
-      const segundos = Math.floor((diff % 1000) / 1000);
+      const segundos = Math.floor((diff % (1000 * 60)) / 1000);
 
       setTiempo({ dias, horas, minutos, segundos });
     };
@@ -266,39 +270,38 @@ export default function QuinceRosadoSaveTheDate({
       )}
 
       {/* ============================================================== */}
-      {/* 1. PRIMERA SECCIÓN: FOTO DE LA QUINCEAÑERA + SOBRE ANIDADO */}
+      {/* 1. PRIMERA SECCIÓN: FOTO DE LA QUINCEAÑERA + SOBRE (100% VIEWPORT EN MÓVIL) */}
       {/* ============================================================== */}
-      <section className="relative min-h-screen flex flex-col items-center px-0 pt-0 pb-8 overflow-hidden">
-        {/* PARTE SUPERIOR: FOTO PRINCIPAL CON DESVANECIMIENTO PROGRESIVO Y AIRE ARRIBA */}
-        <div className="w-full max-w-md flex flex-col items-center relative pt-3">
+      <section className="relative h-[100dvh] max-h-[100dvh] flex flex-col justify-between items-center px-0 pt-0 pb-3 overflow-hidden">
+        {/* PARTE SUPERIOR: FOTO COMPLETA DE BORDE A BORDE SIN ESPACIOS */}
+        <div className="w-full max-w-md flex flex-col items-center relative pt-0">
           <div
-            className="relative w-full aspect-[4/4.6] overflow-hidden"
+            className="relative w-full h-[47dvh] overflow-hidden"
             style={{
               WebkitMaskImage:
-                "linear-gradient(to bottom, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 95%)",
+                "linear-gradient(to bottom, rgba(0,0,0,1) 48%, rgba(0,0,0,0) 96%)",
               maskImage:
-                "linear-gradient(to bottom, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 95%)",
+                "linear-gradient(to bottom, rgba(0,0,0,1) 48%, rgba(0,0,0,0) 96%)",
             }}
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={fotoPrincipal}
               alt={nombreFestejada}
-              className="w-full h-full object-cover object-top scale-[0.98] origin-top transition-transform duration-700"
+              className="w-full h-full object-cover object-top"
             />
           </div>
 
-          {/* Caligrafía "Save the Date" EXCLUSIVA DE LA PANTALLA CON SOBRE CERRADO */}
+          {/* Caligrafía "Save the Date" SOLO EN SOBRE CERRADO, SIN TAPAR EL SOBRE */}
           {!sobreAbierto && (
             <div
-              className="text-center relative z-10 px-4 animate-in fade-in duration-500"
+              className="text-center relative z-10 px-4 -mt-10 sm:-mt-12 animate-in fade-in duration-500"
               style={{
-                marginTop: "-60px",
                 textShadow: "0px 2px 10px rgba(255, 248, 240, 0.9)",
               }}
             >
               <h2
-                className="text-[2.8rem] leading-none font-normal tracking-wide"
+                className="text-[2.5rem] sm:text-[2.8rem] leading-none font-normal tracking-wide"
                 style={{
                   fontFamily: "'Great Vibes', cursive",
                   color: "#4a3b32",
@@ -310,23 +313,15 @@ export default function QuinceRosadoSaveTheDate({
           )}
         </div>
 
-        {/* PARTE INFERIOR: SOBRE ANIDADO */}
-        <div
-          className="w-full flex flex-col items-center justify-center relative px-4"
-          style={{
-            maxWidth: "82%",
-            marginTop: !sobreAbierto ? "-30px" : "-45px",
-            zIndex: 15,
-            transition: "all 0.6s cubic-bezier(0.25, 1, 0.50, 1)",
-          }}
-        >
+        {/* PARTE INFERIOR: SOBRE CENTRADO EN EL ESPACIO RESTANTE (SIN OVERLAP NI SCROLL) */}
+        <div className="w-full max-w-[320px] flex-1 flex flex-col items-center justify-center relative px-4 z-10 my-auto">
           <div
             onClick={!sobreAbierto ? abrirSobre : undefined}
             className={`w-full relative transition-all duration-700 transform flex flex-col items-center ${
               !sobreAbierto ? "cursor-pointer hover:scale-102 active:scale-98" : ""
             } ${animandoSobre ? "scale-105 -translate-y-2" : ""}`}
           >
-            {/* SOBRE CERRADO (LIMPIO, SIN ETIQUETA RECTANGULAR, SOLO EL SELLO) */}
+            {/* SOBRE CERRADO (LIMPIO, SIN ETIQUETAS NI BOTÓN DE INSTRUCCIÓN) */}
             {!sobreAbierto ? (
               <div className="w-full relative flex flex-col items-center animate-in fade-in slide-in-from-bottom-4 duration-700">
                 {/* Pulso brillante sobre el sello dorado */}
@@ -345,42 +340,31 @@ export default function QuinceRosadoSaveTheDate({
                 <img
                   src="/assets/save-the-date/sobre-cerrado-plain.webp"
                   alt="Sobre cerrado"
-                  className="w-full max-w-[320px] h-auto transition-all duration-500 mb-5"
+                  className="w-full max-w-[270px] sm:max-w-[300px] max-h-[38dvh] object-contain transition-all duration-500"
                   style={{
                     filter:
                       "contrast(1.06) drop-shadow(0 12px 20px rgba(90, 60, 45, 0.22))",
                   }}
                 />
-
-                {/* Prompt para abrir */}
-                <div className="text-center animate-bounce">
-                  <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-white/90 backdrop-blur-md text-xs font-semibold text-[#5D1F2D] shadow-md border border-white/70">
-                    <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-                    Toca el sobre para abrir
-                  </span>
-                </div>
               </div>
             ) : (
-              /* SOBRE ABIERTO CON LA TARJETA QUE SUBE Y DICE "MIS XV AÑOS - MARÍA" */
+              /* SOBRE ABIERTO CON LA TARJETA QUE DICE "MIS XV AÑOS - MELISSA" */
               <div className="w-full relative animate-in zoom-in-95 duration-500 flex flex-col items-center">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src="/assets/save-the-date/sobre-abierto.webp"
                   alt="Sobre abierto"
-                  className="w-full max-w-[320px] h-auto mb-5"
+                  className="w-full max-w-[275px] sm:max-w-[305px] max-h-[42dvh] object-contain"
                   style={{
                     filter:
                       "contrast(1.06) drop-shadow(0 12px 20px rgba(90, 60, 45, 0.22))",
                   }}
                 />
 
-                {/* TEXTO EXACTO DENTRO DE LA TARJETA CON ANIMACIÓN DE REVELACIÓN HACIA ARRIBA */}
+                {/* TEXTO EXACTO DENTRO DE LA TARJETA */}
                 <div
-                  className="absolute left-1/2 -translate-x-1/2 w-[62%] text-center pointer-events-none flex flex-col items-center justify-center transition-all duration-700 ease-out"
-                  style={{
-                    top: "35%",
-                    transform: "translate(-50%, 0)",
-                  }}
+                  className="absolute left-1/2 -translate-x-1/2 w-[62%] text-center pointer-events-none flex flex-col items-center justify-center"
+                  style={{ top: "35%" }}
                 >
                   <span className="font-serif text-[12px] sm:text-[14px] uppercase tracking-[0.24em] text-[#2A1B16] font-semibold block leading-tight">
                     MIS XV AÑOS
@@ -393,14 +377,14 @@ export default function QuinceRosadoSaveTheDate({
                   </span>
                 </div>
 
-                {/* Indicador para deslizar hacia abajo una vez abierto */}
-                <div className="text-center animate-bounce">
+                {/* Indicador discreto para deslizar hacia abajo una vez abierto */}
+                <div className="mt-2 text-center animate-bounce">
                   <button
                     type="button"
                     onClick={scrollHaciaDetalles}
-                    className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-white/90 backdrop-blur-md text-xs font-semibold text-[#7A002A] shadow-md border border-white/70 hover:bg-white cursor-pointer transition active:scale-95"
+                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/90 backdrop-blur-md text-[11px] font-semibold text-[#7A002A] shadow-md border border-white/70 hover:bg-white cursor-pointer transition active:scale-95"
                   >
-                    <span>Ver detalles del evento</span>
+                    <span>Ver detalles</span>
                     <ChevronDown className="w-3.5 h-3.5 text-[#C5A059]" />
                   </button>
                 </div>
