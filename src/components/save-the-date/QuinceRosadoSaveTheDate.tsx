@@ -310,12 +310,23 @@ export default function QuinceRosadoSaveTheDate({
               }}
             />
           </div>
+        </div>
 
-          {/* Caligrafía "Save the Date" SOLO EN SOBRE CERRADO */}
+        {/* PARTE INFERIOR: TÍTULO Y SOBRE AGRUPADOS CON 10px DE AIRE EXACTO */}
+        <div
+          className="w-full flex flex-col items-center justify-end relative px-4 z-10 pb-4 sm:pb-6"
+          style={{
+            maxWidth: "78%",
+            marginTop: "-18px",
+          }}
+        >
+          {/* Caligrafía "Save the Date" SOLO EN SOBRE CERRADO CON 10px HACIA EL SOBRE */}
           {!sobreAbierto && (
             <div
-              className="text-center relative z-10 px-4 -mt-10 sm:-mt-12 animate-in fade-in duration-500"
+              className="text-center relative px-4 animate-in fade-in duration-500"
               style={{
+                marginBottom: "10px",
+                zIndex: 12,
                 textShadow: "0px 2px 10px rgba(255, 248, 240, 0.9)",
               }}
             >
@@ -330,15 +341,7 @@ export default function QuinceRosadoSaveTheDate({
               </h2>
             </div>
           )}
-        </div>
 
-        {/* PARTE INFERIOR: SOBRE COMPACTO (78%) Y UBICADO ABAJO */}
-        <div
-          className="w-full flex flex-col items-center justify-end relative px-4 z-10 pb-4 sm:pb-6"
-          style={{
-            maxWidth: "78%",
-          }}
-        >
           <div
             onClick={!sobreAbierto ? abrirSobre : undefined}
             className={`w-full relative transition-all duration-700 transform flex flex-col items-center ${
