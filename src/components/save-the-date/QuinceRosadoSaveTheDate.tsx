@@ -199,7 +199,7 @@ export default function QuinceRosadoSaveTheDate({
           telefono,
           email,
           respuesta,
-          pasesTentativos: pases,
+          pasesTentativos: respuesta === "NO" ? 0 : pases,
           notas,
         }),
       });
@@ -215,7 +215,7 @@ export default function QuinceRosadoSaveTheDate({
           particleCount: 80,
           spread: 70,
           origin: { y: 0.6 },
-          colors: ["#7A002A", "#C5A059", "#25D366"],
+          colors: ["#C5A059", "#B87C82", "#FDF9F4", "#E8C8CB"],
         });
       } catch {}
     } catch (err: any) {
@@ -811,12 +811,23 @@ export default function QuinceRosadoSaveTheDate({
           {/* SECCIÓN PRE-RSVP / CONFIRMACIÓN */}
           {/* ============================================================ */}
           {data.mostrarPreRsvp && (
-            <section className="bg-white/90 backdrop-blur-md rounded-[32px] p-6 shadow-xl border border-white space-y-5">
+            <section
+              className="rounded-[32px] p-6 sm:p-7 shadow-xl space-y-5"
+              style={{
+                background: "rgba(253, 249, 244, 0.88)",
+                backdropFilter: "blur(8px)",
+                WebkitBackdropFilter: "blur(8px)",
+                border: "1px solid rgba(197, 160, 89, 0.45)",
+              }}
+            >
               <div className="text-center space-y-1">
                 <span className="text-[10px] uppercase font-bold tracking-widest text-[#C5A059] block">
                   Confirmación Anticipada
                 </span>
-                <h3 className="font-serif text-2xl font-bold text-[#7A5C32]">
+                <h3
+                  className="text-[2.3rem] sm:text-[2.6rem] leading-tight text-[#7A5C32] block"
+                  style={{ fontFamily: "'Great Vibes', cursive" }}
+                >
                   ¿Podrás Acompañarnos?
                 </h3>
                 <p className="text-xs text-stone-600 px-2 leading-relaxed">
@@ -826,14 +837,14 @@ export default function QuinceRosadoSaveTheDate({
               </div>
 
               {rsvpCompletado ? (
-                <div className="rounded-2xl bg-emerald-50 border border-emerald-200 p-5 text-center space-y-2 animate-in zoom-in-95">
-                  <div className="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto shadow-xs">
+                <div className="rounded-2xl bg-white/70 border border-[#C5A059]/40 p-5 text-center space-y-2 animate-in zoom-in-95">
+                  <div className="w-12 h-12 bg-[#B87C82]/15 text-[#B87C82] rounded-full flex items-center justify-center mx-auto shadow-xs">
                     <CheckCircle2 className="w-7 h-7" />
                   </div>
-                  <h4 className="font-serif text-lg font-bold text-emerald-900">
+                  <h4 className="font-serif text-lg font-bold text-[#7A5C32]">
                     ¡Gracias por responder!
                   </h4>
-                  <p className="text-xs text-emerald-700">
+                  <p className="text-xs text-stone-600">
                     Registramos tu respuesta. Muy pronto recibirás todos los
                     detalles oficiales de la invitación.
                   </p>
@@ -846,44 +857,79 @@ export default function QuinceRosadoSaveTheDate({
                     </div>
                   )}
 
-                  {/* Selector de respuesta */}
+                  {/* Selector de respuesta con iconos SVG minimalistas y palo de rosa */}
                   <div className="grid grid-cols-3 gap-2">
+                    {/* Opción 1: ¡Sí asistiré! */}
                     <button
                       type="button"
                       onClick={() => setRespuesta("SI")}
-                      className={`py-3 px-2 rounded-2xl text-xs font-semibold border text-center transition cursor-pointer flex flex-col items-center gap-1 ${
+                      className={`py-3 px-2 rounded-2xl text-xs font-medium border text-center transition cursor-pointer flex flex-col items-center gap-1.5 shadow-xs ${
                         respuesta === "SI"
-                          ? "bg-emerald-600 text-white border-emerald-600 shadow-md"
-                          : "bg-white text-stone-700 border-stone-200 hover:bg-stone-50"
+                          ? "bg-[#B87C82] text-white border-[#B87C82] shadow-sm"
+                          : "bg-[#FDF9F4]/90 text-[#7A5C32] border-[rgba(197,160,89,0.35)] hover:border-[rgba(197,160,89,0.6)]"
                       }`}
                     >
-                      <span className="text-base">✨</span>
+                      <svg
+                        className="w-4 h-4"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.8"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
                       <span>¡Sí asistiré!</span>
                     </button>
 
+                    {/* Opción 2: Tal vez */}
                     <button
                       type="button"
                       onClick={() => setRespuesta("TAL_VEZ")}
-                      className={`py-3 px-2 rounded-2xl text-xs font-semibold border text-center transition cursor-pointer flex flex-col items-center gap-1 ${
+                      className={`py-3 px-2 rounded-2xl text-xs font-medium border text-center transition cursor-pointer flex flex-col items-center gap-1.5 shadow-xs ${
                         respuesta === "TAL_VEZ"
-                          ? "bg-amber-600 text-white border-amber-600 shadow-md"
-                          : "bg-white text-stone-700 border-stone-200 hover:bg-stone-50"
+                          ? "bg-[#B87C82] text-white border-[#B87C82] shadow-sm"
+                          : "bg-[#FDF9F4]/90 text-[#7A5C32] border-[rgba(197,160,89,0.35)] hover:border-[rgba(197,160,89,0.6)]"
                       }`}
                     >
-                      <span className="text-base">⏳</span>
+                      <svg
+                        className="w-4 h-4"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.8"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <circle cx="12" cy="12" r="10" />
+                        <polyline points="12 6 12 12 16 14" />
+                      </svg>
                       <span>Tal vez</span>
                     </button>
 
+                    {/* Opción 3: No podré */}
                     <button
                       type="button"
                       onClick={() => setRespuesta("NO")}
-                      className={`py-3 px-2 rounded-2xl text-xs font-semibold border text-center transition cursor-pointer flex flex-col items-center gap-1 ${
+                      className={`py-3 px-2 rounded-2xl text-xs font-medium border text-center transition cursor-pointer flex flex-col items-center gap-1.5 shadow-xs ${
                         respuesta === "NO"
-                          ? "bg-stone-700 text-white border-stone-700 shadow-md"
-                          : "bg-white text-stone-700 border-stone-200 hover:bg-stone-50"
+                          ? "bg-[#B87C82] text-white border-[#B87C82] shadow-sm"
+                          : "bg-[#FDF9F4]/90 text-[#7A5C32] border-[rgba(197,160,89,0.35)] hover:border-[rgba(197,160,89,0.6)]"
                       }`}
                     >
-                      <span className="text-base">💌</span>
+                      <svg
+                        className="w-4 h-4"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.8"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                      </svg>
                       <span>No podré</span>
                     </button>
                   </div>
@@ -891,7 +937,7 @@ export default function QuinceRosadoSaveTheDate({
                   {/* Campos de contacto */}
                   <div className="space-y-3 pt-1">
                     <div>
-                      <label className="block text-[11px] font-bold uppercase tracking-wider text-stone-600 mb-1">
+                      <label className="block text-[11px] font-bold uppercase tracking-wider text-[#7A5C32] mb-1">
                         Tu Nombre Completo *
                       </label>
                       <input
@@ -900,13 +946,14 @@ export default function QuinceRosadoSaveTheDate({
                         value={nombre}
                         onChange={(e) => setNombre(e.target.value)}
                         placeholder="Ej. Familia Rodríguez o Nombre"
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 text-xs focus:ring-2 focus:ring-[#B87C82] focus:border-transparent outline-none bg-white/95"
+                        className="w-full px-3.5 py-2.5 rounded-xl border border-[rgba(197,160,89,0.35)] text-xs focus:ring-2 focus:ring-[#B87C82] focus:border-transparent outline-none bg-white/95 text-[#5C4538]"
                       />
                     </div>
 
-                    <div className="grid grid-cols-2 gap-2">
-                      <div>
-                        <label className="block text-[11px] font-bold uppercase tracking-wider text-stone-600 mb-1">
+                    {/* Teléfono y Pases (Pases se oculta si seleccionó "No podré") */}
+                    <div className={`grid ${respuesta === "NO" ? "grid-cols-1" : "grid-cols-2"} gap-2`}>
+                      <div className={respuesta === "NO" ? "col-span-1" : ""}>
+                        <label className="block text-[11px] font-bold uppercase tracking-wider text-[#7A5C32] mb-1">
                           Teléfono / WhatsApp
                         </label>
                         <input
@@ -914,30 +961,32 @@ export default function QuinceRosadoSaveTheDate({
                           value={telefono}
                           onChange={(e) => setTelefono(e.target.value)}
                           placeholder="+1 (555) 000-0000"
-                          className="w-full px-3 py-2.5 rounded-xl border border-stone-300 text-xs focus:ring-2 focus:ring-[#B87C82] outline-none bg-white/95"
+                          className="w-full px-3 py-2.5 rounded-xl border border-[rgba(197,160,89,0.35)] text-xs focus:ring-2 focus:ring-[#B87C82] outline-none bg-white/95 text-[#5C4538]"
                         />
                       </div>
 
-                      <div>
-                        <label className="block text-[11px] font-bold uppercase tracking-wider text-stone-600 mb-1">
-                          Pases Estimados
-                        </label>
-                        <select
-                          value={pases}
-                          onChange={(e) => setPases(Number(e.target.value))}
-                          className="w-full px-3 py-2.5 rounded-xl border border-stone-300 text-xs focus:ring-2 focus:ring-[#B87C82] outline-none bg-white/95"
-                        >
-                          {[1, 2, 3, 4, 5, 6, 7, 8].map((num) => (
-                            <option key={num} value={num}>
-                              {num} {num === 1 ? "pase" : "pases"}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
+                      {respuesta !== "NO" && (
+                        <div>
+                          <label className="block text-[11px] font-bold uppercase tracking-wider text-[#7A5C32] mb-1">
+                            Pases Estimados
+                          </label>
+                          <select
+                            value={pases}
+                            onChange={(e) => setPases(Number(e.target.value))}
+                            className="w-full px-3 py-2.5 rounded-xl border border-[rgba(197,160,89,0.35)] text-xs focus:ring-2 focus:ring-[#B87C82] outline-none bg-white/95 text-[#5C4538]"
+                          >
+                            {[1, 2, 3, 4, 5, 6, 7, 8].map((num) => (
+                              <option key={num} value={num}>
+                                {num} {num === 1 ? "pase" : "pases"}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      )}
                     </div>
 
                     <div>
-                      <label className="block text-[11px] font-bold uppercase tracking-wider text-stone-600 mb-1">
+                      <label className="block text-[11px] font-bold uppercase tracking-wider text-[#7A5C32] mb-1">
                         Nota o mensaje para {nombreFestejada}
                       </label>
                       <textarea
@@ -945,15 +994,20 @@ export default function QuinceRosadoSaveTheDate({
                         value={notas}
                         onChange={(e) => setNotas(e.target.value)}
                         placeholder="¡Felicidades, te queremos mucho!"
-                        className="w-full px-3.5 py-2 rounded-xl border border-stone-300 text-xs focus:ring-2 focus:ring-[#B87C82] outline-none bg-white/95"
+                        className="w-full px-3.5 py-2 rounded-xl border border-[rgba(197,160,89,0.35)] text-xs focus:ring-2 focus:ring-[#B87C82] outline-none bg-white/95 text-[#5C4538]"
                       />
                     </div>
                   </div>
 
+                  {/* Botón con degradado dorado elegante */}
                   <button
                     type="submit"
                     disabled={enviandoRsvp}
-                    className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-[#B87C82] via-[#A2646B] to-[#7A5C32] text-white font-bold text-xs uppercase tracking-wider shadow-md hover:brightness-105 active:scale-95 transition disabled:opacity-60 flex items-center justify-center gap-2 cursor-pointer"
+                    className="w-full py-3.5 px-4 rounded-xl text-white font-semibold text-xs uppercase tracking-[0.18em] shadow-md hover:brightness-105 active:scale-95 transition disabled:opacity-60 flex items-center justify-center gap-2 cursor-pointer"
+                    style={{
+                      background: "linear-gradient(135deg, #c5a059 0%, #a88340 100%)",
+                      boxShadow: "0 4px 14px rgba(197, 160, 89, 0.3)",
+                    }}
                   >
                     {enviandoRsvp ? (
                       <>
