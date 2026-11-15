@@ -135,6 +135,19 @@ export default function TemplatesManager() {
     setEditingTemplate(null);
   };
 
+  const getPublicDemoUrl = (slug: string) => {
+    if (typeof window === "undefined") {
+      return slug.includes("save-the-date") ? "/save-the-date/demo" : `/demo/${slug}`;
+    }
+    const isSaveDate = slug.includes("save-the-date");
+    let origin = window.location.origin;
+    if (window.location.host.startsWith("admin.")) {
+      const publicHost = window.location.host.replace(/^admin\./, "");
+      origin = `${window.location.protocol}//${publicHost}`;
+    }
+    return isSaveDate ? `${origin}/save-the-date/demo` : `${origin}/demo/${slug}`;
+  };
+
   // Subida de archivos (Canción o Imágenes) directamente a AWS S3
   const handleFileUpload = async (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -520,11 +533,7 @@ export default function TemplatesManager() {
             </button>
 
             <a
-              href={
-                editingTemplate.slug.includes("save-the-date")
-                  ? `/save-the-date/demo`
-                  : `https://clickandlove.app/demo/${editingTemplate.slug}`
-              }
+              href={getPublicDemoUrl(editingTemplate.slug)}
               target="_blank"
               rel="noopener noreferrer"
               className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-stone-700 bg-stone-100 hover:bg-stone-200 rounded-xl transition"
@@ -1834,7 +1843,7 @@ export default function TemplatesManager() {
                   <div className="pt-2 border-t border-stone-100 space-y-2">
                     <div className="flex items-center gap-2">
                       <a
-                        href={isStd ? "/save-the-date/demo" : `https://clickandlove.app/demo/${tpl.slug}`}
+                        href={getPublicDemoUrl(tpl.slug)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-semibold text-stone-700 bg-stone-100 hover:bg-stone-200 rounded-xl transition"

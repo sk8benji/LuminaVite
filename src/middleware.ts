@@ -44,6 +44,19 @@ export async function middleware(request: NextRequest) {
   // CASO A: PETICIÓN EN EL SUBDOMINIO ADMIN (admin.clickandlove.app)
   // ──────────────────────────────────────────────────────────
   if (isAdminSubdomain) {
+    // Si intenta acceder a una ruta pública (demo, save-the-date, invitaciones públicas)
+    // en el subdominio admin, redirigir al dominio público principal sin pedir contraseña
+    if (
+      pathname.startsWith("/save-the-date") ||
+      pathname.startsWith("/demo")
+    ) {
+      if (host.includes("clickandlove.app")) {
+        const publicUrl = new URL(pathname + url.search, "https://clickandlove.app");
+        return NextResponse.redirect(publicUrl);
+      }
+      return NextResponse.next();
+    }
+
     // Si NO está autenticado
     if (!isAuthenticated) {
       if (pathname === "/login") {
