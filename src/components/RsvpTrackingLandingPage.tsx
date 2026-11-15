@@ -131,6 +131,7 @@ export default function RsvpTrackingLandingPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           plan,
+          lang: "en",
           templateSlug: "isabella-xv",
           currency: "usd",
         }),

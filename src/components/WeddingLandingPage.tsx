@@ -108,6 +108,7 @@ export default function WeddingLandingPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           plan,
+          lang: "en",
           templateSlug: "emma-and-lucas",
           currency: "usd",
         }),

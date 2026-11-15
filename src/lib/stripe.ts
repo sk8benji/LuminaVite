@@ -3,9 +3,13 @@ import Stripe from "stripe";
 export interface PackagePlan {
   id: string;
   name: string;
+  nameEn?: string;
+  nameEs?: string;
   price: number; // en dólares
   currency: string;
   description: string;
+  descriptionEn?: string;
+  descriptionEs?: string;
   image?: string;
   badge: string;
   features: string[];
@@ -15,9 +19,13 @@ export const PACKAGES: Record<string, PackagePlan> = {
   express: {
     id: "express",
     name: "Express Digital",
+    nameEn: "Express Digital Package",
+    nameEs: "Paquete Express Digital",
     price: 99,
     currency: "usd",
-    description: "Ordena, elige tu invitación, envíanos tu información y te regresamos tu enlace digital listo para compartir.",
+    description: "✨ Fast & Self-Service: Select your design, submit your event details, and receive your personalized digital invitation link ready to share. Includes interactive envelope, background music & GPS directions.",
+    descriptionEn: "✨ Fast & Self-Service: Select your design, submit your event details, and receive your personalized digital invitation link ready to share. Includes interactive envelope, background music & GPS directions.",
+    descriptionEs: "✨ Rápido y Listo para Compartir: Elige tu diseño, envíanos los datos de tu evento y recibe tu enlace digital interactivo. Incluye sobre virtual con música de fondo, botón de navegación GPS y confirmación RSVP.",
     image: "https://clickandlove.app/assets/template-era-pink/foto-retrato.webp",
     badge: "Express Digital",
     features: [
@@ -32,9 +40,13 @@ export const PACKAGES: Record<string, PackagePlan> = {
   assisted: {
     id: "assisted",
     name: "Assisted Digital",
+    nameEn: "Assisted Digital Package",
+    nameEs: "Paquete Digital Asistido",
     price: 199,
     currency: "usd",
-    description: "Sin usar computadora: envíanos tus datos por WhatsApp y nosotros armamos todo.",
+    description: "✨ 100% Done-For-You Experience: Send us your details via WhatsApp and our team crafts your luxury interactive invitation. Includes up to 300 SMS RSVPs, GPS navigation button, calendar sync & 4 rounds of revisions.",
+    descriptionEn: "✨ 100% Done-For-You Experience: Send us your details via WhatsApp and our team crafts your luxury interactive invitation. Includes up to 300 SMS RSVPs, GPS navigation button, calendar sync & 4 rounds of revisions.",
+    descriptionEs: "✨ Todo Hecho por Nosotros: Envíanos tus datos por WhatsApp y diseñamos tu invitación digital de lujo. Incluye hasta 300 confirmaciones interactivas por SMS, botón de navegación GPS, guardado en calendario y 4 rondas de cambios.",
     image: "https://clickandlove.app/assets/template-era-pink/foto-retrato.webp",
     badge: "MÁS POPULAR • Listo para Compartir",
     features: [
@@ -48,9 +60,13 @@ export const PACKAGES: Record<string, PackagePlan> = {
   vip: {
     id: "vip",
     name: "VIP All-Inclusive",
+    nameEn: "VIP All-Inclusive Experience",
+    nameEs: "Experiencia VIP All-Inclusive",
     price: 279,
     currency: "usd",
-    description: "Todo lo del plan Assisted Digital, Save the Date adicional, Álbum de fotos en vivo y hasta 400 SMS.",
+    description: "✨ Complete White-Glove VIP Experience: Dedicated designer setup • Matching Save the Date included ($99 value) • Live Guest Photo Album with table QR cards • Real-Time RSVP tracking & up to 400 SMS reminders • Turn-by-turn GPS directions & Unlimited revisions until your celebration.",
+    descriptionEn: "✨ Complete White-Glove VIP Experience: Dedicated designer setup • Matching Save the Date included ($99 value) • Live Guest Photo Album with table QR cards • Real-Time RSVP tracking & up to 400 SMS reminders • Turn-by-turn GPS directions & Unlimited revisions until your celebration.",
+    descriptionEs: "✨ Experiencia VIP Todo Incluido: Diseño personalizado por expertos • Save the Date adicional de regalo (valor de $99) • Álbum de fotos interactivo en vivo con tarjetas QR para mesas • Confirmación RSVP en tiempo real y hasta 400 SMS de recordatorio • Ubicación GPS y cambios ilimitados hasta tu fiesta.",
     image: "https://clickandlove.app/assets/template-era-pink/foto-sentada.webp",
     badge: "VIP All-Inclusive",
     features: [

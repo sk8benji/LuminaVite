@@ -129,6 +129,7 @@ export default function QuinceLandingPageEs() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           plan,
+          lang: "es",
           templateSlug: "mariposas-xv",
           currency: "usd",
         }),
