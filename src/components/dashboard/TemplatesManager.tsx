@@ -390,6 +390,16 @@ export default function TemplatesManager() {
       mostrarPreRsvp: extra.mostrarPreRsvp !== undefined ? extra.mostrarPreRsvp : true,
       textoPreRsvp: extra.textoPreRsvp || "¿Podrás Acompañarnos?",
       telefonoWhatsapp: editForm.telefonoWhatsappRsvp || extra.telefonoWhatsapp || "18181234567",
+      // Títulos bilingües configurables
+      tituloCalendarioEs: (editForm as any).tituloCalendarioEs || extra.tituloCalendarioEs || "RESERVA LA FECHA",
+      tituloCalendarioEn: (editForm as any).tituloCalendarioEn || extra.tituloCalendarioEn || "SAVE THE DATE",
+      tituloContadorEs: (editForm as any).tituloContadorEs || extra.tituloContadorEs || "Solo Faltan...",
+      tituloContadorEn: (editForm as any).tituloContadorEn || extra.tituloContadorEn || "Countdown...",
+      tituloRsvpEs: (editForm as any).tituloRsvpEs || extra.tituloRsvpEs || "Confirmación Anticipada",
+      tituloRsvpEn: (editForm as any).tituloRsvpEn || extra.tituloRsvpEn || "Early RSVP",
+      preguntaRsvpEs: (editForm as any).preguntaRsvpEs || extra.preguntaRsvpEs || "¿Podrás Acompañarnos?",
+      preguntaRsvpEn: (editForm as any).preguntaRsvpEn || extra.preguntaRsvpEn || "Will You Join Us?",
+      subtituloEn: (editForm as any).subtituloEn || extra.subtituloEn || "My Sweet Fifteen",
       textoDisco: editForm.textoDisco || "Click to Play Music",
       telefonoWhatsappRsvp: editForm.telefonoWhatsappRsvp || "18181234567",
       recepcionNombre: editForm.recepcionNombre || "Salón de Gala",
@@ -841,6 +851,147 @@ export default function TemplatesManager() {
                         className="w-full px-3.5 py-2 bg-stone-50 border border-stone-200 rounded-xl text-xs"
                       />
                     </div>
+
+                    {/* TÍTULOS BILINGÜES PARA SAVE THE DATE */}
+                    {isSaveDate && (
+                      <div className="pt-4 border-t border-stone-200 space-y-4">
+                        <div className="flex items-center gap-2">
+                          <Sparkles className="w-4 h-4 text-[#C5A059]" />
+                          <h4 className="font-serif font-bold text-sm text-stone-900">
+                            Títulos Principales de Secciones (Bilingüe EN / ES)
+                          </h4>
+                        </div>
+                        <p className="text-[11px] text-stone-500 -mt-2">
+                          Personaliza los títulos del calendario, la cuenta regresiva y la confirmación cuando el usuario alterna entre inglés y español (por defecto inicia en inglés).
+                        </p>
+
+                        {/* 1. TÍTULO CALENDARIO */}
+                        <div className="bg-amber-50/50 p-3 rounded-xl border border-amber-200/60 space-y-2">
+                          <label className="text-xs font-bold text-stone-800 block">
+                            1. Título Calendario ("RESERVA LA FECHA"):
+                          </label>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            <div>
+                              <span className="text-[10px] font-semibold text-stone-500 uppercase">Español (ES)</span>
+                              <input
+                                type="text"
+                                placeholder="RESERVA LA FECHA"
+                                value={(editForm as any).tituloCalendarioEs || ""}
+                                onChange={(e) => setEditForm({ ...editForm, tituloCalendarioEs: e.target.value } as any)}
+                                className="w-full px-3 py-1.5 bg-white border border-stone-200 rounded-lg text-xs"
+                              />
+                            </div>
+                            <div>
+                              <span className="text-[10px] font-semibold text-stone-500 uppercase">Inglés (EN - Default)</span>
+                              <input
+                                type="text"
+                                placeholder="SAVE THE DATE"
+                                value={(editForm as any).tituloCalendarioEn || ""}
+                                onChange={(e) => setEditForm({ ...editForm, tituloCalendarioEn: e.target.value } as any)}
+                                className="w-full px-3 py-1.5 bg-white border border-stone-200 rounded-lg text-xs font-medium text-[#7A5C32]"
+                              />
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* 2. TÍTULO CUENTA REGRESIVA */}
+                        <div className="bg-amber-50/50 p-3 rounded-xl border border-amber-200/60 space-y-2">
+                          <label className="text-xs font-bold text-stone-800 block">
+                            2. Título Cuenta Regresiva ("SOLO FALTAN"):
+                          </label>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            <div>
+                              <span className="text-[10px] font-semibold text-stone-500 uppercase">Español (ES)</span>
+                              <input
+                                type="text"
+                                placeholder="Solo Faltan..."
+                                value={(editForm as any).tituloContadorEs || ""}
+                                onChange={(e) => setEditForm({ ...editForm, tituloContadorEs: e.target.value } as any)}
+                                className="w-full px-3 py-1.5 bg-white border border-stone-200 rounded-lg text-xs"
+                              />
+                            </div>
+                            <div>
+                              <span className="text-[10px] font-semibold text-stone-500 uppercase">Inglés (EN - Default)</span>
+                              <input
+                                type="text"
+                                placeholder="Countdown..."
+                                value={(editForm as any).tituloContadorEn || ""}
+                                onChange={(e) => setEditForm({ ...editForm, tituloContadorEn: e.target.value } as any)}
+                                className="w-full px-3 py-1.5 bg-white border border-stone-200 rounded-lg text-xs font-medium text-[#7A5C32]"
+                              />
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* 3. TÍTULO CONFIRMACIÓN ANTICIPADA */}
+                        <div className="bg-amber-50/50 p-3 rounded-xl border border-amber-200/60 space-y-2">
+                          <label className="text-xs font-bold text-stone-800 block">
+                            3. Título Confirmación Pre-RSVP ("CONFIRMACIÓN ANTICIPADA"):
+                          </label>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            <div>
+                              <span className="text-[10px] font-semibold text-stone-500 uppercase">Español (ES)</span>
+                              <input
+                                type="text"
+                                placeholder="Confirmación Anticipada"
+                                value={(editForm as any).tituloRsvpEs || ""}
+                                onChange={(e) => setEditForm({ ...editForm, tituloRsvpEs: e.target.value } as any)}
+                                className="w-full px-3 py-1.5 bg-white border border-stone-200 rounded-lg text-xs"
+                              />
+                            </div>
+                            <div>
+                              <span className="text-[10px] font-semibold text-stone-500 uppercase">Inglés (EN - Default)</span>
+                              <input
+                                type="text"
+                                placeholder="Early RSVP"
+                                value={(editForm as any).tituloRsvpEn || ""}
+                                onChange={(e) => setEditForm({ ...editForm, tituloRsvpEn: e.target.value } as any)}
+                                className="w-full px-3 py-1.5 bg-white border border-stone-200 rounded-lg text-xs font-medium text-[#7A5C32]"
+                              />
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* 4. PREGUNTA PRE-RSVP Y SUBTÍTULO EN */}
+                        <div className="bg-stone-50 p-3 rounded-xl border border-stone-200 space-y-2">
+                          <label className="text-xs font-bold text-stone-800 block">
+                            4. Pregunta RSVP y Subtítulo Inglés:
+                          </label>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            <div>
+                              <span className="text-[10px] font-semibold text-stone-500 uppercase">Pregunta (ES)</span>
+                              <input
+                                type="text"
+                                placeholder="¿Podrás Acompañarnos?"
+                                value={(editForm as any).preguntaRsvpEs || ""}
+                                onChange={(e) => setEditForm({ ...editForm, preguntaRsvpEs: e.target.value } as any)}
+                                className="w-full px-3 py-1.5 bg-white border border-stone-200 rounded-lg text-xs"
+                              />
+                            </div>
+                            <div>
+                              <span className="text-[10px] font-semibold text-stone-500 uppercase">Question (EN)</span>
+                              <input
+                                type="text"
+                                placeholder="Will You Join Us?"
+                                value={(editForm as any).preguntaRsvpEn || ""}
+                                onChange={(e) => setEditForm({ ...editForm, preguntaRsvpEn: e.target.value } as any)}
+                                className="w-full px-3 py-1.5 bg-white border border-stone-200 rounded-lg text-xs font-medium text-[#7A5C32]"
+                              />
+                            </div>
+                            <div className="sm:col-span-2">
+                              <span className="text-[10px] font-semibold text-stone-500 uppercase">Subtítulo Tarjeta Sobre (EN)</span>
+                              <input
+                                type="text"
+                                placeholder="My Sweet Fifteen"
+                                value={(editForm as any).subtituloEn || ""}
+                                onChange={(e) => setEditForm({ ...editForm, subtituloEn: e.target.value } as any)}
+                                className="w-full px-3 py-1.5 bg-white border border-stone-200 rounded-lg text-xs font-medium text-[#7A5C32]"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
 

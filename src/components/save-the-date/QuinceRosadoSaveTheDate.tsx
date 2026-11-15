@@ -28,6 +28,7 @@ export interface SaveTheDateProps {
     slug: string;
     titulo: string;
     subtitulo?: string | null;
+    subtituloEn?: string | null;
     mensaje?: string | null;
     fechaEvento: string | Date;
     fechaTextoPersonalizada?: string | null;
@@ -45,6 +46,15 @@ export interface SaveTheDateProps {
     mostrarPreRsvp: boolean;
     textoPreRsvp?: string | null;
     telefonoWhatsapp?: string | null;
+    // Títulos bilingües configurables desde el admin
+    tituloCalendarioEs?: string | null;
+    tituloCalendarioEn?: string | null;
+    tituloContadorEs?: string | null;
+    tituloContadorEn?: string | null;
+    tituloRsvpEs?: string | null;
+    tituloRsvpEn?: string | null;
+    preguntaRsvpEs?: string | null;
+    preguntaRsvpEn?: string | null;
   };
   skipIntro?: boolean;
 }
@@ -53,6 +63,9 @@ export default function QuinceRosadoSaveTheDate({
   data,
   skipIntro = false,
 }: SaveTheDateProps) {
+  // Idioma activo (por defecto entra en inglés: 'EN')
+  const [idioma, setIdioma] = useState<"EN" | "ES">("EN");
+
   // Estado del sobre (abierto o cerrado)
   const [sobreAbierto, setSobreAbierto] = useState(
     skipIntro || !data.mostrarSobre
@@ -225,26 +238,54 @@ export default function QuinceRosadoSaveTheDate({
     }
   };
 
-  // Días y nombres del mes para el calendario
+  // Días y nombres del mes para el calendario bilingüe
   const anio = fechaObj.getFullYear();
   const mesIdx = fechaObj.getMonth();
   const diaEvento = fechaObj.getDate();
 
-  const mesesCapitalizados = [
-    "Enero",
-    "Febrero",
-    "Marzo",
-    "Abril",
-    "Mayo",
-    "Junio",
-    "Julio",
-    "Agosto",
-    "Septiembre",
-    "Octubre",
-    "Noviembre",
-    "Diciembre",
+  const mesesEs = [
+    "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+    "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
   ];
-  const nombreMes = mesesCapitalizados[mesIdx] || "Septiembre";
+  const mesesEn = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+  ];
+  const nombreMes = idioma === "EN" ? (mesesEn[mesIdx] || "September") : (mesesEs[mesIdx] || "Septiembre");
+
+  const diasSemanaHeaders = idioma === "EN"
+    ? ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"]
+    : ["DOM", "LUN", "MAR", "MIÉ", "JUE", "VIE", "SÁB"];
+
+  // Títulos bilingües solicitados configurables desde el admin
+  const tituloCalendario = idioma === "EN"
+    ? (data.tituloCalendarioEn || "SAVE THE DATE")
+    : (data.tituloCalendarioEs || "RESERVA LA FECHA");
+
+  const tituloContador = idioma === "EN"
+    ? (data.tituloContadorEn || "Solo Faltan...")
+    : (data.tituloContadorEs || "Solo Faltan...");
+
+  const tituloRsvp = idioma === "EN"
+    ? (data.tituloRsvpEn || "Early RSVP")
+    : (data.tituloRsvpEs || "Confirmación Anticipada");
+
+  const preguntaRsvp = idioma === "EN"
+    ? (data.preguntaRsvpEn || "Will You Join Us?")
+    : (data.preguntaRsvpEs || data.textoPreRsvp || "¿Podrás Acompañarnos?");
+
+  const mensajeRsvp = idioma === "EN"
+    ? "Please help us confirm your tentative attendance to reserve your spot in advance."
+    : (data.textoPreRsvp || "Ayúdanos confirmando tu asistencia tentativa para apartar tu lugar con anticipación.");
+
+  const subtituloTarjeta = idioma === "EN"
+    ? (data.subtituloEn || "MY SWEET FIFTEEN")
+    : (data.subtitulo || "MIS XV AÑOS");
+
+  const labelDias = idioma === "EN" ? "Days" : "Días";
+  const labelHoras = idioma === "EN" ? "Hours" : "Horas";
+  const labelMin = idioma === "EN" ? "Mins" : "Min";
+  const labelSeg = idioma === "EN" ? "Secs" : "Seg";
 
   // Generar cuadrícula del calendario iniciando en Domingo (DOM a SÁB)
   const primerDiaSemana = new Date(anio, mesIdx, 1).getDay(); // 0 = Domingo
@@ -266,6 +307,36 @@ export default function QuinceRosadoSaveTheDate({
         overflowX: "clip",
       }}
     >
+      {/* Selector Flotante de Idioma Superior Derecho (EN | ES, por defecto EN) */}
+      <aside
+        aria-label="Selector de idioma"
+        className="fixed top-3.5 right-3.5 sm:top-5 sm:right-5 z-50 flex items-center bg-white/90 backdrop-blur-md border border-[#C5A059]/45 rounded-full p-0.5 shadow-[0_4px_16px_rgba(90,60,45,0.18)] transition hover:shadow-lg"
+      >
+        <button
+          type="button"
+          onClick={() => setIdioma("EN")}
+          className={`px-3 py-1 rounded-full text-[11px] font-bold tracking-wider transition-all cursor-pointer ${
+            idioma === "EN"
+              ? "bg-[#C5A059] text-white shadow-xs"
+              : "text-[#7A5C32] hover:text-[#5C4538]"
+          }`}
+          title="Switch to English"
+        >
+          EN
+        </button>
+        <button
+          type="button"
+          onClick={() => setIdioma("ES")}
+          className={`px-3 py-1 rounded-full text-[11px] font-bold tracking-wider transition-all cursor-pointer ${
+            idioma === "ES"
+              ? "bg-[#C5A059] text-white shadow-xs"
+              : "text-[#7A5C32] hover:text-[#5C4538]"
+          }`}
+          title="Cambiar a Español"
+        >
+          ES
+        </button>
+      </aside>
       {/* Capa de velo suave para unificar el fondo satinado */}
       <div className="fixed inset-0 bg-white/35 pointer-events-none backdrop-blur-[1px]" />
 
@@ -400,7 +471,7 @@ export default function QuinceRosadoSaveTheDate({
                   style={{ top: "35%" }}
                 >
                   <span className="font-serif text-[11px] sm:text-[13px] uppercase tracking-[0.24em] text-[#2A1B16] font-semibold block leading-tight">
-                    {data.subtitulo || "MIS XV AÑOS"}
+                    {subtituloTarjeta}
                   </span>
                   <span
                     className="text-2xl sm:text-3xl text-[#3E2723] font-normal leading-tight mt-1"
@@ -417,7 +488,7 @@ export default function QuinceRosadoSaveTheDate({
                     onClick={scrollHaciaDetalles}
                     className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/90 backdrop-blur-md text-[11px] font-semibold text-[#7A002A] shadow-md border border-white/70 hover:bg-white cursor-pointer transition active:scale-95"
                   >
-                    <span>Ver detalles</span>
+                    <span>{idioma === "EN" ? "View details" : "Ver detalles"}</span>
                     <ChevronDown className="w-3.5 h-3.5 text-[#C5A059]" />
                   </button>
                 </div>
@@ -551,7 +622,9 @@ export default function QuinceRosadoSaveTheDate({
                 className="mt-2.5 text-[11px] sm:text-xs uppercase tracking-[0.25em] font-semibold text-[#8C6B38] text-center"
                 style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
               >
-                {reproduciendo ? "MÚSICA REPRODUCIENDO" : 'PRESIONA "PLAY"'}
+                {reproduciendo
+                  ? (idioma === "EN" ? "MUSIC PLAYING" : "MÚSICA REPRODUCIENDO")
+                  : (idioma === "EN" ? 'PRESS "PLAY"' : 'PRESIONA "PLAY"')}
               </p>
             </div>
 
@@ -619,13 +692,13 @@ export default function QuinceRosadoSaveTheDate({
             {/* ============================================================ */}
             {data.mostrarCalendario && (
               <section className="flex flex-col items-center">
-                {/* 1. TÍTULO 'RESERVA LA FECHA' FUERA Y ARRIBA DE CALENDARIO.PNG */}
+                {/* 1. TÍTULO 'RESERVA LA FECHA' / 'SAVE THE DATE' FUERA Y ARRIBA DE CALENDARIO.PNG */}
                 <div className="w-full text-center mb-3 sm:mb-4">
                   <h2
                     className="text-sm sm:text-base uppercase tracking-[0.22em] text-[#7A5C32] font-semibold"
                     style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
                   >
-                    RESERVA LA FECHA
+                    {tituloCalendario}
                   </h2>
                 </div>
 
@@ -641,7 +714,7 @@ export default function QuinceRosadoSaveTheDate({
                     }}
                   />
 
-                  {/* Mes 'Septiembre' en Great Vibes (3.5rem, color #7a5c32) */}
+                  {/* Mes en Great Vibes (3.5rem, color #7a5c32) */}
                   <span
                     className="text-[3rem] sm:text-[3.5rem] leading-none text-[#7A5C32] block -mt-1"
                     style={{ fontFamily: "'Great Vibes', cursive" }}
@@ -649,23 +722,19 @@ export default function QuinceRosadoSaveTheDate({
                     {nombreMes}
                   </span>
 
-                  {/* Año 2026 con líneas doradas a los lados */}
+                  {/* Año con líneas doradas a los lados */}
                   <div className="flex items-center justify-center gap-3 text-xs font-serif tracking-[0.25em] text-[#C5A059] font-medium mt-1 mb-3">
                     <span className="h-px w-7 bg-gradient-to-r from-transparent to-[#C5A059]" />
                     <span>{anio}</span>
                     <span className="h-px w-7 bg-gradient-to-l from-transparent to-[#C5A059]" />
                   </div>
 
-                  {/* Cuadrícula interactiva del mes: Días de 3 letras (DOM a SÁB) */}
+                  {/* Cuadrícula interactiva del mes: Días de 3 letras */}
                   <div className="w-[86%] max-w-[250px] mx-auto">
                     <div className="grid grid-cols-7 gap-1 text-center font-bold text-[9px] sm:text-[10px] text-[#A68A68] tracking-wider mb-2 uppercase">
-                      <span>DOM</span>
-                      <span>LUN</span>
-                      <span>MAR</span>
-                      <span>MIÉ</span>
-                      <span>JUE</span>
-                      <span>VIE</span>
-                      <span>SÁB</span>
+                      {diasSemanaHeaders.map((header) => (
+                        <span key={header}>{header}</span>
+                      ))}
                     </div>
 
                     <div className="grid grid-cols-7 gap-1 text-center text-xs">
@@ -756,7 +825,7 @@ export default function QuinceRosadoSaveTheDate({
 
             {/* ============================================================ */}
             {/* SECCIÓN CUENTA REGRESIVA (SIN BLOQUE SÓLIDO VINO) */}
-            {/* 'Solo Faltan...' en Great Vibes + números sobre satén champagne en #5c4538 */}
+            {/* 'Solo Faltan...' / 'Countdown...' en Great Vibes + números sobre satén champagne en #5c4538 */}
             {/* ============================================================ */}
             {data.mostrarContador && (
               <section className="text-center pt-2 pb-2 space-y-3">
@@ -764,7 +833,7 @@ export default function QuinceRosadoSaveTheDate({
                   className="text-4xl sm:text-5xl text-[#7A5C32] leading-tight"
                   style={{ fontFamily: "'Great Vibes', cursive" }}
                 >
-                  Solo Faltan...
+                  {tituloContador}
                 </h3>
 
                 <div className="grid grid-cols-4 gap-2 sm:gap-3 max-w-[340px] mx-auto pt-1">
@@ -773,7 +842,7 @@ export default function QuinceRosadoSaveTheDate({
                       {tiempo.dias}
                     </span>
                     <span className="text-[10px] uppercase tracking-widest text-[#8C6B38] font-medium mt-1.5">
-                      Días
+                      {labelDias}
                     </span>
                   </div>
 
@@ -782,7 +851,7 @@ export default function QuinceRosadoSaveTheDate({
                       {tiempo.horas}
                     </span>
                     <span className="text-[10px] uppercase tracking-widest text-[#8C6B38] font-medium mt-1.5">
-                      Horas
+                      {labelHoras}
                     </span>
                   </div>
 
@@ -791,7 +860,7 @@ export default function QuinceRosadoSaveTheDate({
                       {tiempo.minutos}
                     </span>
                     <span className="text-[10px] uppercase tracking-widest text-[#8C6B38] font-medium mt-1.5">
-                      Min
+                      {labelMin}
                     </span>
                   </div>
 
@@ -800,7 +869,7 @@ export default function QuinceRosadoSaveTheDate({
                       {tiempo.segundos}
                     </span>
                     <span className="text-[10px] uppercase tracking-widest text-[#8C6B38] font-medium mt-1.5">
-                      Seg
+                      {labelSeg}
                     </span>
                   </div>
                 </div>
@@ -823,17 +892,16 @@ export default function QuinceRosadoSaveTheDate({
             >
               <div className="text-center space-y-1">
                 <span className="text-[10px] uppercase font-bold tracking-widest text-[#C5A059] block">
-                  Confirmación Anticipada
+                  {tituloRsvp}
                 </span>
                 <h3
                   className="text-[2.3rem] sm:text-[2.6rem] leading-tight text-[#7A5C32] block"
                   style={{ fontFamily: "'Great Vibes', cursive" }}
                 >
-                  ¿Podrás Acompañarnos?
+                  {preguntaRsvp}
                 </h3>
                 <p className="text-xs text-stone-600 px-2 leading-relaxed">
-                  {data.textoPreRsvp ||
-                    "Ayúdanos confirmando tu asistencia tentativa para apartar tu lugar con anticipación."}
+                  {mensajeRsvp}
                 </p>
               </div>
 
@@ -843,11 +911,12 @@ export default function QuinceRosadoSaveTheDate({
                     <CheckCircle2 className="w-7 h-7" />
                   </div>
                   <h4 className="font-serif text-lg font-bold text-[#7A5C32]">
-                    ¡Gracias por responder!
+                    {idioma === "EN" ? "Thank you for responding!" : "¡Gracias por responder!"}
                   </h4>
                   <p className="text-xs text-stone-600">
-                    Registramos tu respuesta. Muy pronto recibirás todos los
-                    detalles oficiales de la invitación.
+                    {idioma === "EN"
+                      ? "We recorded your response. Very soon you will receive official invitation details."
+                      : "Registramos tu respuesta. Muy pronto recibirás todos los detalles oficiales de la invitación."}
                   </p>
                 </div>
               ) : (
@@ -881,7 +950,7 @@ export default function QuinceRosadoSaveTheDate({
                       >
                         <polyline points="20 6 9 17 4 12" />
                       </svg>
-                      <span>¡Sí asistiré!</span>
+                      <span>{idioma === "EN" ? "Will Attend!" : "¡Sí asistiré!"}</span>
                     </button>
 
                     {/* Opción 2: Tal vez */}
@@ -906,7 +975,7 @@ export default function QuinceRosadoSaveTheDate({
                         <circle cx="12" cy="12" r="10" />
                         <polyline points="12 6 12 12 16 14" />
                       </svg>
-                      <span>Tal vez</span>
+                      <span>{idioma === "EN" ? "Maybe" : "Tal vez"}</span>
                     </button>
 
                     {/* Opción 3: No podré */}
@@ -931,7 +1000,7 @@ export default function QuinceRosadoSaveTheDate({
                         <line x1="18" y1="6" x2="6" y2="18" />
                         <line x1="6" y1="6" x2="18" y2="18" />
                       </svg>
-                      <span>No podré</span>
+                      <span>{idioma === "EN" ? "Can't Make It" : "No podré"}</span>
                     </button>
                   </div>
 
@@ -939,14 +1008,14 @@ export default function QuinceRosadoSaveTheDate({
                   <div className="space-y-3 pt-1">
                     <div>
                       <label className="block text-[11px] font-bold uppercase tracking-wider text-[#7A5C32] mb-1">
-                        Tu Nombre Completo *
+                        {idioma === "EN" ? "Full Name *" : "Tu Nombre Completo *"}
                       </label>
                       <input
                         type="text"
                         required
                         value={nombre}
                         onChange={(e) => setNombre(e.target.value)}
-                        placeholder="Ej. Familia Rodríguez o Nombre"
+                        placeholder={idioma === "EN" ? "e.g. The Rodriguez Family or Name" : "Ej. Familia Rodríguez o Nombre"}
                         className="w-full px-3.5 py-2.5 rounded-xl border border-[rgba(197,160,89,0.35)] text-xs focus:ring-2 focus:ring-[#B87C82] focus:border-transparent outline-none bg-white/95 text-[#5C4538]"
                       />
                     </div>
@@ -955,7 +1024,7 @@ export default function QuinceRosadoSaveTheDate({
                     <div className={`grid ${respuesta === "NO" ? "grid-cols-1" : "grid-cols-2"} gap-2`}>
                       <div className={respuesta === "NO" ? "col-span-1" : ""}>
                         <label className="block text-[11px] font-bold uppercase tracking-wider text-[#7A5C32] mb-1">
-                          Teléfono / WhatsApp
+                          {idioma === "EN" ? "Phone / WhatsApp" : "Teléfono / WhatsApp"}
                         </label>
                         <input
                           type="tel"
@@ -969,7 +1038,7 @@ export default function QuinceRosadoSaveTheDate({
                       {respuesta !== "NO" && (
                         <div>
                           <label className="block text-[11px] font-bold uppercase tracking-wider text-[#7A5C32] mb-1">
-                            Pases Estimados
+                            {idioma === "EN" ? "Estimated Guests" : "Pases Estimados"}
                           </label>
                           <select
                             value={pases}
@@ -978,7 +1047,7 @@ export default function QuinceRosadoSaveTheDate({
                           >
                             {[1, 2, 3, 4, 5, 6, 7, 8].map((num) => (
                               <option key={num} value={num}>
-                                {num} {num === 1 ? "pase" : "pases"}
+                                {num} {idioma === "EN" ? (num === 1 ? "guest" : "guests") : (num === 1 ? "pase" : "pases")}
                               </option>
                             ))}
                           </select>
@@ -988,13 +1057,13 @@ export default function QuinceRosadoSaveTheDate({
 
                     <div>
                       <label className="block text-[11px] font-bold uppercase tracking-wider text-[#7A5C32] mb-1">
-                        Nota o mensaje para {nombreFestejada}
+                        {idioma === "EN" ? `Note or message for ${nombreFestejada}` : `Nota o mensaje para ${nombreFestejada}`}
                       </label>
                       <textarea
                         rows={2}
                         value={notas}
                         onChange={(e) => setNotas(e.target.value)}
-                        placeholder="¡Felicidades, te queremos mucho!"
+                        placeholder={idioma === "EN" ? "Congratulations, we love you!" : "¡Felicidades, te queremos mucho!"}
                         className="w-full px-3.5 py-2 rounded-xl border border-[rgba(197,160,89,0.35)] text-xs focus:ring-2 focus:ring-[#B87C82] outline-none bg-white/95 text-[#5C4538]"
                       />
                     </div>
@@ -1013,12 +1082,12 @@ export default function QuinceRosadoSaveTheDate({
                     {enviandoRsvp ? (
                       <>
                         <Loader2 className="w-4 h-4 animate-spin" />
-                        <span>Enviando respuesta...</span>
+                        <span>{idioma === "EN" ? "Sending RSVP..." : "Enviando respuesta..."}</span>
                       </>
                     ) : (
                       <>
                         <Send className="w-4 h-4" />
-                        <span>Confirmar Pre-Registro</span>
+                        <span>{idioma === "EN" ? "Confirm Early RSVP" : "Confirmar Pre-Registro"}</span>
                       </>
                     )}
                   </button>
@@ -1030,10 +1099,12 @@ export default function QuinceRosadoSaveTheDate({
           {/* Pie de página sutil */}
           <footer className="text-center pb-8 pt-4 space-y-1 text-stone-500">
             <p className="text-[11px] uppercase tracking-widest font-semibold text-stone-600">
-              {nombreFestejada} · Mis Quince Años
+              {nombreFestejada} · {idioma === "EN" ? (data.subtituloEn || "Sweet Fifteen") : (data.subtitulo || "Mis Quince Años")}
             </p>
             <p className="text-[10px]">
-              Invitación creada con amor en Click & Love
+              {idioma === "EN"
+                ? "Invitation crafted with love at Click & Love"
+                : "Invitación creada con amor en Click & Love"}
             </p>
           </footer>
         </div>

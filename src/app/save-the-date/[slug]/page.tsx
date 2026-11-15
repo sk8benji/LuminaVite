@@ -16,10 +16,12 @@ export const DEMO_SAVE_THE_DATE = {
   slug: "demo",
   titulo: "Melissa",
   subtitulo: "Mis Quince Años",
+  subtituloEn: "My Sweet Fifteen",
   mensaje:
     "Guarda esta fecha especial en tu calendario. Muy pronto compartiremos todos los detalles y la invitación formal.",
   fechaEvento: new Date("2027-09-18T20:00:00Z"),
   fechaTextoPersonalizada: "Viernes 18 de Septiembre, 2026",
+  fechaTextoPersonalizadaEn: "Friday, September 18, 2026",
   ciudad: "Los Ángeles, California",
   estiloPlantilla: "QUINCE_ROSADO",
   colorSobre: "#FFE8EE",
@@ -41,6 +43,15 @@ export const DEMO_SAVE_THE_DATE = {
   mostrarPreRsvp: true,
   textoPreRsvp: "¿Podrás Acompañarnos?",
   telefonoWhatsapp: "18181234567",
+  // Títulos bilingües configurables
+  tituloCalendarioEs: "RESERVA LA FECHA",
+  tituloCalendarioEn: "SAVE THE DATE",
+  tituloContadorEs: "Solo Faltan...",
+  tituloContadorEn: "Countdown...",
+  tituloRsvpEs: "Confirmación Anticipada",
+  tituloRsvpEn: "Early RSVP",
+  preguntaRsvpEs: "¿Podrás Acompañarnos?",
+  preguntaRsvpEn: "Will You Join Us?",
 };
 
 async function getSaveTheDateData(rawSlug: string) {
@@ -99,6 +110,15 @@ async function getSaveTheDateData(rawSlug: string) {
         textoPreRsvp: item.textoPreRsvp || "¿Podrás Acompañarnos?",
         telefonoWhatsapp:
           item.telefonoWhatsapp || item.evento?.telefonoWhatsappRsvp || null,
+        tituloCalendarioEs: (item as any).tituloCalendarioEs || DEMO_SAVE_THE_DATE.tituloCalendarioEs,
+        tituloCalendarioEn: (item as any).tituloCalendarioEn || DEMO_SAVE_THE_DATE.tituloCalendarioEn,
+        tituloContadorEs: (item as any).tituloContadorEs || DEMO_SAVE_THE_DATE.tituloContadorEs,
+        tituloContadorEn: (item as any).tituloContadorEn || DEMO_SAVE_THE_DATE.tituloContadorEn,
+        tituloRsvpEs: (item as any).tituloRsvpEs || DEMO_SAVE_THE_DATE.tituloRsvpEs,
+        tituloRsvpEn: (item as any).tituloRsvpEn || DEMO_SAVE_THE_DATE.tituloRsvpEn,
+        preguntaRsvpEs: (item as any).preguntaRsvpEs || item.textoPreRsvp || DEMO_SAVE_THE_DATE.preguntaRsvpEs,
+        preguntaRsvpEn: (item as any).preguntaRsvpEn || DEMO_SAVE_THE_DATE.preguntaRsvpEn,
+        subtituloEn: (item as any).subtituloEn || DEMO_SAVE_THE_DATE.subtituloEn,
       };
     }
   } catch (error) {
@@ -150,6 +170,15 @@ async function getSaveTheDateData(rawSlug: string) {
         mostrarPreRsvp: extra.mostrarPreRsvp !== undefined ? extra.mostrarPreRsvp : true,
         textoPreRsvp: extra.textoPreRsvp || DEMO_SAVE_THE_DATE.textoPreRsvp,
         telefonoWhatsapp: extra.telefonoWhatsapp || DEMO_SAVE_THE_DATE.telefonoWhatsapp,
+        tituloCalendarioEs: extra.tituloCalendarioEs || DEMO_SAVE_THE_DATE.tituloCalendarioEs,
+        tituloCalendarioEn: extra.tituloCalendarioEn || DEMO_SAVE_THE_DATE.tituloCalendarioEn,
+        tituloContadorEs: extra.tituloContadorEs || DEMO_SAVE_THE_DATE.tituloContadorEs,
+        tituloContadorEn: extra.tituloContadorEn || DEMO_SAVE_THE_DATE.tituloContadorEn,
+        tituloRsvpEs: extra.tituloRsvpEs || DEMO_SAVE_THE_DATE.tituloRsvpEs,
+        tituloRsvpEn: extra.tituloRsvpEn || DEMO_SAVE_THE_DATE.tituloRsvpEn,
+        preguntaRsvpEs: extra.preguntaRsvpEs || extra.textoPreRsvp || DEMO_SAVE_THE_DATE.preguntaRsvpEs,
+        preguntaRsvpEn: extra.preguntaRsvpEn || DEMO_SAVE_THE_DATE.preguntaRsvpEn,
+        subtituloEn: extra.subtituloEn || DEMO_SAVE_THE_DATE.subtituloEn,
       };
     }
   } catch (mTplErr) {

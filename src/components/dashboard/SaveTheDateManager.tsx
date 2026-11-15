@@ -55,6 +55,15 @@ export interface SaveTheDateItem {
   mostrarPreRsvp: boolean;
   textoPreRsvp?: string | null;
   telefonoWhatsapp?: string | null;
+  tituloCalendarioEs?: string | null;
+  tituloCalendarioEn?: string | null;
+  tituloContadorEs?: string | null;
+  tituloContadorEn?: string | null;
+  tituloRsvpEs?: string | null;
+  tituloRsvpEn?: string | null;
+  preguntaRsvpEs?: string | null;
+  preguntaRsvpEn?: string | null;
+  subtituloEn?: string | null;
   vistasContador: number;
   activo: boolean;
   createdAt: string;
@@ -129,6 +138,15 @@ export default function SaveTheDateManager() {
     mostrarPreRsvp: true,
     textoPreRsvp: "¿Podrás Acompañarnos?",
     telefonoWhatsapp: "18181234567",
+    tituloCalendarioEs: "RESERVA LA FECHA",
+    tituloCalendarioEn: "SAVE THE DATE",
+    tituloContadorEs: "Solo Faltan...",
+    tituloContadorEn: "Countdown...",
+    tituloRsvpEs: "Confirmación Anticipada",
+    tituloRsvpEn: "Early RSVP",
+    preguntaRsvpEs: "¿Podrás Acompañarnos?",
+    preguntaRsvpEn: "Will You Join Us?",
+    subtituloEn: "My Sweet Fifteen",
   });
 
   const toggleProbarAudio = (url: string) => {
@@ -294,6 +312,15 @@ export default function SaveTheDateManager() {
       mostrarPreRsvp: true,
       textoPreRsvp: "¿Crees que podrás acompañarnos?",
       telefonoWhatsapp: "18181234567",
+      tituloCalendarioEs: "RESERVA LA FECHA",
+      tituloCalendarioEn: "SAVE THE DATE",
+      tituloContadorEs: "Solo Faltan...",
+      tituloContadorEn: "Countdown...",
+      tituloRsvpEs: "Confirmación Anticipada",
+      tituloRsvpEn: "Early RSVP",
+      preguntaRsvpEs: "¿Podrás Acompañarnos?",
+      preguntaRsvpEn: "Will You Join Us?",
+      subtituloEn: "My Sweet Fifteen",
     });
     setModalAbierto(true);
   };
@@ -324,6 +351,15 @@ export default function SaveTheDateManager() {
       mostrarPreRsvp: item.mostrarPreRsvp !== false,
       textoPreRsvp: item.textoPreRsvp || "¿Crees que podrás acompañarnos?",
       telefonoWhatsapp: item.telefonoWhatsapp || "",
+      tituloCalendarioEs: item.tituloCalendarioEs || "RESERVA LA FECHA",
+      tituloCalendarioEn: item.tituloCalendarioEn || "SAVE THE DATE",
+      tituloContadorEs: item.tituloContadorEs || "Solo Faltan...",
+      tituloContadorEn: item.tituloContadorEn || "Countdown...",
+      tituloRsvpEs: item.tituloRsvpEs || "Confirmación Anticipada",
+      tituloRsvpEn: item.tituloRsvpEn || "Early RSVP",
+      preguntaRsvpEs: item.preguntaRsvpEs || item.textoPreRsvp || "¿Podrás Acompañarnos?",
+      preguntaRsvpEn: item.preguntaRsvpEn || "Will You Join Us?",
+      subtituloEn: item.subtituloEn || "My Sweet Fifteen",
     });
     setModalAbierto(true);
   };
@@ -1168,6 +1204,139 @@ export default function SaveTheDateManager() {
                       placeholder="18181234567"
                       className="w-full px-3 py-2 rounded-xl border border-stone-200 bg-white text-xs font-mono"
                     />
+                  </div>
+                </div>
+              </div>
+
+              {/* TÍTULOS BILINGÜES DE SECCIONES (EN / ES) */}
+              <div className="p-4 rounded-2xl bg-amber-50/60 border border-amber-200/70 space-y-3">
+                <div className="flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 text-[#C5A059]" />
+                  <span className="text-xs font-bold text-stone-900 uppercase tracking-wider">
+                    Títulos Principales de Secciones (Bilingüe EN / ES)
+                  </span>
+                </div>
+                <p className="text-[11px] text-stone-600">
+                  Configura los títulos que aparecen al alternar entre inglés y español (por defecto inicia en inglés con el botón EN | ES en la esquina superior).
+                </p>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                  {/* 1. TÍTULO CALENDARIO */}
+                  <div className="bg-white p-3 rounded-xl border border-stone-200 space-y-1.5">
+                    <label className="text-[11px] font-bold text-stone-700 block">
+                      1. Título Calendario:
+                    </label>
+                    <div>
+                      <span className="text-[10px] text-stone-400 font-semibold uppercase">Español (ES):</span>
+                      <input
+                        type="text"
+                        value={formData.tituloCalendarioEs || ""}
+                        onChange={(e) => setFormData({ ...formData, tituloCalendarioEs: e.target.value })}
+                        placeholder="RESERVA LA FECHA"
+                        className="w-full px-3 py-1.5 rounded-lg border border-stone-200 text-xs"
+                      />
+                    </div>
+                    <div>
+                      <span className="text-[10px] text-amber-700 font-semibold uppercase">Inglés (EN - Default):</span>
+                      <input
+                        type="text"
+                        value={formData.tituloCalendarioEn || ""}
+                        onChange={(e) => setFormData({ ...formData, tituloCalendarioEn: e.target.value })}
+                        placeholder="SAVE THE DATE"
+                        className="w-full px-3 py-1.5 rounded-lg border border-amber-200 text-xs font-medium text-amber-900"
+                      />
+                    </div>
+                  </div>
+
+                  {/* 2. TÍTULO CUENTA REGRESIVA */}
+                  <div className="bg-white p-3 rounded-xl border border-stone-200 space-y-1.5">
+                    <label className="text-[11px] font-bold text-stone-700 block">
+                      2. Título Cuenta Regresiva:
+                    </label>
+                    <div>
+                      <span className="text-[10px] text-stone-400 font-semibold uppercase">Español (ES):</span>
+                      <input
+                        type="text"
+                        value={formData.tituloContadorEs || ""}
+                        onChange={(e) => setFormData({ ...formData, tituloContadorEs: e.target.value })}
+                        placeholder="Solo Faltan..."
+                        className="w-full px-3 py-1.5 rounded-lg border border-stone-200 text-xs"
+                      />
+                    </div>
+                    <div>
+                      <span className="text-[10px] text-amber-700 font-semibold uppercase">Inglés (EN - Default):</span>
+                      <input
+                        type="text"
+                        value={formData.tituloContadorEn || ""}
+                        onChange={(e) => setFormData({ ...formData, tituloContadorEn: e.target.value })}
+                        placeholder="Countdown..."
+                        className="w-full px-3 py-1.5 rounded-lg border border-amber-200 text-xs font-medium text-amber-900"
+                      />
+                    </div>
+                  </div>
+
+                  {/* 3. TÍTULO PRE-RSVP */}
+                  <div className="bg-white p-3 rounded-xl border border-stone-200 space-y-1.5">
+                    <label className="text-[11px] font-bold text-stone-700 block">
+                      3. Título Confirmación (Badge Pre-RSVP):
+                    </label>
+                    <div>
+                      <span className="text-[10px] text-stone-400 font-semibold uppercase">Español (ES):</span>
+                      <input
+                        type="text"
+                        value={formData.tituloRsvpEs || ""}
+                        onChange={(e) => setFormData({ ...formData, tituloRsvpEs: e.target.value })}
+                        placeholder="Confirmación Anticipada"
+                        className="w-full px-3 py-1.5 rounded-lg border border-stone-200 text-xs"
+                      />
+                    </div>
+                    <div>
+                      <span className="text-[10px] text-amber-700 font-semibold uppercase">Inglés (EN - Default):</span>
+                      <input
+                        type="text"
+                        value={formData.tituloRsvpEn || ""}
+                        onChange={(e) => setFormData({ ...formData, tituloRsvpEn: e.target.value })}
+                        placeholder="Early RSVP"
+                        className="w-full px-3 py-1.5 rounded-lg border border-amber-200 text-xs font-medium text-amber-900"
+                      />
+                    </div>
+                  </div>
+
+                  {/* 4. PREGUNTA PRE-RSVP Y SUBTÍTULO EN */}
+                  <div className="bg-white p-3 rounded-xl border border-stone-200 space-y-1.5">
+                    <label className="text-[11px] font-bold text-stone-700 block">
+                      4. Pregunta RSVP & Subtítulo EN:
+                    </label>
+                    <div>
+                      <span className="text-[10px] text-stone-400 font-semibold uppercase">Pregunta (ES):</span>
+                      <input
+                        type="text"
+                        value={formData.preguntaRsvpEs || ""}
+                        onChange={(e) => setFormData({ ...formData, preguntaRsvpEs: e.target.value })}
+                        placeholder="¿Podrás Acompañarnos?"
+                        className="w-full px-3 py-1.5 rounded-lg border border-stone-200 text-xs"
+                      />
+                    </div>
+                    <div>
+                      <span className="text-[10px] text-amber-700 font-semibold uppercase">Question (EN - Default):</span>
+                      <input
+                        type="text"
+                        value={formData.preguntaRsvpEn || ""}
+                        onChange={(e) => setFormData({ ...formData, preguntaRsvpEn: e.target.value })}
+                        placeholder="Will You Join Us?"
+                        className="w-full px-3 py-1.5 rounded-lg border border-amber-200 text-xs font-medium text-amber-900"
+                      />
+                    </div>
+                    <div>
+                      <span className="text-[10px] text-amber-700 font-semibold uppercase">Subtítulo Sobre (EN):</span>
+                      <input
+                        type="text"
+                        value={formData.subtituloEn || ""}
+                        onChange={(e) => setFormData({ ...formData, subtituloEn: e.target.value })}
+                        placeholder="My Sweet Fifteen"
+                        className="w-full px-3 py-1.5 rounded-lg border border-amber-200 text-xs font-medium text-amber-900"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>

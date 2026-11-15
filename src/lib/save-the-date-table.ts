@@ -70,6 +70,24 @@ export async function ensureSaveTheDateTables(): Promise<void> {
         CREATE INDEX IF NOT EXISTS "PreRsvpRegistro_saveTheDateId_idx" ON "PreRsvpRegistro"("saveTheDateId");
       `);
 
+      // Asegurar columnas de títulos bilingües configurables
+      const columnasBilingues = [
+        `ALTER TABLE "SaveTheDate" ADD COLUMN IF NOT EXISTS "tituloCalendarioEs" TEXT DEFAULT 'RESERVA LA FECHA';`,
+        `ALTER TABLE "SaveTheDate" ADD COLUMN IF NOT EXISTS "tituloCalendarioEn" TEXT DEFAULT 'SAVE THE DATE';`,
+        `ALTER TABLE "SaveTheDate" ADD COLUMN IF NOT EXISTS "tituloContadorEs" TEXT DEFAULT 'Solo Faltan...';`,
+        `ALTER TABLE "SaveTheDate" ADD COLUMN IF NOT EXISTS "tituloContadorEn" TEXT DEFAULT 'Countdown...';`,
+        `ALTER TABLE "SaveTheDate" ADD COLUMN IF NOT EXISTS "tituloRsvpEs" TEXT DEFAULT 'Confirmación Anticipada';`,
+        `ALTER TABLE "SaveTheDate" ADD COLUMN IF NOT EXISTS "tituloRsvpEn" TEXT DEFAULT 'Early RSVP';`,
+        `ALTER TABLE "SaveTheDate" ADD COLUMN IF NOT EXISTS "preguntaRsvpEs" TEXT DEFAULT '¿Podrás Acompañarnos?';`,
+        `ALTER TABLE "SaveTheDate" ADD COLUMN IF NOT EXISTS "preguntaRsvpEn" TEXT DEFAULT 'Will You Join Us?';`,
+        `ALTER TABLE "SaveTheDate" ADD COLUMN IF NOT EXISTS "subtituloEn" TEXT DEFAULT 'My Sweet Fifteen';`,
+      ];
+      for (const sql of columnasBilingues) {
+        try {
+          await prisma.$executeRawUnsafe(sql);
+        } catch {}
+      }
+
       isEnsured = true;
     } catch (err: any) {
       console.warn("⚠️ Aviso al asegurar tablas SaveTheDate en PostgreSQL:", err?.message || err);
