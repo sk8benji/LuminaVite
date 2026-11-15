@@ -1096,16 +1096,45 @@ export default function QuinceRosadoSaveTheDate({
             </section>
           )}
 
-          {/* Pie de página sutil */}
-          <footer className="text-center pb-8 pt-4 space-y-1 text-stone-500">
-            <p className="text-[11px] uppercase tracking-widest font-semibold text-stone-600">
-              {nombreFestejada} · {idioma === "EN" ? (data.subtituloEn || "Sweet Fifteen") : (data.subtitulo || "Mis Quince Años")}
+          {/* Pie de página con Branding Elegante Click & Love */}
+          <footer className="w-full pt-7 pb-12 px-5 flex flex-col items-center text-center">
+            <p
+              className="font-serif font-semibold text-[0.85rem] tracking-[0.22em] uppercase"
+              style={{ color: "#6e5641" }}
+            >
+              {nombreFestejada} · {idioma === "EN" ? (data.subtituloEn || "MY SWEET FIFTEEN").toUpperCase() : (data.subtitulo || "MIS QUINCE AÑOS").toUpperCase()}
             </p>
-            <p className="text-[10px]">
-              {idioma === "EN"
-                ? "Invitation crafted with love at Click & Love"
-                : "Invitación creada con amor en Click & Love"}
-            </p>
+
+            <div
+              className="w-12 h-px my-3"
+              style={{ backgroundColor: "rgba(197, 160, 89, 0.55)" }}
+            />
+
+            <a
+              href="https://clickandlove.app?utm_source=invitacion&utm_medium=footer"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex flex-col items-center gap-1.5 px-5 py-2.5 rounded-2xl transition-all duration-300 group hover:-translate-y-0.5 hover:shadow-md"
+              style={{
+                backgroundColor: "rgba(253, 249, 244, 0.75)",
+                backdropFilter: "blur(6px)",
+                border: "1px solid rgba(197, 160, 89, 0.35)",
+                boxShadow: "0 4px 14px rgba(110, 86, 65, 0.08)",
+              }}
+              aria-label={idioma === "EN" ? "Craft digital invitation at Click and Love" : "Crear invitación digital en Click and Love"}
+            >
+              <span
+                className="text-[0.68rem] tracking-wider uppercase font-medium"
+                style={{ color: "#8a735c" }}
+              >
+                {idioma === "EN" ? "Digital invitation crafted by" : "Invitación digital creada por"}
+              </span>
+              <img
+                src="/assets/logo-lockup.png"
+                alt="Click and Love - Interactive Website Invitations"
+                className="w-[140px] max-w-[145px] h-auto object-contain opacity-90 group-hover:opacity-100 transition-opacity duration-300"
+              />
+            </a>
           </footer>
         </div>
         </div>
