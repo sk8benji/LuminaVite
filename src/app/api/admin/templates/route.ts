@@ -3,6 +3,7 @@ import prisma from "@/lib/db";
 import { INITIAL_MASTER_TEMPLATES, MasterTemplateItem } from "@/lib/templates-data";
 import { requireAdmin } from "@/lib/auth";
 import { ensurePostgresTables } from "@/lib/init-db";
+import { ensureSaveTheDateTables } from "@/lib/save-the-date-table";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -103,6 +104,75 @@ export async function POST(req: NextRequest) {
         { error: "No se pudo guardar la plantilla en la base de datos. Inténtalo de nuevo." },
         { status: 500 }
       );
+    }
+
+    // Si es la plantilla Save the Date, sincronizar también en la tabla SaveTheDate (slug 'demo')
+    if (slug === "save-the-date-quince-rosado" || updates.estiloPlantilla === "SAVE_THE_DATE_QUINCE_ROSADO") {
+      try {
+        await ensureSaveTheDateTables();
+        const galeria = cleanUpdates.galeriaFotosUrls || [
+          updates.fotoInfanciaUrl,
+          updates.fotoActualUrl,
+          updates.fotoCierreUrl,
+        ].filter(Boolean);
+
+        await prisma.saveTheDate.upsert({
+          where: { slug: "demo" },
+          update: {
+            titulo: updates.titulo || "Melissa",
+            subtitulo: updates.subtitulo || "Mis Quince Años",
+            mensaje: updates.frasePersonalizada || cleanUpdates.mensaje || "Guarda esta fecha especial en tu calendario.",
+            fechaEvento: cleanUpdates.fechaEvento ? new Date(cleanUpdates.fechaEvento) : new Date("2027-09-18T20:00:00Z"),
+            fechaTextoPersonalizada: updates.fechaTextoPersonalizada || "Viernes 18 de Septiembre, 2026",
+            ciudad: cleanUpdates.ciudad || updates.fechaPlacaLugar || "Los Ángeles, California",
+            colorSobre: updates.colorSobre || "#FFE8EE",
+            colorSello: updates.colorSello || "#D4AF37",
+            fotoPortadaUrl: updates.fotoPortadaUrl || "/assets/save-the-date/principal.jpeg",
+            galeriaFotosUrls: galeria.length > 0 ? galeria : [
+              "/assets/save-the-date/save1.webp",
+              "/assets/save-the-date/save2.webp",
+              "/assets/save-the-date/save3.webp",
+            ],
+            musicaUrl: updates.musicaUrl,
+            musicaTitulo: updates.musicaTitulo,
+            mostrarSobre: cleanUpdates.mostrarSobre !== undefined ? cleanUpdates.mostrarSobre : true,
+            mostrarGaleria: cleanUpdates.mostrarGaleria !== undefined ? cleanUpdates.mostrarGaleria : true,
+            mostrarContador: cleanUpdates.mostrarContador !== undefined ? cleanUpdates.mostrarContador : true,
+            mostrarCalendario: cleanUpdates.mostrarCalendario !== undefined ? cleanUpdates.mostrarCalendario : true,
+            mostrarPreRsvp: cleanUpdates.mostrarPreRsvp !== undefined ? cleanUpdates.mostrarPreRsvp : true,
+            textoPreRsvp: cleanUpdates.textoPreRsvp || "¿Podrás Acompañarnos?",
+            telefonoWhatsapp: cleanUpdates.telefonoWhatsapp || "18181234567",
+          },
+          create: {
+            slug: "demo",
+            titulo: updates.titulo || "Melissa",
+            subtitulo: updates.subtitulo || "Mis Quince Años",
+            mensaje: updates.frasePersonalizada || cleanUpdates.mensaje || "Guarda esta fecha especial en tu calendario.",
+            fechaEvento: cleanUpdates.fechaEvento ? new Date(cleanUpdates.fechaEvento) : new Date("2027-09-18T20:00:00Z"),
+            fechaTextoPersonalizada: updates.fechaTextoPersonalizada || "Viernes 18 de Septiembre, 2026",
+            ciudad: cleanUpdates.ciudad || updates.fechaPlacaLugar || "Los Ángeles, California",
+            colorSobre: updates.colorSobre || "#FFE8EE",
+            colorSello: updates.colorSello || "#D4AF37",
+            fotoPortadaUrl: updates.fotoPortadaUrl || "/assets/save-the-date/principal.jpeg",
+            galeriaFotosUrls: galeria.length > 0 ? galeria : [
+              "/assets/save-the-date/save1.webp",
+              "/assets/save-the-date/save2.webp",
+              "/assets/save-the-date/save3.webp",
+            ],
+            musicaUrl: updates.musicaUrl,
+            musicaTitulo: updates.musicaTitulo,
+            mostrarSobre: true,
+            mostrarGaleria: true,
+            mostrarContador: true,
+            mostrarCalendario: true,
+            mostrarPreRsvp: true,
+            textoPreRsvp: "¿Podrás Acompañarnos?",
+            telefonoWhatsapp: "18181234567",
+          },
+        });
+      } catch (syncErr) {
+        console.warn("Aviso al sincronizar SaveTheDate demo desde admin/templates:", syncErr);
+      }
     }
 
     return NextResponse.json({ success: true, message: "Plantilla actualizada con éxito." });

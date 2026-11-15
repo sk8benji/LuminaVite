@@ -302,10 +302,10 @@ export default function QuinceRosadoSaveTheDate({
               }}
             />
 
-            {/* Foto 2: Estado Sobre Abierto (f291897753a9fc56f20003d177749b21.webp) */}
+            {/* Foto 2: Estado Sobre Abierto (f291897753a9fc56f20003d177749b21.webp o personalizada) */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/assets/save-the-date/f291897753a9fc56f20003d177749b21.webp"
+              src={(data as any).fotoSobreAbiertoUrl || "/assets/save-the-date/f291897753a9fc56f20003d177749b21.webp"}
               alt={nombreFestejada}
               className={`w-full h-full object-cover object-[center_15%] absolute inset-0 transition-opacity duration-1000 ${
                 sobreAbierto ? "opacity-100" : "opacity-0 pointer-events-none"
@@ -399,7 +399,7 @@ export default function QuinceRosadoSaveTheDate({
                   style={{ top: "35%" }}
                 >
                   <span className="font-serif text-[11px] sm:text-[13px] uppercase tracking-[0.24em] text-[#2A1B16] font-semibold block leading-tight">
-                    MIS XV AÑOS
+                    {data.subtitulo || "MIS XV AÑOS"}
                   </span>
                   <span
                     className="text-2xl sm:text-3xl text-[#3E2723] font-normal leading-tight mt-1"
@@ -570,7 +570,7 @@ export default function QuinceRosadoSaveTheDate({
               <div className="relative aspect-[3/5] overflow-hidden rounded-[2px] border border-[rgba(197,160,89,0.55)] shadow-[0_6px_14px_rgba(60,40,35,0.15)] group bg-white/40">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src="/assets/save-the-date/save1.webp"
+                  src={data.galeriaFotosUrls?.[0] || "/assets/save-the-date/save1.webp"}
                   alt={`${nombreFestejada} - 1`}
                   className="galeria-foto w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
                 />
@@ -579,7 +579,7 @@ export default function QuinceRosadoSaveTheDate({
               <div className="relative aspect-[3/5] overflow-hidden rounded-[2px] border border-[rgba(197,160,89,0.55)] shadow-[0_6px_14px_rgba(60,40,35,0.15)] group bg-white/40">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src="/assets/save-the-date/save2.webp"
+                  src={data.galeriaFotosUrls?.[1] || "/assets/save-the-date/save2.webp"}
                   alt={`${nombreFestejada} - 2`}
                   className="galeria-foto w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
                 />
@@ -588,7 +588,7 @@ export default function QuinceRosadoSaveTheDate({
               <div className="relative aspect-[3/5] overflow-hidden rounded-[2px] border border-[rgba(197,160,89,0.55)] shadow-[0_6px_14px_rgba(60,40,35,0.15)] group bg-white/40">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src="/assets/save-the-date/save3.webp"
+                  src={data.galeriaFotosUrls?.[2] || "/assets/save-the-date/save3.webp"}
                   alt={`${nombreFestejada} - 3`}
                   className="galeria-foto w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
                 />

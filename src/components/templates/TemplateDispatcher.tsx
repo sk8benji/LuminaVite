@@ -13,6 +13,7 @@ import Miss15Template from "./Miss15Template";
 import BabyBlueTemplate from "./BabyBlueTemplate";
 import CoralineThemedTemplate from "./CoralineThemedTemplate";
 import QuinceRosadoTemplate from "./QuinceRosadoTemplate";
+import QuinceRosadoSaveTheDate from "../save-the-date/QuinceRosadoSaveTheDate";
 
 export default function TemplateDispatcher({
   data,
@@ -21,6 +22,10 @@ export default function TemplateDispatcher({
   data: InvitationData;
   skipIntro?: boolean;
 }) {
+  if (data.estiloPlantilla === "SAVE_THE_DATE_QUINCE_ROSADO" || data.slug?.includes("save-the-date")) {
+    return <QuinceRosadoSaveTheDate data={data as any} skipIntro={skipIntro} />;
+  }
+
   switch (data.estiloPlantilla) {
     case "QUINCE_ROSADO":
       return <QuinceRosadoTemplate data={data} skipIntro={skipIntro} />;

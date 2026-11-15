@@ -14,7 +14,8 @@ export type TemplateId =
   | "CLASICA_IMPERIAL"
   | "ESMERALDA_ROYAL"
   | "JARDIN_BOTANICA"
-  | "MINIMALISTA_EDITORIAL";
+  | "MINIMALISTA_EDITORIAL"
+  | "SAVE_THE_DATE_QUINCE_ROSADO";
 
 export interface TemplateConfig {
   id: TemplateId;
@@ -57,6 +58,26 @@ export const TEMPLATES: Record<TemplateId, TemplateConfig> = {
     ribbonGradient: "from-pink-300 via-rose-200 to-pink-400",
     badgeBg: "#FDF0F3",
     description: "Sobre interactivo 3D con lazo de seda y rosas, arco de princesa a caballo, línea de tiempo floral, dress code, regalos y confirmación.",
+  },
+  SAVE_THE_DATE_QUINCE_ROSADO: {
+    id: "SAVE_THE_DATE_QUINCE_ROSADO",
+    name: "Save the Date — Quince Rosado (Melissa)",
+    category: "QUINCEANERA",
+    bgColor: "#FAF4F0",
+    cardBg: "#FFFFFF",
+    textPrimary: "#7A5C32",
+    textSecondary: "#8C7060",
+    accentColor: "#C5A059",
+    accentSoft: "#F7EFE6",
+    borderSoft: "#E2D3B8",
+    buttonBg: "#C5A059",
+    buttonText: "#2C1F1B",
+    fontHeading: "'Cormorant Garamond', serif",
+    fontSubheading: "'Great Vibes', cursive",
+    fontBody: "'Cinzel', serif",
+    ribbonGradient: "linear-gradient(135deg, #c5a059 0%, #a88340 100%)",
+    badgeBg: "#FDF9F4",
+    description: "Plantilla interactiva de Save the Date con sobre 3D, galería vertical de 3 fotos, calendario interactivo, cuenta regresiva en vivo y pre-confirmación.",
   },
   ELEGANT_ROSE: {
     id: "ELEGANT_ROSE",

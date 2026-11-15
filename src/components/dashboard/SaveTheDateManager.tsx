@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import {
   CalendarHeart,
@@ -25,6 +25,9 @@ import {
   CheckCircle2,
   AlertCircle,
   Image as ImageIcon,
+  Upload,
+  Play,
+  Square,
 } from "lucide-react";
 
 export interface SaveTheDateItem {
@@ -94,32 +97,108 @@ export default function SaveTheDateManager() {
   const [editandoItem, setEditandoItem] = useState<SaveTheDateItem | null>(null);
   const [guardando, setGuardando] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
+  const [subiendoArchivo, setSubiendoArchivo] = useState<string | null>(null);
+  const [reproduciendoAudio, setReproduciendoAudio] = useState(false);
+  const audioDemoRef = useRef<HTMLAudioElement | null>(null);
 
   // Formulario local
   const [formData, setFormData] = useState({
     slug: "",
     eventoId: "",
     titulo: "",
-    subtitulo: "Save Our Date",
-    mensaje: "Nos encantaría que reserves este día especial para celebrarlo juntos.",
+    subtitulo: "Mis Quince Años",
+    mensaje: "Guarda esta fecha especial en tu calendario. Muy pronto compartiremos todos los detalles y la invitación formal.",
     fechaEvento: "",
-    fechaTextoPersonalizada: "",
-    ciudad: "Los Ángeles, CA",
+    fechaTextoPersonalizada: "Viernes 18 de Septiembre, 2026",
+    ciudad: "Los Ángeles, California",
     estiloPlantilla: "QUINCE_ROSADO",
-    colorSobre: "#FFF0F3",
-    colorSello: "#C5A059",
-    fotoPortadaUrl: "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=800&q=80",
-    galeriaFotosUrls: [] as string[],
-    musicaUrl: "",
-    musicaTitulo: "",
+    colorSobre: "#FFE8EE",
+    colorSello: "#D4AF37",
+    fotoPortadaUrl: "/assets/save-the-date/principal.jpeg",
+    galeriaFotosUrls: [
+      "/assets/save-the-date/save1.webp",
+      "/assets/save-the-date/save2.webp",
+      "/assets/save-the-date/save3.webp",
+    ] as string[],
+    musicaUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+    musicaTitulo: "A Thousand Years (Instrumental)",
     mostrarSobre: true,
     mostrarGaleria: true,
     mostrarContador: true,
     mostrarCalendario: true,
     mostrarPreRsvp: true,
-    textoPreRsvp: "¿Crees que podrás acompañarnos?",
-    telefonoWhatsapp: "",
+    textoPreRsvp: "¿Podrás Acompañarnos?",
+    telefonoWhatsapp: "18181234567",
   });
+
+  const toggleProbarAudio = (url: string) => {
+    if (!url) return;
+    if (audioDemoRef.current) {
+      if (reproduciendoAudio) {
+        audioDemoRef.current.pause();
+        setReproduciendoAudio(false);
+        return;
+      }
+    }
+    const audio = new Audio(url);
+    audioDemoRef.current = audio;
+    audio.play().then(() => setReproduciendoAudio(true)).catch(() => {});
+    audio.onended = () => setReproduciendoAudio(false);
+  };
+
+  const handleSubirArchivo = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+    campo: string,
+    esAudio: boolean = false
+  ) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setSubiendoArchivo(campo);
+    setFormError(null);
+
+    try {
+      const folder = esAudio ? "save-the-date/audio" : "save-the-date/images";
+      const presignedRes = await fetch("/api/s3/presigned-url", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          filename: file.name,
+          contentType: file.type || (esAudio ? "audio/mpeg" : "image/jpeg"),
+          folder,
+          fileSize: file.size,
+        }),
+      });
+
+      const presignedData = await presignedRes.json();
+      if (!presignedRes.ok) throw new Error(presignedData.error || "No se pudo obtener enlace firmado de S3");
+
+      await fetch(presignedData.uploadUrl, {
+        method: "PUT",
+        headers: { "Content-Type": file.type },
+        body: file,
+      });
+
+      if (campo.startsWith("galeria-")) {
+        const idx = parseInt(campo.split("-")[1], 10);
+        setFormData((prev) => {
+          const nuevas = [...prev.galeriaFotosUrls];
+          nuevas[idx] = presignedData.fileUrl;
+          return { ...prev, galeriaFotosUrls: nuevas };
+        });
+      } else {
+        setFormData((prev) => ({
+          ...prev,
+          [campo]: presignedData.fileUrl,
+          ...(esAudio && !prev.musicaTitulo ? { musicaTitulo: file.name.replace(/\.[^/.]+$/, "") } : {}),
+        }));
+      }
+    } catch (err: any) {
+      setFormError(err.message || "Error al subir archivo a AWS S3");
+    } finally {
+      setSubiendoArchivo(null);
+    }
+  };
 
   const cargarDatos = async () => {
     setLoading(true);
@@ -129,9 +208,47 @@ export default function SaveTheDateManager() {
         fetch("/api/eventos").then((r) => r.json()),
       ]);
 
-      if (resStd.items) {
-        setItems(resStd.items);
+      let stdItems = resStd.items || [];
+      const hasDemo = stdItems.some((i: any) => i.slug === "demo");
+      if (!hasDemo) {
+        stdItems = [
+          {
+            id: "demo-master",
+            slug: "demo",
+            titulo: "Melissa",
+            subtitulo: "Mis Quince Años",
+            mensaje: "Guarda esta fecha especial en tu calendario. Muy pronto compartiremos todos los detalles y la invitación formal.",
+            fechaEvento: "2027-09-18T20:00:00.000Z",
+            fechaTextoPersonalizada: "Viernes 18 de Septiembre, 2026",
+            ciudad: "Los Ángeles, California",
+            estiloPlantilla: "QUINCE_ROSADO",
+            colorSobre: "#FFE8EE",
+            colorSello: "#D4AF37",
+            tipoLetra: "Cinzel",
+            fotoPortadaUrl: "/assets/save-the-date/principal.jpeg",
+            galeriaFotosUrls: [
+              "/assets/save-the-date/save1.webp",
+              "/assets/save-the-date/save2.webp",
+              "/assets/save-the-date/save3.webp",
+            ],
+            musicaUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+            musicaTitulo: "A Thousand Years (Instrumental)",
+            mostrarSobre: true,
+            mostrarGaleria: true,
+            mostrarContador: true,
+            mostrarCalendario: true,
+            mostrarPreRsvp: true,
+            textoPreRsvp: "¿Podrás Acompañarnos?",
+            telefonoWhatsapp: "18181234567",
+            vistasContador: 0,
+            activo: true,
+            createdAt: new Date().toISOString(),
+          },
+          ...stdItems,
+        ];
       }
+      setItems(stdItems);
+
       if (resEventos.eventos) {
         setEventos(resEventos.eventos);
       }
@@ -766,7 +883,7 @@ export default function SaveTheDateManager() {
                 </select>
               </div>
 
-              {/* 2. Enlace y Título */}
+              {/* 2. Enlace, Título y Textos */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-1.5">
@@ -776,7 +893,7 @@ export default function SaveTheDateManager() {
                     type="text"
                     value={formData.titulo}
                     onChange={(e) => setFormData({ ...formData, titulo: e.target.value })}
-                    placeholder="Valeria Sofía"
+                    placeholder="Valeria Sofía o Melissa"
                     className="w-full px-3.5 py-2.5 rounded-xl border border-stone-200 text-xs font-semibold text-stone-900 focus:outline-none focus:border-[#7A002A]"
                   />
                 </div>
@@ -792,7 +909,7 @@ export default function SaveTheDateManager() {
                     <input
                       type="text"
                       value={formData.slug}
-                      disabled={Boolean(editandoItem)}
+                      disabled={Boolean(editandoItem && editandoItem.slug === "demo")}
                       onChange={(e) =>
                         setFormData({
                           ...formData,
@@ -803,6 +920,35 @@ export default function SaveTheDateManager() {
                       className="flex-1 px-3 py-2.5 text-xs text-stone-900 font-bold bg-transparent focus:outline-none disabled:opacity-60"
                     />
                   </div>
+                </div>
+              </div>
+
+              {/* Subtítulo y Frase */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-1.5">
+                    Subtítulo (ej. dentro del sobre)
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.subtitulo || ""}
+                    onChange={(e) => setFormData({ ...formData, subtitulo: e.target.value })}
+                    placeholder="Mis Quince Años o Save Our Date"
+                    className="w-full px-3.5 py-2 rounded-xl border border-stone-200 text-xs font-semibold text-stone-900 focus:outline-none focus:border-[#7A002A]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-1.5">
+                    Frase o Mensaje de Cabecera
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.mensaje || ""}
+                    onChange={(e) => setFormData({ ...formData, mensaje: e.target.value })}
+                    placeholder="Guarda esta fecha especial en tu calendario..."
+                    className="w-full px-3.5 py-2 rounded-xl border border-stone-200 text-xs text-stone-800 focus:outline-none focus:border-[#7A002A]"
+                  />
                 </div>
               </div>
 
@@ -826,71 +972,207 @@ export default function SaveTheDateManager() {
                   </label>
                   <input
                     type="text"
-                    value={formData.fechaTextoPersonalizada}
+                    value={formData.fechaTextoPersonalizada || ""}
                     onChange={(e) => setFormData({ ...formData, fechaTextoPersonalizada: e.target.value })}
-                    placeholder="SÁBADO 15 DE MAYO, 2027"
+                    placeholder="Viernes 18 de Septiembre, 2026"
                     className="w-full px-3 py-2.5 rounded-xl border border-stone-200 text-xs text-stone-800 focus:outline-none focus:border-[#7A002A]"
                   />
                 </div>
 
                 <div>
                   <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-1.5">
-                    Ciudad / Estado
+                    Ciudad / Ubicación
                   </label>
                   <input
                     type="text"
-                    value={formData.ciudad}
+                    value={formData.ciudad || ""}
                     onChange={(e) => setFormData({ ...formData, ciudad: e.target.value })}
-                    placeholder="Los Ángeles, CA"
+                    placeholder="Los Ángeles, California"
                     className="w-full px-3 py-2.5 rounded-xl border border-stone-200 text-xs text-stone-800 focus:outline-none focus:border-[#7A002A]"
                   />
                 </div>
               </div>
 
-              {/* 4. Fotos: Portada y Galería Vertical */}
-              <div className="space-y-3">
-                <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider">
-                  Fotografía de Portada (Vertical 9:16) *
-                </label>
-                <div className="flex gap-3 items-center p-3 rounded-2xl border border-stone-200 bg-stone-50">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={formData.fotoPortadaUrl}
-                    alt="Portada"
-                    className="w-14 h-20 rounded-xl object-cover border border-white shadow-xs shrink-0"
-                  />
-                  <input
-                    type="text"
-                    value={formData.fotoPortadaUrl}
-                    onChange={(e) => setFormData({ ...formData, fotoPortadaUrl: e.target.value })}
-                    placeholder="URL de la foto de portada (AWS S3 o enlace)..."
-                    className="flex-1 px-3 py-2 rounded-xl border border-stone-200 text-xs text-stone-800 bg-white"
-                  />
+              {/* 4. Música & Audio */}
+              <div className="p-4 rounded-2xl bg-amber-50/50 border border-amber-200/80 space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Music className="w-4 h-4 text-[#C5A059]" />
+                    <span className="text-xs font-bold text-stone-800 uppercase tracking-wider">
+                      Música de Fondo
+                    </span>
+                  </div>
+                  <label className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#7A002A] hover:bg-[#5e0020] text-white rounded-lg text-xs font-semibold cursor-pointer shadow-xs transition">
+                    <Upload className="w-3 h-3" />
+                    <span>{subiendoArchivo === "musicaUrl" ? "Subiendo..." : "Subir MP3"}</span>
+                    <input
+                      type="file"
+                      accept="audio/*,.mp3,.wav,.m4a"
+                      onChange={(e) => handleSubirArchivo(e, "musicaUrl", true)}
+                      disabled={subiendoArchivo === "musicaUrl"}
+                      className="hidden"
+                    />
+                  </label>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-[11px] font-semibold text-stone-600 mb-1">Título de la Canción:</label>
+                    <input
+                      type="text"
+                      placeholder="Ej. A Thousand Years (Instrumental)"
+                      value={formData.musicaTitulo || ""}
+                      onChange={(e) => setFormData({ ...formData, musicaTitulo: e.target.value })}
+                      className="w-full px-3 py-2 rounded-xl border border-stone-200 bg-white text-xs text-stone-800"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-semibold text-stone-600 mb-1">URL del Audio:</label>
+                    <div className="flex gap-2">
+                      <input
+                        type="url"
+                        placeholder="https://.../cancion.mp3"
+                        value={formData.musicaUrl || ""}
+                        onChange={(e) => setFormData({ ...formData, musicaUrl: e.target.value })}
+                        className="flex-1 px-3 py-2 rounded-xl border border-stone-200 bg-white text-xs font-mono"
+                      />
+                      {formData.musicaUrl && (
+                        <button
+                          type="button"
+                          onClick={() => toggleProbarAudio(formData.musicaUrl || "")}
+                          className="px-2.5 py-1.5 bg-stone-100 hover:bg-stone-200 border border-stone-300 rounded-xl text-xs font-bold flex items-center gap-1 cursor-pointer"
+                        >
+                          {reproduciendoAudio ? (
+                            <Square className="w-3 h-3 fill-current text-red-600" />
+                          ) : (
+                            <Play className="w-3 h-3 fill-current text-emerald-600 ml-0.5" />
+                          )}
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* 5. Fotos: Portada y Galería Vertical */}
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-1.5">
+                    Foto de Portada 9:16 (Festejada con Periódico) *
+                  </label>
+                  <div className="flex gap-3 items-center p-3 rounded-2xl border border-stone-200 bg-stone-50">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={formData.fotoPortadaUrl || "/assets/save-the-date/principal.jpeg"}
+                      alt="Portada"
+                      className="w-14 h-20 rounded-xl object-cover border border-white shadow-xs shrink-0"
+                    />
+                    <input
+                      type="text"
+                      value={formData.fotoPortadaUrl}
+                      onChange={(e) => setFormData({ ...formData, fotoPortadaUrl: e.target.value })}
+                      placeholder="URL de la foto de portada..."
+                      className="flex-1 px-3 py-2 rounded-xl border border-stone-200 text-xs text-stone-800 bg-white font-mono"
+                    />
+                    <label className="inline-flex items-center gap-1.5 px-3 py-2 bg-[#7A002A] text-white rounded-xl text-xs font-semibold cursor-pointer shrink-0">
+                      <Upload className="w-3 h-3" />
+                      <span>{subiendoArchivo === "fotoPortadaUrl" ? "Subiendo..." : "Subir Foto"}</span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => handleSubirArchivo(e, "fotoPortadaUrl", false)}
+                        disabled={subiendoArchivo === "fotoPortadaUrl"}
+                        className="hidden"
+                      />
+                    </label>
+                  </div>
                 </div>
 
                 <div>
                   <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-1.5">
-                    Galería de Fotos Vertical (URLs separadas por coma)
+                    Galería de 3 Fotos Verticales (Sección 2)
                   </label>
-                  <textarea
-                    rows={2}
-                    value={formData.galeriaFotosUrls.join(", ")}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        galeriaFotosUrls: e.target.value
-                          .split(",")
-                          .map((u) => u.trim())
-                          .filter(Boolean),
-                      })
-                    }
-                    placeholder="https://...foto1.jpg, https://...foto2.jpg"
-                    className="w-full px-3.5 py-2 rounded-xl border border-stone-200 text-xs text-stone-800 focus:outline-none focus:border-[#7A002A]"
-                  />
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    {[0, 1, 2].map((idx) => {
+                      const url = formData.galeriaFotosUrls[idx] || "";
+                      return (
+                        <div key={idx} className="p-3 bg-stone-50 rounded-2xl border border-stone-200 space-y-2">
+                          <div className="flex items-center justify-between">
+                            <span className="text-[11px] font-bold text-stone-700">Foto {idx + 1}</span>
+                            <label className="inline-flex items-center gap-1 px-2 py-1 bg-stone-200 hover:bg-stone-300 text-stone-800 rounded-lg text-[10px] font-semibold cursor-pointer">
+                              <Upload className="w-2.5 h-2.5" />
+                              <span>{subiendoArchivo === `galeria-${idx}` ? "Subiendo..." : "Subir"}</span>
+                              <input
+                                type="file"
+                                accept="image/*"
+                                onChange={(e) => handleSubirArchivo(e, `galeria-${idx}`, false)}
+                                disabled={subiendoArchivo === `galeria-${idx}`}
+                                className="hidden"
+                              />
+                            </label>
+                          </div>
+                          {url && (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img
+                              src={url}
+                              alt={`Foto ${idx + 1}`}
+                              className="w-full h-24 rounded-lg object-cover border border-white shadow-2xs"
+                            />
+                          )}
+                          <input
+                            type="text"
+                            value={url}
+                            onChange={(e) => {
+                              const nuevas = [...formData.galeriaFotosUrls];
+                              nuevas[idx] = e.target.value;
+                              setFormData({ ...formData, galeriaFotosUrls: nuevas });
+                            }}
+                            placeholder={`URL Foto ${idx + 1}...`}
+                            className="w-full px-2 py-1 bg-white border border-stone-200 rounded-lg text-[10px] font-mono"
+                          />
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
 
-              {/* 5. Estilo y Sobre */}
+              {/* 6. Pre-RSVP y WhatsApp */}
+              <div className="p-4 rounded-2xl bg-stone-50 border border-stone-200 space-y-3">
+                <span className="text-xs font-bold text-stone-800 uppercase tracking-wider block">
+                  Pre-Confirmación (RSVP)
+                </span>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-[11px] font-semibold text-stone-600 mb-1">
+                      Pregunta / Título Pre-RSVP:
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.textoPreRsvp || "¿Podrás Acompañarnos?"}
+                      onChange={(e) => setFormData({ ...formData, textoPreRsvp: e.target.value })}
+                      placeholder="¿Podrás Acompañarnos?"
+                      className="w-full px-3 py-2 rounded-xl border border-stone-200 bg-white text-xs"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-semibold text-stone-600 mb-1">
+                      Teléfono WhatsApp para Confirmaciones:
+                    </label>
+                    <input
+                      type="tel"
+                      value={formData.telefonoWhatsapp || ""}
+                      onChange={(e) => setFormData({ ...formData, telefonoWhatsapp: e.target.value })}
+                      placeholder="18181234567"
+                      className="w-full px-3 py-2 rounded-xl border border-stone-200 bg-white text-xs font-mono"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* 7. Estilo y Sobre */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
                   <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-1.5">

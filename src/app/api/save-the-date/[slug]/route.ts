@@ -64,11 +64,44 @@ export async function PATCH(req: NextRequest, context: RouteParams) {
     const { slug } = await context.params;
     const body = await req.json();
 
-    const existing = await prisma.saveTheDate.findUnique({
+    let existing = await prisma.saveTheDate.findUnique({
       where: { slug },
     });
 
     if (!existing) {
+      if (slug === "demo") {
+        existing = await prisma.saveTheDate.create({
+          data: {
+            slug: "demo",
+            titulo: body.titulo || "Melissa",
+            subtitulo: body.subtitulo || "Mis Quince Años",
+            mensaje: body.mensaje || "Guarda esta fecha especial en tu calendario.",
+            fechaEvento: body.fechaEvento ? new Date(body.fechaEvento) : new Date("2027-09-18T20:00:00Z"),
+            fechaTextoPersonalizada: body.fechaTextoPersonalizada || "Viernes 18 de Septiembre, 2026",
+            ciudad: body.ciudad || "Los Ángeles, California",
+            estiloPlantilla: body.estiloPlantilla || "QUINCE_ROSADO",
+            colorSobre: body.colorSobre || "#FFE8EE",
+            colorSello: body.colorSello || "#D4AF37",
+            fotoPortadaUrl: body.fotoPortadaUrl || "/assets/save-the-date/principal.jpeg",
+            galeriaFotosUrls: body.galeriaFotosUrls || [
+              "/assets/save-the-date/save1.webp",
+              "/assets/save-the-date/save2.webp",
+              "/assets/save-the-date/save3.webp",
+            ],
+            musicaUrl: body.musicaUrl,
+            musicaTitulo: body.musicaTitulo,
+            mostrarSobre: body.mostrarSobre !== undefined ? body.mostrarSobre : true,
+            mostrarGaleria: body.mostrarGaleria !== undefined ? body.mostrarGaleria : true,
+            mostrarContador: body.mostrarContador !== undefined ? body.mostrarContador : true,
+            mostrarCalendario: body.mostrarCalendario !== undefined ? body.mostrarCalendario : true,
+            mostrarPreRsvp: body.mostrarPreRsvp !== undefined ? body.mostrarPreRsvp : true,
+            textoPreRsvp: body.textoPreRsvp || "¿Podrás Acompañarnos?",
+            telefonoWhatsapp: body.telefonoWhatsapp || "18181234567",
+          },
+        });
+        return NextResponse.json({ success: true, item: existing });
+      }
+
       return NextResponse.json(
         { error: "Save The Date no encontrado" },
         { status: 404 }
