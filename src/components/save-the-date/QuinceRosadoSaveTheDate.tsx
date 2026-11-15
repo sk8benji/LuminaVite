@@ -64,8 +64,24 @@ export default function QuinceRosadoSaveTheDate({
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const contenidoRef = useRef<HTMLDivElement | null>(null);
 
-  // Cuenta regresiva
+  // Fecha del evento
   const fechaObj = useMemo(() => new Date(data.fechaEvento), [data.fechaEvento]);
+
+  // Cuenta regresiva: Si la fecha objetivo quedó en el pasado (como septiembre 2026 en demo),
+  // calculamos hacia una fecha futura (18 de septiembre de 2027) para que el reloj corra en vivo
+  const fechaCountdown = useMemo(() => {
+    const raw = new Date(data.fechaEvento);
+    if (raw.getTime() <= Date.now()) {
+      const futura = new Date(raw);
+      futura.setFullYear(2027);
+      if (futura.getTime() <= Date.now()) {
+        futura.setFullYear(new Date().getFullYear() + 1);
+      }
+      return futura;
+    }
+    return raw;
+  }, [data.fechaEvento]);
+
   const [tiempo, setTiempo] = useState({
     dias: 0,
     horas: 0,
@@ -91,7 +107,7 @@ export default function QuinceRosadoSaveTheDate({
 
   // Actualizar cuenta regresiva en tiempo real
   useEffect(() => {
-    const target = fechaObj.getTime();
+    const target = fechaCountdown.getTime();
     const calcular = () => {
       const ahora = Date.now();
       const diff = target - ahora;
@@ -117,7 +133,7 @@ export default function QuinceRosadoSaveTheDate({
     calcular();
     const interval = setInterval(calcular, 1000);
     return () => clearInterval(interval);
-  }, [fechaObj]);
+  }, [fechaCountdown]);
 
   // Manejar audio
   const toggleMusica = () => {
@@ -257,21 +273,6 @@ export default function QuinceRosadoSaveTheDate({
         <audio ref={audioRef} src={data.musicaUrl} preload="auto" loop />
       )}
 
-      {/* Botón flotante de música */}
-      {data.musicaUrl && sobreAbierto && (
-        <button
-          onClick={toggleMusica}
-          className="fixed top-4 right-4 z-40 p-3 rounded-full bg-white/95 backdrop-blur-md shadow-lg border border-pink-200 text-[#7A002A] hover:scale-105 active:scale-95 transition cursor-pointer"
-          title={reproduciendo ? "Pausar música" : "Reproducir música"}
-          aria-label="Control de música"
-        >
-          {reproduciendo ? (
-            <Volume2 className="w-5 h-5 animate-pulse text-[#7A002A]" />
-          ) : (
-            <VolumeX className="w-5 h-5 text-stone-400" />
-          )}
-        </button>
-      )}
 
       {/* ============================================================== */}
       {/* 1. PRIMERA SECCIÓN: FOTO DE LA QUINCEAÑERA (60svh) + SOBRE COMPACTO (78%) */}
@@ -655,7 +656,7 @@ export default function QuinceRosadoSaveTheDate({
                   </div>
 
                   {/* Cuadrícula interactiva del mes: Días de 3 letras (DOM a SÁB) */}
-                  <div className="w-full max-w-[280px]">
+                  <div className="w-[86%] max-w-[250px] mx-auto">
                     <div className="grid grid-cols-7 gap-1 text-center font-bold text-[9px] sm:text-[10px] text-[#A68A68] tracking-wider mb-2 uppercase">
                       <span>DOM</span>
                       <span>LUN</span>
