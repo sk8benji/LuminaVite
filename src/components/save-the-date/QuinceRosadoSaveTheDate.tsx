@@ -214,26 +214,26 @@ export default function QuinceRosadoSaveTheDate({
   const mesIdx = fechaObj.getMonth();
   const diaEvento = fechaObj.getDate();
 
-  const mesesNombres = [
-    "ENERO",
-    "FEBRERO",
-    "MARZO",
-    "ABRIL",
-    "MAYO",
-    "JUNIO",
-    "JULIO",
-    "AGOSTO",
-    "SEPTIEMBRE",
-    "OCTUBRE",
-    "NOVIEMBRE",
-    "DICIEMBRE",
+  const mesesCapitalizados = [
+    "Enero",
+    "Febrero",
+    "Marzo",
+    "Abril",
+    "Mayo",
+    "Junio",
+    "Julio",
+    "Agosto",
+    "Septiembre",
+    "Octubre",
+    "Noviembre",
+    "Diciembre",
   ];
-  const nombreMes = mesesNombres[mesIdx];
+  const nombreMes = mesesCapitalizados[mesIdx] || "Septiembre";
 
-  // Generar cuadrícula del calendario (Lunes = 0)
+  // Generar cuadrícula del calendario iniciando en Domingo (DOM a SÁB)
   const primerDiaSemana = new Date(anio, mesIdx, 1).getDay(); // 0 = Domingo
   const diasEnMes = new Date(anio, mesIdx + 1, 0).getDate();
-  const offsetDias = (primerDiaSemana + 6) % 7; // Ajuste a semana iniciando en Lunes
+  const offsetDias = primerDiaSemana; // 0 = Domingo
 
   const matrizDias: (number | null)[] = [];
   for (let i = 0; i < offsetDias; i++) matrizDias.push(null);
@@ -611,156 +611,193 @@ export default function QuinceRosadoSaveTheDate({
           {/* ============================================================ */}
           {/* SECCIONES POSTERIORES: CALENDARIO (SECCIÓN 3) -> COUNTDOWN -> RSVP */}
           {/* ============================================================ */}
-          <div className="max-w-md mx-auto px-4 space-y-10 pt-10 sm:pt-12">
+          <div className="max-w-md mx-auto px-4 space-y-8 pt-8 sm:pt-10">
             {/* ============================================================ */}
-            {/* SECCIÓN 3: CALENDARIO CON MARCO ELEGANTE (calendario.webp) */}
-            {/* ARRANCA INMEDIATAMENTE DEBAJO DE LA GUIRNALDA FLORAL */}
+            {/* SECCIÓN 3: CALENDARIO */}
             {/* ============================================================ */}
             {data.mostrarCalendario && (
-              <section className="relative rounded-[32px] overflow-hidden shadow-2xl p-6 sm:p-8 flex flex-col items-center">
-                {/* Marco gráfico de fondo decorativo */}
-                <div
-                  className="absolute inset-0 -z-10"
-                  style={{
-                    backgroundImage: "url('/assets/save-the-date/calendario.webp')",
-                    backgroundSize: "100% 100%",
-                    backgroundPosition: "center",
-                  }}
-                />
-
-                <div className="w-full text-center space-y-1 pt-2">
-                  <span
-                    className="text-xs sm:text-sm uppercase tracking-[0.25em] text-[#C5A059] font-bold block"
+              <section className="flex flex-col items-center">
+                {/* 1. TÍTULO 'RESERVA LA FECHA' FUERA Y ARRIBA DE CALENDARIO.PNG */}
+                <div className="w-full text-center mb-3 sm:mb-4">
+                  <h2
+                    className="text-sm sm:text-base uppercase tracking-[0.22em] text-[#7A5C32] font-semibold"
                     style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
                   >
-                    Reserva La Fecha
-                  </span>
-                  <h3 className="font-serif text-2xl font-bold text-[#7A002A]">
-                    {nombreMes} {anio}
-                  </h3>
+                    RESERVA LA FECHA
+                  </h2>
                 </div>
 
-                {/* Cuadrícula interactiva del mes */}
-                <div className="w-full max-w-[300px] mt-4">
-                  <div className="grid grid-cols-7 gap-1 text-center font-bold text-[10px] text-stone-500 mb-2 uppercase">
-                    <span>L</span>
-                    <span>M</span>
-                    <span>M</span>
-                    <span>J</span>
-                    <span>V</span>
-                    <span>S</span>
-                    <span>D</span>
-                  </div>
+                {/* 2. TARJETA CALENDARIO CON MARCO ELEGANTE (calendario.webp) */}
+                <div className="relative w-full max-w-[340px] rounded-[30px] overflow-hidden shadow-xl p-6 sm:p-7 flex flex-col items-center">
+                  {/* Marco gráfico de fondo decorativo */}
+                  <div
+                    className="absolute inset-0 -z-10"
+                    style={{
+                      backgroundImage: "url('/assets/save-the-date/calendario.webp')",
+                      backgroundSize: "100% 100%",
+                      backgroundPosition: "center",
+                    }}
+                  />
 
-                  <div className="grid grid-cols-7 gap-1.5 text-center text-xs">
-                    {matrizDias.map((dia, idx) => {
-                      if (dia === null) {
-                        return <div key={`empty-${idx}`} className="h-8" />;
-                      }
-
-                      const esElDia = dia === diaEvento;
-
-                      return (
-                        <div
-                          key={`dia-${dia}`}
-                          className={`h-8 flex items-center justify-center rounded-full text-xs font-semibold transition relative ${
-                            esElDia
-                              ? "bg-[#7A002A] text-white shadow-md ring-2 ring-[#C5A059] font-bold scale-110"
-                              : "text-stone-700 hover:bg-stone-100/60"
-                          }`}
-                        >
-                          {dia}
-                          {esElDia && (
-                            <span className="absolute -top-1 -right-1 text-[10px]">
-                              👑
-                            </span>
-                          )}
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* Botones de acción: Agregar a Google / Apple Calendar */}
-                <div className="w-full max-w-[300px] pt-6 flex flex-col gap-2.5">
-                  <a
-                    href={generateGoogleCalendarUrl({
-                      titulo: `Save the Date · ${nombreFestejada}`,
-                      descripcion: `Reserva la fecha para los quince años de ${nombreFestejada}.`,
-                      fechaInicio: fechaObj,
-                      ciudad: data.ciudad || "Salón de Eventos",
-                    })}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-[#7A002A] text-white font-semibold text-xs shadow-md hover:bg-[#5E0020] transition active:scale-95"
+                  {/* Mes 'Septiembre' en Great Vibes (3.5rem, color #7a5c32) */}
+                  <span
+                    className="text-[3rem] sm:text-[3.5rem] leading-none text-[#7A5C32] block -mt-1"
+                    style={{ fontFamily: "'Great Vibes', cursive" }}
                   >
-                    <CalendarPlus className="w-4 h-4 text-amber-200" />
-                    <span>Agregar a Google Calendar</span>
-                  </a>
+                    {nombreMes}
+                  </span>
 
-                  <button
-                    type="button"
-                    onClick={() =>
-                      downloadIcsFile({
+                  {/* Año 2026 con líneas doradas a los lados */}
+                  <div className="flex items-center justify-center gap-3 text-xs font-serif tracking-[0.25em] text-[#C5A059] font-medium mt-1 mb-3">
+                    <span className="h-px w-7 bg-gradient-to-r from-transparent to-[#C5A059]" />
+                    <span>{anio}</span>
+                    <span className="h-px w-7 bg-gradient-to-l from-transparent to-[#C5A059]" />
+                  </div>
+
+                  {/* Cuadrícula interactiva del mes: Días de 3 letras (DOM a SÁB) */}
+                  <div className="w-full max-w-[280px]">
+                    <div className="grid grid-cols-7 gap-1 text-center font-bold text-[9px] sm:text-[10px] text-[#A68A68] tracking-wider mb-2 uppercase">
+                      <span>DOM</span>
+                      <span>LUN</span>
+                      <span>MAR</span>
+                      <span>MIÉ</span>
+                      <span>JUE</span>
+                      <span>VIE</span>
+                      <span>SÁB</span>
+                    </div>
+
+                    <div className="grid grid-cols-7 gap-1 text-center text-xs">
+                      {matrizDias.map((dia, idx) => {
+                        if (dia === null) {
+                          return <div key={`empty-${idx}`} className="h-8" />;
+                        }
+
+                        const esElDia = dia === diaEvento;
+
+                        return (
+                          <div
+                            key={`dia-${dia}`}
+                            className={`h-8 flex items-center justify-center text-xs relative ${
+                              esElDia
+                                ? "text-[#7A5C32] font-bold"
+                                : "text-[#5C4538] font-medium"
+                            }`}
+                          >
+                            {/* Día 18: Contorno de corazón dorado/rosado en SVG */}
+                            {esElDia && (
+                              <svg
+                                className="absolute inset-0 w-full h-full text-[#B87C82] pointer-events-none drop-shadow-xs"
+                                viewBox="0 0 24 24"
+                                fill="rgba(184, 124, 130, 0.12)"
+                                stroke="#B87C82"
+                                strokeWidth="1.8"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              >
+                                <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+                              </svg>
+                            )}
+                            <span className="relative z-10">{dia}</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+
+                {/* 3. BOTONES DE CALENDARIO FUERA DE LA TARJETA + UBICACIÓN */}
+                <div className="w-full max-w-[340px] mt-4 flex flex-col items-center gap-2.5">
+                  {/* Ubicación */}
+                  {data.ciudad && (
+                    <div className="inline-flex items-center gap-1.5 text-xs text-[#7A5C32] font-medium tracking-wide">
+                      <MapPin className="w-3.5 h-3.5 text-[#C5A059]" />
+                      <span>{data.ciudad}</span>
+                    </div>
+                  )}
+
+                  {/* Botones translúcidos con borde dorado fino */}
+                  <div className="flex flex-row items-center justify-center gap-2 w-full">
+                    <a
+                      href={generateGoogleCalendarUrl({
                         titulo: `Save the Date · ${nombreFestejada}`,
                         descripcion: `Reserva la fecha para los quince años de ${nombreFestejada}.`,
                         fechaInicio: fechaObj,
                         ciudad: data.ciudad || "Salón de Eventos",
-                      })
-                    }
-                    className="w-full inline-flex items-center justify-center gap-2 py-2 px-4 rounded-xl bg-white/90 text-stone-700 font-medium text-xs border border-stone-200 shadow-xs hover:bg-white transition active:scale-95 cursor-pointer"
-                  >
-                    <Calendar className="w-3.5 h-3.5 text-stone-500" />
-                    <span>Apple / Outlook Calendar (.ics)</span>
-                  </button>
+                      })}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-1 inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-full bg-white/70 backdrop-blur-md text-[#7A5C32] font-medium text-[11px] sm:text-xs border border-[#C5A059]/45 shadow-xs hover:bg-white/95 hover:border-[#C5A059] transition active:scale-95"
+                    >
+                      <CalendarPlus className="w-3.5 h-3.5 text-[#C5A059]" />
+                      <span>Google Calendar</span>
+                    </a>
+
+                    <button
+                      type="button"
+                      onClick={() =>
+                        downloadIcsFile({
+                          titulo: `Save the Date · ${nombreFestejada}`,
+                          descripcion: `Reserva la fecha para los quince años de ${nombreFestejada}.`,
+                          fechaInicio: fechaObj,
+                          ciudad: data.ciudad || "Salón de Eventos",
+                        })
+                      }
+                      className="flex-1 inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-full bg-white/70 backdrop-blur-md text-[#7A5C32] font-medium text-[11px] sm:text-xs border border-[#C5A059]/45 shadow-xs hover:bg-white/95 hover:border-[#C5A059] transition active:scale-95 cursor-pointer"
+                    >
+                      <Calendar className="w-3.5 h-3.5 text-[#C5A059]" />
+                      <span>Apple / Outlook (.ics)</span>
+                    </button>
+                  </div>
                 </div>
               </section>
             )}
 
             {/* ============================================================ */}
-            {/* SECCIÓN CUENTA REGRESIVA */}
+            {/* SECCIÓN CUENTA REGRESIVA (SIN BLOQUE SÓLIDO VINO) */}
+            {/* 'Solo Faltan...' en Great Vibes + números sobre satén champagne en #5c4538 */}
             {/* ============================================================ */}
             {data.mostrarContador && (
-              <section className="bg-gradient-to-br from-[#7A002A] to-[#4A0319] text-white rounded-[32px] p-6 shadow-xl text-center space-y-4">
-                <div className="space-y-1">
-                  <span className="text-[10px] uppercase font-bold tracking-widest text-amber-300 block">
-                    Tiempo Restante
-                  </span>
-                  <h3 className="font-serif text-2xl font-bold text-pink-50">
-                    La Cuenta Regresiva
-                  </h3>
-                </div>
+              <section className="text-center pt-2 pb-2 space-y-3">
+                <h3
+                  className="text-4xl sm:text-5xl text-[#7A5C32] leading-tight"
+                  style={{ fontFamily: "'Great Vibes', cursive" }}
+                >
+                  Solo Faltan...
+                </h3>
 
-                <div className="grid grid-cols-4 gap-2 pt-2">
-                  <div className="bg-white/10 backdrop-blur-md rounded-2xl p-2.5 border border-white/15">
-                    <span className="block font-serif text-2xl sm:text-3xl font-bold text-amber-200">
+                <div className="grid grid-cols-4 gap-2 sm:gap-3 max-w-[340px] mx-auto pt-1">
+                  <div className="flex flex-col items-center justify-center py-2.5 px-1 rounded-2xl bg-white/40 backdrop-blur-xs border border-[#C5A059]/25 shadow-xs">
+                    <span className="font-serif text-3xl sm:text-4xl font-normal text-[#5C4538] leading-none">
                       {tiempo.dias}
                     </span>
-                    <span className="text-[9px] uppercase tracking-wider text-pink-100">
+                    <span className="text-[10px] uppercase tracking-widest text-[#8C6B38] font-medium mt-1.5">
                       Días
                     </span>
                   </div>
-                  <div className="bg-white/10 backdrop-blur-md rounded-2xl p-2.5 border border-white/15">
-                    <span className="block font-serif text-2xl sm:text-3xl font-bold text-amber-200">
+
+                  <div className="flex flex-col items-center justify-center py-2.5 px-1 rounded-2xl bg-white/40 backdrop-blur-xs border border-[#C5A059]/25 shadow-xs">
+                    <span className="font-serif text-3xl sm:text-4xl font-normal text-[#5C4538] leading-none">
                       {tiempo.horas}
                     </span>
-                    <span className="text-[9px] uppercase tracking-wider text-pink-100">
+                    <span className="text-[10px] uppercase tracking-widest text-[#8C6B38] font-medium mt-1.5">
                       Horas
                     </span>
                   </div>
-                  <div className="bg-white/10 backdrop-blur-md rounded-2xl p-2.5 border border-white/15">
-                    <span className="block font-serif text-2xl sm:text-3xl font-bold text-amber-200">
+
+                  <div className="flex flex-col items-center justify-center py-2.5 px-1 rounded-2xl bg-white/40 backdrop-blur-xs border border-[#C5A059]/25 shadow-xs">
+                    <span className="font-serif text-3xl sm:text-4xl font-normal text-[#5C4538] leading-none">
                       {tiempo.minutos}
                     </span>
-                    <span className="text-[9px] uppercase tracking-wider text-pink-100">
+                    <span className="text-[10px] uppercase tracking-widest text-[#8C6B38] font-medium mt-1.5">
                       Min
                     </span>
                   </div>
-                  <div className="bg-white/10 backdrop-blur-md rounded-2xl p-2.5 border border-white/15">
-                    <span className="block font-serif text-2xl sm:text-3xl font-bold text-amber-200">
+
+                  <div className="flex flex-col items-center justify-center py-2.5 px-1 rounded-2xl bg-white/40 backdrop-blur-xs border border-[#C5A059]/25 shadow-xs">
+                    <span className="font-serif text-3xl sm:text-4xl font-normal text-[#5C4538] leading-none">
                       {tiempo.segundos}
                     </span>
-                    <span className="text-[9px] uppercase tracking-wider text-pink-100">
+                    <span className="text-[10px] uppercase tracking-widest text-[#8C6B38] font-medium mt-1.5">
                       Seg
                     </span>
                   </div>
@@ -778,7 +815,7 @@ export default function QuinceRosadoSaveTheDate({
                 <span className="text-[10px] uppercase font-bold tracking-widest text-[#C5A059] block">
                   Confirmación Anticipada
                 </span>
-                <h3 className="font-serif text-2xl font-bold text-[#7A002A]">
+                <h3 className="font-serif text-2xl font-bold text-[#7A5C32]">
                   ¿Podrás Acompañarnos?
                 </h3>
                 <p className="text-xs text-stone-600 px-2 leading-relaxed">
@@ -862,7 +899,7 @@ export default function QuinceRosadoSaveTheDate({
                         value={nombre}
                         onChange={(e) => setNombre(e.target.value)}
                         placeholder="Ej. Familia Rodríguez o Nombre"
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 text-xs focus:ring-2 focus:ring-[#7A002A] focus:border-transparent outline-none bg-white/95"
+                        className="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 text-xs focus:ring-2 focus:ring-[#B87C82] focus:border-transparent outline-none bg-white/95"
                       />
                     </div>
 
@@ -876,7 +913,7 @@ export default function QuinceRosadoSaveTheDate({
                           value={telefono}
                           onChange={(e) => setTelefono(e.target.value)}
                           placeholder="+1 (555) 000-0000"
-                          className="w-full px-3 py-2.5 rounded-xl border border-stone-300 text-xs focus:ring-2 focus:ring-[#7A002A] outline-none bg-white/95"
+                          className="w-full px-3 py-2.5 rounded-xl border border-stone-300 text-xs focus:ring-2 focus:ring-[#B87C82] outline-none bg-white/95"
                         />
                       </div>
 
@@ -887,7 +924,7 @@ export default function QuinceRosadoSaveTheDate({
                         <select
                           value={pases}
                           onChange={(e) => setPases(Number(e.target.value))}
-                          className="w-full px-3 py-2.5 rounded-xl border border-stone-300 text-xs focus:ring-2 focus:ring-[#7A002A] outline-none bg-white/95"
+                          className="w-full px-3 py-2.5 rounded-xl border border-stone-300 text-xs focus:ring-2 focus:ring-[#B87C82] outline-none bg-white/95"
                         >
                           {[1, 2, 3, 4, 5, 6, 7, 8].map((num) => (
                             <option key={num} value={num}>
@@ -907,7 +944,7 @@ export default function QuinceRosadoSaveTheDate({
                         value={notas}
                         onChange={(e) => setNotas(e.target.value)}
                         placeholder="¡Felicidades, te queremos mucho!"
-                        className="w-full px-3.5 py-2 rounded-xl border border-stone-300 text-xs focus:ring-2 focus:ring-[#7A002A] outline-none bg-white/95"
+                        className="w-full px-3.5 py-2 rounded-xl border border-stone-300 text-xs focus:ring-2 focus:ring-[#B87C82] outline-none bg-white/95"
                       />
                     </div>
                   </div>
@@ -915,7 +952,7 @@ export default function QuinceRosadoSaveTheDate({
                   <button
                     type="submit"
                     disabled={enviandoRsvp}
-                    className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-[#7A002A] to-[#990F3D] text-white font-bold text-xs uppercase tracking-wider shadow-lg hover:brightness-110 active:scale-95 transition disabled:opacity-60 flex items-center justify-center gap-2 cursor-pointer"
+                    className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-[#B87C82] via-[#A2646B] to-[#7A5C32] text-white font-bold text-xs uppercase tracking-wider shadow-md hover:brightness-105 active:scale-95 transition disabled:opacity-60 flex items-center justify-center gap-2 cursor-pointer"
                   >
                     {enviandoRsvp ? (
                       <>
