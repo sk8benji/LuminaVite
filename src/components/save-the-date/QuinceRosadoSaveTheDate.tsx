@@ -257,12 +257,13 @@ export default function QuinceRosadoSaveTheDate({
 
   return (
     <div
-      className="min-h-screen text-[#2C1F1B] font-sans antialiased relative overflow-x-hidden selection:bg-[#7A002A] selection:text-white pb-20"
+      className="min-h-screen text-[#2C1F1B] font-sans antialiased relative overflow-x-clip overflow-y-visible selection:bg-[#7A002A] selection:text-white pb-20"
       style={{
         backgroundImage: "url('/assets/save-the-date/background.webp')",
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundAttachment: "fixed",
+        overflowX: "clip",
       }}
     >
       {/* Capa de velo suave para unificar el fondo satinado */}
@@ -438,7 +439,7 @@ export default function QuinceRosadoSaveTheDate({
           {/* SECCIÓN 2: GALERÍA DE FOTOS + REPRODUCTOR + CORONA + FLORES */}
           {/* ============================================================ */}
           <section
-            className="galeria-section relative w-full flex flex-col items-center overflow-x-hidden"
+            className="galeria-section relative w-full flex flex-col items-center overflow-visible"
             style={{
               paddingTop: "32px",
               paddingBottom: "16px",
