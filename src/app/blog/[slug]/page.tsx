@@ -175,8 +175,8 @@ export default async function BlogPostPage({
         <section className="rounded-2xl bg-[#7A002A] text-white p-6 text-center">
           <h2 className="text-2xl font-bold">Ready to send yours?</h2>
           <p className="mt-3 text-white/90">
-            See live demos, pick your design and share the link. Assisted $99.
-            VIP $199.
+            See live demos, pick your design and share the link. Assisted $199.
+            VIP $279.
           </p>
           <Link
             href={post.landing.href}

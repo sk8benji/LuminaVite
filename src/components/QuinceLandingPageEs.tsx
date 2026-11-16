@@ -275,7 +275,7 @@ export default function QuinceLandingPageEs() {
                   href="#precios"
                   className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl border-2 border-[#2B0A18]/20 bg-white/70 text-[#2B0A18] text-base font-semibold hover:border-[#7A002A] hover:text-[#7A002A] hover:bg-white transition-all text-center"
                 >
-                  <span>Ver Precios ($99 - $199)</span>
+                  <span>Ver Precios ($99 - $279)</span>
                   <ArrowRight className="w-4 h-4" />
                 </a>
               </div>
@@ -773,7 +773,7 @@ export default function QuinceLandingPageEs() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
-            {/* Plan Asistido ($99) */}
+            {/* Plan Asistido ($199) */}
             <div className="rounded-3xl p-8 bg-white border border-[#2B0A18]/15 shadow-sm flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between mb-4">
@@ -785,7 +785,7 @@ export default function QuinceLandingPageEs() {
                   </span>
                 </div>
                 <div className="flex items-baseline gap-2 mb-4">
-                  <span className="text-4xl sm:text-5xl font-bold text-[#2B0A18]">$99</span>
+                  <span className="text-4xl sm:text-5xl font-bold text-[#2B0A18]">$199</span>
                   <span className="text-xs text-[#2B0A18]/60 uppercase tracking-wider font-medium">
                     Pago Único
                   </span>
@@ -831,14 +831,14 @@ export default function QuinceLandingPageEs() {
                   <Loader2 className="w-4 h-4 animate-spin" />
                 ) : (
                   <>
-                    <span>Elegir Plan Asistido ($99)</span>
+                    <span>Elegir Plan Asistido ($199)</span>
                     <ArrowRight className="w-4 h-4" />
                   </>
                 )}
               </button>
             </div>
 
-            {/* Plan VIP Los Ángeles ($199) - Destacado */}
+            {/* Plan VIP Los Ángeles ($279) - Destacado */}
             <div className="rounded-3xl p-8 bg-gradient-to-b from-[#2B0A18] to-[#1A050E] text-white border-2 border-[#B08D3C] shadow-2xl flex flex-col justify-between relative overflow-hidden">
               <div className="absolute top-4 right-4 bg-gradient-to-r from-[#B08D3C] to-[#E5C158] text-[#2B0A18] text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full shadow-md">
                 El Más Elegido
@@ -854,7 +854,7 @@ export default function QuinceLandingPageEs() {
                   </span>
                 </div>
                 <div className="flex items-baseline gap-2 mb-4">
-                  <span className="text-4xl sm:text-5xl font-bold text-white">$199</span>
+                  <span className="text-4xl sm:text-5xl font-bold text-white">$279</span>
                   <span className="text-xs text-white/60 uppercase tracking-wider font-medium">
                     Pago Único
                   </span>
@@ -901,7 +901,7 @@ export default function QuinceLandingPageEs() {
                 ) : (
                   <>
                     <Sparkles className="w-4 h-4 fill-current" />
-                    <span>Elegir Plan VIP Los Ángeles ($199)</span>
+                    <span>Elegir Plan VIP Los Ángeles ($279)</span>
                   </>
                 )}
               </button>

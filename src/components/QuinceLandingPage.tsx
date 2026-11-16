@@ -798,7 +798,7 @@ export default function QuinceLandingPage() {
 
           {/* Plans Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
-            {/* Plan 1: Assisted ($99) */}
+            {/* Plan 1: Assisted ($199) */}
             <div className="rounded-3xl bg-white border border-[#E7DCC8] p-8 sm:p-10 shadow-sm flex flex-col justify-between relative">
               <div className="space-y-6">
                 <div>
@@ -812,7 +812,7 @@ export default function QuinceLandingPage() {
                 </div>
 
                 <div className="flex items-baseline gap-2">
-                  <span className="text-5xl font-extrabold text-[#2B0A18]">$99</span>
+                  <span className="text-5xl font-extrabold text-[#2B0A18]">$199</span>
                   <span className="text-xs text-[#8A6B76] font-medium">USD • One-time fee</span>
                 </div>
 
@@ -860,13 +860,13 @@ export default function QuinceLandingPage() {
                   {checkoutLoading === "assisted" ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
                   ) : (
-                    <span>Select Assisted Plan ($99)</span>
+                    <span>Select Assisted Plan ($199)</span>
                   )}
                 </button>
               </div>
             </div>
 
-            {/* Plan 2: VIP Los Angeles ($199) - Highlighted */}
+            {/* Plan 2: VIP Los Angeles ($279) - Highlighted */}
             <div className="rounded-3xl bg-white border-2 border-[#B08D3C] p-8 sm:p-10 shadow-[0_20px_50px_rgba(176,141,60,0.18)] flex flex-col justify-between relative overflow-hidden">
               {/* Highlight ribbon */}
               <div className="absolute top-0 right-0 bg-[#B08D3C] text-white text-[10px] font-extrabold uppercase tracking-widest py-1.5 px-6 rounded-bl-xl shadow-sm">
@@ -885,7 +885,7 @@ export default function QuinceLandingPage() {
                 </div>
 
                 <div className="flex items-baseline gap-2">
-                  <span className="text-5xl font-extrabold text-[#7A002A]">$199</span>
+                  <span className="text-5xl font-extrabold text-[#7A002A]">$279</span>
                   <span className="text-xs text-[#8A6B76] font-medium">USD • One-time fee</span>
                 </div>
 
@@ -949,7 +949,7 @@ export default function QuinceLandingPage() {
                   {checkoutLoading === "vip" ? (
                     <Loader2 className="w-4 h-4 animate-spin text-white" />
                   ) : (
-                    <span>Get VIP Los Ángeles ($199)</span>
+                    <span>Get VIP Los Ángeles ($279)</span>
                   )}
                 </button>
               </div>

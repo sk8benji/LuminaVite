@@ -274,7 +274,7 @@ export default function WeddingLasVegasLandingPage() {
                   href="#pricing"
                   className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl border-2 border-[#2B0A18]/20 bg-white/70 text-[#2B0A18] text-base font-semibold hover:border-[#7A002A] hover:text-[#7A002A] hover:bg-white transition-all text-center"
                 >
-                  <span>See Packages ($99 - $199)</span>
+                  <span>See Packages ($99 - $279)</span>
                   <ArrowRight className="w-4 h-4" />
                 </a>
               </div>
@@ -812,7 +812,7 @@ export default function WeddingLasVegasLandingPage() {
       </section>
 
       {/* ==================================================================== */}
-      {/* 6. PRICING TABLE (Plan Assisted $99 vs Plan VIP $199) */}
+      {/* 6. PRICING TABLE (Plan Assisted $199 vs Plan VIP $279) */}
       {/* ==================================================================== */}
       <section id="pricing" className="py-20 md:py-24 bg-[#FAF5EC]/70">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -829,7 +829,7 @@ export default function WeddingLasVegasLandingPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
-            {/* Plan Assisted ($99) */}
+            {/* Plan Assisted ($199) */}
             <div className="rounded-3xl p-8 bg-white border border-[#2B0A18]/15 shadow-sm flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between mb-4">
@@ -841,7 +841,7 @@ export default function WeddingLasVegasLandingPage() {
                   </span>
                 </div>
                 <div className="flex items-baseline gap-2 mb-4">
-                  <span className="text-4xl sm:text-5xl font-bold text-[#2B0A18]">$99</span>
+                  <span className="text-4xl sm:text-5xl font-bold text-[#2B0A18]">$199</span>
                   <span className="text-xs text-[#2B0A18]/60 uppercase tracking-wider font-medium">
                     One-Time Payment
                   </span>
@@ -887,14 +887,14 @@ export default function WeddingLasVegasLandingPage() {
                   <Loader2 className="w-4 h-4 animate-spin" />
                 ) : (
                   <>
-                    <span>Select Plan Assisted ($99)</span>
+                    <span>Select Plan Assisted ($199)</span>
                     <ArrowRight className="w-4 h-4" />
                   </>
                 )}
               </button>
             </div>
 
-            {/* Plan VIP Las Vegas ($199) - Highlighted */}
+            {/* Plan VIP Las Vegas ($279) - Highlighted */}
             <div className="rounded-3xl p-8 bg-gradient-to-b from-[#2B0A18] to-[#1A050E] text-white border-2 border-[#B08D3C] shadow-2xl flex flex-col justify-between relative overflow-hidden">
               {/* Highlight Ribbon */}
               <div className="absolute top-4 right-4 bg-gradient-to-r from-[#B08D3C] to-[#E5C158] text-[#2B0A18] text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full shadow-md">
@@ -911,7 +911,7 @@ export default function WeddingLasVegasLandingPage() {
                   </span>
                 </div>
                 <div className="flex items-baseline gap-2 mb-4">
-                  <span className="text-4xl sm:text-5xl font-bold text-white">$199</span>
+                  <span className="text-4xl sm:text-5xl font-bold text-white">$279</span>
                   <span className="text-xs text-white/60 uppercase tracking-wider font-medium">
                     One-Time Payment
                   </span>
@@ -958,7 +958,7 @@ export default function WeddingLasVegasLandingPage() {
                 ) : (
                   <>
                     <Sparkles className="w-4 h-4 fill-current" />
-                    <span>Get Plan VIP Las Vegas ($199)</span>
+                    <span>Get Plan VIP Las Vegas ($279)</span>
                   </>
                 )}
               </button>
