@@ -58,6 +58,33 @@ export default function sitemap(): MetadataRoute.Sitemap {
         },
       },
     },
+    // Pricing (landing /pricing + /es/precios, keyword research 2026-11-15)
+    {
+      url: `${baseUrl}/pricing`,
+      lastModified,
+      changeFrequency: "weekly",
+      priority: 0.9,
+      alternates: {
+        languages: {
+          en: `${baseUrl}/pricing`,
+          es: `${baseUrl}/es/precios`,
+          "x-default": `${baseUrl}/pricing`,
+        },
+      },
+    },
+    {
+      url: `${baseUrl}/es/precios`,
+      lastModified,
+      changeFrequency: "weekly",
+      priority: 0.9,
+      alternates: {
+        languages: {
+          en: `${baseUrl}/pricing`,
+          es: `${baseUrl}/es/precios`,
+          "x-default": `${baseUrl}/pricing`,
+        },
+      },
+    },
     // Landings transaccionales (estrategia de contenido 2026-10-30)
     {
       url: `${baseUrl}/quince-invitations`,
