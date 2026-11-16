@@ -243,7 +243,7 @@ export default function SiteFooter({ lang = "en" }: SiteFooterProps) {
               </li>
               <li>
                 <Link
-                  href={isEs ? "/es#precios" : "/#precios"}
+                  href={isEs ? "/es/precios" : "/pricing"}
                   className="hover:text-white transition-colors"
                 >
                   {isEs ? "Mesa de Regalos y Zelle Directo" : "Honeymoon & Zelle Registry"}
@@ -285,7 +285,7 @@ export default function SiteFooter({ lang = "en" }: SiteFooterProps) {
               </li>
               <li>
                 <Link
-                  href={isEs ? "/es#precios" : "/#precios"}
+                  href={isEs ? "/es/precios" : "/pricing"}
                   className="hover:text-white transition-colors"
                 >
                   {isEs ? "Planes y Precios" : "Pricing Plans"}

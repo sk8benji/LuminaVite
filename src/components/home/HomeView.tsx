@@ -160,7 +160,7 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
             <a href="#plantillas" className="hover:text-[#7A002A] transition">
               {b.navTemplates}
             </a>
-            <a href="#precios" className="hover:text-[#7A002A] transition">
+            <a href={lang === "es" ? "#precios" : "#prices"} className="hover:text-[#7A002A] transition">
               {t.nav.pricing}
             </a>
             <a href="#reviews" className="hover:text-[#7A002A] transition">
@@ -226,7 +226,7 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
             <a
-              href="#precios"
+              href={lang === "es" ? "#precios" : "#prices"}
               className="hidden sm:inline-flex px-5 py-2.5 bg-[#7A002A] hover:bg-[#660025] text-white rounded-full text-[13px] font-['Montserrat'] font-bold shadow-[0_6px_18px_rgba(122,0,42,0.35)] transition active:scale-95"
             >
               {b.createBtn}
@@ -253,7 +253,7 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
             <a href="#plantillas" onClick={() => setMobileMenuOpen(false)} className="py-2.5 hover:text-[#7A002A] transition">
               {b.navTemplates}
             </a>
-            <a href="#precios" onClick={() => setMobileMenuOpen(false)} className="py-2.5 hover:text-[#7A002A] transition">
+            <a href={lang === "es" ? "#precios" : "#prices"} onClick={() => setMobileMenuOpen(false)} className="py-2.5 hover:text-[#7A002A] transition">
               {t.nav.pricing}
             </a>
             <a href="#reviews" onClick={() => setMobileMenuOpen(false)} className="py-2.5 hover:text-[#7A002A] transition">
@@ -304,7 +304,7 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
                 {b.heroCtaDemo}
               </button>
               <a
-                href="#precios"
+                href={lang === "es" ? "#precios" : "#prices"}
                 className="w-full sm:w-auto px-8 py-3.5 rounded-full border-2 border-[#7A002A] text-[#7A002A] hover:bg-[#F5EDDA] font-['Montserrat'] font-bold text-sm text-center transition active:scale-95"
               >
                 {b.heroCtaPricing}
@@ -471,7 +471,7 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
       {/* ============================================================== */}
       {/* PRECIOS */}
       {/* ============================================================== */}
-      <section id="precios" className="py-20 px-4 sm:px-6 scroll-mt-24">
+      <section id={lang === "es" ? "precios" : "prices"} className="py-20 px-4 sm:px-6 scroll-mt-24">
         <div className="max-w-7xl mx-auto">
           <div className="text-center max-w-2xl mx-auto mb-12">
             <h2 className="font-['Cinzel'] font-bold text-3xl sm:text-4xl text-[#2B0A18]">{b.pricingTitle}</h2>

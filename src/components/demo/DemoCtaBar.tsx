@@ -36,7 +36,7 @@ export default function DemoCtaBar({
           {es ? "Quiero esta plantilla" : "I want this template"}
         </TrackLink>
         <a
-          href="/#precios"
+          href={es ? "/es/precios" : "/pricing"}
           className="inline-flex items-center px-3.5 py-2.5 rounded-xl bg-white text-[#7A002A] text-[11px] font-extrabold uppercase tracking-wide shadow-sm shrink-0"
         >
           {es ? "Ver paquetes" : "See packages"}
