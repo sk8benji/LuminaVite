@@ -298,6 +298,11 @@ export default function PreciosPage() {
               videos durante la fiesta con un código QR en las mesas — además del Save the Date
               digital y cambios ilimitados hasta el evento.
             </p>
+            <p className="mt-4 leading-relaxed">
+              <Link href="/es/invitaciones-de-quinceanera" className="font-semibold underline underline-offset-4">
+                Ver Invitaciones de Quinceañera
+              </Link>
+            </p>
           </section>
 
           {/* H2: FAQ */}

@@ -327,6 +327,11 @@ export default function PricingPage() {
               and videos during the party with a QR code on the tables — plus the digital Save
               the Date and unlimited revisions until the event.
             </p>
+            <p className="mt-4 leading-relaxed">
+              <Link href="/quince-invitations" className="font-semibold underline underline-offset-4">
+                Explore Quinceañera Invitations
+              </Link>
+            </p>
           </section>
 
           {/* H2: FAQ */}
