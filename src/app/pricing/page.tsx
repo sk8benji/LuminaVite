@@ -4,8 +4,8 @@ import PricingPlans from "@/components/pricing/PricingPlans";
 import SiteFooter from "@/components/layout/SiteFooter";
 import { pricingPlans, planByKey, planPriceNumber, pricingRange } from "@/lib/pricing";
 
-const PHONE_DISPLAY = "(818) 299-4882";
-const PHONE_TEL = "tel:+18182994882";
+const PHONE_DISPLAY = "(818) 918-2519";
+const PHONE_TEL = "tel:+18189182519";
 
 // Title / meta exactos del keyword research (keyword-research-pricing-2026-11-15.md).
 export const metadata: Metadata = {

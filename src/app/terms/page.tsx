@@ -77,7 +77,7 @@ export default function TermsOfServicePage() {
               5. Contact &amp; Support
             </h2>
             <p>
-              If you have inquiries regarding these Terms, contact our concierge team at <a href="mailto:concierge@clickandlove.app" className="text-[#720e26] font-medium underline">concierge@clickandlove.app</a> or call (818) 299-4882.
+              If you have inquiries regarding these Terms, contact our concierge team at <a href="mailto:concierge@clickandlove.app" className="text-[#720e26] font-medium underline">concierge@clickandlove.app</a> or call (818) 918-2519.
             </p>
           </section>
         </div>

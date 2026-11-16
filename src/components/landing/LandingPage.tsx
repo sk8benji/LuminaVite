@@ -51,8 +51,8 @@ type LandingPageProps = {
   breadcrumbCurrent: string;
 };
 
-const PHONE_DISPLAY = "(818) 299-4882";
-const PHONE_TEL = "tel:+18182994882";
+const PHONE_DISPLAY = "(818) 918-2519";
+const PHONE_TEL = "tel:+18189182519";
 const PHONE_SMS = "sms:+18182994882";
 
 const AREA_SERVED = [
@@ -118,7 +118,7 @@ export default function LandingPage(props: LandingPageProps) {
           "@type": "ProfessionalService",
           name: "Click & Love",
           url: "https://clickandlove.app/",
-          telephone: "+1-818-299-4882",
+          telephone: "+1-818-918-2519",
           priceRange: schemaPriceRange(lang),
           address: {
             "@type": "PostalAddress",

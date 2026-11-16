@@ -57,7 +57,7 @@ export default function Page() {
     description:
       "Custom digital invitations made in Los Angeles for weddings and quinceañeras, with 3D music envelopes and live SMS RSVP tracking.",
     priceRange: schemaPriceRange("en"),
-    telephone: "+1-818-299-4882",
+    telephone: "+1-818-918-2519",
     serviceArea: "United States",
     address: {
       "@type": "PostalAddress",

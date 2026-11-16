@@ -17,8 +17,8 @@ interface SiteFooterProps {
   lang?: "en" | "es";
 }
 
-const PHONE_DISPLAY = "(818) 299-4882";
-const PHONE_TEL = "tel:+18182994882";
+const PHONE_DISPLAY = "(818) 918-2519";
+const PHONE_TEL = "tel:+18189182519";
 const WHATSAPP_URL =
   "https://wa.me/18182994882?text=Hello%20Click%20%26%20Love!%20I%20would%20like%20information%20about%20digital%20invitations.";
 const WHATSAPP_URL_ES =

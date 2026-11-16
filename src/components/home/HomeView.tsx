@@ -29,8 +29,8 @@ import FaqSection from "@/components/home/FaqSection";
 import LatestArticles from "@/components/home/LatestArticles";
 import BlackFridayModal from "@/components/home/BlackFridayModal";
 
-const PHONE_DISPLAY = "(818) 299-4882";
-const PHONE_TEL = "tel:+18182994882";
+const PHONE_DISPLAY = "(818) 918-2519";
+const PHONE_TEL = "tel:+18189182519";
 const PHONE_SMS = "sms:+18182994882";
 
 // Enlaces internos a las landings transaccionales (SEO: las landings eran

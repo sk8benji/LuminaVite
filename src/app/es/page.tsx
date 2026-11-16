@@ -57,7 +57,7 @@ export default function SpanishHomePage() {
     description:
       "Papelería digital interactiva para bodas y quinceañeras con confirmación SMS, navegación GPS a salones y panel de anfitrión en Los Ángeles, California.",
     priceRange: schemaPriceRange("es"),
-    telephone: "+1-818-299-4882",
+    telephone: "+1-818-918-2519",
     serviceArea: "United States",
     address: {
       "@type": "PostalAddress",

@@ -229,7 +229,7 @@ export interface HomeTranslations {
 export const translations: Record<Language, HomeTranslations> = {
   es: {
     brand: {
-      topbar: "Los Angeles · Invitaciones digitales con RSVP por SMS · (818) 299-4882",
+      topbar: "Los Angeles · Invitaciones digitales con RSVP por SMS · (818) 918-2519",
       navLiveDemo: "Demo en vivo",
       navTemplates: "Plantillas",
       navReviews: "Opiniones",
@@ -693,7 +693,7 @@ trustBadgesText: "Pago 100% seguro con tarjeta de crédito/débito, Apple Pay, G
       privacy: "Privacidad",
       terms: "Términos del Servicio",
       whatsappSupport: "Asesoría Concierge por WhatsApp",
-      localOrigin: "Hecho en Los Ángeles, California · Teléfono/WhatsApp: +1 (818) 299-4882",
+      localOrigin: "Hecho en Los Ángeles, California · Teléfono: +1 (818) 918-2519 · WhatsApp: +1 (818) 299-4882",
     },
     blog: {
       title: "Artículos Recientes",
@@ -705,7 +705,7 @@ trustBadgesText: "Pago 100% seguro con tarjeta de crédito/débito, Apple Pay, G
   },
   en: {
     brand: {
-      topbar: "Los Angeles · Digital invitations with SMS RSVP · (818) 299-4882",
+      topbar: "Los Angeles · Digital invitations with SMS RSVP · (818) 918-2519",
       navLiveDemo: "Live demo",
       navTemplates: "Templates",
       navReviews: "Reviews",
@@ -1169,7 +1169,7 @@ trustBadgesText: "100% Secure Checkout with Credit/Debit Card, Apple Pay, Google
       privacy: "Privacy Policy",
       terms: "Terms of Service",
       whatsappSupport: "Concierge WhatsApp Support",
-      localOrigin: "Crafted in Los Angeles, California · Phone/WhatsApp: +1 (818) 299-4882",
+      localOrigin: "Crafted in Los Angeles, California · Phone: +1 (818) 918-2519 · WhatsApp: +1 (818) 299-4882",
     },
     blog: {
       title: "Latest Articles",

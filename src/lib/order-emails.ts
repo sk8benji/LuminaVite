@@ -28,8 +28,8 @@ export async function sendCustomerOrderConfirmationEmail(
 
   const thankYouUrl = `${siteUrl}/gracias?session_id=${order.stripeSessionId}`;
   const datosUrl = order.datosToken ? `${siteUrl}/datos/${order.datosToken}` : null;
-  const teamPhoneDisplay = "(818) 299-4882";
-  const teamPhoneTel = "+18182994882";
+  const teamPhoneDisplay = "(818) 918-2519";
+  const teamPhoneTel = "+18189182519";
 
   const htmlBody = `
 <!DOCTYPE html>

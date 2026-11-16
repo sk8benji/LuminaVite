@@ -77,7 +77,7 @@ export default function PrivacyPolicyPage() {
               5. Contact Us
             </h2>
             <p>
-              For any questions regarding this Privacy Policy or data requests, contact us at <a href="mailto:concierge@clickandlove.app" className="text-[#720e26] font-medium underline">concierge@clickandlove.app</a> or via phone at (818) 299-4882.
+              For any questions regarding this Privacy Policy or data requests, contact us at <a href="mailto:concierge@clickandlove.app" className="text-[#720e26] font-medium underline">concierge@clickandlove.app</a> or via phone at (818) 918-2519.
             </p>
           </section>
         </div>

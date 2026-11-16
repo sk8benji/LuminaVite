@@ -75,7 +75,7 @@ export default async function RootLayout({
               name: "Click & Love",
               url: "https://clickandlove.app/",
               logo: "https://clickandlove.app/logo.png",
-              telephone: "+1-818-299-4882",
+              telephone: "+1-818-918-2519",
               areaServed: [
                 { "@type": "AdministrativeArea", name: "Los Angeles" },
                 { "@type": "AdministrativeArea", name: "Southern California" },
