@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -17,13 +18,17 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // lang por ruta (SEO home, nov 2026): el middleware pone x-locale ("es" en
+  // /es/*, "en" en el resto). Default "en" si el header no viene (p. ej. el
+  // rewrite interno del admin a /dashboard).
+  const locale = (await headers()).get("x-locale") === "es" ? "es" : "en";
   return (
-    <html lang="es" className="scroll-smooth">
+    <html lang={locale} className="scroll-smooth">
       <head>
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="icon" href="/icon.png" type="image/png" />

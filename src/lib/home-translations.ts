@@ -217,6 +217,13 @@ export interface HomeTranslations {
     whatsappSupport: string;
     localOrigin: string;
   };
+  blog: {
+    title: string;
+    subtitle: string;
+    readMore: string;
+    viewAll: string;
+    readSuffix: string;
+  };
 }
 
 export const translations: Record<Language, HomeTranslations> = {
@@ -319,7 +326,7 @@ export const translations: Record<Language, HomeTranslations> = {
           imgPos: "50% 20%",
         },
       ],
-      pricingTitle: "Precios claros, sin sorpresas",
+      pricingTitle: "Precios Claros de Invitaciones para Boda — Sin Sorpresas",
       pricingSubtitle: "Un solo pago. Nosotros hacemos todo.",
       pricingFavorite: "MÁS POPULAR",
       pricingPerNote: "USD · pago único",
@@ -688,6 +695,13 @@ trustBadgesText: "Pago 100% seguro con tarjeta de crédito/débito, Apple Pay, G
       whatsappSupport: "Asesoría Concierge por WhatsApp",
       localOrigin: "Hecho en Los Ángeles, California · Teléfono/WhatsApp: +1 (818) 299-4882",
     },
+    blog: {
+      title: "Artículos Recientes",
+      subtitle: "Guías prácticas para bodas y quinceañeras: textos, RSVP por SMS y fotos de invitados.",
+      readMore: "Leer la guía →",
+      viewAll: "Ver todos los artículos",
+      readSuffix: "min de lectura",
+    },
   },
   en: {
     brand: {
@@ -788,7 +802,7 @@ trustBadgesText: "Pago 100% seguro con tarjeta de crédito/débito, Apple Pay, G
           imgPos: "50% 20%",
         },
       ],
-      pricingTitle: "Clear pricing, no surprises",
+      pricingTitle: "Clear Pricing for Digital Wedding Invitations — No Surprises",
       pricingSubtitle: "One single payment. We do everything.",
       pricingFavorite: "MOST POPULAR",
       pricingPerNote: "USD · one-time payment",
@@ -1156,6 +1170,13 @@ trustBadgesText: "100% Secure Checkout with Credit/Debit Card, Apple Pay, Google
       terms: "Terms of Service",
       whatsappSupport: "Concierge WhatsApp Support",
       localOrigin: "Crafted in Los Angeles, California · Phone/WhatsApp: +1 (818) 299-4882",
+    },
+    blog: {
+      title: "Latest Articles",
+      subtitle: "Practical guides for weddings and quinceañeras — wording, SMS RSVP and guest photos.",
+      readMore: "Read the guide →",
+      viewAll: "View all articles",
+      readSuffix: "min read",
     },
   },
 };

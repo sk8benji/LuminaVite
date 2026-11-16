@@ -1,5 +1,6 @@
 import Link from "next/link";
 import TrackLink from "@/components/analytics/TrackLink";
+import { planByKey, planPriceNumber, schemaPriceRange } from "@/lib/pricing";
 
 // Shared layout for the transactional landing pages (content strategy 2026-10-30).
 // Every page passes its own copy; this component only renders structure, CTAs and JSON-LD.
@@ -118,7 +119,7 @@ export default function LandingPage(props: LandingPageProps) {
           name: "Click & Love",
           url: "https://clickandlove.app/",
           telephone: "+1-818-299-4882",
-          priceRange: "$99 - $199",
+          priceRange: schemaPriceRange(lang),
           address: {
             "@type": "PostalAddress",
             addressLocality: "Los Angeles",
@@ -129,9 +130,21 @@ export default function LandingPage(props: LandingPageProps) {
           knowsLanguage: ["en", "es"],
         },
         areaServed: AREA_SERVED,
+        // OJO: antes decía Assisted $99 / VIP $199 (precios viejos). Ahora se
+        // derivan de la fuente única, igual que priceRange.
         offers: [
-          { "@type": "Offer", name: "Assisted", price: "99", priceCurrency: "USD" },
-          { "@type": "Offer", name: "VIP", price: "199", priceCurrency: "USD" },
+          {
+            "@type": "Offer",
+            name: "Assisted",
+            price: String(planPriceNumber(planByKey(lang, "assisted").price)),
+            priceCurrency: "USD",
+          },
+          {
+            "@type": "Offer",
+            name: "VIP",
+            price: String(planPriceNumber(planByKey(lang, "vip").price)),
+            priceCurrency: "USD",
+          },
         ],
       },
       {

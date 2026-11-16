@@ -25,6 +25,8 @@ import SiteFooter from "@/components/layout/SiteFooter";
 import BenefitsBento from "@/components/home/BenefitsBento";
 import ServiceTabs from "@/components/home/ServiceTabs";
 import ValueFeatures from "@/components/home/ValueFeatures";
+import FaqSection from "@/components/home/FaqSection";
+import LatestArticles from "@/components/home/LatestArticles";
 import BlackFridayModal from "@/components/home/BlackFridayModal";
 
 const PHONE_DISPLAY = "(818) 299-4882";
@@ -396,7 +398,7 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
           {/* Header */}
           <div className="text-center max-w-3xl mx-auto mb-14">
             <h2 className="font-['Playfair_Display',serif] font-bold text-3xl sm:text-4xl text-neutral-900 tracking-tight">
-              {lang === "es" ? "Explora Diseños Interactivos de Quinceañera" : "Explore Interactive Quince Themes"}
+              {lang === "es" ? "Explora Diseños Interactivos de Quinceañera y Sweet 16" : "Explore Interactive Quince & Sweet 16 Invitation Themes"}
             </h2>
             <p className="mt-3 text-sm md:text-base text-neutral-600 leading-relaxed font-['Montserrat',sans-serif] max-w-2xl mx-auto">
               {lang === "es"
@@ -656,6 +658,16 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
           </div>
         </div>
       </section>
+
+      {/* ============================================================== */}
+      {/* ÚLTIMOS ARTÍCULOS DEL BLOG (SEO: la home no enlazaba al blog) */}
+      {/* ============================================================== */}
+      <LatestArticles lang={lang} />
+
+      {/* ============================================================== */}
+      {/* FAQ (SEO: PAA reales + schema FAQPage en page.tsx / es/page.tsx) */}
+      {/* ============================================================== */}
+      <FaqSection lang={lang} />
 
       {/* ============================================================== */}
       {/* BANDA DE CONTACTO */}

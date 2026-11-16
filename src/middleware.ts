@@ -2,6 +2,18 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { ADMIN_COOKIE_NAME, verifyAdminToken } from "@/lib/auth";
 
+// Idioma del <html lang> por ruta (SEO home, nov 2026): /es/* -> "es",
+// todo lo demás -> "en". El root layout lee este header vía headers().
+// Se pasa en TODOS los next() porque el layout raíz es compartido (admin
+// incluido); las rutas que no renderizan layout simplemente lo ignoran.
+function nextWithLocale(request: NextRequest) {
+  const pathname = request.nextUrl.pathname;
+  const locale = pathname === "/es" || pathname.startsWith("/es/") ? "es" : "en";
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set("x-locale", locale);
+  return NextResponse.next({ request: { headers: requestHeaders } });
+}
+
 export async function middleware(request: NextRequest) {
   const url = request.nextUrl;
   const pathname = url.pathname;
@@ -19,7 +31,7 @@ export async function middleware(request: NextRequest) {
     pathname === "/icon.png" ||
     pathname.includes(".")
   ) {
-    return NextResponse.next();
+    return nextWithLocale(request);
   }
 
   // 2. Permitir siempre endpoints de autenticación administrativa
@@ -27,7 +39,7 @@ export async function middleware(request: NextRequest) {
     pathname === "/api/admin/login" ||
     pathname === "/api/admin/logout"
   ) {
-    return NextResponse.next();
+    return nextWithLocale(request);
   }
 
   // 3. Detectar si la petición proviene del subdominio admin (admin.clickandlove.app o admin.localhost)
@@ -54,13 +66,13 @@ export async function middleware(request: NextRequest) {
         const publicUrl = new URL(pathname + url.search, "https://clickandlove.app");
         return NextResponse.redirect(publicUrl);
       }
-      return NextResponse.next();
+      return nextWithLocale(request);
     }
 
     // Si NO está autenticado
     if (!isAuthenticated) {
       if (pathname === "/login") {
-        return NextResponse.next();
+        return nextWithLocale(request);
       }
       // Redirigir al formulario de acceso
       const loginUrl = new URL("/login", request.url);
@@ -82,7 +94,7 @@ export async function middleware(request: NextRequest) {
     }
 
     // Permitir cualquier otra ruta dentro de admin
-    return NextResponse.next();
+    return nextWithLocale(request);
   }
 
   // ──────────────────────────────────────────────────────────
@@ -119,7 +131,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
-  return NextResponse.next();
+  return nextWithLocale(request);
 }
 
 export const config = {

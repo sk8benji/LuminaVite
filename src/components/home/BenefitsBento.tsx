@@ -70,8 +70,8 @@ export function BenefitsBento({ lang = "en" }: BenefitsBentoProps) {
           </span>
           <h2 className="font-['Playfair_Display',serif] text-3xl sm:text-4xl lg:text-[2.65rem] font-bold leading-[1.2] m-0 text-neutral-900 tracking-tight max-w-3xl">
             {isEs
-              ? "Control Total de Invitados para tu Celebración"
-              : "Complete Guest Control for Your Celebration"}
+              ? "Invitaciones Digitales con RSVP: Control Total de Invitados para tu Celebración"
+              : "Digital Invitations with RSVP: Complete Guest Control for Your Celebration"}
           </h2>
           <p className="text-sm md:text-base font-normal leading-relaxed text-neutral-600 max-w-2xl m-0 font-['Montserrat']">
             {isEs

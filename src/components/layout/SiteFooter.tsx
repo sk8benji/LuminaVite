@@ -277,6 +277,14 @@ export default function SiteFooter({ lang = "en" }: SiteFooterProps) {
               </li>
               <li>
                 <Link
+                  href="/blog"
+                  className="hover:text-white transition-colors"
+                >
+                  Blog
+                </Link>
+              </li>
+              <li>
+                <Link
                   href={isEs ? "/es#precios" : "/#precios"}
                   className="hover:text-white transition-colors"
                 >

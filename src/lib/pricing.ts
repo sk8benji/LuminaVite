@@ -23,6 +23,12 @@ export function planPriceNumber(price: string): number {
   return n;
 }
 
+/** "$99 - $279" (formato JSON-LD priceRange, con guion y espacios). */
+export function schemaPriceRange(lang: Language) {
+  const { min, max } = pricingRange(lang);
+  return `$${min} - $${max}`;
+}
+
 /** Rango de precios de los planes, derivado de la fuente única. */
 export function pricingRange(lang: Language) {
   const prices = pricingPlans(lang).map((p) => planPriceNumber(p.price));

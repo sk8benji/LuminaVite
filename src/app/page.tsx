@@ -1,5 +1,7 @@
 import { Metadata } from "next";
 import HomeView from "@/components/home/HomeView";
+import { schemaPriceRange } from "@/lib/pricing";
+import { homeFaq } from "@/lib/home-faq";
 
 export const metadata: Metadata = {
   title: "Digital Invitations in Los Angeles with SMS RSVP | Click & Love",
@@ -42,6 +44,9 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
+  // FAQ del home (SEO, nov 2026): mismas preguntas/respuestas que la sección
+  // visible en HomeView (homeFaq), para que el schema no se desincronice.
+  const faq = homeFaq("en");
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
@@ -51,7 +56,7 @@ export default function Page() {
     image: "https://clickandlove.app/assets/og-banner.png",
     description:
       "Custom digital invitations made in Los Angeles for weddings and quinceañeras, with 3D music envelopes and live SMS RSVP tracking.",
-    priceRange: "$99 - $199",
+    priceRange: schemaPriceRange("en"),
     telephone: "+1-818-299-4882",
     serviceArea: "United States",
     address: {
@@ -84,6 +89,20 @@ export default function Page() {
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: faq.items.map((f) => ({
+              "@type": "Question",
+              name: f.q,
+              acceptedAnswer: { "@type": "Answer", text: f.a },
+            })),
+          }),
+        }}
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
