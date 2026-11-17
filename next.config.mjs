@@ -150,6 +150,17 @@ const nextConfig = {
           },
         ],
       },
+      {
+        // templates/gatsby-20s: nombres sin hash -> TTL corto (7 dias) para que una portada
+        // cambiada en el editor no quede un mes en cache.
+        source: "/assets/templates/gatsby-20s/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=604800, stale-while-revalidate=86400",
+          },
+        ],
+      },
     ];
   },
   async rewrites() {

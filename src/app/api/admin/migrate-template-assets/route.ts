@@ -29,6 +29,7 @@ const MAPPINGS: { localDir: string; s3Folder: string }[] = [
   { localDir: "template-rose", s3Folder: "elegant-rose" },
   { localDir: "template-quince-rosado", s3Folder: "quince-rosado" },
   { localDir: "sobre-rosa", s3Folder: "sobre-rosa" },
+  { localDir: "templates/gatsby-20s", s3Folder: "gatsby-20s" },
 ];
 
 const CONTENT_TYPES: Record<string, string> = {

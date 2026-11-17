@@ -248,6 +248,18 @@ export const SECCIONES_POR_PLANTILLA: Record<string, SeccionId[]> = {
     'cuentaRegresiva',
     'musica',
   ],
+  GATSBY_20S: [
+    'portada',
+    'medallonFecha',
+    'rsvp',
+    'ubicaciones',
+    'dressCode',
+    'mesaRegalos',
+    'itinerario',
+    'corteHonor',
+    'cuentaRegresiva',
+    'musica',
+  ],
 };
 
 export function seccionesSoportadas(estiloPlantilla?: string | null): SeccionId[] {

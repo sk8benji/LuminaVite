@@ -56,6 +56,13 @@ const DEMO_ITEMS: DemoItem[] = [
     icon: "\U0001F451",
   },
   {
+    slug: "gybsy-20s",
+    title: "Gatsby 20's",
+    shortTitle: "Gatsby 20's",
+    category: "XV Años & Gala",
+    icon: "🎷",
+  },
+  {
     slug: "isabella-xv",
     title: "Vintage Quinceanera",
     shortTitle: "Vintage Quinceanera",
