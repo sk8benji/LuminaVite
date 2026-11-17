@@ -189,6 +189,18 @@ export const TEMPLATE_CATALOG: TemplatePickerItem[] = [
     dots: ["#FFFFFF", "#222222", "#666666"],
     features: ["Blanco & Negro", "Estilo Revista", "Fotos Verticales", "Minimalismo Puro"],
   },
+  {
+    id: "GATSBY_20S",
+    name: "Gatsby 20's (Roaring Twenties)",
+    categoria: "QUINCEANERA",
+    badgeLabel: "Nuevo - Art Déco",
+    thumbnail: "/assets/templates/gatsby-20s/photo-chloe-portrait.webp",
+    description: "Roaring Twenties estilo Gran Gatsby: sobre negro con sello dorado, tarjeta Art Déco, disco de vinilo con música, ticket Save the Date y corte de honor.",
+    demoSlug: "gybsy-20s",
+    dots: ["#0B0B0D", "#D4AF37", "#F5E6AB"],
+    features: ["Sobre Negro con Sello", "Disco de Vinilo", "Ticket Save the Date", "Bilingüe EN/ES"],
+    destacada: true,
+  },
 ];
 
 interface TemplatePickerGridProps {

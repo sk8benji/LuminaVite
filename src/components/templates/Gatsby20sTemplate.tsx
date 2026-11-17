@@ -2,24 +2,18 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import {
-  MapPin,
   Play,
   Pause,
-  Sparkles,
-  Send,
-  Loader2,
-  Check,
-  Wine,
   Gift,
   Copy,
-  Phone,
 } from "lucide-react";
 import confetti from "canvas-confetti";
 import { GATSBY_20S_ASSETS } from "@/lib/templates/gatsby20sAssets";
 import { InvitationData } from "../invitation/InvitationMobileView";
 import { parseTemplateConfig, Gatsby20sConfig } from "@/types/templateConfigs";
 import { getMapDirectionsUrl } from "@/lib/maps";
-import { formatFechaLimiteRsvp } from "@/lib/fecha-limite";
+import DynamicRsvpForm from "../invitation/DynamicRsvpForm";
+import { isSectionEnabledInEvent, SeccionId } from "@/config/templateSections";
 
 interface Gatsby20sTemplateProps {
   data: InvitationData;
@@ -35,14 +29,15 @@ export default function Gatsby20sTemplate({
     subtituloEn: (data.configPlantilla as any)?.subtituloEn || "My Sweet Fifteen",
     fraseApertura: (data.configPlantilla as any)?.fraseApertura || "Una Celebración Años 20",
     fraseAperturaEn: (data.configPlantilla as any)?.fraseAperturaEn || "A Roaring Twenties Celebration",
-    ticketFechaTexto: "SATURDAY 10.14.2026 • 8:00 PM • ADMIT ONE",
+    ticketFechaTexto: "THURSDAY 10.14.2027 • 7:00 PM • ADMIT ONE",
     venueNombre: "GRAND HALL BALLROOM",
     venueDireccion: "1920 Speakeasy Blvd, Los Angeles, CA",
     dressCodeTitulo: "ROARING 20'S ATTIRE",
     dressCodeTexto: "Vestimenta de gala estilo años 20: Vestidos de flecos, plumas, perlas o traje formal de etiqueta.",
     cocktailsTitulo: "GIFT REGISTRY",
     cocktailsTexto: "Su presencia es nuestro mejor regalo. Si desean tener un detalle con la quinceañera, contaremos con un buzón de sobres en la recepción.",
-    agradecimientoTexto: "Thank You\n\nSharing this milestone with you means more than words can say!\n\nLove, Chloe",
+    agradecimientoTexto: "¡Compartir este momento tan especial con ustedes significa más de lo que las palabras pueden expresar!",
+    agradecimientoTextoEn: "Sharing this milestone with you means more than words can say!",
     colorAcentoHex: "#C5A059",
   });
 
@@ -63,31 +58,11 @@ export default function Gatsby20sTemplate({
   // Referencias para scroll
   const contenidoRef = useRef<HTMLDivElement | null>(null);
 
-  // Estado Formulario RSVP (Canónico del sistema Click & Love)
-  const [nombre, setNombre] = useState("");
-  const [telefono, setTelefono] = useState("");
-  const [asistencia, setAsistencia] = useState<"SI" | "NO">("SI");
-  const [pases, setPases] = useState(1);
-  const [enviandoRsvp, setEnviandoRsvp] = useState(false);
-  const [rsvpCompletado, setRsvpCompletado] = useState(false);
-  const [submitError, setSubmitError] = useState<string | null>(null);
 
   // Modal / Detalle de Regalos
   const [mostrarRegaloModal, setMostrarRegaloModal] = useState(false);
   const [cuentaCopiada, setCuentaCopiada] = useState(false);
 
-  // Helper para formatear número telefónico del admin
-  const formatDisplayPhone = (phone?: string | null) => {
-    if (!phone) return "";
-    const digits = phone.replace(/\D/g, "");
-    if (digits.length === 11 && digits.startsWith("1")) {
-      return `+1 (${digits.slice(1, 4)}) ${digits.slice(4, 7)}-${digits.slice(7)}`;
-    }
-    if (digits.length === 10) {
-      return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
-    }
-    return phone;
-  };
 
   // Cuenta Regresiva (Conectada a la fecha de evento configurada en el Admin)
   const [tiempoRestante, setTiempoRestante] = useState({
@@ -122,6 +97,44 @@ export default function Gatsby20sTemplate({
     (data.configPlantilla as any)?.nombreQuinceanera ||
     data.titulo?.split("·")[0]?.replace(/Chloe's.*/i, "Chloe")?.trim() ||
     "Chloe";
+
+  // Corte de honor desde el admin (corteHonorJson); sin datos, demo Chloe
+  const corte = (data.corteHonorJson || {}) as any;
+  const padresTexto = corte.parents || "MATEO & CAMILA TORRES";
+  const damasLista: string[] =
+    Array.isArray(corte.damas) && corte.damas.length > 0
+      ? corte.damas
+      : ["VALERIA SANDOVAL", "MARIANA DELGADO", "ISABELA RÍOS", "JULIETA MONTOYA", "CAMILA ESPARZA", "LUNA HERRERA", "SOFÍA NAVARRO"];
+  const chambelanHonor = corte.chambelan || "JOAQUÍN JIMÉNEZ";
+  const chambelanesLista: string[] =
+    Array.isArray(corte.chambelanes) && corte.chambelanes.length > 0
+      ? corte.chambelanes
+      : ["DIEGO TORRES", "THIAGO MENDOZA", "NICOLÁS JIMÉNEZ", "SAMUEL RAMÍREZ", "EMILIANO VEGA", "MATEO CASTILLO", "ALEJANDRO CRUZ"];
+
+  // Fecha del ticket derivada de la fecha del evento (zona Los Ángeles)
+  const fechaTicket = (() => {
+    try {
+      const d = new Date(data.fechaEvento || "2027-10-15T02:00:00Z");
+      const fechaEn = d.toLocaleDateString("en-US", { timeZone: "America/Los_Angeles", month: "2-digit", day: "2-digit", year: "numeric" }).replace(/\//g, ".");
+      const fechaEs = d.toLocaleDateString("es-ES", { timeZone: "America/Los_Angeles", day: "2-digit", month: "2-digit", year: "numeric" }).replace(/\//g, ".");
+      const horaEn = d.toLocaleTimeString("en-US", { timeZone: "America/Los_Angeles", hour: "numeric", hour12: true });
+      const horaEs = d.toLocaleTimeString("en-US", { timeZone: "America/Los_Angeles", hour: "numeric", minute: "2-digit", hour12: true });
+      return { fechaEn, fechaEs, horaEn, horaEs };
+    } catch {
+      return { fechaEn: "10.14.2027", fechaEs: "14.10.2027", horaEn: "7 PM", horaEs: "7:00 PM" };
+    }
+  })();
+
+  // Secciones habilitadas desde el editor (por defecto todas activas)
+  const isSectionActive = (sectionId: SeccionId): boolean => {
+    return isSectionEnabledInEvent(sectionId, data.configPlantilla, {
+      mostrarFrasePersonalizada: data.mostrarFrasePersonalizada,
+      mostrarFechaPlacaHora: data.mostrarFechaPlacaHora,
+      mostrarDressCode: data.mostrarDressCode,
+      mostrarMesaRegalos: data.mostrarMesaRegalos,
+      permitirConfirmacionTelefono: data.permitirConfirmacionTelefono,
+    });
+  };
 
   // Inicializar Audio
   useEffect(() => {
@@ -204,116 +217,18 @@ export default function Gatsby20sTemplate({
     }
   };
 
-  const handleEnviarRsvp = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!nombre.trim() || enviandoRsvp) return;
-    setEnviandoRsvp(true);
-    setSubmitError(null);
-    try {
-      const res = await fetch(`/api/rsvp/save`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          eventoId: data.id,
-          slug: data.slug,
-          nombreInvitado: nombre.trim(),
-          asistira: asistencia === "SI",
-          pases: asistencia === "SI" ? pases : 0,
-        }),
-      });
-
-      const resData = await res.json().catch(() => ({}));
-
-      if (!res.ok) {
-        const errCode = String(resData?.error || "");
-        if (errCode.startsWith("ALREADY_CONFIRMED")) {
-          setSubmitError(
-            idioma === "EN"
-              ? "You already have a confirmed RSVP for this event."
-              : "Ya tienes una confirmación registrada para este evento."
-          );
-        } else if (errCode.startsWith("MAX_PASSES_EXCEEDED")) {
-          const max = errCode.split(":")[1] || "";
-          setSubmitError(
-            idioma === "EN"
-              ? `The maximum number of guests per confirmation is ${max}.`
-              : `El máximo de invitados por confirmación es ${max}.`
-          );
-        } else if (errCode.startsWith("CAPACITY_EXCEEDED")) {
-          const left = errCode.split(":")[1] || "0";
-          setSubmitError(
-            idioma === "EN"
-              ? `The event is almost full — only ${left} seats left.`
-              : `El evento está casi lleno, solo quedan ${left} lugares.`
-          );
-        } else if (errCode.includes("EVENT_NOT_FOUND")) {
-          setSubmitError(
-            idioma === "EN"
-              ? "This is a demo invitation, so the confirmation is not saved in the system."
-              : "Esta es una invitación de demostración, la confirmación no se guarda en el sistema."
-          );
-        } else {
-          setSubmitError(
-            idioma === "EN"
-              ? "We could not save your confirmation. Please try again."
-              : "No pudimos guardar tu confirmación. Inténtalo de nuevo."
-          );
-        }
-        setEnviandoRsvp(false);
-        return;
-      }
-
-      setRsvpCompletado(true);
-      if (asistencia === "SI") {
-        try {
-          confetti({
-            particleCount: 80,
-            spread: 80,
-            origin: { y: 0.6 },
-            colors: ["#E2C078", "#C5A059", "#000000", "#FFFFFF"],
-          });
-        } catch {}
-      }
-    } catch {
-      setSubmitError(
-        idioma === "EN"
-          ? "We could not save your confirmation. Please try again."
-          : "No pudimos guardar tu confirmación. Inténtalo de nuevo."
-      );
-    } finally {
-      setEnviandoRsvp(false);
-    }
-  };
-
   const copiarCuenta = () => {
+    if (!data.regalosZelle) return;
     if (typeof navigator !== "undefined" && navigator.clipboard) {
-      navigator.clipboard.writeText(
-        data.regalosZelle || "Zelle: chloe15@clickandlove.app • Cuenta: 1234-5678-9012-3456"
-      );
+      navigator.clipboard.writeText(data.regalosZelle);
       setCuentaCopiada(true);
       setTimeout(() => setCuentaCopiada(false), 2500);
     }
   };
 
-  // Fecha límite RSVP formateada del sistema
-  const fechaLimiteLegible = formatFechaLimiteRsvp(
-    data.fechaLimiteRsvp || data.rsvpFechaLimite,
-    idioma === "EN" ? "en" : "es"
-  );
-
-  // Límite de pases según admin (0 = sin límite con tope 200)
-  const maxPases = data.maxPasesPorInvitado ?? 4;
-  const sinLimitePases = maxPases === 0;
-  const pasesOptions = Array.from(
-    { length: Math.min(Math.max(maxPases, 1), 10) },
-    (_, i) => i + 1
-  );
-
   return (
     <div
-      className={`w-full flex justify-center text-[#EADFC7] antialiased relative selection:bg-[#C5A059] selection:text-black ${
-        scrollPermitido ? "min-h-screen" : "h-[100svh] overflow-hidden"
-      }`}
+      className="w-full flex justify-center text-[#EADFC7] antialiased relative selection:bg-[#C5A059] selection:text-black min-h-screen"
       style={{
         backgroundColor: "#0d0d0d",
         backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.55)), url(${GATSBY_20S_ASSETS.bgTexture})`,
@@ -416,16 +331,9 @@ export default function Gatsby20sTemplate({
             SECCIÓN 1: HERO / SOBRE INTERACTIVO (100svh, SIN SCROLL ANTES DE ABRIR)
            ========================================================================= */}
         <section
-          className={`w-full relative flex flex-col items-center select-none ${
-            sobreAbierto
-              ? "justify-start pt-4 px-3 overflow-visible"
-              : "justify-center h-[100svh] overflow-hidden px-4"
+          className={`w-full relative flex flex-col items-center select-none justify-center h-[100svh] ${
+            sobreAbierto ? "px-3 overflow-visible" : "px-4 overflow-hidden"
           }`}
-          style={
-            sobreAbierto
-              ? { minHeight: "auto", paddingBottom: "20px" }
-              : undefined
-          }
         >
           {/* Luz / Resplandor Dorado de Fondo */}
           <div className="absolute inset-0 pointer-events-none opacity-25 bg-[radial-gradient(ellipse_at_center,rgba(212,175,55,0.3)_0%,transparent_75%)]" />
@@ -559,7 +467,7 @@ export default function Gatsby20sTemplate({
                   CAPA 1 (Fondo superior derecho): Sobre Abierto con Chispas (e9 + ec)
                  =================================================================== */}
               <div
-                className="absolute top-4 sm:top-5 left-1/2 -translate-x-1/2 pointer-events-none select-none"
+                className="absolute top-4 sm:top-5 left-1/2 -translate-x-1/2 pointer-events-none select-none animate-fadeIn"
                 style={{
                   width: "100%",
                   maxWidth: "400px",
@@ -644,10 +552,11 @@ export default function Gatsby20sTemplate({
                   + Centro Negro Sólido (#0e0e0e)
                  =================================================================== */}
               <div
-                className="absolute top-[13rem] left-0 rounded-sm overflow-hidden"
+                className="absolute top-[13rem] left-0 rounded-sm overflow-hidden animate-gatsby-rise"
                 style={{
                   width: "65%",
                   zIndex: 2,
+                  animationDelay: "120ms",
                   boxShadow: "0 20px 40px rgba(0,0,0,0.85)",
                   backgroundImage: `url(${GATSBY_20S_ASSETS.artDecoPattern})`,
                   backgroundSize: "cover",
@@ -663,7 +572,7 @@ export default function Gatsby20sTemplate({
                     style={{ height: "170px" }}
                   >
                     <img
-                      src={GATSBY_20S_ASSETS.quinceaneraGatsby || GATSBY_20S_ASSETS.quinceanera || data.fotoPortadaUrl}
+                      src={data.fotoPortadaUrl || GATSBY_20S_ASSETS.quinceaneraGatsby || GATSBY_20S_ASSETS.quinceanera}
                       alt={nombreQuinceanera}
                       className="w-full h-full object-cover object-top block"
                       style={{ objectPosition: "center 12%" }}
@@ -705,8 +614,8 @@ export default function Gatsby20sTemplate({
               {/* 1. Disco de Vinilo (bb9dc50bdef6c4f4d2a669a595b16a0c.png): mitad derecha, superpuesto al borde */}
               <div
                 onClick={toggleMusica}
-                className="absolute right-[-10px] sm:right-[2%] w-[88px] sm:w-[96px] h-[88px] sm:h-[96px] cursor-pointer group"
-                style={{ top: "360px", zIndex: 3 }}
+                className="absolute right-[-10px] sm:right-[2%] w-[88px] sm:w-[96px] h-[88px] sm:h-[96px] cursor-pointer group animate-gatsby-rise"
+                style={{ top: "360px", zIndex: 3, animationDelay: "240ms" }}
                 role="button"
                 aria-label="Tap for music"
               >
@@ -747,8 +656,8 @@ export default function Gatsby20sTemplate({
 
               {/* 2. Ticket Negro Vintage (c9bb422442ef42c19f1835d77746abf0.png): ancho 175px, desplazado a la derecha */}
               <div
-                className="absolute right-[-25px] sm:right-[0px] w-[175px] aspect-[16/9] flex items-center justify-center"
-                style={{ top: "447px", zIndex: 4 }}
+                className="absolute right-[-25px] sm:right-[0px] w-[175px] aspect-[16/9] flex items-center justify-center animate-gatsby-rise"
+                style={{ top: "447px", zIndex: 4, animationDelay: "360ms" }}
               >
                 <img
                   src={GATSBY_20S_ASSETS.ticketBadge}
@@ -760,10 +669,10 @@ export default function Gatsby20sTemplate({
                     {idioma === "EN" ? "SAVE THE DATE" : "RESERVA LA FECHA"}
                   </span>
                   <span className="text-[15px] sm:text-[16px] tracking-[0.18em] text-[#F3E5AB] font-serif font-bold uppercase block leading-tight my-0.5">
-                    {idioma === "EN" ? "10.14.2027" : "14.10.2027"}
+                    {idioma === "EN" ? fechaTicket.fechaEn : fechaTicket.fechaEs}
                   </span>
                   <span className="text-[7px] sm:text-[7.5px] tracking-[0.26em] text-[#D4AF37] font-serif uppercase mt-0.5">
-                    {idioma === "EN" ? "AT 7 PM" : "7:00 PM"}
+                    {idioma === "EN" ? `AT ${fechaTicket.horaEn}` : fechaTicket.horaEs}
                   </span>
                 </div>
               </div>
@@ -777,7 +686,8 @@ export default function Gatsby20sTemplate({
         {sobreAbierto && (
           <div
             ref={contenidoRef}
-            className="w-full flex flex-col items-center gap-14 pl-0 pr-4 pb-20 animate-fadeIn mt-0"
+            className="w-full flex flex-col items-center gap-14 pl-0 pr-4 pb-20 animate-gatsby-rise mt-0"
+            style={{ animationDelay: "150ms" }}
           >
             {/* =====================================================================
                 SECCIÓN 2: PEQUEÑA GALERÍA / COLLAGE FOTOGRÁFICO VINTAGE
@@ -878,7 +788,7 @@ export default function Gatsby20sTemplate({
                     {/* Foto 1 (photobooth-1.jpg) */}
                     <div className="w-full aspect-square overflow-hidden bg-[#181818] rounded-[1px]">
                       <img
-                        src={GATSBY_20S_ASSETS.photobooth1 || GATSBY_20S_ASSETS.photoStrip}
+                        src={data.fotoPortadaUrl || GATSBY_20S_ASSETS.photobooth1 || GATSBY_20S_ASSETS.photoStrip}
                         alt="Photobooth 1"
                         className="w-full h-full object-cover block"
                         style={{ filter: "grayscale(100%) contrast(1.15)" }}
@@ -888,7 +798,7 @@ export default function Gatsby20sTemplate({
                     {/* Foto 2 (photobooth-2.jpg) */}
                     <div className="w-full aspect-square overflow-hidden bg-[#181818] rounded-[1px]">
                       <img
-                        src={GATSBY_20S_ASSETS.photobooth2 || GATSBY_20S_ASSETS.photoChloeCake}
+                        src={data.fotoActualUrl || GATSBY_20S_ASSETS.photobooth2 || GATSBY_20S_ASSETS.photoChloeCake}
                         alt="Photobooth 2"
                         className="w-full h-full object-cover block"
                         style={{ filter: "grayscale(100%) contrast(1.15)" }}
@@ -898,7 +808,7 @@ export default function Gatsby20sTemplate({
                     {/* Foto 3 (photobooth-3.jpg) */}
                     <div className="w-full aspect-square overflow-hidden bg-[#181818] rounded-[1px]">
                       <img
-                        src={GATSBY_20S_ASSETS.photobooth3 || GATSBY_20S_ASSETS.photoChloePortrait}
+                        src={data.fotoInfanciaUrl || GATSBY_20S_ASSETS.photobooth3 || GATSBY_20S_ASSETS.photoChloePortrait}
                         alt="Photobooth 3"
                         className="w-full h-full object-cover block"
                         style={{ filter: "grayscale(100%) contrast(1.15)" }}
@@ -988,7 +898,7 @@ export default function Gatsby20sTemplate({
             {/* =====================================================================
                 SECCIÓN 3: PADRES Y CORTE DE HONOR (DISEÑO ABIERTO ART DÉCO)
                ===================================================================== */}
-            <section className="w-full flex flex-col items-center select-none py-2">
+            {isSectionActive("corteHonor") && (<section className="w-full flex flex-col items-center select-none py-2">
               {/* Contenedor abierto y centrado sobre el fondo negro texturizado */}
               <div
                 className="w-[92%] max-w-[400px] flex flex-col items-center"
@@ -1023,7 +933,7 @@ export default function Gatsby20sTemplate({
                   className="font-gatsby-display text-[17px] text-center mt-1.5 leading-snug"
                   style={{ marginBottom: "28px" }}
                 >
-                  MATEO &amp; CAMILA TORRES
+                  {padresTexto}
                 </p>
 
                 {/* -------------------------------------------------------------
@@ -1049,12 +959,7 @@ export default function Gatsby20sTemplate({
                 >
                   {/* Columna 1 */}
                   <div className="flex flex-col gap-2.5">
-                    {[
-                      "VALERIA SANDOVAL",
-                      "MARIANA DELGADO",
-                      "ISABELA RÍOS",
-                      "JULIETA MONTOYA",
-                    ].map((nombreDama, idx) => (
+                    {damasLista.slice(0, 4).map((nombreDama, idx) => (
                       <p
                         key={idx}
                         className="font-marcellus text-[12px] text-[#f5e6ab] uppercase tracking-wider leading-tight whitespace-nowrap"
@@ -1066,11 +971,7 @@ export default function Gatsby20sTemplate({
 
                   {/* Columna 2 */}
                   <div className="flex flex-col gap-2.5">
-                    {[
-                      "CAMILA ESPARZA",
-                      "LUNA HERRERA",
-                      "SOFÍA NAVARRO",
-                    ].map((nombreDama, idx) => (
+                    {damasLista.slice(4).map((nombreDama, idx) => (
                       <p
                         key={idx}
                         className="font-marcellus text-[12px] text-[#f5e6ab] uppercase tracking-wider leading-tight whitespace-nowrap"
@@ -1121,7 +1022,7 @@ export default function Gatsby20sTemplate({
                 </h3>
 
                 <p className="font-gatsby-display text-[17px] text-center mt-1.5 leading-snug">
-                  JOAQUÍN JIMÉNEZ
+                  {chambelanHonor}
                 </p>
 
                 <h4
@@ -1144,12 +1045,7 @@ export default function Gatsby20sTemplate({
                 >
                   {/* Columna 1 */}
                   <div className="flex flex-col gap-2.5">
-                    {[
-                      "DIEGO TORRES",
-                      "THIAGO MENDOZA",
-                      "NICOLÁS JIMÉNEZ",
-                      "SAMUEL RAMÍREZ",
-                    ].map((nombreChambelan, idx) => (
+                    {chambelanesLista.slice(0, 4).map((nombreChambelan, idx) => (
                       <p
                         key={idx}
                         className="font-marcellus text-[12px] text-[#f5e6ab] uppercase tracking-wider leading-tight whitespace-nowrap"
@@ -1161,11 +1057,7 @@ export default function Gatsby20sTemplate({
 
                   {/* Columna 2 */}
                   <div className="flex flex-col gap-2.5">
-                    {[
-                      "EMILIANO VEGA",
-                      "MATEO CASTILLO",
-                      "ALEJANDRO CRUZ",
-                    ].map((nombreChambelan, idx) => (
+                    {chambelanesLista.slice(4).map((nombreChambelan, idx) => (
                       <p
                         key={idx}
                         className="font-marcellus text-[12px] text-[#f5e6ab] uppercase tracking-wider leading-tight whitespace-nowrap"
@@ -1218,7 +1110,8 @@ export default function Gatsby20sTemplate({
                   }}
                 />
               </div>
-            </section>
+            </section>)}
+
 
             {/* =====================================================================
                 SECCIÓN 4: CUENTA REGRESIVA, UBICACIONES, ITINERARIO Y CÓDIGO DE VESTIMENTA
@@ -1692,8 +1585,8 @@ export default function Gatsby20sTemplate({
                   style={{ marginBottom: "18px" }}
                 >
                   {idioma === "EN"
-                    ? "Your presence is our greatest gift. If you wish to honor Chloe with a token of love, an envelope box will be available at the reception, or you may view her registry below."
-                    : "Tu presencia es nuestro mejor regalo. Si deseas tener un detalle con Chloe, contaremos con lluvia de sobres en la recepción o puedes consultar su mesa de regalos."}
+                    ? `Your presence is our greatest gift. If you wish to honor ${nombreQuinceanera} with a token of love, an envelope box will be available at the reception, or you may view her registry below.`
+                    : `Tu presencia es nuestro mejor regalo. Si deseas tener un detalle con ${nombreQuinceanera}, contaremos con lluvia de sobres en la recepción o puedes consultar su mesa de regalos.`}
                 </p>
 
                 {/* Botón 1: Zelle / Datos Lluvia de Sobres con copia al portapapeles */}
@@ -1737,12 +1630,15 @@ export default function Gatsby20sTemplate({
                     <p className="font-marcellus text-[11px] text-[#d4af37] tracking-wider uppercase mb-1">
                       {idioma === "EN" ? "ZELLE & ACCOUNT DETAILS" : "DATOS DE ZELLE Y TRANSFERENCIA"}
                     </p>
-                    <p className="font-mono text-xs text-[#f5e6ab] select-all">
-                      Zelle: chloe15@clickandlove.app
-                    </p>
-                    <p className="font-mono text-xs text-[#f5e6ab] mt-0.5 select-all">
-                      Account / Cuenta: 1234-5678-9012-3456
-                    </p>
+                    {data.regalosZelle ? (
+                      <p className="font-mono text-xs text-[#f5e6ab] select-all">
+                        {data.regalosZelle}
+                      </p>
+                    ) : (
+                      <p className="font-marcellus text-xs text-[#f5e6ab]">
+                        {idioma === "EN" ? "Ask the family for the details at the reception." : "Pregunta por los datos en la recepción."}
+                      </p>
+                    )}
                   </div>
                 )}
 
@@ -1772,291 +1668,34 @@ export default function Gatsby20sTemplate({
                 </a>
               </div>
 
-              {/* Bloque 2: Tarjeta de Confirmación (RSVP / ASISTENCIA) - Formulario Canónico del Sistema con Estilo Gatsby Déco */}
-              <div
-                className="relative"
-                style={{
-                  width: "88%",
-                  maxWidth: "350px",
-                  margin: "0 auto 36px auto",
-                  padding: "18px",
-                  borderRadius: "0px",
-                  border: "none",
-                  backgroundColor: "#111111",
-                  backgroundImage: `url(${GATSBY_20S_ASSETS.artDecoPattern})`,
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
-                  boxShadow: "0 15px 40px rgba(0,0,0,0.9)",
-                }}
-              >
-                {/* Panel interior negro mate (#0e0e0e) con borde fino dorado */}
-                <div
-                  className="w-full flex flex-col items-center text-center"
-                  style={{
-                    borderRadius: "0px",
-                    backgroundColor: "#0e0e0e",
-                    border: "1px solid rgba(212, 175, 55, 0.75)",
-                    padding: "32px 18px 26px 18px",
-                  }}
-                >
-                  {/* Título de RSVP (configurable desde el Admin: rsvpTitulo / rsvpTituloEn) */}
-                  {!((idioma === "EN" ? data.rsvpTituloEn : data.rsvpTitulo) === "") && (
-                    <h3
-                      className="font-geotica text-[28px] sm:text-[30px] leading-none tracking-wider"
-                      style={{
-                        color: "#f5e6ab",
-                        textShadow: "0 2px 10px rgba(212, 175, 55, 0.4)",
-                      }}
-                    >
-                      {idioma === "EN"
-                        ? (data.rsvpTituloEn || data.rsvpTitulo || "RSVP")
-                        : (data.rsvpTitulo || "CONFIRMAR ASISTENCIA")}
-                    </h3>
-                  )}
-
-                  {/* Subtítulo / Fecha Límite formateada del sistema */}
-                  {!((idioma === "EN" ? data.rsvpSubtituloEn : data.rsvpSubtitulo) === "") && (
-                    <p
-                      className="font-marcellus text-[11px] text-[#d4af37] uppercase leading-relaxed"
-                      style={{
-                        letterSpacing: "0.18em",
-                        margin: "8px 0 20px 0",
-                      }}
-                    >
-                      {(idioma === "EN" ? data.rsvpSubtituloEn : data.rsvpSubtitulo) ||
-                        (fechaLimiteLegible
-                          ? (idioma === "EN"
-                              ? `PLEASE CONFIRM BEFORE ${fechaLimiteLegible.toUpperCase()}`
-                              : `FAVOR DE CONFIRMAR ANTES DEL ${fechaLimiteLegible.toUpperCase()}`)
-                          : (idioma === "EN" ? "PLEASE CONFIRM YOUR ATTENDANCE" : "FAVOR DE CONFIRMAR TU ASISTENCIA"))}
-                    </p>
-                  )}
-
-                  {rsvpCompletado ? (
-                    <div className="py-6 text-center flex flex-col items-center w-full animate-fadeIn">
-                      <div
-                        className="w-12 h-12 flex items-center justify-center text-[#f5e6ab] mb-3"
-                        style={{
-                          borderRadius: "0px",
-                          backgroundColor: "rgba(212, 175, 55, 0.15)",
-                          border: "1px solid #d4af37",
-                          boxShadow: "0 4px 12px rgba(0,0,0,0.6)",
-                        }}
-                      >
-                        <Check className="w-6 h-6 text-[#d4af37]" />
-                      </div>
-                      <p className="font-geotica text-xl text-[#f5e6ab]">
-                        {idioma === "EN" ? "THANK YOU!" : "¡MUCHAS GRACIAS!"}
-                      </p>
-                      <p className="font-marcellus text-xs text-[#d4af37] mt-2 max-w-xs leading-relaxed">
-                        {idioma === "EN"
-                          ? `Your RSVP has been confirmed. ${nombre.trim()} — ${asistencia === "SI" ? `${pases} ${pases === 1 ? "guest" : "guests"}` : "Regretfully declined"}.`
-                          : `Tu confirmación ha sido recibida con éxito. ${nombre.trim()} — ${asistencia === "SI" ? `${pases} ${pases === 1 ? "invitado" : "invitados"}` : "Lamentablemente no podrás asistir"}.`}
-                      </p>
-                    </div>
-                  ) : (
-                    <form onSubmit={handleEnviarRsvp} className="w-full space-y-4 text-left">
-                      {/* Campo 1: Nombre Completo (Canónico del sistema) */}
-                      <div>
-                        <label className="block font-marcellus text-[12px] text-[#f5e6ab] mb-1.5 uppercase tracking-wider">
-                          {idioma === "EN" ? "Your name *" : "Tu nombre *"}
-                        </label>
-                        <input
-                          type="text"
-                          required
-                          value={nombre}
-                          onChange={(e) => setNombre(e.target.value)}
-                          placeholder={idioma === "EN" ? "e.g. John Doe / Buchanan Family" : "ej. Juan Pérez / Familia Rodríguez"}
-                          className="w-full font-marcellus text-[13px] placeholder-[#d4af37]/35 focus:outline-hidden focus:border-[#d4af37] transition-colors"
-                          style={{
-                            borderRadius: "0px",
-                            backgroundColor: "#141414",
-                            border: "1px solid rgba(212, 175, 55, 0.45)",
-                            color: "#f5e6ab",
-                            padding: "11px 12px",
-                          }}
-                        />
-                      </div>
-
-                      {/* Campo 2: Asistencia Sí / No (Canónico del sistema con estilo Canva) */}
-                      <div>
-                        <label className="block font-marcellus text-[12px] text-[#f5e6ab] mb-1.5 uppercase tracking-wider">
-                          {idioma === "EN" ? "Are you coming? *" : "¿Asistirás? *"}
-                        </label>
-                        <div className="flex flex-col gap-2.5">
-                          <button
-                            type="button"
-                            onClick={() => setAsistencia("SI")}
-                            className="w-full font-marcellus text-[13px] py-3 px-3.5 transition-all cursor-pointer text-left flex items-center justify-between"
-                            style={{
-                              borderRadius: "0px",
-                              backgroundColor: asistencia === "SI" ? "#2a2620" : "#1a1816",
-                              color: "#f5e6ab",
-                              border: asistencia === "SI" ? "1px solid #d4af37" : "1px solid rgba(255, 255, 255, 0.12)",
-                              boxShadow: asistencia === "SI" ? "0 0 10px rgba(212,175,55,0.25)" : "none",
-                            }}
-                          >
-                            <span>{idioma === "EN" ? "Heck, yes!! Will be there!" : "¡Claro que sí, ahí estaré!"}</span>
-                            {asistencia === "SI" && <Check className="w-4 h-4 text-[#d4af37]" />}
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => setAsistencia("NO")}
-                            className="w-full font-marcellus text-[13px] py-3 px-3.5 transition-all cursor-pointer text-left flex items-center justify-between"
-                            style={{
-                              borderRadius: "0px",
-                              backgroundColor: asistencia === "NO" ? "#2a2620" : "#1a1816",
-                              color: asistencia === "NO" ? "#f5e6ab" : "rgba(245, 230, 171, 0.65)",
-                              border: asistencia === "NO" ? "1px solid #d4af37" : "1px solid rgba(255, 255, 255, 0.12)",
-                              boxShadow: asistencia === "NO" ? "0 0 10px rgba(212,175,55,0.25)" : "none",
-                            }}
-                          >
-                            <span>{idioma === "EN" ? "Bummer, can't make it!" : "Lamentablemente no podré"}</span>
-                            {asistencia === "NO" && <Check className="w-4 h-4 text-[#d4af37]" />}
-                          </button>
-                        </div>
-                      </div>
-
-                      {/* Campo 3: Pases Estimados (Canónico del sistema, según maxPasesPorInvitado del Admin) */}
-                      {asistencia === "SI" && (
-                        <div className="animate-fadeIn">
-                          <label className="block font-marcellus text-[12px] text-[#f5e6ab] mb-1.5 uppercase tracking-wider">
-                            {idioma === "EN" ? "How big is your party (including you)?" : "¿Cuántos invitados asistirán (incluyéndote)?"}
-                          </label>
-
-                          {sinLimitePases ? (
-                            <div className="flex items-center gap-2">
-                              <button
-                                type="button"
-                                aria-label={idioma === "EN" ? "One less guest" : "Un invitado menos"}
-                                onClick={() => setPases((p) => Math.max(1, p - 1))}
-                                className="w-10 h-10 shrink-0 border text-base font-bold flex items-center justify-center cursor-pointer transition-colors hover:bg-[#d4af37]/20"
-                                style={{
-                                  borderRadius: "0px",
-                                  backgroundColor: "#141414",
-                                  border: "1px solid rgba(212, 175, 55, 0.45)",
-                                  color: "#f5e6ab",
-                                }}
-                              >
-                                −
-                              </button>
-                              <input
-                                type="number"
-                                min={1}
-                                max={200}
-                                value={pases}
-                                onChange={(e) => {
-                                  const v = Math.floor(Number(e.target.value));
-                                  setPases(Number.isFinite(v) ? Math.min(200, Math.max(1, v)) : 1);
-                                }}
-                                className="w-full text-center font-marcellus text-[13px] py-2.5 border focus:outline-hidden focus:border-[#d4af37]"
-                                style={{
-                                  borderRadius: "0px",
-                                  backgroundColor: "#141414",
-                                  border: "1px solid rgba(212, 175, 55, 0.45)",
-                                  color: "#f5e6ab",
-                                }}
-                              />
-                              <button
-                                type="button"
-                                aria-label={idioma === "EN" ? "One more guest" : "Un invitado más"}
-                                onClick={() => setPases((p) => Math.min(200, p + 1))}
-                                className="w-10 h-10 shrink-0 border text-base font-bold flex items-center justify-center cursor-pointer transition-colors hover:bg-[#d4af37]/20"
-                                style={{
-                                  borderRadius: "0px",
-                                  backgroundColor: "#141414",
-                                  border: "1px solid rgba(212, 175, 55, 0.45)",
-                                  color: "#f5e6ab",
-                                }}
-                              >
-                                +
-                              </button>
-                            </div>
-                          ) : (
-                            <select
-                              value={pases}
-                              onChange={(e) => setPases(Number(e.target.value))}
-                              className="w-full font-marcellus text-[13px] focus:outline-hidden focus:border-[#d4af37] transition-colors"
-                              style={{
-                                borderRadius: "0px",
-                                backgroundColor: "#141414",
-                                border: "1px solid rgba(212, 175, 55, 0.45)",
-                                color: "#f5e6ab",
-                                padding: "11px 12px",
-                              }}
-                            >
-                              {pasesOptions.map((num) => (
-                                <option key={num} value={num} className="bg-[#141414] text-[#f5e6ab]">
-                                  {num} {num === 1 ? (idioma === "EN" ? "Guest / Seat" : "Invitado / Lugar") : (idioma === "EN" ? "Guests / Seats" : "Invitados / Lugares")}
-                                </option>
-                              ))}
-                            </select>
-                          )}
-                        </div>
-                      )}
-
-                      {/* Error del sistema */}
-                      {submitError && (
-                        <p className="text-center font-marcellus text-[12px] leading-relaxed text-[#ff6b6b] mt-3">
-                          {submitError}
-                        </p>
-                      )}
-
-                      {/* Botón de Envío */}
-                      <button
-                        type="submit"
-                        disabled={enviandoRsvp}
-                        className="w-full font-marcellus text-[12px] font-bold uppercase transition-all flex items-center justify-center gap-2 cursor-pointer hover:brightness-110 active:scale-[0.99] disabled:opacity-50"
-                        style={{
-                          marginTop: "20px",
-                          padding: "13px",
-                          backgroundColor: "#d4af37",
-                          color: "#0e0e0e",
-                          letterSpacing: "0.2em",
-                          borderRadius: "0px",
-                          border: "none",
-                        }}
-                      >
-                        {enviandoRsvp ? (
-                          <>
-                            <Loader2 className="w-4 h-4 animate-spin text-[#0e0e0e]" />
-                            <span>{idioma === "EN" ? "SAVING..." : "GUARDANDO..."}</span>
-                          </>
-                        ) : (
-                          <>
-                            <Send className="w-4 h-4 text-[#0e0e0e]" />
-                            <span>{idioma === "EN" ? "SUBMIT RSVP" : "CONFIRMAR ASISTENCIA"}</span>
-                          </>
-                        )}
-                      </button>
-
-                      {/* Opción Confirmar por Teléfono (Toggle Admin: permitirConfirmacionTelefono) */}
-                      {data.permitirConfirmacionTelefono !== false && data.telefonoWhatsappRsvp && (
-                        <div className="w-full text-center mt-6 pt-4 border-t border-[#d4af37]/25">
-                          <p className="font-marcellus text-[11px] text-[#f5e6ab] uppercase tracking-wider mb-2 flex items-center justify-center gap-1.5">
-                            <Phone className="w-3 h-3 text-[#d4af37]" />
-                            <span>
-                              {idioma === "EN"
-                                ? (data.rsvpTelefonoTituloEn || "Prefer to confirm by phone?")
-                                : (data.rsvpTelefonoTitulo || "¿Prefieres confirmar por teléfono?")}
-                            </span>
-                          </p>
-                          <a
-                            href={`tel:${data.telefonoWhatsappRsvp.replace(/[^0-9+]/g, "")}`}
-                            className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-[#1a1816] text-[#f5e6ab] border border-[#d4af37]/50 text-xs font-marcellus hover:bg-[#d4af37]/20 transition-colors"
-                            style={{ borderRadius: "0px", textDecoration: "none" }}
-                          >
-                            <span>{idioma === "EN" ? "Call" : "Llamar"}</span>
-                            <span className="font-bold underline text-[#d4af37]">
-                              {formatDisplayPhone(data.telefonoWhatsappRsvp)}
-                            </span>
-                          </a>
-                        </div>
-                      )}
-                    </form>
-                  )}
+              {/* Bloque 2: RSVP - Formulario del sistema (DynamicRsvpForm, igual que todos los templates) */}
+              {isSectionActive("rsvp") && (
+                <div data-preview-section="rsvp" className="w-full flex justify-center mb-9">
+                  <DynamicRsvpForm
+                    slug={data.slug || "demo"}
+                    eventTitle={data.titulo}
+                    eventDate={data.fechaEvento}
+                    ceremoniaMapUrl={data.ceremoniaMapUrl}
+                    recepcionMapUrl={data.recepcionMapUrl}
+                    telefonoWhatsapp={data.telefonoWhatsappRsvp}
+                    primaryColor="#C5A059"
+                    deadlineText={data.rsvpFechaLimite || "POR FAVOR, CONFIRMA TU ASISTENCIA."}
+                    deadlineTextEn={data.rsvpFechaLimiteEn || "PLEASE CONFIRM YOUR ATTENDANCE."}
+                    rsvpTitulo={data.rsvpTitulo}
+                    rsvpTituloEn={data.rsvpTituloEn}
+                    rsvpSubtitulo={data.rsvpSubtitulo}
+                    rsvpSubtituloEn={data.rsvpSubtituloEn}
+                    rsvpTelefonoTitulo={data.rsvpTelefonoTitulo}
+                    rsvpTelefonoTituloEn={data.rsvpTelefonoTituloEn}
+                    lang={idioma === "EN" ? "en" : "es"}
+                    permiteSms={data.permiteSms}
+                    tipoPlan={data.tipoPlan}
+                    modalidadRsvp={data.modalidadRsvp || undefined}
+                    maxPasesPorInvitado={data.maxPasesPorInvitado}
+                    permitirConfirmacionTelefono={data.permitirConfirmacionTelefono !== false}
+                  />
                 </div>
-              </div>
+              )}
             </section>
 
             {/* =====================================================================

@@ -66,6 +66,15 @@ const DEMO_CARDS = [
     image: "/assets/template-blush/foto-1.webp",
   },
   {
+    slug: "gybsy-20s",
+    title: "Gatsby 20's",
+    name: "Chloe",
+    tag: "XV Años & Gala",
+    badge: "Nueva",
+    desc: "Años 20 Art Déco: sobre negro con sello dorado, disco de vinilo, ticket Save the Date y corte de honor completo.",
+    image: "/assets/templates/gatsby-20s/photo-chloe-portrait.webp",
+  },
+  {
     slug: "isabella-xv",
     title: "Vintage Quinceanera",
     name: "Isabella Cordero",

@@ -199,6 +199,40 @@ html {
   animation: butterfly-fly-right 1.2s ease-out forwards;
 }
 
+/* fadeIn genérico (lo usan EnvelopeIntro, DynamicRsvpForm y Gatsby 20s; antes no existía y era no-op) */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.6s ease both;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.6s ease both;
+}
+
+/* Entrada escalonada del hero Gatsby 20s (fade + subida suave) */
+@keyframes gatsby-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-gatsby-rise {
+  animation: gatsby-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
 /* Recorte de papel rasgado oficial de Canva */
 .clip-canva-torn {
   clip-path: url(#canvaTornClip);
