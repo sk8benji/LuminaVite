@@ -285,6 +285,52 @@ export default function Gatsby20sTemplate({
         .font-marcellus {
           font-family: 'Marcellus', serif;
         }
+
+        /* RSVP del sistema en modo oscuro Gatsby (solo este template; DynamicRsvpForm.tsx no se toca) */
+        .gatsby-rsvp-dark > div { background-color: #0e0e0e !important; border-color: #d4af37 !important; border-radius: 0 !important; box-shadow: none !important; }
+        .gatsby-rsvp-dark .text-stone-900, .gatsby-rsvp-dark .text-stone-800 { color: #f5e6ab !important; }
+        .gatsby-rsvp-dark .text-stone-700 { color: #e8d9a8 !important; }
+        .gatsby-rsvp-dark .text-stone-600 { color: #c9b896 !important; }
+        .gatsby-rsvp-dark .text-stone-500 { color: #b8a67c !important; }
+        .gatsby-rsvp-dark .text-stone-400 { color: #8a7a55 !important; }
+        .gatsby-rsvp-dark .text-neutral-500 { color: #8a7a55 !important; }
+        .gatsby-rsvp-dark .bg-stone-50, .gatsby-rsvp-dark .bg-stone-50\/80 { background-color: #171717 !important; }
+        .gatsby-rsvp-dark .bg-stone-100 { background-color: #1f1f1f !important; }
+        .gatsby-rsvp-dark .border-stone-200 { border-color: rgba(212,175,55,.4) !important; }
+        .gatsby-rsvp-dark .border-stone-100 { border-color: rgba(212,175,55,.25) !important; }
+        .gatsby-rsvp-dark .border-pink-200\/80, .gatsby-rsvp-dark .border-pink-100\/90 { border-color: rgba(212,175,55,.35) !important; }
+        .gatsby-rsvp-dark .bg-pink-50, .gatsby-rsvp-dark .bg-pink-100\/90 { background-color: transparent !important; }
+        .gatsby-rsvp-dark .text-\[\#7A002A\] { color: #f5e6ab !important; }
+        .gatsby-rsvp-dark .text-\[\#B74F5F\] { color: #d4af37 !important; }
+        .gatsby-rsvp-dark input, .gatsby-rsvp-dark select, .gatsby-rsvp-dark textarea { background-color: #171717 !important; color: #f5e6ab !important; border-radius: 0 !important; }
+        .gatsby-rsvp-dark input::placeholder, .gatsby-rsvp-dark textarea::placeholder { color: #8a7a55 !important; }
+        .gatsby-rsvp-dark .focus\:bg-white:focus { background-color: #171717 !important; }
+        .gatsby-rsvp-dark .focus\:ring-stone-400:focus { --tw-ring-color: #d4af37 !important; }
+        .gatsby-rsvp-dark .rounded-2xl, .gatsby-rsvp-dark .rounded-xl, .gatsby-rsvp-dark .rounded-full { border-radius: 0 !important; }
+        .gatsby-rsvp-dark .bg-emerald-50, .gatsby-rsvp-dark .bg-emerald-50\/90 { background-color: rgba(6,78,59,.55) !important; }
+        .gatsby-rsvp-dark .text-emerald-800 { color: #a7f3d0 !important; }
+        .gatsby-rsvp-dark .text-emerald-900 { color: #d1fae5 !important; }
+        .gatsby-rsvp-dark .text-emerald-600 { color: #34d399 !important; }
+        .gatsby-rsvp-dark .border-emerald-200 { border-color: rgba(52,211,153,.45) !important; }
+        .gatsby-rsvp-dark .border-emerald-500 { border-color: #34d399 !important; }
+        .gatsby-rsvp-dark .bg-rose-50, .gatsby-rsvp-dark .bg-rose-50\/80 { background-color: rgba(76,5,25,.55) !important; }
+        .gatsby-rsvp-dark .text-rose-800, .gatsby-rsvp-dark .text-rose-700 { color: #fda4af !important; }
+        .gatsby-rsvp-dark .text-rose-600 { color: #fb7185 !important; }
+        .gatsby-rsvp-dark .border-rose-200 { border-color: rgba(251,113,133,.4) !important; }
+        .gatsby-rsvp-dark .border-rose-400 { border-color: #fb7185 !important; }
+        .gatsby-rsvp-dark .bg-amber-50\/80 { background-color: #241d08 !important; }
+        .gatsby-rsvp-dark .text-amber-950 { color: #f5e6ab !important; }
+        .gatsby-rsvp-dark .border-amber-200 { border-color: rgba(212,175,55,.4) !important; }
+        .gatsby-rsvp-dark .bg-stone-900 { background-color: #d4af37 !important; }
+        .gatsby-rsvp-dark .text-white { color: #000000 !important; }
+        .gatsby-rsvp-dark .hover\:bg-stone-100:hover { background-color: #1f1f1f !important; }
+        .gatsby-rsvp-dark .hover\:border-stone-400:hover { border-color: #d4af37 !important; }
+        .gatsby-rsvp-dark .hover\:bg-pink-100\/90:hover { background-color: rgba(212,175,55,.12) !important; }
+        .gatsby-rsvp-dark .hover\:bg-black:hover { background-color: #e5c65a !important; }
+        .gatsby-rsvp-dark .group:hover .group-hover\:text-black { color: #ffffff !important; }
+
+        /* Fondo de pagina negro mientras este template esta montado (el body global es #FAF8F5 y se veia una franja clara bajo el sobre final) */
+        body { background-color: #0d0d0d !important; }
       `}</style>
 
       {/* Selector de Idioma Flotante Superior (Visible solo cuando el sobre ya está abierto) */}
@@ -686,7 +732,7 @@ export default function Gatsby20sTemplate({
         {sobreAbierto && (
           <div
             ref={contenidoRef}
-            className="w-full flex flex-col items-center gap-14 pl-0 pr-4 pb-20 animate-gatsby-rise mt-0"
+            className="w-full flex flex-col items-center gap-14 pl-0 pr-4 pb-2 animate-gatsby-rise mt-0"
             style={{ animationDelay: "150ms" }}
           >
             {/* =====================================================================
@@ -788,7 +834,7 @@ export default function Gatsby20sTemplate({
                     {/* Foto 1 (photobooth-1.jpg) */}
                     <div className="w-full aspect-square overflow-hidden bg-[#181818] rounded-[1px]">
                       <img
-                        src={data.fotoPortadaUrl || GATSBY_20S_ASSETS.photobooth1 || GATSBY_20S_ASSETS.photoStrip}
+                        src={GATSBY_20S_ASSETS.photobooth1}
                         alt="Photobooth 1"
                         className="w-full h-full object-cover block"
                         style={{ filter: "grayscale(100%) contrast(1.15)" }}
@@ -798,7 +844,7 @@ export default function Gatsby20sTemplate({
                     {/* Foto 2 (photobooth-2.jpg) */}
                     <div className="w-full aspect-square overflow-hidden bg-[#181818] rounded-[1px]">
                       <img
-                        src={data.fotoActualUrl || GATSBY_20S_ASSETS.photobooth2 || GATSBY_20S_ASSETS.photoChloeCake}
+                        src={GATSBY_20S_ASSETS.photobooth2}
                         alt="Photobooth 2"
                         className="w-full h-full object-cover block"
                         style={{ filter: "grayscale(100%) contrast(1.15)" }}
@@ -808,7 +854,7 @@ export default function Gatsby20sTemplate({
                     {/* Foto 3 (photobooth-3.jpg) */}
                     <div className="w-full aspect-square overflow-hidden bg-[#181818] rounded-[1px]">
                       <img
-                        src={data.fotoInfanciaUrl || GATSBY_20S_ASSETS.photobooth3 || GATSBY_20S_ASSETS.photoChloePortrait}
+                        src={GATSBY_20S_ASSETS.photobooth3}
                         alt="Photobooth 3"
                         className="w-full h-full object-cover block"
                         style={{ filter: "grayscale(100%) contrast(1.15)" }}
@@ -1668,32 +1714,68 @@ export default function Gatsby20sTemplate({
                 </a>
               </div>
 
-              {/* Bloque 2: RSVP - Formulario del sistema (DynamicRsvpForm, igual que todos los templates) */}
+              {/* Bloque 2: RSVP - Formulario del sistema con marco dorado Gatsby (ba.png) */}
               {isSectionActive("rsvp") && (
                 <div data-preview-section="rsvp" className="w-full flex justify-center mb-9">
-                  <DynamicRsvpForm
-                    slug={data.slug || "demo"}
-                    eventTitle={data.titulo}
-                    eventDate={data.fechaEvento}
-                    ceremoniaMapUrl={data.ceremoniaMapUrl}
-                    recepcionMapUrl={data.recepcionMapUrl}
-                    telefonoWhatsapp={data.telefonoWhatsappRsvp}
-                    primaryColor="#C5A059"
-                    deadlineText={data.rsvpFechaLimite || "POR FAVOR, CONFIRMA TU ASISTENCIA."}
-                    deadlineTextEn={data.rsvpFechaLimiteEn || "PLEASE CONFIRM YOUR ATTENDANCE."}
-                    rsvpTitulo={data.rsvpTitulo}
-                    rsvpTituloEn={data.rsvpTituloEn}
-                    rsvpSubtitulo={data.rsvpSubtitulo}
-                    rsvpSubtituloEn={data.rsvpSubtituloEn}
-                    rsvpTelefonoTitulo={data.rsvpTelefonoTitulo}
-                    rsvpTelefonoTituloEn={data.rsvpTelefonoTituloEn}
-                    lang={idioma === "EN" ? "en" : "es"}
-                    permiteSms={data.permiteSms}
-                    tipoPlan={data.tipoPlan}
-                    modalidadRsvp={data.modalidadRsvp || undefined}
-                    maxPasesPorInvitado={data.maxPasesPorInvitado}
-                    permitirConfirmacionTelefono={data.permitirConfirmacionTelefono !== false}
-                  />
+                  <div
+                    className="relative"
+                    style={{
+                      width: "88%",
+                      maxWidth: "380px",
+                      margin: "0 auto",
+                      padding: "18px",
+                      borderRadius: "0px",
+                      backgroundColor: "#111111",
+                      backgroundImage: `url(${GATSBY_20S_ASSETS.artDecoPattern})`,
+                      backgroundSize: "cover",
+                      backgroundPosition: "center",
+                      border: "0px",
+                      boxShadow: "0 15px 40px rgba(0,0,0,0.9)",
+                    }}
+                  >
+                    <div
+                      className="w-full flex flex-col items-center text-center"
+                      style={{
+                        borderRadius: "0px",
+                        backgroundColor: "#0e0e0e",
+                        border: "1px solid #d4af37",
+                        padding: "26px 18px",
+                      }}
+                    >
+                      <h3
+                        className="font-gatsby-display text-[44px] leading-none"
+                        style={{ color: "#f5e6ab" }}
+                      >
+                        RSVP
+                      </h3>
+                      <div className="gatsby-rsvp-dark w-full mt-4">
+                        <DynamicRsvpForm
+                          slug={data.slug || "demo"}
+                          eventTitle={data.titulo}
+                          eventDate={data.fechaEvento}
+                          ceremoniaMapUrl={data.ceremoniaMapUrl}
+                          recepcionMapUrl={data.recepcionMapUrl}
+                          telefonoWhatsapp={data.telefonoWhatsappRsvp}
+                          primaryColor="#C5A059"
+                          accentBgColor="bg-[#0e0e0e]"
+                          deadlineText={data.rsvpFechaLimite || "POR FAVOR, CONFIRMA TU ASISTENCIA."}
+                          deadlineTextEn={data.rsvpFechaLimiteEn || "PLEASE CONFIRM YOUR ATTENDANCE."}
+                          rsvpTitulo=""
+                          rsvpTituloEn=""
+                          rsvpSubtitulo=""
+                          rsvpSubtituloEn=""
+                          rsvpTelefonoTitulo={data.rsvpTelefonoTitulo}
+                          rsvpTelefonoTituloEn={data.rsvpTelefonoTituloEn}
+                          lang={idioma === "EN" ? "en" : "es"}
+                          permiteSms={data.permiteSms}
+                          tipoPlan={data.tipoPlan}
+                          modalidadRsvp={data.modalidadRsvp || undefined}
+                          maxPasesPorInvitado={data.maxPasesPorInvitado}
+                          permitirConfirmacionTelefono={data.permitirConfirmacionTelefono !== false}
+                        />
+                      </div>
+                    </div>
+                  </div>
                 </div>
               )}
             </section>
@@ -1707,7 +1789,7 @@ export default function Gatsby20sTemplate({
                 style={{
                   width: "90%",
                   maxWidth: "360px",
-                  margin: "0 auto 40px auto",
+                  margin: "0 auto 16px auto",
                   textAlign: "center",
                 }}
               >
@@ -1830,8 +1912,6 @@ export default function Gatsby20sTemplate({
               </div>
             </section>
 
-            {/* Espaciado final limpio */}
-            <div className="w-full pb-16" />
           </div>
         )}
       </div>

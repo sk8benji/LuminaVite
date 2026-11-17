@@ -689,7 +689,7 @@ export const DEMO_GATSBY_20S: InvitationData = {
   regalosMensaje: "Tu presencia es nuestro mejor regalo. Si deseas tener un detalle, contaremos con un buzón de sobres en la recepción.",
   regalosMensajeEn: "Your presence is our favorite gift. If you wish to bring a token of love, a card box will be at the reception.",
   rsvpFechaLimite: "Confirma antes del 20 de septiembre",
-  rsvpFechaLimiteEn: "RSVP by September 20th",
+  rsvpFechaLimiteEn: "BY SEPTEMBER 20TH",
   rsvpDiasAntes: 24,
   mensajeDespedida: "Sharing this milestone with you means more than words can say!",
   idiomaDefault: "EN",
