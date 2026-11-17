@@ -422,7 +422,7 @@ export default function BlushPrincessTemplate({
   };
 
   return (
-    <div className="relative min-h-screen font-sans-body text-[#4A3436] antialiased selection:bg-rose-100 selection:text-rose-900 overflow-x-hidden bg-[#FDF8F4]">
+    <div className="relative min-h-screen font-sans-body text-[#4A3436] antialiased selection:bg-rose-100 selection:text-rose-900 overflow-x-clip bg-[#FDF8F4]">
       {/* Fondo general: seda blush */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img

@@ -14,6 +14,7 @@ import BabyBlueTemplate from "./BabyBlueTemplate";
 import CoralineThemedTemplate from "./CoralineThemedTemplate";
 import QuinceRosadoTemplate from "./QuinceRosadoTemplate";
 import QuinceRosadoSaveTheDate from "../save-the-date/QuinceRosadoSaveTheDate";
+import Gatsby20sTemplate from "./Gatsby20sTemplate";
 
 export default function TemplateDispatcher({
   data,
@@ -29,6 +30,9 @@ export default function TemplateDispatcher({
   switch (data.estiloPlantilla) {
     case "QUINCE_ROSADO":
       return <QuinceRosadoTemplate data={data} skipIntro={skipIntro} />;
+    case "GATSBY_20S":
+    case "GYBSY_20S":
+      return <Gatsby20sTemplate data={data} skipIntro={skipIntro} />;
     case "ELEGANT_ROSE":
       return <ElegantRoseTemplate data={data} skipIntro={skipIntro} />;
     case "FAIRYTALE_CHATEAU":

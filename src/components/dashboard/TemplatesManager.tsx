@@ -426,6 +426,10 @@ export default function TemplatesManager() {
         colorSello: editForm.colorSello || "#C5A059",
         tipoLetra: editForm.tipoLetra || "Cinzel",
         ...(editForm.configExtra || {}),
+        fraseApertura: (editForm as any).fraseApertura || (editForm as any).configExtra?.fraseApertura || extra.fraseApertura || "Una Celebración Años 20",
+        fraseAperturaEn: (editForm as any).fraseAperturaEn || (editForm as any).configExtra?.fraseAperturaEn || extra.fraseAperturaEn || "A Roaring Twenties Celebration",
+        subtitulo: editForm.subtitulo || (editForm as any).configExtra?.subtitulo || extra.subtitulo || "Mis Quince Años",
+        subtituloEn: (editForm as any).subtituloEn || (editForm as any).configExtra?.subtituloEn || extra.subtituloEn || "My Sweet Fifteen",
         arteBeautyQuince:
           (editForm as any).arteBeautyQuince || (editForm as any).configExtra?.arteBeautyQuince,
       },
@@ -435,6 +439,12 @@ export default function TemplatesManager() {
   const isSaveDate =
     editingTemplate?.slug?.includes("save-the-date") ||
     editingTemplate?.estiloPlantilla === "SAVE_THE_DATE_QUINCE_ROSADO";
+
+  const isGatsby =
+    editingTemplate?.slug?.includes("gybsy") ||
+    editingTemplate?.slug?.includes("gatsby") ||
+    editingTemplate?.estiloPlantilla === "GATSBY_20S" ||
+    editingTemplate?.estiloPlantilla === "GYBSY_20S";
 
   const sectionsList = isSaveDate
     ? ([
@@ -985,6 +995,103 @@ export default function TemplatesManager() {
                                 placeholder="My Sweet Fifteen"
                                 value={(editForm as any).subtituloEn || ""}
                                 onChange={(e) => setEditForm({ ...editForm, subtituloEn: e.target.value } as any)}
+                                className="w-full px-3 py-1.5 bg-white border border-stone-200 rounded-lg text-xs font-medium text-[#7A5C32]"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* TÍTULOS BILINGÜES PARA GATSBY 20'S */}
+                    {isGatsby && (
+                      <div className="pt-4 border-t border-stone-200 space-y-4">
+                        <div className="flex items-center gap-2">
+                          <Sparkles className="w-4 h-4 text-[#C5A059]" />
+                          <h4 className="font-serif font-bold text-sm text-stone-900">
+                            Títulos de Pantalla Sobre Cerrado (Gatsby 20's / Roaring 20s)
+                          </h4>
+                        </div>
+                        <p className="text-[11px] text-stone-500 -mt-2">
+                          Edita el lema superior y el título principal del sobre cerrado en inglés y español.
+                        </p>
+
+                        {/* 1. LEMA SUPERIOR */}
+                        <div className="bg-amber-50/50 p-3 rounded-xl border border-amber-200/60 space-y-2">
+                          <label className="text-xs font-bold text-stone-800 block">
+                            1. Lema Superior ("A ROARING TWENTIES CELEBRATION"):
+                          </label>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            <div>
+                              <span className="text-[10px] font-semibold text-stone-500 uppercase">Español (ES)</span>
+                              <input
+                                type="text"
+                                placeholder="UNA CELEBRACIÓN AÑOS 20"
+                                value={(editForm as any).fraseApertura || (editForm as any).configExtra?.fraseApertura || ""}
+                                onChange={(e) =>
+                                  setEditForm({
+                                    ...editForm,
+                                    fraseApertura: e.target.value,
+                                    configExtra: { ...(editForm as any).configExtra, fraseApertura: e.target.value },
+                                  } as any)
+                                }
+                                className="w-full px-3 py-1.5 bg-white border border-stone-200 rounded-lg text-xs"
+                              />
+                            </div>
+                            <div>
+                              <span className="text-[10px] font-semibold text-stone-500 uppercase">Inglés (EN - Default)</span>
+                              <input
+                                type="text"
+                                placeholder="A ROARING TWENTIES CELEBRATION"
+                                value={(editForm as any).fraseAperturaEn || (editForm as any).configExtra?.fraseAperturaEn || ""}
+                                onChange={(e) =>
+                                  setEditForm({
+                                    ...editForm,
+                                    fraseAperturaEn: e.target.value,
+                                    configExtra: { ...(editForm as any).configExtra, fraseAperturaEn: e.target.value },
+                                  } as any)
+                                }
+                                className="w-full px-3 py-1.5 bg-white border border-stone-200 rounded-lg text-xs font-medium text-[#7A5C32]"
+                              />
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* 2. TÍTULO PRINCIPAL DEL EVENTO */}
+                        <div className="bg-amber-50/50 p-3 rounded-xl border border-amber-200/60 space-y-2">
+                          <label className="text-xs font-bold text-stone-800 block">
+                            2. Título Principal ("MY SWEET FIFTEEN" / "MIS QUINCE AÑOS"):
+                          </label>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            <div>
+                              <span className="text-[10px] font-semibold text-stone-500 uppercase">Español (ES)</span>
+                              <input
+                                type="text"
+                                placeholder="MIS QUINCE AÑOS"
+                                value={editForm.subtitulo || (editForm as any).configExtra?.subtitulo || ""}
+                                onChange={(e) =>
+                                  setEditForm({
+                                    ...editForm,
+                                    subtitulo: e.target.value,
+                                    configExtra: { ...(editForm as any).configExtra, subtitulo: e.target.value },
+                                  } as any)
+                                }
+                                className="w-full px-3 py-1.5 bg-white border border-stone-200 rounded-lg text-xs"
+                              />
+                            </div>
+                            <div>
+                              <span className="text-[10px] font-semibold text-stone-500 uppercase">Inglés (EN - Default)</span>
+                              <input
+                                type="text"
+                                placeholder="MY SWEET FIFTEEN"
+                                value={(editForm as any).subtituloEn || (editForm as any).configExtra?.subtituloEn || ""}
+                                onChange={(e) =>
+                                  setEditForm({
+                                    ...editForm,
+                                    subtituloEn: e.target.value,
+                                    configExtra: { ...(editForm as any).configExtra, subtituloEn: e.target.value },
+                                  } as any)
+                                }
                                 className="w-full px-3 py-1.5 bg-white border border-stone-200 rounded-lg text-xs font-medium text-[#7A5C32]"
                               />
                             </div>

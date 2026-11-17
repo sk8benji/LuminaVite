@@ -105,11 +105,30 @@ export interface CoralineMysticalConfig {
   puertaSecretaMsg?: string;
 }
 
+export interface Gatsby20sConfig {
+  subtitulo?: string;
+  subtituloEn?: string;
+  fraseApertura?: string;
+  fraseAperturaEn?: string;
+  ticketFechaTexto?: string;
+  venueNombre?: string;
+  venueDireccion?: string;
+  dressCodeTitulo?: string;
+  dressCodeTexto?: string;
+  cocktailsTitulo?: string;
+  cocktailsTexto?: string;
+  agradecimientoTexto?: string;
+  agradecimientoTextoEn?: string;
+  colorAcentoHex?: string;
+}
+
 /**
  * Mapa de tipos tipado por identificador de plantilla
  */
 export type TemplateConfigMap = {
   QUINCE_ROSADO: QuinceRosadoConfig;
+  GATSBY_20S: Gatsby20sConfig;
+  GYBSY_20S: Gatsby20sConfig;
   BLUE_BUTTERFLY: BlueButterflyConfig;
   BLUSH_PRINCESS: BlushPrincessConfig;
   QUINCE_ERA_PINK: QuinceEraPinkConfig;

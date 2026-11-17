@@ -15,7 +15,9 @@ export type TemplateId =
   | "ESMERALDA_ROYAL"
   | "JARDIN_BOTANICA"
   | "MINIMALISTA_EDITORIAL"
-  | "SAVE_THE_DATE_QUINCE_ROSADO";
+  | "SAVE_THE_DATE_QUINCE_ROSADO"
+  | "GATSBY_20S"
+  | "GYBSY_20S";
 
 export interface TemplateConfig {
   id: TemplateId;
@@ -374,6 +376,46 @@ export const TEMPLATES: Record<TemplateId, TemplateConfig> = {
     fontBody: "'Inter', sans-serif",
     ribbonGradient: "from-zinc-200 via-stone-100 to-neutral-200",
     badgeBg: "#EEEEEE",
+  },
+  GATSBY_20S: {
+    id: "GATSBY_20S",
+    name: "Gatsby 20's (Roaring Twenties / Art Deco)",
+    category: "CUMPLEANOS",
+    bgColor: "#0B0B0D",
+    cardBg: "#141418",
+    textPrimary: "#F5E6BE",
+    textSecondary: "#C5A059",
+    accentColor: "#D4AF37",
+    accentSoft: "#22222B",
+    borderSoft: "#C5A059",
+    buttonBg: "#D4AF37",
+    buttonText: "#000000",
+    fontHeading: "'Cinzel', serif",
+    fontSubheading: "'Cormorant Garamond', serif",
+    fontBody: "'Montserrat', sans-serif",
+    ribbonGradient: "from-[#D4AF37] via-[#F3E5AB] to-[#AA8232]",
+    badgeBg: "#1C1C24",
+    description: "Diseño Roaring 20s estilo Gran Gatsby con detalles en oro metálico, sobre negro y estética Art Deco.",
+  },
+  GYBSY_20S: {
+    id: "GYBSY_20S",
+    name: "Gybsy 20's (Roaring Twenties / Art Deco)",
+    category: "CUMPLEANOS",
+    bgColor: "#0B0B0D",
+    cardBg: "#141418",
+    textPrimary: "#F5E6BE",
+    textSecondary: "#C5A059",
+    accentColor: "#D4AF37",
+    accentSoft: "#22222B",
+    borderSoft: "#C5A059",
+    buttonBg: "#D4AF37",
+    buttonText: "#000000",
+    fontHeading: "'Cinzel', serif",
+    fontSubheading: "'Cormorant Garamond', serif",
+    fontBody: "'Montserrat', sans-serif",
+    ribbonGradient: "from-[#D4AF37] via-[#F3E5AB] to-[#AA8232]",
+    badgeBg: "#1C1C24",
+    description: "Diseño Roaring 20s estilo Gran Gatsby con detalles en oro metálico, sobre negro y estética Art Deco.",
   },
 };
 

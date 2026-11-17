@@ -1,4 +1,38 @@
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Great+Vibes&display=swap');
+
+@font-face {
+  font-family: 'Geotica Four Open';
+  src: url('/fonts/GeoticaFourOpen.woff2') format('woff2'),
+       url('/fonts/GeoticaFourOpen.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+.font-geotica {
+  font-family: 'Geotica Four Open', 'Cinzel Decorative', serif;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #f5e6ab;
+  text-shadow: 0 2px 10px rgba(212, 175, 55, 0.35);
+}
+@font-face {
+  font-family: 'Gatsby Display';
+  src: url('/fonts/GatsbyDisplay.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+.font-gatsby-display {
+  font-family: 'Gatsby Display', 'Limelight', serif;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #f5e6ab;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -29,6 +63,11 @@ body {
   color: var(--foreground);
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
+  overflow-x: clip;
+}
+
+html {
+  overflow-x: clip;
 }
 
 @layer utilities {
