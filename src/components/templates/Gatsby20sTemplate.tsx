@@ -110,6 +110,21 @@ export default function Gatsby20sTemplate({
     Array.isArray(corte.chambelanes) && corte.chambelanes.length > 0
       ? corte.chambelanes
       : ["DIEGO TORRES", "THIAGO MENDOZA", "NICOLÁS JIMÉNEZ", "SAMUEL RAMÍREZ", "EMILIANO VEGA", "MATEO CASTILLO", "ALEJANDRO CRUZ"];
+  // Fotos de la corte editables desde el admin (corteHonorJson); sin foto, arte del template
+  const fotoDamasUrl = corte.fotoDamasUrl || GATSBY_20S_ASSETS.damasGatsby;
+  const fotoChambelanesUrl = corte.fotoChambelanesUrl || GATSBY_20S_ASSETS.chambelanesGatsby;
+
+  // Hora de la placa bilingüe: el valor guardado trae el prefijo en español
+  // ("A LAS 6:19 PM") y la invitación es bilingüe — en inglés se muestra
+  // "AT 6:19 PM". Si fechaPlacaHoraEn no está guardado, se deriva del ES.
+  const horaPlacaTexto = (fallback: string) => {
+    const raw =
+      (idioma === "EN" ? data.fechaPlacaHoraEn : data.fechaPlacaHora) ||
+      data.fechaPlacaHora ||
+      fallback;
+    const hora = String(raw).replace(/^(A LAS|AT)\s+/i, "");
+    return idioma === "EN" ? `AT ${hora}` : `A LAS ${hora}`;
+  };
 
   // Fecha del ticket derivada de la fecha del evento (zona Los Ángeles)
   const fechaTicket = (() => {
@@ -969,6 +984,7 @@ export default function Gatsby20sTemplate({
                 {/* -------------------------------------------------------------
                     BLOQUE 1: PADRES (PARENTS / PADRES)
                    ------------------------------------------------------------- */}
+                {corte.showParents !== false && (<>
                 <h3
                   className="font-marcellus text-[11px] text-[#d4af37] uppercase text-center"
                   style={{ letterSpacing: "0.25em" }}
@@ -982,10 +998,12 @@ export default function Gatsby20sTemplate({
                 >
                   {padresTexto}
                 </p>
+                </>)}
 
                 {/* -------------------------------------------------------------
                     BLOQUE 2: DAMAS EN DOS COLUMNAS + FOTO EDITORIAL
                    ------------------------------------------------------------- */}
+                {corte.showDamas !== false && (<>
                 <h3
                   className="font-marcellus text-[11px] text-[#d4af37] uppercase text-center"
                   style={{ letterSpacing: "0.25em" }}
@@ -1052,15 +1070,17 @@ export default function Gatsby20sTemplate({
                   />
 
                   <img
-                    src={GATSBY_20S_ASSETS.damasGatsby}
+                    src={fotoDamasUrl}
                     alt="Damas de Honor"
                     className="w-full h-full object-cover block rounded-xs"
                   />
                 </div>
+                </>)}
 
                 {/* -------------------------------------------------------------
                     BLOQUE 3: CHAMBELÁN DE HONOR Y CHAMBELANES EN DOS COLUMNAS + FOTO
                    ------------------------------------------------------------- */}
+                {corte.showChambelan !== false && (<>
                 <h3
                   className="font-marcellus text-[11px] text-[#d4af37] uppercase text-center"
                   style={{ letterSpacing: "0.25em" }}
@@ -1071,7 +1091,9 @@ export default function Gatsby20sTemplate({
                 <p className="font-gatsby-display text-[17px] text-center mt-1.5 leading-snug">
                   {chambelanHonor}
                 </p>
+                </>)}
 
+                {corte.showChambelanes !== false && (<>
                 <h4
                   className="font-marcellus text-[11px] text-[#d4af37] uppercase text-center"
                   style={{ letterSpacing: "0.25em", marginTop: "20px" }}
@@ -1139,11 +1161,12 @@ export default function Gatsby20sTemplate({
                   />
 
                   <img
-                    src={GATSBY_20S_ASSETS.chambelanesGatsby}
+                    src={fotoChambelanesUrl}
                     alt="Chambelanes de Honor"
                     className="w-full h-full object-cover block rounded-xs"
                   />
                 </div>
+                </>)}
 
                 {/* Remate final de sección: Abanico de plumas (Untitled design (22).png) */}
                 <img
@@ -1313,7 +1336,7 @@ export default function Gatsby20sTemplate({
                       }}
                     >
                       <p className="font-bold tracking-widest text-[#d4af37]">
-                        {data.fechaPlacaHora || "5:00 PM"}
+                        {horaPlacaTexto("5:00 PM")}
                       </p>
                       <p className="font-semibold tracking-wider mt-0.5">
                         {data.ceremoniaNombre || "ST. PATRICK CATHEDRAL"}
@@ -1392,7 +1415,7 @@ export default function Gatsby20sTemplate({
                       }}
                     >
                       <p className="font-bold tracking-widest text-[#d4af37]">
-                        {data.fechaPlacaHora || "7:00 PM"}
+                        {horaPlacaTexto("7:00 PM")}
                       </p>
                       <p className="font-semibold tracking-wider mt-0.5">
                         {data.recepcionNombre || config.venueNombre || "THE GRAND GATSBY HALL"}

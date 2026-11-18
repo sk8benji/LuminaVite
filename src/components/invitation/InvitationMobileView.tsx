@@ -116,6 +116,9 @@ export interface InvitationData {
     showPadrinos?: boolean;
     padrinos?: string[];
     chambelanes?: string[];
+    showChambelanes?: boolean;
+    fotoDamasUrl?: string;
+    fotoChambelanesUrl?: string;
     mensajeGratitud?: string;
   } | any;
   mesaRegalosJson?: {
