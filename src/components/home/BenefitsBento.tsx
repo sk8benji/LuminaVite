@@ -105,7 +105,7 @@ export function BenefitsBento({ lang = "en" }: BenefitsBentoProps) {
                   </span>
                 </div>
                 <span className="text-[10px] font-bold text-[#720e26] bg-[#720e26]/10 px-2 py-0.5 rounded-full">
-                  Mesa #7
+                  {isEs ? "4 pases" : "4 passes"}
                 </span>
               </div>
 
@@ -133,7 +133,9 @@ export function BenefitsBento({ lang = "en" }: BenefitsBentoProps) {
 
               <div className="pt-3 border-t border-dashed border-neutral-200 flex items-center justify-between text-[11px] text-neutral-500 font-['Montserrat']">
                 <span>{isEs ? "Cero invitados sorpresa" : "Zero surprise guests"}</span>
-                <span className="font-bold text-neutral-800">QR #07-MOR</span>
+                <span className="font-bold text-neutral-800">
+                  {isEs ? "Sin app · Sin contraseña" : "No app · No password"}
+                </span>
               </div>
             </div>
 
@@ -175,37 +177,45 @@ export function BenefitsBento({ lang = "en" }: BenefitsBentoProps) {
 
               <div className="bg-white rounded-xl border border-neutral-200 p-3 shadow-sm text-xs font-['Montserrat'] text-neutral-800 space-y-2">
                 <p className="font-semibold text-neutral-900 text-[11px]">
-                  {isEs ? "Click & Love · Confirmación" : "Click & Love · Event Update"}
+                  {isEs ? "Click & Love · Confirmación" : "Click & Love · Confirmation"}
                 </p>
                 <p className="text-[11px] text-neutral-600 leading-snug">
                   {isEs
-                    ? "¡Hola Familia Ramos! Confirmamos sus 3 pases para la Quinceañera. Mesa #7 reservada. Pulsa aquí para ver tu pase y ruta:"
-                    : "Hi Ramos Family! 3 passes confirmed for Isabella's Quince. Table #7 reserved. Tap below for your pass & route:"}
+                    ? "Hola Familia Ramos, confirmaste 3 pases para la Quinceañera de Isabella."
+                    : "Hi Ramos Family, you confirmed 3 passes for Isabella's Quinceañera."}
                 </p>
-                <div className="inline-block px-3 py-1 rounded-md bg-[#720e26] text-white text-[10px] font-bold shadow-xs">
-                  {isEs ? "Confirmar Asistencia →" : "Confirm Attendance →"}
+                <div className="flex flex-wrap gap-1.5">
+                  <span className="inline-block px-2 py-1 rounded-md bg-emerald-50 border border-emerald-200 text-emerald-800 text-[10px] font-bold">
+                    {isEs ? "Misa ↗" : "Ceremony ↗"}
+                  </span>
+                  <span className="inline-block px-2 py-1 rounded-md bg-emerald-50 border border-emerald-200 text-emerald-800 text-[10px] font-bold">
+                    {isEs ? "Salón ↗" : "Reception ↗"}
+                  </span>
                 </div>
+                <p className="text-[11px] text-neutral-600 leading-snug">
+                  {isEs ? "Te esperamos!" : "See you there!"}
+                </p>
               </div>
 
               <div className="mt-2.5 flex items-center justify-between text-[10px] text-neutral-500 font-semibold font-['Montserrat']">
                 <span>✓ Delivered</span>
                 <span className="text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 font-bold">
-                  98.4% Open Rate
+                  {isEs ? "Confirmación automática" : "Automatic confirmation"}
                 </span>
               </div>
             </div>
 
             <div className="flex flex-col items-start max-[767px]:items-center max-[767px]:text-center gap-2.5 flex-1">
               <span className="text-[11px] font-bold uppercase tracking-wider text-[#720e26]">
-                {isEs ? "Apertura >98%" : "98% Open Rate"}
+                {isEs ? "Sin app · Sin contraseña" : "No app · No password"}
               </span>
               <h3 className="font-['Playfair_Display',serif] text-2xl font-bold leading-tight m-0 text-neutral-900">
                 {isEs ? "RSVP instantáneo por SMS" : "Instant 1-Click SMS RSVP"}
               </h3>
               <div className="text-sm text-neutral-600 leading-relaxed font-['Montserrat']">
                 {isEs
-                  ? "Sin aplicaciones que descargar ni usuarios que registrar. Tus invitados reciben su mensaje y confirman en segundos con recordatorio el día del evento."
-                  : "No apps to download, no passwords. Guests receive automated SMS reminders and confirm in 1 tap with day-of navigation alerts."}
+                  ? "Sin app que descargar ni contraseña. Tu invitado confirma con 1 toque desde su invitación y le llega este SMS con los enlaces a la misa y al salón."
+                  : "No app to download, no password. Your guest confirms in 1 tap from the invitation and gets this SMS with the links to the ceremony and the reception."}
               </div>
             </div>
           </div>
@@ -231,7 +241,7 @@ export function BenefitsBento({ lang = "en" }: BenefitsBentoProps) {
               <div className="text-sm text-neutral-600 leading-relaxed font-['Montserrat']">
                 {isEs
                   ? "Ruta directa con 1 toque a la iglesia y al salón de recepción."
-                  : "Direct 1-tap route straight to ceremony and reception parking."}
+                  : "Direct 1-tap route to the ceremony and the reception."}
               </div>
             </div>
 
@@ -241,22 +251,22 @@ export function BenefitsBento({ lang = "en" }: BenefitsBentoProps) {
                 <div className="flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse" />
                   <span className="font-bold text-neutral-900 text-[11px]">
-                    {isEs ? "Ruta Activa en Google Maps" : "Live Google Maps Route"}
+                    {isEs ? "Ruta en Google Maps" : "Google Maps Route"}
                   </span>
                 </div>
                 <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
-                  14 min · 6.2 mi
+                  {isEs ? "1 toque" : "1 tap"}
                 </span>
               </div>
 
               <div className="grid grid-cols-2 gap-2 text-[11px]">
                 <div className="bg-white rounded-lg p-2 border border-neutral-200 flex items-center gap-1.5">
                   <span>⛪</span>
-                  <span className="font-semibold text-neutral-800 truncate">{isEs ? "Misa" : "Ceremony"}</span>
+                  <span className="font-semibold text-neutral-800 truncate">St. Mary&apos;s Church</span>
                 </div>
                 <div className="bg-white rounded-lg p-2 border border-neutral-200 flex items-center gap-1.5">
                   <span>🏰</span>
-                  <span className="font-semibold text-neutral-800 truncate">{isEs ? "Recepción" : "Reception"}</span>
+                  <span className="font-semibold text-neutral-800 truncate">Grand Ballroom</span>
                 </div>
               </div>
 
