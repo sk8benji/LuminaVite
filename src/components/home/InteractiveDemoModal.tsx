@@ -113,13 +113,17 @@ export default function InteractiveDemoModal({
 
   if (!isOpen) return null;
 
-  // Redirigir a precios cerrando el modal
+  // Redirigir a precios cerrando el modal (segun el idioma: #prices en EN, #precios en ES)
   const handleSelectPlan = () => {
     onClose();
     setTimeout(() => {
-      const el = document.getElementById("precios");
+      const targetId = lang === "es" ? "precios" : "prices";
+      const el = document.getElementById(targetId);
       if (el) {
         el.scrollIntoView({ behavior: "smooth" });
+      } else {
+        // Respaldo: si la seccion no existe en esta pagina, ir a la landing de precios
+        window.location.href = lang === "es" ? "/es/precios" : "/pricing";
       }
     }, 120);
   };
