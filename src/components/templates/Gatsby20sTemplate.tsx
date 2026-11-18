@@ -287,8 +287,9 @@ export default function Gatsby20sTemplate({
         }
 
         /* RSVP del sistema en modo oscuro Gatsby (solo este template; DynamicRsvpForm.tsx no se toca) */
-        .gatsby-rsvp-dark > div { background-color: #0e0e0e !important; border-color: #d4af37 !important; border-radius: 0 !important; box-shadow: none !important; }
+        .gatsby-rsvp-dark > div { background-color: #0e0e0e !important; border: none !important; border-radius: 0 !important; box-shadow: none !important; }
         .gatsby-rsvp-dark .text-stone-900, .gatsby-rsvp-dark .text-stone-800 { color: #f5e6ab !important; }
+        .gatsby-rsvp-dark span.text-2xl { display: none !important; }
         .gatsby-rsvp-dark .text-stone-700 { color: #e8d9a8 !important; }
         .gatsby-rsvp-dark .text-stone-600 { color: #c9b896 !important; }
         .gatsby-rsvp-dark .text-stone-500 { color: #b8a67c !important; }
