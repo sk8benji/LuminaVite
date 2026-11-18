@@ -31,6 +31,11 @@ export async function GET(req: NextRequest) {
       return {
         ...item,
         ...(dbMatch || {}),
+        // El estilo es identidad del template y lo define el codigo: el admin
+        // no tiene UI para cambiarlo y el guardado nunca lo escribe, asi que
+        // una fila creada con el default (BLUE_BUTTERFLY) pisaria el correcto
+        // y la vista previa del admin mostraria otro template (paso con Gybsy).
+        estiloPlantilla: item.estiloPlantilla,
       };
     });
 
@@ -65,6 +70,9 @@ export async function POST(req: NextRequest) {
         update: {
           nombre: updates.nombre,
           categoria: updates.categoria as any,
+          estiloPlantilla:
+            (updates.estiloPlantilla as any) ||
+            (INITIAL_MASTER_TEMPLATES.find((t) => t.slug === slug)?.estiloPlantilla as any),
           titulo: updates.titulo,
           subtitulo: updates.subtitulo,
           frasePersonalizada: updates.frasePersonalizada,
@@ -83,6 +91,9 @@ export async function POST(req: NextRequest) {
           slug,
           nombre: updates.nombre || slug,
           categoria: (updates.categoria as any) || "QUINCEANERA",
+          estiloPlantilla:
+            (updates.estiloPlantilla as any) ||
+            (INITIAL_MASTER_TEMPLATES.find((t) => t.slug === slug)?.estiloPlantilla as any),
           titulo: updates.titulo || "Título Base",
           subtitulo: updates.subtitulo,
           frasePersonalizada: updates.frasePersonalizada,
