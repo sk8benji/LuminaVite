@@ -126,6 +126,17 @@ export default function Gatsby20sTemplate({
     return idioma === "EN" ? `AT ${hora}` : `A LAS ${hora}`;
   };
 
+  // Hora propia de la recepcion (configPlantilla.horaRecepcion, seccion 6 del
+  // editor); vacia = la recepcion comparte la hora de la placa (ceremonia).
+  const horaRecepcionTexto = (fallback: string) => {
+    const raw = (config as any)?.horaRecepcion;
+    if (raw && String(raw).trim() !== "") {
+      const hora = String(raw).replace(/^(A LAS|AT)\s+/i, "").trim();
+      return idioma === "EN" ? `AT ${hora}` : `A LAS ${hora}`;
+    }
+    return horaPlacaTexto(fallback);
+  };
+
   // Fecha del ticket derivada de la fecha del evento (zona Los Ángeles)
   const fechaTicket = (() => {
     try {
@@ -1415,7 +1426,7 @@ export default function Gatsby20sTemplate({
                       }}
                     >
                       <p className="font-bold tracking-widest text-[#d4af37]">
-                        {horaPlacaTexto("7:00 PM")}
+                        {horaRecepcionTexto("7:00 PM")}
                       </p>
                       <p className="font-semibold tracking-wider mt-0.5">
                         {data.recepcionNombre || config.venueNombre || "THE GRAND GATSBY HALL"}
