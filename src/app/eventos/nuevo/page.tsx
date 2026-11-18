@@ -663,7 +663,8 @@ function NuevoEventoContent() {
         ? `${daysEn[dayOfWeek]}, ${monthsEn[month]} ${day}, ${year}`
         : `${daysEs[dayOfWeek]} ${day} DE ${monthsEs[month]}, ${year}`,
       mes: isEn ? monthsEn[month] : monthsEs[month],
-      horaPlaca: isEn ? `AT ${timeStr}` : `A LAS ${timeStr}`,
+      horaPlaca: `A LAS ${timeStr}`,
+      horaPlacaEn: `AT ${timeStr}`,
       diaSemana: isEn ? daysEn[dayOfWeek] : daysEs[dayOfWeek],
       diaNumero: String(day),
       anio: String(year),
@@ -826,6 +827,7 @@ function NuevoEventoContent() {
       fechaTextoPersonalizada: formatted.formalText,
       fechaPlacaMes: formatted.mes,
       fechaPlacaHora: formatted.horaPlaca,
+      fechaPlacaHoraEn: formatted.horaPlacaEn,
       fechaLimiteRsvp: rsvpCalc.fechaLimiteIso,
       // Si el usuario escribió la frase a mano en la sección RSVP, no sobreescribirla.
       ...(rsvpFraseManual ? {} : { rsvpFechaLimite: rsvpCalc.fraseEs }),
@@ -841,6 +843,7 @@ function NuevoEventoContent() {
       fechaTextoPersonalizada: formatted.formalText,
       fechaPlacaMes: formatted.mes,
       fechaPlacaHora: formatted.horaPlaca,
+      fechaPlacaHoraEn: formatted.horaPlacaEn,
     }));
   };
 
@@ -856,6 +859,7 @@ function NuevoEventoContent() {
       fechaTextoPersonalizada: formatted.formalText,
       fechaPlacaMes: formatted.mes,
       fechaPlacaHora: formatted.horaPlaca,
+      fechaPlacaHoraEn: formatted.horaPlacaEn,
       subtitulo: newLang === "en" ? (prev.subtitulo === "Mis Quince Años" ? "My Quinceañera" : prev.subtitulo) : prev.subtitulo,
       countdownEncabezado: newLang === "en" ? "Counting down..." : "Faltan sólo...",
       // Si el usuario escribió la frase a mano en la sección RSVP, no sobreescribirla.
@@ -967,6 +971,7 @@ function NuevoEventoContent() {
             fechaTextoPersonalizada: formatted.formalText || preset.fechaTextoPersonalizada || prev.fechaTextoPersonalizada,
             fechaPlacaMes: formatted.mes || preset.fechaPlacaMes || prev.fechaPlacaMes,
             fechaPlacaHora: formatted.horaPlaca || preset.fechaPlacaHora || prev.fechaPlacaHora,
+            fechaPlacaHoraEn: formatted.horaPlacaEn || preset.fechaPlacaHoraEn || prev.fechaPlacaHoraEn,
             fotoPortadaUrl: esFotoDePreset(prev.fotoPortadaUrl) ? (preset.fotoPortadaUrl || prev.fotoPortadaUrl) : prev.fotoPortadaUrl,
             fotoInfanciaUrl: esFotoDePreset(prev.fotoInfanciaUrl) ? (preset.fotoInfanciaUrl || prev.fotoInfanciaUrl) : prev.fotoInfanciaUrl,
             fotoActualUrl: esFotoDePreset(prev.fotoActualUrl) ? (preset.fotoActualUrl || prev.fotoActualUrl) : prev.fotoActualUrl,
@@ -985,6 +990,7 @@ function NuevoEventoContent() {
           fechaTextoPersonalizada: formatted.formalText || prev.fechaTextoPersonalizada,
           fechaPlacaMes: formatted.mes || prev.fechaPlacaMes,
           fechaPlacaHora: formatted.horaPlaca || prev.fechaPlacaHora,
+          fechaPlacaHoraEn: formatted.horaPlacaEn || prev.fechaPlacaHoraEn,
           fotoPortadaUrl: esFotoDePreset(prev.fotoPortadaUrl) ? (preset.fotoPortadaUrl || prev.fotoPortadaUrl) : prev.fotoPortadaUrl,
           // Hallazgo 12: mismo criterio que la portada para las demás fotos —
           // foto de plantilla/stock se reemplaza por la del preset nuevo; subida S3 del usuario se conserva
@@ -1016,7 +1022,9 @@ function NuevoEventoContent() {
       | "fotoCierreUrl"
       | "fotoZapato1Url"
       | "fotoZapato2Url"
-      | "ogImagenUrl",
+      | "ogImagenUrl"
+      | "corteFotoDamas"
+      | "corteFotoChambelanes",
     mediaType: "images" | "audio" = "images"
   ) => {
     const file = e.target.files?.[0];
@@ -1114,7 +1122,17 @@ function NuevoEventoContent() {
       }
 
       // 3. Guardar URL final del archivo en el estado
-      updateField(field, data.fileUrl);
+      if (field === "corteFotoDamas" || field === "corteFotoChambelanes") {
+        // Fotos de la corte (Gatsby 20's): viven dentro de corteHonorJson,
+        // no como campo de nivel superior (sin columna nueva en la DB).
+        const key = field === "corteFotoDamas" ? "fotoDamasUrl" : "fotoChambelanesUrl";
+        setFormData((prev: any) => ({
+          ...prev,
+          corteHonorJson: { ...(prev.corteHonorJson || {}), [key]: data.fileUrl },
+        }));
+      } else {
+        updateField(field, data.fileUrl);
+      }
       // Si es audio y aún no hay título, usar el nombre del archivo (sin extensión)
       if (field === "musicaUrl") {
         setFormData((prev: any) => {
@@ -1494,6 +1512,7 @@ function NuevoEventoContent() {
               uploadEstado={uploadEstado}
               formatFormalDate={formatFormalDate}
               computeRsvpPhrases={computeRsvpPhrases}
+              onDateChange={handleDateChange}
               onOpenTemplatePicker={openTemplateGrid}
             />
           ) : (
