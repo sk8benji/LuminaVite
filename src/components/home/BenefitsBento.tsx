@@ -144,7 +144,7 @@ export function BenefitsBento({ lang = "en" }: BenefitsBentoProps) {
                 {isEs ? "Capacidad Blindada" : "Capacity Control"}
               </span>
               <h3 className="font-['Playfair_Display',serif] text-2xl font-bold leading-tight m-0 text-neutral-900">
-                {isEs ? "Control de pases familiares" : "Strict Family Pass Control"}
+                {isEs ? "Control de pases familiares" : "Family Pass Control"}
               </h3>
               <div className="text-sm text-neutral-600 leading-relaxed font-['Montserrat']">
                 {isEs

@@ -54,14 +54,14 @@ export function ValueFeatures({ lang = "en" }: ValueFeaturesProps) {
       src: "/assets/home-real/quince-telefono-aerea.jpg",
       alt: isEs ? "Control de pases familiares" : "Family pass allocation",
       tag: isEs ? "PASES" : "FAMILY PASS",
-      title: isEs ? "Control de Mesa" : "Strict Allocation",
+      title: isEs ? "Control de Pases" : "Family Pass Control",
       subtitle: isEs ? "— Conteo exacto por familia sin invitados extra." : "— Allotted guest counts without surprise plus-ones.",
     },
     {
       src: "/assets/home-real/blue-butterfly-real.webp",
       alt: isEs ? "RSVP instantáneo por SMS" : "Instant SMS RSVP",
       tag: isEs ? "SMS REAL" : "INSTANT SMS",
-      title: isEs ? "Tasa del 98%" : "98% Open Rate",
+      title: isEs ? "RSVP por SMS" : "SMS RSVP",
       subtitle: isEs ? "— Sin descargar aplicaciones ni recordar claves." : "— Instant 1-tap confirmation with no apps or logins.",
     },
     {

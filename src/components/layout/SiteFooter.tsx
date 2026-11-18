@@ -206,7 +206,7 @@ export default function SiteFooter({ lang = "en" }: SiteFooterProps) {
                   href="/rsvp-tracking"
                   className="hover:text-white transition-colors"
                 >
-                  {isEs ? "Control Estricto de Pases" : "Strict Family Pass Control"}
+                  {isEs ? "Control de Pases Familiares" : "Family Pass Control"}
                 </Link>
               </li>
               <li>
@@ -214,7 +214,7 @@ export default function SiteFooter({ lang = "en" }: SiteFooterProps) {
                   href="/text-message-invitations"
                   className="hover:text-white transition-colors"
                 >
-                  {isEs ? "Confirmación por SMS 1-Click" : "Instant SMS RSVPs (98% Open)"}
+                  {isEs ? "Confirmación por SMS 1-Click" : "Instant SMS RSVPs"}
                 </Link>
               </li>
               <li>

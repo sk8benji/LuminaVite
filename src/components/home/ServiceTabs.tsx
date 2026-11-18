@@ -114,7 +114,7 @@ export function ServiceTabs({ lang = "en" }: ServiceTabsProps) {
                         <div className="flex justify-between items-center w-full gap-4 text-xs">
                           <div>
                             <div className="font-bold text-[#090B10]">Familia Morales</div>
-                            <div className="text-[10px] text-neutral-500">4 pases asignados · Mesa #7</div>
+                            <div className="text-[10px] text-neutral-500">4 pases asignados</div>
                           </div>
                           <span className="px-2.5 py-1 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold text-[10px]">
                             {isEs ? "✓ 4 Confirmados" : "✓ 4 Attending"}
@@ -155,7 +155,7 @@ export function ServiceTabs({ lang = "en" }: ServiceTabsProps) {
                         <span className="text-[#090B10]/50">01 //</span> 03 · {isEs ? "Control de Aforo" : "Capacity"}
                       </div>
                       <h3 className="m-0 font-['Playfair_Display',serif] text-[1.875rem] leading-[2.375rem] font-bold tracking-[-0.02rem] max-[767px]:text-2xl text-[#090B10]">
-                        {isEs ? "Control Estricto de Pases Familiares" : "Strict Family Pass Allocation"}
+                        {isEs ? "Control de Pases Familiares" : "Family Pass Allocation"}
                       </h3>
                     </div>
                     <p className="m-0 text-base leading-relaxed font-normal font-['Montserrat',sans-serif] text-[#090B10]">
@@ -207,18 +207,24 @@ export function ServiceTabs({ lang = "en" }: ServiceTabsProps) {
                     <div className="relative z-[5] rounded-xl bg-[#FFFFFF] border border-neutral-200 w-full text-[#090B10] p-6 shadow-sm flex flex-col gap-4 font-['Montserrat']">
                       <div className="flex items-center justify-between border-b border-neutral-100 pb-3">
                         <span className="text-xs font-bold text-[#720e26] uppercase tracking-wider">SMS Directo</span>
-                        <span className="text-[10px] text-neutral-400">98.4% Open Rate</span>
+                        <span className="text-[10px] text-neutral-400">{isEs ? "Confirmación automática" : "Automatic confirmation"}</span>
                       </div>
                       <div className="bg-[#FAF8F5] rounded-xl border border-neutral-200 p-4 text-xs leading-relaxed text-[#090B10]">
                         <p className="font-semibold text-neutral-800 mb-1">Click &amp; Love Notification</p>
                         <p>
                           {isEs
-                            ? "¡Hola Familia Ramos! Confirmamos 3 pases para la Boda. Mesa #7 asignada. Tu pase y confirmación directa:"
-                            : "Hi Ramos Family! 3 passes confirmed for the Wedding. Table #7 reserved. Your pass & direct link:"}
+                            ? "Hola Familia Ramos, confirmaste 3 pases para la Boda."
+                            : "Hi Ramos Family, you confirmed 3 passes for the Wedding."}
                         </p>
-                        <div className="mt-3 inline-block px-3 py-1.5 rounded-lg bg-[#720e26] text-white font-bold text-[11px]">
-                          {isEs ? "Confirmar Asistencia" : "Confirm Attendance"}
+                        <div className="flex flex-wrap gap-1.5">
+                          <span className="inline-block px-2 py-1 rounded-md bg-emerald-50 border border-emerald-200 text-emerald-800 text-[10px] font-bold">
+                            {isEs ? "Misa ↗" : "Ceremony ↗"}
+                          </span>
+                          <span className="inline-block px-2 py-1 rounded-md bg-emerald-50 border border-emerald-200 text-emerald-800 text-[10px] font-bold">
+                            {isEs ? "Salón ↗" : "Reception ↗"}
+                          </span>
                         </div>
+                        <p>{isEs ? "Te esperamos!" : "See you there!"}</p>
                       </div>
                     </div>
                   </div>
@@ -236,14 +242,14 @@ export function ServiceTabs({ lang = "en" }: ServiceTabsProps) {
                     <p className="m-0 text-base leading-relaxed font-normal font-['Montserrat',sans-serif] text-[#090B10]">
                       {isEs ? (
                         <>
-                          <strong className="text-[#090B10] font-semibold">Tasa de apertura superior al 98%:</strong>{" "}
+                          <strong className="text-[#090B10] font-semibold">Entrega inmediata:</strong>{" "}
                           <span className="text-[#090B10]/70">
                             los mensajes de texto SMS se leen al instante, a diferencia de los correos que terminan en la carpeta de spam.
                           </span>
                         </>
                       ) : (
                         <>
-                          <strong className="text-[#090B10] font-semibold">98%+ open rate:</strong>{" "}
+                          <strong className="text-[#090B10] font-semibold">Instant delivery:</strong>{" "}
                           <span className="text-[#090B10]/70">
                             native SMS text messages are seen immediately, unlike emails that get lost in spam folders.
                           </span>
@@ -253,16 +259,16 @@ export function ServiceTabs({ lang = "en" }: ServiceTabsProps) {
                     <p className="m-0 text-base leading-relaxed font-normal font-['Montserrat',sans-serif] text-[#090B10]">
                       {isEs ? (
                         <>
-                          <strong className="text-[#090B10] font-semibold">Recordatorio el día del evento:</strong>{" "}
+                          <strong className="text-[#090B10] font-semibold">Confirmación con los enlaces:</strong>{" "}
                           <span className="text-[#090B10]/70">
-                            tus invitados reciben un aviso automático con el número de mesa y vestimenta para que nadie olvide asistir.
+                            tus invitados reciben su confirmación por SMS con los enlaces a la misa y al salón, sin descargar nada.
                           </span>
                         </>
                       ) : (
                         <>
-                          <strong className="text-[#090B10] font-semibold">Day-of automated reminder:</strong>{" "}
+                          <strong className="text-[#090B10] font-semibold">Confirmation with the links:</strong>{" "}
                           <span className="text-[#090B10]/70">
-                            guests receive their table assignment and dress code reminders on their phones automatically.
+                            your guests get their confirmation by SMS with the links to the ceremony and the reception, nothing to download.
                           </span>
                         </>
                       )}
