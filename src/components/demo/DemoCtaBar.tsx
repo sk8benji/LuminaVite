@@ -30,6 +30,8 @@ export default function DemoCtaBar({
           href={PHONE_TEL}
           event="click_llamar"
           eventParams={{ origen: "barra_demo" }}
+          copyText="+1 (818) 918-2519"
+          copiedLabel={es ? "✓ Número copiado" : "✓ Number copied"}
           className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-[#FFD166] text-[#7A002A] text-[11px] font-extrabold uppercase tracking-wide shadow-sm shrink-0"
         >
           <span aria-hidden="true">📞</span>
