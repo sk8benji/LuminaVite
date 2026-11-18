@@ -131,6 +131,32 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
     },
     {
+      url: `${baseUrl}/save-the-date`,
+      lastModified,
+      changeFrequency: "weekly",
+      priority: 0.9,
+      alternates: {
+        languages: {
+          en: `${baseUrl}/save-the-date`,
+          es: `${baseUrl}/es/save-the-date`,
+          "x-default": `${baseUrl}/save-the-date`,
+        },
+      },
+    },
+    {
+      url: `${baseUrl}/es/save-the-date`,
+      lastModified,
+      changeFrequency: "weekly",
+      priority: 0.9,
+      alternates: {
+        languages: {
+          en: `${baseUrl}/save-the-date`,
+          es: `${baseUrl}/es/save-the-date`,
+          "x-default": `${baseUrl}/save-the-date`,
+        },
+      },
+    },
+    {
       url: `${baseUrl}/wedding-invitations-los-angeles`,
       lastModified,
       changeFrequency: "weekly",
