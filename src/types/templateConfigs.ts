@@ -110,6 +110,8 @@ export interface Gatsby20sConfig {
   subtituloEn?: string;
   fraseApertura?: string;
   fraseAperturaEn?: string;
+  /** Hora propia de la recepcion ("6:19 PM"); vacia = usa la hora de la placa (seccion Fecha y Hora). */
+  horaRecepcion?: string;
   ticketFechaTexto?: string;
   venueNombre?: string;
   venueDireccion?: string;

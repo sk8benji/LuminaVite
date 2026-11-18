@@ -34,6 +34,29 @@ import { SECCIONES_QUINCE_ROSADO, SeccionId, isSectionEnabledInEvent, seccionesS
 import { TEMPLATES, TemplateId } from "@/lib/templates";
 import MiniaturaConMeta from "@/components/admin/MiniaturaConMeta";
 
+// Hora 12h ("6:19 PM") <-> 24h ("18:19") para el input type="time" de la
+// hora de recepcion (se guarda en 12h, como la hora de la placa).
+function hora12To24(h12: string): string {
+  const m = h12.match(/(\d{1,2}):(\d{2})\s*([AP]M)?/i);
+  if (!m) return "";
+  let h = parseInt(m[1], 10);
+  const min = m[2];
+  const ap = (m[3] || "PM").toUpperCase();
+  if (ap === "PM" && h < 12) h += 12;
+  if (ap === "AM" && h === 12) h = 0;
+  return `${String(h).padStart(2, "0")}:${min}`;
+}
+function hora24To12(h24: string): string {
+  const m = h24.match(/(\d{1,2}):(\d{2})/);
+  if (!m) return "";
+  let h = parseInt(m[1], 10);
+  const min = m[2];
+  const ap = h >= 12 ? "PM" : "AM";
+  if (h === 0) h = 12;
+  else if (h > 12) h -= 12;
+  return `${h}:${min} ${ap}`;
+}
+
 interface TemplateSectionBuilderProps {
   formData: InvitationData;
   updateField: (field: keyof InvitationData, value: any) => void;
@@ -1515,6 +1538,29 @@ export default function TemplateSectionBuilder({
                               className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm text-gray-900"
                             />
                           </div>
+                          {((formData as any).estiloPlantilla === "GATSBY_20S" ||
+                            (formData as any).estiloPlantilla === "GYBSY_20S") && (
+                            <div>
+                              <label className="block text-[11px] font-semibold text-gray-600 mb-1">
+                                Hora de la recepción
+                              </label>
+                              <input
+                                type="time"
+                                value={hora12To24(((formData.configPlantilla as any)?.horaRecepcion as string) || "")}
+                                onChange={(e) => {
+                                  const cp = { ...(formData.configPlantilla || {}) } as any;
+                                  const v12 = hora24To12(e.target.value);
+                                  if (v12) cp.horaRecepcion = v12;
+                                  else delete cp.horaRecepcion;
+                                  updateField("configPlantilla", cp);
+                                }}
+                                className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm text-gray-900"
+                              />
+                              <p className="text-[10px] text-gray-500 mt-1">
+                                Si la dejas vacía, la recepción usa la hora de la sección Fecha y Hora.
+                              </p>
+                            </div>
+                          )}
                           <div className="sm:col-span-2">
                             <label className="block text-[11px] font-semibold text-gray-600 mb-1">
                               Enlace de Google Maps
