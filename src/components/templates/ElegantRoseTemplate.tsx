@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import { getTemplate } from "@/lib/templates";
 import { getMapDirectionsUrl } from "@/lib/maps";
-import { ELEGANT_ROSE_ASSETS } from "@/lib/templates/elegantRoseAssets";
+import { ELEGANT_ROSE_ASSETS, ELEGANT_ROSE_HITOS_DEFAULTS } from "@/lib/templates/elegantRoseAssets";
 import EnvelopeIntro from "../invitation/EnvelopeIntro";
 import { InvitationData } from "../invitation/InvitationMobileView";
 import DynamicRsvpForm from "../invitation/DynamicRsvpForm";
@@ -164,48 +164,63 @@ export default function ElegantRoseTemplate({
 
   const heroPhotoUrl = data.fotoPortadaUrl || ELEGANT_ROSE_ASSETS.heroPhoto;
 
-  const hitos = [
-    {
-      foto: ELEGANT_ROSE_ASSETS.growingBaby,
-      fecha: "2011",
-      titulo: isEn ? "Baby Girl" : "Primeros Pasos",
-      texto: isEn
-        ? "Every story has a beginning, and mine started with the love of family, the comfort of home, and countless little moments that became treasured memories."
-        : "Toda historia tiene un comienzo, y la mía comenzó rodeada del amor de mi familia, la calidez de mi hogar y un sinfín de pequeños recuerdos.",
-    },
-    {
-      foto: ELEGANT_ROSE_ASSETS.growingChild,
-      fecha: "2016",
-      titulo: isEn ? "First Steps" : "Nuevas Aventuras",
-      texto: isEn
-        ? "With each new adventure came exciting firsts, growing confidence, and friendships that would become an important part of my journey."
-        : "Cada nueva aventura trajo consigo emocionantes primeras experiencias, una confianza creciente y amistades que se convirtieron en parte de mi camino.",
-    },
-    {
-      foto: ELEGANT_ROSE_ASSETS.growingPreteen,
-      fecha: "2019",
-      titulo: isEn ? "Special Bonds" : "Momentos Inolvidables",
-      texto: isEn
-        ? "From laughter-filled days to unforgettable memories, these special people helped shape the person I am today."
-        : "Entre días llenos de risas y recuerdos inolvidables, estas personas tan especiales me ayudaron a convertirme en la persona que soy hoy.",
-    },
-    {
-      foto: ELEGANT_ROSE_ASSETS.growingCompanion,
-      fecha: "2022",
-      titulo: isEn ? "Loyal Companion" : "Compañero Fiel",
-      texto: isEn
-        ? "Along the way, I discovered the things that inspire me, bring me joy, and help me become the best version of myself."
-        : "En el camino, descubrí las cosas que me inspiran, me dan alegría y me motivan a ser la mejor versión de mí misma.",
-    },
-    {
-      foto: heroPhotoUrl,
-      fecha: "2026",
-      titulo: isEn ? "Sweet Fifteen" : "Mis Quince Años",
-      texto: isEn
-        ? "And through every chapter, celebrating fifteen amazing years with all my loved ones—the best is yet to come."
-        : "Celebrando quince años de recuerdos, sueños y momentos inolvidables… lo mejor está por venir.",
-    },
-  ];
+  // "Growing Up": hitos editables desde el admin (Sección 15: Historia).
+  // Sin hitos guardados se usan los 5 por defecto del template; cada hito
+  // guardado pisa solo los campos que trae (foto, fecha, título, texto).
+  const hitosGuardados = ((data.configPlantilla as any)?.hitosVida as
+    | Array<{
+        anio: string;
+        titulo: string;
+        tituloEn?: string;
+        texto: string;
+        textoEn?: string;
+        fotoUrl?: string;
+      }>
+    | undefined);
+  const hitosBase =
+    hitosGuardados && hitosGuardados.length > 0 ? hitosGuardados : null;
+  const hitos = (hitosBase
+    ? hitosBase.map((c, i) => {
+        const d = ELEGANT_ROSE_HITOS_DEFAULTS[i];
+        return {
+          foto: c.fotoUrl || d?.foto || heroPhotoUrl,
+          fecha: c.anio || d?.fecha || "",
+          titulo: isEn
+            ? c.tituloEn || c.titulo || d?.tituloEn || ""
+            : c.titulo || d?.tituloEs || "",
+          texto: isEn
+            ? c.textoEn || c.texto || d?.textoEn || ""
+            : c.texto || d?.textoEs || "",
+        };
+      })
+    : ELEGANT_ROSE_HITOS_DEFAULTS.map((d) => ({
+        foto: d.foto || heroPhotoUrl,
+        fecha: d.fecha,
+        titulo: isEn ? d.tituloEn : d.tituloEs,
+        texto: isEn ? d.textoEn : d.textoEs,
+      })));
+
+  // Foto de fondo del sobre cerrado (editable en Portada). Vacío = foto principal.
+  const fotoFondoSobre = (data.configPlantilla as any)?.fotoFondoSobre as
+    | string
+    | undefined;
+
+  // Frase de cierre de "Growing Up" (editable en Historia). "" explícito = oculta.
+  const cierreGrowingUp =
+    isEn
+      ? ((data.configPlantilla as any)?.growingUpCierreEn ??
+        "Celebrating Fifteen Amazing Years — The Best Is Yet to Come.")
+      : ((data.configPlantilla as any)?.growingUpCierre ??
+        "Celebrando Quince Años Inolvidables — Lo Mejor Está Por Venir.");
+
+  // Dedicatoria (editable en Sección 3): mismos campos que Quince Rosado.
+  const dedicatoriaMensaje = isEn
+    ? data.frasePersonalizadaEn || data.frasePersonalizada || ""
+    : data.frasePersonalizada || "";
+  const dedicatoriaHayContenido =
+    dedicatoriaMensaje !== "" ||
+    !!data.fotoInfanciaUrl ||
+    !!data.fotoActualUrl;
 
   const corteHonor = data.corteHonorJson || {
     padrinos: ["Miguel Herrera", "Daniela Herrera"],
@@ -278,7 +293,7 @@ export default function ElegantRoseTemplate({
           tipoEvento={data.tipoEvento}
           fechaTexto={data.fechaTextoPersonalizada || (isEn ? "SUNDAY, JULY 18 • 4:00 PM" : "DOMINGO 18 DE JULIO • 4:00 PM")}
           template={template}
-          coverPhotoUrl={heroPhotoUrl}
+          coverPhotoUrl={fotoFondoSobre || heroPhotoUrl}
           idiomaDefault={data.idiomaDefault || "bilingual"}
           reproducirMusicaAlAbrir={data.reproducirMusicaAlAbrir}
           onOpen={handleEnvelopeOpen}
@@ -514,8 +529,74 @@ export default function ElegantRoseTemplate({
         )}
 
         {/* ══════════════════════════════════════════════════════════
+            DEDICATORIA: MENSAJE + 2 POLAROIDS (EDITABLE EN SECCIÓN 3)
+        ══════════════════════════════════════════════════════════ */}
+        {isSectionActive("dedicatoria") && dedicatoriaHayContenido && (
+        <section
+          className="relative w-full bg-cover bg-center overflow-hidden"
+          style={{ backgroundImage: `url(${ELEGANT_ROSE_ASSETS.rosesBg})` }}
+        >
+          <div className="absolute inset-0 bg-[#1C1016]/60" />
+          <WavyColumn className="py-12">
+            <p className="font-['Cinzel'] text-[11px] tracking-[0.35em] uppercase text-[#D4AF37] font-bold select-none">
+              {isEn ? "Dedication" : "Dedicatoria"}
+            </p>
+            <h3 className="font-['Alex_Brush'] text-5xl sm:text-6xl text-rose-100 drop-shadow-md select-none leading-none mt-1">
+              {isEn ? "With Love" : "Con Amor"}
+            </h3>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={ELEGANT_ROSE_ASSETS.crown}
+              alt="Corona"
+              className="w-9 h-auto my-2.5 opacity-95 drop-shadow-md"
+            />
+            {dedicatoriaMensaje !== "" && (
+              <p className="font-['Cormorant_Garamond',serif] italic text-lg sm:text-xl text-white font-medium leading-relaxed mt-2 px-2 drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
+                {dedicatoriaMensaje}
+              </p>
+            )}
+            {(data.fotoInfanciaUrl || data.fotoActualUrl) && (
+              <div className="flex justify-center gap-4 w-full mt-8">
+                {data.fotoInfanciaUrl && (
+                  <div className="w-[44%] max-w-[170px] text-center">
+                    <div className="relative w-full aspect-[3/4] overflow-hidden rounded-xl border-2 border-[#D4AF37]/60 shadow-xl">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={data.fotoInfanciaUrl}
+                        alt={isEn ? "As a little girl" : "De niña"}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <p className="font-['Cormorant_Garamond',serif] italic text-sm text-rose-100 mt-2 drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
+                      {isEn ? "As a little girl" : "De niña"}
+                    </p>
+                  </div>
+                )}
+                {data.fotoActualUrl && (
+                  <div className="w-[44%] max-w-[170px] text-center">
+                    <div className="relative w-full aspect-[3/4] overflow-hidden rounded-xl border-2 border-[#D4AF37]/60 shadow-xl">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={data.fotoActualUrl}
+                        alt={isEn ? "Today" : "Hoy"}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <p className="font-['Cormorant_Garamond',serif] italic text-sm text-rose-100 mt-2 drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
+                      {isEn ? "Today" : "Hoy"}
+                    </p>
+                  </div>
+                )}
+              </div>
+            )}
+          </WavyColumn>
+        </section>
+        )}
+
+        {/* ══════════════════════════════════════════════════════════
             3. GROWING UP: CASTILLO & TIRAS DE PELÍCULA NEGATIVAS
         ══════════════════════════════════════════════════════════ */}
+        {isSectionActive("historia") && (
         <section
           id="growing-up"
           className="relative w-full bg-cover bg-top overflow-hidden"
@@ -580,7 +661,7 @@ export default function ElegantRoseTemplate({
 
                   {/* Fecha elegante en Bodoni Moda itálica */}
                   <p className="font-['Bodoni_Moda',serif] italic text-2xl sm:text-3xl text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)] mt-3">
-                    {hito.fecha === "2011" ? "10-8-2012" : hito.fecha}
+                    {hito.fecha}
                   </p>
 
                   {/* Descripción altamente legible */}
@@ -592,15 +673,16 @@ export default function ElegantRoseTemplate({
             </div>
 
             {/* Frase Cierre Growing Up */}
-            <div className="mt-10 border-t border-white/30 pt-4 w-full">
-              <p className="font-['Cinzel'] text-xs sm:text-[13px] tracking-[0.2em] uppercase text-rose-100 font-bold leading-relaxed drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
-                {isEn
-                  ? "Celebrating Fifteen Amazing Years — The Best Is Yet to Come."
-                  : "Celebrando Quince Años Inolvidables — Lo Mejor Está Por Venir."}
-              </p>
-            </div>
+            {cierreGrowingUp !== "" && (
+              <div className="mt-10 border-t border-white/30 pt-4 w-full">
+                <p className="font-['Cinzel'] text-xs sm:text-[13px] tracking-[0.2em] uppercase text-rose-100 font-bold leading-relaxed drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
+                  {cierreGrowingUp}
+                </p>
+              </div>
+            )}
           </WavyColumn>
         </section>
+        )}
 
         {/* ══════════════════════════════════════════════════════════
             4. THE COUNTDOWN CON FONDO DE ROSAS BLANCAS

@@ -85,12 +85,21 @@ export interface ElegantRoseConfig {
   padrinos?: string[];
   chambelan?: string;
   damas?: string[];
+  /** Hitos de "Growing Up" editados en el admin (Sección 15: Historia).
+      Sin hitos guardados se usan los 5 por defecto del template. */
   hitosVida?: Array<{
     anio: string;
     titulo: string;
+    tituloEn?: string;
     texto: string;
+    textoEn?: string;
     fotoUrl?: string;
   }>;
+  /** Foto de fondo del sobre cerrado. Vacío = la foto principal de portada. */
+  fotoFondoSobre?: string;
+  /** Frase de cierre de "Growing Up". Vacío = texto por defecto del template. */
+  growingUpCierre?: string;
+  growingUpCierreEn?: string;
 }
 
 export interface FairytaleChateauConfig {

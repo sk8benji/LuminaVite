@@ -32,6 +32,7 @@ import { extractCleanMapUrl } from "@/lib/mapsUrlCleaner";
 import { InvitationData } from "@/components/invitation/InvitationMobileView";
 import { SECCIONES_QUINCE_ROSADO, SeccionId, isSectionEnabledInEvent, seccionesSoportadas } from "@/config/templateSections";
 import { TEMPLATES, TemplateId } from "@/lib/templates";
+import { ELEGANT_ROSE_HITOS_DEFAULTS } from "@/lib/templates/elegantRoseAssets";
 import MiniaturaConMeta from "@/components/admin/MiniaturaConMeta";
 
 // Hora 12h ("6:19 PM") <-> 24h ("18:19") para el input type="time" de la
@@ -72,7 +73,9 @@ interface TemplateSectionBuilderProps {
       | "fotoZapato1Url"
       | "fotoZapato2Url"
       | "corteFotoDamas"
-      | "corteFotoChambelanes",
+      | "corteFotoChambelanes"
+      | "fotoFondoSobre"
+      | `hitoFoto_${number}`,
     mediaType?: "images" | "audio"
   ) => Promise<void>;
   uploadingS3: boolean;
@@ -272,6 +275,45 @@ export default function TemplateSectionBuilder({
   );
   const activeSectionDef =
     SECCIONES_QUINCE_ROSADO[activeSectionIndex] ?? SECCIONES_QUINCE_ROSADO[0];
+
+  // Historia / Growing Up (Elegant Rose): lista editable de hitos.
+  // Sin hitos guardados se muestran los 5 por defecto del template; la
+  // primera edición materializa la lista en configPlantilla.hitosVida.
+  const hitosGuardadosEditor = ((formData.configPlantilla as any)?.hitosVida as
+    | Array<{
+        anio: string;
+        titulo: string;
+        tituloEn?: string;
+        texto: string;
+        textoEn?: string;
+        fotoUrl?: string;
+      }>
+    | undefined);
+  const hitosEditor =
+    hitosGuardadosEditor && hitosGuardadosEditor.length > 0
+      ? hitosGuardadosEditor
+      : ELEGANT_ROSE_HITOS_DEFAULTS.map((d) => ({
+          anio: d.fecha,
+          titulo: d.tituloEs,
+          tituloEn: d.tituloEn,
+          texto: d.textoEs,
+          textoEn: d.textoEn,
+          fotoUrl: d.foto,
+        }));
+  const setHitosEditor = (
+    next: Array<{
+      anio: string;
+      titulo: string;
+      tituloEn?: string;
+      texto: string;
+      textoEn?: string;
+      fotoUrl?: string;
+    }>
+  ) => {
+    const cp = { ...((formData as any).configPlantilla || {}) };
+    cp.hitosVida = next;
+    updateField("configPlantilla", cp);
+  };
 
   // Auto-limpieza en carga de URLs de mapas si contienen código <iframe> residual
   useEffect(() => {
@@ -952,6 +994,67 @@ export default function TemplateSectionBuilder({
                           </div>
                         </div>
                       </div>
+
+                      {/* Foto de fondo del sobre cerrado — solo Elegant Rose */}
+                      {((formData as any).estiloPlantilla === "ELEGANT_ROSE") && (
+                      <div>
+                        <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
+                          Foto de fondo del sobre (cerrado)
+                        </label>
+                        <div className="flex flex-col sm:flex-row items-center gap-4 p-4 rounded-xl border border-dashed border-stone-200 bg-stone-50">
+                          {(formData.configPlantilla as any)?.fotoFondoSobre ? (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <MiniaturaConMeta url={(formData.configPlantilla as any).fotoFondoSobre} alt="Fondo del sobre" imgClassName="w-20 h-28 object-cover rounded-xl border-2 border-white shadow-md shrink-0" />
+                          ) : (
+                            <div className="w-20 h-28 rounded-xl bg-stone-100 flex items-center justify-center text-stone-400 shrink-0">
+                              <ImageIcon className="w-6 h-6" />
+                            </div>
+                          )}
+                          <div className="flex-1 text-center sm:text-left">
+                            <p className="text-xs font-semibold text-gray-800">
+                              Subir foto de fondo para el sobre cerrado
+                            </p>
+                            <p className="text-[11px] text-gray-500 mb-2">
+                              Es la foto que se ve detrás del sobre cerrado al abrir la invitación. Si queda vacía, el sobre usa la foto principal de portada.
+                            </p>
+                            <div className="flex flex-wrap items-center gap-2">
+                              <label className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#7A002A] text-white text-xs font-bold hover:bg-[#600021] transition cursor-pointer shadow-xs">
+                                {uploadingS3 && uploadingField === "fotoFondoSobre" ? (
+                                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                                ) : (
+                                  <Upload className="w-3.5 h-3.5" />
+                                )}
+                                <span>{uploadingS3 && uploadingField === "fotoFondoSobre" ? "Subiendo..." : "Cambiar Foto"}</span>
+                                <input
+                                  type="file"
+                                  accept="image/*"
+                                  onChange={(e) => handleFileUpload(e, "fotoFondoSobre")}
+                                  disabled={uploadingS3}
+                                  className="hidden"
+                                />
+                              </label>
+                              {uploadEstado?.field === "fotoFondoSobre" && uploadEstado.estado === "ok" && (
+                                <span className="text-[11px] font-bold text-emerald-700">✓ Foto subida</span>
+                              )}
+                              {uploadEstado?.field === "fotoFondoSobre" && uploadEstado.estado === "error" && (
+                                <span className="text-[11px] font-bold text-red-600">✗ {uploadEstado.mensaje || "Error al subir"}</span>
+                              )}
+                              <input
+                                type="text"
+                                value={(formData.configPlantilla as any)?.fotoFondoSobre || ""}
+                                onChange={(e) => {
+                                  const cp = { ...((formData as any).configPlantilla || {}) };
+                                  cp.fotoFondoSobre = e.target.value;
+                                  updateField("configPlantilla", cp);
+                                }}
+                                placeholder="O pega un enlace de imagen..."
+                                className="flex-1 min-w-[200px] px-3 py-1.5 rounded-lg border border-gray-200 text-xs text-gray-700"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      )}
                     </div>
                   )}
 
@@ -1179,7 +1282,8 @@ export default function TemplateSectionBuilder({
                         </div>
                       </div>
 
-                      {/* Mensaje de cierre (abajo de las polaroids) */}
+                      {/* Mensaje de cierre (abajo de las polaroids) — solo Quince Rosado */}
+                      {((formData as any).estiloPlantilla === "QUINCE_ROSADO") && (
                       <div className="pt-2">
                         <div className="flex items-center justify-between mb-1">
                           <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider">
@@ -1237,6 +1341,7 @@ export default function TemplateSectionBuilder({
                           </div>
                         </div>
                       </div>
+                      )}
                     </div>
                   )}
 
@@ -2913,6 +3018,238 @@ export default function TemplateSectionBuilder({
                             }`}
                           />
                         </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* ──────────────────────────────────────────────────────────
+                      SECCIÓN 15: HISTORIA / GROWING UP (SOLO ELEGANT ROSE)
+                  ────────────────────────────────────────────────────────── */}
+                  {sec.id === "historia" && (
+                    <div className="space-y-4">
+                      <p className="text-xs text-gray-500">
+                        Los marcos de película de "Growing Up": cambia la foto, la fecha, el título y el texto de cada hito en español e inglés. Sin hitos guardados se muestran los 5 originales del template.
+                      </p>
+                      {hitosEditor.length === 0 && (
+                        <p className="text-xs font-bold text-amber-700 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2">
+                          Sin hitos guardados: se muestran los 5 originales del template. Agrega uno para empezar a personalizar.
+                        </p>
+                      )}
+                      <div className="space-y-3">
+                        {hitosEditor.map((hito, idx) => {
+                          const fotoHito =
+                            hito.fotoUrl ||
+                            ELEGANT_ROSE_HITOS_DEFAULTS[idx]?.foto ||
+                            formData.fotoPortadaUrl ||
+                            "";
+                          const campoFoto: `hitoFoto_${number}` = `hitoFoto_${idx}`;
+                          return (
+                            <div key={idx} className="p-3.5 rounded-xl border border-stone-200 bg-stone-50 space-y-3">
+                              <div className="flex items-center justify-between">
+                                <span className="text-xs font-bold text-gray-700">Hito {idx + 1}</span>
+                                <button
+                                  type="button"
+                                  onClick={() => setHitosEditor(hitosEditor.filter((_, i) => i !== idx))}
+                                  className="text-[11px] font-bold text-red-600 hover:underline cursor-pointer"
+                                >
+                                  Eliminar
+                                </button>
+                              </div>
+                              <div className="flex items-center gap-3">
+                                {fotoHito ? (
+                                  // eslint-disable-next-line @next/next/no-img-element
+                                  <MiniaturaConMeta url={fotoHito} alt={`Hito ${idx + 1}`} imgClassName="w-16 h-16 object-cover rounded-lg border-2 border-white shadow-sm shrink-0" />
+                                ) : (
+                                  <div className="w-16 h-16 rounded-lg bg-stone-100 flex items-center justify-center text-stone-400 shrink-0">
+                                    <ImageIcon className="w-6 h-6" />
+                                  </div>
+                                )}
+                                <div className="flex-1 flex flex-wrap items-center gap-2">
+                                  <label className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#7A002A] text-white text-[11px] font-bold hover:bg-[#600021] transition cursor-pointer">
+                                    {uploadingS3 && uploadingField === campoFoto ? (
+                                      <Loader2 className="w-3 h-3 animate-spin" />
+                                    ) : (
+                                      <Upload className="w-3 h-3" />
+                                    )}
+                                    <span>{uploadingS3 && uploadingField === campoFoto ? "Subiendo..." : "Cambiar Foto"}</span>
+                                    <input
+                                      type="file"
+                                      accept="image/*"
+                                      onChange={(e) => handleFileUpload(e, campoFoto)}
+                                      disabled={uploadingS3}
+                                      className="hidden"
+                                    />
+                                  </label>
+                                  {uploadEstado?.field === campoFoto && uploadEstado.estado === "ok" && (
+                                    <span className="text-[11px] font-bold text-emerald-700">✓ Foto subida</span>
+                                  )}
+                                  {uploadEstado?.field === campoFoto && uploadEstado.estado === "error" && (
+                                    <span className="text-[11px] font-bold text-red-600">✗ {uploadEstado.mensaje || "Error al subir"}</span>
+                                  )}
+                                  <input
+                                    type="text"
+                                    value={hito.fotoUrl || ""}
+                                    onChange={(e) => {
+                                      const n = [...hitosEditor];
+                                      n[idx] = { ...n[idx], fotoUrl: e.target.value };
+                                      setHitosEditor(n);
+                                    }}
+                                    placeholder="O pega un enlace de imagen..."
+                                    className="flex-1 min-w-[180px] px-3 py-1.5 rounded-lg border border-gray-200 text-xs text-gray-700"
+                                  />
+                                </div>
+                              </div>
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <div>
+                                  <label className="block text-[11px] font-bold text-gray-600 uppercase tracking-wider mb-1">
+                                    Fecha
+                                  </label>
+                                  <input
+                                    type="text"
+                                    value={hito.anio || ""}
+                                    onChange={(e) => {
+                                      const n = [...hitosEditor];
+                                      n[idx] = { ...n[idx], anio: e.target.value };
+                                      setHitosEditor(n);
+                                    }}
+                                    placeholder={ELEGANT_ROSE_HITOS_DEFAULTS[idx]?.fecha || "2016"}
+                                    className="w-full px-3 py-2 rounded-lg border border-gray-200 text-xs text-gray-700"
+                                  />
+                                </div>
+                                <div>
+                                  <label className="block text-[11px] font-bold text-gray-600 uppercase tracking-wider mb-1">
+                                    Título (🇲🇽 ES)
+                                  </label>
+                                  <input
+                                    type="text"
+                                    value={hito.titulo || ""}
+                                    onChange={(e) => {
+                                      const n = [...hitosEditor];
+                                      n[idx] = { ...n[idx], titulo: e.target.value };
+                                      setHitosEditor(n);
+                                    }}
+                                    placeholder={ELEGANT_ROSE_HITOS_DEFAULTS[idx]?.tituloEs || ""}
+                                    className="w-full px-3 py-2 rounded-lg border border-gray-200 text-xs text-gray-700"
+                                  />
+                                </div>
+                                <div>
+                                  <label className="block text-[11px] font-bold text-gray-600 uppercase tracking-wider mb-1">
+                                    Título (🇺🇸 EN)
+                                  </label>
+                                  <input
+                                    type="text"
+                                    value={hito.tituloEn || ""}
+                                    onChange={(e) => {
+                                      const n = [...hitosEditor];
+                                      n[idx] = { ...n[idx], tituloEn: e.target.value };
+                                      setHitosEditor(n);
+                                    }}
+                                    placeholder={ELEGANT_ROSE_HITOS_DEFAULTS[idx]?.tituloEn || ""}
+                                    className="w-full px-3 py-2 rounded-lg border border-gray-200 text-xs text-gray-700"
+                                  />
+                                </div>
+                                <div className="sm:col-span-2">
+                                  <label className="block text-[11px] font-bold text-gray-600 uppercase tracking-wider mb-1">
+                                    Texto (🇲🇽 ES)
+                                  </label>
+                                  <textarea
+                                    rows={3}
+                                    value={hito.texto || ""}
+                                    onChange={(e) => {
+                                      const n = [...hitosEditor];
+                                      n[idx] = { ...n[idx], texto: e.target.value };
+                                      setHitosEditor(n);
+                                    }}
+                                    placeholder={ELEGANT_ROSE_HITOS_DEFAULTS[idx]?.textoEs || ""}
+                                    className="w-full px-3 py-2 rounded-lg border border-gray-200 text-xs text-gray-700"
+                                  />
+                                </div>
+                                <div className="sm:col-span-2">
+                                  <label className="block text-[11px] font-bold text-gray-600 uppercase tracking-wider mb-1">
+                                    Texto (🇺🇸 EN)
+                                  </label>
+                                  <textarea
+                                    rows={3}
+                                    value={hito.textoEn || ""}
+                                    onChange={(e) => {
+                                      const n = [...hitosEditor];
+                                      n[idx] = { ...n[idx], textoEn: e.target.value };
+                                      setHitosEditor(n);
+                                    }}
+                                    placeholder={ELEGANT_ROSE_HITOS_DEFAULTS[idx]?.textoEn || ""}
+                                    className="w-full px-3 py-2 rounded-lg border border-gray-200 text-xs text-gray-700"
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setHitosEditor([...hitosEditor, { anio: "", titulo: "", texto: "", fotoUrl: "" }])
+                          }
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#7A002A] text-white text-xs font-bold hover:bg-[#600021] transition cursor-pointer shadow-xs"
+                        >
+                          + Agregar hito
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const cp = { ...((formData as any).configPlantilla || {}) };
+                            delete cp.hitosVida;
+                            delete cp.growingUpCierre;
+                            delete cp.growingUpCierreEn;
+                            updateField("configPlantilla", cp);
+                          }}
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-gray-300 text-gray-700 text-xs font-bold hover:bg-gray-50 transition cursor-pointer"
+                        >
+                          Restablecer originales
+                        </button>
+                      </div>
+                      <div className="pt-2">
+                        <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+                          Frase de cierre (abajo de los hitos)
+                        </label>
+                        <p className="text-[11px] text-gray-500 mb-2">
+                          Si queda vacía, la frase no aparece. Los textos de abajo son los originales del template.
+                        </p>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-[11px] font-bold text-gray-600 uppercase tracking-wider mb-1">
+                              Frase de cierre (🇲🇽 ES)
+                            </label>
+                            <textarea
+                              rows={2}
+                              value={(formData.configPlantilla as any)?.growingUpCierre || ""}
+                              onChange={(e) => {
+                                const cp = { ...((formData as any).configPlantilla || {}) };
+                                cp.growingUpCierre = e.target.value;
+                                updateField("configPlantilla", cp);
+                              }}
+                              placeholder="Celebrando Quince Años Inolvidables — Lo Mejor Está Por Venir."
+                              className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-[11px] font-bold text-gray-600 uppercase tracking-wider mb-1">
+                              Frase de cierre (🇺🇸 EN)
+                            </label>
+                            <textarea
+                              rows={2}
+                              value={(formData.configPlantilla as any)?.growingUpCierreEn || ""}
+                              onChange={(e) => {
+                                const cp = { ...((formData as any).configPlantilla || {}) };
+                                cp.growingUpCierreEn = e.target.value;
+                                updateField("configPlantilla", cp);
+                              }}
+                              placeholder="Celebrating Fifteen Amazing Years — The Best Is Yet to Come."
+                              className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
+                            />
+                          </div>
+                        </div>
                       </div>
                     </div>
                   )}
