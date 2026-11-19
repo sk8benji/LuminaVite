@@ -22,7 +22,7 @@ import { track } from "@/lib/analytics";
 import HeroPhones from "@/components/home/HeroPhones";
 import InteractiveDemoModal from "@/components/home/InteractiveDemoModal";
 import SiteFooter from "@/components/layout/SiteFooter";
-import BenefitsBento from "@/components/home/BenefitsBento";
+import HowItWorks from "@/components/home/HowItWorks";
 import ServiceTabs from "@/components/home/ServiceTabs";
 import ValueFeatures from "@/components/home/ValueFeatures";
 import FaqSection from "@/components/home/FaqSection";
@@ -382,7 +382,7 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
       {/* ============================================================== */}
       {/* BENTO GRID DE BENEFICIOS (good-biz-bento-1)                    */}
       {/* ============================================================== */}
-      <BenefitsBento lang={lang} />
+      <HowItWorks lang={lang} />
 
       {/* ============================================================== */}
       {/* COMPARATIVA / TABS DE SERVICIOS (nextwell-tabs-1)              */}
