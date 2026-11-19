@@ -34,6 +34,7 @@ import { TEMPLATES, TemplateId } from "@/lib/templates";
 import { InvitationData } from "@/components/invitation/InvitationMobileView";
 import MobileSimulator from "@/components/preview/MobileSimulator";
 import { optimizarImagen } from "@/lib/optimize-image";
+import { ELEGANT_ROSE_HITOS_DEFAULTS } from "@/lib/templates/elegantRoseAssets";
 import TemplateConfigDispatcher from "@/components/events/forms/TemplateConfigDispatcher";
 import TemplateSectionBuilder from "@/components/admin/TemplateSectionBuilder";
 import EventSettingsConfig from "@/components/admin/EventSettingsConfig";
@@ -1024,7 +1025,9 @@ function NuevoEventoContent() {
       | "fotoZapato2Url"
       | "ogImagenUrl"
       | "corteFotoDamas"
-      | "corteFotoChambelanes",
+      | "corteFotoChambelanes"
+      | "fotoFondoSobre"
+      | `hitoFoto_${number}`,
     mediaType: "images" | "audio" = "images"
   ) => {
     const file = e.target.files?.[0];
@@ -1130,8 +1133,44 @@ function NuevoEventoContent() {
           ...prev,
           corteHonorJson: { ...(prev.corteHonorJson || {}), [key]: data.fileUrl },
         }));
+      } else if (field === "fotoFondoSobre") {
+        // Foto de fondo del sobre cerrado (Elegant Rose): vive en
+        // configPlantilla, sin columna nueva en la DB.
+        setFormData((prev: any) => ({
+          ...prev,
+          configPlantilla: { ...(prev.configPlantilla || {}), fotoFondoSobre: data.fileUrl },
+        }));
+      } else if (typeof field === "string" && field.startsWith("hitoFoto_")) {
+        // Foto de un hito de Growing Up (Elegant Rose): vive en
+        // configPlantilla.hitosVida[idx].fotoUrl. Si aún no hay hitos
+        // guardados, se materializan los 5 por defecto del template.
+        const idx = Number(field.slice("hitoFoto_".length));
+        setFormData((prev: any) => {
+          const guardados = (prev.configPlantilla?.hitosVida as any[]) || [];
+          const base =
+            guardados.length > 0
+              ? [...guardados]
+              : ELEGANT_ROSE_HITOS_DEFAULTS.map((d) => ({
+                  anio: d.fecha,
+                  titulo: d.tituloEs,
+                  tituloEn: d.tituloEn,
+                  texto: d.textoEs,
+                  textoEn: d.textoEn,
+                  fotoUrl: d.foto,
+                }));
+          while (base.length <= idx) {
+            base.push({ anio: "", titulo: "", texto: "", fotoUrl: "" });
+          }
+          base[idx] = { ...base[idx], fotoUrl: data.fileUrl };
+          return {
+            ...prev,
+            configPlantilla: { ...(prev.configPlantilla || {}), hitosVida: base },
+          };
+        });
       } else {
-        updateField(field, data.fileUrl);
+        // Aquí solo llegan los campos top-level (fotoFondoSobre e
+        // hitoFoto_N ya se atendieron arriba); el cast es seguro.
+        updateField(field as keyof InvitationData, data.fileUrl);
       }
       // Si es audio y aún no hay título, usar el nombre del archivo (sin extensión)
       if (field === "musicaUrl") {
