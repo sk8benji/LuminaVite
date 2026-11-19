@@ -449,7 +449,7 @@ export default function GypsyBurgundyTemplate({
                 </h1>
               </div>
 
-              {/* Contenedor del Sobre Negro Cerrado (e6.png) con Sello XV (sello-xv.png) */}
+              {/* Contenedor del Sobre Cerrado (el sello de corona ya viene en la imagen del sobre) */}
               <div
                 onClick={() => ejecutarApertura()}
                 className={`relative w-[92%] max-w-[340px] cursor-pointer transition-all ${
@@ -471,23 +471,6 @@ export default function GypsyBurgundyTemplate({
                     className="w-full h-auto object-contain block drop-shadow-[0_12px_28px_rgba(0,0,0,0.9)]"
                   />
 
-                  {/* Sello de Lacre XV Circular (sello-xv.png) centrado en la punta de la solapa triangular */}
-                  <div
-                    className="absolute left-1/2 top-[70%] -translate-x-1/2 -translate-y-1/2 pointer-events-auto z-20 cursor-pointer"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      ejecutarApertura();
-                    }}
-                  >
-                    <img
-                      src={GYPSY_BURGUNDY_ASSETS.selloXv}
-                      alt="Sello de lacre XV"
-                      className="w-[70px] h-[70px] sm:w-[80px] sm:h-[80px] object-contain transition-transform hover:scale-105 active:scale-95"
-                      style={{
-                        filter: "drop-shadow(0 6px 14px rgba(0, 0, 0, 0.85))",
-                      }}
-                    />
-                  </div>
                 </div>
               </div>
 
