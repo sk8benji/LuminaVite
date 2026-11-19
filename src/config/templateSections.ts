@@ -260,6 +260,18 @@ export const SECCIONES_POR_PLANTILLA: Record<string, SeccionId[]> = {
     'cuentaRegresiva',
     'musica',
   ],
+  GYPSY_BURGUNDY: [
+    'portada',
+    'medallonFecha',
+    'rsvp',
+    'ubicaciones',
+    'dressCode',
+    'mesaRegalos',
+    'itinerario',
+    'corteHonor',
+    'cuentaRegresiva',
+    'musica',
+  ],
 };
 
 export function seccionesSoportadas(estiloPlantilla?: string | null): SeccionId[] {

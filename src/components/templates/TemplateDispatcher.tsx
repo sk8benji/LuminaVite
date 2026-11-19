@@ -15,6 +15,7 @@ import CoralineThemedTemplate from "./CoralineThemedTemplate";
 import QuinceRosadoTemplate from "./QuinceRosadoTemplate";
 import QuinceRosadoSaveTheDate from "../save-the-date/QuinceRosadoSaveTheDate";
 import Gatsby20sTemplate from "./Gatsby20sTemplate";
+import GypsyBurgundyTemplate from "./GypsyBurgundyTemplate";
 
 export default function TemplateDispatcher({
   data,
@@ -33,6 +34,8 @@ export default function TemplateDispatcher({
     case "GATSBY_20S":
     case "GYBSY_20S":
       return <Gatsby20sTemplate data={data} skipIntro={skipIntro} />;
+    case "GYPSY_BURGUNDY":
+      return <GypsyBurgundyTemplate data={data} skipIntro={skipIntro} />;
     case "ELEGANT_ROSE":
       return <ElegantRoseTemplate data={data} skipIntro={skipIntro} />;
     case "FAIRYTALE_CHATEAU":

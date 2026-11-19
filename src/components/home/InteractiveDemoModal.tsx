@@ -63,6 +63,13 @@ const DEMO_ITEMS: DemoItem[] = [
     icon: "🎷",
   },
   {
+    slug: "gybsy-burgundy",
+    title: "Gypsy Burgundy",
+    shortTitle: "Gypsy Burgundy",
+    category: "XV Años & Gala",
+    icon: "🍷",
+  },
+  {
     slug: "isabella-xv",
     title: "Vintage Quinceanera",
     shortTitle: "Vintage Quinceanera",

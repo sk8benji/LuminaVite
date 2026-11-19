@@ -75,6 +75,15 @@ const DEMO_CARDS = [
     image: "/assets/templates/gatsby-20s/photo-chloe-portrait.webp",
   },
   {
+    slug: "gybsy-burgundy",
+    title: "Gypsy Burgundy",
+    name: "Chloe",
+    tag: "Quinceañera & Gala",
+    badge: "New",
+    desc: "Roaring Twenties Art Déco in burgundy: burgundy envelope with gold seal, vinyl record, Save the Date ticket, and full court of honor.",
+    image: "/assets/templates/gypsy-burgundy/photo-chloe-portrait.webp",
+  },
+  {
     slug: "isabella-xv",
     title: "Vintage Quinceanera",
     name: "Isabella Cordero",

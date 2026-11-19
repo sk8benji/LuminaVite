@@ -131,6 +131,7 @@ export type TemplateConfigMap = {
   QUINCE_ROSADO: QuinceRosadoConfig;
   GATSBY_20S: Gatsby20sConfig;
   GYBSY_20S: Gatsby20sConfig;
+  GYPSY_BURGUNDY: Gatsby20sConfig;
   BLUE_BUTTERFLY: BlueButterflyConfig;
   BLUSH_PRINCESS: BlushPrincessConfig;
   QUINCE_ERA_PINK: QuinceEraPinkConfig;

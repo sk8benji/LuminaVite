@@ -769,7 +769,8 @@ export default function TemplateSectionBuilder({
                           también por invitación. Se guardan en configPlantilla,
                           que ya viaja al template. Vacío = texto del template. */}
                       {((formData as any).estiloPlantilla === "GATSBY_20S" ||
-                        (formData as any).estiloPlantilla === "GYBSY_20S") && (
+                        (formData as any).estiloPlantilla === "GYBSY_20S" ||
+                        (formData as any).estiloPlantilla === "GYPSY_BURGUNDY") && (
                         <div className="p-4 rounded-xl border border-amber-200/60 bg-amber-50/50 space-y-3">
                           <div>
                             <p className="text-xs font-bold text-gray-800">Título encima del sobre</p>
@@ -1539,7 +1540,8 @@ export default function TemplateSectionBuilder({
                             />
                           </div>
                           {((formData as any).estiloPlantilla === "GATSBY_20S" ||
-                            (formData as any).estiloPlantilla === "GYBSY_20S") && (
+                            (formData as any).estiloPlantilla === "GYBSY_20S" ||
+                            (formData as any).estiloPlantilla === "GYPSY_BURGUNDY") && (
                             <div>
                               <label className="block text-[11px] font-semibold text-gray-600 mb-1">
                                 Hora de la recepción
@@ -2336,7 +2338,8 @@ export default function TemplateSectionBuilder({
                           preview — damas y chambelanes — eran arte fijo del
                           template y no se podían cambiar desde el admin. */}
                       {((formData as any).estiloPlantilla === "GATSBY_20S" ||
-                        (formData as any).estiloPlantilla === "GYBSY_20S") && (
+                        (formData as any).estiloPlantilla === "GYBSY_20S" ||
+                        (formData as any).estiloPlantilla === "GYPSY_BURGUNDY") && (
                         <>
                           <div>
                             <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">

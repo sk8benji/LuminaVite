@@ -444,7 +444,8 @@ export default function TemplatesManager() {
     editingTemplate?.slug?.includes("gybsy") ||
     editingTemplate?.slug?.includes("gatsby") ||
     editingTemplate?.estiloPlantilla === "GATSBY_20S" ||
-    editingTemplate?.estiloPlantilla === "GYBSY_20S";
+    editingTemplate?.estiloPlantilla === "GYBSY_20S" ||
+    editingTemplate?.estiloPlantilla === "GYPSY_BURGUNDY";
 
   const sectionsList = isSaveDate
     ? ([

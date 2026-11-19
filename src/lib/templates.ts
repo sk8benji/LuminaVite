@@ -17,7 +17,8 @@ export type TemplateId =
   | "MINIMALISTA_EDITORIAL"
   | "SAVE_THE_DATE_QUINCE_ROSADO"
   | "GATSBY_20S"
-  | "GYBSY_20S";
+  | "GYBSY_20S"
+  | "GYPSY_BURGUNDY";
 
 export interface TemplateConfig {
   id: TemplateId;
@@ -416,6 +417,26 @@ export const TEMPLATES: Record<TemplateId, TemplateConfig> = {
     ribbonGradient: "from-[#D4AF37] via-[#F3E5AB] to-[#AA8232]",
     badgeBg: "#1C1C24",
     description: "Diseño Roaring 20s estilo Gran Gatsby con detalles en oro metálico, sobre negro y estética Art Deco.",
+  },
+  GYPSY_BURGUNDY: {
+    id: "GYPSY_BURGUNDY",
+    name: "Gypsy Burgundy (Roaring Twenties / Burgundy)",
+    category: "CUMPLEANOS",
+    bgColor: "#200710",
+    cardBg: "#2A0A12",
+    textPrimary: "#F5E6BE",
+    textSecondary: "#C5A059",
+    accentColor: "#D4AF37",
+    accentSoft: "#3A1220",
+    borderSoft: "#C5A059",
+    buttonBg: "#D4AF37",
+    buttonText: "#000000",
+    fontHeading: "'Cinzel', serif",
+    fontSubheading: "'Cormorant Garamond', serif",
+    fontBody: "'Montserrat', sans-serif",
+    ribbonGradient: "from-[#D4AF37] via-[#F3E5AB] to-[#AA8232]",
+    badgeBg: "#2E0B14",
+    description: "Diseño Roaring 20s en burgundy con detalles en oro metálico, sobre burgundy profundo y estética Art Deco (clon de Gatsby 20's).",
   },
 };
 
