@@ -230,6 +230,11 @@ async function getEventoData(rawSlug: string): Promise<InvitationData | null> {
       };
     }
   }
+  if (cleanSlug === "gybsy-burgundy") {
+    const { getMergedDemo } = await import("@/lib/template-demo-merge");
+    const demo = await getMergedDemo("gybsy-burgundy");
+    if (demo) return demo;
+  }
 
   return null;
 }
