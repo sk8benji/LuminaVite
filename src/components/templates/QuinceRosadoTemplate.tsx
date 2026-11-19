@@ -322,6 +322,22 @@ export default function QuinceRosadoTemplate({
   // Configuración dinámica por plantilla (JSONB: configPlantilla) con fallback en cascada
   const templateConfig = parseTemplateConfig<QuinceRosadoConfig>(data.configPlantilla);
 
+  // Aviso niños (Sección 10 "Recomendación"): undefined = texto original de la plantilla;
+  // título "" = oculta el recuadro; texto/cierre "" = oculta esa línea.
+  const ninosTitulo = isEn
+    ? (templateConfig.ninosTituloEn ?? "FOR OUR LITTLE GUESTS")
+    : (templateConfig.ninosTitulo ?? "PARA NUESTROS NIÑOS");
+  const ninosTexto = isEn
+    ? (templateConfig.ninosTextoEn ?? "Our little guests are a very special part of this celebration. We kindly ask that they remain seated and accompanied by a parent or guardian during special dances and presentations.")
+    : (templateConfig.ninosTexto ?? "Nuestros pequeños invitados son una parte muy especial de esta celebración. Les pedimos amablemente que permanezcan sentados y acompañados por padre o tutor durante los bailes especiales y las presentaciones.");
+  const ninosCierre = isEn
+    ? (templateConfig.ninosCierreEn ?? "Thank you for helping us keep these moments beautiful for everyone.")
+    : (templateConfig.ninosCierre ?? "Gracias por ayudarnos a mantener estos momentos hermosos para todos.");
+  // Mensaje de cierre de la Dedicatoria (Sección 3): vacío = no se muestra.
+  const dedicatoriaCierreTexto = isEn
+    ? (templateConfig.dedicatoriaCierreEn || "")
+    : (templateConfig.dedicatoriaCierre || "");
+
   const photoShoe1 =
     templateConfig.cambioZapatillas?.fotoZapato1Url ||
     data.fotoZapato1Url ||
@@ -875,6 +891,13 @@ export default function QuinceRosadoTemplate({
                   {isEn ? "Sweet 15" : "A señorita"}
                 </p>
               </div>
+
+              {/* Mensaje de cierre de la Dedicatoria (editable en el admin, Sección 3) */}
+              {templateConfig.mostrarDedicatoriaCierre !== false && dedicatoriaCierreTexto !== "" && (
+                <p className="font-['Lora',serif] text-xs sm:text-[13px] leading-relaxed text-[#722927] italic text-center px-2 mt-10">
+                  {dedicatoriaCierreTexto}
+                </p>
+              )}
             </div>
           </section>
         )}
@@ -1162,22 +1185,20 @@ export default function QuinceRosadoTemplate({
                     </p>
                   </div>
 
-                  {/* Aviso: Para Nuestros Niños */}
-                  <div className="bg-pink-50/70 p-5 rounded-2xl border border-pink-200 text-center">
-                    <h4 className="font-['Cinzel',serif] text-xs tracking-widest uppercase text-[#A55B64] font-bold mb-2">
-                      {isEn ? "FOR OUR LITTLE GUESTS" : "PARA NUESTROS NIÑOS"}
-                    </h4>
-                    <p className="text-xs leading-relaxed text-[#CE2962] font-medium">
-                      {isEn
-                        ? "Our little guests are a very special part of this celebration. We kindly ask that they remain seated and accompanied by a parent or guardian during special dances and presentations."
-                        : "Nuestros pequeños invitados son una parte muy especial de esta celebración. Les pedimos amablemente que permanezcan sentados y acompañados por padre o tutor durante los bailes especiales y las presentaciones."}
-                    </p>
-                    <p className="text-[11px] text-[#CE2962] font-semibold mt-2">
-                      {isEn
-                        ? "Thank you for helping us keep these moments beautiful for everyone."
-                        : "Gracias por ayudarnos a mantener estos momentos hermosos para todos."}
-                    </p>
-                  </div>
+                  {/* Aviso: Para Nuestros Niños (editable en el admin, Sección 10 "Recomendación") */}
+                  {ninosTitulo !== "" && (
+                    <div className="bg-pink-50/70 p-5 rounded-2xl border border-pink-200 text-center">
+                      <h4 className="font-['Cinzel',serif] text-xs tracking-widest uppercase text-[#A55B64] font-bold mb-2">
+                        {ninosTitulo}
+                      </h4>
+                      {ninosTexto !== "" && (
+                        <p className="text-xs leading-relaxed text-[#CE2962] font-medium">{ninosTexto}</p>
+                      )}
+                      {ninosCierre !== "" && (
+                        <p className="text-[11px] text-[#CE2962] font-semibold mt-2">{ninosCierre}</p>
+                      )}
+                    </div>
+                  )}
                 </>
               )}
             </div>

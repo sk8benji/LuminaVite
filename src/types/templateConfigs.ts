@@ -23,6 +23,18 @@ export interface QuinceRosadoConfig {
   cancionVals?: string;
   fraseEmocional?: string;
   avisoNinos?: string;
+  // Aviso niños (Sección 10 "Recomendación"): undefined = texto original;
+  // título "" = oculta el recuadro; texto/cierre "" = oculta esa línea.
+  ninosTitulo?: string;
+  ninosTituloEn?: string;
+  ninosTexto?: string;
+  ninosTextoEn?: string;
+  ninosCierre?: string;
+  ninosCierreEn?: string;
+  // Mensaje de cierre de la Dedicatoria (Sección 3): vacío = no se muestra.
+  dedicatoriaCierre?: string;
+  dedicatoriaCierreEn?: string;
+  mostrarDedicatoriaCierre?: boolean;
 }
 
 export interface BlueButterflyConfig {
@@ -112,6 +124,12 @@ export interface Gatsby20sConfig {
   fraseAperturaEn?: string;
   /** Hora propia de la recepcion ("6:19 PM"); vacia = usa la hora de la placa (seccion Fecha y Hora). */
   horaRecepcion?: string;
+  /** Linea de bienvenida de la portada ("WELCOME TO THE" / "BIENVENIDOS A"); "" = oculta la linea. */
+  portadaBienvenida?: string;
+  portadaBienvenidaEn?: string;
+  /** Linea de colores reservados (Vestimenta); "" = oculta la linea en ese idioma. */
+  coloresReservados?: string;
+  coloresReservadosEn?: string;
   ticketFechaTexto?: string;
   venueNombre?: string;
   venueDireccion?: string;

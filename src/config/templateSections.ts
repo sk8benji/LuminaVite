@@ -111,8 +111,8 @@ export const SECCIONES_QUINCE_ROSADO: SeccionMeta[] = [
   {
     id: 'fotoZapatos2',
     numero: 10,
-    label: 'Foto en Cojín',
-    descripcion: 'Fotografía en cojín, mensaje de despedida y pautas para pequeños invitados.',
+    label: 'Recomendación',
+    descripcion: 'Foto en cojín, mensaje de despedida y recomendaciones para los invitados.',
     icono: 'Image',
     defaultEnabled: true,
   },
