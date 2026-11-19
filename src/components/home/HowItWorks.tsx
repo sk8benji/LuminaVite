@@ -77,26 +77,29 @@ export function HowItWorks({ lang = "en" }: HowItWorksProps) {
     {
       num: "01",
       icon: <IconCard />,
-      title: isEs ? "Elige y paga" : "Choose & pay",
+      title: isEs ? "Elige tu diseño y plan ($99–$279)" : "Pick your style & plan ($99–$279)",
       body: isEs
-        ? "Elige tu plantilla y tu paquete ($99–$279). Un solo pago, sin suscripción."
-        : "Pick your template and your package ($99–$279). One payment, no subscription.",
+        ? "Elige tu diseño y tu paquete con un solo pago. Sin mensualidades ni sorpresas."
+        : "Choose your design and package with a single payment. No monthly fees or surprises.",
+      tag: isEs ? "Un solo pago" : "Single payment",
     },
     {
       num: "02",
       icon: <IconPen />,
-      title: isEs ? "La creamos contigo" : "We build it with you",
+      title: isEs ? "Manda tus datos y fotos" : "Send your details & photos",
       body: isEs
-        ? "Mándanos tus datos y fotos por tu enlace personal y nuestro equipo arma tu invitación. La revisas antes de que se mande."
-        : "Send your details and photos through your personal link and our team builds your invitation. You review it before it goes out.",
+        ? "Comparte los datos de tu evento, los horarios del salón y tus fotos. Lo armamos y te mandamos una vista previa para que lo revises antes de compartirlo."
+        : "Share your event info, venue times, and photos. We set it up and send you a preview so you can review before sharing.",
+      tag: isEs ? "Vista previa antes de publicar" : "Preview before going live",
     },
     {
       num: "03",
       icon: <IconSend />,
-      title: isEs ? "Compártela y sigue los RSVP" : "Share it & track RSVPs",
+      title: isEs ? "Mándala por SMS y sigue los RSVP" : "Send by SMS & track RSVPs",
       body: isEs
-        ? "Mándala por SMS a tus invitados. Confirman con 1 toque, les llega su confirmación y tú ves quién viene en tu panel."
-        : "Send it by SMS to your guests. They confirm in 1 tap, get their confirmation, and you see who's coming in your panel.",
+        ? "Tus invitados reciben el enlace en su teléfono, confirman con 1 toque, y tú ves el conteo exacto y los pases en tu panel."
+        : "Your guests get the link on their phone, confirm in one tap, and you see exact headcounts and passes in your dashboard.",
+      tag: isEs ? "Conteo en vivo y pases por familia" : "Live headcount & family passes",
     },
   ];
 
@@ -126,13 +129,13 @@ export function HowItWorks({ lang = "en" }: HowItWorksProps) {
           <h2 className="font-['Playfair_Display',serif] text-3xl sm:text-4xl lg:text-[2.65rem] font-bold leading-[1.2] m-0 text-neutral-900 tracking-tight max-w-3xl">
             {isEs ? (
               <>
-                Tres pasos.{" "}
-                <em className="text-[#B08D3C] italic">Así de simple.</em>
+                Simple{" "}
+                <em className="text-[#B08D3C] italic">desde el primer día.</em>
               </>
             ) : (
               <>
-                Three steps.{" "}
-                <em className="text-[#B08D3C] italic">That&apos;s it.</em>
+                Simple{" "}
+                <em className="text-[#B08D3C] italic">from day one.</em>
               </>
             )}
           </h2>
@@ -161,6 +164,9 @@ export function HowItWorks({ lang = "en" }: HowItWorksProps) {
               <p className="text-sm text-neutral-600 leading-relaxed font-['Montserrat'] m-0">
                 {s.body}
               </p>
+              <span className="mt-auto inline-flex items-center px-2.5 py-1 rounded-full border border-neutral-200 bg-[#FAF8F5] text-[10px] font-bold uppercase tracking-wider text-[#720e26]">
+                {s.tag}
+              </span>
             </div>
           ))}
         </div>
@@ -169,14 +175,14 @@ export function HowItWorks({ lang = "en" }: HowItWorksProps) {
         <div className="flex flex-col items-center text-center gap-6 mt-14">
           <p className="font-['Playfair_Display',serif] italic text-lg text-neutral-500 m-0 max-w-xl">
             {isEs
-              ? "Sin app que descargar, sin contraseña — tu invitado solo toca el enlace."
-              : "No app to download, no password — your guest just taps the link."}
+              ? "Tus invitados no descargan apps ni recuerdan contraseñas. Tocan, confirman y llegan."
+              : "Your guests don't download apps or remember passwords. They tap, confirm, and show up."}
           </p>
           <a
             href={isEs ? "/es/precios" : "/pricing"}
             className="inline-flex items-center justify-center px-8 py-3.5 rounded-full bg-[#7A002A] hover:bg-[#5e0020] text-white text-sm font-bold tracking-wide transition shadow-sm"
           >
-            {isEs ? "Crear mi invitación" : "Create my invitation"}
+            {isEs ? "Empezar mi invitación" : "Start my invitation"}
           </a>
         </div>
       </div>
