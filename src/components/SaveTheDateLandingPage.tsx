@@ -57,6 +57,7 @@ function useCountdown(target: number) {
 
 const MENU_LANDING_LINKS = {
   en: [
+    { href: "/save-the-date", label: "Save the Date" },
     { href: "/quince-invitations", label: "Quince Invitations" },
     { href: "/wedding-invitations-los-angeles", label: "Wedding Invitations" },
     { href: "/wedding-invitations-las-vegas", label: "Wedding Invitations Las Vegas" },
@@ -65,6 +66,7 @@ const MENU_LANDING_LINKS = {
     { href: "/whatsapp-invitations", label: "WhatsApp Invitations" },
   ],
   es: [
+    { href: "/es/save-the-date", label: "Save the Date" },
     { href: "/es/invitaciones-de-quinceanera", label: "Invitaciones de Quinceañera" },
     { href: "/wedding-invitations-los-angeles", label: "Invitaciones de Boda" },
     { href: "/wedding-invitations-las-vegas", label: "Invitaciones de Boda Las Vegas" },
