@@ -1,6 +1,39 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/db";
-import { ensureSaveTheDateTables } from "@/lib/save-the-date-table";
+import {
+  ensureSaveTheDateTables,
+  getSaveTheDateTitulos,
+  pickTitulosBilingues,
+  updateSaveTheDateTitulos,
+} from "@/lib/save-the-date-table";
+
+// Campos que el Prisma Client generado SÍ conoce (están en schema.prisma).
+// Todo lo demás que mande el cliente se ignora aquí; los 9 títulos
+// bilingües van por updateSaveTheDateTitulos (SQL crudo).
+const CAMPOS_PRISMA = [
+  "eventoId",
+  "titulo",
+  "subtitulo",
+  "mensaje",
+  "fechaEvento",
+  "fechaTextoPersonalizada",
+  "ciudad",
+  "estiloPlantilla",
+  "colorSobre",
+  "colorSello",
+  "tipoLetra",
+  "fotoPortadaUrl",
+  "galeriaFotosUrls",
+  "musicaUrl",
+  "musicaTitulo",
+  "mostrarSobre",
+  "mostrarGaleria",
+  "mostrarContador",
+  "mostrarCalendario",
+  "mostrarPreRsvp",
+  "textoPreRsvp",
+  "telefonoWhatsapp",
+] as const;
 
 export const dynamic = "force-dynamic";
 
@@ -47,7 +80,10 @@ export async function GET(req: NextRequest, context: RouteParams) {
       data: { vistasContador: { increment: 1 } },
     }).catch(() => {});
 
-    return NextResponse.json({ success: true, item });
+    // GET: devolver también los títulos bilingües (no los trae Prisma).
+    const titulos = await getSaveTheDateTitulos(item.id);
+
+    return NextResponse.json({ success: true, item: { ...item, ...titulos } });
   } catch (error: any) {
     console.error("Error al obtener Save The Date:", error);
     return NextResponse.json(
@@ -108,22 +144,80 @@ export async function PATCH(req: NextRequest, context: RouteParams) {
       );
     }
 
-    const dataToUpdate: any = { ...body };
+    // Solo campos que Prisma conoce: el form del admin manda además los 9
+    // títulos bilingües (no están en el schema) y eso tumbaba el guardado
+    // con "Unknown argument" (500). Esos van por SQL crudo abajo.
+    const dataToUpdate: any = {};
+    for (const key of CAMPOS_PRISMA) {
+      if (body[key] !== undefined) dataToUpdate[key] = body[key];
+    }
+
+    // Sin vincular = null, no "" ("" rompe la FK a Evento con P2003).
+    if (dataToUpdate.eventoId === "") dataToUpdate.eventoId = null;
+    if (dataToUpdate.eventoId) {
+      const evento = await prisma.evento.findUnique({
+        where: { id: dataToUpdate.eventoId },
+        select: { id: true },
+      });
+      if (!evento) {
+        return NextResponse.json(
+          { error: "La invitación vinculada ya no existe. Desvincula el Save The Date y guarda de nuevo." },
+          { status: 400 }
+        );
+      }
+    }
 
     // Si viene fechaEvento como string, parsearlo a Date
     if (dataToUpdate.fechaEvento) {
-      dataToUpdate.fechaEvento = new Date(dataToUpdate.fechaEvento);
+      const fecha = new Date(dataToUpdate.fechaEvento);
+      if (isNaN(fecha.getTime())) {
+        return NextResponse.json(
+          { error: "La fecha del evento no es válida." },
+          { status: 400 }
+        );
+      }
+      dataToUpdate.fechaEvento = fecha;
+    }
+    if (dataToUpdate.galeriaFotosUrls && !Array.isArray(dataToUpdate.galeriaFotosUrls)) {
+      dataToUpdate.galeriaFotosUrls = [];
     }
 
-    // No permitir cambiar id o slug directo en el patch simple
-    delete dataToUpdate.id;
+    // Cambio de slug: normalizar igual que en POST y evitar colisiones.
+    let nuevoSlug: string | null = null;
+    if (typeof body.slug === "string" && body.slug.trim()) {
+      nuevoSlug = body.slug
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9-]/g, "-")
+        .replace(/-+/g, "-");
+      if (nuevoSlug && nuevoSlug !== existing.slug) {
+        const choque = await prisma.saveTheDate.findUnique({
+          where: { slug: nuevoSlug },
+        });
+        if (choque) {
+          return NextResponse.json(
+            { error: `Ya existe un Save The Date con el enlace "${nuevoSlug}". Por favor elige otro.` },
+            { status: 409 }
+          );
+        }
+        dataToUpdate.slug = nuevoSlug;
+      }
+    }
 
     const updated = await prisma.saveTheDate.update({
       where: { id: existing.id },
       data: dataToUpdate,
     });
 
-    return NextResponse.json({ success: true, item: updated });
+    // Títulos bilingües por SQL crudo (no los conoce el Prisma Client).
+    const titulos = pickTitulosBilingues(body);
+    await updateSaveTheDateTitulos(existing.id, titulos);
+    const titulosGuardados = await getSaveTheDateTitulos(existing.id);
+
+    return NextResponse.json({
+      success: true,
+      item: { ...updated, ...titulosGuardados },
+    });
   } catch (error: any) {
     console.error("Error al actualizar Save The Date:", error);
     return NextResponse.json(

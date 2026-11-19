@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/db";
-import { ensureSaveTheDateTables } from "@/lib/save-the-date-table";
+import {
+  ensureSaveTheDateTables,
+  getSaveTheDateTitulosMany,
+  pickTitulosBilingues,
+  updateSaveTheDateTitulos,
+} from "@/lib/save-the-date-table";
 
 export const dynamic = "force-dynamic";
 
@@ -30,7 +35,17 @@ export async function GET() {
       },
     });
 
-    return NextResponse.json({ success: true, items });
+    // GET: devolver también los títulos bilingües (no los trae Prisma),
+    // si no el admin los ve en blanco al reabrir aunque estén guardados.
+    const titulosPorId = await getSaveTheDateTitulosMany(
+      items.map((i: any) => i.id)
+    );
+    const itemsConTitulos = items.map((i: any) => ({
+      ...i,
+      ...(titulosPorId[i.id] || {}),
+    }));
+
+    return NextResponse.json({ success: true, items: itemsConTitulos });
   } catch (error: any) {
     console.error("Error al obtener Save The Dates:", error);
     return NextResponse.json(
@@ -126,7 +141,12 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    return NextResponse.json({ success: true, item: created });
+    // Títulos bilingües por SQL crudo (no los conoce el Prisma Client);
+    // si no, al crear con títulos personalizados se perderían en silencio.
+    const titulos = pickTitulosBilingues(body);
+    await updateSaveTheDateTitulos(created.id, titulos);
+
+    return NextResponse.json({ success: true, item: { ...created, ...titulos } });
   } catch (error: any) {
     console.error("Error al crear Save The Date:", error);
     return NextResponse.json(

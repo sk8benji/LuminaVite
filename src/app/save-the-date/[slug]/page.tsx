@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import prisma from "@/lib/db";
-import { ensureSaveTheDateTables } from "@/lib/save-the-date-table";
+import { ensureSaveTheDateTables, getSaveTheDateTitulos } from "@/lib/save-the-date-table";
 import QuinceRosadoSaveTheDate from "@/components/save-the-date/QuinceRosadoSaveTheDate";
 
 export const dynamic = "force-dynamic";
@@ -75,6 +75,10 @@ async function getSaveTheDateData(rawSlug: string) {
     });
 
     if (item && item.activo) {
+      // Los títulos bilingües viven en columnas que Prisma no conoce
+      // (ver save-the-date-table.ts): sin esta lectura siempre caían
+      // al default del demo aunque el admin los hubiera guardado.
+      const titulos = await getSaveTheDateTitulos(item.id);
       // Incrementar contador de forma asíncrona
       prisma.saveTheDate
         .update({
@@ -110,15 +114,15 @@ async function getSaveTheDateData(rawSlug: string) {
         textoPreRsvp: item.textoPreRsvp || "¿Podrás Acompañarnos?",
         telefonoWhatsapp:
           item.telefonoWhatsapp || item.evento?.telefonoWhatsappRsvp || null,
-        tituloCalendarioEs: (item as any).tituloCalendarioEs || DEMO_SAVE_THE_DATE.tituloCalendarioEs,
-        tituloCalendarioEn: (item as any).tituloCalendarioEn || DEMO_SAVE_THE_DATE.tituloCalendarioEn,
-        tituloContadorEs: (item as any).tituloContadorEs || DEMO_SAVE_THE_DATE.tituloContadorEs,
-        tituloContadorEn: (item as any).tituloContadorEn || DEMO_SAVE_THE_DATE.tituloContadorEn,
-        tituloRsvpEs: (item as any).tituloRsvpEs || DEMO_SAVE_THE_DATE.tituloRsvpEs,
-        tituloRsvpEn: (item as any).tituloRsvpEn || DEMO_SAVE_THE_DATE.tituloRsvpEn,
-        preguntaRsvpEs: (item as any).preguntaRsvpEs || item.textoPreRsvp || DEMO_SAVE_THE_DATE.preguntaRsvpEs,
-        preguntaRsvpEn: (item as any).preguntaRsvpEn || DEMO_SAVE_THE_DATE.preguntaRsvpEn,
-        subtituloEn: (item as any).subtituloEn || DEMO_SAVE_THE_DATE.subtituloEn,
+        tituloCalendarioEs: titulos.tituloCalendarioEs || DEMO_SAVE_THE_DATE.tituloCalendarioEs,
+        tituloCalendarioEn: titulos.tituloCalendarioEn || DEMO_SAVE_THE_DATE.tituloCalendarioEn,
+        tituloContadorEs: titulos.tituloContadorEs || DEMO_SAVE_THE_DATE.tituloContadorEs,
+        tituloContadorEn: titulos.tituloContadorEn || DEMO_SAVE_THE_DATE.tituloContadorEn,
+        tituloRsvpEs: titulos.tituloRsvpEs || DEMO_SAVE_THE_DATE.tituloRsvpEs,
+        tituloRsvpEn: titulos.tituloRsvpEn || DEMO_SAVE_THE_DATE.tituloRsvpEn,
+        preguntaRsvpEs: titulos.preguntaRsvpEs || item.textoPreRsvp || DEMO_SAVE_THE_DATE.preguntaRsvpEs,
+        preguntaRsvpEn: titulos.preguntaRsvpEn || DEMO_SAVE_THE_DATE.preguntaRsvpEn,
+        subtituloEn: titulos.subtituloEn || DEMO_SAVE_THE_DATE.subtituloEn,
       };
     }
   } catch (error) {
