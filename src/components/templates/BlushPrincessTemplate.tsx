@@ -878,7 +878,7 @@ export default function BlushPrincessTemplate({
         <section className="px-6 py-8 text-center">
           <div className="relative max-w-sm mx-auto">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={BLUSH_ASSETS.envelopeOpen} alt="Sobre" className="w-full h-auto rounded-2xl shadow-xl" />
+            <img src={BLUSH_ASSETS.envelopeOpen} alt="Sobre" className="w-full h-auto drop-shadow-xl" />
             <div
               className="absolute left-[21%] right-[21%] top-[24%] text-center"
             >
