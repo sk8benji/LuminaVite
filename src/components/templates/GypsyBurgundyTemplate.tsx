@@ -46,6 +46,17 @@ export default function GypsyBurgundyTemplate({
     data.idiomaDefault === "es" ? "ES" : "EN"
   );
 
+  // Línea de bienvenida de la portada (Sección 1): undefined = texto del template; "" = oculta la línea.
+  const bienvenidaPortada = idioma === "EN"
+    ? (config.portadaBienvenidaEn ?? "WELCOME TO THE")
+    : (config.portadaBienvenida ?? "BIENVENIDOS A");
+  // Línea de colores reservados (Sección 7 Vestimenta): en ES usa el valor guardado
+  // del evento si no hay texto en el admin; en EN solo muestra lo escrito en el admin.
+  // "" explícito = oculta la línea en ese idioma.
+  const coloresReservadosTexto = idioma === "EN"
+    ? (config.coloresReservadosEn ?? "")
+    : (config.coloresReservados ?? data.dressCodeColoresReservados ?? "");
+
   // Estados del Sobre y Animación de Apertura
   const [sobreAbierto, setSobreAbierto] = useState<boolean>(skipIntro);
   const [animandoSobre, setAnimandoSobre] = useState<boolean>(false);
@@ -654,10 +665,12 @@ export default function GypsyBurgundyTemplate({
 
                   {/* ABAJO (Nuevo texto de celebración: WELCOME TO THE / CHLOE / ROARING 15th CELEBRATION) */}
                   <div className="mt-3.5 flex flex-col items-center text-center space-y-0.5 w-full">
-                    {/* Línea 1: WELCOME TO THE */}
-                    <span className="font-cinzel text-[8.5px] sm:text-[9.5px] tracking-[0.26em] text-[#D4AF37] uppercase font-semibold">
-                      {idioma === "EN" ? "WELCOME TO THE" : "BIENVENIDOS A"}
-                    </span>
+                    {/* Línea 1: WELCOME TO THE (editable en el admin, Sección 1 Portada) */}
+                    {bienvenidaPortada !== "" && (
+                      <span className="font-cinzel text-[8.5px] sm:text-[9.5px] tracking-[0.26em] text-[#D4AF37] uppercase font-semibold">
+                        {bienvenidaPortada}
+                      </span>
+                    )}
 
                     {/* Línea 2: CHLOE (La protagonista: el texto más grande de la tarjeta) */}
                     <h2 className="font-gatsby-display text-3xl sm:text-4xl my-0.5">
@@ -1579,7 +1592,9 @@ export default function GypsyBurgundyTemplate({
                         textShadow: "0 2px 10px rgba(212, 175, 55, 0.35)",
                       }}
                     >
-                      {data.dressCodeTitulo || config.dressCodeTitulo || (idioma === "EN" ? "DRESS CODE" : "VESTIMENTA")}
+                      {idioma === "EN"
+                        ? (data.dressCodeTituloEn || data.dressCodeTitulo || config.dressCodeTitulo || "DRESS CODE")
+                        : (data.dressCodeTitulo || config.dressCodeTitulo || "VESTIMENTA")}
                     </h3>
 
                     <p
@@ -1596,17 +1611,15 @@ export default function GypsyBurgundyTemplate({
                           : "Etiqueta Formal Gatsby: Se sugiere vestimenta elegante años 20 y trajes de etiqueta.")}
                     </p>
 
-                    {(data.dressCodeColoresReservados || data.coloresReservados || data.dressCodeNota) && (
+                    {/* Línea de colores reservados (editable en el admin, Sección 7 Vestimenta) */}
+                    {coloresReservadosTexto !== "" && (
                       <p
                         className="font-marcellus text-[11px] text-[#d4af37] leading-normal max-w-[270px] italic"
                         style={{
                           marginBottom: "16px",
                         }}
                       >
-                        {data.dressCodeColoresReservados ||
-                          (idioma === "EN"
-                            ? "Please reserve gold and black for the Quinceañera."
-                            : "Favor de reservar los colores dorado y negro para la quinceañera.")}
+                        {coloresReservadosTexto}
                       </p>
                     )}
 

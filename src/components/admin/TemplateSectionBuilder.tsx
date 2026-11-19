@@ -851,7 +851,8 @@ export default function TemplateSectionBuilder({
                           dorada "WELCOME TO THE" / "BIENVENIDOS A" encima del nombre.
                           Vacío = la línea no aparece. */}
                       {((formData as any).estiloPlantilla === "GATSBY_20S" ||
-                        (formData as any).estiloPlantilla === "GYBSY_20S") && (
+                        (formData as any).estiloPlantilla === "GYBSY_20S" ||
+                        (formData as any).estiloPlantilla === "GYPSY_BURGUNDY") && (
                         <div className="p-4 rounded-xl border border-amber-200/60 bg-amber-50/50 space-y-3">
                           <div>
                             <p className="text-xs font-bold text-gray-800">Texto de bienvenida (encima del nombre)</p>
