@@ -22,7 +22,7 @@ import { track } from "@/lib/analytics";
 import HeroPhones from "@/components/home/HeroPhones";
 import InteractiveDemoModal from "@/components/home/InteractiveDemoModal";
 import SiteFooter from "@/components/layout/SiteFooter";
-import BenefitsBento from "@/components/home/BenefitsBento";
+import HowItWorks from "@/components/home/HowItWorks";
 import ServiceTabs from "@/components/home/ServiceTabs";
 import ValueFeatures from "@/components/home/ValueFeatures";
 import FaqSection from "@/components/home/FaqSection";
@@ -382,7 +382,7 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
       {/* ============================================================== */}
       {/* BENTO GRID DE BENEFICIOS (good-biz-bento-1)                    */}
       {/* ============================================================== */}
-      <BenefitsBento lang={lang} />
+      <HowItWorks lang={lang} />
 
       {/* ============================================================== */}
       {/* COMPARATIVA / TABS DE SERVICIOS (nextwell-tabs-1)              */}
@@ -517,19 +517,51 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
                     {b.pricingPerNote}
                   </span>
                 </div>
+                {plan.dict.bonusLabel ? (
+                  <div
+                    className={`mt-6 rounded-2xl border px-4 py-3.5 ${
+                      plan.hot ? "border-[#FFD166]/60 bg-white/10" : "border-[#E7DCC8] bg-[#FAF8F5]"
+                    }`}
+                  >
+                    <span
+                      className={`font-['Montserrat'] text-[10px] font-extrabold tracking-[0.18em] uppercase ${
+                        plan.hot ? "text-[#FFD166]" : "text-[#96690A]"
+                      }`}
+                    >
+                      {plan.dict.bonusLabel}
+                    </span>
+                    <p
+                      className={`font-['Montserrat'] text-[13px] font-semibold leading-snug mt-1 ${
+                        plan.hot ? "text-white" : "text-[#2B0A18]"
+                      }`}
+                    >
+                      {plan.dict.bonusText}
+                    </p>
+                  </div>
+                ) : null}
                 <ul className="mt-7 space-y-3 flex-1">
                   {plan.dict.features.map((f) => (
                     <li key={f.text} className="flex items-start gap-2.5">
-                      <span
-                        className={`w-[18px] h-[18px] rounded-full flex items-center justify-center shrink-0 mt-[1px] ${
-                          plan.hot ? "bg-[#FFD166] text-[#7A002A]" : "bg-[#F5EDDA] text-[#7A002A]"
-                        }`}
-                      >
-                        <Check className="w-3 h-3" strokeWidth={3.5} />
-                      </span>
+                      {f.included === false ? (
+                        <span className="w-[18px] h-[18px] rounded-full flex items-center justify-center shrink-0 mt-[1px] bg-neutral-200 text-neutral-500">
+                          <X className="w-3 h-3" strokeWidth={3.5} />
+                        </span>
+                      ) : (
+                        <span
+                          className={`w-[18px] h-[18px] rounded-full flex items-center justify-center shrink-0 mt-[1px] ${
+                            plan.hot ? "bg-[#FFD166] text-[#7A002A]" : "bg-[#F5EDDA] text-[#7A002A]"
+                          }`}
+                        >
+                          <Check className="w-3 h-3" strokeWidth={3.5} />
+                        </span>
+                      )}
                       <span
                         className={`font-['Montserrat'] text-[13.5px] leading-snug ${
-                          plan.hot ? "text-white" : "text-[#45303B]"
+                          f.included === false
+                            ? "text-neutral-400 line-through"
+                            : plan.hot
+                              ? "text-white"
+                              : "text-[#45303B]"
                         } ${f.isBold ? "font-bold" : ""}`}
                       >
                         {f.text}
@@ -537,6 +569,16 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
                     </li>
                   ))}
                 </ul>
+                {plan.dict.trustLine ? (
+                  <p
+                    className={`mt-6 flex items-start gap-2 font-['Montserrat'] text-xs leading-snug ${
+                      plan.hot ? "text-[#F0DCAE]" : "text-[#8A6B76]"
+                    }`}
+                  >
+                    <BadgeCheck className="w-4 h-4 shrink-0 mt-[1px]" />
+                    <span>{plan.dict.trustLine}</span>
+                  </p>
+                ) : null}
                 <button
                   onClick={() => handleCheckout(plan.key)}
                   disabled={checkoutLoading !== null}
@@ -554,7 +596,7 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
                   ) : (
                     <>
                       <CreditCard className="w-4 h-4" />
-                      <span>{b.pricingCta}</span>
+                      <span>{plan.dict.cta}</span>
                     </>
                   )}
                 </button>

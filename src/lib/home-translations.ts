@@ -141,6 +141,9 @@ export interface HomeTranslations {
       features: { text: string; included: boolean; isBold?: boolean }[];
       cta: string;
       highlighted?: boolean;
+      bonusLabel?: string;
+      bonusText?: string;
+      trustLine?: string;
       whatsappMessage?: string;
       secondaryActionText: string;
       secondaryActionMessage: string;
@@ -326,7 +329,7 @@ export const translations: Record<Language, HomeTranslations> = {
           imgPos: "50% 20%",
         },
       ],
-      pricingTitle: "Precios Claros de Invitaciones para Boda — Sin Sorpresas",
+      pricingTitle: "Invitaciones Digitales para Bodas y Quinceañeras — Sin Sorpresas",
       pricingSubtitle: "Un solo pago. Nosotros hacemos todo.",
       pricingFavorite: "MÁS POPULAR",
       pricingPerNote: "USD · pago único",
@@ -618,7 +621,7 @@ export const translations: Record<Language, HomeTranslations> = {
           description: "Ordena, elige tu invitación, envíanos tu información y te regresamos tu enlace digital listo para compartir.",
           price: "$99",
           currency: "USD · pago único",
-          cta: "Comenzar Express ($99)",
+          cta: "Elegir Express — $99",
           whatsappMessage: "Hola, quiero comenzar con el paquete Express Digital ($99) para mi evento.",
           secondaryActionText: "¿Prefieres pagar con Zelle o por WhatsApp? Toca aquí",
           secondaryActionMessage: "Hola, me interesa el paquete Express de $99 y tengo dudas o quiero pagar por Zelle.",
@@ -629,6 +632,9 @@ export const translations: Record<Language, HomeTranslations> = {
             { text: "Sobre virtual interactivo con música de fondo", included: true },
             { text: "Botón de ubicación GPS con navegación directa", included: true },
             { text: "Panel web de confirmación RSVP (sin envíos SMS)", included: true },
+            { text: "Confirmaciones interactivas RSVP por SMS", included: false },
+            { text: "Enlace privado para la familia con panel en tiempo real", included: false },
+            { text: "Álbum de fotos en vivo", included: false },
           ],
         },
         {
@@ -640,7 +646,10 @@ export const translations: Record<Language, HomeTranslations> = {
           price: "$199",
           currency: "USD · pago único",
           highlighted: true,
-          cta: "Elegir Asistido ($199)",
+          cta: "Acceso Asistido — $199 →",
+          bonusLabel: "BONUS GRATIS INCLUIDO",
+          bonusText: "Hasta 300 confirmaciones automáticas por SMS incluidas",
+          trustLine: "Vista previa antes de publicar — tú la revisas antes de que salga.",
           whatsappMessage: "Hola, quiero ordenar el paquete Assisted Digital ($199) para mi evento.",
           secondaryActionText: "¿Prefieres pagar con Zelle o por WhatsApp? Toca aquí",
           secondaryActionMessage: "Hola, quiero pagar el paquete Asistido de $199 por Zelle o WhatsApp.",
@@ -650,6 +659,7 @@ export const translations: Record<Language, HomeTranslations> = {
             { text: "Enlace privado para la familia con panel en tiempo real", included: true },
             { text: "Guardar fecha directo en el calendario del teléfono", included: true },
             { text: "4 rondas de cambios incluidas", included: true },
+            { text: "Álbum de fotos en vivo", included: false },
           ],
         },
         {
@@ -660,7 +670,7 @@ export const translations: Record<Language, HomeTranslations> = {
           description: "Todo incluido de inicio a fin con álbum de fotos en vivo y atención personalizada.",
           price: "$279",
           currency: "USD · pago único",
-          cta: "✦ Ordenar VIP ($279) ✦",
+          cta: "VIP Todo Incluido — $279",
           whatsappMessage: "Hola, me interesa el paquete VIP All-Inclusive de $279 para mi evento. ¿Me pueden dar detalles?",
           secondaryActionText: "¿Preguntas o pago con Zelle? Escríbenos por WhatsApp",
           secondaryActionMessage: "Hola, me interesa el paquete VIP All-Inclusive de $279 para mi evento.",
@@ -802,7 +812,7 @@ trustBadgesText: "Pago 100% seguro con tarjeta de crédito/débito, Apple Pay, G
           imgPos: "50% 20%",
         },
       ],
-      pricingTitle: "Clear Pricing for Digital Wedding Invitations — No Surprises",
+      pricingTitle: "Digital Invitations for Weddings & Quinceañeras — No Surprises",
       pricingSubtitle: "One single payment. We do everything.",
       pricingFavorite: "MOST POPULAR",
       pricingPerNote: "USD · one-time payment",
@@ -1094,7 +1104,7 @@ trustBadgesText: "Pago 100% seguro con tarjeta de crédito/débito, Apple Pay, G
           description: "Order, choose your invitation, send us your details, and we deliver your shareable digital link.",
           price: "$99",
           currency: "USD · one-time payment",
-          cta: "Start Express ($99)",
+          cta: "Choose Express — $99",
           whatsappMessage: "Hi, I'd like to get started with the Express Digital package ($99) for my event.",
           secondaryActionText: "Prefer to pay with Zelle or via WhatsApp? Tap here",
           secondaryActionMessage: "Hi, I'm interested in the $99 Express package and have questions or want to pay via Zelle.",
@@ -1105,6 +1115,9 @@ trustBadgesText: "Pago 100% seguro con tarjeta de crédito/débito, Apple Pay, G
             { text: "Interactive virtual envelope with background music", included: true },
             { text: "GPS location button with direct navigation", included: true },
             { text: "Standard web RSVP dashboard (no SMS alerts)", included: true },
+            { text: "Interactive SMS RSVP confirmations", included: false },
+            { text: "Family private link with live dashboard", included: false },
+            { text: "Live guest photo album", included: false },
           ],
         },
         {
@@ -1116,7 +1129,10 @@ trustBadgesText: "Pago 100% seguro con tarjeta de crédito/débito, Apple Pay, G
           price: "$199",
           currency: "USD · one-time payment",
           highlighted: true,
-          cta: "Choose Assisted ($199)",
+          cta: "Get Assisted Access — $199 →",
+          bonusLabel: "FREE BONUS INCLUDED",
+          bonusText: "Up to 300 automated SMS confirmations included",
+          trustLine: "Preview before you publish — you review your invitation before it goes out.",
           whatsappMessage: "Hi, I'd like to order the Assisted Digital package ($199) for my event.",
           secondaryActionText: "Prefer to pay with Zelle or via WhatsApp? Tap here",
           secondaryActionMessage: "Hi, I'd like to pay the $199 Assisted package via Zelle or need assistance.",
@@ -1126,6 +1142,7 @@ trustBadgesText: "Pago 100% seguro con tarjeta de crédito/débito, Apple Pay, G
             { text: "Family private link with real-time live dashboard", included: true },
             { text: "Save directly to phone calendar", included: true },
             { text: "4 revision rounds included", included: true },
+            { text: "Live guest photo album", included: false },
           ],
         },
         {
@@ -1136,7 +1153,7 @@ trustBadgesText: "Pago 100% seguro con tarjeta de crédito/débito, Apple Pay, G
           description: "Everything taken care of from beginning to end with live guest photo album and priority care.",
           price: "$279",
           currency: "USD · one-time payment",
-          cta: "✦ Order VIP ($279) ✦",
+          cta: "Go VIP All-Inclusive — $279",
           whatsappMessage: "Hi, I'm interested in the $279 VIP All-Inclusive package for my event. Could you share more details?",
           secondaryActionText: "Questions or Zelle payment? Chat on WhatsApp",
           secondaryActionMessage: "Hi, I'm interested in the $279 VIP All-Inclusive package for my event.",
