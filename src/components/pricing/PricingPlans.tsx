@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Check, CreditCard, Loader2 } from "lucide-react";
+import { BadgeCheck, Check, CreditCard, Loader2, X } from "lucide-react";
 import { translations, type Language } from "@/lib/home-translations";
 import { track } from "@/lib/analytics";
 
@@ -95,19 +95,51 @@ export default function PricingPlans({ lang }: { lang: Language }) {
                   {plan.currency}
                 </span>
               </div>
+              {plan.bonusLabel ? (
+                <div
+                  className={`mt-6 rounded-2xl border px-4 py-3.5 ${
+                    hot ? "border-[#FFD166]/60 bg-white/10" : "border-[#E7DCC8] bg-[#FAF8F5]"
+                  }`}
+                >
+                  <span
+                    className={`font-['Montserrat'] text-[10px] font-extrabold tracking-[0.18em] uppercase ${
+                      hot ? "text-[#FFD166]" : "text-[#96690A]"
+                    }`}
+                  >
+                    {plan.bonusLabel}
+                  </span>
+                  <p
+                    className={`font-['Montserrat'] text-[13px] font-semibold leading-snug mt-1 ${
+                      hot ? "text-white" : "text-[#2B0A18]"
+                    }`}
+                  >
+                    {plan.bonusText}
+                  </p>
+                </div>
+              ) : null}
               <ul className="mt-7 space-y-3 flex-1">
                 {plan.features.map((f) => (
                   <li key={f.text} className="flex items-start gap-2.5">
-                    <span
-                      className={`w-[18px] h-[18px] rounded-full flex items-center justify-center shrink-0 mt-[1px] ${
-                        hot ? "bg-[#FFD166] text-[#7A002A]" : "bg-[#F5EDDA] text-[#7A002A]"
-                      }`}
-                    >
-                      <Check className="w-3 h-3" strokeWidth={3.5} />
-                    </span>
+                    {f.included === false ? (
+                      <span className="w-[18px] h-[18px] rounded-full flex items-center justify-center shrink-0 mt-[1px] bg-neutral-200 text-neutral-500">
+                        <X className="w-3 h-3" strokeWidth={3.5} />
+                      </span>
+                    ) : (
+                      <span
+                        className={`w-[18px] h-[18px] rounded-full flex items-center justify-center shrink-0 mt-[1px] ${
+                          hot ? "bg-[#FFD166] text-[#7A002A]" : "bg-[#F5EDDA] text-[#7A002A]"
+                        }`}
+                      >
+                        <Check className="w-3 h-3" strokeWidth={3.5} />
+                      </span>
+                    )}
                     <span
                       className={`font-['Montserrat'] text-[13.5px] leading-snug ${
-                        hot ? "text-white" : "text-[#45303B]"
+                        f.included === false
+                          ? "text-neutral-400 line-through"
+                          : hot
+                            ? "text-white"
+                            : "text-[#45303B]"
                       } ${f.isBold ? "font-bold" : ""}`}
                     >
                       {f.text}
@@ -115,6 +147,16 @@ export default function PricingPlans({ lang }: { lang: Language }) {
                   </li>
                 ))}
               </ul>
+              {plan.trustLine ? (
+                <p
+                  className={`mt-6 flex items-start gap-2 font-['Montserrat'] text-xs leading-snug ${
+                    hot ? "text-[#F0DCAE]" : "text-[#8A6B76]"
+                  }`}
+                >
+                  <BadgeCheck className="w-4 h-4 shrink-0 mt-[1px]" />
+                  <span>{plan.trustLine}</span>
+                </p>
+              ) : null}
               <button
                 onClick={() => handleCheckout(plan.planKey)}
                 disabled={checkoutLoading !== null}
