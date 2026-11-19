@@ -23,7 +23,6 @@ export const GYPSY_BURGUNDY_ASSETS = {
   envelopePocketV: `${LOCAL_BASE}/envelope-flap.webp`,
   envelopeThankYou: `${LOCAL_BASE}/envelope-thank-you.webp`,
   waxSeal: `${LOCAL_BASE}/wax-seal.webp`,
-  selloXv: `${LOCAL_BASE}/sello-xv.webp`,
   sparklersGif: `${LOCAL_BASE}/sparklers.gif`,
   sparklerStar: `${LOCAL_BASE}/sparkler-star.webp`,
 
@@ -68,7 +67,6 @@ export const GYPSY_BURGUNDY_ASSETS = {
     envelopePocketV: `${S3_BASE}/envelope-flap.webp`,
     envelopeThankYou: `${S3_BASE}/envelope-thank-you.webp`,
     waxSeal: `${S3_BASE}/wax-seal.webp`,
-    selloXv: `${S3_BASE}/sello-xv.webp`,
     sparklersGif: `${S3_BASE}/sparklers.gif`,
     sparklerStar: `${S3_BASE}/sparkler-star.webp`,
     headbandFeathers: `${S3_BASE}/headband-feathers.webp`,
