@@ -83,3 +83,73 @@ export const ELEGANT_ROSE_ASSETS = {
     frostedBlurStrip: `${S3_BASE}/339872b4722f5715a436439eedbd3ab5.png`,
   }
 };
+
+/**
+ * Hitos por defecto de la sección "Growing Up" (Elegant Rose).
+ * Son los 5 marcos de película que el template mostraba fijos: 4 fotos
+ * del template + la foto principal de portada como 5º hito.
+ * El editor (Sección 15: Historia / Growing Up) edita esta lista y la
+ * guarda en configPlantilla.hitosVida; si está vacía, se usan estos.
+ * `foto: ""` en el 5º hito significa "la foto principal de portada".
+ */
+export interface ElegantRoseHitoDefault {
+  foto: string;
+  fecha: string;
+  tituloEs: string;
+  tituloEn: string;
+  textoEs: string;
+  textoEn: string;
+}
+
+export const ELEGANT_ROSE_HITOS_DEFAULTS: ElegantRoseHitoDefault[] = [
+  {
+    foto: `${LOCAL_BASE}/722d78548334333072ad7200e4f8233e.webp`,
+    fecha: "10-8-2012",
+    tituloEs: "Primeros Pasos",
+    tituloEn: "Baby Girl",
+    textoEs:
+      "Toda historia tiene un comienzo, y la mía comenzó rodeada del amor de mi familia, la calidez de mi hogar y un sinfín de pequeños recuerdos.",
+    textoEn:
+      "Every story has a beginning, and mine started with the love of family, the comfort of home, and countless little moments that became treasured memories.",
+  },
+  {
+    foto: `${LOCAL_BASE}/94a9fcddf0e62c3f0ffe60a5a769dd9c.webp`,
+    fecha: "2016",
+    tituloEs: "Nuevas Aventuras",
+    tituloEn: "First Steps",
+    textoEs:
+      "Cada nueva aventura trajo consigo emocionantes primeras experiencias, una confianza creciente y amistades que se convirtieron en parte de mi camino.",
+    textoEn:
+      "With each new adventure came exciting firsts, growing confidence, and friendships that would become an important part of my journey.",
+  },
+  {
+    foto: `${LOCAL_BASE}/97da854ac288883d24133acda9d854ca.webp`,
+    fecha: "2019",
+    tituloEs: "Momentos Inolvidables",
+    tituloEn: "Special Bonds",
+    textoEs:
+      "Entre días llenos de risas y recuerdos inolvidables, estas personas tan especiales me ayudaron a convertirme en la persona que soy hoy.",
+    textoEn:
+      "From laughter-filled days to unforgettable memories, these special people helped shape the person I am today.",
+  },
+  {
+    foto: `${LOCAL_BASE}/39e6d693ec9d82a484d96df04a0cffd3.webp`,
+    fecha: "2022",
+    tituloEs: "Compañero Fiel",
+    tituloEn: "Loyal Companion",
+    textoEs:
+      "En el camino, descubrí las cosas que me inspiran, me dan alegría y me motivan a ser la mejor versión de mí misma.",
+    textoEn:
+      "Along the way, I discovered the things that inspire me, bring me joy, and help me become the best version of myself.",
+  },
+  {
+    foto: "",
+    fecha: "2026",
+    tituloEs: "Mis Quince Años",
+    tituloEn: "Sweet Fifteen",
+    textoEs:
+      "Celebrando quince años de recuerdos, sueños y momentos inolvidables… lo mejor está por venir.",
+    textoEn:
+      "And through every chapter, celebrating fifteen amazing years with all my loved ones—the best is yet to come.",
+  },
+];

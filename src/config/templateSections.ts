@@ -19,7 +19,8 @@ export type SeccionId =
   | 'fotoZapatos2'
   | 'corteHonor'
   | 'cuentaRegresiva'
-  | 'videoDespedida';
+  | 'videoDespedida'
+  | 'historia';
 
 export interface SeccionMeta {
   id: SeccionId;
@@ -148,6 +149,14 @@ export const SECCIONES_QUINCE_ROSADO: SeccionMeta[] = [
     icono: 'Music',
     defaultEnabled: true,
   },
+  {
+    id: 'historia',
+    numero: 15,
+    label: 'Historia / Growing Up',
+    descripcion: 'Marcos de película con las fotos de su infancia, fecha, título y texto por hito, más la frase de cierre.',
+    icono: 'BookOpen',
+    defaultEnabled: true,
+  },
 ];
 
 /**
@@ -156,9 +165,10 @@ export const SECCIONES_QUINCE_ROSADO: SeccionMeta[] = [
  * BeautyQuince) y la vista genérica NO tienen bloque de zapato (fotoZapatos1),
  * ni de cojín (fotoZapatos2), ni de video de despedida: esos campos existen
  * en el editor pero la plantilla nunca los muestra. BabyBlue tampoco tiene
- * dedicatoria; ElegantRose tampoco; Coraline no tiene mesa de regalos ni
- * corte; Fairytale (boda) no tiene dedicatoria ni corte. QuinceRosado es
- * la única con las 14. Si una plantilla no está aquí, se listan las 14
+ * dedicatoria; Coraline no tiene mesa de regalos ni corte; Fairytale (boda)
+ * no tiene dedicatoria ni corte. ElegantRose SÍ tiene dedicatoria e historia
+ * (Growing Up) desde nov 2026. QuinceRosado es la única con las 14
+ * originales. Si una plantilla no está aquí, se listan las 14
  * (comportamiento anterior) para no desactivar nada sin evidencia.
  */
 const TODAS_MENOS_ZAPATOS_VIDEO: SeccionId[] = [
@@ -217,6 +227,7 @@ export const SECCIONES_POR_PLANTILLA: Record<string, SeccionId[]> = {
   ELEGANT_ROSE: [
     'portada',
     'medallonFecha',
+    'dedicatoria',
     'rsvp',
     'ubicaciones',
     'dressCode',
@@ -225,6 +236,7 @@ export const SECCIONES_POR_PLANTILLA: Record<string, SeccionId[]> = {
     'corteHonor',
     'cuentaRegresiva',
     'musica',
+    'historia',
   ],
   CORALINE_MYSTICAL: [
     'portada',
