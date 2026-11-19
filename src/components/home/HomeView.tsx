@@ -40,6 +40,7 @@ const PHONE_SMS = "sms:+18182994882";
 // (no render condicional) para que los enlaces estén en el HTML inicial.
 const MENU_LANDING_LINKS: Record<Language, { href: string; label: string }[]> = {
   en: [
+    { href: "/save-the-date", label: "Save the Date" },
     { href: "/quince-invitations", label: "Quince Invitations" },
     { href: "/wedding-invitations-los-angeles", label: "Wedding Invitations" },
     { href: "/wedding-invitations-las-vegas", label: "Wedding Invitations Las Vegas" },
@@ -48,6 +49,7 @@ const MENU_LANDING_LINKS: Record<Language, { href: string; label: string }[]> = 
     { href: "/whatsapp-invitations", label: "WhatsApp Invitations" },
   ],
   es: [
+    { href: "/es/save-the-date", label: "Save the Date" },
     { href: "/es/invitaciones-de-quinceanera", label: "Invitaciones de Quinceañera" },
     { href: "/wedding-invitations-los-angeles", label: "Invitaciones de Boda" },
     { href: "/wedding-invitations-las-vegas", label: "Invitaciones de Boda Las Vegas" },
