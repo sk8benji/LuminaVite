@@ -846,6 +846,55 @@ export default function TemplateSectionBuilder({
                         </div>
                       )}
 
+                      {/* Texto de bienvenida de la portada (SOLO Gatsby 20's): la línea
+                          dorada "WELCOME TO THE" / "BIENVENIDOS A" encima del nombre.
+                          Vacío = la línea no aparece. */}
+                      {((formData as any).estiloPlantilla === "GATSBY_20S" ||
+                        (formData as any).estiloPlantilla === "GYBSY_20S") && (
+                        <div className="p-4 rounded-xl border border-amber-200/60 bg-amber-50/50 space-y-3">
+                          <div>
+                            <p className="text-xs font-bold text-gray-800">Texto de bienvenida (encima del nombre)</p>
+                            <p className="text-[11px] text-gray-500">
+                              La línea dorada encima del nombre en la portada. Si la dejas vacía, la línea no aparece.
+                            </p>
+                          </div>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                              <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+                                Bienvenida (🇲🇽 ES)
+                              </label>
+                              <input
+                                type="text"
+                                value={(formData.configPlantilla as any)?.portadaBienvenida || ""}
+                                onChange={(e) => {
+                                  const cp = { ...((formData as any).configPlantilla || {}) };
+                                  cp.portadaBienvenida = e.target.value;
+                                  updateField("configPlantilla", cp);
+                                }}
+                                placeholder="BIENVENIDOS A"
+                                className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+                                Bienvenida (🇺🇸 EN)
+                              </label>
+                              <input
+                                type="text"
+                                value={(formData.configPlantilla as any)?.portadaBienvenidaEn || ""}
+                                onChange={(e) => {
+                                  const cp = { ...((formData as any).configPlantilla || {}) };
+                                  cp.portadaBienvenidaEn = e.target.value;
+                                  updateField("configPlantilla", cp);
+                                }}
+                                placeholder="WELCOME TO THE"
+                                className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
                       {/* Foto Portada con S3 */}
                       <div>
                         <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
@@ -1124,6 +1173,65 @@ export default function TemplateSectionBuilder({
                             {uploadEstado?.field === "fotoActualUrl" && uploadEstado.estado === "error" && (
                               <span className="text-[11px] font-bold text-red-600">✗ {uploadEstado.mensaje || "Error al subir"}</span>
                             )}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Mensaje de cierre (abajo de las polaroids) */}
+                      <div className="pt-2">
+                        <div className="flex items-center justify-between mb-1">
+                          <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider">
+                            Mensaje de cierre (abajo de las fotos)
+                          </label>
+                          <label className="inline-flex items-center gap-1.5 text-[11px] font-bold text-gray-700 cursor-pointer">
+                            <input
+                              type="checkbox"
+                              checked={(formData.configPlantilla as any)?.mostrarDedicatoriaCierre !== false}
+                              onChange={(e) => {
+                                const cp = { ...((formData as any).configPlantilla || {}) };
+                                cp.mostrarDedicatoriaCierre = e.target.checked;
+                                updateField("configPlantilla", cp);
+                              }}
+                              className="rounded text-[#7A002A]"
+                            />
+                            <span>Mostrar</span>
+                          </label>
+                        </div>
+                        <p className="text-[11px] text-gray-500 mb-3">
+                          Pequeño texto al final de la dedicatoria, con el mismo estilo del mensaje de arriba. Si queda vacío, no aparece.
+                        </p>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+                              Mensaje de cierre (🇲🇽 ES)
+                            </label>
+                            <textarea
+                              rows={3}
+                              value={(formData.configPlantilla as any)?.dedicatoriaCierre || ""}
+                              onChange={(e) => {
+                                const cp = { ...((formData as any).configPlantilla || {}) };
+                                cp.dedicatoriaCierre = e.target.value;
+                                updateField("configPlantilla", cp);
+                              }}
+                              placeholder="Escribe un mensaje de cierre para la dedicatoria..."
+                              className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+                              Mensaje de cierre (🇺🇸 EN)
+                            </label>
+                            <textarea
+                              rows={3}
+                              value={(formData.configPlantilla as any)?.dedicatoriaCierreEn || ""}
+                              onChange={(e) => {
+                                const cp = { ...((formData as any).configPlantilla || {}) };
+                                cp.dedicatoriaCierreEn = e.target.value;
+                                updateField("configPlantilla", cp);
+                              }}
+                              placeholder="Write a closing message for the dedication..."
+                              className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
+                            />
                           </div>
                         </div>
                       </div>
@@ -1688,6 +1796,50 @@ export default function TemplateSectionBuilder({
                           />
                         </div>
                       </div>
+
+                      {/* Colores reservados (línea dorada en cursiva debajo de la nota) */}
+                      <div className="pt-2">
+                        <p className="text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+                          Colores reservados (línea debajo de la nota)
+                        </p>
+                        <p className="text-[11px] text-gray-500 mb-3">
+                          En español se muestra el texto guardado del evento si no escribes uno aquí. En inglés solo aparece lo que escribas. Vacío en ese idioma = la línea no aparece.
+                        </p>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+                              Colores reservados (🇲🇽 ES)
+                            </label>
+                            <input
+                              type="text"
+                              value={(formData.configPlantilla as any)?.coloresReservados ?? (formData as any).dressCodeColoresReservados ?? ""}
+                              onChange={(e) => {
+                                const cp = { ...((formData as any).configPlantilla || {}) };
+                                cp.coloresReservados = e.target.value;
+                                updateField("configPlantilla", cp);
+                              }}
+                              placeholder="Ej. Tonos rosa pastel reservados para la quinceañera"
+                              className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+                              Colores reservados (🇺🇸 EN)
+                            </label>
+                            <input
+                              type="text"
+                              value={(formData.configPlantilla as any)?.coloresReservadosEn || ""}
+                              onChange={(e) => {
+                                const cp = { ...((formData as any).configPlantilla || {}) };
+                                cp.coloresReservadosEn = e.target.value;
+                                updateField("configPlantilla", cp);
+                              }}
+                              placeholder="Ej. Pastel pink tones reserved for the quinceañera"
+                              className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
+                            />
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   )}
 
@@ -1930,7 +2082,7 @@ export default function TemplateSectionBuilder({
                   )}
 
                   {/* ──────────────────────────────────────────────────────────
-                      SECCIÓN 10: FOTO ZAPATOS 2 / PARA NUESTROS NIÑOS
+                      SECCIÓN 10: RECOMENDACIÓN (FOTO ZAPATOS 2 / PARA NUESTROS NIÑOS)
                   ────────────────────────────────────────────────────────── */}
                   {sec.id === "fotoZapatos2" && (
                     <div className="space-y-4">
@@ -1994,6 +2146,114 @@ export default function TemplateSectionBuilder({
                           placeholder="No puedo celebrar sin ti / I can’t celebrate without you"
                           className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
                         />
+                      </div>
+
+                      {/* Para Nuestros Niños: contenido del recuadro (editable) */}
+                      <div className="pt-2">
+                        <p className="text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+                          Para Nuestros Niños (recuadro)
+                        </p>
+                        <p className="text-[11px] text-gray-500 mb-3">
+                          Si el título queda vacío, el recuadro no aparece en la invitación.
+                        </p>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+                              Título (🇲🇽 ES)
+                            </label>
+                            <input
+                              type="text"
+                              value={(formData.configPlantilla as any)?.ninosTitulo || ""}
+                              onChange={(e) => {
+                                const cp = { ...((formData as any).configPlantilla || {}) };
+                                cp.ninosTitulo = e.target.value;
+                                updateField("configPlantilla", cp);
+                              }}
+                              placeholder="PARA NUESTROS NIÑOS"
+                              className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+                              Título (🇺🇸 EN)
+                            </label>
+                            <input
+                              type="text"
+                              value={(formData.configPlantilla as any)?.ninosTituloEn || ""}
+                              onChange={(e) => {
+                                const cp = { ...((formData as any).configPlantilla || {}) };
+                                cp.ninosTituloEn = e.target.value;
+                                updateField("configPlantilla", cp);
+                              }}
+                              placeholder="FOR OUR LITTLE GUESTS"
+                              className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+                              Mensaje (🇲🇽 ES)
+                            </label>
+                            <textarea
+                              rows={3}
+                              value={(formData.configPlantilla as any)?.ninosTexto || ""}
+                              onChange={(e) => {
+                                const cp = { ...((formData as any).configPlantilla || {}) };
+                                cp.ninosTexto = e.target.value;
+                                updateField("configPlantilla", cp);
+                              }}
+                              placeholder="Nuestros pequeños invitados son una parte muy especial de esta celebración..."
+                              className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+                              Mensaje (🇺🇸 EN)
+                            </label>
+                            <textarea
+                              rows={3}
+                              value={(formData.configPlantilla as any)?.ninosTextoEn || ""}
+                              onChange={(e) => {
+                                const cp = { ...((formData as any).configPlantilla || {}) };
+                                cp.ninosTextoEn = e.target.value;
+                                updateField("configPlantilla", cp);
+                              }}
+                              placeholder="Our little guests are a very special part of this celebration..."
+                              className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+                              Despedida (🇲🇽 ES)
+                            </label>
+                            <input
+                              type="text"
+                              value={(formData.configPlantilla as any)?.ninosCierre || ""}
+                              onChange={(e) => {
+                                const cp = { ...((formData as any).configPlantilla || {}) };
+                                cp.ninosCierre = e.target.value;
+                                updateField("configPlantilla", cp);
+                              }}
+                              placeholder="Gracias por ayudarnos a mantener estos momentos hermosos para todos."
+                              className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+                              Despedida (🇺🇸 EN)
+                            </label>
+                            <input
+                              type="text"
+                              value={(formData.configPlantilla as any)?.ninosCierreEn || ""}
+                              onChange={(e) => {
+                                const cp = { ...((formData as any).configPlantilla || {}) };
+                                cp.ninosCierreEn = e.target.value;
+                                updateField("configPlantilla", cp);
+                              }}
+                              placeholder="Thank you for helping us keep these moments beautiful for everyone."
+                              className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
+                            />
+                          </div>
+                        </div>
                       </div>
                     </div>
                   )}
