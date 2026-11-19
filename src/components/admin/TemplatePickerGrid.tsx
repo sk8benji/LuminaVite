@@ -201,6 +201,18 @@ export const TEMPLATE_CATALOG: TemplatePickerItem[] = [
     features: ["Sobre Negro con Sello", "Disco de Vinilo", "Ticket Save the Date", "Bilingüe EN/ES"],
     destacada: true,
   },
+  {
+    id: "GYPSY_BURGUNDY",
+    name: "Gypsy Burgundy (Roaring Twenties)",
+    categoria: "QUINCEANERA",
+    badgeLabel: "Nuevo - Burgundy",
+    thumbnail: "/assets/templates/gypsy-burgundy/photo-chloe-portrait.webp",
+    description: "Roaring Twenties en burgundy: sobre burgundy con sello dorado, tarjeta Art Déco, disco de vinilo con música, ticket Save the Date y corte de honor.",
+    demoSlug: "gybsy-burgundy",
+    dots: ["#2B0A12", "#D4AF37", "#F5E6AB"],
+    features: ["Sobre Burgundy con Sello", "Disco de Vinilo", "Ticket Save the Date", "Bilingüe EN/ES"],
+    destacada: true,
+  },
 ];
 
 interface TemplatePickerGridProps {

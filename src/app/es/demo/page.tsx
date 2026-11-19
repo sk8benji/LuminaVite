@@ -75,6 +75,15 @@ const DEMO_CARDS = [
     image: "/assets/templates/gatsby-20s/photo-chloe-portrait.webp",
   },
   {
+    slug: "gybsy-burgundy",
+    title: "Gypsy Burgundy",
+    name: "Chloe",
+    tag: "XV Años & Gala",
+    badge: "Nueva",
+    desc: "Años 20 Art Déco en burgundy: sobre burgundy con sello dorado, disco de vinilo, ticket Save the Date y corte de honor completo.",
+    image: "/assets/templates/gypsy-burgundy/photo-chloe-portrait.webp",
+  },
+  {
     slug: "isabella-xv",
     title: "Vintage Quinceanera",
     name: "Isabella Cordero",

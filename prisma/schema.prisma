@@ -48,6 +48,7 @@ enum EstiloPlantilla {
   BABY_BLUE               // T7: Baby Blue (Réplica Canva Studio Eburnean, azul bebé y plata)
   BEAUTY_QUINCE           // Beauty Quince (Réplica Canva Beauty Quince Invitation, azul/dorado/rojo)
   GATSBY_20S              // Gatsby 20s (Roaring Twenties / Art Deco)
+  GYPSY_BURGUNDY         // Gypsy Burgundy (clon de Gatsby 20s, paleta burgundy)
 }
 
 enum RolUsuario {
