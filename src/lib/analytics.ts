@@ -1,5 +1,7 @@
-// Eventos GA4 del plan de marketing (semana 1). gtag ya carga global en
-// layout.tsx; si no está disponible (bloqueador, SSR) no se rompe nada.
+// Eventos de medición (REGLA Tag Manager, 25 nov 2026): la web SOLO pushea
+// eventos al dataLayer; GTM los lee y los reenvía a GA4 (tags de evento).
+// Nada de gtag/fbq/clarity directo en el código. Si GTM aún no tiene el tag
+// creado, el push no se pierde ni rompe nada: queda en el dataLayer.
 /**
  * Lee el client_id de GA4 de la cookie _ga (formato GA1.1.<random>.<ts>).
  * El client_id es "<random>.<ts>". null si no hay cookie (bloqueador,
@@ -20,11 +22,12 @@ export function track(
   params?: Record<string, unknown>
 ): void {
   try {
-    const gtag = (window as unknown as { gtag?: (...args: unknown[]) => void })
-      .gtag;
-    if (typeof gtag === "function") {
-      gtag("event", event, params || {});
-    }
+    if (typeof window === "undefined") return;
+    const w = window as unknown as {
+      dataLayer?: Array<Record<string, unknown>>;
+    };
+    w.dataLayer = w.dataLayer || [];
+    w.dataLayer.push({ event, ...(params || {}) });
   } catch {
     // Analítica opcional: nunca debe romper la interacción.
   }
