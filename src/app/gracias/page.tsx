@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Suspense, useEffect, useRef, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import confetti from "canvas-confetti";
@@ -41,7 +41,6 @@ function GraciasContent() {
 
   const [loading, setLoading] = useState(true);
   const [order, setOrder] = useState<OrderInfo | null>(null);
-  const purchaseFiredFor = useRef<string | null>(null);
 
   useEffect(() => {
     // Celebration confetti
@@ -79,23 +78,12 @@ function GraciasContent() {
     }
   }, [sessionId]);
 
-  // Semana 1: compra confirmada como conversión GA4 (solo pago PAGADO,
-  // una sola vez por sesión, con monto y paquete reales de Stripe).
-  useEffect(() => {
-    if (
-      order &&
-      order.estadoPago === "PAGADO" &&
-      purchaseFiredFor.current !== order.stripeSessionId
-    ) {
-      purchaseFiredFor.current = order.stripeSessionId;
-      track("purchase", {
-        transaction_id: order.stripeSessionId,
-        value: order.montoTotal,
-        currency: order.moneda.toUpperCase(),
-        items: [{ item_id: order.paqueteId, item_name: order.paqueteNombre }],
-      });
-    }
-  }, [order]);
+  // NOTA (2026-11-25): el purchase YA NO se dispara aquí. Dos ventas
+  // reales de $159.20 (10 y ~12 nov) nunca llegaron a GA4 porque la
+  // compradora no volvió a /gracias tras pagar. El purchase se envía
+  // ahora SOLO desde el webhook de Stripe por Measurement Protocol
+  // (src/lib/ga4-measurement-protocol.ts), fuente de verdad, con el
+  // guard de transición PENDIENTE → PAGADO para no duplicar.
 
   if (loading) {
     return (

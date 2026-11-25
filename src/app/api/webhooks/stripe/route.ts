@@ -5,6 +5,7 @@ import {
   sendCustomerOrderConfirmationEmail,
   sendAdminOrderAlertEmail,
 } from "@/lib/order-emails";
+import { sendGa4Purchase } from "@/lib/ga4-measurement-protocol";
 import { getSiteUrl } from "@/lib/url-safety";
 
 /**
@@ -107,11 +108,23 @@ export async function POST(req: NextRequest) {
       telefonoCliente: customerPhone,
     });
 
-    // Correos (no bloqueantes para la respuesta 2xx a Stripe)
+    // Correos + purchase GA4 (no bloqueantes para la respuesta 2xx a Stripe).
+    // El purchase va SOLO por Measurement Protocol desde aquí: el guard de
+    // arriba (existing PAGADO → duplicate) evita que los reintentos de
+    // Stripe lo reenvíen. Si GA4_MP_API_SECRET no está configurado, el
+    // helper solo registra en log y la orden sigue su curso normal.
     const origin = getSiteUrl();
     await Promise.allSettled([
       sendCustomerOrderConfirmationEmail(order, origin),
       sendAdminOrderAlertEmail(order, origin),
+      sendGa4Purchase({
+        clientId: (session.metadata as any)?.gaClientId || null,
+        transactionId: sessionId,
+        value: order.montoTotal,
+        currency: order.moneda,
+        itemId: order.paqueteId,
+        itemName: order.paqueteNombre,
+      }),
     ]);
 
     console.log(`[Stripe webhook] Orden ${order.id} marcada PAGADO + correos enviados.`);
