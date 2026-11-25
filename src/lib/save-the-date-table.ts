@@ -87,6 +87,50 @@ export async function updateSaveTheDateTitulos(
   );
 }
 
+/** Foto del sobre abierto (2ª foto del hero). Default = foto del demo. */
+export const FOTO_SOBRE_ABIERTO_DEFAULT =
+  "/assets/save-the-date/f291897753a9fc56f20003d177749b21.webp";
+
+export async function getSaveTheDateFotoSobreAbierto(
+  id: string
+): Promise<string | null> {
+  try {
+    const rows = await prisma.$queryRaw<Array<{ fotoSobreAbiertoUrl: string | null }>>(
+      Prisma.sql`SELECT "fotoSobreAbiertoUrl" FROM "SaveTheDate" WHERE "id" = ${id}`
+    );
+    return rows[0]?.fotoSobreAbiertoUrl ?? null;
+  } catch {
+    return null;
+  }
+}
+
+export async function getSaveTheDateFotoSobreAbiertoMany(
+  ids: string[]
+): Promise<Record<string, string | null>> {
+  if (ids.length === 0) return {};
+  try {
+    const rows = await prisma.$queryRaw<
+      Array<{ id: string; fotoSobreAbiertoUrl: string | null }>
+    >(
+      Prisma.sql`SELECT "id", "fotoSobreAbiertoUrl" FROM "SaveTheDate" WHERE "id" IN (${Prisma.join(ids)})`
+    );
+    const out: Record<string, string | null> = {};
+    for (const row of rows) out[row.id] = row.fotoSobreAbiertoUrl;
+    return out;
+  } catch {
+    return {};
+  }
+}
+
+export async function updateSaveTheDateFotoSobreAbierto(
+  id: string,
+  url: string | null
+): Promise<void> {
+  await prisma.$executeRaw(
+    Prisma.sql`UPDATE "SaveTheDate" SET "fotoSobreAbiertoUrl" = ${url} WHERE "id" = ${id}`
+  );
+}
+
 let isEnsured = false;
 let ensuringPromise: Promise<void> | null = null;
 
@@ -170,6 +214,20 @@ export async function ensureSaveTheDateTables(): Promise<void> {
         `ALTER TABLE "SaveTheDate" ADD COLUMN IF NOT EXISTS "subtituloEn" TEXT DEFAULT 'My Sweet Fifteen';`,
       ];
       for (const sql of columnasBilingues) {
+        try {
+          await prisma.$executeRawUnsafe(sql);
+        } catch {}
+      }
+
+      // Foto del sobre abierto: la 2ª foto del hero (se ve al abrir el sobre).
+      // Igual que los títulos: columna en DB pero NO en schema.prisma, así
+      // que se lee/escribe con los helpers de abajo, nunca con Prisma.
+      // El DEFAULT es la foto del demo (vestido rosado) para que las
+      // invitaciones existentes sigan viéndose igual hasta que se cambie.
+      const columnasExtras = [
+        `ALTER TABLE "SaveTheDate" ADD COLUMN IF NOT EXISTS "fotoSobreAbiertoUrl" TEXT DEFAULT '/assets/save-the-date/f291897753a9fc56f20003d177749b21.webp';`,
+      ];
+      for (const sql of columnasExtras) {
         try {
           await prisma.$executeRawUnsafe(sql);
         } catch {}

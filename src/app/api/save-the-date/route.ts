@@ -2,8 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/db";
 import {
   ensureSaveTheDateTables,
+  getSaveTheDateFotoSobreAbiertoMany,
   getSaveTheDateTitulosMany,
   pickTitulosBilingues,
+  updateSaveTheDateFotoSobreAbierto,
   updateSaveTheDateTitulos,
 } from "@/lib/save-the-date-table";
 
@@ -35,14 +37,19 @@ export async function GET() {
       },
     });
 
-    // GET: devolver también los títulos bilingües (no los trae Prisma),
-    // si no el admin los ve en blanco al reabrir aunque estén guardados.
+    // GET: devolver también los títulos bilingües y la foto del sobre
+    // abierto (no los trae Prisma), si no el admin los ve en blanco al
+    // reabrir aunque estén guardados.
     const titulosPorId = await getSaveTheDateTitulosMany(
+      items.map((i: any) => i.id)
+    );
+    const fotosPorId = await getSaveTheDateFotoSobreAbiertoMany(
       items.map((i: any) => i.id)
     );
     const itemsConTitulos = items.map((i: any) => ({
       ...i,
       ...(titulosPorId[i.id] || {}),
+      fotoSobreAbiertoUrl: fotosPorId[i.id] ?? null,
     }));
 
     return NextResponse.json({ success: true, items: itemsConTitulos });
@@ -128,7 +135,9 @@ export async function POST(req: NextRequest) {
         colorSello: colorSello || "#C5A059",
         tipoLetra: tipoLetra || "Cinzel",
         fotoPortadaUrl,
-        galeriaFotosUrls: Array.isArray(galeriaFotosUrls) ? galeriaFotosUrls : [],
+        galeriaFotosUrls: Array.isArray(galeriaFotosUrls)
+          ? galeriaFotosUrls.filter((u: any) => typeof u === "string" && u.trim() !== "")
+          : [],
         musicaUrl: musicaUrl || null,
         musicaTitulo: musicaTitulo || null,
         mostrarSobre: mostrarSobre !== false,
@@ -146,7 +155,22 @@ export async function POST(req: NextRequest) {
     const titulos = pickTitulosBilingues(body);
     await updateSaveTheDateTitulos(created.id, titulos);
 
-    return NextResponse.json({ success: true, item: { ...created, ...titulos } });
+    // Foto del sobre abierto, también por SQL crudo (misma razón).
+    if (body.fotoSobreAbiertoUrl !== undefined) {
+      await updateSaveTheDateFotoSobreAbierto(
+        created.id,
+        body.fotoSobreAbiertoUrl || null
+      );
+    }
+
+    return NextResponse.json({
+      success: true,
+      item: {
+        ...created,
+        ...titulos,
+        fotoSobreAbiertoUrl: body.fotoSobreAbiertoUrl ?? null,
+      },
+    });
   } catch (error: any) {
     console.error("Error al crear Save The Date:", error);
     return NextResponse.json(

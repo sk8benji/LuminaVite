@@ -30,6 +30,13 @@ import {
   Square,
 } from "lucide-react";
 
+// Foto del sobre abierto del demo (vestido rosado). El admin la puede
+// cambiar desde el modal; si queda vacía, la vista pública usa esta.
+// OJO: este archivo es cliente, no puede importar el helper del servidor
+// (save-the-date-table.ts trae Prisma); por eso la URL va literal aquí.
+const FOTO_SOBRE_ABIERTO_DEMO =
+  "/assets/save-the-date/f291897753a9fc56f20003d177749b21.webp";
+
 export interface SaveTheDateItem {
   id: string;
   slug: string;
@@ -45,6 +52,7 @@ export interface SaveTheDateItem {
   colorSello?: string | null;
   tipoLetra?: string | null;
   fotoPortadaUrl: string;
+  fotoSobreAbiertoUrl?: string | null; // 2ª foto del hero, se ve al abrir el sobre
   galeriaFotosUrls: string[];
   musicaUrl?: string | null;
   musicaTitulo?: string | null;
@@ -124,6 +132,7 @@ export default function SaveTheDateManager() {
     colorSobre: "#FFE8EE",
     colorSello: "#D4AF37",
     fotoPortadaUrl: "/assets/save-the-date/principal.jpeg",
+    fotoSobreAbiertoUrl: FOTO_SOBRE_ABIERTO_DEMO,
     galeriaFotosUrls: [
       "/assets/save-the-date/save1.webp",
       "/assets/save-the-date/save2.webp",
@@ -244,6 +253,7 @@ export default function SaveTheDateManager() {
             colorSello: "#D4AF37",
             tipoLetra: "Cinzel",
             fotoPortadaUrl: "/assets/save-the-date/principal.jpeg",
+            fotoSobreAbiertoUrl: FOTO_SOBRE_ABIERTO_DEMO,
             galeriaFotosUrls: [
               "/assets/save-the-date/save1.webp",
               "/assets/save-the-date/save2.webp",
@@ -299,6 +309,7 @@ export default function SaveTheDateManager() {
       colorSobre: "#FFE8EE",
       colorSello: "#D4AF37",
       fotoPortadaUrl: "/assets/save-the-date/principal.jpeg",
+      fotoSobreAbiertoUrl: FOTO_SOBRE_ABIERTO_DEMO,
       galeriaFotosUrls: [
         "/assets/save-the-date/save1.webp",
         "/assets/save-the-date/save2.webp",
@@ -342,6 +353,7 @@ export default function SaveTheDateManager() {
       colorSobre: item.colorSobre || "#FFF0F3",
       colorSello: item.colorSello || "#C5A059",
       fotoPortadaUrl: item.fotoPortadaUrl,
+      fotoSobreAbiertoUrl: item.fotoSobreAbiertoUrl || FOTO_SOBRE_ABIERTO_DEMO,
       galeriaFotosUrls: item.galeriaFotosUrls || [],
       musicaUrl: item.musicaUrl || "",
       musicaTitulo: item.musicaTitulo || "",
@@ -1128,26 +1140,75 @@ export default function SaveTheDateManager() {
 
                 <div>
                   <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-1.5">
-                    Galería de 3 Fotos Verticales (Sección 2)
+                    Foto al Abrir el Sobre (se ve al abrirlo)
                   </label>
+                  <div className="flex gap-3 items-center p-3 rounded-2xl border border-stone-200 bg-stone-50">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={formData.fotoSobreAbiertoUrl || FOTO_SOBRE_ABIERTO_DEMO}
+                      alt="Al abrir el sobre"
+                      className="w-14 h-20 rounded-xl object-cover border border-white shadow-xs shrink-0"
+                    />
+                    <input
+                      type="text"
+                      value={formData.fotoSobreAbiertoUrl || ""}
+                      onChange={(e) => setFormData({ ...formData, fotoSobreAbiertoUrl: e.target.value })}
+                      placeholder="URL de la foto al abrir el sobre..."
+                      className="flex-1 px-3 py-2 rounded-xl border border-stone-200 text-xs text-stone-800 bg-white font-mono"
+                    />
+                    <label className="inline-flex items-center gap-1.5 px-3 py-2 bg-[#7A002A] text-white rounded-xl text-xs font-semibold cursor-pointer shrink-0">
+                      <Upload className="w-3 h-3" />
+                      <span>{subiendoArchivo === "fotoSobreAbiertoUrl" ? "Subiendo..." : "Subir Foto"}</span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => handleSubirArchivo(e, "fotoSobreAbiertoUrl", false)}
+                        disabled={subiendoArchivo === "fotoSobreAbiertoUrl"}
+                        className="hidden"
+                      />
+                    </label>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-1.5">
+                    Galería de Fotos Verticales (Sección 2)
+                  </label>
+                  <p className="text-[11px] text-stone-500 mb-1.5">
+                    Se ven 2 fotos a la vez; si hay más, el invitado las desliza de lado.
+                  </p>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                    {[0, 1, 2].map((idx) => {
-                      const url = formData.galeriaFotosUrls[idx] || "";
+                    {formData.galeriaFotosUrls.map((urlFila, idx) => {
+                      const url = urlFila || "";
                       return (
                         <div key={idx} className="p-3 bg-stone-50 rounded-2xl border border-stone-200 space-y-2">
                           <div className="flex items-center justify-between">
                             <span className="text-[11px] font-bold text-stone-700">Foto {idx + 1}</span>
-                            <label className="inline-flex items-center gap-1 px-2 py-1 bg-stone-200 hover:bg-stone-300 text-stone-800 rounded-lg text-[10px] font-semibold cursor-pointer">
-                              <Upload className="w-2.5 h-2.5" />
-                              <span>{subiendoArchivo === `galeria-${idx}` ? "Subiendo..." : "Subir"}</span>
-                              <input
-                                type="file"
-                                accept="image/*"
-                                onChange={(e) => handleSubirArchivo(e, `galeria-${idx}`, false)}
-                                disabled={subiendoArchivo === `galeria-${idx}`}
-                                className="hidden"
-                              />
-                            </label>
+                            <div className="flex items-center gap-1">
+                              <label className="inline-flex items-center gap-1 px-2 py-1 bg-stone-200 hover:bg-stone-300 text-stone-800 rounded-lg text-[10px] font-semibold cursor-pointer">
+                                <Upload className="w-2.5 h-2.5" />
+                                <span>{subiendoArchivo === `galeria-${idx}` ? "Subiendo..." : "Subir"}</span>
+                                <input
+                                  type="file"
+                                  accept="image/*"
+                                  onChange={(e) => handleSubirArchivo(e, `galeria-${idx}`, false)}
+                                  disabled={subiendoArchivo === `galeria-${idx}`}
+                                  className="hidden"
+                                />
+                              </label>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  const nuevas = formData.galeriaFotosUrls.filter((_, i) => i !== idx);
+                                  setFormData({ ...formData, galeriaFotosUrls: nuevas });
+                                }}
+                                className="inline-flex items-center gap-1 px-2 py-1 bg-red-50 hover:bg-red-100 text-red-700 rounded-lg text-[10px] font-semibold"
+                                title="Quitar esta foto"
+                              >
+                                <Trash2 className="w-2.5 h-2.5" />
+                                <span>Quitar</span>
+                              </button>
+                            </div>
                           </div>
                           {url && (
                             // eslint-disable-next-line @next/next/no-img-element
@@ -1172,6 +1233,16 @@ export default function SaveTheDateManager() {
                       );
                     })}
                   </div>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setFormData({ ...formData, galeriaFotosUrls: [...formData.galeriaFotosUrls, ""] })
+                    }
+                    className="mt-3 inline-flex items-center gap-1.5 px-3 py-2 bg-stone-200 hover:bg-stone-300 text-stone-800 rounded-xl text-xs font-semibold"
+                  >
+                    <Plus className="w-3.5 h-3.5" />
+                    <span>Agregar foto</span>
+                  </button>
                 </div>
               </div>
 

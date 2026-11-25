@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import prisma from "@/lib/db";
-import { ensureSaveTheDateTables, getSaveTheDateTitulos } from "@/lib/save-the-date-table";
+import { ensureSaveTheDateTables, getSaveTheDateFotoSobreAbierto, getSaveTheDateTitulos } from "@/lib/save-the-date-table";
 import QuinceRosadoSaveTheDate from "@/components/save-the-date/QuinceRosadoSaveTheDate";
 
 export const dynamic = "force-dynamic";
@@ -79,6 +79,7 @@ async function getSaveTheDateData(rawSlug: string) {
       // (ver save-the-date-table.ts): sin esta lectura siempre caían
       // al default del demo aunque el admin los hubiera guardado.
       const titulos = await getSaveTheDateTitulos(item.id);
+      const fotoSobreAbierto = await getSaveTheDateFotoSobreAbierto(item.id);
       // Incrementar contador de forma asíncrona
       prisma.saveTheDate
         .update({
@@ -100,7 +101,7 @@ async function getSaveTheDateData(rawSlug: string) {
         colorSello: item.colorSello,
         tipoLetra: item.tipoLetra,
         fotoPortadaUrl: item.fotoPortadaUrl,
-        fotoSobreAbiertoUrl: (item as any).fotoSobreAbiertoUrl || "/assets/save-the-date/f291897753a9fc56f20003d177749b21.webp",
+        fotoSobreAbiertoUrl: fotoSobreAbierto || DEMO_SAVE_THE_DATE.fotoSobreAbiertoUrl,
         galeriaFotosUrls: Array.isArray(item.galeriaFotosUrls) && item.galeriaFotosUrls.length > 0
           ? item.galeriaFotosUrls
           : DEMO_SAVE_THE_DATE.galeriaFotosUrls,
