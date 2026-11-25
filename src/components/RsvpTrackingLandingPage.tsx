@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { track } from "@/lib/analytics";
+import { track, getGaClientId } from "@/lib/analytics";
 import Image from "next/image";
 import {
   ArrowRight,
@@ -123,6 +123,8 @@ export default function RsvpTrackingLandingPage() {
   const totalPending = 28;
 
   const handleCheckout = async (plan: "assisted" | "vip") => {
+    // GA4: inicio de checkout (antes de salir a Stripe).
+    track("begin_checkout", { paquete: plan });
     setCheckoutLoading(plan);
     try {
       const res = await fetch("/api/checkout", {
@@ -130,6 +132,7 @@ export default function RsvpTrackingLandingPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           plan,
+          gaClientId: getGaClientId(),
           templateSlug: "isabella-xv",
           currency: "usd",
         }),

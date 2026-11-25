@@ -6,7 +6,7 @@ import { getSiteUrl } from "@/lib/url-safety";
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { plan = "signature" } = body;
+    const { plan = "signature", gaClientId } = body;
 
     const pkg = PACKAGES[plan] || PACKAGES.signature;
     // H3: URL canónica fija para Stripe, nunca headers del request
@@ -40,6 +40,11 @@ export async function POST(req: NextRequest) {
         metadata: {
           paqueteId: pkg.id,
           paqueteNombre: pkg.name,
+          // GA4 client_id para el purchase por Measurement Protocol
+          // desde el webhook (si el navegador lo pudo leer de la cookie _ga).
+          ...(typeof gaClientId === "string" && gaClientId
+            ? { gaClientId }
+            : {}),
         },
         success_url: `${origin}/gracias?session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `${origin}/#precios`,

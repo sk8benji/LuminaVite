@@ -17,7 +17,7 @@ import {
   X,
 } from "lucide-react";
 import { Language, translations } from "@/lib/home-translations";
-import { track } from "@/lib/analytics";
+import { track, getGaClientId } from "@/lib/analytics";
 import HeroPhones from "@/components/home/HeroPhones";
 import InteractiveDemoModal from "@/components/home/InteractiveDemoModal";
 
@@ -84,7 +84,7 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
       const res = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ plan }),
+        body: JSON.stringify({ plan, gaClientId: getGaClientId() }),
       });
       const data = await res.json();
       if (data.url) {

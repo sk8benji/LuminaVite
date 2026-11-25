@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { track } from "@/lib/analytics";
+import { track, getGaClientId } from "@/lib/analytics";
 import Image from "next/image";
 import { FAQS_LIST } from "@/lib/quince-faqs";
 import {
@@ -130,12 +130,14 @@ export default function QuinceLandingPage() {
 
   // Handler for Checkout API
   const handleCheckout = async (plan: "assisted" | "vip") => {
+    // GA4: inicio de checkout (antes de salir a Stripe).
+    track("begin_checkout", { paquete: plan });
     setCheckoutLoading(plan);
     try {
       const res = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ plan }),
+        body: JSON.stringify({ plan, gaClientId: getGaClientId() }),
       });
       const data = await res.json();
       if (data.url) {
