@@ -1,4 +1,5 @@
 "use client";
+import SiteFooter from "@/components/layout/SiteFooter";
 
 import React, { useState } from "react";
 import Link from "next/link";
@@ -36,8 +37,8 @@ import {
 // ============================================================================
 // CONSTANTS & ASSETS
 // ============================================================================
-const PHONE_DISPLAY = "(818) 299-4882";
-const PHONE_TEL = "tel:+18182994882";
+const PHONE_DISPLAY = "(818) 918-2519";
+const PHONE_TEL = "tel:+18189182519";
 const PHONE_SMS = "sms:+18182994882";
 const WHATSAPP_URL =
   "https://wa.me/18182994882?text=Hello%20Click%20%26%20Love!%20I%20would%20like%20information%20about%20Wedding%20invitations%20in%20Las%20Vegas.";
@@ -71,7 +72,7 @@ const WEDDING_TEMPLATES_LIST: WeddingTemplateItem[] = [
     slug: "sofia-y-alejandro",
     image: "https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=800&q=80",
     palette: "Eucalyptus Green • Warm Rose • Ivory",
-    description: "Romantic garden atmosphere with botanical borders, church & reception dual itinerary, gift registry links, and Waze navigation.",
+    description: "Romantic garden atmosphere with botanical borders, church & reception dual itinerary, gift registry links, and Google Maps navigation.",
     highlights: ["Bilingual EN / ES switcher", "Dual-venue itinerary (Church + Reception)", "Honeyfund / Zelle registry"],
   },
   {
@@ -110,6 +111,7 @@ export default function WeddingLasVegasLandingPage() {
         body: JSON.stringify({
           plan,
           gaClientId: getGaClientId(),
+          lang: "en",
           templateSlug: "emma-and-lucas",
           currency: "usd",
         }),
@@ -275,7 +277,7 @@ export default function WeddingLasVegasLandingPage() {
                   href="#pricing"
                   className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl border-2 border-[#2B0A18]/20 bg-white/70 text-[#2B0A18] text-base font-semibold hover:border-[#7A002A] hover:text-[#7A002A] hover:bg-white transition-all text-center"
                 >
-                  <span>See Packages ($99 - $199)</span>
+                  <span>See Packages ($99 - $279)</span>
                   <ArrowRight className="w-4 h-4" />
                 </a>
               </div>
@@ -571,22 +573,22 @@ export default function WeddingLasVegasLandingPage() {
                   1-Tap GPS to Iconic Vegas Venues
                 </h3>
                 <p className="text-[#2B0A18]/75 text-sm leading-relaxed mb-6">
-                  Guests open driving directions directly in Google Maps, Apple Maps, or Waze. Pre-mapped with ceremony and reception parking instructions.
+                  Guests open driving directions directly in Google Maps directly. Pre-mapped with ceremony and reception parking instructions.
                 </p>
               </div>
 
               <div className="space-y-2 text-xs">
                 <div className="flex items-center justify-between p-2.5 rounded-xl bg-white border border-[#2B0A18]/10">
                   <span className="font-semibold text-[#2B0A18]">Bellagio</span>
-                  <span className="text-[#B08D3C] font-semibold text-[11px]">Waze &amp; Maps</span>
+                  <span className="text-[#B08D3C] font-semibold text-[11px]">Google Maps</span>
                 </div>
                 <div className="flex items-center justify-between p-2.5 rounded-xl bg-white border border-[#2B0A18]/10">
                   <span className="font-semibold text-[#2B0A18]">Caesars Palace</span>
-                  <span className="text-[#B08D3C] font-semibold text-[11px]">Waze &amp; Maps</span>
+                  <span className="text-[#B08D3C] font-semibold text-[11px]">Google Maps</span>
                 </div>
                 <div className="flex items-center justify-between p-2.5 rounded-xl bg-white border border-[#2B0A18]/10">
                   <span className="font-semibold text-[#2B0A18]">Wynn Las Vegas</span>
-                  <span className="text-[#B08D3C] font-semibold text-[11px]">Waze &amp; Maps</span>
+                  <span className="text-[#B08D3C] font-semibold text-[11px]">Google Maps</span>
                 </div>
               </div>
             </div>
@@ -813,7 +815,7 @@ export default function WeddingLasVegasLandingPage() {
       </section>
 
       {/* ==================================================================== */}
-      {/* 6. PRICING TABLE (Plan Assisted $99 vs Plan VIP $199) */}
+      {/* 6. PRICING TABLE (Plan Assisted $199 vs Plan VIP $279) */}
       {/* ==================================================================== */}
       <section id="pricing" className="py-20 md:py-24 bg-[#FAF5EC]/70">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -830,7 +832,7 @@ export default function WeddingLasVegasLandingPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
-            {/* Plan Assisted ($99) */}
+            {/* Plan Assisted ($199) */}
             <div className="rounded-3xl p-8 bg-white border border-[#2B0A18]/15 shadow-sm flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between mb-4">
@@ -842,7 +844,7 @@ export default function WeddingLasVegasLandingPage() {
                   </span>
                 </div>
                 <div className="flex items-baseline gap-2 mb-4">
-                  <span className="text-4xl sm:text-5xl font-bold text-[#2B0A18]">$99</span>
+                  <span className="text-4xl sm:text-5xl font-bold text-[#2B0A18]">$199</span>
                   <span className="text-xs text-[#2B0A18]/60 uppercase tracking-wider font-medium">
                     One-Time Payment
                   </span>
@@ -888,14 +890,14 @@ export default function WeddingLasVegasLandingPage() {
                   <Loader2 className="w-4 h-4 animate-spin" />
                 ) : (
                   <>
-                    <span>Select Plan Assisted ($99)</span>
+                    <span>Select Plan Assisted ($199)</span>
                     <ArrowRight className="w-4 h-4" />
                   </>
                 )}
               </button>
             </div>
 
-            {/* Plan VIP Las Vegas ($199) - Highlighted */}
+            {/* Plan VIP Las Vegas ($279) - Highlighted */}
             <div className="rounded-3xl p-8 bg-gradient-to-b from-[#2B0A18] to-[#1A050E] text-white border-2 border-[#B08D3C] shadow-2xl flex flex-col justify-between relative overflow-hidden">
               {/* Highlight Ribbon */}
               <div className="absolute top-4 right-4 bg-gradient-to-r from-[#B08D3C] to-[#E5C158] text-[#2B0A18] text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full shadow-md">
@@ -912,7 +914,7 @@ export default function WeddingLasVegasLandingPage() {
                   </span>
                 </div>
                 <div className="flex items-baseline gap-2 mb-4">
-                  <span className="text-4xl sm:text-5xl font-bold text-white">$199</span>
+                  <span className="text-4xl sm:text-5xl font-bold text-white">$279</span>
                   <span className="text-xs text-white/60 uppercase tracking-wider font-medium">
                     One-Time Payment
                   </span>
@@ -959,7 +961,7 @@ export default function WeddingLasVegasLandingPage() {
                 ) : (
                   <>
                     <Sparkles className="w-4 h-4 fill-current" />
-                    <span>Get Plan VIP Las Vegas ($199)</span>
+                    <span>Get Plan VIP Las Vegas ($279)</span>
                   </>
                 )}
               </button>
@@ -1117,46 +1119,7 @@ export default function WeddingLasVegasLandingPage() {
 
       {/* ==================================================================== */}
       {/* FOOTER */}
-      {/* ==================================================================== */}
-      <footer className="py-12 bg-[#120309] text-white/60 text-xs border-t border-white/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-6">
-          <div className="flex items-center gap-3">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <Image src="/logo.png" alt="Click & Love" width={1600} height={1600} className="h-7 w-auto object-contain opacity-80" />
-            <span className="font-['Playfair_Display',serif] text-sm font-semibold text-white">
-              Click &amp; Love
-            </span>
-            <span className="text-white/40">© {new Date().getFullYear()} All Rights Reserved.</span>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-6 text-white/70">
-            <Link href="/" className="hover:text-white transition-colors">
-              Home
-            </Link>
-            <Link href="/quince-invitations" className="hover:text-white transition-colors">
-              Quinceañera Invitations
-            </Link>
-            <Link href="/wedding-invitations-los-angeles" className="hover:text-white transition-colors">
-              Wedding Invitations LA
-            </Link>
-            <Link href="/wedding-invitations-las-vegas" className="hover:text-white text-white font-semibold">
-              Wedding Invitations Las Vegas
-            </Link>
-            <Link href="/text-message-invitations" className="hover:text-white transition-colors">
-              SMS Invitations
-            </Link>
-            <Link href="/rsvp-tracking" className="hover:text-white transition-colors">
-              RSVP Tracking
-            </Link>
-            <Link href="/whatsapp-invitations" className="hover:text-white transition-colors">
-              WhatsApp Invitations
-            </Link>
-            <Link href="/demo" className="hover:text-white transition-colors">
-              Catalog
-            </Link>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter lang="en" />
     </div>
   );
 }

@@ -51,9 +51,9 @@ const nextConfig = {
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "font-src 'self' https://fonts.gstatic.com",
               "img-src 'self' data: blob: https://*.amazonaws.com https://*.cloudfront.net https://images.unsplash.com",
-              "media-src 'self' blob: https://*.amazonaws.com https://*.cloudfront.net https://cdn.pixabay.com",
+              "media-src 'self' blob: https://*.amazonaws.com https://*.cloudfront.net https://cdn.pixabay.com https://www.soundhelix.com",
               "frame-src 'self' https://www.youtube.com https://www.google.com https://maps.google.com",
-              "connect-src 'self'",
+              "connect-src 'self' https://*.amazonaws.com",
               "object-src 'none'",
               "base-uri 'self'",
               "form-action 'self'",
@@ -143,6 +143,17 @@ const nextConfig = {
         // template-rose: nombres sin hash -> TTL corto (7 dias) para que una portada
         // cambiada en el editor no quede un mes en cache.
         source: "/assets/template-rose/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=604800, stale-while-revalidate=86400",
+          },
+        ],
+      },
+      {
+        // templates/gatsby-20s: nombres sin hash -> TTL corto (7 dias) para que una portada
+        // cambiada en el editor no quede un mes en cache.
+        source: "/assets/templates/gatsby-20s/:path*",
         headers: [
           {
             key: "Cache-Control",

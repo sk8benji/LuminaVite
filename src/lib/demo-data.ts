@@ -427,6 +427,16 @@ export const DEMO_BLUSH: InvitationData = {
 
 
 // =========================================================================
+// =========================================================================
+// 7b. BLUSH ENVELOPE XV (Isabella Sofia Hernandez - Canva CouCou Envelope & Polaroid)
+// =========================================================================
+export const DEMO_BLUSH_ENVELOPE: InvitationData = {
+  ...DEMO_BLUSH,
+  id: "demo-blush-envelope",
+  slug: "blush-envelope-xv",
+  estiloPlantilla: "BLUSH_ENVELOPE",
+};
+
 // 8. QUINCE ERA PINK (Issabella Gonzales - Replica Canva The Hanger PH)
 // =========================================================================
 export const DEMO_ERA: InvitationData = {
@@ -649,8 +659,131 @@ export const DEMO_BEAUTY: InvitationData = {
   },
 };
 
+// =========================================================================
+// GATSBY 20'S (Chloe - Quinceañera Roaring Twenties Art Deco)
+// =========================================================================
+export const DEMO_GATSBY_20S: InvitationData = {
+  id: "demo-gatsby-20s",
+  slug: "gybsy-20s",
+  tipoEvento: "QUINCEANERA",
+  estiloPlantilla: "GATSBY_20S",
+  titulo: "Chloe · Mis Quince Años",
+  subtitulo: "A Roaring Good Time",
+  frasePersonalizada: "“A little party never killed nobody. Te invito a celebrar mis quince años en una noche mágica de jazz, perlas y glamour estilo Gatsby.”",
+  fechaEvento: new Date("2027-10-15T02:00:00Z"), // 14 oct 2027, 7:00 PM Los Angeles
+  fechaTextoPersonalizada: "THURSDAY, OCTOBER 14, 2027 • 7:00 PM",
+  fotoPortadaUrl: "/assets/templates/gatsby-20s/quinceanera-gatsby.webp",
+  fotoInfanciaUrl: "/assets/templates/gatsby-20s/photo-chloe-portrait.webp",
+  fotoActualUrl: "/assets/templates/gatsby-20s/photo-chloe-cake.webp",
+  musicaUrl: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
+  telefonoWhatsappRsvp: "18181234567",
+  fechaLimiteRsvp: "Sept 20th",
+  maxPasesPorInvitado: 2,
+  recepcionNombre: "GRAND HALL BALLROOM",
+  recepcionDireccion: "1920 Speakeasy Blvd, Los Angeles, CA",
+  recepcionMapUrl: "https://maps.google.com",
+  dressCodeTitulo: "ROARING 20'S ATTIRE",
+  dressCodeNota: "Vestimenta de gala estilo años 20: Vestidos de flecos, perlas, plumas, sombreros y trajes de etiqueta.",
+  dressCodeNotaEn: "Dress to the nines! Flappers, fringe, feathers, pearls, fedoras & sharp suits.",
+  coloresReservados: ["#C5A059", "#000000"],
+  regalosMensaje: "Tu presencia es nuestro mejor regalo. Si deseas tener un detalle, contaremos con un buzón de sobres en la recepción.",
+  regalosMensajeEn: "Your presence is our favorite gift. If you wish to bring a token of love, a card box will be at the reception.",
+  rsvpFechaLimite: "Confirma antes del 20 de septiembre",
+  rsvpFechaLimiteEn: "BY SEPTEMBER 20TH",
+  rsvpDiasAntes: 24,
+  mensajeDespedida: "Sharing this milestone with you means more than words can say!",
+  idiomaDefault: "EN",
+  corteHonorJson: {
+    parents: "MATEO & CAMILA TORRES",
+    damas: ["VALERIA SANDOVAL", "MARIANA DELGADO", "ISABELA RÍOS", "JULIETA MONTOYA", "CAMILA ESPARZA", "LUNA HERRERA", "SOFÍA NAVARRO"],
+    chambelan: "JOAQUÍN JIMÉNEZ",
+    chambelanes: ["DIEGO TORRES", "THIAGO MENDOZA", "NICOLÁS JIMÉNEZ", "SAMUEL RAMÍREZ", "EMILIANO VEGA", "MATEO CASTILLO", "ALEJANDRO CRUZ"],
+  },
+  configPlantilla: {
+    nombreQuinceanera: "Chloe",
+    fraseApertura: "Una Celebración Años 20",
+    fraseAperturaEn: "A Roaring Twenties Celebration",
+    subtitulo: "Mis Quince Años",
+    subtituloEn: "My Sweet Fifteen",
+    ticketFechaTexto: "THURSDAY 10.14.2027 • 7:00 PM • ADMIT ONE",
+    venueNombre: "GRAND HALL BALLROOM",
+    venueDireccion: "1920 Speakeasy Blvd, Los Angeles, CA",
+    dressCodeTitulo: "ROARING 20'S ATTIRE",
+    dressCodeTexto: "Dress to the nines! Flappers, fringe, feathers, pearls, fedoras & sharp suits.",
+    cocktailsTitulo: "OPEN SPEAKEASY BAR",
+    cocktailsTexto: "Signature mocktails, sparkling champagne towers & craft drinks all night.",
+    agradecimientoTexto: "¡Compartir este momento tan especial con ustedes significa más de lo que las palabras pueden expresar!",
+    agradecimientoTextoEn: "Sharing this milestone with you means more than words can say!",
+    colorAcentoHex: "#C5A059",
+  },
+}
+
+export const DEMO_GYPSY_BURGUNDY: InvitationData = {
+  id: "demo-gypsy-burgundy",
+  slug: "gybsy-burgundy",
+  tipoEvento: "QUINCEANERA",
+  estiloPlantilla: "GYPSY_BURGUNDY",
+  titulo: "Chloe · Mis Quince Años",
+  subtitulo: "A Roaring Good Time",
+  frasePersonalizada: "“A little party never killed nobody. Te invito a celebrar mis quince años en una noche mágica de jazz, perlas y glamour estilo Gatsby.”",
+  fechaEvento: new Date("2027-10-15T02:00:00Z"), // 14 oct 2027, 7:00 PM Los Angeles
+  fechaTextoPersonalizada: "THURSDAY, OCTOBER 14, 2027 • 7:00 PM",
+  fotoPortadaUrl: "/assets/templates/gypsy-burgundy/quinceanera-gatsby.webp",
+  fotoInfanciaUrl: "/assets/templates/gypsy-burgundy/photo-chloe-portrait.webp",
+  fotoActualUrl: "/assets/templates/gypsy-burgundy/photo-chloe-cake.webp",
+  musicaUrl: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
+  telefonoWhatsappRsvp: "18181234567",
+  fechaLimiteRsvp: "Sept 20th",
+  maxPasesPorInvitado: 2,
+  recepcionNombre: "GRAND HALL BALLROOM",
+  recepcionDireccion: "1920 Speakeasy Blvd, Los Angeles, CA",
+  recepcionMapUrl: "https://maps.google.com",
+  dressCodeTitulo: "ROARING 20'S ATTIRE",
+  dressCodeNota: "Vestimenta de gala estilo años 20: Vestidos de flecos, perlas, plumas, sombreros y trajes de etiqueta.",
+  dressCodeNotaEn: "Dress to the nines! Flappers, fringe, feathers, pearls, fedoras & sharp suits.",
+  coloresReservados: ["#C5A059", "#000000"],
+  regalosMensaje: "Tu presencia es nuestro mejor regalo. Si deseas tener un detalle, contaremos con un buzón de sobres en la recepción.",
+  regalosMensajeEn: "Your presence is our favorite gift. If you wish to bring a token of love, a card box will be at the reception.",
+  rsvpFechaLimite: "Confirma antes del 20 de septiembre",
+  rsvpFechaLimiteEn: "BY SEPTEMBER 20TH",
+  rsvpDiasAntes: 24,
+  mensajeDespedida: "Sharing this milestone with you means more than words can say!",
+  idiomaDefault: "EN",
+  corteHonorJson: {
+    parents: "MATEO & CAMILA TORRES",
+    damas: ["VALERIA SANDOVAL", "MARIANA DELGADO", "ISABELA RÍOS", "JULIETA MONTOYA", "CAMILA ESPARZA", "LUNA HERRERA", "SOFÍA NAVARRO"],
+    chambelan: "JOAQUÍN JIMÉNEZ",
+    chambelanes: ["DIEGO TORRES", "THIAGO MENDOZA", "NICOLÁS JIMÉNEZ", "SAMUEL RAMÍREZ", "EMILIANO VEGA", "MATEO CASTILLO", "ALEJANDRO CRUZ"],
+  },
+  configPlantilla: {
+    nombreQuinceanera: "Chloe",
+    fraseApertura: "Una Celebración Años 20",
+    fraseAperturaEn: "A Roaring Twenties Celebration",
+    subtitulo: "Mis Quince Años",
+    subtituloEn: "My Sweet Fifteen",
+    ticketFechaTexto: "THURSDAY 10.14.2027 • 7:00 PM • ADMIT ONE",
+    venueNombre: "GRAND HALL BALLROOM",
+    venueDireccion: "1920 Speakeasy Blvd, Los Angeles, CA",
+    dressCodeTitulo: "ROARING 20'S ATTIRE",
+    dressCodeTexto: "Dress to the nines! Flappers, fringe, feathers, pearls, fedoras & sharp suits.",
+    cocktailsTitulo: "OPEN SPEAKEASY BAR",
+    cocktailsTexto: "Signature mocktails, sparkling champagne towers & craft drinks all night.",
+    agradecimientoTexto: "¡Compartir este momento tan especial con ustedes significa más de lo que las palabras pueden expresar!",
+    agradecimientoTextoEn: "Sharing this milestone with you means more than words can say!",
+    colorAcentoHex: "#C5A059",
+  },
+};
+
 // Diccionario centralizado de los 8+ Demos del Sistema
 export const ALL_SYSTEM_DEMOS: Record<string, InvitationData> = {
+  "gybsy-20s": DEMO_GATSBY_20S,
+  "gybsy-burgundy": DEMO_GYPSY_BURGUNDY,
+  "gybsy-20's": DEMO_GATSBY_20S,
+  "gatsby-20s": DEMO_GATSBY_20S,
+  "gatsby": DEMO_GATSBY_20S,
+  "roaring-20s": DEMO_GATSBY_20S,
+  "blush-envelope-xv": DEMO_BLUSH_ENVELOPE,
+  "blush-envelope": DEMO_BLUSH_ENVELOPE,
   "mariposas-xv": DEMO_BUTTERFLY,
   "blue-butterfly": DEMO_BUTTERFLY,
   "blush-princess-xv": DEMO_BLUSH,

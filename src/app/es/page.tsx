@@ -1,10 +1,12 @@
 import { Metadata } from "next";
 import HomeView from "@/components/home/HomeView";
+import { schemaPriceRange } from "@/lib/pricing";
+import { homeFaq } from "@/lib/home-faq";
 
 export const metadata: Metadata = {
-  title: "Invitaciones Digitales en Los Ángeles con RSVP por SMS | Click & Love",
+  title: "Invitaciones Digitales con RSVP por SMS | Click & Love",
   description:
-    "Invitaciones digitales personalizadas en Los Ángeles para bodas, quinceañeras y galas. Incluyen sobres virtuales 3D, música y seguimiento de RSVP por SMS en tiempo real.",
+    "Invitaciones digitales personalizadas en Los Ángeles para bodas, quinceañeras y galas: sobres 3D, música y RSVP por SMS en tiempo real.",
   metadataBase: new URL("https://clickandlove.app"),
   alternates: {
     canonical: "https://clickandlove.app/es/",
@@ -15,9 +17,9 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "Invitaciones Digitales en Los Ángeles con RSVP por SMS | Click & Love",
+    title: "Invitaciones Digitales con RSVP por SMS | Click & Love",
     description:
-      "Invitaciones digitales personalizadas en Los Ángeles para bodas, quinceañeras y galas. Incluyen sobres virtuales 3D, música y seguimiento de RSVP por SMS en tiempo real.",
+      "Invitaciones digitales personalizadas en Los Ángeles para bodas, quinceañeras y galas: sobres 3D, música y RSVP por SMS en tiempo real.",
     url: "https://clickandlove.app/es/",
     siteName: "Click & Love",
     locale: "es_US",
@@ -34,14 +36,17 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Invitaciones Digitales en Los Ángeles con RSVP por SMS | Click & Love",
+    title: "Invitaciones Digitales con RSVP por SMS | Click & Love",
     description:
-      "Invitaciones digitales personalizadas en Los Ángeles para bodas, quinceañeras y galas. Incluyen sobres virtuales 3D, música y seguimiento de RSVP por SMS en tiempo real.",
+      "Invitaciones digitales personalizadas en Los Ángeles para bodas, quinceañeras y galas: sobres 3D, música y RSVP por SMS en tiempo real.",
     images: ["https://clickandlove.app/assets/og-banner.png"],
   },
 };
 
 export default function SpanishHomePage() {
+  // FAQ del home (SEO, nov 2026): mismas preguntas/respuestas que la sección
+  // visible en HomeView (homeFaq), para que el schema no se desincronice.
+  const faq = homeFaq("es");
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
@@ -51,9 +56,9 @@ export default function SpanishHomePage() {
     image: "https://clickandlove.app/assets/og-banner.png",
     description:
       "Papelería digital interactiva para bodas y quinceañeras con confirmación SMS, navegación GPS a salones y panel de anfitrión en Los Ángeles, California.",
-    priceRange: "$99 - $199",
-    telephone: "+1-818-299-4882",
-    serviceArea: "Los Angeles, CA",
+    priceRange: schemaPriceRange("es"),
+    telephone: "+1-818-918-2519",
+    serviceArea: "United States",
     address: {
       "@type": "PostalAddress",
       addressLocality: "Los Angeles",
@@ -61,11 +66,7 @@ export default function SpanishHomePage() {
       addressCountry: "US",
     },
     areaServed: [
-      { "@type": "City", "name": "Los Angeles" },
-      { "@type": "City", "name": "Glendale" },
-      { "@type": "City", "name": "Burbank" },
-      { "@type": "City", "name": "Pasadena" },
-      { "@type": "AdministrativeArea", "name": "San Fernando Valley" },
+      { "@type": "Country", "name": "United States" },
     ],
     knowsLanguage: ["es", "en"],
     hasOfferCatalog: {
@@ -88,6 +89,20 @@ export default function SpanishHomePage() {
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: faq.items.map((f) => ({
+              "@type": "Question",
+              name: f.q,
+              acceptedAnswer: { "@type": "Answer", text: f.a },
+            })),
+          }),
+        }}
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

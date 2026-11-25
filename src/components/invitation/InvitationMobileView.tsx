@@ -49,10 +49,12 @@ export interface InvitationData {
   ceremoniaNombre?: string | null;
   ceremoniaDireccion?: string | null;
   ceremoniaMapUrl?: string | null;
+  mostrarCeremonia?: boolean;
 
   recepcionNombre: string;
   recepcionDireccion: string;
   recepcionMapUrl: string;
+  mostrarRecepcion?: boolean;
 
   // Placa de Fecha & Recinto (Paso 3)
   fechaPlacaMes?: string | null;
@@ -71,6 +73,13 @@ export interface InvitationData {
   regalosZelle?: string | null;
   regalosCashApp?: string | null;
   rsvpFechaLimite?: string | null;
+  rsvpFechaLimiteEn?: string | null;
+  rsvpTitulo?: string | null;
+  rsvpTituloEn?: string | null;
+  rsvpSubtitulo?: string | null;
+  rsvpSubtituloEn?: string | null;
+  rsvpTelefonoTitulo?: string | null;
+  rsvpTelefonoTituloEn?: string | null;
   rsvpDiasAntes?: number | null;
   emailOrganizador?: string | null;
   aforoTotal?: number;
@@ -107,6 +116,9 @@ export interface InvitationData {
     showPadrinos?: boolean;
     padrinos?: string[];
     chambelanes?: string[];
+    showChambelanes?: boolean;
+    fotoDamasUrl?: string;
+    fotoChambelanesUrl?: string;
     mensajeGratitud?: string;
   } | any;
   mesaRegalosJson?: {
@@ -418,6 +430,12 @@ export default function InvitationMobileView({
           eventoId={data.id}
           eventoTitulo={data.titulo}
           telefonoWhatsapp={data.telefonoWhatsappRsvp}
+          rsvpTitulo={data.rsvpTitulo}
+          rsvpTituloEn={data.rsvpTituloEn}
+          rsvpSubtitulo={data.rsvpSubtitulo}
+          rsvpSubtituloEn={data.rsvpSubtituloEn}
+          rsvpTelefonoTitulo={data.rsvpTelefonoTitulo}
+          rsvpTelefonoTituloEn={data.rsvpTelefonoTituloEn}
           maxPases={data.maxPasesPorInvitado ?? 4}
           fechaLimite={data.fechaLimiteRsvp}
           template={template}
@@ -481,6 +499,7 @@ export default function InvitationMobileView({
           </div>
 
           {/* Salón de Recepción */}
+          {data.mostrarRecepcion !== false && (
           <div
             className="p-6 rounded-3xl border border-pink-100 shadow-sm text-center bg-white"
           >
@@ -525,9 +544,10 @@ export default function InvitationMobileView({
               Directions / Ver en Mapa
             </a>
           </div>
+          )}
 
           {/* Ceremonia religiosa si existe */}
-          {data.ceremoniaNombre && (
+          {data.mostrarCeremonia !== false && data.ceremoniaNombre && (
             <div
               className="p-5 rounded-2xl border border-pink-100 shadow-sm text-center bg-white/70"
             >
@@ -600,12 +620,13 @@ export default function InvitationMobileView({
               {isEn && data.dressCodeTituloEn ? data.dressCodeTituloEn : data.dressCodeTitulo || (isEn ? "DRESS CODE: ELEGANT & FORMAL" : "CÓDIGO DE VESTIMENTA: ELEGANTE Y FORMAL")}
             </p>
 
-            <p className="text-xs text-stone-600 mt-2 leading-relaxed font-light">
-              {isEn && data.dressCodeNotaEn ? data.dressCodeNotaEn : data.dressCodeNota ||
-                (isEn
-                  ? "Guests are encouraged to wear shades of white/formal to match the celebration."
-                  : "Se recomienda vestir de blanco o formal para acompañar la celebración.")}
-            </p>
+            {(() => {
+              const note = isEn
+                ? data.dressCodeNotaEn || data.dressCodeNota || null
+                : data.dressCodeNota || null;
+              if (!note) return null;
+              return <p className="text-xs text-stone-600 mt-2 leading-relaxed font-light">{note}</p>;
+            })()}
 
             {/* Muestra de colores reservados */}
             {data.coloresReservados && data.coloresReservados.length > 0 && (

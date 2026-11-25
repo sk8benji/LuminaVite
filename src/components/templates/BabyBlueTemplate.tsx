@@ -276,8 +276,8 @@ export default function BabyBlueTemplate({
   const deadlineMonthEn = rawMonthEn.charAt(0).toUpperCase() + rawMonthEn.slice(1);
 
   const rsvpDeadlinePhrase = isEn
-    ? `Please confirm before ${deadlineMonthEn} ${deadlineDay}`
-    : `Favor de confirmar antes del ${deadlineDay} de ${deadlineMonthEs}`;
+    ? (data.rsvpFechaLimiteEn || `Please confirm before ${deadlineMonthEn} ${deadlineDay}`)
+    : (data.rsvpFechaLimite || `Favor de confirmar antes del ${deadlineDay} de ${deadlineMonthEs}`);
 
   // Itinerario dinámico con los iconos ilustrados del set Era Pink
   const getItineraryIcon = (item: any, idx: number) => {
@@ -592,7 +592,7 @@ export default function BabyBlueTemplate({
         {/* ======================================================= */}
         {/* MASS VENUE: POSTAL                                      */}
         {/* ======================================================= */}
-        {data.ceremoniaNombre && (
+        {data.mostrarCeremonia !== false && data.ceremoniaNombre && (
           <section className="px-6 py-10 text-center">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={BABY_BLUE_ASSETS.envelopeOpen} alt="" className="w-64 sm:w-72 h-auto mx-auto" />
@@ -747,11 +747,17 @@ export default function BabyBlueTemplate({
           </div>
 
           <div className="bg-white/95 backdrop-blur-sm p-6 pt-10 rounded-3xl border border-[#D8B772]/60 shadow-xl text-center relative z-10">
-            <h3 className="font-script text-4xl text-[#2E5A88] my-1">
-              {isEn ? "RSVP" : "Confirmar Asistencia"}
-            </h3>
+            {(() => {
+              const t = isEn ? data.rsvpTituloEn : data.rsvpTitulo;
+              if (t === "") return null;
+              return (
+                <h3 className="font-script text-4xl text-[#2E5A88] my-1">
+                  {isEn ? (data.rsvpTituloEn || "RSVP") : (data.rsvpTitulo || "Confirmar Asistencia")}
+                </h3>
+              );
+            })()}
             <p className="text-[11px] text-slate-500 mb-5 uppercase tracking-wider font-serif-roman font-semibold">
-              {(data.fechaLimiteRsvp && isEn) ? `Please confirm by ${data.fechaLimiteRsvp}` : rsvpDeadlinePhrase}
+              {rsvpDeadlinePhrase}
             </p>
 
             {/* Alerta de confirmación previa / actualización de pases */}
@@ -992,11 +998,7 @@ export default function BabyBlueTemplate({
               {
                 n: "01",
                 q: isEn ? "What is the dress code?" : "¿Cuál es el código de vestimenta?",
-                a:
-                  (isEn ? data.dressCodeNotaEn : data.dressCodeNota) ||
-                  (isEn
-                    ? "Guests are encouraged to dress in formal attire in harmony with the event's theme."
-                    : "Se invita a los invitados a vestir formal, en armonía con el tema del evento."),
+                a: (isEn ? data.dressCodeNotaEn : data.dressCodeNota) || null,
               },
               {
                 n: "02",
@@ -1012,7 +1014,7 @@ export default function BabyBlueTemplate({
                   ? "Your presence is the greatest gift of all. If you wish to give something extra, registry details are provided above."
                   : "Tu presencia es el regalo más grande. Si deseas dar algo extra, arriba están los detalles del registro.",
               },
-            ].map((f) => (
+            ].filter((f) => f.a).map((f) => (
               <div key={f.n} className="bg-white rounded-3xl border border-[#E4EEF6] shadow-md px-6 py-5 text-left">
                 <p className="font-serif-roman text-[10px] tracking-[0.3em] text-[#7FA8C9] font-bold">{f.n}</p>
                 <h5 className="font-serif-roman text-sm sm:text-base font-bold text-[#22344A] mt-1">{f.q}</h5>

@@ -1,4 +1,5 @@
 "use client";
+import SiteFooter from "@/components/layout/SiteFooter";
 
 import React, { useState } from "react";
 import Link from "next/link";
@@ -35,8 +36,8 @@ import {
 // ============================================================================
 // CONSTANTS & ASSETS
 // ============================================================================
-const PHONE_DISPLAY = "(818) 299-4882";
-const PHONE_TEL = "tel:+18182994882";
+const PHONE_DISPLAY = "(818) 918-2519";
+const PHONE_TEL = "tel:+18189182519";
 const PHONE_SMS = "sms:+18182994882";
 const WHATSAPP_URL =
   "https://wa.me/18182994882?text=Hola%20Click%20%26%20Love!%20Me%20gustar%C3%ADa%20informaci%C3%B3n%20sobre%20invitaciones%20de%20Quincea%C3%B1era.";
@@ -131,6 +132,7 @@ export default function QuinceLandingPageEs() {
         body: JSON.stringify({
           plan,
           gaClientId: getGaClientId(),
+          lang: "es",
           templateSlug: "mariposas-xv",
           currency: "usd",
         }),
@@ -276,7 +278,7 @@ export default function QuinceLandingPageEs() {
                   href="#precios"
                   className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl border-2 border-[#2B0A18]/20 bg-white/70 text-[#2B0A18] text-base font-semibold hover:border-[#7A002A] hover:text-[#7A002A] hover:bg-white transition-all text-center"
                 >
-                  <span>Ver Precios ($99 - $199)</span>
+                  <span>Ver Precios ($99 - $279)</span>
                   <ArrowRight className="w-4 h-4" />
                 </a>
               </div>
@@ -529,25 +531,21 @@ export default function QuinceLandingPageEs() {
                   Cero Invitados Perdidos
                 </span>
                 <h3 className="font-['Playfair_Display',serif] text-2xl font-bold text-[#2B0A18] mt-1 mb-3">
-                  GPS Directo a Salones en LA
+                  Navegación GPS en 1 Toque
                 </h3>
                 <p className="text-[#2B0A18]/75 text-sm leading-relaxed mb-6">
-                  Un solo toque abre la ruta en Google Maps, Apple Maps o Waze hacia salones populares en Glendale, Burbank, Pasadena, Downey y el Valle de San Fernando.
+                  Tus invitados reciben enlaces directos a Google Maps para la ceremonia religiosa y el banquete. Evita llamadas de familiares perdidos en el tráfico y asegura que todos lleguen a tiempo a la entrada correcta.
                 </p>
               </div>
 
               <div className="space-y-2 text-xs">
                 <div className="flex items-center justify-between p-2.5 rounded-xl bg-white border border-[#2B0A18]/10">
-                  <span className="font-semibold text-[#2B0A18]">Brandview Ballroom Glendale</span>
-                  <span className="text-[#B08D3C] font-semibold text-[11px]">Waze &amp; Maps</span>
+                  <span className="font-semibold text-[#2B0A18]">📍 Misa / Ceremonia</span>
+                  <span className="text-[#B08D3C] font-semibold text-[11px]">Google Maps</span>
                 </div>
                 <div className="flex items-center justify-between p-2.5 rounded-xl bg-white border border-[#2B0A18]/10">
-                  <span className="font-semibold text-[#2B0A18]">Castaway Burbank</span>
-                  <span className="text-[#B08D3C] font-semibold text-[11px]">Waze &amp; Maps</span>
-                </div>
-                <div className="flex items-center justify-between p-2.5 rounded-xl bg-white border border-[#2B0A18]/10">
-                  <span className="font-semibold text-[#2B0A18]">Renaissance Banquet Hall</span>
-                  <span className="text-[#B08D3C] font-semibold text-[11px]">Waze &amp; Maps</span>
+                  <span className="font-semibold text-[#2B0A18]">📍 Recepción / Fiesta</span>
+                  <span className="text-[#B08D3C] font-semibold text-[11px]">Google Maps</span>
                 </div>
               </div>
             </div>
@@ -778,7 +776,7 @@ export default function QuinceLandingPageEs() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
-            {/* Plan Asistido ($99) */}
+            {/* Plan Asistido ($199) */}
             <div className="rounded-3xl p-8 bg-white border border-[#2B0A18]/15 shadow-sm flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between mb-4">
@@ -790,7 +788,7 @@ export default function QuinceLandingPageEs() {
                   </span>
                 </div>
                 <div className="flex items-baseline gap-2 mb-4">
-                  <span className="text-4xl sm:text-5xl font-bold text-[#2B0A18]">$99</span>
+                  <span className="text-4xl sm:text-5xl font-bold text-[#2B0A18]">$199</span>
                   <span className="text-xs text-[#2B0A18]/60 uppercase tracking-wider font-medium">
                     Pago Único
                   </span>
@@ -836,14 +834,14 @@ export default function QuinceLandingPageEs() {
                   <Loader2 className="w-4 h-4 animate-spin" />
                 ) : (
                   <>
-                    <span>Elegir Plan Asistido ($99)</span>
+                    <span>Elegir Plan Asistido ($199)</span>
                     <ArrowRight className="w-4 h-4" />
                   </>
                 )}
               </button>
             </div>
 
-            {/* Plan VIP Los Ángeles ($199) - Destacado */}
+            {/* Plan VIP Los Ángeles ($279) - Destacado */}
             <div className="rounded-3xl p-8 bg-gradient-to-b from-[#2B0A18] to-[#1A050E] text-white border-2 border-[#B08D3C] shadow-2xl flex flex-col justify-between relative overflow-hidden">
               <div className="absolute top-4 right-4 bg-gradient-to-r from-[#B08D3C] to-[#E5C158] text-[#2B0A18] text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full shadow-md">
                 El Más Elegido
@@ -859,7 +857,7 @@ export default function QuinceLandingPageEs() {
                   </span>
                 </div>
                 <div className="flex items-baseline gap-2 mb-4">
-                  <span className="text-4xl sm:text-5xl font-bold text-white">$199</span>
+                  <span className="text-4xl sm:text-5xl font-bold text-white">$279</span>
                   <span className="text-xs text-white/60 uppercase tracking-wider font-medium">
                     Pago Único
                   </span>
@@ -906,7 +904,7 @@ export default function QuinceLandingPageEs() {
                 ) : (
                   <>
                     <Sparkles className="w-4 h-4 fill-current" />
-                    <span>Elegir Plan VIP Los Ángeles ($199)</span>
+                    <span>Elegir Plan VIP Los Ángeles ($279)</span>
                   </>
                 )}
               </button>
@@ -1055,43 +1053,7 @@ export default function QuinceLandingPageEs() {
         </div>
       </section>
 
-      {/* FOOTER */}
-      <footer className="py-12 bg-[#120309] text-white/60 text-xs border-t border-white/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-6">
-          <div className="flex items-center gap-3">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <Image src="/logo.png" alt="Click & Love" width={1600} height={1600} className="h-7 w-auto object-contain opacity-80" />
-            <span className="font-['Playfair_Display',serif] text-sm font-semibold text-white">
-              Click &amp; Love
-            </span>
-            <span className="text-white/40">© {new Date().getFullYear()} Todos los Derechos Reservados.</span>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-6 text-white/70">
-            <Link href="/es" className="hover:text-white transition-colors">
-              Inicio
-            </Link>
-            <Link href="/es/invitaciones-de-quinceanera" className="hover:text-white text-white font-semibold">
-              Quinceañeras
-            </Link>
-            <Link href="/wedding-invitations-los-angeles" className="hover:text-white transition-colors">
-              Bodas
-            </Link>
-            <Link href="/text-message-invitations" className="hover:text-white transition-colors">
-              Invitaciones por SMS
-            </Link>
-            <Link href="/rsvp-tracking" className="hover:text-white transition-colors">
-              Control de Asistencia
-            </Link>
-            <Link href="/whatsapp-invitations" className="hover:text-white transition-colors">
-              WhatsApp
-            </Link>
-            <Link href="/demo" className="hover:text-white transition-colors">
-              Catálogo
-            </Link>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter lang="es" />
     </div>
   );
 }

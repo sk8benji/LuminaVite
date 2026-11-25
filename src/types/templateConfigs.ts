@@ -23,6 +23,18 @@ export interface QuinceRosadoConfig {
   cancionVals?: string;
   fraseEmocional?: string;
   avisoNinos?: string;
+  // Aviso niños (Sección 10 "Recomendación"): undefined = texto original;
+  // título "" = oculta el recuadro; texto/cierre "" = oculta esa línea.
+  ninosTitulo?: string;
+  ninosTituloEn?: string;
+  ninosTexto?: string;
+  ninosTextoEn?: string;
+  ninosCierre?: string;
+  ninosCierreEn?: string;
+  // Mensaje de cierre de la Dedicatoria (Sección 3): vacío = no se muestra.
+  dedicatoriaCierre?: string;
+  dedicatoriaCierreEn?: string;
+  mostrarDedicatoriaCierre?: boolean;
 }
 
 export interface BlueButterflyConfig {
@@ -73,12 +85,21 @@ export interface ElegantRoseConfig {
   padrinos?: string[];
   chambelan?: string;
   damas?: string[];
+  /** Hitos de "Growing Up" editados en el admin (Sección 15: Historia).
+      Sin hitos guardados se usan los 5 por defecto del template. */
   hitosVida?: Array<{
     anio: string;
     titulo: string;
+    tituloEn?: string;
     texto: string;
+    textoEn?: string;
     fotoUrl?: string;
   }>;
+  /** Foto de fondo del sobre cerrado. Vacío = la foto principal de portada. */
+  fotoFondoSobre?: string;
+  /** Frase de cierre de "Growing Up". Vacío = texto por defecto del template. */
+  growingUpCierre?: string;
+  growingUpCierreEn?: string;
 }
 
 export interface FairytaleChateauConfig {
@@ -105,11 +126,39 @@ export interface CoralineMysticalConfig {
   puertaSecretaMsg?: string;
 }
 
+export interface Gatsby20sConfig {
+  subtitulo?: string;
+  subtituloEn?: string;
+  fraseApertura?: string;
+  fraseAperturaEn?: string;
+  /** Hora propia de la recepcion ("6:19 PM"); vacia = usa la hora de la placa (seccion Fecha y Hora). */
+  horaRecepcion?: string;
+  /** Linea de bienvenida de la portada ("WELCOME TO THE" / "BIENVENIDOS A"); "" = oculta la linea. */
+  portadaBienvenida?: string;
+  portadaBienvenidaEn?: string;
+  /** Linea de colores reservados (Vestimenta); "" = oculta la linea en ese idioma. */
+  coloresReservados?: string;
+  coloresReservadosEn?: string;
+  ticketFechaTexto?: string;
+  venueNombre?: string;
+  venueDireccion?: string;
+  dressCodeTitulo?: string;
+  dressCodeTexto?: string;
+  cocktailsTitulo?: string;
+  cocktailsTexto?: string;
+  agradecimientoTexto?: string;
+  agradecimientoTextoEn?: string;
+  colorAcentoHex?: string;
+}
+
 /**
  * Mapa de tipos tipado por identificador de plantilla
  */
 export type TemplateConfigMap = {
   QUINCE_ROSADO: QuinceRosadoConfig;
+  GATSBY_20S: Gatsby20sConfig;
+  GYBSY_20S: Gatsby20sConfig;
+  GYPSY_BURGUNDY: Gatsby20sConfig;
   BLUE_BUTTERFLY: BlueButterflyConfig;
   BLUSH_PRINCESS: BlushPrincessConfig;
   QUINCE_ERA_PINK: QuinceEraPinkConfig;

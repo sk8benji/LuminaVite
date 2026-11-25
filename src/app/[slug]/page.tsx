@@ -140,6 +140,8 @@ async function getEventoData(rawSlug: string): Promise<InvitationData | null> {
       ),
       maxPasesPorInvitado: dbEvento.maxPasesPorInvitado,
       fotosInvitadosActivas: (dbEvento as any).fotosInvitadosActivas !== false,
+      mostrarCeremonia: (dbEvento as any).mostrarCeremonia !== false,
+      mostrarRecepcion: (dbEvento as any).mostrarRecepcion !== false,
       ceremoniaNombre: dbEvento.ceremoniaNombre,
       ceremoniaDireccion: dbEvento.ceremoniaDireccion,
       ceremoniaMapUrl: dbEvento.ceremoniaMapUrl,
@@ -160,6 +162,13 @@ async function getEventoData(rawSlug: string): Promise<InvitationData | null> {
       regalosZelle: (dbEvento as any).regalosZelle,
       regalosCashApp: (dbEvento as any).regalosCashApp,
       rsvpFechaLimite: (dbEvento as any).rsvpFechaLimite,
+      rsvpFechaLimiteEn: (dbEvento as any).rsvpFechaLimiteEn,
+      rsvpTitulo: (dbEvento as any).rsvpTitulo ?? null,
+      rsvpTituloEn: (dbEvento as any).rsvpTituloEn ?? null,
+      rsvpSubtitulo: (dbEvento as any).rsvpSubtitulo ?? null,
+      rsvpSubtituloEn: (dbEvento as any).rsvpSubtituloEn ?? null,
+      rsvpTelefonoTitulo: (dbEvento as any).rsvpTelefonoTitulo ?? null,
+      rsvpTelefonoTituloEn: (dbEvento as any).rsvpTelefonoTituloEn ?? null,
       rsvpDiasAntes: (dbEvento as any).rsvpDiasAntes ?? 15,
       autorBendicion: (dbEvento as any).autorBendicion,
       textoDisco: (dbEvento as any).textoDisco,
@@ -209,6 +218,23 @@ async function getEventoData(rawSlug: string): Promise<InvitationData | null> {
   if (cleanSlug === "mariposas-xv") return DEMO_BUTTERFLY;
   if (cleanSlug === "coraline-party") return DEMO_CORALINE;
   if (cleanSlug === "sofia-y-alejandro") return DEMO_BODA;
+  if (cleanSlug === "sofia-tapia") {
+    const { getMergedDemo } = await import("@/lib/template-demo-merge");
+    const demo = await getMergedDemo("blush-princess-xv");
+    if (demo) {
+      return {
+        ...demo,
+        slug: "sofia-tapia",
+        titulo: "Sofia Marie Tapia",
+        subtitulo: "Mis Quince",
+      };
+    }
+  }
+  if (cleanSlug === "gybsy-burgundy") {
+    const { getMergedDemo } = await import("@/lib/template-demo-merge");
+    const demo = await getMergedDemo("gybsy-burgundy");
+    if (demo) return demo;
+  }
 
   return null;
 }
@@ -367,17 +393,6 @@ export default async function InvitationPage(props: PageProps) {
       <TemplateDispatcher data={data} />
       {/* Barra fija comercial (solo si el evento la activó en Ajustes) */}
       <ContactBanner data={data} />
-      {/* Fotos de invitados: botón a la página de subida (sin login) */}
-      {data.fotosInvitadosActivas !== false && (
-        <div className="flex justify-center px-5 pb-10 -mt-2">
-          <a
-            href={`/${data.slug}/fotos`}
-            className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-[#7A002A] text-white font-bold shadow-lg"
-          >
-            📸 Subir fotos de la fiesta
-          </a>
-        </div>
-      )}
     </>
   );
 }

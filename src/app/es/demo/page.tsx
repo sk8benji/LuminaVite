@@ -66,6 +66,24 @@ const DEMO_CARDS = [
     image: "/assets/template-blush/foto-1.webp",
   },
   {
+    slug: "gybsy-20s",
+    title: "Gatsby 20's",
+    name: "Chloe",
+    tag: "XV Años & Gala",
+    badge: "Nueva",
+    desc: "Años 20 Art Déco: sobre negro con sello dorado, disco de vinilo, ticket Save the Date y corte de honor completo.",
+    image: "/assets/templates/gatsby-20s/photo-chloe-portrait.webp",
+  },
+  {
+    slug: "gybsy-burgundy",
+    title: "Gypsy Burgundy",
+    name: "Chloe",
+    tag: "XV Años & Gala",
+    badge: "Nueva",
+    desc: "Años 20 Art Déco en burgundy: sobre burgundy con sello dorado, disco de vinilo, ticket Save the Date y corte de honor completo.",
+    image: "/assets/templates/gypsy-burgundy/photo-chloe-portrait.webp",
+  },
+  {
     slug: "isabella-xv",
     title: "Vintage Quinceanera",
     name: "Isabella Cordero",
@@ -219,6 +237,8 @@ export default async function DemosIndexPageEs() {
                   href={`sms:+18182994882?&body=${encodeURIComponent(`Hola, vi la plantilla ${card.title} y la quiero para mi evento`)}`}
                   event="click_sms"
                   eventParams={{ origen: "catalogo", plantilla: card.title }}
+                  copyText="+1 (818) 299-4882"
+                  copiedLabel="✓ Número copiado"
                   className="w-full mt-2 py-2.5 px-3 rounded-xl border border-[#7A002A] bg-white text-[#7A002A] hover:brightness-105 active:scale-95 font-['Cinzel'] text-[10px] tracking-wider uppercase font-bold shadow-xs transition flex items-center justify-center gap-1.5"
                 >
                   <MessageSquare className="w-3.5 h-3.5" />

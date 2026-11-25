@@ -322,6 +322,22 @@ export default function QuinceRosadoTemplate({
   // Configuración dinámica por plantilla (JSONB: configPlantilla) con fallback en cascada
   const templateConfig = parseTemplateConfig<QuinceRosadoConfig>(data.configPlantilla);
 
+  // Aviso niños (Sección 10 "Recomendación"): undefined = texto original de la plantilla;
+  // título "" = oculta el recuadro; texto/cierre "" = oculta esa línea.
+  const ninosTitulo = isEn
+    ? (templateConfig.ninosTituloEn ?? "FOR OUR LITTLE GUESTS")
+    : (templateConfig.ninosTitulo ?? "PARA NUESTROS NIÑOS");
+  const ninosTexto = isEn
+    ? (templateConfig.ninosTextoEn ?? "Our little guests are a very special part of this celebration. We kindly ask that they remain seated and accompanied by a parent or guardian during special dances and presentations.")
+    : (templateConfig.ninosTexto ?? "Nuestros pequeños invitados son una parte muy especial de esta celebración. Les pedimos amablemente que permanezcan sentados y acompañados por padre o tutor durante los bailes especiales y las presentaciones.");
+  const ninosCierre = isEn
+    ? (templateConfig.ninosCierreEn ?? "Thank you for helping us keep these moments beautiful for everyone.")
+    : (templateConfig.ninosCierre ?? "Gracias por ayudarnos a mantener estos momentos hermosos para todos.");
+  // Mensaje de cierre de la Dedicatoria (Sección 3): vacío = no se muestra.
+  const dedicatoriaCierreTexto = isEn
+    ? (templateConfig.dedicatoriaCierreEn || "")
+    : (templateConfig.dedicatoriaCierre || "");
+
   const photoShoe1 =
     templateConfig.cambioZapatillas?.fotoZapato1Url ||
     data.fotoZapato1Url ||
@@ -875,6 +891,13 @@ export default function QuinceRosadoTemplate({
                   {isEn ? "Sweet 15" : "A señorita"}
                 </p>
               </div>
+
+              {/* Mensaje de cierre de la Dedicatoria (editable en el admin, Sección 3) */}
+              {templateConfig.mostrarDedicatoriaCierre !== false && dedicatoriaCierreTexto !== "" && (
+                <p className="font-['Lora',serif] text-xs sm:text-[13px] leading-relaxed text-[#722927] italic text-center px-2 mt-10">
+                  {dedicatoriaCierreTexto}
+                </p>
+              )}
             </div>
           </section>
         )}
@@ -886,7 +909,7 @@ export default function QuinceRosadoTemplate({
           <div className="max-w-[360px] mx-auto">
             {/* Tarjeta de Confirmación de Asistencia Dinámica con Búsqueda de Invitados */}
             {isSectionActive("rsvp") && (
-              <div className="mb-8">
+              <div data-preview-section="rsvp" className="mb-8">
                 <DynamicRsvpForm
                   slug={data.slug || "demo"}
                   eventTitle={data.titulo}
@@ -896,7 +919,14 @@ export default function QuinceRosadoTemplate({
                   telefonoWhatsapp={data.telefonoWhatsappRsvp}
                   primaryColor="#7A002A"
                   accentBgColor="bg-white/95"
-                  deadlineText={data.rsvpFechaLimite || (isEn ? "PLEASE CONFIRM YOUR ATTENDANCE BEFORE NOVEMBER 15." : "POR FAVOR, CONFIRMA TU ASISTENCIA ANTES DEL 20 DE OCTUBRE.")}
+                  deadlineText={data.rsvpFechaLimite || "POR FAVOR, CONFIRMA TU ASISTENCIA ANTES DEL 20 DE OCTUBRE."}
+                  deadlineTextEn={data.rsvpFechaLimiteEn || "PLEASE CONFIRM YOUR ATTENDANCE BEFORE NOVEMBER 15."}
+                  rsvpTitulo={data.rsvpTitulo}
+                  rsvpTituloEn={data.rsvpTituloEn}
+                  rsvpSubtitulo={data.rsvpSubtitulo}
+                  rsvpSubtituloEn={data.rsvpSubtituloEn}
+                  rsvpTelefonoTitulo={data.rsvpTelefonoTitulo}
+                  rsvpTelefonoTituloEn={data.rsvpTelefonoTituloEn}
                   lang={currentLang}
                   permiteSms={data.permiteSms}
                   tipoPlan={data.tipoPlan}
@@ -923,9 +953,10 @@ export default function QuinceRosadoTemplate({
             )}
 
             {/* Ubicaciones de Iglesia y Salón */}
-            {isSectionActive("ubicaciones") && (
+            {isSectionActive("ubicaciones") && (data.mostrarCeremonia !== false || data.mostrarRecepcion !== false) && (
               <div data-preview-section="ubicaciones" className="space-y-4 mb-8">
                 {/* Iglesia */}
+                {data.mostrarCeremonia !== false && (
                 <div className="bg-white p-4 rounded-2xl shadow-md border border-pink-100 text-center">
                   <h4 className="font-['Cinzel',serif] text-xs tracking-widest uppercase text-[#7A002A] font-bold">
                     {isEn ? "RELIGIOUS CEREMONY" : "CEREMONIA RELIGIOSA"}
@@ -948,8 +979,10 @@ export default function QuinceRosadoTemplate({
                     <span>{isEn ? "VIEW MAP" : "VER MAPA"}</span>
                   </a>
                 </div>
+                )}
 
                 {/* Salón de Recepción */}
+                {data.mostrarRecepcion !== false && (
                 <div className="bg-white p-4 rounded-2xl shadow-md border border-pink-100 text-center">
                   <h4 className="font-['Cinzel',serif] text-xs tracking-widest uppercase text-[#7A002A] font-bold">
                     {isEn ? "RECEPTION & PARTY" : "RECEPCIÓN & FIESTA"}
@@ -972,6 +1005,7 @@ export default function QuinceRosadoTemplate({
                     <span>{isEn ? "VIEW MAP" : "VER MAPA"}</span>
                   </a>
                 </div>
+                )}
               </div>
             )}
 
@@ -986,22 +1020,26 @@ export default function QuinceRosadoTemplate({
                     ? (data.dressCodeTituloEn || (data.dressCodeTitulo === "ELEGANTE Y FORMAL" || !data.dressCodeTitulo ? "ELEGANT & FORMAL" : data.dressCodeTitulo))
                     : (data.dressCodeTitulo || "ELEGANTE Y FORMAL")}
                 </h4>
-                <p className="text-xs leading-relaxed text-[#722927]">
-                  {(() => {
-                    if (isEn) {
-                      if (data.dressCodeNotaEn) return data.dressCodeNotaEn;
-                      const note = (data.dressCodeNota || "").toLowerCase();
-                      if (note.includes("rosa") || note.includes("rosado") || note.includes("quinceañera")) {
-                        return "Blush pink tones reserved exclusively for the quinceañera. Guests are encouraged to wear elegant formal attire.";
+                {(() => {
+                  let note: string | null = null;
+                  if (isEn) {
+                    if (data.dressCodeNotaEn) note = data.dressCodeNotaEn;
+                    else {
+                      const n = (data.dressCodeNota || "").toLowerCase();
+                      if (n.includes("rosa") || n.includes("rosado") || n.includes("quinceañera")) {
+                        note = "Blush pink tones reserved exclusively for the quinceañera. Guests are encouraged to wear elegant formal attire.";
+                      } else if (n.includes("azul")) {
+                        note = "Blue tones reserved exclusively for the quinceañera. Guests are encouraged to wear elegant formal attire.";
+                      } else {
+                        note = data.dressCodeNota || null;
                       }
-                      if (note.includes("azul")) {
-                        return "Blue tones reserved exclusively for the quinceañera. Guests are encouraged to wear elegant formal attire.";
-                      }
-                      return data.dressCodeNota || "Join us in this wonderful celebration dressed in your best attire. Guests are encouraged to wear elegant formal clothes.";
                     }
-                    return data.dressCodeNota || "Acompáñanos en esta hermosa celebración y luce tu mejor atuendo para impresionar a la quinceañera. Se invita a los invitados a vestir elegantemente. Por favor, NO usar atuendos ROSADOS ni BLANCOS, creando así una celebración tan hermosa y atemporal como este día tan especial.";
-                  })()}
-                </p>
+                  } else {
+                    note = data.dressCodeNota || null;
+                  }
+                  if (!note) return null;
+                  return <p className="text-xs leading-relaxed text-[#722927]">{note}</p>;
+                })()}
               </div>
             )}
 
@@ -1147,22 +1185,20 @@ export default function QuinceRosadoTemplate({
                     </p>
                   </div>
 
-                  {/* Aviso: Para Nuestros Niños */}
-                  <div className="bg-pink-50/70 p-5 rounded-2xl border border-pink-200 text-center">
-                    <h4 className="font-['Cinzel',serif] text-xs tracking-widest uppercase text-[#A55B64] font-bold mb-2">
-                      {isEn ? "FOR OUR LITTLE GUESTS" : "PARA NUESTROS NIÑOS"}
-                    </h4>
-                    <p className="text-xs leading-relaxed text-[#CE2962] font-medium">
-                      {isEn
-                        ? "Our little guests are a very special part of this celebration. We kindly ask that they remain seated and accompanied by a parent or guardian during special dances and presentations."
-                        : "Nuestros pequeños invitados son una parte muy especial de esta celebración. Les pedimos amablemente que permanezcan sentados y acompañados por padre o tutor durante los bailes especiales y las presentaciones."}
-                    </p>
-                    <p className="text-[11px] text-[#CE2962] font-semibold mt-2">
-                      {isEn
-                        ? "Thank you for helping us keep these moments beautiful for everyone."
-                        : "Gracias por ayudarnos a mantener estos momentos hermosos para todos."}
-                    </p>
-                  </div>
+                  {/* Aviso: Para Nuestros Niños (editable en el admin, Sección 10 "Recomendación") */}
+                  {ninosTitulo !== "" && (
+                    <div className="bg-pink-50/70 p-5 rounded-2xl border border-pink-200 text-center">
+                      <h4 className="font-['Cinzel',serif] text-xs tracking-widest uppercase text-[#A55B64] font-bold mb-2">
+                        {ninosTitulo}
+                      </h4>
+                      {ninosTexto !== "" && (
+                        <p className="text-xs leading-relaxed text-[#CE2962] font-medium">{ninosTexto}</p>
+                      )}
+                      {ninosCierre !== "" && (
+                        <p className="text-[11px] text-[#CE2962] font-semibold mt-2">{ninosCierre}</p>
+                      )}
+                    </div>
+                  )}
                 </>
               )}
             </div>
@@ -1234,12 +1270,12 @@ export default function QuinceRosadoTemplate({
                 {hasAnyCorteCards && (
                   <>
                     {/* Título Corte */}
-                    <div className="flex items-center justify-center gap-2 mb-6">
+                    <div className="text-center mb-6">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={QUINCE_ROSADO_ASSETS.crownIcon}
                         alt="Corona"
-                        className="w-6 h-6 object-contain"
+                        className="w-12 h-12 object-contain mx-auto mb-2 drop-shadow-sm"
                       />
                       <h2 className="font-['Cinzel',serif] text-xl tracking-[0.2em] uppercase text-[#7A002A] font-bold">
                         {isEn ? "THE COURT OF HONOR" : "LA CORTE DE HONOR"}
@@ -1368,9 +1404,19 @@ export default function QuinceRosadoTemplate({
 
                 {/* Agradecimiento Especial */}
                 <div className="text-center px-3">
-                  <h3 className="font-['Great_Vibes',cursive] text-4xl text-[#7A002A] mb-2">
-                    {isEn ? "A special thank you" : "Un agradecimiento especial"}
-                  </h3>
+                  {(() => {
+                    const titulo = isEn
+                      ? (corte.agradecimientoTituloEn !== undefined
+                          ? corte.agradecimientoTituloEn
+                          : corte.agradecimientoTitulo)
+                      : corte.agradecimientoTitulo;
+                    if (titulo === "") return null;
+                    return (
+                      <h3 className="font-['Great_Vibes',cursive] text-4xl text-[#7A002A] mb-2">
+                        {titulo ?? (isEn ? "A special thank you" : "Un agradecimiento especial")}
+                      </h3>
+                    );
+                  })()}
                   <p className="text-xs italic leading-relaxed text-[#722927]">
                     {corte.mensajeGratitud ||
                       (isEn

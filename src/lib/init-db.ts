@@ -16,7 +16,7 @@ export async function ensurePostgresTables(): Promise<boolean> {
       END $$;`,
 
       `DO $$ BEGIN
-        CREATE TYPE "EstiloPlantilla" AS ENUM ('QUINCE_ROSADO', 'PRINCESA_ROSA', 'ELEGANT_ROSE', 'FAIRYTALE_CHATEAU', 'BLUE_BUTTERFLY', 'CORALINE_MYSTICAL', 'CLASICA_IMPERIAL', 'ESMERALDA_ROYAL', 'JARDIN_BOTANICA', 'MINIMALISTA_EDITORIAL', 'BLUSH_PRINCESS', 'QUINCE_ERA_PINK', 'MISS_15', 'BABY_BLUE', 'BEAUTY_QUINCE');
+        CREATE TYPE "EstiloPlantilla" AS ENUM ('QUINCE_ROSADO', 'PRINCESA_ROSA', 'ELEGANT_ROSE', 'FAIRYTALE_CHATEAU', 'BLUE_BUTTERFLY', 'CORALINE_MYSTICAL', 'CLASICA_IMPERIAL', 'ESMERALDA_ROYAL', 'JARDIN_BOTANICA', 'MINIMALISTA_EDITORIAL', 'BLUSH_PRINCESS', 'QUINCE_ERA_PINK', 'MISS_15', 'BABY_BLUE', 'BEAUTY_QUINCE', 'GATSBY_20S', 'GYPSY_BURGUNDY');
       EXCEPTION WHEN duplicate_object THEN null;
       END $$;`,
 
@@ -47,6 +47,12 @@ export async function ensurePostgresTables(): Promise<boolean> {
 
       `DO $$ BEGIN
         ALTER TYPE "EstiloPlantilla" ADD VALUE IF NOT EXISTS 'BEAUTY_QUINCE';
+      EXCEPTION WHEN duplicate_object THEN null;
+      END $$;`,
+
+      `DO $$ BEGIN
+        ALTER TYPE "EstiloPlantilla" ADD VALUE IF NOT EXISTS 'GATSBY_20S';
+        ALTER TYPE "EstiloPlantilla" ADD VALUE IF NOT EXISTS 'GYPSY_BURGUNDY';
       EXCEPTION WHEN duplicate_object THEN null;
       END $$;`,
 
@@ -126,6 +132,13 @@ export async function ensurePostgresTables(): Promise<boolean> {
           "regalosZelle" TEXT,
           "regalosCashApp" TEXT,
           "rsvpFechaLimite" TEXT,
+          "rsvpFechaLimiteEn" TEXT,
+          "rsvpTitulo" TEXT,
+          "rsvpTituloEn" TEXT,
+          "rsvpSubtitulo" TEXT,
+          "rsvpSubtituloEn" TEXT,
+          "rsvpTelefonoTitulo" TEXT,
+          "rsvpTelefonoTituloEn" TEXT,
           "rsvpDiasAntes" INTEGER DEFAULT 15,
           "autorBendicion" TEXT,
           "textoDisco" TEXT,
@@ -191,6 +204,15 @@ export async function ensurePostgresTables(): Promise<boolean> {
 
       // Fotos de invitados (v1): galería por evento, subida pública por link.
       `ALTER TABLE "Evento" ADD COLUMN IF NOT EXISTS "fotosInvitadosActivas" BOOLEAN DEFAULT true;`,
+      `ALTER TABLE "Evento" ADD COLUMN IF NOT EXISTS "mostrarCeremonia" BOOLEAN DEFAULT true;`,
+      `ALTER TABLE "Evento" ADD COLUMN IF NOT EXISTS "mostrarRecepcion" BOOLEAN DEFAULT true;`,
+      `ALTER TABLE "Evento" ADD COLUMN IF NOT EXISTS "rsvpTitulo" TEXT;`,
+      `ALTER TABLE "Evento" ADD COLUMN IF NOT EXISTS "rsvpTituloEn" TEXT;`,
+      `ALTER TABLE "Evento" ADD COLUMN IF NOT EXISTS "rsvpSubtitulo" TEXT;`,
+      `ALTER TABLE "Evento" ADD COLUMN IF NOT EXISTS "rsvpSubtituloEn" TEXT;`,
+      `ALTER TABLE "Evento" ADD COLUMN IF NOT EXISTS "rsvpTelefonoTitulo" TEXT;`,
+      `ALTER TABLE "Evento" ADD COLUMN IF NOT EXISTS "rsvpTelefonoTituloEn" TEXT;`,
+      `ALTER TABLE "Evento" ADD COLUMN IF NOT EXISTS "rsvpFechaLimiteEn" TEXT;`,
       `CREATE TABLE IF NOT EXISTS "FotoInvitado" (
           "id" TEXT NOT NULL PRIMARY KEY,
           "eventoId" TEXT NOT NULL REFERENCES "Evento"("id") ON DELETE CASCADE,

@@ -6,12 +6,16 @@ import ElegantRoseTemplate from "./ElegantRoseTemplate";
 import FairytaleWeddingTemplate from "./FairytaleWeddingTemplate";
 import BlueButterflyTemplate from "./BlueButterflyTemplate";
 import BlushPrincessTemplate from "./BlushPrincessTemplate";
+import BlushEnvelopeTemplate from "./BlushEnvelopeTemplate";
 import BeautyQuinceTemplate from "./BeautyQuinceTemplate";
 import QuinceEraPinkTemplate from "./QuinceEraPinkTemplate";
 import Miss15Template from "./Miss15Template";
 import BabyBlueTemplate from "./BabyBlueTemplate";
 import CoralineThemedTemplate from "./CoralineThemedTemplate";
 import QuinceRosadoTemplate from "./QuinceRosadoTemplate";
+import QuinceRosadoSaveTheDate from "../save-the-date/QuinceRosadoSaveTheDate";
+import Gatsby20sTemplate from "./Gatsby20sTemplate";
+import GypsyBurgundyTemplate from "./GypsyBurgundyTemplate";
 
 export default function TemplateDispatcher({
   data,
@@ -20,9 +24,18 @@ export default function TemplateDispatcher({
   data: InvitationData;
   skipIntro?: boolean;
 }) {
+  if (data.estiloPlantilla === "SAVE_THE_DATE_QUINCE_ROSADO" || data.slug?.includes("save-the-date")) {
+    return <QuinceRosadoSaveTheDate data={data as any} skipIntro={skipIntro} />;
+  }
+
   switch (data.estiloPlantilla) {
     case "QUINCE_ROSADO":
       return <QuinceRosadoTemplate data={data} skipIntro={skipIntro} />;
+    case "GATSBY_20S":
+    case "GYBSY_20S":
+      return <Gatsby20sTemplate data={data} skipIntro={skipIntro} />;
+    case "GYPSY_BURGUNDY":
+      return <GypsyBurgundyTemplate data={data} skipIntro={skipIntro} />;
     case "ELEGANT_ROSE":
       return <ElegantRoseTemplate data={data} skipIntro={skipIntro} />;
     case "FAIRYTALE_CHATEAU":
@@ -35,6 +48,8 @@ export default function TemplateDispatcher({
       return <Miss15Template data={data} skipIntro={skipIntro} />;
     case "QUINCE_ERA_PINK":
       return <QuinceEraPinkTemplate data={data} skipIntro={skipIntro} />;
+    case "BLUSH_ENVELOPE":
+      return <BlushEnvelopeTemplate data={data} skipIntro={skipIntro} />;
     case "BLUSH_PRINCESS":
       return <BlushPrincessTemplate data={data} skipIntro={skipIntro} />;
     case "BEAUTY_QUINCE":

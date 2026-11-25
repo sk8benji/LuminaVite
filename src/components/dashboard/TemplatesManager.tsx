@@ -45,7 +45,7 @@ export default function TemplatesManager() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [categoryFilter, setCategoryFilter] = useState<"ALL" | "QUINCEANERA" | "BODA" | "CUMPLEANOS">("ALL");
+  const [categoryFilter, setCategoryFilter] = useState<"ALL" | "QUINCEANERA" | "BODA" | "CUMPLEANOS" | "SAVEDATE">("ALL");
 
   // Estado de plantilla en edición
   const [editingTemplate, setEditingTemplate] = useState<MasterTemplateItem | null>(null);
@@ -133,6 +133,19 @@ export default function TemplatesManager() {
       window.history.replaceState(null, "", url);
     } catch {}
     setEditingTemplate(null);
+  };
+
+  const getPublicDemoUrl = (slug: string) => {
+    if (typeof window === "undefined") {
+      return slug.includes("save-the-date") ? "/save-the-date/demo" : `/demo/${slug}`;
+    }
+    const isSaveDate = slug.includes("save-the-date");
+    let origin = window.location.origin;
+    if (window.location.host.startsWith("admin.")) {
+      const publicHost = window.location.host.replace(/^admin\./, "");
+      origin = `${window.location.protocol}//${publicHost}`;
+    }
+    return isSaveDate ? `${origin}/save-the-date/demo` : `${origin}/demo/${slug}`;
   };
 
   // Subida de archivos (Canción o Imágenes) directamente a AWS S3
@@ -331,27 +344,62 @@ export default function TemplatesManager() {
       return {} as InvitationData;
     }
 
+    const isSaveDate =
+      editingTemplate.slug?.includes("save-the-date") ||
+      editingTemplate.estiloPlantilla === "SAVE_THE_DATE_QUINCE_ROSADO";
+
+    const extra = (editForm as any).configExtra || {};
+    const galeriaFotos = (editForm as any).galeriaFotosUrls || extra.galeriaFotosUrls || [
+      editForm.fotoInfanciaUrl || "/assets/save-the-date/save1.webp",
+      editForm.fotoActualUrl || "/assets/save-the-date/save2.webp",
+      editForm.fotoCierreUrl || "/assets/save-the-date/save3.webp",
+    ];
+
     return {
       id: editingTemplate.id || "preview-template",
       slug: editingTemplate.slug,
       tipoEvento: (editForm.categoria as any) || "QUINCEANERA",
       estiloPlantilla: (editForm.estiloPlantilla as any) || "BLUE_BUTTERFLY",
-      titulo: editForm.titulo || "Valeria Morales",
-      subtitulo: editForm.subtitulo || "My Quinceañera",
+      titulo: editForm.titulo || "Melissa",
+      subtitulo: editForm.subtitulo || "Mis Quince Años",
       frasePersonalizada: editForm.frasePersonalizada || "",
-      fechaEvento: new Date("2026-10-24T15:00:00Z"),
-      fechaTextoPersonalizada: editForm.fechaTextoPersonalizada || "SATURDAY, OCTOBER 24, 2026 AT 3 PM",
-      fechaPlacaLugar: editForm.fechaPlacaLugar || editForm.recepcionNombre || "QUINCE PALACE",
-      countdownEncabezado: editForm.countdownEncabezado || "Faltan sólo...",
-      // Sin portada, placeholder neutro (nunca la foto de otra plantilla)
+      mensaje: editForm.frasePersonalizada || extra.mensaje || "",
+      fechaEvento: isSaveDate
+        ? (extra.fechaEvento ? new Date(extra.fechaEvento) : new Date("2027-09-18T20:00:00Z"))
+        : new Date("2026-10-24T15:00:00Z"),
+      fechaTextoPersonalizada: editForm.fechaTextoPersonalizada || "Viernes 18 de Septiembre, 2026",
+      fechaPlacaLugar: editForm.fechaPlacaLugar || editForm.recepcionNombre || "Los Ángeles, California",
+      ciudad: editForm.fechaPlacaLugar || extra.ciudad || "Los Ángeles, California",
+      countdownEncabezado: editForm.countdownEncabezado || "Solo Faltan...",
       fotoPortadaUrl:
         editForm.fotoPortadaUrl ||
-        `data:image/svg+xml;utf8,${encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' width='1200' height='630'><rect width='1200' height='630' fill='#7A002A'/></svg>")}`,
+        (isSaveDate
+          ? "/assets/save-the-date/principal.jpeg"
+          : `data:image/svg+xml;utf8,${encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' width='1200' height='630'><rect width='1200' height='630' fill='#7A002A'/></svg>")}`),
+      fotoSobreAbiertoUrl: extra.fotoSobreAbiertoUrl || "/assets/save-the-date/f291897753a9fc56f20003d177749b21.webp",
       fotoInfanciaUrl: editForm.fotoInfanciaUrl || "",
       fotoActualUrl: editForm.fotoActualUrl || "",
       fotoCierreUrl: editForm.fotoCierreUrl || "",
+      galeriaFotosUrls: galeriaFotos,
       musicaUrl: editForm.musicaUrl || "",
       musicaTitulo: editForm.musicaTitulo || "",
+      mostrarSobre: extra.mostrarSobre !== undefined ? extra.mostrarSobre : true,
+      mostrarGaleria: extra.mostrarGaleria !== undefined ? extra.mostrarGaleria : true,
+      mostrarContador: extra.mostrarContador !== undefined ? extra.mostrarContador : true,
+      mostrarCalendario: extra.mostrarCalendario !== undefined ? extra.mostrarCalendario : true,
+      mostrarPreRsvp: extra.mostrarPreRsvp !== undefined ? extra.mostrarPreRsvp : true,
+      textoPreRsvp: extra.textoPreRsvp || "¿Podrás Acompañarnos?",
+      telefonoWhatsapp: editForm.telefonoWhatsappRsvp || extra.telefonoWhatsapp || "18181234567",
+      // Títulos bilingües configurables
+      tituloCalendarioEs: (editForm as any).tituloCalendarioEs || extra.tituloCalendarioEs || "RESERVA LA FECHA",
+      tituloCalendarioEn: (editForm as any).tituloCalendarioEn || extra.tituloCalendarioEn || "SAVE THE DATE",
+      tituloContadorEs: (editForm as any).tituloContadorEs || extra.tituloContadorEs || "Solo Faltan...",
+      tituloContadorEn: (editForm as any).tituloContadorEn || extra.tituloContadorEn || "Countdown...",
+      tituloRsvpEs: (editForm as any).tituloRsvpEs || extra.tituloRsvpEs || "Confirmación Anticipada",
+      tituloRsvpEn: (editForm as any).tituloRsvpEn || extra.tituloRsvpEn || "Early RSVP",
+      preguntaRsvpEs: (editForm as any).preguntaRsvpEs || extra.preguntaRsvpEs || "¿Podrás Acompañarnos?",
+      preguntaRsvpEn: (editForm as any).preguntaRsvpEn || extra.preguntaRsvpEn || "Will You Join Us?",
+      subtituloEn: (editForm as any).subtituloEn || extra.subtituloEn || "My Sweet Fifteen",
       textoDisco: editForm.textoDisco || "Click to Play Music",
       telefonoWhatsappRsvp: editForm.telefonoWhatsappRsvp || "18181234567",
       recepcionNombre: editForm.recepcionNombre || "Salón de Gala",
@@ -374,38 +422,68 @@ export default function TemplatesManager() {
       corteHonorJson: editForm.corteHonorJson || {},
       itinerarioJson: editForm.itinerarioJson || [],
       configPlantilla: {
-        colorSobre: editForm.colorSobre || "#E8D5C4",
+        colorSobre: editForm.colorSobre || (isSaveDate ? "#FFE8EE" : "#E8D5C4"),
         colorSello: editForm.colorSello || "#C5A059",
         tipoLetra: editForm.tipoLetra || "Cinzel",
         ...(editForm.configExtra || {}),
-        // El arte recién subido (aún sin guardar) también se previsualiza
+        fraseApertura: (editForm as any).fraseApertura || (editForm as any).configExtra?.fraseApertura || extra.fraseApertura || "Una Celebración Años 20",
+        fraseAperturaEn: (editForm as any).fraseAperturaEn || (editForm as any).configExtra?.fraseAperturaEn || extra.fraseAperturaEn || "A Roaring Twenties Celebration",
+        subtitulo: editForm.subtitulo || (editForm as any).configExtra?.subtitulo || extra.subtitulo || "Mis Quince Años",
+        subtituloEn: (editForm as any).subtituloEn || (editForm as any).configExtra?.subtituloEn || extra.subtituloEn || "My Sweet Fifteen",
         arteBeautyQuince:
           (editForm as any).arteBeautyQuince || (editForm as any).configExtra?.arteBeautyQuince,
       },
-    };
+    } as any;
   };
 
-  const sectionsList = [
-    { id: "musica", label: "Música & Audio", icon: Music },
-    { id: "sobre", label: "Sobre 3D & Tipografía", icon: Mail },
-    { id: "textos", label: "Textos Principales", icon: Sparkles },
-    { id: "fechas", label: "Fecha & Medallón", icon: Calendar },
-    { id: "lugares", label: "Recepción & Misa", icon: MapPin },
-    { id: "dresscode", label: "Dress Code", icon: Shirt },
-    { id: "regalos", label: "Regalos & RSVP", icon: Gift },
-    { id: "corte", label: "Corte & Programa", icon: Users },
-    { id: "fotos", label: "Fotos & Galería", icon: ImageIcon },
-    // Solo Beauty Quince tiene arte reemplazable por pieza por ahora
-    ...(editingTemplate?.estiloPlantilla === "BEAUTY_QUINCE"
-      ? [{ id: "arte", label: "Arte Beauty Quince", icon: ImageIcon }]
-      : []),
-  ] as const;
+  const isSaveDate =
+    editingTemplate?.slug?.includes("save-the-date") ||
+    editingTemplate?.estiloPlantilla === "SAVE_THE_DATE_QUINCE_ROSADO";
+
+  const isGatsby =
+    editingTemplate?.slug?.includes("gybsy") ||
+    editingTemplate?.slug?.includes("gatsby") ||
+    editingTemplate?.estiloPlantilla === "GATSBY_20S" ||
+    editingTemplate?.estiloPlantilla === "GYBSY_20S" ||
+    editingTemplate?.estiloPlantilla === "GYPSY_BURGUNDY";
+
+  const sectionsList = isSaveDate
+    ? ([
+        { id: "textos", label: "Nombres & Títulos", icon: Sparkles },
+        { id: "musica", label: "Música & Audio", icon: Music },
+        { id: "fechas", label: "Fecha & Ubicación", icon: Calendar },
+        { id: "fotos", label: "Fotos & Galería", icon: ImageIcon },
+        { id: "sobre", label: "Sobre 3D", icon: Mail },
+        { id: "regalos", label: "Pre-RSVP & Módulos", icon: Gift },
+      ] as const)
+    : ([
+        { id: "musica", label: "Música & Audio", icon: Music },
+        { id: "sobre", label: "Sobre 3D & Tipografía", icon: Mail },
+        { id: "textos", label: "Textos Principales", icon: Sparkles },
+        { id: "fechas", label: "Fecha & Medallón", icon: Calendar },
+        { id: "lugares", label: "Recepción & Misa", icon: MapPin },
+        { id: "dresscode", label: "Dress Code", icon: Shirt },
+        { id: "regalos", label: "Regalos & RSVP", icon: Gift },
+        { id: "corte", label: "Corte & Programa", icon: Users },
+        { id: "fotos", label: "Fotos & Galería", icon: ImageIcon },
+        ...(editingTemplate?.estiloPlantilla === "BEAUTY_QUINCE"
+          ? [{ id: "arte", label: "Arte Beauty Quince", icon: ImageIcon }]
+          : []),
+      ] as const);
 
   const filteredTemplates = templates.filter((tpl) => {
     const matchesSearch =
       tpl.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
       tpl.slug.toLowerCase().includes(searchTerm.toLowerCase()) ||
       tpl.titulo.toLowerCase().includes(searchTerm.toLowerCase());
+
+    const isTplSaveDate =
+      tpl.slug.toLowerCase().includes("save-the-date") ||
+      tpl.estiloPlantilla === "SAVE_THE_DATE_QUINCE_ROSADO";
+
+    if (categoryFilter === "SAVEDATE") {
+      return matchesSearch && isTplSaveDate;
+    }
 
     const matchesCategory =
       categoryFilter === "ALL" || tpl.categoria === categoryFilter;
@@ -476,7 +554,7 @@ export default function TemplatesManager() {
             </button>
 
             <a
-              href={`https://clickandlove.app/demo/${editingTemplate.slug}`}
+              href={getPublicDemoUrl(editingTemplate.slug)}
               target="_blank"
               rel="noopener noreferrer"
               className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-stone-700 bg-stone-100 hover:bg-stone-200 rounded-xl transition"
@@ -784,6 +862,244 @@ export default function TemplatesManager() {
                         className="w-full px-3.5 py-2 bg-stone-50 border border-stone-200 rounded-xl text-xs"
                       />
                     </div>
+
+                    {/* TÍTULOS BILINGÜES PARA SAVE THE DATE */}
+                    {isSaveDate && (
+                      <div className="pt-4 border-t border-stone-200 space-y-4">
+                        <div className="flex items-center gap-2">
+                          <Sparkles className="w-4 h-4 text-[#C5A059]" />
+                          <h4 className="font-serif font-bold text-sm text-stone-900">
+                            Títulos Principales de Secciones (Bilingüe EN / ES)
+                          </h4>
+                        </div>
+                        <p className="text-[11px] text-stone-500 -mt-2">
+                          Personaliza los títulos del calendario, la cuenta regresiva y la confirmación cuando el usuario alterna entre inglés y español (por defecto inicia en inglés).
+                        </p>
+
+                        {/* 1. TÍTULO CALENDARIO */}
+                        <div className="bg-amber-50/50 p-3 rounded-xl border border-amber-200/60 space-y-2">
+                          <label className="text-xs font-bold text-stone-800 block">
+                            1. Título Calendario ("RESERVA LA FECHA"):
+                          </label>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            <div>
+                              <span className="text-[10px] font-semibold text-stone-500 uppercase">Español (ES)</span>
+                              <input
+                                type="text"
+                                placeholder="RESERVA LA FECHA"
+                                value={(editForm as any).tituloCalendarioEs || ""}
+                                onChange={(e) => setEditForm({ ...editForm, tituloCalendarioEs: e.target.value } as any)}
+                                className="w-full px-3 py-1.5 bg-white border border-stone-200 rounded-lg text-xs"
+                              />
+                            </div>
+                            <div>
+                              <span className="text-[10px] font-semibold text-stone-500 uppercase">Inglés (EN - Default)</span>
+                              <input
+                                type="text"
+                                placeholder="SAVE THE DATE"
+                                value={(editForm as any).tituloCalendarioEn || ""}
+                                onChange={(e) => setEditForm({ ...editForm, tituloCalendarioEn: e.target.value } as any)}
+                                className="w-full px-3 py-1.5 bg-white border border-stone-200 rounded-lg text-xs font-medium text-[#7A5C32]"
+                              />
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* 2. TÍTULO CUENTA REGRESIVA */}
+                        <div className="bg-amber-50/50 p-3 rounded-xl border border-amber-200/60 space-y-2">
+                          <label className="text-xs font-bold text-stone-800 block">
+                            2. Título Cuenta Regresiva ("SOLO FALTAN"):
+                          </label>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            <div>
+                              <span className="text-[10px] font-semibold text-stone-500 uppercase">Español (ES)</span>
+                              <input
+                                type="text"
+                                placeholder="Solo Faltan..."
+                                value={(editForm as any).tituloContadorEs || ""}
+                                onChange={(e) => setEditForm({ ...editForm, tituloContadorEs: e.target.value } as any)}
+                                className="w-full px-3 py-1.5 bg-white border border-stone-200 rounded-lg text-xs"
+                              />
+                            </div>
+                            <div>
+                              <span className="text-[10px] font-semibold text-stone-500 uppercase">Inglés (EN - Default)</span>
+                              <input
+                                type="text"
+                                placeholder="Countdown..."
+                                value={(editForm as any).tituloContadorEn || ""}
+                                onChange={(e) => setEditForm({ ...editForm, tituloContadorEn: e.target.value } as any)}
+                                className="w-full px-3 py-1.5 bg-white border border-stone-200 rounded-lg text-xs font-medium text-[#7A5C32]"
+                              />
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* 3. TÍTULO CONFIRMACIÓN ANTICIPADA */}
+                        <div className="bg-amber-50/50 p-3 rounded-xl border border-amber-200/60 space-y-2">
+                          <label className="text-xs font-bold text-stone-800 block">
+                            3. Título Confirmación Pre-RSVP ("CONFIRMACIÓN ANTICIPADA"):
+                          </label>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            <div>
+                              <span className="text-[10px] font-semibold text-stone-500 uppercase">Español (ES)</span>
+                              <input
+                                type="text"
+                                placeholder="Confirmación Anticipada"
+                                value={(editForm as any).tituloRsvpEs || ""}
+                                onChange={(e) => setEditForm({ ...editForm, tituloRsvpEs: e.target.value } as any)}
+                                className="w-full px-3 py-1.5 bg-white border border-stone-200 rounded-lg text-xs"
+                              />
+                            </div>
+                            <div>
+                              <span className="text-[10px] font-semibold text-stone-500 uppercase">Inglés (EN - Default)</span>
+                              <input
+                                type="text"
+                                placeholder="Early RSVP"
+                                value={(editForm as any).tituloRsvpEn || ""}
+                                onChange={(e) => setEditForm({ ...editForm, tituloRsvpEn: e.target.value } as any)}
+                                className="w-full px-3 py-1.5 bg-white border border-stone-200 rounded-lg text-xs font-medium text-[#7A5C32]"
+                              />
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* 4. PREGUNTA PRE-RSVP Y SUBTÍTULO EN */}
+                        <div className="bg-stone-50 p-3 rounded-xl border border-stone-200 space-y-2">
+                          <label className="text-xs font-bold text-stone-800 block">
+                            4. Pregunta RSVP y Subtítulo Inglés:
+                          </label>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            <div>
+                              <span className="text-[10px] font-semibold text-stone-500 uppercase">Pregunta (ES)</span>
+                              <input
+                                type="text"
+                                placeholder="¿Podrás Acompañarnos?"
+                                value={(editForm as any).preguntaRsvpEs || ""}
+                                onChange={(e) => setEditForm({ ...editForm, preguntaRsvpEs: e.target.value } as any)}
+                                className="w-full px-3 py-1.5 bg-white border border-stone-200 rounded-lg text-xs"
+                              />
+                            </div>
+                            <div>
+                              <span className="text-[10px] font-semibold text-stone-500 uppercase">Question (EN)</span>
+                              <input
+                                type="text"
+                                placeholder="Will You Join Us?"
+                                value={(editForm as any).preguntaRsvpEn || ""}
+                                onChange={(e) => setEditForm({ ...editForm, preguntaRsvpEn: e.target.value } as any)}
+                                className="w-full px-3 py-1.5 bg-white border border-stone-200 rounded-lg text-xs font-medium text-[#7A5C32]"
+                              />
+                            </div>
+                            <div className="sm:col-span-2">
+                              <span className="text-[10px] font-semibold text-stone-500 uppercase">Subtítulo Tarjeta Sobre (EN)</span>
+                              <input
+                                type="text"
+                                placeholder="My Sweet Fifteen"
+                                value={(editForm as any).subtituloEn || ""}
+                                onChange={(e) => setEditForm({ ...editForm, subtituloEn: e.target.value } as any)}
+                                className="w-full px-3 py-1.5 bg-white border border-stone-200 rounded-lg text-xs font-medium text-[#7A5C32]"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* TÍTULOS BILINGÜES PARA GATSBY 20'S */}
+                    {isGatsby && (
+                      <div className="pt-4 border-t border-stone-200 space-y-4">
+                        <div className="flex items-center gap-2">
+                          <Sparkles className="w-4 h-4 text-[#C5A059]" />
+                          <h4 className="font-serif font-bold text-sm text-stone-900">
+                            Títulos de Pantalla Sobre Cerrado (Gatsby 20's / Roaring 20s)
+                          </h4>
+                        </div>
+                        <p className="text-[11px] text-stone-500 -mt-2">
+                          Edita el lema superior y el título principal del sobre cerrado en inglés y español.
+                        </p>
+
+                        {/* 1. LEMA SUPERIOR */}
+                        <div className="bg-amber-50/50 p-3 rounded-xl border border-amber-200/60 space-y-2">
+                          <label className="text-xs font-bold text-stone-800 block">
+                            1. Lema Superior ("A ROARING TWENTIES CELEBRATION"):
+                          </label>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            <div>
+                              <span className="text-[10px] font-semibold text-stone-500 uppercase">Español (ES)</span>
+                              <input
+                                type="text"
+                                placeholder="UNA CELEBRACIÓN AÑOS 20"
+                                value={(editForm as any).fraseApertura || (editForm as any).configExtra?.fraseApertura || ""}
+                                onChange={(e) =>
+                                  setEditForm({
+                                    ...editForm,
+                                    fraseApertura: e.target.value,
+                                    configExtra: { ...(editForm as any).configExtra, fraseApertura: e.target.value },
+                                  } as any)
+                                }
+                                className="w-full px-3 py-1.5 bg-white border border-stone-200 rounded-lg text-xs"
+                              />
+                            </div>
+                            <div>
+                              <span className="text-[10px] font-semibold text-stone-500 uppercase">Inglés (EN - Default)</span>
+                              <input
+                                type="text"
+                                placeholder="A ROARING TWENTIES CELEBRATION"
+                                value={(editForm as any).fraseAperturaEn || (editForm as any).configExtra?.fraseAperturaEn || ""}
+                                onChange={(e) =>
+                                  setEditForm({
+                                    ...editForm,
+                                    fraseAperturaEn: e.target.value,
+                                    configExtra: { ...(editForm as any).configExtra, fraseAperturaEn: e.target.value },
+                                  } as any)
+                                }
+                                className="w-full px-3 py-1.5 bg-white border border-stone-200 rounded-lg text-xs font-medium text-[#7A5C32]"
+                              />
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* 2. TÍTULO PRINCIPAL DEL EVENTO */}
+                        <div className="bg-amber-50/50 p-3 rounded-xl border border-amber-200/60 space-y-2">
+                          <label className="text-xs font-bold text-stone-800 block">
+                            2. Título Principal ("MY SWEET FIFTEEN" / "MIS QUINCE AÑOS"):
+                          </label>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            <div>
+                              <span className="text-[10px] font-semibold text-stone-500 uppercase">Español (ES)</span>
+                              <input
+                                type="text"
+                                placeholder="MIS QUINCE AÑOS"
+                                value={editForm.subtitulo || (editForm as any).configExtra?.subtitulo || ""}
+                                onChange={(e) =>
+                                  setEditForm({
+                                    ...editForm,
+                                    subtitulo: e.target.value,
+                                    configExtra: { ...(editForm as any).configExtra, subtitulo: e.target.value },
+                                  } as any)
+                                }
+                                className="w-full px-3 py-1.5 bg-white border border-stone-200 rounded-lg text-xs"
+                              />
+                            </div>
+                            <div>
+                              <span className="text-[10px] font-semibold text-stone-500 uppercase">Inglés (EN - Default)</span>
+                              <input
+                                type="text"
+                                placeholder="MY SWEET FIFTEEN"
+                                value={(editForm as any).subtituloEn || (editForm as any).configExtra?.subtituloEn || ""}
+                                onChange={(e) =>
+                                  setEditForm({
+                                    ...editForm,
+                                    subtituloEn: e.target.value,
+                                    configExtra: { ...(editForm as any).configExtra, subtituloEn: e.target.value },
+                                  } as any)
+                                }
+                                className="w-full px-3 py-1.5 bg-white border border-stone-200 rounded-lg text-xs font-medium text-[#7A5C32]"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
 
@@ -791,8 +1107,34 @@ export default function TemplatesManager() {
                 {activeSection === "fechas" && (
                   <div className="space-y-4">
                     <div>
-                      <h3 className="font-serif font-bold text-base text-stone-900">Fecha del Evento & Medallón</h3>
-                      <p className="text-[11px] text-stone-500">Composición del medallón dorado y cuenta regresiva.</p>
+                      <h3 className="font-serif font-bold text-base text-stone-900">
+                        {isSaveDate ? "Fecha del Evento & Ubicación" : "Fecha del Evento & Medallón"}
+                      </h3>
+                      <p className="text-[11px] text-stone-500">
+                        {isSaveDate
+                          ? "Fecha oficial para el calendario, el reloj de cuenta regresiva y la ciudad."
+                          : "Composición del medallón dorado y cuenta regresiva."}
+                      </p>
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="text-xs font-semibold text-stone-700">Fecha y Hora del Evento (Selector):</label>
+                      <input
+                        type="datetime-local"
+                        value={
+                          (editForm as any).configExtra?.fechaEvento
+                            ? new Date((editForm as any).configExtra.fechaEvento).toISOString().slice(0, 16)
+                            : "2027-09-18T20:00"
+                        }
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          setEditForm((prev) => ({
+                            ...prev,
+                            configExtra: { ...((prev as any).configExtra || {}), fechaEvento: val },
+                          }));
+                        }}
+                        className="w-full px-3.5 py-2 bg-stone-50 border border-stone-200 rounded-xl text-xs font-medium"
+                      />
                     </div>
 
                     <div className="space-y-1">
@@ -807,10 +1149,12 @@ export default function TemplatesManager() {
                     </div>
 
                     <div className="space-y-1">
-                      <label className="text-xs font-semibold text-stone-700">Lugar en Medallón:</label>
+                      <label className="text-xs font-semibold text-stone-700">
+                        {isSaveDate ? "Ciudad / Ubicación:" : "Lugar en Medallón:"}
+                      </label>
                       <input
                         type="text"
-                        placeholder="GRAN SALÓN REAL"
+                        placeholder={isSaveDate ? "Los Ángeles, California" : "GRAN SALÓN REAL"}
                         value={editForm.fechaPlacaLugar || ""}
                         onChange={(e) => setEditForm({ ...editForm, fechaPlacaLugar: e.target.value })}
                         className="w-full px-3.5 py-2 bg-stone-50 border border-stone-200 rounded-xl text-xs"
@@ -856,7 +1200,7 @@ export default function TemplatesManager() {
                       />
                       <input
                         type="url"
-                        placeholder="Enlace Google Maps / Waze"
+                        placeholder="Enlace Google Maps"
                         value={editForm.recepcionMapUrl || ""}
                         onChange={(e) => setEditForm({ ...editForm, recepcionMapUrl: e.target.value })}
                         className="w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs font-mono"
@@ -943,76 +1287,158 @@ export default function TemplatesManager() {
                   </div>
                 )}
 
-                {/* 7. REGALOS & RSVP */}
+                {/* 7. REGALOS & RSVP / PRE-RSVP */}
                 {activeSection === "regalos" && (
                   <div className="space-y-4">
                     <div>
-                      <h3 className="font-serif font-bold text-base text-stone-900">Mesa de Regalos & RSVP</h3>
-                      <p className="text-[11px] text-stone-500">Lluvia de sobres, Zelle, CashApp y WhatsApp.</p>
+                      <h3 className="font-serif font-bold text-base text-stone-900">
+                        {isSaveDate ? "Pre-Confirmación (RSVP) & Interruptores" : "Mesa de Regalos & RSVP"}
+                      </h3>
+                      <p className="text-[11px] text-stone-500">
+                        {isSaveDate
+                          ? "Configura la pregunta de pre-confirmación, teléfono de WhatsApp y activa/desactiva módulos."
+                          : "Lluvia de sobres, Zelle, CashApp y WhatsApp."}
+                      </p>
                     </div>
 
-                    <div className="space-y-1">
-                      <label className="text-xs font-semibold text-stone-700">Mensaje de Regalo:</label>
-                      <textarea
-                        rows={2}
-                        value={editForm.regalosMensaje || ""}
-                        onChange={(e) => setEditForm({ ...editForm, regalosMensaje: e.target.value })}
-                        className="w-full px-3.5 py-2 bg-stone-50 border border-stone-200 rounded-xl text-xs"
-                      />
-                    </div>
+                    {isSaveDate ? (
+                      <div className="space-y-4">
+                        <div className="space-y-1">
+                          <label className="text-xs font-semibold text-stone-700">Título / Pregunta Pre-RSVP:</label>
+                          <input
+                            type="text"
+                            value={(editForm as any).configExtra?.textoPreRsvp || "¿Podrás Acompañarnos?"}
+                            onChange={(e) => {
+                              const val = e.target.value;
+                              setEditForm((prev) => ({
+                                ...prev,
+                                configExtra: { ...((prev as any).configExtra || {}), textoPreRsvp: val },
+                              }));
+                            }}
+                            className="w-full px-3.5 py-2 bg-stone-50 border border-stone-200 rounded-xl text-xs"
+                          />
+                        </div>
 
-                    <div className="grid grid-cols-2 gap-3">
-                      <div className="space-y-1">
-                        <label className="text-xs font-semibold text-stone-700">Zelle:</label>
-                        <input
-                          type="text"
-                          placeholder="email o teléfono Zelle"
-                          value={editForm.regalosZelle || ""}
-                          onChange={(e) => setEditForm({ ...editForm, regalosZelle: e.target.value })}
-                          className="w-full px-3.5 py-2 bg-stone-50 border border-stone-200 rounded-xl text-xs"
-                        />
-                      </div>
-                      <div className="space-y-1">
-                        <label className="text-xs font-semibold text-stone-700">CashApp:</label>
-                        <input
-                          type="text"
-                          placeholder="$Cashtag"
-                          value={editForm.regalosCashApp || ""}
-                          onChange={(e) => setEditForm({ ...editForm, regalosCashApp: e.target.value })}
-                          className="w-full px-3.5 py-2 bg-stone-50 border border-stone-200 rounded-xl text-xs"
-                        />
-                      </div>
-                    </div>
+                        <div className="space-y-1">
+                          <label className="text-xs font-semibold text-stone-700">WhatsApp para Recibir Confirmaciones:</label>
+                          <input
+                            type="tel"
+                            placeholder="18181234567"
+                            value={editForm.telefonoWhatsappRsvp || (editForm as any).configExtra?.telefonoWhatsapp || ""}
+                            onChange={(e) => {
+                              const val = e.target.value;
+                              setEditForm((prev) => ({
+                                ...prev,
+                                telefonoWhatsappRsvp: val,
+                                configExtra: { ...((prev as any).configExtra || {}), telefonoWhatsapp: val },
+                              }));
+                            }}
+                            className="w-full px-3.5 py-2 bg-stone-50 border border-stone-200 rounded-xl text-xs font-mono"
+                          />
+                        </div>
 
-                    <div className="grid grid-cols-2 gap-3">
-                      <div className="space-y-1">
-                        <label className="text-xs font-semibold text-stone-700">WhatsApp RSVP:</label>
-                        <input
-                          type="tel"
-                          placeholder="18181234567"
-                          value={editForm.telefonoWhatsappRsvp || ""}
-                          onChange={(e) => setEditForm({ ...editForm, telefonoWhatsappRsvp: e.target.value })}
-                          className="w-full px-3.5 py-2 bg-stone-50 border border-stone-200 rounded-xl text-xs"
-                        />
+                        {/* Módulos On / Off */}
+                        <div className="p-4 rounded-2xl bg-stone-50 border border-stone-200 space-y-3">
+                          <label className="block text-xs font-bold text-stone-800 uppercase tracking-wider">
+                            Interruptores de Secciones (On / Off)
+                          </label>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                            {[
+                              { key: "mostrarSobre", label: "💌 Sobre Interactivo 3D" },
+                              { key: "mostrarGaleria", label: "🖼️ Galería Vertical (3 Fotos)" },
+                              { key: "mostrarContador", label: "⏳ Cuenta Regresiva en Vivo" },
+                              { key: "mostrarCalendario", label: "📅 Calendario Interactivo con Corazón" },
+                              { key: "mostrarPreRsvp", label: "✅ Pre-Confirmación de Asistencia" },
+                            ].map((sw) => {
+                              const extra = (editForm as any).configExtra || {};
+                              const isChecked = extra[sw.key] !== undefined ? extra[sw.key] : true;
+                              return (
+                                <label key={sw.key} className="flex items-center gap-2 cursor-pointer font-medium text-stone-800">
+                                  <input
+                                    type="checkbox"
+                                    checked={Boolean(isChecked)}
+                                    onChange={(e) => {
+                                      const checked = e.target.checked;
+                                      setEditForm((prev) => ({
+                                        ...prev,
+                                        configExtra: { ...((prev as any).configExtra || {}), [sw.key]: checked },
+                                      }));
+                                    }}
+                                    className="rounded text-[#C5A059] focus:ring-[#C5A059]"
+                                  />
+                                  <span>{sw.label}</span>
+                                </label>
+                              );
+                            })}
+                          </div>
+                        </div>
                       </div>
-                      <div className="space-y-1">
-                        <label className="text-xs font-semibold text-stone-700">Máx Pases (0 = sin límite):</label>
-                        <input
-                          type="number"
-                          min={0}
-                          max={100}
-                          value={editForm.maxPasesPorInvitado ?? 3}
-                          onChange={(e) => {
-                            const v = parseInt(e.target.value, 10);
-                            setEditForm({
-                              ...editForm,
-                              maxPasesPorInvitado: Number.isNaN(v) ? 0 : Math.min(100, Math.max(0, v)),
-                            });
-                          }}
-                          className="w-full px-3.5 py-2 bg-stone-50 border border-stone-200 rounded-xl text-xs"
-                        />
-                      </div>
-                    </div>
+                    ) : (
+                      <>
+                        <div className="space-y-1">
+                          <label className="text-xs font-semibold text-stone-700">Mensaje de Regalo:</label>
+                          <textarea
+                            rows={2}
+                            value={editForm.regalosMensaje || ""}
+                            onChange={(e) => setEditForm({ ...editForm, regalosMensaje: e.target.value })}
+                            className="w-full px-3.5 py-2 bg-stone-50 border border-stone-200 rounded-xl text-xs"
+                          />
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-3">
+                          <div className="space-y-1">
+                            <label className="text-xs font-semibold text-stone-700">Zelle:</label>
+                            <input
+                              type="text"
+                              placeholder="email o teléfono Zelle"
+                              value={editForm.regalosZelle || ""}
+                              onChange={(e) => setEditForm({ ...editForm, regalosZelle: e.target.value })}
+                              className="w-full px-3.5 py-2 bg-stone-50 border border-stone-200 rounded-xl text-xs"
+                            />
+                          </div>
+                          <div className="space-y-1">
+                            <label className="text-xs font-semibold text-stone-700">CashApp:</label>
+                            <input
+                              type="text"
+                              placeholder="$Cashtag"
+                              value={editForm.regalosCashApp || ""}
+                              onChange={(e) => setEditForm({ ...editForm, regalosCashApp: e.target.value })}
+                              className="w-full px-3.5 py-2 bg-stone-50 border border-stone-200 rounded-xl text-xs"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-3">
+                          <div className="space-y-1">
+                            <label className="text-xs font-semibold text-stone-700">WhatsApp RSVP:</label>
+                            <input
+                              type="tel"
+                              placeholder="18181234567"
+                              value={editForm.telefonoWhatsappRsvp || ""}
+                              onChange={(e) => setEditForm({ ...editForm, telefonoWhatsappRsvp: e.target.value })}
+                              className="w-full px-3.5 py-2 bg-stone-50 border border-stone-200 rounded-xl text-xs"
+                            />
+                          </div>
+                          <div className="space-y-1">
+                            <label className="text-xs font-semibold text-stone-700">Máx Pases (0 = sin límite):</label>
+                            <input
+                              type="number"
+                              min={0}
+                              max={100}
+                              value={editForm.maxPasesPorInvitado ?? 3}
+                              onChange={(e) => {
+                                const v = parseInt(e.target.value, 10);
+                                setEditForm({
+                                  ...editForm,
+                                  maxPasesPorInvitado: Number.isNaN(v) ? 0 : Math.min(100, Math.max(0, v)),
+                                });
+                              }}
+                              className="w-full px-3.5 py-2 bg-stone-50 border border-stone-200 rounded-xl text-xs"
+                            />
+                          </div>
+                        </div>
+                      </>
+                    )}
                   </div>
                 )}
 
@@ -1115,7 +1541,9 @@ export default function TemplatesManager() {
                     {/* Foto de Portada */}
                     <div className="p-3.5 bg-stone-50 rounded-2xl border border-stone-200 space-y-2">
                       <div className="flex items-center justify-between">
-                        <span className="text-xs font-bold text-stone-800">Foto de Portada 9:16</span>
+                        <span className="text-xs font-bold text-stone-800">
+                          {isSaveDate ? "Foto de Portada 9:16 (Festejada con Periódico)" : "Foto de Portada 9:16"}
+                        </span>
                         <label className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#7A002A] text-white rounded-lg text-xs font-semibold cursor-pointer">
                           <Upload className="w-3 h-3" />
                           <span>{uploadingField === "fotoPortadaUrl" ? "Subiendo..." : "Subir Foto"}</span>
@@ -1145,10 +1573,80 @@ export default function TemplatesManager() {
                       )}
                     </div>
 
-                    {/* Foto Infancia */}
+                    {/* Foto Sobre Abierto (solo Save the Date) */}
+                    {isSaveDate && (
+                      <div className="p-3.5 bg-stone-50 rounded-2xl border border-stone-200 space-y-2">
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-bold text-stone-800">Foto Sobre Abierto (Tarjeta interna al abrir)</span>
+                          <label className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#7A002A] text-white rounded-lg text-xs font-semibold cursor-pointer">
+                            <Upload className="w-3 h-3" />
+                            <span>{uploadingField === "fotoSobreAbiertoUrl" ? "Subiendo..." : "Subir Foto"}</span>
+                            <input
+                              type="file"
+                              accept="image/*"
+                              onChange={async (e) => {
+                                const file = e.target.files?.[0];
+                                if (!file || !editingTemplate) return;
+                                setUploadingField("fotoSobreAbiertoUrl");
+                                try {
+                                  const presignedRes = await fetch("/api/s3/presigned-url", {
+                                    method: "POST",
+                                    headers: { "Content-Type": "application/json" },
+                                    body: JSON.stringify({
+                                      filename: file.name,
+                                      contentType: file.type || "image/jpeg",
+                                      folder: "save-the-date/demo/images",
+                                      fileSize: file.size,
+                                    }),
+                                  });
+                                  const presignedData = await presignedRes.json();
+                                  if (!presignedRes.ok) throw new Error(presignedData.error || "Error S3");
+                                  await fetch(presignedData.uploadUrl, { method: "PUT", headers: { "Content-Type": file.type }, body: file });
+                                  setEditForm((prev) => ({
+                                    ...prev,
+                                    configExtra: { ...((prev as any).configExtra || {}), fotoSobreAbiertoUrl: presignedData.fileUrl },
+                                  }));
+                                  setSuccessToast("¡Foto de sobre abierto subida con éxito!");
+                                } catch (err: any) {
+                                  setErrorToast(err.message || "Error al subir");
+                                } finally {
+                                  setUploadingField(null);
+                                }
+                              }}
+                              disabled={uploadingField === "fotoSobreAbiertoUrl"}
+                              className="hidden"
+                            />
+                          </label>
+                        </div>
+                        <input
+                          type="text"
+                          value={(editForm as any).configExtra?.fotoSobreAbiertoUrl || ""}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            setEditForm((prev) => ({
+                              ...prev,
+                              configExtra: { ...((prev as any).configExtra || {}), fotoSobreAbiertoUrl: val },
+                            }));
+                          }}
+                          placeholder="/assets/save-the-date/f291897753a9fc56f20003d177749b21.webp"
+                          className="w-full px-3 py-1.5 bg-white border border-stone-200 rounded-xl text-xs font-mono"
+                        />
+                        {(editForm as any).configExtra?.fotoSobreAbiertoUrl && (
+                          <div className="flex items-center gap-3">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <MiniaturaConMeta url={(editForm as any).configExtra.fotoSobreAbiertoUrl} alt="Vista previa sobre abierto" imgClassName="w-24 h-16 object-cover rounded-lg border border-stone-200 bg-white" />
+                            <span className="text-[11px] text-stone-400">Vista previa foto sobre abierto</span>
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    {/* Foto Infancia / Foto Galería 1 */}
                     <div className="p-3.5 bg-stone-50 rounded-2xl border border-stone-200 space-y-2">
                       <div className="flex items-center justify-between">
-                        <span className="text-xs font-bold text-stone-800">Foto Infancia / Recuerdo</span>
+                        <span className="text-xs font-bold text-stone-800">
+                          {isSaveDate ? "Foto 1 de Galería Vertical (Sesión exterior)" : "Foto Infancia / Recuerdo"}
+                        </span>
                         <label className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#7A002A] text-white rounded-lg text-xs font-semibold cursor-pointer">
                           <Upload className="w-3 h-3" />
                           <span>{uploadingField === "fotoInfanciaUrl" ? "Subiendo..." : "Subir Foto"}</span>
@@ -1170,18 +1668,20 @@ export default function TemplatesManager() {
                       {editForm.fotoInfanciaUrl ? (
                         <div className="flex items-center gap-3">
                           {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <MiniaturaConMeta url={editForm.fotoInfanciaUrl} alt="Vista previa de la foto de infancia" imgClassName="w-24 h-16 object-cover rounded-lg border border-stone-200 bg-white" />
-                          <span className="text-[11px] text-stone-400">Vista previa de la foto de infancia</span>
+                          <MiniaturaConMeta url={editForm.fotoInfanciaUrl} alt="Vista previa foto 1" imgClassName="w-24 h-16 object-cover rounded-lg border border-stone-200 bg-white" />
+                          <span className="text-[11px] text-stone-400">Vista previa foto 1</span>
                         </div>
                       ) : (
                         <span className="text-[11px] text-stone-400">Sin foto todavía</span>
                       )}
                     </div>
 
-                    {/* Foto Actual */}
+                    {/* Foto Actual / Foto Galería 2 */}
                     <div className="p-3.5 bg-stone-50 rounded-2xl border border-stone-200 space-y-2">
                       <div className="flex items-center justify-between">
-                        <span className="text-xs font-bold text-stone-800">Foto Sesión de Gala</span>
+                        <span className="text-xs font-bold text-stone-800">
+                          {isSaveDate ? "Foto 2 de Galería Vertical (De espaldas con globos)" : "Foto Sesión de Gala"}
+                        </span>
                         <label className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#7A002A] text-white rounded-lg text-xs font-semibold cursor-pointer">
                           <Upload className="w-3 h-3" />
                           <span>{uploadingField === "fotoActualUrl" ? "Subiendo..." : "Subir Foto"}</span>
@@ -1203,16 +1703,20 @@ export default function TemplatesManager() {
                       {editForm.fotoActualUrl ? (
                         <div className="flex items-center gap-3">
                           {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <MiniaturaConMeta url={editForm.fotoActualUrl} alt="Vista previa de la sesión de gala" imgClassName="w-24 h-16 object-cover rounded-lg border border-stone-200 bg-white" />
-                          <span className="text-[11px] text-stone-400">Vista previa de la sesión de gala</span>
+                          <MiniaturaConMeta url={editForm.fotoActualUrl} alt="Vista previa foto 2" imgClassName="w-24 h-16 object-cover rounded-lg border border-stone-200 bg-white" />
+                          <span className="text-[11px] text-stone-400">Vista previa foto 2</span>
                         </div>
                       ) : (
                         <span className="text-[11px] text-stone-400">Sin foto todavía</span>
                       )}
-                    {/* Foto de Cierre */}
+                    </div>
+
+                    {/* Foto de Cierre / Foto Galería 3 */}
                     <div className="p-3.5 bg-stone-50 rounded-2xl border border-stone-200 space-y-2">
                       <div className="flex items-center justify-between">
-                        <span className="text-xs font-bold text-stone-800">Foto de Cierre</span>
+                        <span className="text-xs font-bold text-stone-800">
+                          {isSaveDate ? "Foto 3 de Galería Vertical (En el suelo con globos)" : "Foto de Cierre"}
+                        </span>
                         <label className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#7A002A] text-white rounded-lg text-xs font-semibold cursor-pointer">
                           <Upload className="w-3 h-3" />
                           <span>{uploadingField === "fotoCierreUrl" ? "Subiendo..." : "Subir Foto"}</span>
@@ -1234,13 +1738,12 @@ export default function TemplatesManager() {
                       {editForm.fotoCierreUrl ? (
                         <div className="flex items-center gap-3">
                           {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <MiniaturaConMeta url={editForm.fotoCierreUrl} alt="Vista previa de la foto de cierre" imgClassName="w-24 h-16 object-cover rounded-lg border border-stone-200 bg-white" />
-                          <span className="text-[11px] text-stone-400">Vista previa de la foto de cierre</span>
+                          <MiniaturaConMeta url={editForm.fotoCierreUrl} alt="Vista previa foto 3" imgClassName="w-24 h-16 object-cover rounded-lg border border-stone-200 bg-white" />
+                          <span className="text-[11px] text-stone-400">Vista previa foto 3</span>
                         </div>
                       ) : (
                         <span className="text-[11px] text-stone-400">Sin foto todavía</span>
                       )}
-                    </div>
                     </div>
                   </div>
                 )}
@@ -1467,6 +1970,16 @@ export default function TemplatesManager() {
           >
             Cumpleaños
           </button>
+          <button
+            onClick={() => setCategoryFilter("SAVEDATE")}
+            className={`px-3 py-1.5 rounded-lg font-medium transition cursor-pointer ${
+              categoryFilter === "SAVEDATE"
+                ? "bg-[#7A002A] text-white font-bold"
+                : "text-stone-600 hover:bg-stone-100"
+            }`}
+          >
+            💌 Save the Date
+          </button>
         </div>
       </div>
 
@@ -1482,135 +1995,153 @@ export default function TemplatesManager() {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {filteredTemplates.map((tpl) => (
-            <div
-              key={tpl.slug}
-              className="bg-white rounded-2xl border border-stone-200 overflow-hidden shadow-2xs hover:shadow-md transition flex flex-col"
-            >
-              {/* Vista previa superior con miniatura */}
-              <div className="relative h-44 bg-stone-900 overflow-hidden group">
-                <img
-                  src={tpl.fotoPortadaUrl}
-                  alt={tpl.nombre}
-                  className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500 opacity-90"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+          {filteredTemplates.map((tpl) => {
+            const isStd =
+              tpl.slug.toLowerCase().includes("save-the-date") ||
+              tpl.estiloPlantilla === "SAVE_THE_DATE_QUINCE_ROSADO";
 
-                {/* Badge Categoría */}
-                <span className="absolute top-3 left-3 px-2.5 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase bg-white/95 text-stone-900 backdrop-blur-md shadow-xs">
-                  {tpl.categoria === "QUINCEANERA"
-                    ? "XV Años"
-                    : tpl.categoria === "BODA"
-                    ? "Boda"
-                    : "Cumpleaños"}
-                </span>
+            return (
+              <div
+                key={tpl.slug}
+                className="bg-white rounded-2xl border border-stone-200 overflow-hidden shadow-2xs hover:shadow-md transition flex flex-col"
+              >
+                {/* Vista previa superior con miniatura */}
+                <div className="relative h-44 bg-stone-900 overflow-hidden group">
+                  <img
+                    src={tpl.fotoPortadaUrl}
+                    alt={tpl.nombre}
+                    className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500 opacity-90"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
-                {/* Slug ID */}
-                <span className="absolute top-3 right-3 px-2 py-0.5 rounded-md text-[10px] font-mono bg-black/60 text-stone-300 backdrop-blur-md border border-white/10">
-                  /{tpl.slug}
-                </span>
+                  {/* Badge Categoría */}
+                  <span className="absolute top-3 left-3 px-2.5 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase bg-white/95 text-stone-900 backdrop-blur-md shadow-xs">
+                    {isStd
+                      ? "💌 Save the Date"
+                      : tpl.categoria === "QUINCEANERA"
+                      ? "XV Años"
+                      : tpl.categoria === "BODA"
+                      ? "Boda"
+                      : "Cumpleaños"}
+                  </span>
 
-                {/* Título en la imagen */}
-                <div className="absolute bottom-3 left-3 right-3">
-                  <h3 className="text-white font-serif font-bold text-base leading-tight drop-shadow-md">
-                    {tpl.titulo}
-                  </h3>
-                  <p className="text-stone-300 text-xs truncate">
-                    {tpl.nombre}
-                  </p>
+                  {/* Slug ID */}
+                  <span className="absolute top-3 right-3 px-2 py-0.5 rounded-md text-[10px] font-mono bg-black/60 text-stone-300 backdrop-blur-md border border-white/10">
+                    /{tpl.slug}
+                  </span>
+
+                  {/* Título en la imagen */}
+                  <div className="absolute bottom-3 left-3 right-3">
+                    <h3 className="text-white font-serif font-bold text-base leading-tight drop-shadow-md">
+                      {tpl.titulo}
+                    </h3>
+                    <p className="text-stone-300 text-xs truncate">
+                      {tpl.nombre}
+                    </p>
+                  </div>
                 </div>
-              </div>
 
-              {/* Contenido / Metadatos */}
-              <div className="p-4 space-y-3 flex-1 flex flex-col justify-between">
-                <div className="space-y-2 text-xs">
-                  {/* Canción Predeterminada */}
-                  <div className="flex items-center justify-between p-2 rounded-xl bg-stone-50 border border-stone-100">
-                    <div className="flex items-center gap-2 overflow-hidden">
-                      <Music className="w-3.5 h-3.5 text-[#C5A059] flex-shrink-0" />
-                      <div className="truncate">
-                        <span className="text-[10px] text-stone-400 block uppercase tracking-wider font-semibold">Canción Demo</span>
-                        <span className="text-stone-700 font-medium truncate block">
-                          {tpl.musicaTitulo || "Sin título definido"}
-                        </span>
+                {/* Contenido / Metadatos */}
+                <div className="p-4 space-y-3 flex-1 flex flex-col justify-between">
+                  <div className="space-y-2 text-xs">
+                    {/* Canción Predeterminada */}
+                    <div className="flex items-center justify-between p-2 rounded-xl bg-stone-50 border border-stone-100">
+                      <div className="flex items-center gap-2 overflow-hidden">
+                        <Music className="w-3.5 h-3.5 text-[#C5A059] flex-shrink-0" />
+                        <div className="truncate">
+                          <span className="text-[10px] text-stone-400 block uppercase tracking-wider font-semibold">Canción Demo</span>
+                          <span className="text-stone-700 font-medium truncate block">
+                            {tpl.musicaTitulo || "Sin título definido"}
+                          </span>
+                        </div>
+                      </div>
+                      {tpl.musicaUrl && (
+                        <button
+                          type="button"
+                          onClick={() => handleTogglePlayAudio(tpl.musicaUrl)}
+                          title={playingAudioUrl === tpl.musicaUrl ? "Detener" : "Reproducir demo"}
+                          className="p-1.5 rounded-full bg-white hover:bg-stone-200 border border-stone-200 text-stone-800 transition cursor-pointer flex-shrink-0"
+                        >
+                          {playingAudioUrl === tpl.musicaUrl ? (
+                            <Square className="w-3 h-3 fill-current text-red-600" />
+                          ) : (
+                            <Play className="w-3 h-3 fill-current text-emerald-700 ml-0.5" />
+                          )}
+                        </button>
+                      )}
+                    </div>
+
+                    {/* Atributos Visuales (Sobre, Sello y Fuente) */}
+                    <div className="grid grid-cols-2 gap-2 text-[11px]">
+                      <div className="flex items-center gap-2 p-2 rounded-lg bg-stone-50 border border-stone-100">
+                        <div
+                          className="w-4 h-4 rounded-full border border-stone-300 flex-shrink-0 shadow-2xs"
+                          style={{ backgroundColor: tpl.colorSobre || "#E8D5C4" }}
+                        />
+                        <div className="truncate">
+                          <span className="text-stone-400 block text-[9px] uppercase font-semibold">Sobre 3D</span>
+                          <span className="text-stone-700 font-mono text-[10px]">
+                            {tpl.colorSobre || "#E8D5C4"}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-2 p-2 rounded-lg bg-stone-50 border border-stone-100">
+                        <Type className="w-3.5 h-3.5 text-[#C5A059] flex-shrink-0" />
+                        <div className="truncate">
+                          <span className="text-stone-400 block text-[9px] uppercase font-semibold">Tipografía</span>
+                          <span className="text-stone-700 font-medium truncate block">
+                            {tpl.tipoLetra || "Cinzel"}
+                          </span>
+                        </div>
                       </div>
                     </div>
-                    {tpl.musicaUrl && (
-                      <button
-                        type="button"
-                        onClick={() => handleTogglePlayAudio(tpl.musicaUrl)}
-                        title={playingAudioUrl === tpl.musicaUrl ? "Detener" : "Reproducir demo"}
-                        className="p-1.5 rounded-full bg-white hover:bg-stone-200 border border-stone-200 text-stone-800 transition cursor-pointer flex-shrink-0"
+                  </div>
+
+                  {/* Acciones */}
+                  <div className="pt-2 border-t border-stone-100 space-y-2">
+                    <div className="flex items-center gap-2">
+                      <a
+                        href={getPublicDemoUrl(tpl.slug)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-semibold text-stone-700 bg-stone-100 hover:bg-stone-200 rounded-xl transition"
                       >
-                        {playingAudioUrl === tpl.musicaUrl ? (
-                          <Square className="w-3 h-3 fill-current text-red-600" />
-                        ) : (
-                          <Play className="w-3 h-3 fill-current text-emerald-700 ml-0.5" />
-                        )}
+                        <span>Ver Demo</span>
+                        <ExternalLink className="w-3 h-3" />
+                      </a>
+
+                      <button
+                        onClick={() => handleOpenEdit(tpl)}
+                        className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-bold text-[#2C1F1B] bg-gradient-to-r from-[#C5A059] via-[#EED3A1] to-[#C5A059] hover:opacity-95 rounded-xl shadow-xs transition cursor-pointer"
+                      >
+                        <Edit3 className="w-3.5 h-3.5" />
+                        <span>Editar Plantilla</span>
                       </button>
+                    </div>
+
+                    {isStd ? (
+                      <Link
+                        href="/dashboard?tab=savedate"
+                        className="w-full inline-flex items-center justify-center gap-1.5 py-2 px-3 bg-[#7A002A] hover:bg-[#5e0020] text-white rounded-xl text-xs font-bold shadow-xs transition"
+                      >
+                        <Sparkles className="w-3.5 h-3.5 text-amber-200" />
+                        <span>Gestionar Pre-Invitaciones</span>
+                      </Link>
+                    ) : (
+                      <Link
+                        href={`/eventos/nuevo?plantilla=${tpl.estiloPlantilla}`}
+                        className="w-full inline-flex items-center justify-center gap-1.5 py-2 px-3 bg-[#7A002A] hover:bg-[#5e0020] text-white rounded-xl text-xs font-bold shadow-xs transition"
+                      >
+                        <Sparkles className="w-3.5 h-3.5 text-amber-200" />
+                        <span>Crear Invitación con este Diseño</span>
+                      </Link>
                     )}
                   </div>
-
-                  {/* Atributos Visuales (Sobre, Sello y Fuente) */}
-                  <div className="grid grid-cols-2 gap-2 text-[11px]">
-                    <div className="flex items-center gap-2 p-2 rounded-lg bg-stone-50 border border-stone-100">
-                      <div
-                        className="w-4 h-4 rounded-full border border-stone-300 flex-shrink-0 shadow-2xs"
-                        style={{ backgroundColor: tpl.colorSobre || "#E8D5C4" }}
-                      />
-                      <div className="truncate">
-                        <span className="text-stone-400 block text-[9px] uppercase font-semibold">Sobre 3D</span>
-                        <span className="text-stone-700 font-mono text-[10px]">
-                          {tpl.colorSobre || "#E8D5C4"}
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-2 p-2 rounded-lg bg-stone-50 border border-stone-100">
-                      <Type className="w-3.5 h-3.5 text-[#C5A059] flex-shrink-0" />
-                      <div className="truncate">
-                        <span className="text-stone-400 block text-[9px] uppercase font-semibold">Tipografía</span>
-                        <span className="text-stone-700 font-medium truncate block">
-                          {tpl.tipoLetra || "Cinzel"}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Acciones */}
-                <div className="pt-2 border-t border-stone-100 space-y-2">
-                  <div className="flex items-center gap-2">
-                    <a
-                      href={`https://clickandlove.app/demo/${tpl.slug}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-semibold text-stone-700 bg-stone-100 hover:bg-stone-200 rounded-xl transition"
-                    >
-                      <span>Ver Demo</span>
-                      <ExternalLink className="w-3 h-3" />
-                    </a>
-
-                    <button
-                      onClick={() => handleOpenEdit(tpl)}
-                      className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-bold text-[#2C1F1B] bg-gradient-to-r from-[#C5A059] via-[#EED3A1] to-[#C5A059] hover:opacity-95 rounded-xl shadow-xs transition cursor-pointer"
-                    >
-                      <Edit3 className="w-3.5 h-3.5" />
-                      <span>Editar Plantilla</span>
-                    </button>
-                  </div>
-
-                  <Link
-                    href={`/eventos/nuevo?plantilla=${tpl.estiloPlantilla}`}
-                    className="w-full inline-flex items-center justify-center gap-1.5 py-2 px-3 bg-[#7A002A] hover:bg-[#5e0020] text-white rounded-xl text-xs font-bold shadow-xs transition"
-                  >
-                    <Sparkles className="w-3.5 h-3.5 text-amber-200" />
-                    <span>Crear Invitación con este Diseño</span>
-                  </Link>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>

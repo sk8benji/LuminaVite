@@ -56,6 +56,20 @@ const DEMO_ITEMS: DemoItem[] = [
     icon: "\U0001F451",
   },
   {
+    slug: "gybsy-20s",
+    title: "Gatsby 20's",
+    shortTitle: "Gatsby 20's",
+    category: "XV Años & Gala",
+    icon: "🎷",
+  },
+  {
+    slug: "gybsy-burgundy",
+    title: "Gypsy Burgundy",
+    shortTitle: "Gypsy Burgundy",
+    category: "XV Años & Gala",
+    icon: "🍷",
+  },
+  {
     slug: "isabella-xv",
     title: "Vintage Quinceanera",
     shortTitle: "Vintage Quinceanera",
@@ -106,13 +120,17 @@ export default function InteractiveDemoModal({
 
   if (!isOpen) return null;
 
-  // Redirigir a precios cerrando el modal
+  // Redirigir a precios cerrando el modal (segun el idioma: #prices en EN, #precios en ES)
   const handleSelectPlan = () => {
     onClose();
     setTimeout(() => {
-      const el = document.getElementById("precios");
+      const targetId = lang === "es" ? "precios" : "prices";
+      const el = document.getElementById(targetId);
       if (el) {
         el.scrollIntoView({ behavior: "smooth" });
+      } else {
+        // Respaldo: si la seccion no existe en esta pagina, ir a la landing de precios
+        window.location.href = lang === "es" ? "/es/precios" : "/pricing";
       }
     }, 120);
   };
@@ -301,14 +319,6 @@ export default function InteractiveDemoModal({
                 allow="autoplay; clipboard-write"
               />
 
-              {/* Indicación Flotante Pulsante: TOCA EL SOBRE PARA ABRIR (pointer-events-none para permitir clic directo) */}
-              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-30 pointer-events-none w-max max-w-[90%]">
-                <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#2C1F1B]/90 backdrop-blur-md border border-[#C5A059]/60 text-[#FAF8F5] text-[10px] sm:text-xs font-['Cinzel'] tracking-wider uppercase font-bold shadow-lg animate-pulse whitespace-nowrap">
-                  <span>✨</span>
-                  <span>{lang === "es" ? "Toca el sobre para abrir" : "Tap envelope to open"}</span>
-                  <span>👆</span>
-                </div>
-              </div>
             </div>
 
             {/* Barra inferior del iPhone (Solo visible con marco) */}

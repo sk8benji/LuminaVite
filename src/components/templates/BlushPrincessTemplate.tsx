@@ -422,7 +422,7 @@ export default function BlushPrincessTemplate({
   };
 
   return (
-    <div className="relative min-h-screen font-sans-body text-[#4A3436] antialiased selection:bg-rose-100 selection:text-rose-900 overflow-x-hidden bg-[#FDF8F4]">
+    <div className="relative min-h-screen font-sans-body text-[#4A3436] antialiased selection:bg-rose-100 selection:text-rose-900 overflow-x-clip bg-[#FDF8F4]">
       {/* Fondo general: seda blush */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
@@ -445,12 +445,16 @@ export default function BlushPrincessTemplate({
             isEnvelopeExiting ? "pointer-events-none" : ""
           }`}
         >
-          {/* Fondo floral acuarela (el mismo motivo de la invitación) */}
+          {/* Fondo floral acuarela con filtro de profundidad */}
           <div
             aria-hidden="true"
             className={`absolute inset-0 bg-[#FBF1EA] bg-[url('/assets/template-blush/fondo-floral-ancho.webp')] bg-cover bg-center transition-opacity duration-200 ${
               isEnvelopeFading ? "opacity-0" : "opacity-100"
             }`}
+            style={{
+              filter: "blur(1.5px) brightness(0.95)",
+              transform: "scale(1.02)",
+            }}
           />
 
           {/* Grupo de la intro: sale en cortina al abrir */}
@@ -478,32 +482,58 @@ export default function BlushPrincessTemplate({
               )}
             </div>
 
-            {/* Escenario del sobre */}
+            {/* Escenario del sobre: 100% transparente sin bordes ni fondos heredados */}
             <div
               id="envelopeContainer"
-              className={`relative w-[min(94vw,430px)] sm:w-[500px] aspect-[799/654] cursor-pointer ${
+              className={`envelope-container card-wrapper relative w-[min(94vw,430px)] sm:w-[500px] aspect-[780/646] cursor-pointer bg-transparent border-0 shadow-none ${
                 isEnvelopeOpen ? "animate-envelope-pulse" : ""
               }`}
+              style={{
+                overflow: "visible",
+                border: "none",
+                outline: "none",
+                background: "transparent",
+                backgroundColor: "transparent",
+                boxShadow: "none",
+              }}
             >
-              {/* Sobre ABIERTO (retrato, con su carta): entra al abrir */}
+              {/* Sobre ABIERTO: transparente con drop-shadow que sigue la silueta del sobre */}
               <div
-                className={`absolute left-1/2 top-1/2 z-10 w-[min(78vw,320px)] sm:w-[350px] aspect-[1404/1600] -translate-x-1/2 -translate-y-1/2 transition-all duration-500 ${
+                className={`absolute left-1/2 top-1/2 z-10 w-[min(78vw,320px)] sm:w-[350px] aspect-[1404/1600] -translate-x-1/2 -translate-y-1/2 transition-all duration-500 bg-transparent border-0 ${
                   isEnvelopeOpen
                     ? "opacity-100 scale-100"
                     : "opacity-0 scale-95 pointer-events-none"
                 }`}
+                style={{
+                  overflow: "visible",
+                  border: "none",
+                  outline: "none",
+                  background: "transparent",
+                  backgroundColor: "transparent",
+                  boxShadow: "none",
+                  filter: "drop-shadow(0 15px 30px rgba(0, 0, 0, 0.22)) drop-shadow(0 5px 12px rgba(0, 0, 0, 0.12))",
+                }}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={BLUSH_ASSETS.envelopeOpen}
                   alt="Sobre abierto"
-                  className="absolute inset-0 w-full h-full object-contain drop-shadow-2xl"
+                  className="absolute inset-0 w-full h-full object-contain bg-transparent border-0 shadow-none block"
+                  style={{
+                    overflow: "visible",
+                    border: "none",
+                    outline: "none",
+                  }}
                 />
                 {/* Texto impreso sobre la carta del arte (zona medida) */}
                 <div
-                  className={`absolute left-[21%] right-[21%] top-[26%] text-center transition-opacity duration-500 ${
+                  className={`absolute left-[21%] right-[21%] top-[26%] text-center transition-opacity duration-500 bg-transparent ${
                     isLetterOut ? "opacity-100" : "opacity-0"
                   }`}
+                  style={{
+                    background: "transparent",
+                    backgroundColor: "transparent",
+                  }}
                 >
                   <p className="font-serif-roman text-[9px] sm:text-[10px] tracking-[0.3em] uppercase text-[#B08D3C] font-semibold">
                     My Quinceañera
@@ -517,32 +547,55 @@ export default function BlushPrincessTemplate({
                 </div>
               </div>
 
-              {/* Sobre CERRADO: encima mientras está cerrado */}
+              {/* Sobre CERRADO: estructura limpia original sin adornos superpuestos y con sombra directa a la silueta */}
               <div
-                className={`absolute inset-0 z-40 pointer-events-none drop-shadow-xl transition-opacity duration-200 ${
+                className={`absolute inset-0 z-40 pointer-events-none transition-opacity duration-200 bg-transparent border-0 ${
                   isEnvelopeOpen ? "opacity-0" : "opacity-100"
                 }`}
+                style={{
+                  overflow: "visible",
+                  border: "none",
+                  outline: "none",
+                  background: "transparent",
+                  backgroundColor: "transparent",
+                  boxShadow: "none",
+                }}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={BLUSH_ASSETS.envelopeClosed}
                   alt="Sobre Cerrado"
-                  className="w-full h-full object-contain"
+                  className="envelope-image w-full h-full object-contain bg-transparent border-0"
+                  style={{
+                    overflow: "visible",
+                    border: "none",
+                    outline: "none",
+                    filter: "drop-shadow(0 18px 28px rgba(0, 0, 0, 0.25)) drop-shadow(0 4px 10px rgba(0, 0, 0, 0.12))",
+                  }}
                 />
-                {/* Tiara dorada descansando sobre el sobre (como en Canva) */}
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={BLUSH_ASSETS.crown}
-                  alt=""
-                  className="absolute -top-10 sm:-top-12 right-4 sm:right-8 w-24 sm:w-32 h-auto object-contain rotate-[10deg] drop-shadow-md"
-                />
-                {/* Mariposa rosa perchada */}
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={BLUSH_ASSETS.butterflyB}
-                  alt=""
-                  className="absolute -bottom-5 -left-3 sm:-left-5 w-16 sm:w-20 h-auto object-contain rotate-[18deg] drop-shadow-md animate-flutter"
-                />
+                {/* Mariposa dorada decorativa en la esquina inferior izquierda con efecto de movimiento/aleteo flotante */}
+                <div
+                  className="envelope-butterfly-accent animate-float pointer-events-none"
+                  style={{
+                    position: "absolute",
+                    bottom: "-10px",
+                    left: "-12px",
+                    width: "46px",
+                    height: "auto",
+                    zIndex: 50,
+                    pointerEvents: "none",
+                  }}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={BLUSH_ASSETS.butterflyB}
+                    alt=""
+                    className="w-full h-auto object-contain animate-flutter block"
+                    style={{
+                      filter: "drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2))",
+                    }}
+                  />
+                </div>
               </div>
 
               {/* Mariposas que salen volando al abrir */}
@@ -564,15 +617,28 @@ export default function BlushPrincessTemplate({
               )}
             </div>
 
-            {/* Selector de idioma / pista de toque */}
+            {/* Selector de idioma / pista de toque con fondo 100% transparente */}
             {isBilingual ? (
               <div
-                className={`mt-7 sm:mt-9 flex flex-col items-center gap-3 z-30 transition-opacity duration-300 ${
+                className={`language-selector-container language-modal-box mt-6 sm:mt-8 flex flex-col items-center gap-3 z-30 transition-opacity duration-300 w-full max-w-lg mx-auto bg-transparent border-0 shadow-none ${
                   isEnvelopeOpen ? "opacity-0 pointer-events-none" : "opacity-100"
                 }`}
+                style={{
+                  background: "transparent",
+                  backgroundColor: "transparent",
+                  boxShadow: "none",
+                  border: "none",
+                  padding: "10px 0",
+                }}
               >
-                <p className="font-serif-roman text-[11px] sm:text-xs tracking-[0.3em] uppercase text-[#4A3436] font-semibold">
-                  Choose language / Elige tu idioma
+                <p
+                  className="font-serif-roman text-[11px] sm:text-xs tracking-[0.25em] uppercase font-semibold"
+                  style={{
+                    color: "#4a3728",
+                    fontWeight: 600,
+                  }}
+                >
+                  CHOOSE LANGUAGE / ELIGE TU IDIOMA
                 </p>
                 <div className="flex items-center justify-center gap-3 sm:gap-5">
                   <button
@@ -581,7 +647,14 @@ export default function BlushPrincessTemplate({
                       e.stopPropagation();
                       handleOpenEnvelope("en");
                     }}
-                    className="inline-flex items-center justify-center w-36 sm:w-44 h-12 sm:h-14 rounded-full bg-gradient-to-b from-[#DCC084] via-[#B08D3C] to-[#96762E] text-white font-serif-roman text-xs sm:text-sm tracking-[0.25em] uppercase font-bold shadow-lg transition-transform duration-300 hover:scale-105 active:scale-95 cursor-pointer"
+                    className="inline-flex items-center justify-center w-36 sm:w-44 h-12 sm:h-14 rounded-full font-serif-roman text-xs sm:text-sm uppercase transition-transform duration-300 hover:scale-105 active:scale-95 cursor-pointer shadow-md"
+                    style={{
+                      background: "#a37c3f",
+                      color: "#ffffff",
+                      textShadow: "0 1px 2px rgba(0, 0, 0, 0.4)",
+                      fontWeight: "bold",
+                      letterSpacing: "1px",
+                    }}
                   >
                     English
                   </button>
@@ -591,7 +664,14 @@ export default function BlushPrincessTemplate({
                       e.stopPropagation();
                       handleOpenEnvelope("es");
                     }}
-                    className="inline-flex items-center justify-center w-36 sm:w-44 h-12 sm:h-14 rounded-full bg-gradient-to-b from-[#DCC084] via-[#B08D3C] to-[#96762E] text-white font-serif-roman text-xs sm:text-sm tracking-[0.25em] uppercase font-bold shadow-lg transition-transform duration-300 hover:scale-105 active:scale-95 cursor-pointer"
+                    className="inline-flex items-center justify-center w-36 sm:w-44 h-12 sm:h-14 rounded-full font-serif-roman text-xs sm:text-sm uppercase transition-transform duration-300 hover:scale-105 active:scale-95 cursor-pointer shadow-md"
+                    style={{
+                      background: "#a37c3f",
+                      color: "#ffffff",
+                      textShadow: "0 1px 2px rgba(0, 0, 0, 0.4)",
+                      fontWeight: "bold",
+                      letterSpacing: "1px",
+                    }}
                   >
                     Español
                   </button>
@@ -603,103 +683,174 @@ export default function BlushPrincessTemplate({
                   e.stopPropagation();
                   handleOpenEnvelope(isEn ? "en" : "es");
                 }}
-                className={`mt-7 sm:mt-9 flex flex-col items-center justify-center z-30 cursor-pointer group transition-all duration-300 hover:scale-105 active:scale-95 ${
+                className={`language-selector-container language-modal-box mt-6 sm:mt-8 flex flex-col items-center justify-center z-30 cursor-pointer group transition-all duration-300 hover:scale-105 active:scale-95 w-full max-w-lg mx-auto bg-transparent border-0 shadow-none ${
                   isEnvelopeOpen ? "opacity-0 pointer-events-none" : "opacity-100"
                 }`}
+                style={{
+                  background: "transparent",
+                  backgroundColor: "transparent",
+                  boxShadow: "none",
+                  border: "none",
+                  padding: "10px 0",
+                }}
               >
-                <p className="font-serif-roman text-xs sm:text-sm tracking-[0.25em] uppercase text-[#9D2C4A] font-semibold drop-shadow-sm flex items-center gap-2">
+                <p
+                  className="font-serif-roman text-xs sm:text-sm tracking-[0.25em] uppercase font-bold flex items-center gap-2"
+                  style={{
+                    color: "#4a3728",
+                    fontWeight: 600,
+                  }}
+                >
                   <span className="inline-block animate-bounce text-sm">✨</span>
                   {isEn ? "Tap the envelope to open" : "Toca el sobre para abrir"}
                   <span className="inline-block animate-bounce text-sm">✨</span>
                 </p>
-                <div className="w-16 h-0.5 bg-[#B08D3C]/60 mt-1.5 transition-all duration-300 group-hover:w-28 group-hover:bg-[#B08D3C]" />
+                <div className="w-16 h-0.5 bg-[#a37c3f]/80 mt-1.5 transition-all duration-300 group-hover:w-28 group-hover:bg-[#a37c3f]" />
               </div>
             )}
           </div>
         </aside>
       )}
 
-      {/* Selector flotante de idioma (solo eventos bilingües) */}
-      {isBilingual && (
-        <aside
-          aria-label="Selector de idioma"
-          className="fixed top-4 right-4 z-40 bg-white/90 backdrop-blur-md border border-[#B08D3C]/60 rounded-full shadow-lg p-1 flex items-center gap-1 text-[11px] font-serif-roman tracking-wider"
+      {/* Controles flotantes superiores: Selector de idioma y Botón de Audio discreto */}
+      <div className="fixed top-4 right-4 z-40 flex items-center gap-2 pointer-events-auto">
+        {isBilingual && (
+          <aside
+            aria-label="Selector de idioma"
+            className="bg-white/90 backdrop-blur-md border border-[#B08D3C]/60 rounded-full shadow-md p-1 flex items-center gap-1 text-[11px] font-serif-roman tracking-wider"
+          >
+            <button
+              type="button"
+              onClick={() => setCurrentLang("es")}
+              className={`px-2.5 py-0.5 rounded-full transition-all cursor-pointer font-bold ${
+                currentLang === "es"
+                  ? "bg-[#9D2C4A] text-white shadow-sm"
+                  : "text-slate-600 hover:text-slate-900"
+              }`}
+            >
+              ES
+            </button>
+            <span className="text-slate-300">|</span>
+            <button
+              type="button"
+              onClick={() => setCurrentLang("en")}
+              className={`px-2.5 py-0.5 rounded-full transition-all cursor-pointer font-bold ${
+                currentLang === "en"
+                  ? "bg-[#9D2C4A] text-white shadow-sm"
+                  : "text-slate-600 hover:text-slate-900"
+              }`}
+            >
+              EN
+            </button>
+          </aside>
+        )}
+
+        {/* Botón flotante de audio discreto (40px) */}
+        <button
+          type="button"
+          onClick={toggleMusic}
+          aria-label={isPlaying ? (isEn ? "Pause music" : "Pausar música") : (isEn ? "Play music" : "Escuchar música")}
+          title={data.musicaTitulo || (isEn ? "Music" : "Música")}
+          className="w-10 h-10 rounded-full bg-gradient-to-b from-[#DCC084] to-[#96762E] text-white shadow-md flex items-center justify-center cursor-pointer transition-transform hover:scale-105 active:scale-95 border border-white/60"
         >
-          <button
-            type="button"
-            onClick={() => setCurrentLang("es")}
-            className={`px-2.5 py-1 rounded-full transition-all cursor-pointer font-bold ${
-              currentLang === "es"
-                ? "bg-[#9D2C4A] text-white shadow-sm"
-                : "text-slate-600 hover:text-slate-900"
-            }`}
-          >
-            ES
-          </button>
-          <span className="text-slate-300">|</span>
-          <button
-            type="button"
-            onClick={() => setCurrentLang("en")}
-            className={`px-2.5 py-1 rounded-full transition-all cursor-pointer font-bold ${
-              currentLang === "en"
-                ? "bg-[#9D2C4A] text-white shadow-sm"
-                : "text-slate-600 hover:text-slate-900"
-            }`}
-          >
-            EN
-          </button>
-        </aside>
-      )}
+          {isPlaying ? (
+            <Pause className="w-5 h-5 animate-pulse" />
+          ) : (
+            <Music className="w-5 h-5" />
+          )}
+        </button>
+      </div>
 
       <main className="relative z-10">
         {/* ======================================================= */}
-        {/* SECCIÓN 1: HERO — música, monograma, polaroid, texto    */}
+        {/* SECCIÓN 1: HERO — monograma ST, polaroid decorada, texto */}
         {/* ======================================================= */}
-        <section className="relative px-6 pt-14 pb-8 text-center overflow-hidden">
+        <section className="relative px-4 pt-10 sm:pt-14 pb-8 text-center overflow-hidden">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={BLUSH_ASSETS.bouquetB} alt="" className="absolute -top-4 -left-8 w-36 sm:w-44 opacity-80 pointer-events-none" />
+          <img src={BLUSH_ASSETS.bouquetB} alt="" className="absolute -top-4 -left-8 w-32 sm:w-44 opacity-80 pointer-events-none" />
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={BLUSH_ASSETS.bouquetC} alt="" className="absolute -top-4 -right-8 w-36 sm:w-44 opacity-80 pointer-events-none -scale-x-100" />
+          <img src={BLUSH_ASSETS.bouquetC} alt="" className="absolute -top-4 -right-8 w-32 sm:w-44 opacity-80 pointer-events-none -scale-x-100" />
 
-          {/* Música: texto circular girando (réplica Canva) */}
-          <div className="relative w-32 h-32 mx-auto mb-2">
-            <svg viewBox="0 0 100 100" className="absolute inset-0 w-full h-full animate-[spin_16s_linear_infinite]">
-              <defs>
-                <path id="blushSongCircle" d="M 50,50 m -38,0 a 38,38 0 1,1 76,0 a 38,38 0 1,1 -76,0" />
-              </defs>
-              <text className="fill-[#9D2C4A]" style={{ fontSize: "8.2px", letterSpacing: "2.6px", fontFamily: "serif" }}>
-                <textPath href="#blushSongCircle">
-                  {isEn ? "TAP TO PLAY MY SONG • TAP TO PLAY MY SONG • " : "TOCA PARA ESCUCHAR MI CANCIÓN • "}
-                </textPath>
-              </text>
-            </svg>
-            <button
-              type="button"
-              onClick={toggleMusic}
-              aria-label={isEn ? "Play my song" : "Escuchar mi canción"}
-              className="absolute inset-0 m-auto w-14 h-14 rounded-full bg-gradient-to-b from-[#DCC084] to-[#96762E] text-white shadow-lg flex items-center justify-center cursor-pointer transition-transform hover:scale-105 active:scale-95"
+          {/* Monograma y escudo superior (ST) centrado, fondo 100% transparente y tamaño optimizado */}
+          <div
+            className="monogram-container relative mx-auto my-2 block"
+            style={{
+              maxWidth: "130px",
+              background: "transparent",
+              backgroundColor: "transparent",
+              border: "none",
+              boxShadow: "none",
+            }}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={BLUSH_ASSETS.monogramST || BLUSH_ASSETS.crownFrame}
+              alt="Monograma Quinceañera"
+              className="w-full h-auto drop-shadow-sm mx-auto block bg-transparent border-0"
+              style={{ background: "transparent", backgroundColor: "transparent" }}
+            />
+          </div>
+
+          {/* Polaroid principal con encuadre armónico y elementos decorativos */}
+          <div className="relative mx-auto mt-2 mb-4 text-center">
+            <div
+              className="polaroid-wrapper relative inline-block w-[240px] sm:w-[270px] max-w-[85vw] bg-white p-2.5 pb-6 shadow-xl rounded-sm transition-transform duration-300"
+              style={{
+                transform: "rotate(-1.5deg)",
+                boxShadow: "0 10px 25px rgba(0, 0, 0, 0.15)",
+              }}
             >
-              {isPlaying ? <Pause className="w-6 h-6" /> : <Music className="w-6 h-6" />}
-            </button>
-          </div>
-          <p className="text-[10px] font-serif-roman tracking-[0.2em] uppercase text-[#B08D3C] font-semibold mb-8">
-            {data.musicaTitulo || (isEn ? "My Song" : "Mi Canción")}
-          </p>
+              {/* Moño rosa en esquina superior derecha */}
+              {BLUSH_ASSETS.bowPink && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={BLUSH_ASSETS.bowPink}
+                  alt=""
+                  className="polaroid-bow-accent pointer-events-none"
+                  style={{
+                    position: "absolute",
+                    top: "-12px",
+                    right: "-12px",
+                    width: "50px",
+                    height: "auto",
+                    zIndex: 3,
+                    filter: "drop-shadow(0 4px 6px rgba(0, 0, 0, 0.18))",
+                  }}
+                />
+              )}
 
-          {/* Marco con monograma y corona */}
-          <div className="relative w-56 sm:w-64 mx-auto">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={BLUSH_ASSETS.crownFrame} alt="" className="w-full h-auto drop-shadow-md" />
-            <div className="absolute inset-0 flex items-center justify-center pt-8">
-              <span className="font-script text-6xl sm:text-7xl text-[#B08D3C]">{monograma}</span>
+              {/* Contenedor de la foto con object-fit: cover */}
+              <div className="relative w-full aspect-[4/5] max-h-[260px] sm:max-h-[300px] overflow-hidden bg-rose-50 rounded-[2px]">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={data.fotoPortadaUrl}
+                  alt={data.titulo}
+                  className="w-full h-full object-cover object-center block"
+                />
+              </div>
+
+              {/* Título en pie de foto estilo Polaroid */}
+              <p className="font-script text-2xl text-[#9D2C4A] mt-2 tracking-wide leading-none">
+                {data.titulo}
+              </p>
+
+              {/* Ramillete floral en esquina inferior izquierda */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={BLUSH_ASSETS.flowerCorner}
+                alt=""
+                className="polaroid-flower-accent pointer-events-none"
+                style={{
+                  position: "absolute",
+                  bottom: "-15px",
+                  left: "-20px",
+                  width: "95px",
+                  height: "auto",
+                  zIndex: 3,
+                  filter: "drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2))",
+                }}
+              />
             </div>
-          </div>
-
-          {/* Polaroid principal */}
-          <div className="relative w-60 sm:w-72 mx-auto mt-8 -rotate-3 bg-white p-2.5 pb-8 shadow-xl rounded-sm">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={data.fotoPortadaUrl} alt={data.titulo} className="w-full h-auto object-cover" />
-            <p className="font-script text-2xl text-[#9D2C4A] mt-2">{data.titulo}</p>
           </div>
 
           {/* Texto de invitación */}
@@ -727,7 +878,7 @@ export default function BlushPrincessTemplate({
         <section className="px-6 py-8 text-center">
           <div className="relative max-w-sm mx-auto">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={BLUSH_ASSETS.envelopeOpen} alt="Sobre" className="w-full h-auto rounded-2xl shadow-xl" />
+            <img src={BLUSH_ASSETS.envelopeOpen} alt="Sobre" className="w-full h-auto drop-shadow-xl" />
             <div
               className="absolute left-[21%] right-[21%] top-[24%] text-center"
             >
@@ -782,7 +933,7 @@ export default function BlushPrincessTemplate({
             {isEn ? "The Details" : "Los Detalles"}
           </h3>
           <div className="max-w-md mx-auto space-y-5">
-            {data.ceremoniaNombre && (
+            {data.mostrarCeremonia !== false && data.ceremoniaNombre && (
               <div className="bg-white/90 backdrop-blur-sm rounded-3xl border border-[#B08D3C]/40 shadow-lg p-6 text-center">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={BLUSH_ASSETS.cross} alt="" className="w-10 h-auto mx-auto mb-2" />
@@ -807,6 +958,7 @@ export default function BlushPrincessTemplate({
               </div>
             )}
 
+            {data.mostrarRecepcion !== false && (
             <div className="bg-white/90 backdrop-blur-sm rounded-3xl border border-[#B08D3C]/40 shadow-lg p-6 text-center">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={BLUSH_ASSETS.chandelier} alt="" className="w-14 h-auto mx-auto mb-1" />
@@ -826,6 +978,7 @@ export default function BlushPrincessTemplate({
                 <MapPin className="w-3.5 h-3.5" /> {isEn ? "View Map" : "Ver Mapa"}
               </a>
             </div>
+            )}
           </div>
 
           {/* Then / Now */}
@@ -1123,9 +1276,15 @@ export default function BlushPrincessTemplate({
           </div>
 
           <div className="bg-white/95 backdrop-blur-sm p-6 pt-10 rounded-3xl border border-[#D8B772]/60 shadow-xl text-center relative z-10">
-            <h3 className="font-script text-4xl text-[#9D2C4A] my-1">
-              {isEn ? "RSVP" : "Confirmar Asistencia"}
-            </h3>
+            {(() => {
+              const t = isEn ? data.rsvpTituloEn : data.rsvpTitulo;
+              if (t === "") return null;
+              return (
+                <h3 className="font-script text-4xl text-[#9D2C4A] my-1">
+                  {isEn ? (data.rsvpTituloEn || "RSVP") : (data.rsvpTitulo || "Confirmar Asistencia")}
+                </h3>
+              );
+            })()}
             <p className="text-[11px] text-slate-500 mb-5 uppercase tracking-wider font-serif-roman font-semibold">
               {rsvpDeadlinePhrase}
             </p>

@@ -12,6 +12,7 @@ import {
   Lock,
   Menu,
   MessageSquare,
+  Sparkles,
   Phone,
   Star,
   X,
@@ -20,9 +21,16 @@ import { Language, translations } from "@/lib/home-translations";
 import { track, getGaClientId } from "@/lib/analytics";
 import HeroPhones from "@/components/home/HeroPhones";
 import InteractiveDemoModal from "@/components/home/InteractiveDemoModal";
+import SiteFooter from "@/components/layout/SiteFooter";
+import HowItWorks from "@/components/home/HowItWorks";
+import ServiceTabs from "@/components/home/ServiceTabs";
+import ValueFeatures from "@/components/home/ValueFeatures";
+import FaqSection from "@/components/home/FaqSection";
+import LatestArticles from "@/components/home/LatestArticles";
+import BlackFridayModal from "@/components/home/BlackFridayModal";
 
-const PHONE_DISPLAY = "(818) 299-4882";
-const PHONE_TEL = "tel:+18182994882";
+const PHONE_DISPLAY = "(818) 918-2519";
+const PHONE_TEL = "tel:+18189182519";
 const PHONE_SMS = "sms:+18182994882";
 
 // Enlaces internos a las landings transaccionales (SEO: las landings eran
@@ -32,6 +40,7 @@ const PHONE_SMS = "sms:+18182994882";
 // (no render condicional) para que los enlaces estén en el HTML inicial.
 const MENU_LANDING_LINKS: Record<Language, { href: string; label: string }[]> = {
   en: [
+    { href: "/save-the-date", label: "Save the Date" },
     { href: "/quince-invitations", label: "Quince Invitations" },
     { href: "/wedding-invitations-los-angeles", label: "Wedding Invitations" },
     { href: "/wedding-invitations-las-vegas", label: "Wedding Invitations Las Vegas" },
@@ -40,6 +49,7 @@ const MENU_LANDING_LINKS: Record<Language, { href: string; label: string }[]> = 
     { href: "/whatsapp-invitations", label: "WhatsApp Invitations" },
   ],
   es: [
+    { href: "/es/save-the-date", label: "Save the Date" },
     { href: "/es/invitaciones-de-quinceanera", label: "Invitaciones de Quinceañera" },
     { href: "/wedding-invitations-los-angeles", label: "Invitaciones de Boda" },
     { href: "/wedding-invitations-las-vegas", label: "Invitaciones de Boda Las Vegas" },
@@ -76,7 +86,7 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
     setIsDemoModalOpen(true);
   };
 
-  const handleCheckout = async (plan: "assisted" | "vip" | string) => {
+  const handleCheckout = async (plan: "express" | "assisted" | "vip" | string) => {
     // Semana 1: inicio de checkout como evento (antes de salir a Stripe).
     track("begin_checkout", { paquete: plan });
     setCheckoutLoading(plan);
@@ -84,7 +94,7 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
       const res = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ plan, gaClientId: getGaClientId() }),
+        body: JSON.stringify({ plan, lang, gaClientId: getGaClientId() }),
       });
       const data = await res.json();
       if (data.url) {
@@ -105,8 +115,9 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
   };
 
   const plans = [
-    { key: "assisted" as const, dict: t.pricing.plans[0], hot: false },
-    { key: "vip" as const, dict: t.pricing.plans[1], hot: true },
+    { key: "express" as const, dict: t.pricing.plans[0], hot: false },
+    { key: "assisted" as const, dict: t.pricing.plans[1], hot: true },
+    { key: "vip" as const, dict: t.pricing.plans[2], hot: false },
   ];
 
   return (
@@ -151,7 +162,7 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
             <a href="#plantillas" className="hover:text-[#7A002A] transition">
               {b.navTemplates}
             </a>
-            <a href="#precios" className="hover:text-[#7A002A] transition">
+            <a href={lang === "es" ? "#precios" : "#prices"} className="hover:text-[#7A002A] transition">
               {t.nav.pricing}
             </a>
             <a href="#reviews" className="hover:text-[#7A002A] transition">
@@ -217,7 +228,7 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
             <a
-              href="#precios"
+              href={lang === "es" ? "#precios" : "#prices"}
               className="hidden sm:inline-flex px-5 py-2.5 bg-[#7A002A] hover:bg-[#660025] text-white rounded-full text-[13px] font-['Montserrat'] font-bold shadow-[0_6px_18px_rgba(122,0,42,0.35)] transition active:scale-95"
             >
               {b.createBtn}
@@ -244,7 +255,7 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
             <a href="#plantillas" onClick={() => setMobileMenuOpen(false)} className="py-2.5 hover:text-[#7A002A] transition">
               {b.navTemplates}
             </a>
-            <a href="#precios" onClick={() => setMobileMenuOpen(false)} className="py-2.5 hover:text-[#7A002A] transition">
+            <a href={lang === "es" ? "#precios" : "#prices"} onClick={() => setMobileMenuOpen(false)} className="py-2.5 hover:text-[#7A002A] transition">
               {t.nav.pricing}
             </a>
             <a href="#reviews" onClick={() => setMobileMenuOpen(false)} className="py-2.5 hover:text-[#7A002A] transition">
@@ -295,7 +306,7 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
                 {b.heroCtaDemo}
               </button>
               <a
-                href="#precios"
+                href={lang === "es" ? "#precios" : "#prices"}
                 className="w-full sm:w-auto px-8 py-3.5 rounded-full border-2 border-[#7A002A] text-[#7A002A] hover:bg-[#F5EDDA] font-['Montserrat'] font-bold text-sm text-center transition active:scale-95"
               >
                 {b.heroCtaPricing}
@@ -369,186 +380,40 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
       {/* ============================================================== */}
       {/* CÓMO FUNCIONA */}
       {/* ============================================================== */}
-      <section id="como-funciona" className="py-20 px-4 sm:px-6 scroll-mt-24">
+      {/* BENTO GRID DE BENEFICIOS (good-biz-bento-1)                    */}
+      {/* ============================================================== */}
+      <HowItWorks lang={lang} />
+
+      {/* ============================================================== */}
+      {/* COMPARATIVA / TABS DE SERVICIOS (nextwell-tabs-1)              */}
+      {/* ============================================================== */}
+      <ServiceTabs lang={lang} />
+
+      {/* ============================================================== */}
+      {/* BLOQUE DE CARACTERÍSTICAS (seven-nine-value-features-5)        */}
+      {/* ============================================================== */}
+      <ValueFeatures lang={lang} />
+
+      {/* ============================================================== */}
+      <section id="plantillas" className="py-20 px-4 sm:px-6 bg-[#FAF8F5] border-t border-b border-neutral-200 scroll-mt-24">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center max-w-3xl mx-auto mb-12">
-            <span className="font-vibes text-[32px] text-[#B08D3C] block leading-tight">{b.howScript}</span>
-            <h2 className="font-['Cinzel'] font-bold text-2xl sm:text-[32px] text-[#2B0A18] mt-2 leading-snug">
-              {b.howTitle}
+          {/* Header */}
+          <div className="text-center max-w-3xl mx-auto mb-14">
+            <h2 className="font-['Playfair_Display',serif] font-bold text-3xl sm:text-4xl text-neutral-900 tracking-tight">
+              {lang === "es" ? "Explora Diseños Interactivos de Quinceañera y Sweet 16" : "Explore Interactive Quince & Sweet 16 Invitation Themes"}
             </h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {b.steps.map((step, i) => (
-              <div
-                key={step.title}
-                className="rounded-3xl bg-white border border-[#E7DCC8] p-7 shadow-[0_12px_28px_rgba(122,0,42,0.07)]"
-              >
-                <div className="flex items-center gap-4">
-                  <span className="w-11 h-11 rounded-full bg-[#7A002A] text-white flex items-center justify-center font-['Montserrat'] font-extrabold text-lg shrink-0">
-                    {i + 1}
-                  </span>
-                  <h3 className="font-['Montserrat'] font-extrabold text-[17px] text-[#2B0A18] leading-snug">
-                    {step.title}
-                  </h3>
-                </div>
-                <p className="font-['Montserrat'] text-sm text-[#5A3C46] leading-relaxed mt-4">{step.line1}</p>
-                <p className="font-['Montserrat'] text-sm text-[#5A3C46] leading-relaxed">{step.line2}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ============================================================== */}
-      {/* VALOR / COMPARACIÓN (restaurada del home anterior) */}
-      {/* ============================================================== */}
-      <section id="comparativa" className="py-20 px-4 sm:px-6 scroll-mt-24">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center max-w-3xl mx-auto mb-12">
-            <span className="inline-flex items-center px-3.5 py-1.5 rounded-full border border-[#B08D3C]/40 bg-[#F5EDDA] font-['Montserrat'] text-[10.5px] tracking-[0.22em] uppercase text-[#7A002A] font-extrabold">
-              {t.comparison.pill}
-            </span>
-            <span className="font-vibes text-[32px] text-[#B08D3C] block leading-tight mt-4">{b.compScript}</span>
-            <h2 className="font-['Cinzel'] font-bold text-2xl sm:text-[32px] text-[#2B0A18] mt-2 leading-snug">
-              {t.comparison.title}
-            </h2>
-            <p className="font-['Montserrat'] text-[15px] text-[#5A3C46] leading-relaxed mt-3">{t.comparison.subtitle}</p>
+            <p className="mt-3 text-sm md:text-base text-neutral-600 leading-relaxed font-['Montserrat',sans-serif] max-w-2xl mx-auto">
+              {lang === "es"
+                ? "Vive cada diseño con animación de sobre 3D, música personalizada y confirmación de asistencia instantánea."
+                : "Experience each design with full 3D envelope animations, music, and instant RSVP tracking."}
+            </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
-            {t.comparison.cards.map((card, idx) => (
-              <div
-                key={card.title}
-                className="rounded-3xl bg-white border border-[#E7DCC8] p-6 sm:p-7 flex flex-col shadow-[0_12px_28px_rgba(122,0,42,0.07)] relative overflow-hidden"
-              >
-                <div className="absolute top-0 right-0 w-32 h-32 bg-[#C2185B]/8 rounded-full blur-2xl pointer-events-none" />
-                <span className="relative inline-flex self-start items-center px-3 py-1 rounded-full bg-[#F5EDDA] border border-[#B08D3C]/35 text-[#96690A] text-[10px] font-['Montserrat'] tracking-[0.14em] uppercase font-extrabold mb-4">
-                  ✦ {card.tag}
-                </span>
-                <h3 className="relative font-['Cinzel'] font-bold text-[21px] text-[#2B0A18] leading-snug">{card.title}</h3>
-
-                <div className="relative space-y-3 mt-5">
-                  <div className="p-3.5 rounded-2xl bg-[#FFF0F4] border border-[#F0C4D4]">
-                    <div className="flex items-center gap-1.5 text-[11px] font-['Montserrat'] font-bold text-[#8E0038] mb-1">
-                      <span className="w-4 h-4 rounded-full bg-[#F5B8CC] text-[#8E0038] flex items-center justify-center shrink-0">
-                        <X className="w-2.5 h-2.5" strokeWidth={3.5} />
-                      </span>
-                      <span>{card.canvaProblemLabel}</span>
-                    </div>
-                    <p className="text-xs text-[#5A3C46] font-['Montserrat'] leading-relaxed pl-5">{card.canvaProblem}</p>
-                  </div>
-
-                  <div className="p-3.5 rounded-2xl bg-[#FDF8EC] border border-[#B08D3C]/45">
-                    <div className="flex items-center gap-1.5 text-[11px] font-['Montserrat'] font-bold text-[#7A002A] mb-1">
-                      <span className="w-4 h-4 rounded-full bg-[#7A002A] text-white flex items-center justify-center shrink-0">
-                        <Check className="w-2.5 h-2.5" strokeWidth={3.5} />
-                      </span>
-                      <span>{card.solutionLabel}</span>
-                    </div>
-                    <p className="text-xs text-[#2B0A18] font-['Montserrat'] font-medium leading-relaxed pl-5">{card.solution}</p>
-                  </div>
-                </div>
-
-                {/* Micro-UI tarjeta 2: roster del anfitrión en vivo */}
-                {idx === 1 && (
-                  <div className="relative mt-6 pt-4 border-t border-[#EFE3D2]">
-                    <div className="text-[10px] font-['Montserrat'] font-bold uppercase tracking-wider text-[#8A6B76] mb-2.5 flex items-center justify-between">
-                      <span>{b.rosterTitle}</span>
-                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800 font-bold border border-emerald-200 text-[10px] normal-case tracking-normal">
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-ping" />
-                        {b.rosterLive}
-                      </span>
-                    </div>
-                    <div className="rounded-2xl bg-[#2B0A18] text-white p-3.5 space-y-2.5 text-[11px] font-['Montserrat'] shadow-[0_14px_30px_rgba(43,10,24,0.35)] border border-[#B08D3C]/40">
-                      <div className="grid grid-cols-3 gap-1.5 pb-2 border-b border-white/10 text-center">
-                        <div className="bg-white/8 rounded-lg p-1.5">
-                          <span className="block text-[10px] text-[#D9B8C4] uppercase tracking-wider">{b.rosterConfirmed}</span>
-                          <span className="text-sm font-bold text-emerald-400">142</span>
-                        </div>
-                        <div className="bg-white/8 rounded-lg p-1.5">
-                          <span className="block text-[10px] text-[#D9B8C4] uppercase tracking-wider">{b.rosterDeclined}</span>
-                          <span className="text-sm font-bold text-rose-400">8</span>
-                        </div>
-                        <div className="bg-white/8 rounded-lg p-1.5">
-                          <span className="block text-[10px] text-[#D9B8C4] uppercase tracking-wider">{b.rosterPending}</span>
-                          <span className="text-sm font-bold text-[#FFD166]">15</span>
-                        </div>
-                      </div>
-                      <div className="space-y-1.5 pt-0.5">
-                        <div className="flex items-center justify-between bg-white/6 rounded-lg px-2.5 py-1.5 gap-2">
-                          <div className="min-w-0">
-                            <p className="font-bold text-white text-xs truncate">Familia Morales</p>
-                            <span className="text-[10px] text-[#C9A3B2]">{b.rosterGuest1Sub}</span>
-                          </div>
-                          <span className="px-2 py-0.5 rounded-md bg-emerald-950 text-emerald-300 font-bold text-[10px] border border-emerald-700/50 whitespace-nowrap">
-                            {b.rosterGuest1Chip}
-                          </span>
-                        </div>
-                        <div className="flex items-center justify-between bg-white/6 rounded-lg px-2.5 py-1.5 gap-2">
-                          <div className="min-w-0">
-                            <p className="font-bold text-white text-xs truncate">Carlos &amp; Diana Mendoza</p>
-                            <span className="text-[10px] text-[#C9A3B2]">{b.rosterGuest2Sub}</span>
-                          </div>
-                          <span className="px-2 py-0.5 rounded-md bg-rose-950 text-rose-300 font-bold text-[10px] border border-rose-700/50 whitespace-nowrap">
-                            {b.rosterGuest2Chip}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {/* Micro-UI tarjeta 3: notificación SMS al invitado */}
-                {idx === 2 && (
-                  <div className="relative mt-6 pt-4 border-t border-[#EFE3D2]">
-                    <div className="text-[10px] font-['Montserrat'] font-bold uppercase tracking-wider text-[#8A6B76] mb-2.5 flex items-center justify-between">
-                      <span>{b.smsTitle}</span>
-                      <span className="inline-flex items-center gap-1 text-[#7A002A] normal-case tracking-normal">
-                        <MessageSquare className="w-3.5 h-3.5" />
-                        SMS Text
-                      </span>
-                    </div>
-                    <div className="rounded-2xl bg-[#FBF3E4] p-3 border border-[#E7DCC8]">
-                      <div className="bg-white rounded-2xl rounded-tl-sm p-3 shadow-[0_6px_16px_rgba(122,0,42,0.10)] border border-[#EFE3D2] text-[#2B0A18]">
-                        <div className="flex items-center justify-between text-[9px] text-[#8A6B76] mb-1 pb-1 border-b border-[#F3E9D7] font-semibold font-['Montserrat']">
-                          <span>{b.smsFrom}</span>
-                          <span>{b.smsWhen}</span>
-                        </div>
-                        <p className="leading-snug text-xs font-['Montserrat']">{b.smsBody}</p>
-                        <div className="mt-2.5 pt-2 border-t border-[#F3E9D7] flex items-center gap-2 font-['Montserrat']">
-                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-blue-600 text-white font-bold text-[10px]">
-                            🚗 Waze
-                          </span>
-                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-emerald-600 text-white font-bold text-[10px]">
-                            📍 Google Maps
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ============================================================== */}
-      {/* PLANTILLAS REALES */}
-      {/* ============================================================== */}
-      <section id="plantillas" className="py-20 px-4 sm:px-6 bg-[#F5EDDA] scroll-mt-24">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center max-w-3xl mx-auto mb-12">
-            <span className="font-vibes text-[32px] text-[#B08D3C] block leading-tight">{b.tplScript}</span>
-            <h2 className="font-['Cinzel'] font-bold text-2xl sm:text-[30px] text-[#2B0A18] mt-2 leading-snug">
-              {b.tplTitle}
-            </h2>
-          </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {b.tplCards.map((card) => (
               <div
                 key={card.slug}
-                className="rounded-3xl bg-white border border-[#E7DCC8] overflow-hidden shadow-[0_12px_28px_rgba(122,0,42,0.08)] hover:shadow-[0_20px_40px_rgba(122,0,42,0.14)] transition-shadow flex flex-col"
+                className="rounded-3xl bg-white border border-neutral-200 overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.05)] hover:shadow-[0_12px_32px_rgba(114,14,38,0.12)] transition-all duration-300 flex flex-col group"
               >
                 <a href={`/demo/${card.slug}`} target="_blank" rel="noopener noreferrer" className="block group relative">
                   <div className="h-64 overflow-hidden">
@@ -564,17 +429,17 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                     />
                   </div>
-                  <span className="absolute top-3.5 left-3.5 px-3 py-1 rounded-full bg-[#2B0A18]/78 backdrop-blur text-white font-['Montserrat'] text-[9.5px] font-extrabold tracking-[0.16em] uppercase">
+                  <span className="absolute top-3.5 left-3.5 px-3 py-1 rounded-full bg-white/95 text-neutral-800 shadow-sm font-['Montserrat'] text-[10px] font-bold tracking-[0.12em] uppercase border border-neutral-200/60 backdrop-blur-sm">
                     {card.tag}
                   </span>
                 </a>
-                <div className="p-6 flex flex-col gap-1.5 flex-1">
-                  <h3 className="font-['Montserrat'] font-extrabold text-lg text-[#2B0A18]">{card.name}</h3>
-                  <p className="font-['Montserrat'] text-[13px] text-[#5A3C46] leading-relaxed">{card.desc}</p>
-                  <ul className="mt-3 space-y-1.5">
+                <div className="p-6 flex flex-col gap-2 flex-1 font-['Montserrat']">
+                  <h3 className="font-['Playfair_Display',serif] font-bold text-xl text-neutral-900">{card.name}</h3>
+                  <p className="text-sm text-neutral-600 leading-relaxed">{card.desc}</p>
+                  <ul className="mt-2 space-y-1.5">
                     {card.bullets.map((bullet) => (
-                      <li key={bullet} className="flex items-center gap-2 font-['Montserrat'] text-[12.5px] font-semibold text-[#45303B]">
-                        <span className="w-1.5 h-1.5 rotate-45 bg-[#B08D3C] shrink-0" />
+                      <li key={bullet} className="flex items-center gap-2 text-xs font-medium text-neutral-700">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#720e26] shrink-0" />
                         {bullet}
                       </li>
                     ))}
@@ -582,9 +447,9 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
                   <div className="mt-auto pt-5">
                     <button
                       onClick={() => handleOpenDemo(card.slug)}
-                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#7A002A] hover:bg-[#660025] text-white font-['Montserrat'] font-bold text-[12.5px] transition active:scale-95 cursor-pointer"
+                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#720e26] hover:bg-[#581825] text-white font-['Montserrat'] font-bold text-xs shadow-sm transition active:scale-95 cursor-pointer"
                     >
-                      {t.collections.viewDemo}
+                      {lang === "es" ? "Probar Demo en Vivo" : "Try Live Demo"}
                       <ArrowRight className="w-3.5 h-3.5" />
                     </button>
                   </div>
@@ -592,10 +457,11 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
               </div>
             ))}
           </div>
-          <div className="text-center mt-10">
+
+          <div className="text-center mt-12">
             <Link
               href={lang === "es" ? "/es/demo" : "/demo"}
-              className="inline-flex items-center gap-2 font-['Montserrat'] font-bold text-sm text-[#7A002A] hover:text-[#B08D3C] transition"
+              className="inline-flex items-center gap-2 font-['Montserrat'] font-bold text-sm text-[#720e26] hover:text-[#581825] transition"
             >
               {b.catalogLink}
               <ExternalLink className="w-4 h-4" />
@@ -607,20 +473,20 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
       {/* ============================================================== */}
       {/* PRECIOS */}
       {/* ============================================================== */}
-      <section id="precios" className="py-20 px-4 sm:px-6 scroll-mt-24">
-        <div className="max-w-5xl mx-auto">
+      <section id={lang === "es" ? "precios" : "prices"} className="py-20 px-4 sm:px-6 scroll-mt-24">
+        <div className="max-w-7xl mx-auto">
           <div className="text-center max-w-2xl mx-auto mb-12">
             <h2 className="font-['Cinzel'] font-bold text-3xl sm:text-4xl text-[#2B0A18]">{b.pricingTitle}</h2>
             <p className="font-['Montserrat'] text-[15px] text-[#5A3C46] mt-3">{b.pricingSubtitle}</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
             {plans.map((plan) => (
               <div
                 key={plan.key}
                 className={
                   plan.hot
-                    ? "relative rounded-3xl bg-[#7A002A] text-white p-8 flex flex-col shadow-[0_22px_45px_rgba(122,0,42,0.35)]"
+                    ? "relative rounded-3xl bg-[#7A002A] text-white p-8 flex flex-col shadow-[0_22px_45px_rgba(122,0,42,0.35)] md:-translate-y-2 border-2 border-[#FFD166]/40"
                     : "relative rounded-3xl bg-white border border-[#E7DCC8] p-8 flex flex-col shadow-[0_12px_28px_rgba(122,0,42,0.07)]"
                 }
               >
@@ -651,19 +517,51 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
                     {b.pricingPerNote}
                   </span>
                 </div>
+                {plan.dict.bonusLabel ? (
+                  <div
+                    className={`mt-6 rounded-2xl border px-4 py-3.5 ${
+                      plan.hot ? "border-[#FFD166]/60 bg-white/10" : "border-[#E7DCC8] bg-[#FAF8F5]"
+                    }`}
+                  >
+                    <span
+                      className={`font-['Montserrat'] text-[10px] font-extrabold tracking-[0.18em] uppercase ${
+                        plan.hot ? "text-[#FFD166]" : "text-[#96690A]"
+                      }`}
+                    >
+                      {plan.dict.bonusLabel}
+                    </span>
+                    <p
+                      className={`font-['Montserrat'] text-[13px] font-semibold leading-snug mt-1 ${
+                        plan.hot ? "text-white" : "text-[#2B0A18]"
+                      }`}
+                    >
+                      {plan.dict.bonusText}
+                    </p>
+                  </div>
+                ) : null}
                 <ul className="mt-7 space-y-3 flex-1">
                   {plan.dict.features.map((f) => (
                     <li key={f.text} className="flex items-start gap-2.5">
-                      <span
-                        className={`w-[18px] h-[18px] rounded-full flex items-center justify-center shrink-0 mt-[1px] ${
-                          plan.hot ? "bg-[#FFD166] text-[#7A002A]" : "bg-[#F5EDDA] text-[#7A002A]"
-                        }`}
-                      >
-                        <Check className="w-3 h-3" strokeWidth={3.5} />
-                      </span>
+                      {f.included === false ? (
+                        <span className="w-[18px] h-[18px] rounded-full flex items-center justify-center shrink-0 mt-[1px] bg-neutral-200 text-neutral-500">
+                          <X className="w-3 h-3" strokeWidth={3.5} />
+                        </span>
+                      ) : (
+                        <span
+                          className={`w-[18px] h-[18px] rounded-full flex items-center justify-center shrink-0 mt-[1px] ${
+                            plan.hot ? "bg-[#FFD166] text-[#7A002A]" : "bg-[#F5EDDA] text-[#7A002A]"
+                          }`}
+                        >
+                          <Check className="w-3 h-3" strokeWidth={3.5} />
+                        </span>
+                      )}
                       <span
                         className={`font-['Montserrat'] text-[13.5px] leading-snug ${
-                          plan.hot ? "text-white" : "text-[#45303B]"
+                          f.included === false
+                            ? "text-neutral-400 line-through"
+                            : plan.hot
+                              ? "text-white"
+                              : "text-[#45303B]"
                         } ${f.isBold ? "font-bold" : ""}`}
                       >
                         {f.text}
@@ -671,6 +569,16 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
                     </li>
                   ))}
                 </ul>
+                {plan.dict.trustLine ? (
+                  <p
+                    className={`mt-6 flex items-start gap-2 font-['Montserrat'] text-xs leading-snug ${
+                      plan.hot ? "text-[#F0DCAE]" : "text-[#8A6B76]"
+                    }`}
+                  >
+                    <BadgeCheck className="w-4 h-4 shrink-0 mt-[1px]" />
+                    <span>{plan.dict.trustLine}</span>
+                  </p>
+                ) : null}
                 <button
                   onClick={() => handleCheckout(plan.key)}
                   disabled={checkoutLoading !== null}
@@ -688,7 +596,7 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
                   ) : (
                     <>
                       <CreditCard className="w-4 h-4" />
-                      <span>{b.pricingCta}</span>
+                      <span>{plan.dict.cta}</span>
                     </>
                   )}
                 </button>
@@ -796,30 +704,40 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
       </section>
 
       {/* ============================================================== */}
+      {/* ÚLTIMOS ARTÍCULOS DEL BLOG (SEO: la home no enlazaba al blog) */}
+      {/* ============================================================== */}
+      <LatestArticles lang={lang} />
+
+      {/* ============================================================== */}
+      {/* FAQ (SEO: PAA reales + schema FAQPage en page.tsx / es/page.tsx) */}
+      {/* ============================================================== */}
+      <FaqSection lang={lang} />
+
+      {/* ============================================================== */}
       {/* BANDA DE CONTACTO */}
       {/* ============================================================== */}
       <section className="bg-[#7A002A] py-10 px-4 sm:px-6">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-7 md:gap-10">
-          <div className="flex items-center gap-4 text-center md:text-left flex-col sm:flex-row">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo-white.png" alt="" className="w-16 h-16 object-contain shrink-0" />
-            <div>
-              <h2 className="font-['Cinzel'] font-bold text-2xl sm:text-[28px] text-white">{b.contactTitle}</h2>
-              <p className="font-['Montserrat'] text-sm text-[#F0DCAE] mt-1">{b.contactText}</p>
-            </div>
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-7 md:gap-10">
+          <div className="text-center md:text-left">
+            <h2 className="font-['Playfair_Display',serif] font-bold text-2xl sm:text-[28px] text-white tracking-tight">
+              {b.contactTitle}
+            </h2>
+            <p className="font-['Montserrat'] text-sm text-[#F0DCAE] mt-1.5 font-normal">
+              {b.contactText}
+            </p>
           </div>
-          <div className="md:ml-auto flex flex-col items-center gap-2.5 shrink-0">
+          <div className="flex flex-col items-center md:items-end gap-2.5 shrink-0">
             <div className="flex items-center gap-3">
               <a
                 href={PHONE_TEL}
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white text-[#7A002A] font-['Montserrat'] font-extrabold text-sm hover:bg-[#F5EDDA] transition active:scale-95"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white text-[#7A002A] font-['Montserrat'] font-extrabold text-sm hover:bg-[#F5EDDA] transition active:scale-95 shadow-sm"
               >
                 <Phone className="w-4 h-4" />
                 {b.contactCall}
               </a>
               <a
                 href={PHONE_SMS}
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#FFD166] text-[#2B0A18] font-['Montserrat'] font-extrabold text-sm hover:brightness-105 transition active:scale-95"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#FFD166] text-[#2B0A18] font-['Montserrat'] font-extrabold text-sm hover:brightness-105 transition active:scale-95 shadow-sm"
               >
                 <MessageSquare className="w-4 h-4" />
                 {b.contactSms}
@@ -831,26 +749,9 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
       </section>
 
       {/* ============================================================== */}
-      {/* FOOTER SIMPLE */}
+      {/* LUXURY EDITORIAL FOOTER (BYQ / JIRO STYLE) */}
       {/* ============================================================== */}
-      <footer className="py-10 px-4 bg-[#FDFBF8]">
-        <div className="max-w-7xl mx-auto flex flex-col items-center gap-3 text-center">
-          <p className="font-['Montserrat'] text-[13px] text-[#8A6B76]">{b.footerLine}</p>
-          <p className="font-['Montserrat'] text-[13px] text-[#8A6B76]">
-            {lang === "es"
-              ? "Sirviendo al condado de Los Ángeles, incluyendo Glendale, Burbank, Pasadena, Van Nuys, Northridge y San Fernando Valley, además de otras áreas del sur de California."
-              : "Serving Los Angeles County, including Glendale, Burbank, Pasadena, Van Nuys, Northridge and the San Fernando Valley, plus surrounding Southern California areas."}
-          </p>
-          <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-1.5 font-['Montserrat'] text-xs text-[#8A6B76]">
-            <Link href="/dashboard" className="font-semibold text-[#7A002A] hover:text-[#B08D3C] transition">
-              {t.footer.adminLink}
-            </Link>
-            <span>
-              © {new Date().getFullYear()} Click &amp; Love. {t.footer.rights}
-            </span>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter lang={lang} />
 
       {/* ============================================================== */}
       {/* MODAL DE DEMO EN VIVO */}
@@ -861,6 +762,10 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
         initialSlug={activeDemoSlug}
         lang={lang}
       />
+      {/* ============================================================== */}
+      {/* POP-UP BLACK FRIDAY */}
+      {/* ============================================================== */}
+      <BlackFridayModal lang={lang} />
     </div>
   );
 }

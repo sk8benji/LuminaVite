@@ -1,4 +1,5 @@
 "use client";
+import SiteFooter from "@/components/layout/SiteFooter";
 
 import React, { useState } from "react";
 import Link from "next/link";
@@ -36,8 +37,8 @@ import {
 // ============================================================================
 // CONSTANTS & ASSETS
 // ============================================================================
-const PHONE_DISPLAY = "(818) 299-4882";
-const PHONE_TEL = "tel:+18182994882";
+const PHONE_DISPLAY = "(818) 918-2519";
+const PHONE_TEL = "tel:+18189182519";
 const PHONE_SMS = "sms:+18182994882";
 const WHATSAPP_URL =
   "https://wa.me/18182994882?text=Hello%20Click%20%26%20Love!%20I%20would%20like%20information%20about%20Quincea%C3%B1era%20invitations.";
@@ -137,7 +138,7 @@ export default function QuinceLandingPage() {
       const res = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ plan, gaClientId: getGaClientId() }),
+        body: JSON.stringify({ plan, lang: "en", gaClientId: getGaClientId() }),
       });
       const data = await res.json();
       if (data.url) {
@@ -552,7 +553,7 @@ export default function QuinceLandingPage() {
                 </div>
                 <div className="flex items-center gap-2 pt-1">
                   <span className="inline-flex items-center gap-1 text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded">
-                    🚗 Waze Route
+                    📍 Google Maps Route
                   </span>
                   <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">
                     🗺️ Google Maps
@@ -568,26 +569,21 @@ export default function QuinceLandingPage() {
                   <Navigation className="w-3.5 h-3.5" />
                   GPS Navigation
                 </span>
-                <h3 className="text-2xl font-extrabold text-[#2B0A18]">Church Mass and Reception GPS Navigation</h3>
+                <h3 className="text-2xl font-extrabold text-[#2B0A18]">1-Tap Church &amp; Reception Navigation</h3>
                 <p className="text-sm text-[#5A3C46] leading-relaxed">
-                  No lost abuelitos calling during mass. Seamless deep-linking opens Google Maps, Apple Maps, or Waze
-                  directly to your banquet hall or church.
+                  Your guests receive direct Google Maps links for both the church ceremony and reception party. Avoid phone calls in traffic and ensure everyone arrives right on time.
                 </p>
               </div>
 
-              {/* LA Hall Chips */}
+              {/* Event Navigation Chips */}
               <div className="mt-6 space-y-2">
                 <div className="flex items-center justify-between p-2.5 rounded-xl bg-white border border-[#E7DCC8] text-xs font-medium text-[#2B0A18]">
-                  <span>The Castaway • Burbank</span>
-                  <span className="text-[#B08D3C] text-[11px] font-bold">Waze →</span>
+                  <span>📍 Misa / Church Ceremony</span>
+                  <span className="text-[#B08D3C] text-[11px] font-bold">Google Maps →</span>
                 </div>
                 <div className="flex items-center justify-between p-2.5 rounded-xl bg-white border border-[#E7DCC8] text-xs font-medium text-[#2B0A18]">
-                  <span>Brandview Ballroom • Glendale</span>
-                  <span className="text-[#B08D3C] text-[11px] font-bold">Maps →</span>
-                </div>
-                <div className="flex items-center justify-between p-2.5 rounded-xl bg-white border border-[#E7DCC8] text-xs font-medium text-[#2B0A18]">
-                  <span>Imperial Palace • Pasadena</span>
-                  <span className="text-[#B08D3C] text-[11px] font-bold">Maps →</span>
+                  <span>📍 Recepción / Reception Party</span>
+                  <span className="text-[#B08D3C] text-[11px] font-bold">Google Maps →</span>
                 </div>
               </div>
             </div>
@@ -804,7 +800,7 @@ export default function QuinceLandingPage() {
 
           {/* Plans Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
-            {/* Plan 1: Assisted ($99) */}
+            {/* Plan 1: Assisted ($199) */}
             <div className="rounded-3xl bg-white border border-[#E7DCC8] p-8 sm:p-10 shadow-sm flex flex-col justify-between relative">
               <div className="space-y-6">
                 <div>
@@ -818,7 +814,7 @@ export default function QuinceLandingPage() {
                 </div>
 
                 <div className="flex items-baseline gap-2">
-                  <span className="text-5xl font-extrabold text-[#2B0A18]">$99</span>
+                  <span className="text-5xl font-extrabold text-[#2B0A18]">$199</span>
                   <span className="text-xs text-[#8A6B76] font-medium">USD • One-time fee</span>
                 </div>
 
@@ -839,7 +835,7 @@ export default function QuinceLandingPage() {
                   </div>
                   <div className="flex items-start gap-2.5">
                     <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                    <span>Direct GPS links to church &amp; reception (Waze &amp; Google)</span>
+                    <span>Direct GPS links to church &amp; reception (Google Maps)</span>
                   </div>
                   <div className="flex items-start gap-2.5">
                     <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
@@ -866,13 +862,13 @@ export default function QuinceLandingPage() {
                   {checkoutLoading === "assisted" ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
                   ) : (
-                    <span>Select Assisted Plan ($99)</span>
+                    <span>Select Assisted Plan ($199)</span>
                   )}
                 </button>
               </div>
             </div>
 
-            {/* Plan 2: VIP Los Angeles ($199) - Highlighted */}
+            {/* Plan 2: VIP Los Angeles ($279) - Highlighted */}
             <div className="rounded-3xl bg-white border-2 border-[#B08D3C] p-8 sm:p-10 shadow-[0_20px_50px_rgba(176,141,60,0.18)] flex flex-col justify-between relative overflow-hidden">
               {/* Highlight ribbon */}
               <div className="absolute top-0 right-0 bg-[#B08D3C] text-white text-[10px] font-extrabold uppercase tracking-widest py-1.5 px-6 rounded-bl-xl shadow-sm">
@@ -891,7 +887,7 @@ export default function QuinceLandingPage() {
                 </div>
 
                 <div className="flex items-baseline gap-2">
-                  <span className="text-5xl font-extrabold text-[#7A002A]">$199</span>
+                  <span className="text-5xl font-extrabold text-[#7A002A]">$279</span>
                   <span className="text-xs text-[#8A6B76] font-medium">USD • One-time fee</span>
                 </div>
 
@@ -955,7 +951,7 @@ export default function QuinceLandingPage() {
                   {checkoutLoading === "vip" ? (
                     <Loader2 className="w-4 h-4 animate-spin text-white" />
                   ) : (
-                    <span>Get VIP Los Ángeles ($199)</span>
+                    <span>Get VIP Los Ángeles ($279)</span>
                   )}
                 </button>
               </div>
@@ -1136,34 +1132,12 @@ export default function QuinceLandingPage() {
             <p className="font-semibold text-rose-100">
               Handcrafted with love in Los Angeles, California • Click &amp; Love Studio
             </p>
-            <p>Serving Glendale, Burbank, Pasadena, San Fernando Valley, Long Beach &amp; Inland Empire.</p>
+            <p>Delivering bespoke digital invitation experiences for celebrations nationwide.</p>
           </div>
         </div>
       </section>
 
-      {/* Minimal Footer */}
-      <footer className="bg-[#120309] text-rose-200/50 py-8 px-4 text-center text-xs border-t border-white/5">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <span className="font-bold text-white">Click and Love</span>
-            <span>© {new Date().getFullYear()} All rights reserved.</span>
-          </div>
-          <div className="flex items-center gap-6">
-            <Link href="/" className="hover:text-white transition">
-              Home
-            </Link>
-            <Link href="/es" className="hover:text-white transition">
-              Español
-            </Link>
-            <a href="#templates" className="hover:text-white transition">
-              Quinceañeras
-            </a>
-            <a href="#pricing" className="hover:text-white transition">
-              Pricing
-            </a>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter lang="en" />
     </div>
   );
 }

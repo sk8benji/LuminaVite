@@ -1,5 +1,6 @@
 import Link from "next/link";
 import TrackLink from "@/components/analytics/TrackLink";
+import { planByKey, planPriceNumber, schemaPriceRange } from "@/lib/pricing";
 
 // Shared layout for the transactional landing pages (content strategy 2026-10-30).
 // Every page passes its own copy; this component only renders structure, CTAs and JSON-LD.
@@ -50,16 +51,12 @@ type LandingPageProps = {
   breadcrumbCurrent: string;
 };
 
-const PHONE_DISPLAY = "(818) 299-4882";
-const PHONE_TEL = "tel:+18182994882";
+const PHONE_DISPLAY = "(818) 918-2519";
+const PHONE_TEL = "tel:+18189182519";
 const PHONE_SMS = "sms:+18182994882";
 
 const AREA_SERVED = [
-  { "@type": "City", name: "Los Angeles" },
-  { "@type": "City", name: "Glendale" },
-  { "@type": "City", name: "Burbank" },
-  { "@type": "City", name: "Pasadena" },
-  { "@type": "AdministrativeArea", name: "San Fernando Valley" },
+  { "@type": "Country", name: "United States" },
 ];
 
 export default function LandingPage(props: LandingPageProps) {
@@ -121,8 +118,8 @@ export default function LandingPage(props: LandingPageProps) {
           "@type": "ProfessionalService",
           name: "Click & Love",
           url: "https://clickandlove.app/",
-          telephone: "+1-818-299-4882",
-          priceRange: "$99 - $199",
+          telephone: "+1-818-918-2519",
+          priceRange: schemaPriceRange(lang),
           address: {
             "@type": "PostalAddress",
             addressLocality: "Los Angeles",
@@ -133,9 +130,21 @@ export default function LandingPage(props: LandingPageProps) {
           knowsLanguage: ["en", "es"],
         },
         areaServed: AREA_SERVED,
+        // OJO: antes decía Assisted $99 / VIP $199 (precios viejos). Ahora se
+        // derivan de la fuente única, igual que priceRange.
         offers: [
-          { "@type": "Offer", name: "Assisted", price: "99", priceCurrency: "USD" },
-          { "@type": "Offer", name: "VIP", price: "199", priceCurrency: "USD" },
+          {
+            "@type": "Offer",
+            name: "Assisted",
+            price: String(planPriceNumber(planByKey(lang, "assisted").price)),
+            priceCurrency: "USD",
+          },
+          {
+            "@type": "Offer",
+            name: "VIP",
+            price: String(planPriceNumber(planByKey(lang, "vip").price)),
+            priceCurrency: "USD",
+          },
         ],
       },
       {

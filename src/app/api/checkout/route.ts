@@ -6,9 +6,19 @@ import { getSiteUrl } from "@/lib/url-safety";
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { plan = "signature", gaClientId } = body;
+    const { plan = "signature", lang = "en", gaClientId } = body;
 
     const pkg = PACKAGES[plan] || PACKAGES.signature;
+    const isEs = lang === "es";
+
+    const productName = isEs
+      ? `Click and Love — ${pkg.nameEs || `Paquete ${pkg.name}`}`
+      : `Click and Love — ${pkg.nameEn || `${pkg.name} Package`}`;
+
+    const productDescription = isEs
+      ? (pkg.descriptionEs || pkg.description)
+      : (pkg.descriptionEn || pkg.description);
+
     // H3: URL canónica fija para Stripe, nunca headers del request
     const origin = getSiteUrl();
 
@@ -17,13 +27,14 @@ export async function POST(req: NextRequest) {
     // 1. Si Stripe está configurado con clave secreta
     if (stripe) {
       const session = await stripe.checkout.sessions.create({
+        locale: isEs ? "es" : "en",
         line_items: [
           {
             price_data: {
               currency: pkg.currency,
               product_data: {
-                name: `Click and love - Paquete ${pkg.name}`,
-                description: pkg.description,
+                name: productName,
+                description: productDescription,
                 images: pkg.image ? [pkg.image] : [],
               },
               unit_amount: Math.round(pkg.price * 100),
@@ -40,6 +51,7 @@ export async function POST(req: NextRequest) {
         metadata: {
           paqueteId: pkg.id,
           paqueteNombre: pkg.name,
+          lang: isEs ? "es" : "en",
           // GA4 client_id para el purchase por Measurement Protocol
           // desde el webhook (si el navegador lo pudo leer de la cookie _ga).
           ...(typeof gaClientId === "string" && gaClientId

@@ -43,7 +43,7 @@ export default async function DemoPage(props: PageProps) {
   }
 
   return (
-    <div className="no-scrollbar overflow-x-hidden min-h-screen pb-24">
+    <div className="overflow-x-clip min-h-screen pb-24">
       <TrackOnMount event="view_demo" eventParams={{ plantilla: data.estiloPlantilla }} />
       <TemplateDispatcher data={data} />
       {/* Barra CTA fija (Semana 2): que la demo nunca sea un callejón sin salida */}

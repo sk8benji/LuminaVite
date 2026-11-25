@@ -276,8 +276,8 @@ export default function QuinceEraPinkTemplate({
   const deadlineMonthEn = rawMonthEn.charAt(0).toUpperCase() + rawMonthEn.slice(1);
 
   const rsvpDeadlinePhrase = isEn
-    ? `Please confirm before ${deadlineMonthEn} ${deadlineDay}`
-    : `Favor de confirmar antes del ${deadlineDay} de ${deadlineMonthEs}`;
+    ? (data.rsvpFechaLimiteEn || `Please confirm before ${deadlineMonthEn} ${deadlineDay}`)
+    : (data.rsvpFechaLimite || `Favor de confirmar antes del ${deadlineDay} de ${deadlineMonthEs}`);
 
   // Itinerario dinámico con los iconos ilustrados del set Era Pink
   const getItineraryIcon = (item: any, idx: number) => {
@@ -691,7 +691,7 @@ export default function QuinceEraPinkTemplate({
           </div>
 
           <div className="max-w-md mx-auto mt-8 space-y-6">
-            {data.ceremoniaNombre && (
+            {data.mostrarCeremonia !== false && data.ceremoniaNombre && (
               <div className="bg-[#F6D3DA] rounded-[2rem] shadow-lg p-7 text-center border border-white/60">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={ERA_ASSETS.photoChurch} alt="" className="w-28 h-28 rounded-full object-cover border-4 border-white shadow-md mx-auto" />
@@ -711,6 +711,7 @@ export default function QuinceEraPinkTemplate({
               </div>
             )}
 
+            {data.mostrarRecepcion !== false && (
             <div className="bg-[#F6D3DA] rounded-[2rem] shadow-lg p-7 text-center border border-white/60">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={ERA_ASSETS.photoVenue} alt="" className="w-28 h-28 rounded-full object-cover border-4 border-white shadow-md mx-auto" />
@@ -726,6 +727,7 @@ export default function QuinceEraPinkTemplate({
                 <MapPin className="w-3.5 h-3.5" /> Google Maps
               </a>
             </div>
+            )}
           </div>
         </section>
 
@@ -783,10 +785,15 @@ export default function QuinceEraPinkTemplate({
               <h4 className="font-serif-roman text-sm tracking-[0.35em] uppercase text-[#C4667D] font-bold">
                 {isEn ? "Dress Code" : "Código de Vestimenta"}
               </h4>
-              <p className="font-serif-roman text-xs sm:text-sm tracking-[0.2em] uppercase text-[#3E2A2E] mt-2 leading-relaxed">
-                {(isEn ? data.dressCodeNotaEn : data.dressCodeNota) ||
-                  (isEn ? "Soft pastels & semi-formal elegant" : "Pasteles suaves y semiformal elegante")}
-              </p>
+              {(() => {
+                const note = (isEn ? data.dressCodeNotaEn : data.dressCodeNota) || null;
+                if (!note) return null;
+                return (
+                  <p className="font-serif-roman text-xs sm:text-sm tracking-[0.2em] uppercase text-[#3E2A2E] mt-2 leading-relaxed">
+                    {note}
+                  </p>
+                );
+              })()}
               <div className="flex items-center justify-center gap-3 mt-4">
                 {swatches.map((c: string, i: number) => (
                   <span key={i} className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-white shadow-md" style={{ backgroundColor: c }} />
@@ -912,11 +919,17 @@ export default function QuinceEraPinkTemplate({
           </div>
 
           <div className="bg-white/95 backdrop-blur-sm p-6 pt-10 rounded-3xl border border-[#D8B772]/60 shadow-xl text-center relative z-10">
-            <h3 className="font-script text-4xl text-[#A63D57] my-1">
-              {isEn ? "RSVP" : "Confirmar Asistencia"}
-            </h3>
+            {(() => {
+              const t = isEn ? data.rsvpTituloEn : data.rsvpTitulo;
+              if (t === "") return null;
+              return (
+                <h3 className="font-script text-4xl text-[#A63D57] my-1">
+                  {isEn ? (data.rsvpTituloEn || "RSVP") : (data.rsvpTitulo || "Confirmar Asistencia")}
+                </h3>
+              );
+            })()}
             <p className="text-[11px] text-slate-500 mb-5 uppercase tracking-wider font-serif-roman font-semibold">
-              {(data.fechaLimiteRsvp && isEn) ? `Please confirm by ${data.fechaLimiteRsvp}` : rsvpDeadlinePhrase}
+              {rsvpDeadlinePhrase}
             </p>
 
             {/* Alerta de confirmación previa / actualización de pases */}

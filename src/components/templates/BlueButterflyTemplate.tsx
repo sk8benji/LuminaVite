@@ -1212,13 +1212,20 @@ export default function BlueButterflyTemplate({
               <p className="font-serif-roman text-xs sm:text-[13px] font-bold text-[#2F5A84] tracking-[0.15em] uppercase mt-1">
                 {isEn ? (data.dressCodeTituloEn || data.dressCodeEtiqueta || data.dressCodeTitulo || "Formal Attire") : (data.dressCodeEtiqueta || data.dressCodeTitulo || "Formal & Rigurosa Etiqueta")}
               </p>
-              <p className="font-cormorant italic text-[11px] sm:text-xs text-slate-600 leading-relaxed mt-2 max-w-[175px] mx-auto">
-                {data.dressCodeColoresReservados ||
+              {(() => {
+                // La nota editable del editor (dressCodeNota/NotaEn) es la unica
+                // fuente: dressCodeColoresReservados no tiene campo en el editor
+                // y por eso se comportaba como un texto por defecto imposible de borrar.
+                const note =
                   (isEn && data.dressCodeNotaEn ? data.dressCodeNotaEn : data.dressCodeNota) ||
-                  (isEn
-                    ? "Please join us in your finest formal attire. Shades of sky blue and white are exclusively reserved for the quinceañera."
-                    : "Acompáñanos luciendo tu mejor atuendo formal. Tonos azul celeste y blanco reservados exclusivamente para la quinceañera.")}
-              </p>
+                  null;
+                if (!note) return null;
+                return (
+                  <p className="font-cormorant italic text-[11px] sm:text-xs text-slate-600 leading-relaxed mt-2 max-w-[175px] mx-auto">
+                    {note}
+                  </p>
+                );
+              })()}
             </div>
 
             {/* 3. Maniquí Traje Formal Masculino (Derecha - Proporción equilibrada) */}
@@ -1247,6 +1254,7 @@ export default function BlueButterflyTemplate({
         {/* SECCIÓN 8: MAPA Y NAVEGACIÓN (THE LOCATION)             */}
         {/* ======================================================= */}
         <section className="px-6 py-6 text-center z-20">
+          {data.mostrarRecepcion !== false && (<>
           <h3 className="font-serif-roman text-xs tracking-[0.25em] text-[#2F5A84] uppercase mb-2 font-bold">
             {isEn ? "Reception & Location" : "Recepción & Ubicación"}
           </h3>
@@ -1284,9 +1292,10 @@ export default function BlueButterflyTemplate({
             <MapPin className="w-3.5 h-3.5" />
             {isEn ? "Directions / View Map" : "Cómo Llegar / Ver en Mapa"}
           </a>
+          </>)}
 
           {/* CEREMONIA RELIGIOSA (SI EXISTE) */}
-          {data.ceremoniaNombre && (
+          {data.mostrarCeremonia !== false && data.ceremoniaNombre && (
             <div className="mt-8 pt-6 border-t border-[#D8B772]/30 text-center">
               <span className="font-serif-roman text-[10px] tracking-[0.2em] text-[#C5A059] uppercase font-bold block mb-1">
                 {isEn ? "Religious Ceremony / Church" : "Ceremonia Religiosa / Iglesia"}
@@ -1382,9 +1391,15 @@ export default function BlueButterflyTemplate({
           </div>
 
           <div className="bg-white/95 backdrop-blur-sm p-6 pt-10 rounded-3xl border border-[#D8B772]/60 shadow-xl text-center relative z-10">
-            <h3 className="font-script text-4xl text-[#2F5A84] my-1">
-              {isEn ? "RSVP" : "Confirmar Asistencia"}
-            </h3>
+            {(() => {
+              const t = isEn ? data.rsvpTituloEn : data.rsvpTitulo;
+              if (t === "") return null;
+              return (
+                <h3 className="font-script text-4xl text-[#2F5A84] my-1">
+                  {isEn ? (data.rsvpTituloEn || "RSVP") : (data.rsvpTitulo || "Confirmar Asistencia")}
+                </h3>
+              );
+            })()}
             <p className="text-[11px] text-slate-500 mb-5 uppercase tracking-wider font-serif-roman font-semibold">
               {rsvpDeadlinePhrase}
             </p>

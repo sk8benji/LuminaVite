@@ -34,6 +34,7 @@ import { TEMPLATES, TemplateId } from "@/lib/templates";
 import { InvitationData } from "@/components/invitation/InvitationMobileView";
 import MobileSimulator from "@/components/preview/MobileSimulator";
 import { optimizarImagen } from "@/lib/optimize-image";
+import { ELEGANT_ROSE_HITOS_DEFAULTS } from "@/lib/templates/elegantRoseAssets";
 import TemplateConfigDispatcher from "@/components/events/forms/TemplateConfigDispatcher";
 import TemplateSectionBuilder from "@/components/admin/TemplateSectionBuilder";
 import EventSettingsConfig from "@/components/admin/EventSettingsConfig";
@@ -116,6 +117,10 @@ function NuevoEventoContent() {
   const [showMobilePreview, setShowMobilePreview] = useState(false);
   // Título tecleado (o venido por ?nombre=): la invitación ya es de un cliente real
   const [tituloEditado, setTituloEditado] = useState(false);
+  // La frase de fecha límite del RSVP: true si el usuario la escribió a mano
+  // en la sección RSVP (entonces fecha/días/idioma ya no la sobreescriben).
+  const [rsvpFraseManual, setRsvpFraseManual] = useState(false);
+  const [rsvpFraseManualEn, setRsvpFraseManualEn] = useState(false);
   const [editorMode, setEditorMode] = useState<"sections" | "settings">("sections");
   // Sección activa del editor: se comparte con el preview del teléfono para
   // que al elegir una sección el teléfono se mueva a esa parte.
@@ -167,6 +172,8 @@ function NuevoEventoContent() {
     fechaLimiteRsvp: "15 de Noviembre",
     maxPasesPorInvitado: 4,
     fotosInvitadosActivas: true,
+    mostrarCeremonia: true,
+    mostrarRecepcion: true,
     ceremoniaNombre: "Parroquia Nuestra Señora",
     ceremoniaDireccion: "Av. Las Flores 123",
     ceremoniaMapUrl: "https://maps.google.com",
@@ -185,6 +192,13 @@ function NuevoEventoContent() {
     regalosZelle: "",
     regalosCashApp: "",
     rsvpFechaLimite: "Favor de confirmar antes del 15 de Noviembre",
+    rsvpFechaLimiteEn: "Please confirm before November 15",
+    rsvpTitulo: "",
+    rsvpTituloEn: "",
+    rsvpSubtitulo: "",
+    rsvpSubtituloEn: "",
+    rsvpTelefonoTitulo: "",
+    rsvpTelefonoTituloEn: "",
     rsvpDiasAntes: 15,
     coloresReservados: ["#FCECEE", "#FFFFFF"],
     itinerarioJson: DEMO_ITINERARIO,
@@ -597,6 +611,9 @@ function NuevoEventoContent() {
   const updateField = (field: keyof InvitationData, value: any) => {
     // El título tecleado marca la invitación como personalizada (ver handleSelectTemplate)
     if (field === "titulo") setTituloEditado(true);
+    // La frase de fecha límite escrita a mano ya no se sobreescribe sola.
+    if (field === "rsvpFechaLimite") setRsvpFraseManual(true);
+    if (field === "rsvpFechaLimiteEn") setRsvpFraseManualEn(true);
     if (field === "slug") setSlugError(false);
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
@@ -647,7 +664,8 @@ function NuevoEventoContent() {
         ? `${daysEn[dayOfWeek]}, ${monthsEn[month]} ${day}, ${year}`
         : `${daysEs[dayOfWeek]} ${day} DE ${monthsEs[month]}, ${year}`,
       mes: isEn ? monthsEn[month] : monthsEs[month],
-      horaPlaca: isEn ? `AT ${timeStr}` : `A LAS ${timeStr}`,
+      horaPlaca: `A LAS ${timeStr}`,
+      horaPlacaEn: `AT ${timeStr}`,
       diaSemana: isEn ? daysEn[dayOfWeek] : daysEs[dayOfWeek],
       diaNumero: String(day),
       anio: String(year),
@@ -793,7 +811,9 @@ function NuevoEventoContent() {
       ...prev,
       rsvpDiasAntes: val,
       fechaLimiteRsvp: rsvpCalc.fechaLimiteIso,
-      rsvpFechaLimite: prev.idiomaDefault === "en" ? rsvpCalc.fraseEn : rsvpCalc.fraseEs,
+      // Si el usuario escribió la frase a mano en la sección RSVP, no sobreescribirla.
+      ...(rsvpFraseManual ? {} : { rsvpFechaLimite: rsvpCalc.fraseEs }),
+      ...(rsvpFraseManualEn ? {} : { rsvpFechaLimiteEn: rsvpCalc.fraseEn }),
     }));
   };
 
@@ -808,8 +828,11 @@ function NuevoEventoContent() {
       fechaTextoPersonalizada: formatted.formalText,
       fechaPlacaMes: formatted.mes,
       fechaPlacaHora: formatted.horaPlaca,
+      fechaPlacaHoraEn: formatted.horaPlacaEn,
       fechaLimiteRsvp: rsvpCalc.fechaLimiteIso,
-      rsvpFechaLimite: prev.idiomaDefault === "en" ? rsvpCalc.fraseEn : rsvpCalc.fraseEs,
+      // Si el usuario escribió la frase a mano en la sección RSVP, no sobreescribirla.
+      ...(rsvpFraseManual ? {} : { rsvpFechaLimite: rsvpCalc.fraseEs }),
+      ...(rsvpFraseManualEn ? {} : { rsvpFechaLimiteEn: rsvpCalc.fraseEn }),
     }));
   };
 
@@ -821,6 +844,7 @@ function NuevoEventoContent() {
       fechaTextoPersonalizada: formatted.formalText,
       fechaPlacaMes: formatted.mes,
       fechaPlacaHora: formatted.horaPlaca,
+      fechaPlacaHoraEn: formatted.horaPlacaEn,
     }));
   };
 
@@ -836,9 +860,12 @@ function NuevoEventoContent() {
       fechaTextoPersonalizada: formatted.formalText,
       fechaPlacaMes: formatted.mes,
       fechaPlacaHora: formatted.horaPlaca,
+      fechaPlacaHoraEn: formatted.horaPlacaEn,
       subtitulo: newLang === "en" ? (prev.subtitulo === "Mis Quince Años" ? "My Quinceañera" : prev.subtitulo) : prev.subtitulo,
       countdownEncabezado: newLang === "en" ? "Counting down..." : "Faltan sólo...",
-      rsvpFechaLimite: newLang === "en" ? rsvpCalc.fraseEn : rsvpCalc.fraseEs,
+      // Si el usuario escribió la frase a mano en la sección RSVP, no sobreescribirla.
+      ...(rsvpFraseManual ? {} : { rsvpFechaLimite: rsvpCalc.fraseEs }),
+      ...(rsvpFraseManualEn ? {} : { rsvpFechaLimiteEn: rsvpCalc.fraseEn }),
     }));
   };
 
@@ -896,6 +923,9 @@ function NuevoEventoContent() {
       }
     } catch {}
     if (preset) {
+      // El preset trae su frase de ejemplo: vuelve a ser automática.
+      setRsvpFraseManual(false);
+      setRsvpFraseManualEn(false);
       setFormData((prev) => {
         const isCustomName =
           isEditMode ||
@@ -942,6 +972,7 @@ function NuevoEventoContent() {
             fechaTextoPersonalizada: formatted.formalText || preset.fechaTextoPersonalizada || prev.fechaTextoPersonalizada,
             fechaPlacaMes: formatted.mes || preset.fechaPlacaMes || prev.fechaPlacaMes,
             fechaPlacaHora: formatted.horaPlaca || preset.fechaPlacaHora || prev.fechaPlacaHora,
+            fechaPlacaHoraEn: formatted.horaPlacaEn || preset.fechaPlacaHoraEn || prev.fechaPlacaHoraEn,
             fotoPortadaUrl: esFotoDePreset(prev.fotoPortadaUrl) ? (preset.fotoPortadaUrl || prev.fotoPortadaUrl) : prev.fotoPortadaUrl,
             fotoInfanciaUrl: esFotoDePreset(prev.fotoInfanciaUrl) ? (preset.fotoInfanciaUrl || prev.fotoInfanciaUrl) : prev.fotoInfanciaUrl,
             fotoActualUrl: esFotoDePreset(prev.fotoActualUrl) ? (preset.fotoActualUrl || prev.fotoActualUrl) : prev.fotoActualUrl,
@@ -960,6 +991,7 @@ function NuevoEventoContent() {
           fechaTextoPersonalizada: formatted.formalText || prev.fechaTextoPersonalizada,
           fechaPlacaMes: formatted.mes || prev.fechaPlacaMes,
           fechaPlacaHora: formatted.horaPlaca || prev.fechaPlacaHora,
+          fechaPlacaHoraEn: formatted.horaPlacaEn || prev.fechaPlacaHoraEn,
           fotoPortadaUrl: esFotoDePreset(prev.fotoPortadaUrl) ? (preset.fotoPortadaUrl || prev.fotoPortadaUrl) : prev.fotoPortadaUrl,
           // Hallazgo 12: mismo criterio que la portada para las demás fotos —
           // foto de plantilla/stock se reemplaza por la del preset nuevo; subida S3 del usuario se conserva
@@ -991,7 +1023,11 @@ function NuevoEventoContent() {
       | "fotoCierreUrl"
       | "fotoZapato1Url"
       | "fotoZapato2Url"
-      | "ogImagenUrl",
+      | "ogImagenUrl"
+      | "corteFotoDamas"
+      | "corteFotoChambelanes"
+      | "fotoFondoSobre"
+      | `hitoFoto_${number}`,
     mediaType: "images" | "audio" = "images"
   ) => {
     const file = e.target.files?.[0];
@@ -1040,37 +1076,109 @@ function NuevoEventoContent() {
       const subFolder = isAudio ? "audio" : "images";
       const clientFolder = `clientes/invitaciones/${formData.slug || "general"}/${subFolder}`;
 
-      // 1. Pedir presigned URL a la API
-      const res = await fetch("/api/s3/presigned-url", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          filename: uploadName,
-          contentType: uploadType,
-          folder: clientFolder,
-          fileSize: uploadFile.size,
-        }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.error || "Error al generar URL para S3");
+      // 1. Pedir presigned URL a la API. Si ESTE fetch falla con
+      // "Failed to fetch", el pedido ni siquiera llegó al servidor (red o
+      // reinicio); si el servidor responde con error, el mensaje es legible.
+      let data: any;
+      try {
+        const res = await fetch("/api/s3/presigned-url", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            filename: uploadName,
+            contentType: uploadType,
+            folder: clientFolder,
+            fileSize: uploadFile.size,
+          }),
+        });
+        data = await res.json();
+        if (!res.ok) {
+          throw new Error(data.error || "Error al generar URL para S3");
+        }
+      } catch (err: any) {
+        throw new Error(`Falló pidiendo la URL de subida al servidor: ${err.message || "Error de red"}`);
       }
 
-      // 2. Subir binario directo a S3 usando PUT con el Content-Type firmado
-      const uploadRes = await fetch(data.uploadUrl, {
-        method: "PUT",
-        headers: { "Content-Type": uploadType },
-        body: uploadFile,
-      });
-
-      if (!uploadRes.ok) {
-        throw new Error("Falló la subida a S3. Verifica permisos de tu bucket CORS/ACL.");
+      // 2. Subir binario directo a S3 usando PUT con el Content-Type firmado.
+      // Si ESTE fetch falla con "Failed to fetch", el navegador bloqueó el
+      // PUT (CSP connect-src, CORS del storage o destino no alcanzable).
+      let destino = "";
+      try {
+        destino = new URL(data.uploadUrl).hostname;
+      } catch {}
+      try {
+        const uploadRes = await fetch(data.uploadUrl, {
+          method: "PUT",
+          headers: { "Content-Type": uploadType },
+          body: uploadFile,
+        });
+        if (!uploadRes.ok) {
+          throw new Error("Falló la subida a S3. Verifica permisos de tu bucket CORS/ACL.");
+        }
+      } catch (err: any) {
+        if (err.message === "Failed to fetch") {
+          throw new Error(
+            `El navegador bloqueó la subida a S3 (destino: ${destino || "desconocido"}). Revisa la política de seguridad del sitio (CSP connect-src) o el CORS del storage.`
+          );
+        }
+        throw err;
       }
 
       // 3. Guardar URL final del archivo en el estado
-      updateField(field, data.fileUrl);
+      if (field === "corteFotoDamas" || field === "corteFotoChambelanes") {
+        // Fotos de la corte (Gatsby 20's): viven dentro de corteHonorJson,
+        // no como campo de nivel superior (sin columna nueva en la DB).
+        const key = field === "corteFotoDamas" ? "fotoDamasUrl" : "fotoChambelanesUrl";
+        setFormData((prev: any) => ({
+          ...prev,
+          corteHonorJson: { ...(prev.corteHonorJson || {}), [key]: data.fileUrl },
+        }));
+      } else if (field === "fotoFondoSobre") {
+        // Foto de fondo del sobre cerrado (Elegant Rose): vive en
+        // configPlantilla, sin columna nueva en la DB.
+        setFormData((prev: any) => ({
+          ...prev,
+          configPlantilla: { ...(prev.configPlantilla || {}), fotoFondoSobre: data.fileUrl },
+        }));
+      } else if (typeof field === "string" && field.startsWith("hitoFoto_")) {
+        // Foto de un hito de Growing Up (Elegant Rose): vive en
+        // configPlantilla.hitosVida[idx].fotoUrl. Si aún no hay hitos
+        // guardados, se materializan los 5 por defecto del template.
+        const idx = Number(field.slice("hitoFoto_".length));
+        setFormData((prev: any) => {
+          const guardados = (prev.configPlantilla?.hitosVida as any[]) || [];
+          const base =
+            guardados.length > 0
+              ? [...guardados]
+              : ELEGANT_ROSE_HITOS_DEFAULTS.map((d) => ({
+                  anio: d.fecha,
+                  titulo: d.tituloEs,
+                  tituloEn: d.tituloEn,
+                  texto: d.textoEs,
+                  textoEn: d.textoEn,
+                  fotoUrl: d.foto,
+                }));
+          while (base.length <= idx) {
+            base.push({ anio: "", titulo: "", texto: "", fotoUrl: "" });
+          }
+          base[idx] = { ...base[idx], fotoUrl: data.fileUrl };
+          return {
+            ...prev,
+            configPlantilla: { ...(prev.configPlantilla || {}), hitosVida: base },
+          };
+        });
+      } else {
+        // Aquí solo llegan los campos top-level (fotoFondoSobre e
+        // hitoFoto_N ya se atendieron arriba); el cast es seguro.
+        updateField(field as keyof InvitationData, data.fileUrl);
+      }
+      // Si es audio y aún no hay título, usar el nombre del archivo (sin extensión)
+      if (field === "musicaUrl") {
+        setFormData((prev: any) => {
+          if (prev.musicaTitulo) return prev;
+          return { ...prev, musicaTitulo: uploadFile.name.replace(/\.[^/.]+$/, "") };
+        });
+      }
       setUploadEstado({ field, estado: "ok" });
     } catch (err: any) {
       console.error(err);
@@ -1132,6 +1240,17 @@ function NuevoEventoContent() {
             configPlantilla: parsedConfig,
             fechaEvento: fechaEventoLocal ?? prev.fechaEvento,
           }));
+          // Si la frase guardada no es la automática de su fecha/días, el
+          // usuario la escribió a mano: que un cambio de fecha no la borre.
+          const autoFrase = computeRsvpPhrases(ev.fechaEvento, Number(ev.rsvpDiasAntes) || 15);
+          const fraseGuardada = (ev.rsvpFechaLimite || "").trim();
+          setRsvpFraseManual(
+            fraseGuardada !== "" && fraseGuardada !== autoFrase.fraseEs && fraseGuardada !== autoFrase.fraseEn
+          );
+          const fraseGuardadaEn = (ev.rsvpFechaLimiteEn || "").trim();
+          setRsvpFraseManualEn(
+            fraseGuardadaEn !== "" && fraseGuardadaEn !== autoFrase.fraseEn
+          );
         }
       })
       .catch((err) => {
@@ -1180,9 +1299,14 @@ function NuevoEventoContent() {
           limiteParsed && !isNaN(limiteParsed.getTime())
             ? limiteParsed.toISOString()
             : rsvpCalc.fechaLimiteIso,
-        rsvpFechaLimite:
-          formData.rsvpFechaLimite ||
-          (formData.idiomaDefault === "en" ? rsvpCalc.fraseEn : rsvpCalc.fraseEs),
+        // Frase manual (escrita en la sección RSVP) se respeta; si no, se
+        // recalcula siempre desde fecha + días para no guardar una vieja.
+        rsvpFechaLimite: rsvpFraseManual
+          ? formData.rsvpFechaLimite || rsvpCalc.fraseEs
+          : rsvpCalc.fraseEs,
+        rsvpFechaLimiteEn: rsvpFraseManualEn
+          ? formData.rsvpFechaLimiteEn || rsvpCalc.fraseEn
+          : rsvpCalc.fraseEn,
       };
 
       // En modo crear, un slug existente BLOQUEA: nunca se pisa en silencio
@@ -1427,6 +1551,7 @@ function NuevoEventoContent() {
               uploadEstado={uploadEstado}
               formatFormalDate={formatFormalDate}
               computeRsvpPhrases={computeRsvpPhrases}
+              onDateChange={handleDateChange}
               onOpenTemplatePicker={openTemplateGrid}
             />
           ) : (

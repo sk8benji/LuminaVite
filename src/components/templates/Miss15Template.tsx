@@ -276,8 +276,8 @@ export default function Miss15Template({
   const deadlineMonthEn = rawMonthEn.charAt(0).toUpperCase() + rawMonthEn.slice(1);
 
   const rsvpDeadlinePhrase = isEn
-    ? `Please confirm before ${deadlineMonthEn} ${deadlineDay}`
-    : `Favor de confirmar antes del ${deadlineDay} de ${deadlineMonthEs}`;
+    ? (data.rsvpFechaLimiteEn || `Please confirm before ${deadlineMonthEn} ${deadlineDay}`)
+    : (data.rsvpFechaLimite || `Favor de confirmar antes del ${deadlineDay} de ${deadlineMonthEs}`);
 
   // Itinerario dinámico con los iconos ilustrados del set Era Pink
   const getItineraryIcon = (item: any, idx: number) => {
@@ -607,12 +607,15 @@ export default function Miss15Template({
               <h4 className="font-serif-roman text-sm tracking-[0.35em] uppercase text-[#B0703C] font-bold">
                 {isEn ? "Dress Code" : "Código de Vestimenta"}
               </h4>
-              <p className="text-sm text-[#2B2118]/85 leading-relaxed mt-2 font-serif-roman">
-                {(isEn ? data.dressCodeNotaEn : data.dressCodeNota) ||
-                  (isEn
-                    ? "Elegant & Semi-Formal. Guests are encouraged to wear pastel or soft colors to match the theme."
-                    : "Elegante y semiformal. Se invita a los invitados a usar colores pastel o suaves a tono con el tema.")}
-              </p>
+              {(() => {
+                const note = (isEn ? data.dressCodeNotaEn : data.dressCodeNota) || null;
+                if (!note) return null;
+                return (
+                  <p className="text-sm text-[#2B2118]/85 leading-relaxed mt-2 font-serif-roman">
+                    {note}
+                  </p>
+                );
+              })()}
             </div>
 
             {data.mostrarMesaRegalos !== false && (
@@ -691,11 +694,17 @@ export default function Miss15Template({
           </div>
 
           <div className="bg-white/95 backdrop-blur-sm p-6 pt-10 rounded-3xl border border-[#D8B772]/60 shadow-xl text-center relative z-10">
-            <h3 className="font-script text-4xl text-[#9A6A30] my-1">
-              {isEn ? "RSVP" : "Confirmar Asistencia"}
-            </h3>
+            {(() => {
+              const t = isEn ? data.rsvpTituloEn : data.rsvpTitulo;
+              if (t === "") return null;
+              return (
+                <h3 className="font-script text-4xl text-[#9A6A30] my-1">
+                  {isEn ? (data.rsvpTituloEn || "RSVP") : (data.rsvpTitulo || "Confirmar Asistencia")}
+                </h3>
+              );
+            })()}
             <p className="text-[11px] text-slate-500 mb-5 uppercase tracking-wider font-serif-roman font-semibold">
-              {(data.fechaLimiteRsvp && isEn) ? `Please confirm by ${data.fechaLimiteRsvp}` : rsvpDeadlinePhrase}
+              {rsvpDeadlinePhrase}
             </p>
 
             {/* Alerta de confirmación previa / actualización de pases */}

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -17,13 +18,17 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // lang por ruta (SEO home, nov 2026): el middleware pone x-locale ("es" en
+  // /es/*, "en" en el resto). Default "en" si el header no viene (p. ej. el
+  // rewrite interno del admin a /dashboard).
+  const locale = (await headers()).get("x-locale") === "es" ? "es" : "en";
   return (
-    <html lang="es" className="scroll-smooth">
+    <html lang={locale} className="scroll-smooth">
       <head>
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="icon" href="/icon.png" type="image/png" />
@@ -31,7 +36,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..700;1,6..96,400&family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Great+Vibes&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Lora:ital,wght@0,400..700;1,400..700&family=Montserrat:wght@300;400;500;600;700&family=Pinyon+Script&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Prata&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..700;1,6..96,400&family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Great+Vibes&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Lora:ital,wght@0,400..700;1,400..700&family=Marcellus&family=Montserrat:wght@300;400;500;600;700&family=Pinyon+Script&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Prata&display=swap"
           rel="stylesheet"
         />
         {/* Medición (2026-10-29): GTM + GA4 + Meta Pixel. GTM queda con el contenedor vacío a propósito para no duplicar GA4; GA4 y Pixel van directos y miden desde ya. */}
@@ -70,7 +75,7 @@ export default function RootLayout({
               name: "Click & Love",
               url: "https://clickandlove.app/",
               logo: "https://clickandlove.app/logo.png",
-              telephone: "+1-818-299-4882",
+              telephone: "+1-818-918-2519",
               areaServed: [
                 { "@type": "AdministrativeArea", name: "Los Angeles" },
                 { "@type": "AdministrativeArea", name: "Southern California" },

@@ -1,4 +1,5 @@
 "use client";
+import SiteFooter from "@/components/layout/SiteFooter";
 
 import React, { useState } from "react";
 import Link from "next/link";
@@ -36,8 +37,8 @@ import {
 // ============================================================================
 // CONSTANTS & ASSETS
 // ============================================================================
-const PHONE_DISPLAY = "(818) 299-4882";
-const PHONE_TEL = "tel:+18182994882";
+const PHONE_DISPLAY = "(818) 918-2519";
+const PHONE_TEL = "tel:+18189182519";
 const PHONE_SMS = "sms:+18182994882";
 const WHATSAPP_URL =
   "https://wa.me/18182994882?text=Hello%20Click%20%26%20Love!%20I%20would%20like%20information%20about%20Wedding%20invitations%20in%20Los%20Angeles.";
@@ -71,7 +72,7 @@ const WEDDING_TEMPLATES_LIST: WeddingTemplateItem[] = [
     slug: "sofia-y-alejandro",
     image: "https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=800&q=80",
     palette: "Eucalyptus Green • Warm Rose • Ivory",
-    description: "Romantic garden atmosphere with botanical borders, church & reception dual itinerary, gift registry links, and Waze navigation.",
+    description: "Romantic garden atmosphere with botanical borders, church & reception dual itinerary, gift registry links, and Google Maps navigation.",
     highlights: ["Bilingual EN / ES switcher", "Dual-venue itinerary (Church + Reception)", "Honeyfund / Zelle registry"],
   },
   {
@@ -110,6 +111,7 @@ export default function WeddingLandingPage() {
         body: JSON.stringify({
           plan,
           gaClientId: getGaClientId(),
+          lang: "en",
           templateSlug: "emma-and-lucas",
           currency: "usd",
         }),
@@ -231,7 +233,7 @@ export default function WeddingLandingPage() {
               {/* LA Badge */}
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#7A002A]/5 border border-[#7A002A]/20 text-[#7A002A] text-xs font-semibold tracking-wide mb-6">
                 <MapPin className="w-3.5 h-3.5 text-[#B08D3C]" />
-                <span>Serving Los Angeles • Pasadena • Glendale • Malibu</span>
+                <span>Instant Delivery • Live Guest Support • Nationwide</span>
               </div>
 
               {/* H1 Headline */}
@@ -568,25 +570,21 @@ export default function WeddingLandingPage() {
                   Zero Lost Guests
                 </span>
                 <h3 className="font-['Playfair_Display',serif] text-2xl font-bold text-[#2B0A18] mt-1 mb-3">
-                  1-Tap GPS to Iconic LA Venues
+                  1-Tap Church &amp; Reception Navigation
                 </h3>
                 <p className="text-[#2B0A18]/75 text-sm leading-relaxed mb-6">
-                  Guests open driving directions directly in Google Maps, Apple Maps, or Waze. Pre-mapped with ceremony and reception parking instructions.
+                  Guests receive direct Google Maps links for both the church ceremony and reception venue. Avoid family calls in traffic and ensure everyone arrives at the right entrance.
                 </p>
               </div>
 
               <div className="space-y-2 text-xs">
                 <div className="flex items-center justify-between p-2.5 rounded-xl bg-white border border-[#2B0A18]/10">
-                  <span className="font-semibold text-[#2B0A18]">The Langham Pasadena</span>
-                  <span className="text-[#B08D3C] font-semibold text-[11px]">Waze &amp; Maps</span>
+                  <span className="font-semibold text-[#2B0A18]">📍 Church Ceremony</span>
+                  <span className="text-[#B08D3C] font-semibold text-[11px]">Google Maps</span>
                 </div>
                 <div className="flex items-center justify-between p-2.5 rounded-xl bg-white border border-[#2B0A18]/10">
-                  <span className="font-semibold text-[#2B0A18]">Brandview Ballroom Glendale</span>
-                  <span className="text-[#B08D3C] font-semibold text-[11px]">Waze &amp; Maps</span>
-                </div>
-                <div className="flex items-center justify-between p-2.5 rounded-xl bg-white border border-[#2B0A18]/10">
-                  <span className="font-semibold text-[#2B0A18]">Taglyan Cultural Complex</span>
-                  <span className="text-[#B08D3C] font-semibold text-[11px]">Waze &amp; Maps</span>
+                  <span className="font-semibold text-[#2B0A18]">📍 Reception &amp; Party</span>
+                  <span className="text-[#B08D3C] font-semibold text-[11px]">Google Maps</span>
                 </div>
               </div>
             </div>
@@ -1117,43 +1115,7 @@ export default function WeddingLandingPage() {
 
       {/* ==================================================================== */}
       {/* FOOTER */}
-      {/* ==================================================================== */}
-      <footer className="py-12 bg-[#120309] text-white/60 text-xs border-t border-white/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-6">
-          <div className="flex items-center gap-3">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <Image src="/logo.png" alt="Click & Love" width={1600} height={1600} className="h-7 w-auto object-contain opacity-80" />
-            <span className="font-['Playfair_Display',serif] text-sm font-semibold text-white">
-              Click &amp; Love
-            </span>
-            <span className="text-white/40">© {new Date().getFullYear()} All Rights Reserved.</span>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-6 text-white/70">
-            <Link href="/" className="hover:text-white transition-colors">
-              Home
-            </Link>
-            <Link href="/quince-invitations" className="hover:text-white transition-colors">
-              Quinceañera Invitations
-            </Link>
-            <Link href="/wedding-invitations-los-angeles" className="hover:text-white text-white font-semibold">
-              Wedding Invitations
-            </Link>
-            <Link href="/text-message-invitations" className="hover:text-white transition-colors">
-              SMS Invitations
-            </Link>
-            <Link href="/rsvp-tracking" className="hover:text-white transition-colors">
-              RSVP Tracking
-            </Link>
-            <Link href="/whatsapp-invitations" className="hover:text-white transition-colors">
-              WhatsApp Invitations
-            </Link>
-            <Link href="/demo" className="hover:text-white transition-colors">
-              Catalog
-            </Link>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter lang="en" />
     </div>
   );
 }

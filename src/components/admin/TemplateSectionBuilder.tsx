@@ -32,7 +32,31 @@ import { extractCleanMapUrl } from "@/lib/mapsUrlCleaner";
 import { InvitationData } from "@/components/invitation/InvitationMobileView";
 import { SECCIONES_QUINCE_ROSADO, SeccionId, isSectionEnabledInEvent, seccionesSoportadas } from "@/config/templateSections";
 import { TEMPLATES, TemplateId } from "@/lib/templates";
+import { ELEGANT_ROSE_HITOS_DEFAULTS } from "@/lib/templates/elegantRoseAssets";
 import MiniaturaConMeta from "@/components/admin/MiniaturaConMeta";
+
+// Hora 12h ("6:19 PM") <-> 24h ("18:19") para el input type="time" de la
+// hora de recepcion (se guarda en 12h, como la hora de la placa).
+function hora12To24(h12: string): string {
+  const m = h12.match(/(\d{1,2}):(\d{2})\s*([AP]M)?/i);
+  if (!m) return "";
+  let h = parseInt(m[1], 10);
+  const min = m[2];
+  const ap = (m[3] || "PM").toUpperCase();
+  if (ap === "PM" && h < 12) h += 12;
+  if (ap === "AM" && h === 12) h = 0;
+  return `${String(h).padStart(2, "0")}:${min}`;
+}
+function hora24To12(h24: string): string {
+  const m = h24.match(/(\d{1,2}):(\d{2})/);
+  if (!m) return "";
+  let h = parseInt(m[1], 10);
+  const min = m[2];
+  const ap = h >= 12 ? "PM" : "AM";
+  if (h === 0) h = 12;
+  else if (h > 12) h -= 12;
+  return `${h}:${min} ${ap}`;
+}
 
 interface TemplateSectionBuilderProps {
   formData: InvitationData;
@@ -47,7 +71,11 @@ interface TemplateSectionBuilderProps {
       | "musicaUrl"
       | "fotoCierreUrl"
       | "fotoZapato1Url"
-      | "fotoZapato2Url",
+      | "fotoZapato2Url"
+      | "corteFotoDamas"
+      | "corteFotoChambelanes"
+      | "fotoFondoSobre"
+      | `hitoFoto_${number}`,
     mediaType?: "images" | "audio"
   ) => Promise<void>;
   uploadingS3: boolean;
@@ -55,6 +83,8 @@ interface TemplateSectionBuilderProps {
   uploadEstado?: { field: string; estado: "ok" | "error"; mensaje?: string } | null;
   formatFormalDate: (dateInput: string | Date, lang?: string) => any;
   computeRsvpPhrases: (eventDateInput: string | Date, dias: number) => any;
+  // Cambio de fecha/hora: re-deriva fechaPlacaHora ES/EN, mes y fecha límite RSVP.
+  onDateChange?: (newDateStr: string) => void;
   onOpenTemplatePicker?: () => void;
   // Sección activa controlada desde fuera (para sincronizar el preview del
   // teléfono). Si no se pasa, el builder usa su estado interno de siempre.
@@ -221,6 +251,7 @@ export default function TemplateSectionBuilder({
   uploadEstado,
   formatFormalDate,
   computeRsvpPhrases,
+  onDateChange,
   onOpenTemplatePicker,
   activeSection: activeSectionProp,
   onActiveSectionChange,
@@ -244,6 +275,45 @@ export default function TemplateSectionBuilder({
   );
   const activeSectionDef =
     SECCIONES_QUINCE_ROSADO[activeSectionIndex] ?? SECCIONES_QUINCE_ROSADO[0];
+
+  // Historia / Growing Up (Elegant Rose): lista editable de hitos.
+  // Sin hitos guardados se muestran los 5 por defecto del template; la
+  // primera edición materializa la lista en configPlantilla.hitosVida.
+  const hitosGuardadosEditor = ((formData.configPlantilla as any)?.hitosVida as
+    | Array<{
+        anio: string;
+        titulo: string;
+        tituloEn?: string;
+        texto: string;
+        textoEn?: string;
+        fotoUrl?: string;
+      }>
+    | undefined);
+  const hitosEditor =
+    hitosGuardadosEditor && hitosGuardadosEditor.length > 0
+      ? hitosGuardadosEditor
+      : ELEGANT_ROSE_HITOS_DEFAULTS.map((d) => ({
+          anio: d.fecha,
+          titulo: d.tituloEs,
+          tituloEn: d.tituloEn,
+          texto: d.textoEs,
+          textoEn: d.textoEn,
+          fotoUrl: d.foto,
+        }));
+  const setHitosEditor = (
+    next: Array<{
+      anio: string;
+      titulo: string;
+      tituloEn?: string;
+      texto: string;
+      textoEn?: string;
+      fotoUrl?: string;
+    }>
+  ) => {
+    const cp = { ...((formData as any).configPlantilla || {}) };
+    cp.hitosVida = next;
+    updateField("configPlantilla", cp);
+  };
 
   // Auto-limpieza en carga de URLs de mapas si contienen código <iframe> residual
   useEffect(() => {
@@ -735,6 +805,140 @@ export default function TemplateSectionBuilder({
                         </div>
                       </div>
 
+                      {/* Título encima del sobre (SOLO Gatsby 20's): el lema y el
+                          título que se ven sobre el sobre cerrado. Antes solo se
+                          podían cambiar en el editor del template maestro; ahora
+                          también por invitación. Se guardan en configPlantilla,
+                          que ya viaja al template. Vacío = texto del template. */}
+                      {((formData as any).estiloPlantilla === "GATSBY_20S" ||
+                        (formData as any).estiloPlantilla === "GYBSY_20S" ||
+                        (formData as any).estiloPlantilla === "GYPSY_BURGUNDY") && (
+                        <div className="p-4 rounded-xl border border-amber-200/60 bg-amber-50/50 space-y-3">
+                          <div>
+                            <p className="text-xs font-bold text-gray-800">Título encima del sobre</p>
+                            <p className="text-[11px] text-gray-500">
+                              El lema y el título que se ven sobre el sobre cerrado, en español e inglés. Si lo dejas vacío se usa el texto del template.
+                            </p>
+                          </div>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                              <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+                                Lema superior (🇲🇽 ES)
+                              </label>
+                              <input
+                                type="text"
+                                value={(formData.configPlantilla as any)?.fraseApertura || ""}
+                                onChange={(e) => {
+                                  const cp = { ...((formData as any).configPlantilla || {}) };
+                                  cp.fraseApertura = e.target.value;
+                                  updateField("configPlantilla", cp);
+                                }}
+                                placeholder="Una Celebración Años 20"
+                                className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+                                Lema superior (🇺🇸 EN)
+                              </label>
+                              <input
+                                type="text"
+                                value={(formData.configPlantilla as any)?.fraseAperturaEn || ""}
+                                onChange={(e) => {
+                                  const cp = { ...((formData as any).configPlantilla || {}) };
+                                  cp.fraseAperturaEn = e.target.value;
+                                  updateField("configPlantilla", cp);
+                                }}
+                                placeholder="A Roaring Twenties Celebration"
+                                className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+                                Título principal (🇲🇽 ES)
+                              </label>
+                              <input
+                                type="text"
+                                value={(formData.configPlantilla as any)?.subtitulo || ""}
+                                onChange={(e) => {
+                                  const cp = { ...((formData as any).configPlantilla || {}) };
+                                  cp.subtitulo = e.target.value;
+                                  updateField("configPlantilla", cp);
+                                }}
+                                placeholder="Mis Quince Años"
+                                className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+                                Título principal (🇺🇸 EN)
+                              </label>
+                              <input
+                                type="text"
+                                value={(formData.configPlantilla as any)?.subtituloEn || ""}
+                                onChange={(e) => {
+                                  const cp = { ...((formData as any).configPlantilla || {}) };
+                                  cp.subtituloEn = e.target.value;
+                                  updateField("configPlantilla", cp);
+                                }}
+                                placeholder="My Sweet Fifteen"
+                                className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Texto de bienvenida de la portada (SOLO Gatsby 20's): la línea
+                          dorada "WELCOME TO THE" / "BIENVENIDOS A" encima del nombre.
+                          Vacío = la línea no aparece. */}
+                      {((formData as any).estiloPlantilla === "GATSBY_20S" ||
+                        (formData as any).estiloPlantilla === "GYBSY_20S" ||
+                        (formData as any).estiloPlantilla === "GYPSY_BURGUNDY") && (
+                        <div className="p-4 rounded-xl border border-amber-200/60 bg-amber-50/50 space-y-3">
+                          <div>
+                            <p className="text-xs font-bold text-gray-800">Texto de bienvenida (encima del nombre)</p>
+                            <p className="text-[11px] text-gray-500">
+                              La línea dorada encima del nombre en la portada. Si la dejas vacía, la línea no aparece.
+                            </p>
+                          </div>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                              <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+                                Bienvenida (🇲🇽 ES)
+                              </label>
+                              <input
+                                type="text"
+                                value={(formData.configPlantilla as any)?.portadaBienvenida || ""}
+                                onChange={(e) => {
+                                  const cp = { ...((formData as any).configPlantilla || {}) };
+                                  cp.portadaBienvenida = e.target.value;
+                                  updateField("configPlantilla", cp);
+                                }}
+                                placeholder="BIENVENIDOS A"
+                                className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+                                Bienvenida (🇺🇸 EN)
+                              </label>
+                              <input
+                                type="text"
+                                value={(formData.configPlantilla as any)?.portadaBienvenidaEn || ""}
+                                onChange={(e) => {
+                                  const cp = { ...((formData as any).configPlantilla || {}) };
+                                  cp.portadaBienvenidaEn = e.target.value;
+                                  updateField("configPlantilla", cp);
+                                }}
+                                placeholder="WELCOME TO THE"
+                                className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
                       {/* Foto Portada con S3 */}
                       <div>
                         <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
@@ -790,6 +994,67 @@ export default function TemplateSectionBuilder({
                           </div>
                         </div>
                       </div>
+
+                      {/* Foto de fondo del sobre cerrado — solo Elegant Rose */}
+                      {((formData as any).estiloPlantilla === "ELEGANT_ROSE") && (
+                      <div>
+                        <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
+                          Foto de fondo del sobre (cerrado)
+                        </label>
+                        <div className="flex flex-col sm:flex-row items-center gap-4 p-4 rounded-xl border border-dashed border-stone-200 bg-stone-50">
+                          {(formData.configPlantilla as any)?.fotoFondoSobre ? (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <MiniaturaConMeta url={(formData.configPlantilla as any).fotoFondoSobre} alt="Fondo del sobre" imgClassName="w-20 h-28 object-cover rounded-xl border-2 border-white shadow-md shrink-0" />
+                          ) : (
+                            <div className="w-20 h-28 rounded-xl bg-stone-100 flex items-center justify-center text-stone-400 shrink-0">
+                              <ImageIcon className="w-6 h-6" />
+                            </div>
+                          )}
+                          <div className="flex-1 text-center sm:text-left">
+                            <p className="text-xs font-semibold text-gray-800">
+                              Subir foto de fondo para el sobre cerrado
+                            </p>
+                            <p className="text-[11px] text-gray-500 mb-2">
+                              Es la foto que se ve detrás del sobre cerrado al abrir la invitación. Si queda vacía, el sobre usa la foto principal de portada.
+                            </p>
+                            <div className="flex flex-wrap items-center gap-2">
+                              <label className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#7A002A] text-white text-xs font-bold hover:bg-[#600021] transition cursor-pointer shadow-xs">
+                                {uploadingS3 && uploadingField === "fotoFondoSobre" ? (
+                                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                                ) : (
+                                  <Upload className="w-3.5 h-3.5" />
+                                )}
+                                <span>{uploadingS3 && uploadingField === "fotoFondoSobre" ? "Subiendo..." : "Cambiar Foto"}</span>
+                                <input
+                                  type="file"
+                                  accept="image/*"
+                                  onChange={(e) => handleFileUpload(e, "fotoFondoSobre")}
+                                  disabled={uploadingS3}
+                                  className="hidden"
+                                />
+                              </label>
+                              {uploadEstado?.field === "fotoFondoSobre" && uploadEstado.estado === "ok" && (
+                                <span className="text-[11px] font-bold text-emerald-700">✓ Foto subida</span>
+                              )}
+                              {uploadEstado?.field === "fotoFondoSobre" && uploadEstado.estado === "error" && (
+                                <span className="text-[11px] font-bold text-red-600">✗ {uploadEstado.mensaje || "Error al subir"}</span>
+                              )}
+                              <input
+                                type="text"
+                                value={(formData.configPlantilla as any)?.fotoFondoSobre || ""}
+                                onChange={(e) => {
+                                  const cp = { ...((formData as any).configPlantilla || {}) };
+                                  cp.fotoFondoSobre = e.target.value;
+                                  updateField("configPlantilla", cp);
+                                }}
+                                placeholder="O pega un enlace de imagen..."
+                                className="flex-1 min-w-[200px] px-3 py-1.5 rounded-lg border border-gray-200 text-xs text-gray-700"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      )}
                     </div>
                   )}
 
@@ -845,10 +1110,18 @@ export default function TemplateSectionBuilder({
                                 : new Date(formData.fechaEvento).toISOString().slice(0, 16)
                             }
                             onChange={(e) => {
-                              const val = e.target.value;
-                              updateField("fechaEvento", val);
-                              const formatted = formatFormalDate(val, "es");
-                              updateField("fechaTextoPersonalizada", formatted.formalText);
+                              // handleDateChange re-deriva TODO de la fecha: texto formal,
+                              // mes, hora de la placa ES/EN y fecha límite RSVP. Antes solo
+                              // se actualizaban fechaEvento y el texto, y la hora de la
+                              // placa (Recepción/Ceremonia) quedaba congelada en el valor viejo.
+                              if (onDateChange) {
+                                onDateChange(e.target.value);
+                              } else {
+                                const val = e.target.value;
+                                updateField("fechaEvento", val);
+                                const formatted = formatFormalDate(val, "es");
+                                updateField("fechaTextoPersonalizada", formatted.formalText);
+                              }
                             }}
                             className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
                           />
@@ -1008,11 +1281,295 @@ export default function TemplateSectionBuilder({
                           </div>
                         </div>
                       </div>
+
+                      {/* Mensaje de cierre (abajo de las polaroids) — solo Quince Rosado */}
+                      {((formData as any).estiloPlantilla === "QUINCE_ROSADO") && (
+                      <div className="pt-2">
+                        <div className="flex items-center justify-between mb-1">
+                          <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider">
+                            Mensaje de cierre (abajo de las fotos)
+                          </label>
+                          <label className="inline-flex items-center gap-1.5 text-[11px] font-bold text-gray-700 cursor-pointer">
+                            <input
+                              type="checkbox"
+                              checked={(formData.configPlantilla as any)?.mostrarDedicatoriaCierre !== false}
+                              onChange={(e) => {
+                                const cp = { ...((formData as any).configPlantilla || {}) };
+                                cp.mostrarDedicatoriaCierre = e.target.checked;
+                                updateField("configPlantilla", cp);
+                              }}
+                              className="rounded text-[#7A002A]"
+                            />
+                            <span>Mostrar</span>
+                          </label>
+                        </div>
+                        <p className="text-[11px] text-gray-500 mb-3">
+                          Pequeño texto al final de la dedicatoria, con el mismo estilo del mensaje de arriba. Si queda vacío, no aparece.
+                        </p>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+                              Mensaje de cierre (🇲🇽 ES)
+                            </label>
+                            <textarea
+                              rows={3}
+                              value={(formData.configPlantilla as any)?.dedicatoriaCierre || ""}
+                              onChange={(e) => {
+                                const cp = { ...((formData as any).configPlantilla || {}) };
+                                cp.dedicatoriaCierre = e.target.value;
+                                updateField("configPlantilla", cp);
+                              }}
+                              placeholder="Escribe un mensaje de cierre para la dedicatoria..."
+                              className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+                              Mensaje de cierre (🇺🇸 EN)
+                            </label>
+                            <textarea
+                              rows={3}
+                              value={(formData.configPlantilla as any)?.dedicatoriaCierreEn || ""}
+                              onChange={(e) => {
+                                const cp = { ...((formData as any).configPlantilla || {}) };
+                                cp.dedicatoriaCierreEn = e.target.value;
+                                updateField("configPlantilla", cp);
+                              }}
+                              placeholder="Write a closing message for the dedication..."
+                              className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      )}
                     </div>
                   )}
 
                   {/* ──────────────────────────────────────────────────────────
-                      SECCIÓN 4: FOTO ZAPATILLAS 1
+                      SECCIÓN 4: RSVP (CONFIRMACIÓN DE ASISTENCIA)
+                  ────────────────────────────────────────────────────────── */}
+                  {sec.id === "rsvp" && (
+                    <div className="space-y-4">
+                      <p className="text-xs text-stone-500">
+                        Personaliza los títulos de la tarjeta de confirmación. Si un campo queda vacío, ese texto no aparece en la invitación.
+                      </p>
+                      {/* Título ES y EN */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+                            Título en Español (🇲🇽 ES)
+                          </label>
+                          <input
+                            type="text"
+                            value={formData.rsvpTitulo ?? "¿SERÁS PARTE DE"}
+                            onChange={(e) => updateField("rsvpTitulo", e.target.value)}
+                            placeholder="Ej. ¡Te esperamos!"
+                            className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
+                          />
+                        </div>
+                        <div>
+                          <div className="flex items-center justify-between mb-1">
+                            <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider">
+                              Título en Inglés (🇺🇸 EN)
+                            </label>
+                            <button
+                              type="button"
+                              onClick={() =>
+                                translateWithAi(
+                                  formData.rsvpTitulo ?? "¿SERÁS PARTE DE",
+                                  "rsvpTituloEn",
+                                  "en"
+                                )
+                              }
+                              disabled={translatingField === "rsvpTituloEn"}
+                              className="inline-flex items-center gap-1 text-[11px] font-bold text-[#7A002A] hover:underline cursor-pointer disabled:opacity-50"
+                            >
+                              {translatingField === "rsvpTituloEn" ? (
+                                <Loader2 className="w-3 h-3 animate-spin" />
+                              ) : (
+                                <Sparkles className="w-3 h-3" />
+                              )}
+                              <span>
+                                {translatingField === "rsvpTituloEn"
+                                  ? "Traduciendo..."
+                                  : "Traducir con IA"}
+                              </span>
+                            </button>
+                          </div>
+                          <input
+                            type="text"
+                            value={formData.rsvpTituloEn ?? "WILL YOU JOIN US?"}
+                            onChange={(e) => updateField("rsvpTituloEn", e.target.value)}
+                            placeholder="Eg. We can't wait!"
+                            className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
+                          />
+                        </div>
+                      </div>
+                      {/* Subtítulo ES y EN */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+                            Subtítulo en Español (🇲🇽 ES)
+                          </label>
+                          <input
+                            type="text"
+                            value={formData.rsvpSubtitulo ?? "Mi Celebración?"}
+                            onChange={(e) => updateField("rsvpSubtitulo", e.target.value)}
+                            placeholder="Ej. ¡Celebra con nosotros!"
+                            className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
+                          />
+                        </div>
+                        <div>
+                          <div className="flex items-center justify-between mb-1">
+                            <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider">
+                              Subtítulo en Inglés (🇺🇸 EN)
+                            </label>
+                            <button
+                              type="button"
+                              onClick={() =>
+                                translateWithAi(
+                                  formData.rsvpSubtitulo ?? "Mi Celebración?",
+                                  "rsvpSubtituloEn",
+                                  "en"
+                                )
+                              }
+                              disabled={translatingField === "rsvpSubtituloEn"}
+                              className="inline-flex items-center gap-1 text-[11px] font-bold text-[#7A002A] hover:underline cursor-pointer disabled:opacity-50"
+                            >
+                              {translatingField === "rsvpSubtituloEn" ? (
+                                <Loader2 className="w-3 h-3 animate-spin" />
+                              ) : (
+                                <Sparkles className="w-3 h-3" />
+                              )}
+                              <span>
+                                {translatingField === "rsvpSubtituloEn"
+                                  ? "Traduciendo..."
+                                  : "Traducir con IA"}
+                              </span>
+                            </button>
+                          </div>
+                          <input
+                            type="text"
+                            value={formData.rsvpSubtituloEn ?? "Our Celebration?"}
+                            onChange={(e) => updateField("rsvpSubtituloEn", e.target.value)}
+                            placeholder="Eg. Join the celebration!"
+                            className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
+                          />
+                        </div>
+                      </div>
+                      {/* Frase de fecha límite ES y EN */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+                            Frase de fecha límite (🇲🇽 ES)
+                          </label>
+                          <input
+                            type="text"
+                            value={formData.rsvpFechaLimite || ""}
+                            onChange={(e) => updateField("rsvpFechaLimite", e.target.value)}
+                            placeholder="Favor de confirmar antes del 24 de Febrero"
+                            className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
+                          />
+                        </div>
+                        <div>
+                          <div className="flex items-center justify-between mb-1">
+                            <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider">
+                              Frase de fecha límite (🇺🇸 EN)
+                            </label>
+                            <button
+                              type="button"
+                              onClick={() =>
+                                translateWithAi(
+                                  formData.rsvpFechaLimite || "",
+                                  "rsvpFechaLimiteEn",
+                                  "en"
+                                )
+                              }
+                              disabled={translatingField === "rsvpFechaLimiteEn"}
+                              className="inline-flex items-center gap-1 text-[11px] font-bold text-[#7A002A] hover:underline cursor-pointer disabled:opacity-50"
+                            >
+                              {translatingField === "rsvpFechaLimiteEn" ? (
+                                <Loader2 className="w-3 h-3 animate-spin" />
+                              ) : (
+                                <Sparkles className="w-3 h-3" />
+                              )}
+                              <span>
+                                {translatingField === "rsvpFechaLimiteEn"
+                                  ? "Traduciendo..."
+                                  : "Traducir con IA"}
+                              </span>
+                            </button>
+                          </div>
+                          <input
+                            type="text"
+                            value={formData.rsvpFechaLimiteEn || ""}
+                            onChange={(e) => updateField("rsvpFechaLimiteEn", e.target.value)}
+                            placeholder="Please confirm before February 24"
+                            className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
+                          />
+                        </div>
+                      </div>
+                      <p className="text-[11px] text-stone-500 mt-1">
+                        Se generan solas desde la fecha del evento y los días de anticipación. Si las escribes a mano, ya no se sobreescriben al cambiar la fecha o los días.
+                      </p>
+                      {/* Línea "confirmar por teléfono" ES y EN */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+                            Confirmar por teléfono ES (🇲🇽 ES)
+                          </label>
+                          <input
+                            type="text"
+                            value={formData.rsvpTelefonoTitulo ?? "¿Prefieres confirmar por teléfono?"}
+                            onChange={(e) => updateField("rsvpTelefonoTitulo", e.target.value)}
+                            placeholder="Ej. ¿Prefieres llamar?"
+                            className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
+                          />
+                        </div>
+                        <div>
+                          <div className="flex items-center justify-between mb-1">
+                            <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider">
+                              Confirmar por teléfono EN (🇺🇸 EN)
+                            </label>
+                            <button
+                              type="button"
+                              onClick={() =>
+                                translateWithAi(
+                                  formData.rsvpTelefonoTitulo ?? "¿Prefieres confirmar por teléfono?",
+                                  "rsvpTelefonoTituloEn",
+                                  "en"
+                                )
+                              }
+                              disabled={translatingField === "rsvpTelefonoTituloEn"}
+                              className="inline-flex items-center gap-1 text-[11px] font-bold text-[#7A002A] hover:underline cursor-pointer disabled:opacity-50"
+                            >
+                              {translatingField === "rsvpTelefonoTituloEn" ? (
+                                <Loader2 className="w-3 h-3 animate-spin" />
+                              ) : (
+                                <Sparkles className="w-3 h-3" />
+                              )}
+                              <span>
+                                {translatingField === "rsvpTelefonoTituloEn"
+                                  ? "Traduciendo..."
+                                  : "Traducir con IA"}
+                              </span>
+                            </button>
+                          </div>
+                          <input
+                            type="text"
+                            value={formData.rsvpTelefonoTituloEn ?? "Prefer to RSVP by phone?"}
+                            onChange={(e) => updateField("rsvpTelefonoTituloEn", e.target.value)}
+                            placeholder="Eg. Prefer to call?"
+                            className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+
+                  {/* ──────────────────────────────────────────────────────────
+                      SECCIÓN 5: FOTO ZAPATILLAS 1
                   ────────────────────────────────────────────────────────── */}
                   {sec.id === "fotoZapatos1" && (
                     <div className="space-y-4">
@@ -1078,6 +1635,15 @@ export default function TemplateSectionBuilder({
                           <MapPin className="w-4 h-4" />
                           <span>Ceremonia Religiosa (Iglesia)</span>
                         </h4>
+                        <label className="flex items-center gap-2 mt-1 mb-1 cursor-pointer select-none">
+                          <input
+                            type="checkbox"
+                            checked={formData.mostrarCeremonia !== false}
+                            onChange={(e) => updateField("mostrarCeremonia", e.target.checked)}
+                            className="w-4 h-4 accent-[#7A002A]"
+                          />
+                          <span className="text-[11px] font-semibold text-gray-600">Mostrar esta subsección en la invitación (apágala si no habrá ceremonia)</span>
+                        </label>
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                           <div>
                             <label className="block text-[11px] font-semibold text-gray-600 mb-1">
@@ -1153,6 +1719,15 @@ export default function TemplateSectionBuilder({
                           <MapPin className="w-4 h-4" />
                           <span>Recepción & Fiesta (Salón)</span>
                         </h4>
+                        <label className="flex items-center gap-2 mt-1 mb-1 cursor-pointer select-none">
+                          <input
+                            type="checkbox"
+                            checked={formData.mostrarRecepcion !== false}
+                            onChange={(e) => updateField("mostrarRecepcion", e.target.checked)}
+                            className="w-4 h-4 accent-[#7A002A]"
+                          />
+                          <span className="text-[11px] font-semibold text-gray-600">Mostrar esta subsección en la invitación (apágala si no habrá recepción)</span>
+                        </label>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                           <div>
                             <label className="block text-[11px] font-semibold text-gray-600 mb-1">
@@ -1178,6 +1753,30 @@ export default function TemplateSectionBuilder({
                               className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm text-gray-900"
                             />
                           </div>
+                          {((formData as any).estiloPlantilla === "GATSBY_20S" ||
+                            (formData as any).estiloPlantilla === "GYBSY_20S" ||
+                            (formData as any).estiloPlantilla === "GYPSY_BURGUNDY") && (
+                            <div>
+                              <label className="block text-[11px] font-semibold text-gray-600 mb-1">
+                                Hora de la recepción
+                              </label>
+                              <input
+                                type="time"
+                                value={hora12To24(((formData.configPlantilla as any)?.horaRecepcion as string) || "")}
+                                onChange={(e) => {
+                                  const cp = { ...(formData.configPlantilla || {}) } as any;
+                                  const v12 = hora24To12(e.target.value);
+                                  if (v12) cp.horaRecepcion = v12;
+                                  else delete cp.horaRecepcion;
+                                  updateField("configPlantilla", cp);
+                                }}
+                                className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm text-gray-900"
+                              />
+                              <p className="text-[10px] text-gray-500 mt-1">
+                                Si la dejas vacía, la recepción usa la hora de la sección Fecha y Hora.
+                              </p>
+                            </div>
+                          )}
                           <div className="sm:col-span-2">
                             <label className="block text-[11px] font-semibold text-gray-600 mb-1">
                               Enlace de Google Maps
@@ -1266,7 +1865,7 @@ export default function TemplateSectionBuilder({
                             rows={3}
                             value={formData.dressCodeNota || ""}
                             onChange={(e) => updateField("dressCodeNota", e.target.value)}
-                            placeholder="Acompáñanos en esta hermosa celebración... Por favor, NO usar atuendos ROSADOS..."
+                            placeholder="Ej. Por favor, no usar tonos rosados ni blancos (opcional)"
                             className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
                           />
                         </div>
@@ -1300,9 +1899,53 @@ export default function TemplateSectionBuilder({
                             rows={3}
                             value={formData.dressCodeNotaEn || ""}
                             onChange={(e) => updateField("dressCodeNotaEn", e.target.value)}
-                            placeholder="Join us in this wonderful celebration... Blush pink tones reserved exclusively..."
+                            placeholder="E.g. Please, no pink or white attire (optional)"
                             className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
                           />
+                        </div>
+                      </div>
+
+                      {/* Colores reservados (línea dorada en cursiva debajo de la nota) */}
+                      <div className="pt-2">
+                        <p className="text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+                          Colores reservados (línea debajo de la nota)
+                        </p>
+                        <p className="text-[11px] text-gray-500 mb-3">
+                          En español se muestra el texto guardado del evento si no escribes uno aquí. En inglés solo aparece lo que escribas. Vacío en ese idioma = la línea no aparece.
+                        </p>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+                              Colores reservados (🇲🇽 ES)
+                            </label>
+                            <input
+                              type="text"
+                              value={(formData.configPlantilla as any)?.coloresReservados ?? (formData as any).dressCodeColoresReservados ?? ""}
+                              onChange={(e) => {
+                                const cp = { ...((formData as any).configPlantilla || {}) };
+                                cp.coloresReservados = e.target.value;
+                                updateField("configPlantilla", cp);
+                              }}
+                              placeholder="Ej. Tonos rosa pastel reservados para la quinceañera"
+                              className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+                              Colores reservados (🇺🇸 EN)
+                            </label>
+                            <input
+                              type="text"
+                              value={(formData.configPlantilla as any)?.coloresReservadosEn || ""}
+                              onChange={(e) => {
+                                const cp = { ...((formData as any).configPlantilla || {}) };
+                                cp.coloresReservadosEn = e.target.value;
+                                updateField("configPlantilla", cp);
+                              }}
+                              placeholder="Ej. Pastel pink tones reserved for the quinceañera"
+                              className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
+                            />
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -1547,7 +2190,7 @@ export default function TemplateSectionBuilder({
                   )}
 
                   {/* ──────────────────────────────────────────────────────────
-                      SECCIÓN 10: FOTO ZAPATOS 2 / PARA NUESTROS NIÑOS
+                      SECCIÓN 10: RECOMENDACIÓN (FOTO ZAPATOS 2 / PARA NUESTROS NIÑOS)
                   ────────────────────────────────────────────────────────── */}
                   {sec.id === "fotoZapatos2" && (
                     <div className="space-y-4">
@@ -1611,6 +2254,114 @@ export default function TemplateSectionBuilder({
                           placeholder="No puedo celebrar sin ti / I can’t celebrate without you"
                           className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
                         />
+                      </div>
+
+                      {/* Para Nuestros Niños: contenido del recuadro (editable) */}
+                      <div className="pt-2">
+                        <p className="text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+                          Para Nuestros Niños (recuadro)
+                        </p>
+                        <p className="text-[11px] text-gray-500 mb-3">
+                          Si el título queda vacío, el recuadro no aparece en la invitación.
+                        </p>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+                              Título (🇲🇽 ES)
+                            </label>
+                            <input
+                              type="text"
+                              value={(formData.configPlantilla as any)?.ninosTitulo || ""}
+                              onChange={(e) => {
+                                const cp = { ...((formData as any).configPlantilla || {}) };
+                                cp.ninosTitulo = e.target.value;
+                                updateField("configPlantilla", cp);
+                              }}
+                              placeholder="PARA NUESTROS NIÑOS"
+                              className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+                              Título (🇺🇸 EN)
+                            </label>
+                            <input
+                              type="text"
+                              value={(formData.configPlantilla as any)?.ninosTituloEn || ""}
+                              onChange={(e) => {
+                                const cp = { ...((formData as any).configPlantilla || {}) };
+                                cp.ninosTituloEn = e.target.value;
+                                updateField("configPlantilla", cp);
+                              }}
+                              placeholder="FOR OUR LITTLE GUESTS"
+                              className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+                              Mensaje (🇲🇽 ES)
+                            </label>
+                            <textarea
+                              rows={3}
+                              value={(formData.configPlantilla as any)?.ninosTexto || ""}
+                              onChange={(e) => {
+                                const cp = { ...((formData as any).configPlantilla || {}) };
+                                cp.ninosTexto = e.target.value;
+                                updateField("configPlantilla", cp);
+                              }}
+                              placeholder="Nuestros pequeños invitados son una parte muy especial de esta celebración..."
+                              className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+                              Mensaje (🇺🇸 EN)
+                            </label>
+                            <textarea
+                              rows={3}
+                              value={(formData.configPlantilla as any)?.ninosTextoEn || ""}
+                              onChange={(e) => {
+                                const cp = { ...((formData as any).configPlantilla || {}) };
+                                cp.ninosTextoEn = e.target.value;
+                                updateField("configPlantilla", cp);
+                              }}
+                              placeholder="Our little guests are a very special part of this celebration..."
+                              className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+                              Despedida (🇲🇽 ES)
+                            </label>
+                            <input
+                              type="text"
+                              value={(formData.configPlantilla as any)?.ninosCierre || ""}
+                              onChange={(e) => {
+                                const cp = { ...((formData as any).configPlantilla || {}) };
+                                cp.ninosCierre = e.target.value;
+                                updateField("configPlantilla", cp);
+                              }}
+                              placeholder="Gracias por ayudarnos a mantener estos momentos hermosos para todos."
+                              className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+                              Despedida (🇺🇸 EN)
+                            </label>
+                            <input
+                              type="text"
+                              value={(formData.configPlantilla as any)?.ninosCierreEn || ""}
+                              onChange={(e) => {
+                                const cp = { ...((formData as any).configPlantilla || {}) };
+                                cp.ninosCierreEn = e.target.value;
+                                updateField("configPlantilla", cp);
+                              }}
+                              placeholder="Thank you for helping us keep these moments beautiful for everyone."
+                              className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
+                            />
+                          </div>
+                        </div>
                       </div>
                     </div>
                   )}
@@ -1727,6 +2478,37 @@ export default function TemplateSectionBuilder({
                               updateField("corteHonorJson", c);
                             }}
                             placeholder="Nombre (opcional)"
+                            className="w-full px-3 py-1.5 rounded-lg border border-gray-200 text-xs"
+                          />
+
+                          <div className="flex items-center justify-between pt-2">
+                            <label className="text-xs font-bold text-[#7A002A]">Chambelanes</label>
+                            <input
+                              type="checkbox"
+                              checked={formData.corteHonorJson?.showChambelanes !== false}
+                              onChange={(e) => {
+                                const c = { ...(formData.corteHonorJson || {}) };
+                                c.showChambelanes = e.target.checked;
+                                updateField("corteHonorJson", c);
+                              }}
+                              className="rounded text-[#7A002A]"
+                            />
+                          </div>
+                          <input
+                            type="text"
+                            value={
+                              Array.isArray(formData.corteHonorJson?.chambelanes)
+                                ? formData.corteHonorJson?.chambelanes.join(", ")
+                                : formData.corteHonorJson?.chambelanes || ""
+                            }
+                            onChange={(e) => {
+                              const val = e.target.value;
+                              const arr = val.split(",").map((s) => s.trim()).filter(Boolean);
+                              const c = { ...(formData.corteHonorJson || {}) };
+                              c.chambelanes = arr;
+                              updateField("corteHonorJson", c);
+                            }}
+                            placeholder="Separados por comas: Diego, Thiago, Nicolás..."
                             className="w-full px-3 py-1.5 rounded-lg border border-gray-200 text-xs"
                           />
                         </div>
@@ -1881,6 +2663,167 @@ export default function TemplateSectionBuilder({
                           className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
                         />
                       </div>
+
+                      {/* Título del Agradecimiento Especial */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+                            Título del Agradecimiento (🇲🇽 ES)
+                          </label>
+                          <input
+                            type="text"
+                            value={formData.corteHonorJson?.agradecimientoTitulo ?? "Un agradecimiento especial"}
+                            onChange={(e) => {
+                              const c = { ...(formData.corteHonorJson || {}) };
+                              c.agradecimientoTitulo = e.target.value;
+                              updateField("corteHonorJson", c);
+                            }}
+                            className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+                            Título del Agradecimiento (🇺🇸 EN)
+                          </label>
+                          <input
+                            type="text"
+                            value={formData.corteHonorJson?.agradecimientoTituloEn ?? formData.corteHonorJson?.agradecimientoTitulo ?? "A special thank you"}
+                            onChange={(e) => {
+                              const c = { ...(formData.corteHonorJson || {}) };
+                              c.agradecimientoTituloEn = e.target.value;
+                              updateField("corteHonorJson", c);
+                            }}
+                            className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
+                          />
+                        </div>
+                      </div>
+                      <p className="text-[11px] text-gray-400">
+                        Déjalo en blanco para quitar el título: el texto de agradecimiento sube y no queda hueco.
+                      </p>
+                      {/* Fotos de la corte (SOLO Gatsby 20's): las dos fotos del
+                          preview — damas y chambelanes — eran arte fijo del
+                          template y no se podían cambiar desde el admin. */}
+                      {((formData as any).estiloPlantilla === "GATSBY_20S" ||
+                        (formData as any).estiloPlantilla === "GYBSY_20S" ||
+                        (formData as any).estiloPlantilla === "GYPSY_BURGUNDY") && (
+                        <>
+                          <div>
+                            <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
+                              Fotografía de las Damas
+                            </label>
+                            <div className="flex flex-col sm:flex-row items-center gap-4 p-4 rounded-xl border border-dashed border-stone-200 bg-stone-50">
+                              {formData.corteHonorJson?.fotoDamasUrl ? (
+                                // eslint-disable-next-line @next/next/no-img-element
+                                <MiniaturaConMeta url={formData.corteHonorJson.fotoDamasUrl} alt="Damas" imgClassName="w-20 h-20 object-cover rounded-lg border-2 border-white shadow-md shrink-0" />
+                              ) : (
+                                <div className="w-20 h-20 rounded-lg bg-stone-100 flex items-center justify-center text-stone-400 shrink-0">
+                                  <ImageIcon className="w-6 h-6" />
+                                </div>
+                              )}
+                              <div className="flex-1 text-center sm:text-left">
+                                <p className="text-xs font-semibold text-gray-800">
+                                  Subir foto de las damas
+                                </p>
+                                <p className="text-[11px] text-gray-500 mb-2">
+                                  Se muestra en la Corte de Honor, debajo de los nombres de las damas. Si la dejas vacía se usa la foto del template.
+                                </p>
+                                <div className="flex flex-wrap items-center gap-2">
+                                  <label className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#7A002A] text-white text-xs font-bold hover:bg-[#600021] transition cursor-pointer shadow-xs">
+                                    {uploadingS3 && uploadingField === "corteFotoDamas" ? (
+                                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                                    ) : (
+                                      <Upload className="w-3.5 h-3.5" />
+                                    )}
+                                    <span>{uploadingS3 && uploadingField === "corteFotoDamas" ? "Subiendo..." : "Cambiar Foto"}</span>
+                                    <input
+                                      type="file"
+                                      accept="image/*"
+                                      onChange={(e) => handleFileUpload(e, "corteFotoDamas")}
+                                      disabled={uploadingS3}
+                                      className="hidden"
+                                    />
+                                  </label>
+                                  {uploadEstado?.field === "corteFotoDamas" && uploadEstado.estado === "ok" && (
+                                    <span className="text-[11px] font-bold text-emerald-700">✓ Foto subida</span>
+                                  )}
+                                  {uploadEstado?.field === "corteFotoDamas" && uploadEstado.estado === "error" && (
+                                    <span className="text-[11px] font-bold text-red-600">✗ {uploadEstado.mensaje || "Error al subir"}</span>
+                                  )}
+                                  <input
+                                    type="text"
+                                    value={formData.corteHonorJson?.fotoDamasUrl || ""}
+                                    onChange={(e) => {
+                                      const c = { ...(formData.corteHonorJson || {}) };
+                                      c.fotoDamasUrl = e.target.value;
+                                      updateField("corteHonorJson", c);
+                                    }}
+                                    placeholder="O pega un enlace de imagen..."
+                                    className="flex-1 min-w-[200px] px-3 py-1.5 rounded-lg border border-gray-200 text-xs text-gray-700"
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div>
+                            <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
+                              Fotografía de los Chambelanes
+                            </label>
+                            <div className="flex flex-col sm:flex-row items-center gap-4 p-4 rounded-xl border border-dashed border-stone-200 bg-stone-50">
+                              {formData.corteHonorJson?.fotoChambelanesUrl ? (
+                                // eslint-disable-next-line @next/next/no-img-element
+                                <MiniaturaConMeta url={formData.corteHonorJson.fotoChambelanesUrl} alt="Chambelanes" imgClassName="w-20 h-20 object-cover rounded-lg border-2 border-white shadow-md shrink-0" />
+                              ) : (
+                                <div className="w-20 h-20 rounded-lg bg-stone-100 flex items-center justify-center text-stone-400 shrink-0">
+                                  <ImageIcon className="w-6 h-6" />
+                                </div>
+                              )}
+                              <div className="flex-1 text-center sm:text-left">
+                                <p className="text-xs font-semibold text-gray-800">
+                                  Subir foto de los chambelanes
+                                </p>
+                                <p className="text-[11px] text-gray-500 mb-2">
+                                  Se muestra en la Corte de Honor, debajo de los nombres de los chambelanes. Si la dejas vacía se usa la foto del template.
+                                </p>
+                                <div className="flex flex-wrap items-center gap-2">
+                                  <label className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#7A002A] text-white text-xs font-bold hover:bg-[#600021] transition cursor-pointer shadow-xs">
+                                    {uploadingS3 && uploadingField === "corteFotoChambelanes" ? (
+                                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                                    ) : (
+                                      <Upload className="w-3.5 h-3.5" />
+                                    )}
+                                    <span>{uploadingS3 && uploadingField === "corteFotoChambelanes" ? "Subiendo..." : "Cambiar Foto"}</span>
+                                    <input
+                                      type="file"
+                                      accept="image/*"
+                                      onChange={(e) => handleFileUpload(e, "corteFotoChambelanes")}
+                                      disabled={uploadingS3}
+                                      className="hidden"
+                                    />
+                                  </label>
+                                  {uploadEstado?.field === "corteFotoChambelanes" && uploadEstado.estado === "ok" && (
+                                    <span className="text-[11px] font-bold text-emerald-700">✓ Foto subida</span>
+                                  )}
+                                  {uploadEstado?.field === "corteFotoChambelanes" && uploadEstado.estado === "error" && (
+                                    <span className="text-[11px] font-bold text-red-600">✗ {uploadEstado.mensaje || "Error al subir"}</span>
+                                  )}
+                                  <input
+                                    type="text"
+                                    value={formData.corteHonorJson?.fotoChambelanesUrl || ""}
+                                    onChange={(e) => {
+                                      const c = { ...(formData.corteHonorJson || {}) };
+                                      c.fotoChambelanesUrl = e.target.value;
+                                      updateField("corteHonorJson", c);
+                                    }}
+                                    placeholder="O pega un enlace de imagen..."
+                                    className="flex-1 min-w-[200px] px-3 py-1.5 rounded-lg border border-gray-200 text-xs text-gray-700"
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </>
+                      )}
                     </div>
                   )}
 
@@ -2026,6 +2969,22 @@ export default function TemplateSectionBuilder({
                         </div>
                       </div>
 
+                      <div className="p-4 rounded-xl border border-stone-200 bg-stone-50">
+                        <label className="block text-[11px] font-semibold text-gray-600 mb-1">
+                          Nombre de la canción (se muestra en el reproductor)
+                        </label>
+                        <input
+                          type="text"
+                          value={formData.musicaTitulo || ""}
+                          onChange={(e) => updateField("musicaTitulo", e.target.value)}
+                          placeholder="Ej: Slow Down, Little Heart — Linhy"
+                          className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm text-gray-900"
+                        />
+                        <p className="text-[11px] text-gray-500 mt-1">
+                          Este es el nombre que verán los invitados en el reproductor de la invitación.
+                        </p>
+                      </div>
+
                       <div className="p-3.5 rounded-xl bg-stone-50 border border-stone-200 flex items-center justify-between gap-3">
                         <div>
                           <p className="text-xs font-bold text-[#7A002A]">
@@ -2059,6 +3018,238 @@ export default function TemplateSectionBuilder({
                             }`}
                           />
                         </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* ──────────────────────────────────────────────────────────
+                      SECCIÓN 15: HISTORIA / GROWING UP (SOLO ELEGANT ROSE)
+                  ────────────────────────────────────────────────────────── */}
+                  {sec.id === "historia" && (
+                    <div className="space-y-4">
+                      <p className="text-xs text-gray-500">
+                        Los marcos de película de "Growing Up": cambia la foto, la fecha, el título y el texto de cada hito en español e inglés. Sin hitos guardados se muestran los 5 originales del template.
+                      </p>
+                      {hitosEditor.length === 0 && (
+                        <p className="text-xs font-bold text-amber-700 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2">
+                          Sin hitos guardados: se muestran los 5 originales del template. Agrega uno para empezar a personalizar.
+                        </p>
+                      )}
+                      <div className="space-y-3">
+                        {hitosEditor.map((hito, idx) => {
+                          const fotoHito =
+                            hito.fotoUrl ||
+                            ELEGANT_ROSE_HITOS_DEFAULTS[idx]?.foto ||
+                            formData.fotoPortadaUrl ||
+                            "";
+                          const campoFoto: `hitoFoto_${number}` = `hitoFoto_${idx}`;
+                          return (
+                            <div key={idx} className="p-3.5 rounded-xl border border-stone-200 bg-stone-50 space-y-3">
+                              <div className="flex items-center justify-between">
+                                <span className="text-xs font-bold text-gray-700">Hito {idx + 1}</span>
+                                <button
+                                  type="button"
+                                  onClick={() => setHitosEditor(hitosEditor.filter((_, i) => i !== idx))}
+                                  className="text-[11px] font-bold text-red-600 hover:underline cursor-pointer"
+                                >
+                                  Eliminar
+                                </button>
+                              </div>
+                              <div className="flex items-center gap-3">
+                                {fotoHito ? (
+                                  // eslint-disable-next-line @next/next/no-img-element
+                                  <MiniaturaConMeta url={fotoHito} alt={`Hito ${idx + 1}`} imgClassName="w-16 h-16 object-cover rounded-lg border-2 border-white shadow-sm shrink-0" />
+                                ) : (
+                                  <div className="w-16 h-16 rounded-lg bg-stone-100 flex items-center justify-center text-stone-400 shrink-0">
+                                    <ImageIcon className="w-6 h-6" />
+                                  </div>
+                                )}
+                                <div className="flex-1 flex flex-wrap items-center gap-2">
+                                  <label className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#7A002A] text-white text-[11px] font-bold hover:bg-[#600021] transition cursor-pointer">
+                                    {uploadingS3 && uploadingField === campoFoto ? (
+                                      <Loader2 className="w-3 h-3 animate-spin" />
+                                    ) : (
+                                      <Upload className="w-3 h-3" />
+                                    )}
+                                    <span>{uploadingS3 && uploadingField === campoFoto ? "Subiendo..." : "Cambiar Foto"}</span>
+                                    <input
+                                      type="file"
+                                      accept="image/*"
+                                      onChange={(e) => handleFileUpload(e, campoFoto)}
+                                      disabled={uploadingS3}
+                                      className="hidden"
+                                    />
+                                  </label>
+                                  {uploadEstado?.field === campoFoto && uploadEstado.estado === "ok" && (
+                                    <span className="text-[11px] font-bold text-emerald-700">✓ Foto subida</span>
+                                  )}
+                                  {uploadEstado?.field === campoFoto && uploadEstado.estado === "error" && (
+                                    <span className="text-[11px] font-bold text-red-600">✗ {uploadEstado.mensaje || "Error al subir"}</span>
+                                  )}
+                                  <input
+                                    type="text"
+                                    value={hito.fotoUrl || ""}
+                                    onChange={(e) => {
+                                      const n = [...hitosEditor];
+                                      n[idx] = { ...n[idx], fotoUrl: e.target.value };
+                                      setHitosEditor(n);
+                                    }}
+                                    placeholder="O pega un enlace de imagen..."
+                                    className="flex-1 min-w-[180px] px-3 py-1.5 rounded-lg border border-gray-200 text-xs text-gray-700"
+                                  />
+                                </div>
+                              </div>
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <div>
+                                  <label className="block text-[11px] font-bold text-gray-600 uppercase tracking-wider mb-1">
+                                    Fecha
+                                  </label>
+                                  <input
+                                    type="text"
+                                    value={hito.anio || ""}
+                                    onChange={(e) => {
+                                      const n = [...hitosEditor];
+                                      n[idx] = { ...n[idx], anio: e.target.value };
+                                      setHitosEditor(n);
+                                    }}
+                                    placeholder={ELEGANT_ROSE_HITOS_DEFAULTS[idx]?.fecha || "2016"}
+                                    className="w-full px-3 py-2 rounded-lg border border-gray-200 text-xs text-gray-700"
+                                  />
+                                </div>
+                                <div>
+                                  <label className="block text-[11px] font-bold text-gray-600 uppercase tracking-wider mb-1">
+                                    Título (🇲🇽 ES)
+                                  </label>
+                                  <input
+                                    type="text"
+                                    value={hito.titulo || ""}
+                                    onChange={(e) => {
+                                      const n = [...hitosEditor];
+                                      n[idx] = { ...n[idx], titulo: e.target.value };
+                                      setHitosEditor(n);
+                                    }}
+                                    placeholder={ELEGANT_ROSE_HITOS_DEFAULTS[idx]?.tituloEs || ""}
+                                    className="w-full px-3 py-2 rounded-lg border border-gray-200 text-xs text-gray-700"
+                                  />
+                                </div>
+                                <div>
+                                  <label className="block text-[11px] font-bold text-gray-600 uppercase tracking-wider mb-1">
+                                    Título (🇺🇸 EN)
+                                  </label>
+                                  <input
+                                    type="text"
+                                    value={hito.tituloEn || ""}
+                                    onChange={(e) => {
+                                      const n = [...hitosEditor];
+                                      n[idx] = { ...n[idx], tituloEn: e.target.value };
+                                      setHitosEditor(n);
+                                    }}
+                                    placeholder={ELEGANT_ROSE_HITOS_DEFAULTS[idx]?.tituloEn || ""}
+                                    className="w-full px-3 py-2 rounded-lg border border-gray-200 text-xs text-gray-700"
+                                  />
+                                </div>
+                                <div className="sm:col-span-2">
+                                  <label className="block text-[11px] font-bold text-gray-600 uppercase tracking-wider mb-1">
+                                    Texto (🇲🇽 ES)
+                                  </label>
+                                  <textarea
+                                    rows={3}
+                                    value={hito.texto || ""}
+                                    onChange={(e) => {
+                                      const n = [...hitosEditor];
+                                      n[idx] = { ...n[idx], texto: e.target.value };
+                                      setHitosEditor(n);
+                                    }}
+                                    placeholder={ELEGANT_ROSE_HITOS_DEFAULTS[idx]?.textoEs || ""}
+                                    className="w-full px-3 py-2 rounded-lg border border-gray-200 text-xs text-gray-700"
+                                  />
+                                </div>
+                                <div className="sm:col-span-2">
+                                  <label className="block text-[11px] font-bold text-gray-600 uppercase tracking-wider mb-1">
+                                    Texto (🇺🇸 EN)
+                                  </label>
+                                  <textarea
+                                    rows={3}
+                                    value={hito.textoEn || ""}
+                                    onChange={(e) => {
+                                      const n = [...hitosEditor];
+                                      n[idx] = { ...n[idx], textoEn: e.target.value };
+                                      setHitosEditor(n);
+                                    }}
+                                    placeholder={ELEGANT_ROSE_HITOS_DEFAULTS[idx]?.textoEn || ""}
+                                    className="w-full px-3 py-2 rounded-lg border border-gray-200 text-xs text-gray-700"
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setHitosEditor([...hitosEditor, { anio: "", titulo: "", texto: "", fotoUrl: "" }])
+                          }
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#7A002A] text-white text-xs font-bold hover:bg-[#600021] transition cursor-pointer shadow-xs"
+                        >
+                          + Agregar hito
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const cp = { ...((formData as any).configPlantilla || {}) };
+                            delete cp.hitosVida;
+                            delete cp.growingUpCierre;
+                            delete cp.growingUpCierreEn;
+                            updateField("configPlantilla", cp);
+                          }}
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-gray-300 text-gray-700 text-xs font-bold hover:bg-gray-50 transition cursor-pointer"
+                        >
+                          Restablecer originales
+                        </button>
+                      </div>
+                      <div className="pt-2">
+                        <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+                          Frase de cierre (abajo de los hitos)
+                        </label>
+                        <p className="text-[11px] text-gray-500 mb-2">
+                          Si queda vacía, la frase no aparece. Los textos de abajo son los originales del template.
+                        </p>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-[11px] font-bold text-gray-600 uppercase tracking-wider mb-1">
+                              Frase de cierre (🇲🇽 ES)
+                            </label>
+                            <textarea
+                              rows={2}
+                              value={(formData.configPlantilla as any)?.growingUpCierre || ""}
+                              onChange={(e) => {
+                                const cp = { ...((formData as any).configPlantilla || {}) };
+                                cp.growingUpCierre = e.target.value;
+                                updateField("configPlantilla", cp);
+                              }}
+                              placeholder="Celebrando Quince Años Inolvidables — Lo Mejor Está Por Venir."
+                              className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-[11px] font-bold text-gray-600 uppercase tracking-wider mb-1">
+                              Frase de cierre (🇺🇸 EN)
+                            </label>
+                            <textarea
+                              rows={2}
+                              value={(formData.configPlantilla as any)?.growingUpCierreEn || ""}
+                              onChange={(e) => {
+                                const cp = { ...((formData as any).configPlantilla || {}) };
+                                cp.growingUpCierreEn = e.target.value;
+                                updateField("configPlantilla", cp);
+                              }}
+                              placeholder="Celebrating Fifteen Amazing Years — The Best Is Yet to Come."
+                              className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
+                            />
+                          </div>
+                        </div>
                       </div>
                     </div>
                   )}

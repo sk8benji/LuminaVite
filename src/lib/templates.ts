@@ -5,6 +5,7 @@ export type TemplateId =
   | "FAIRYTALE_CHATEAU"
   | "BLUE_BUTTERFLY"
   | "BLUSH_PRINCESS"
+  | "BLUSH_ENVELOPE"
   | "BEAUTY_QUINCE"
   | "QUINCE_ERA_PINK"
   | "MISS_15"
@@ -13,7 +14,11 @@ export type TemplateId =
   | "CLASICA_IMPERIAL"
   | "ESMERALDA_ROYAL"
   | "JARDIN_BOTANICA"
-  | "MINIMALISTA_EDITORIAL";
+  | "MINIMALISTA_EDITORIAL"
+  | "SAVE_THE_DATE_QUINCE_ROSADO"
+  | "GATSBY_20S"
+  | "GYBSY_20S"
+  | "GYPSY_BURGUNDY";
 
 export interface TemplateConfig {
   id: TemplateId;
@@ -56,6 +61,26 @@ export const TEMPLATES: Record<TemplateId, TemplateConfig> = {
     ribbonGradient: "from-pink-300 via-rose-200 to-pink-400",
     badgeBg: "#FDF0F3",
     description: "Sobre interactivo 3D con lazo de seda y rosas, arco de princesa a caballo, línea de tiempo floral, dress code, regalos y confirmación.",
+  },
+  SAVE_THE_DATE_QUINCE_ROSADO: {
+    id: "SAVE_THE_DATE_QUINCE_ROSADO",
+    name: "Save the Date — Quince Rosado (Melissa)",
+    category: "QUINCEANERA",
+    bgColor: "#FAF4F0",
+    cardBg: "#FFFFFF",
+    textPrimary: "#7A5C32",
+    textSecondary: "#8C7060",
+    accentColor: "#C5A059",
+    accentSoft: "#F7EFE6",
+    borderSoft: "#E2D3B8",
+    buttonBg: "#C5A059",
+    buttonText: "#2C1F1B",
+    fontHeading: "'Cormorant Garamond', serif",
+    fontSubheading: "'Great Vibes', cursive",
+    fontBody: "'Cinzel', serif",
+    ribbonGradient: "linear-gradient(135deg, #c5a059 0%, #a88340 100%)",
+    badgeBg: "#FDF9F4",
+    description: "Plantilla interactiva de Save the Date con sobre 3D, galería vertical de 3 fotos, calendario interactivo, cuenta regresiva en vivo y pre-confirmación.",
   },
   ELEGANT_ROSE: {
     id: "ELEGANT_ROSE",
@@ -116,6 +141,26 @@ export const TEMPLATES: Record<TemplateId, TemplateConfig> = {
     ribbonGradient: "from-sky-300 via-blue-200 to-purple-200",
     badgeBg: "#E8EFF8",
     description: "Mariposas celestiales flotantes en CSS, arco celestial, carta emotiva de los padres e itinerario de cuento.",
+  },
+  BLUSH_ENVELOPE: {
+    id: "BLUSH_ENVELOPE",
+    name: "Blush Envelope XV",
+    category: "QUINCEANERA",
+    bgColor: "#FDF8F4",
+    cardBg: "#FFFFFF",
+    textPrimary: "#0D0C0B",
+    textSecondary: "#8C6D3F",
+    accentColor: "#C58424",
+    accentSoft: "#FDF3F5",
+    borderSoft: "#EFC3D0",
+    buttonBg: "#C58424",
+    buttonText: "#FFFFFF",
+    fontHeading: "'Great Vibes', cursive",
+    fontSubheading: "'Cinzel', serif",
+    fontBody: "'Montserrat', sans-serif",
+    ribbonGradient: "from-rose-200 via-amber-100 to-rose-300",
+    badgeBg: "#FDF3F5",
+    description: "Sobre interactivo 3D con solapas y lazo de satén, polaroid superpuesta, ramilletes florales en esquinas limpias y tipografía editorial dorada.",
   },
   BLUSH_PRINCESS: {
     id: "BLUSH_PRINCESS",
@@ -332,6 +377,66 @@ export const TEMPLATES: Record<TemplateId, TemplateConfig> = {
     fontBody: "'Inter', sans-serif",
     ribbonGradient: "from-zinc-200 via-stone-100 to-neutral-200",
     badgeBg: "#EEEEEE",
+  },
+  GATSBY_20S: {
+    id: "GATSBY_20S",
+    name: "Gatsby 20's (Roaring Twenties / Art Deco)",
+    category: "CUMPLEANOS",
+    bgColor: "#0B0B0D",
+    cardBg: "#141418",
+    textPrimary: "#F5E6BE",
+    textSecondary: "#C5A059",
+    accentColor: "#D4AF37",
+    accentSoft: "#22222B",
+    borderSoft: "#C5A059",
+    buttonBg: "#D4AF37",
+    buttonText: "#000000",
+    fontHeading: "'Cinzel', serif",
+    fontSubheading: "'Cormorant Garamond', serif",
+    fontBody: "'Montserrat', sans-serif",
+    ribbonGradient: "from-[#D4AF37] via-[#F3E5AB] to-[#AA8232]",
+    badgeBg: "#1C1C24",
+    description: "Diseño Roaring 20s estilo Gran Gatsby con detalles en oro metálico, sobre negro y estética Art Deco.",
+  },
+  GYBSY_20S: {
+    id: "GYBSY_20S",
+    name: "Gybsy 20's (Roaring Twenties / Art Deco)",
+    category: "CUMPLEANOS",
+    bgColor: "#0B0B0D",
+    cardBg: "#141418",
+    textPrimary: "#F5E6BE",
+    textSecondary: "#C5A059",
+    accentColor: "#D4AF37",
+    accentSoft: "#22222B",
+    borderSoft: "#C5A059",
+    buttonBg: "#D4AF37",
+    buttonText: "#000000",
+    fontHeading: "'Cinzel', serif",
+    fontSubheading: "'Cormorant Garamond', serif",
+    fontBody: "'Montserrat', sans-serif",
+    ribbonGradient: "from-[#D4AF37] via-[#F3E5AB] to-[#AA8232]",
+    badgeBg: "#1C1C24",
+    description: "Diseño Roaring 20s estilo Gran Gatsby con detalles en oro metálico, sobre negro y estética Art Deco.",
+  },
+  GYPSY_BURGUNDY: {
+    id: "GYPSY_BURGUNDY",
+    name: "Gypsy Burgundy (Roaring Twenties / Burgundy)",
+    category: "CUMPLEANOS",
+    bgColor: "#200710",
+    cardBg: "#2A0A12",
+    textPrimary: "#F5E6BE",
+    textSecondary: "#C5A059",
+    accentColor: "#D4AF37",
+    accentSoft: "#3A1220",
+    borderSoft: "#C5A059",
+    buttonBg: "#D4AF37",
+    buttonText: "#000000",
+    fontHeading: "'Cinzel', serif",
+    fontSubheading: "'Cormorant Garamond', serif",
+    fontBody: "'Montserrat', sans-serif",
+    ribbonGradient: "from-[#D4AF37] via-[#F3E5AB] to-[#AA8232]",
+    badgeBg: "#2E0B14",
+    description: "Diseño Roaring 20s en burgundy con detalles en oro metálico, sobre burgundy profundo y estética Art Deco (clon de Gatsby 20's).",
   },
 };
 
