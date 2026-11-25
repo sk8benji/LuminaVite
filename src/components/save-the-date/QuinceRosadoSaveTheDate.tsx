@@ -36,6 +36,7 @@ export interface SaveTheDateProps {
     colorSobre?: string | null;
     colorSello?: string | null;
     fotoPortadaUrl: string;
+    fotoSobreAbiertoUrl?: string | null; // 2ª foto del hero, se ve al abrir el sobre
     galeriaFotosUrls: string[];
     musicaUrl?: string | null;
     musicaTitulo?: string | null;
@@ -374,10 +375,10 @@ export default function QuinceRosadoSaveTheDate({
               }}
             />
 
-            {/* Foto 2: Estado Sobre Abierto (f291897753a9fc56f20003d177749b21.webp o personalizada) */}
+            {/* Foto 2: Estado Sobre Abierto (personalizada o la del demo) */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={(data as any).fotoSobreAbiertoUrl || "/assets/save-the-date/f291897753a9fc56f20003d177749b21.webp"}
+              src={data.fotoSobreAbiertoUrl || "/assets/save-the-date/f291897753a9fc56f20003d177749b21.webp"}
               alt={nombreFestejada}
               className={`w-full h-full object-cover object-[center_15%] absolute inset-0 transition-opacity duration-1000 ${
                 sobreAbierto ? "opacity-100" : "opacity-0 pointer-events-none"
@@ -639,35 +640,41 @@ export default function QuinceRosadoSaveTheDate({
               }}
             />
 
-            {/* 3. GRID DE 3 FOTOS VERTICALES */}
-            <div className="galeria-grid grid grid-cols-3 gap-[5px] w-[94%] max-w-[440px] mx-auto">
-              <div className="relative aspect-[3/5] overflow-hidden rounded-[2px] border border-[rgba(197,160,89,0.55)] shadow-[0_6px_14px_rgba(60,40,35,0.15)] group bg-white/40">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={data.galeriaFotosUrls?.[0] || "/assets/save-the-date/save1.webp"}
-                  alt={`${nombreFestejada} - 1`}
-                  className="galeria-foto w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
-                />
-              </div>
-
-              <div className="relative aspect-[3/5] overflow-hidden rounded-[2px] border border-[rgba(197,160,89,0.55)] shadow-[0_6px_14px_rgba(60,40,35,0.15)] group bg-white/40">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={data.galeriaFotosUrls?.[1] || "/assets/save-the-date/save2.webp"}
-                  alt={`${nombreFestejada} - 2`}
-                  className="galeria-foto w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
-                />
-              </div>
-
-              <div className="relative aspect-[3/5] overflow-hidden rounded-[2px] border border-[rgba(197,160,89,0.55)] shadow-[0_6px_14px_rgba(60,40,35,0.15)] group bg-white/40">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={data.galeriaFotosUrls?.[2] || "/assets/save-the-date/save3.webp"}
-                  alt={`${nombreFestejada} - 3`}
-                  className="galeria-foto w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
-                />
-              </div>
-            </div>
+            {/* 3. GALERÍA: 2 FOTOS VISIBLES + DESLIZAMIENTO HORIZONTAL SI HAY MÁS */}
+            {(() => {
+              const fotos = (data.galeriaFotosUrls || []).filter(Boolean);
+              const lista =
+                fotos.length > 0
+                  ? fotos
+                  : [
+                      "/assets/save-the-date/save1.webp",
+                      "/assets/save-the-date/save2.webp",
+                      "/assets/save-the-date/save3.webp",
+                    ];
+              return (
+                <div
+                  className="galeria-grid flex gap-[5px] w-[94%] max-w-[440px] mx-auto overflow-x-auto snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+                  style={{ WebkitOverflowScrolling: "touch" }}
+                >
+                  {lista.map((src, idx) => (
+                    <div
+                      key={`${idx}-${src}`}
+                      className={`relative aspect-[3/5] overflow-hidden rounded-[2px] border border-[rgba(197,160,89,0.55)] shadow-[0_6px_14px_rgba(60,40,35,0.15)] group bg-white/40 shrink-0 snap-start basis-[calc(50%-2.5px)] ${
+                        lista.length === 1 ? "mx-auto" : ""
+                      }`}
+                    >
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={src}
+                        alt={`${nombreFestejada} - ${idx + 1}`}
+                        className="galeria-foto w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
+                        draggable={false}
+                      />
+                    </div>
+                  ))}
+                </div>
+              );
+            })()}
 
             {/* 4. CIERRE INFERIOR CON GUIRNALDA FLORAL DE BORDE A BORDE */}
             <div className="w-full overflow-hidden flex justify-center mt-3 sm:mt-4 -mb-6 sm:-mb-8 relative z-20 pointer-events-none">

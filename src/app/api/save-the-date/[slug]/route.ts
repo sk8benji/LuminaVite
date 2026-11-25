@@ -2,8 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/db";
 import {
   ensureSaveTheDateTables,
+  getSaveTheDateFotoSobreAbierto,
   getSaveTheDateTitulos,
   pickTitulosBilingues,
+  updateSaveTheDateFotoSobreAbierto,
   updateSaveTheDateTitulos,
 } from "@/lib/save-the-date-table";
 
@@ -80,10 +82,15 @@ export async function GET(req: NextRequest, context: RouteParams) {
       data: { vistasContador: { increment: 1 } },
     }).catch(() => {});
 
-    // GET: devolver también los títulos bilingües (no los trae Prisma).
+    // GET: devolver también los títulos bilingües y la foto del sobre
+    // abierto (no los trae Prisma).
     const titulos = await getSaveTheDateTitulos(item.id);
+    const fotoSobreAbierto = await getSaveTheDateFotoSobreAbierto(item.id);
 
-    return NextResponse.json({ success: true, item: { ...item, ...titulos } });
+    return NextResponse.json({
+      success: true,
+      item: { ...item, ...titulos, fotoSobreAbiertoUrl: fotoSobreAbierto },
+    });
   } catch (error: any) {
     console.error("Error al obtener Save The Date:", error);
     return NextResponse.json(
@@ -178,8 +185,13 @@ export async function PATCH(req: NextRequest, context: RouteParams) {
       }
       dataToUpdate.fechaEvento = fecha;
     }
-    if (dataToUpdate.galeriaFotosUrls && !Array.isArray(dataToUpdate.galeriaFotosUrls)) {
-      dataToUpdate.galeriaFotosUrls = [];
+    if (dataToUpdate.galeriaFotosUrls) {
+      // Sin huecos vacíos: los huecos que se agregan en el admin y quedan
+      // sin URL no se guardan (la vista pública ya ignora vacíos, pero
+      // así la lista queda limpia al reabrir el modal).
+      dataToUpdate.galeriaFotosUrls = Array.isArray(dataToUpdate.galeriaFotosUrls)
+        ? dataToUpdate.galeriaFotosUrls.filter((u: any) => typeof u === "string" && u.trim() !== "")
+        : [];
     }
 
     // Cambio de slug: normalizar igual que en POST y evitar colisiones.
@@ -214,9 +226,18 @@ export async function PATCH(req: NextRequest, context: RouteParams) {
     await updateSaveTheDateTitulos(existing.id, titulos);
     const titulosGuardados = await getSaveTheDateTitulos(existing.id);
 
+    // Foto del sobre abierto, también por SQL crudo (misma razón).
+    if (body.fotoSobreAbiertoUrl !== undefined) {
+      await updateSaveTheDateFotoSobreAbierto(
+        existing.id,
+        body.fotoSobreAbiertoUrl || null
+      );
+    }
+    const fotoSobreAbierto = await getSaveTheDateFotoSobreAbierto(existing.id);
+
     return NextResponse.json({
       success: true,
-      item: { ...updated, ...titulosGuardados },
+      item: { ...updated, ...titulosGuardados, fotoSobreAbiertoUrl: fotoSobreAbierto },
     });
   } catch (error: any) {
     console.error("Error al actualizar Save The Date:", error);
