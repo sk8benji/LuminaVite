@@ -117,8 +117,14 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Si es la plantilla Save the Date, sincronizar también en la tabla SaveTheDate (slug 'demo')
-    if (slug === "save-the-date-quince-rosado" || updates.estiloPlantilla === "SAVE_THE_DATE_QUINCE_ROSADO") {
+    // Si es una plantilla Save the Date, sincronizar también en la tabla SaveTheDate ('demo' o 'coquette-pink')
+    const isQuinceRosadoStd =
+      slug === "save-the-date-quince-rosado" || updates.estiloPlantilla === "SAVE_THE_DATE_QUINCE_ROSADO";
+    const isCoquettePinkStd =
+      slug === "save-the-date-coquette-pink" || updates.estiloPlantilla === "SAVE_THE_DATE_COQUETTE_PINK";
+
+    if (isQuinceRosadoStd || isCoquettePinkStd) {
+      const targetStdSlug = isCoquettePinkStd ? "coquette-pink" : "demo";
       try {
         await ensureSaveTheDateTables();
         const galeria = cleanUpdates.galeriaFotosUrls || [
@@ -128,9 +134,9 @@ export async function POST(req: NextRequest) {
         ].filter(Boolean);
 
         await prisma.saveTheDate.upsert({
-          where: { slug: "demo" },
+          where: { slug: targetStdSlug },
           update: {
-            titulo: updates.titulo || "Melissa",
+            titulo: updates.titulo || (isCoquettePinkStd ? "Melissa Cardenas" : "Melissa"),
             subtitulo: updates.subtitulo || "Mis Quince Años",
             mensaje: updates.frasePersonalizada || cleanUpdates.mensaje || "Guarda esta fecha especial en tu calendario.",
             fechaEvento: cleanUpdates.fechaEvento ? new Date(cleanUpdates.fechaEvento) : new Date("2027-09-18T20:00:00Z"),
@@ -155,7 +161,7 @@ export async function POST(req: NextRequest) {
             telefonoWhatsapp: cleanUpdates.telefonoWhatsapp || "18181234567",
           },
           create: {
-            slug: "demo",
+            slug: targetStdSlug,
             titulo: updates.titulo || "Melissa",
             subtitulo: updates.subtitulo || "Mis Quince Años",
             mensaje: updates.frasePersonalizada || cleanUpdates.mensaje || "Guarda esta fecha especial en tu calendario.",

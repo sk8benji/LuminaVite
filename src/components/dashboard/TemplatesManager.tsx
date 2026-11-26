@@ -136,8 +136,10 @@ export default function TemplatesManager() {
   };
 
   const getPublicDemoUrl = (slug: string) => {
+    const isCoquetteStd = slug.includes("coquette-pink");
+    const stdPath = isCoquetteStd ? "/save-the-date/coquette-pink" : "/save-the-date/demo";
     if (typeof window === "undefined") {
-      return slug.includes("save-the-date") ? "/save-the-date/demo" : `/demo/${slug}`;
+      return slug.includes("save-the-date") ? stdPath : `/demo/${slug}`;
     }
     const isSaveDate = slug.includes("save-the-date");
     let origin = window.location.origin;
@@ -145,7 +147,7 @@ export default function TemplatesManager() {
       const publicHost = window.location.host.replace(/^admin\./, "");
       origin = `${window.location.protocol}//${publicHost}`;
     }
-    return isSaveDate ? `${origin}/save-the-date/demo` : `${origin}/demo/${slug}`;
+    return isSaveDate ? `${origin}${stdPath}` : `${origin}/demo/${slug}`;
   };
 
   // Subida de archivos (Canción o Imágenes) directamente a AWS S3
