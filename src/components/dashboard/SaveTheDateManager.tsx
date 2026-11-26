@@ -925,9 +925,6 @@ export default function SaveTheDateManager() {
                 >
                   <option value="QUINCE_ROSADO">Quince Rosado (Lujo y Rosa)</option>
                   <option value="COQUETTE_PINK">Coquette Pink (Negro & Blush)</option>
-                  <option value="BLUE_BUTTERFLY">Blue Butterfly (Mariposas)</option>
-                  <option value="ELEGANT_ROSE">Elegant Rose (Isabella)</option>
-                  <option value="FAIRYTALE_CHATEAU">Fairytale Château (Boda)</option>
                 </select>
               </div>
 
