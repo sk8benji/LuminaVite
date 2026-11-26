@@ -53,21 +53,21 @@ export default function WeddingLasVegasPage() {
         offers: {
           "@type": "AggregateOffer",
           priceCurrency: "USD",
-          lowPrice: "99",
-          highPrice: "199",
+          lowPrice: "199",
+          highPrice: "279",
           offerCount: "2",
           offers: [
             {
               "@type": "Offer",
               name: "Plan Assisted",
-              price: "99",
+              price: "199",
               priceCurrency: "USD",
               availability: "https://schema.org/InStock",
             },
             {
               "@type": "Offer",
               name: "Plan VIP Las Vegas",
-              price: "199",
+              price: "279",
               priceCurrency: "USD",
               availability: "https://schema.org/InStock",
             },

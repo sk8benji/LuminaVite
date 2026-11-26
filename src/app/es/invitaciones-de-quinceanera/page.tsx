@@ -58,21 +58,21 @@ export default function PaginaQuinceaneraEs() {
         offers: {
           "@type": "AggregateOffer",
           priceCurrency: "USD",
-          lowPrice: "99",
-          highPrice: "199",
+          lowPrice: "199",
+          highPrice: "279",
           offerCount: "2",
           offers: [
             {
               "@type": "Offer",
               name: "Plan Asistido",
-              price: "99",
+              price: "199",
               priceCurrency: "USD",
               availability: "https://schema.org/InStock",
             },
             {
               "@type": "Offer",
               name: "Plan VIP Los Ángeles",
-              price: "199",
+              price: "279",
               priceCurrency: "USD",
               availability: "https://schema.org/InStock",
             },
