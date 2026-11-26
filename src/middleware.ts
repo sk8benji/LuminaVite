@@ -127,6 +127,19 @@ export async function middleware(request: NextRequest) {
     }
   }
 
+  // /login en el dominio principal -> subdominio admin (decisión Abraham,
+  // nov 2026): el SaaS vive solo en admin.clickandlove.app. Redirect 301
+  // permanente, conservando el query string (?next=...). Solo afecta al
+  // dominio principal: en el subdominio admin este bloque no se alcanza
+  // (Caso A ya devolvió antes), así que admin.clickandlove.app/login nunca
+  // se redirige a sí mismo.
+  if (pathname === "/login" && host.includes("clickandlove.app")) {
+    return NextResponse.redirect(
+      new URL("/login" + url.search, "https://admin.clickandlove.app"),
+      301
+    );
+  }
+
   // Si intenta ir a /login en el dominio principal y ya está autenticado
   if (pathname === "/login" && isAuthenticated) {
     if (host.includes("clickandlove.app")) {
