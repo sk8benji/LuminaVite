@@ -722,7 +722,7 @@ export default function SaveTheDateManager() {
 
                 {/* Acciones de pie */}
                 <div className="p-4 pt-0 space-y-2">
-                  <div className="grid grid-cols-2 gap-2">
+                  <div>
                     <a
                       href={`/save-the-date/${item.slug}`}
                       target="_blank"
@@ -731,18 +731,6 @@ export default function SaveTheDateManager() {
                     >
                       <Eye className="w-3.5 h-3.5" />
                       <span>Ver en Vivo</span>
-                    </a>
-
-                    <a
-                      href={`https://api.whatsapp.com/send?text=${encodeURIComponent(
-                        `¡Hola! Reserva la fecha para ${item.titulo} 💌 Abre el Save the Date aquí: ${publicUrl}`
-                      )}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="py-2 px-3 rounded-xl bg-[#25D366] hover:bg-[#20ba5a] text-white text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-2xs"
-                    >
-                      <Share2 className="w-3.5 h-3.5" />
-                      <span>WhatsApp</span>
                     </a>
                   </div>
 

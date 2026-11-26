@@ -397,12 +397,9 @@ export default function DashboardPage() {
       {/* Barra superior de navegación */}
       <nav className="bg-white border-b border-stone-200 px-6 py-4 flex items-center justify-between sticky top-0 z-30 shadow-xs">
         <div className="flex items-center gap-3">
-          <span className="text-2xl">🎀</span>
+          <img src="/logo.png" alt="Click and Love" className="w-11 h-11 object-contain" />
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-base font-bold tracking-tight text-stone-900 font-serif">
-                Click and love
-              </span>
               <span className="text-[10px] uppercase tracking-wider font-semibold bg-pink-100 text-[#7A002A] px-2 py-0.5 rounded-full">
                 Admin
               </span>
@@ -497,13 +494,6 @@ export default function DashboardPage() {
         </div>
 
         <div className="flex items-center gap-2">
-          <Link
-            href="/eventos/nuevo"
-            className="flex items-center gap-1.5 px-3.5 py-2 bg-[#7A002A] hover:bg-[#5e0020] text-white rounded-xl text-xs font-semibold shadow transition"
-          >
-            <Plus className="w-4 h-4" />
-            <span className="hidden sm:inline">Nueva Invitación</span>
-          </Link>
           <button
             type="button"
             onClick={handleLogout}
@@ -1028,9 +1018,9 @@ export default function DashboardPage() {
                 <h2 className="text-base font-bold text-stone-900">Tus Invitaciones Activas</h2>
                 <Link
                   href="/eventos/nuevo"
-                  className="text-xs font-semibold text-[#7A002A] hover:underline flex items-center gap-1"
+                  className="flex items-center gap-1.5 px-3.5 py-2 bg-[#7A002A] hover:bg-[#5e0020] text-white rounded-xl text-xs font-semibold shadow transition"
                 >
-                  <Plus className="w-3.5 h-3.5" />
+                  <Plus className="w-4 h-4" />
                   Crear otra invitación
                 </Link>
               </div>
