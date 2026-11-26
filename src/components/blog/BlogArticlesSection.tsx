@@ -30,6 +30,10 @@ const POST_META: Record<string, { image: string; category: string }> = {
     image: "/blog/rsvp-on-time.jpg",
     category: "RSVP",
   },
+  "how-to-send-text-message-invitations": {
+    image: "/blog/text-message-invitations.jpg",
+    category: "SMS",
+  },
 };
 
 function Reveal({
