@@ -312,6 +312,78 @@ export const BLOG_POSTS: BlogPost[] = [
       },
     ],
   },
+  {
+    slug: "how-to-send-text-message-invitations",
+    title:
+      "How to Send Text Message Invitations with Live RSVP for Your Next Event",
+    description:
+      "Send text message invitations guests actually answer: what to write, when to send, group text vs link, and live RSVP tracking with one tap.",
+    datePublished: "2026-11-27",
+    readMinutes: 5,
+    landing: {
+      href: "/text-message-invitations",
+      label: "Text Message Invitations",
+    },
+    sections: [
+      {
+        heading: "The short answer",
+        paragraphs: [
+          "For most events, one short text with a link beats a plain text and beats mail: guests read it within minutes, tap the link, and confirm on the spot. A text alone leaves you counting replies by hand; a link with live RSVP keeps the headcount in one panel. This guide covers what to write, when to send it, group text vs link, and how to track replies without chasing anyone. Start with the [text message invitations](https://clickandlove.app/text-message-invitations) page if you want to see what the guest opens.",
+          "The rule for the whole guide: the text gets the guest to open; the link does the work.",
+        ],
+      },
+      {
+        heading: "What every text invitation needs",
+        paragraphs: [
+          "A text has no room for a design, so every word has to do a job. Five things, in one message: who it is from, what the event is, when, where, and one way to RSVP. Put the host name first, so the text is never mistaken for spam, and keep the message short enough to read at a glance. If the guest has to ask what, when or where, the text failed.",
+        ],
+        bullets: [
+          "Who: your name in the first few words.",
+          "What: the occasion, with the honoree name — “Maya's 30th,” not “a party.”",
+          "When: day, date and start time.",
+          "Where: the venue name, or the link for an online event.",
+          "One RSVP way: a reply word or a link — never both, never “let me know.”",
+        ],
+      },
+      {
+        heading: "Group text, individual texts, or a link?",
+        paragraphs: [
+          "The real question is not whether texting is fine. It is whether you send a group thread, separate texts, or a link. Past about eight guests, or when the guests do not all know each other, the link wins: one message per guest, one place for the headcount, and no reply-all chaos. See how a real invitation opens from a text in the [Fairytale Castle demo](https://clickandlove.app/demo/emma-and-lucas).",
+        ],
+        table: {
+          headers: ["", "Group thread", "Individual texts", "Link with live RSVP"],
+          rows: [
+            ["Replies", "Everyone sees everyone", "One by one", "One panel, live"],
+            ["Headcount", "A guess", "Counted by hand", "Counted for you"],
+            ["Reminders", "Blast to everyone", "One by one", "Only the ones missing"],
+          ],
+        },
+      },
+      {
+        heading: "When to send (and when to remind)",
+        paragraphs: [
+          "Timing decides whether guests answer or forget. Weddings go out 4 to 6 weeks ahead, with one reminder 3 days before; birthdays 7 to 10 days ahead; casual gatherings 2 to 5 days ahead. Send between 10 AM and 8 PM local time, never late at night. And send the reminder only to the ones who have not replied — the ones who already confirmed do not need another text.",
+        ],
+      },
+      {
+        heading: "Wording that gets a yes",
+        paragraphs: [
+          "Copy, paste, swap the brackets, and keep each one to a single text. The link carries the details; the message only has to earn the tap.",
+        ],
+        bullets: [
+          "Birthday: “Hi [name]! You're invited to [name]'s birthday on [day, date] at [time] at [place]. Details and RSVP here: [link]”",
+          "Wedding: “Hi [name]! [Name] and [Name] are getting married on [date] at [time] at [venue]. We'd love you there — details and RSVP: [link]”",
+          "Quinceañera: “Hi [name]! You're invited to [name]'s quinceañera on [date] at [time] at [place]. Details and RSVP here: [link]”",
+        ],
+      },
+      {
+        heading: "How much it costs with Click & Love",
+        paragraphs: [
+          "Real prices, no cost per guest: Express $99, Assisted $199 and VIP $279. All include the digital invitation with envelope, music, map and SMS confirmation per plan. See the full table at [pricing](https://clickandlove.app/pricing) or call [(818) 918-2519](tel:+18189182519) and we will tell you which plan covers your event.",
+        ],
+      },
+    ],
+  },
 ];
 
 export function getBlogPost(slug: string): BlogPost | undefined {
