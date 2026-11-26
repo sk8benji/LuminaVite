@@ -41,11 +41,17 @@ export async function getMergedDemo(slug: string) {
     const { configExtra, ...rest } = row;
     const dbFields = nonEmpty(rest);
     for (const k of EXCLUDE) delete dbFields[k];
+    // configExtra va DENTRO de configPlantilla (los templates solo leen
+    // data.configPlantilla); aplanarlo arriba lo perdía en la vista previa.
     const merged: any = {
       ...base,
       ...dbFields,
-      ...nonEmpty(configExtra || {}),
+      configPlantilla: {
+        ...((base as any).configPlantilla || {}),
+        ...nonEmpty(configExtra || {}),
+      },
     };
+    delete merged.configExtra;
     // El tema editado (categoria) manda sobre el tipo del demo base.
     if (row.categoria) merged.tipoEvento = row.categoria;
     // El slug y el estilo del demo nunca se pisan con los de la plantilla (tpl-*).
