@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import PricingPlans from "@/components/pricing/PricingPlans";
-import SiteFooter from "@/components/layout/SiteFooter";
 import { pricingPlans, planByKey, planPriceNumber, pricingRange } from "@/lib/pricing";
 
 const PHONE_DISPLAY = "(818) 918-2519";
@@ -127,32 +126,6 @@ export default function PreciosPage() {
       <div className="min-h-screen bg-[#FDFBF8] text-[#2B0A18] font-['Montserrat']">
         {/* Header */}
         <header className="bg-[#7A002A] text-white">
-          <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between gap-3">
-            <Link href="/es" className="flex items-center gap-2.5 shrink-0" aria-label="Click and Love">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/logo.png" alt="Click and Love" className="w-10 h-10 object-contain" />
-              <span className="flex items-baseline whitespace-nowrap">
-                <span className="font-['Montserrat'] font-extrabold text-[20px] tracking-tight text-white">
-                  Click
-                </span>
-                <span className="font-vibes text-[28px] leading-none text-[#FFD166] ml-1.5">and Love</span>
-              </span>
-            </Link>
-            <nav className="flex items-center gap-4 sm:gap-6 text-[13px] font-semibold">
-              <Link href="/es/demo" className="hover:text-[#FFD166] transition">
-                Ver demos
-              </Link>
-              <a href={PHONE_TEL} className="hover:text-[#FFD166] transition">
-                {PHONE_DISPLAY}
-              </a>
-              <Link
-                href="/pricing"
-                className="border border-white/40 rounded-full px-3 py-1 hover:bg-white/10 transition"
-              >
-                English
-              </Link>
-            </nav>
-          </div>
           <div className="max-w-4xl mx-auto px-4 pb-10 pt-4">
             <p className="text-sm tracking-widest uppercase text-[#FFD166] font-bold">
               Click &amp; Love · Los Ángeles
@@ -352,7 +325,6 @@ export default function PreciosPage() {
           </section>
         </main>
       </div>
-      <SiteFooter lang="es" />
     </>
   );
 }

@@ -1,5 +1,4 @@
 "use client";
-import SiteFooter from "@/components/layout/SiteFooter";
 
 import React, { useState } from "react";
 import Link from "next/link";
@@ -30,7 +29,6 @@ import {
   Star,
   Users,
   Volume2,
-  X,
   Zap,
 } from "lucide-react";
 
@@ -162,69 +160,6 @@ export default function QuinceLandingPage() {
         <span className="inline-block w-2 h-2 rounded-full bg-[#E5C158] animate-pulse" />
         <span>📍 Serving Greater Los Angeles, San Fernando Valley & Orange County • 24–48h Turnaround</span>
       </div>
-
-      <header className="sticky top-0 z-50 bg-[#FDFBF8]/90 backdrop-blur-md border-b border-[#E7DCC8]/80 transition-all duration-300">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-2.5 group">
-            <Image
-              src="/logo.png"
-              alt="Click & Love"
-              width={40}
-              height={40}
-              className="w-10 h-10 object-contain group-hover:scale-105 transition-transform duration-300"
-            />
-            <div className="flex items-baseline">
-              <span className="font-extrabold text-2xl tracking-tight text-[#2B0A18]">Click</span>
-              <span className="font-serif italic text-2xl leading-none text-[#C2185B] ml-1.5 font-normal">
-                and Love
-              </span>
-            </div>
-          </Link>
-
-          {/* Quick Links */}
-          <nav className="hidden md:flex items-center gap-8 text-[14px] font-medium text-[#4A2D37]">
-            <a href="#features" className="hover:text-[#7A002A] transition-colors">
-              Features
-            </a>
-            <a href="#how-it-works" className="hover:text-[#7A002A] transition-colors">
-              How It Works
-            </a>
-            <a href="#templates" className="hover:text-[#7A002A] transition-colors">
-              Templates
-            </a>
-            <a href="#pricing" className="hover:text-[#7A002A] transition-colors">
-              Pricing
-            </a>
-            <a href="#faq" className="hover:text-[#7A002A] transition-colors">
-              FAQ
-            </a>
-          </nav>
-
-          {/* Nav CTAs */}
-          <div className="flex items-center gap-3">
-            <a
-              href="/demo/isabella-xv"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 text-xs font-bold uppercase tracking-wider text-[#7A002A] bg-[#F5EDDA] hover:bg-[#EFE3C7] rounded-full transition-all border border-[#B08D3C]/30"
-            >
-              <span>View Live Demo</span>
-              <ExternalLink className="w-3.5 h-3.5" />
-            </a>
-
-            <a
-              href={WHATSAPP_URL} onClick={() => track("click_whatsapp", { origen: "landing", pagina: "quince-invitations" })}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#7A002A] hover:bg-[#600021] text-white rounded-full text-xs font-bold tracking-wide shadow-[0_4px_14px_rgba(122,0,42,0.35)] hover:shadow-[0_6px_20px_rgba(122,0,42,0.45)] transition-all hover:scale-[1.02] active:scale-[0.98]"
-            >
-              <MessageCircle className="w-4 h-4 text-[#E5C158]" />
-              <span>Contact on WhatsApp</span>
-            </a>
-          </div>
-        </div>
-      </header>
 
       {/* ================================================================== */}
       {/* 2. HERO SECTION (2 columns on desktop) */}
@@ -1137,7 +1072,6 @@ export default function QuinceLandingPage() {
         </div>
       </section>
 
-      <SiteFooter lang="en" />
     </div>
   );
 }

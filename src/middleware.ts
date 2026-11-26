@@ -6,11 +6,15 @@ import { ADMIN_COOKIE_NAME, verifyAdminToken } from "@/lib/auth";
 // todo lo demás -> "en". El root layout lee este header vía headers().
 // Se pasa en TODOS los next() porque el layout raíz es compartido (admin
 // incluido); las rutas que no renderizan layout simplemente lo ignoran.
+// También se pasa x-pathname para que el layout decida si la ruta lleva el
+// header/footer compartidos (allowlist de marketing) o va pelada (app,
+// invitaciones, demos, admin).
 function nextWithLocale(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
   const locale = pathname === "/es" || pathname.startsWith("/es/") ? "es" : "en";
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set("x-locale", locale);
+  requestHeaders.set("x-pathname", pathname);
   return NextResponse.next({ request: { headers: requestHeaders } });
 }
 

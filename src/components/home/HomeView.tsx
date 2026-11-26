@@ -10,7 +10,6 @@ import {
   ExternalLink,
   Loader2,
   Lock,
-  Menu,
   MessageSquare,
   Sparkles,
   Phone,
@@ -21,7 +20,6 @@ import { Language, translations } from "@/lib/home-translations";
 import { track, getGaClientId } from "@/lib/analytics";
 import HeroPhones from "@/components/home/HeroPhones";
 import InteractiveDemoModal from "@/components/home/InteractiveDemoModal";
-import SiteFooter from "@/components/layout/SiteFooter";
 import HowItWorks from "@/components/home/HowItWorks";
 import ServiceTabs from "@/components/home/ServiceTabs";
 import ValueFeatures from "@/components/home/ValueFeatures";
@@ -60,9 +58,7 @@ const MENU_LANDING_LINKS: Record<Language, { href: string; label: string }[]> = 
 };
 
 export default function HomeView({ initialLang = "en" }: { initialLang?: Language }) {
-  const [lang, setLang] = useState<Language>(initialLang);
-  const [servicesOpen, setServicesOpen] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const lang = initialLang;
   const [isDemoModalOpen, setIsDemoModalOpen] = useState(false);
   const [activeDemoSlug, setActiveDemoSlug] = useState("isabella-xv");
   const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null);
@@ -122,162 +118,6 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
 
   return (
     <div className="min-h-screen bg-[#FDFBF8] text-[#2B0A18] selection:bg-[#7A002A]/20 selection:text-[#2B0A18] font-['Montserrat'] overflow-x-hidden relative">
-      {/* ============================================================== */}
-      {/* BARRA SUPERIOR BORGOÑA */}
-      {/* ============================================================== */}
-      <div className="bg-[#7A002A] text-white py-2.5 px-4 text-center">
-        <span className="font-['Montserrat'] text-[11px] sm:text-xs font-semibold tracking-wide">
-          {b.topbar}
-        </span>
-      </div>
-
-      {/* ============================================================== */}
-      {/* HEADER CON LOGO NUEVO */}
-      {/* ============================================================== */}
-      <header className="sticky top-0 z-40 bg-[#FDFBF8]/92 backdrop-blur-md border-b border-[#E7DCC8]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-[76px] flex items-center justify-between gap-3">
-          {/* Logo: corazón a color + wordmark */}
-          <Link href={lang === "es" ? "/es" : "/"} className="flex items-center gap-2.5 shrink-0" aria-label="Click and Love">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo.png" alt="Click and Love" className="w-11 h-11 object-contain" />
-            <span className="flex items-baseline whitespace-nowrap">
-              <span className="font-['Montserrat'] font-extrabold text-[22px] tracking-tight text-[#2B0A18]">
-                Click
-              </span>
-              <span className="font-vibes text-[30px] leading-none text-[#C2185B] ml-1.5">and Love</span>
-            </span>
-          </Link>
-
-          {/* Nav */}
-          <nav className="hidden lg:flex items-center gap-7 font-['Montserrat'] text-[13.5px] font-semibold text-[#2B0A18]">
-            <button onClick={() => handleOpenDemo("isabella-xv")} className="hover:text-[#7A002A] transition cursor-pointer">
-              {b.navLiveDemo}
-            </button>
-            <a href="#como-funciona" className="hover:text-[#7A002A] transition">
-              {t.nav.howItWorks}
-            </a>
-            <a href="#comparativa" className="hover:text-[#7A002A] transition">
-              {t.nav.compare}
-            </a>
-            <a href="#plantillas" className="hover:text-[#7A002A] transition">
-              {b.navTemplates}
-            </a>
-            <a href={lang === "es" ? "#precios" : "#prices"} className="hover:text-[#7A002A] transition">
-              {t.nav.pricing}
-            </a>
-            <a href="#reviews" className="hover:text-[#7A002A] transition">
-              {b.navReviews}
-            </a>
-            <div className="relative">
-              <button
-                onClick={() => setServicesOpen((v) => !v)}
-                className="hover:text-[#7A002A] transition cursor-pointer"
-                aria-expanded={servicesOpen}
-              >
-                {lang === "es" ? "Servicios ▾" : "Services ▾"}
-              </button>
-              <div
-                className={`${servicesOpen ? "block" : "hidden"} absolute right-0 top-full mt-3 w-64 rounded-xl border border-[#E7DCC8] bg-white shadow-xl py-2 z-50`}
-              >
-                {MENU_LANDING_LINKS[lang].map((l) => (
-                  <Link
-                    key={l.href}
-                    href={l.href}
-                    onClick={() => setServicesOpen(false)}
-                    className="block px-4 py-2.5 text-[13px] hover:bg-[#FDFBF8] hover:text-[#7A002A] transition"
-                  >
-                    {l.label}
-                  </Link>
-                ))}
-              </div>
-            </div>
-          </nav>
-
-          <div className="flex items-center gap-3">
-            {/* Toggle ES | EN (rutas / y /es) */}
-            <div className="flex items-center gap-1 text-[11px] font-bold tracking-widest text-[#5A3C46]">
-              <Link
-                href="/es"
-                onClick={() => setLang("es")}
-                className={`px-1.5 py-0.5 rounded transition ${
-                  lang === "es" ? "text-[#7A002A] border-b-2 border-[#7A002A]" : "text-[#A98B96] hover:text-[#7A002A]"
-                }`}
-                aria-label="Cambiar a Español"
-              >
-                ES
-              </Link>
-              <span className="text-[#B08D3C]/50 select-none">|</span>
-              <Link
-                href="/"
-                onClick={() => setLang("en")}
-                className={`px-1.5 py-0.5 rounded transition ${
-                  lang === "en" ? "text-[#7A002A] border-b-2 border-[#7A002A]" : "text-[#A98B96] hover:text-[#7A002A]"
-                }`}
-                aria-label="Switch to English"
-              >
-                EN
-              </Link>
-            </div>
-
-            <button
-              onClick={() => setMobileMenuOpen((v) => !v)}
-              className="lg:hidden inline-flex items-center justify-center w-10 h-10 rounded-full border border-[#E7DCC8] text-[#2B0A18] transition"
-              aria-label={lang === "es" ? "Abrir menú" : "Open menu"}
-              aria-expanded={mobileMenuOpen}
-            >
-              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </button>
-            <a
-              href={lang === "es" ? "#precios" : "#prices"}
-              className="hidden sm:inline-flex px-5 py-2.5 bg-[#7A002A] hover:bg-[#660025] text-white rounded-full text-[13px] font-['Montserrat'] font-bold shadow-[0_6px_18px_rgba(122,0,42,0.35)] transition active:scale-95"
-            >
-              {b.createBtn}
-            </a>
-          </div>
-        </div>
-        <div className={`${mobileMenuOpen ? "block" : "hidden"} lg:hidden border-t border-[#E7DCC8] bg-[#FDFBF8]`}>
-          <div className="px-4 py-3 flex flex-col font-['Montserrat'] text-[13.5px] font-semibold text-[#2B0A18]">
-            <button
-              onClick={() => {
-                setMobileMenuOpen(false);
-                handleOpenDemo("isabella-xv");
-              }}
-              className="text-left py-2.5 hover:text-[#7A002A] transition cursor-pointer"
-            >
-              {b.navLiveDemo}
-            </button>
-            <a href="#como-funciona" onClick={() => setMobileMenuOpen(false)} className="py-2.5 hover:text-[#7A002A] transition">
-              {t.nav.howItWorks}
-            </a>
-            <a href="#comparativa" onClick={() => setMobileMenuOpen(false)} className="py-2.5 hover:text-[#7A002A] transition">
-              {t.nav.compare}
-            </a>
-            <a href="#plantillas" onClick={() => setMobileMenuOpen(false)} className="py-2.5 hover:text-[#7A002A] transition">
-              {b.navTemplates}
-            </a>
-            <a href={lang === "es" ? "#precios" : "#prices"} onClick={() => setMobileMenuOpen(false)} className="py-2.5 hover:text-[#7A002A] transition">
-              {t.nav.pricing}
-            </a>
-            <a href="#reviews" onClick={() => setMobileMenuOpen(false)} className="py-2.5 hover:text-[#7A002A] transition">
-              {b.navReviews}
-            </a>
-            <p className="pt-3 mt-1 border-t border-[#E7DCC8] text-xs font-bold tracking-widest text-[#7A002A]">
-              {lang === "es" ? "SERVICIOS" : "SERVICES"}
-            </p>
-            {MENU_LANDING_LINKS[lang].map((l) => (
-              <Link
-                key={l.href}
-                href={l.href}
-                onClick={() => setMobileMenuOpen(false)}
-                className="py-2.5 hover:text-[#7A002A] transition"
-              >
-                {l.label}
-              </Link>
-            ))}
-          </div>
-        </div>
-      </header>
-
       {/* ============================================================== */}
       {/* HERO */}
       {/* ============================================================== */}
@@ -751,7 +591,6 @@ export default function HomeView({ initialLang = "en" }: { initialLang?: Languag
       {/* ============================================================== */}
       {/* LUXURY EDITORIAL FOOTER (BYQ / JIRO STYLE) */}
       {/* ============================================================== */}
-      <SiteFooter lang={lang} />
 
       {/* ============================================================== */}
       {/* MODAL DE DEMO EN VIVO */}
