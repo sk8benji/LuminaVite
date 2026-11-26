@@ -155,7 +155,7 @@ export const BLOG_POSTS: BlogPost[] = [
       {
         heading: "English, Spanish, or both?",
         paragraphs: [
-          "In Los Angeles, most quinceañera families have guests in both languages. An invitation that shows both versions avoids the awkward case where half the family guesses the details. If you can only pick one, pick the language your grandparents read, and put the RSVP link somewhere nobody can miss it. See the Spanish version on the [Spanish quinceañera invitations page](https://clickandlove.app/es/invitaciones-de-quinceanera).",
+          "Most quinceañera families have guests in both languages. An invitation that shows both versions avoids the awkward case where half the family guesses the details. If you can only pick one, pick the language your grandparents read, and put the RSVP link somewhere nobody can miss it. See the Spanish version on the [Spanish quinceañera invitations page](https://clickandlove.app/es/invitaciones-de-quinceanera).",
         ],
       },
     ],
@@ -384,12 +384,13 @@ export const BLOG_POSTS: BlogPost[] = [
         ],
       },
     ],
-  },,
+  },
+  {
     slug: "invitaciones-de-quinceanera-digitales-vs-impresas",
     title:
-      "Invitaciones de Quinceañera Digitales vs. Impresas: ¿Cuál Conviene en Los Ángeles?",
+      "Invitaciones de Quinceañera Digitales vs. Impresas: ¿Cuál Conviene?",
     description:
-      "Compara invitaciones de quinceañera digitales e impresas en Los Ángeles: costo real, velocidad de entrega, confirmación por SMS y cambios de última hora.",
+      "Compara invitaciones de quinceañera digitales e impresas: costo real, velocidad de entrega, confirmación por SMS y cambios de última hora.",
     datePublished: "2026-11-25",
     readMinutes: 5,
     lang: "es",
@@ -401,7 +402,7 @@ export const BLOG_POSTS: BlogPost[] = [
       {
         heading: "La respuesta corta",
         paragraphs: [
-          "Para la mayoría de las familias en Los Ángeles, la digital conviene más: cuesta menos, llega el mismo día y te dice quién viene sin que llames a nadie. La impresa solo gana en una cosa: es un recuerdo físico para guardar. Si tu familia vive en WhatsApp y SMS, la respuesta es la [invitación de quinceañera digital](https://clickandlove.app/es/invitaciones-de-quinceanera). Si tus abuelos o padrinos quieren algo en papel para el recuerdo, la jugada es híbrida: digital para todos y unas pocas impresas de recuerdo.",
+          "Para la mayoría de las familias, la digital conviene más: cuesta menos, llega el mismo día y te dice quién viene sin que llames a nadie. La impresa solo gana en una cosa: es un recuerdo físico para guardar. Si tu familia vive en WhatsApp y SMS, la respuesta es la [invitación de quinceañera digital](https://clickandlove.app/es/invitaciones-de-quinceanera). Si tus abuelos o padrinos quieren algo en papel para el recuerdo, la jugada es híbrida: digital para todos y unas pocas impresas de recuerdo.",
           "Esta guía compara las dos con números reales: lo que cuesta cada una, cuánto tarda en llegar, cómo se confirma y qué pasa cuando algo cambia a última hora.",
         ],
       },
@@ -424,7 +425,7 @@ export const BLOG_POSTS: BlogPost[] = [
       {
         heading: "Velocidad: semanas contra minutos",
         paragraphs: [
-          "La impresa necesita diseño, imprenta y correo: entre una y tres semanas desde que la pides hasta que llega a la última casa, y eso si nadie se muda. La digital se envía el mismo día: un enlace por SMS o WhatsApp y cada invitado la abre en su teléfono. Para una quinceañera en Los Ángeles, donde la familia está repartida entre el Valle, Orange County y México, esa diferencia decide si todos se enteran a tiempo. Mira cómo se ve una invitación real abierta en el teléfono en la [demo Vintage Quinceanera](https://clickandlove.app/demo/isabella-xv).",
+          "La impresa necesita diseño, imprenta y correo: entre una y tres semanas desde que la pides hasta que llega a la última casa, y eso si nadie se muda. La digital se envía el mismo día: un enlace por SMS o WhatsApp y cada invitado la abre en su teléfono. Para una quinceañera, donde la familia suele estar repartida entre varias ciudades y hasta en México, esa diferencia decide si todos se enteran a tiempo. Mira cómo se ve una invitación real abierta en el teléfono en la [demo Vintage Quinceanera](https://clickandlove.app/demo/isabella-xv).",
         ],
       },
       {
