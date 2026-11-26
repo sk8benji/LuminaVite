@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import prisma from "@/lib/db";
 import { ensureSaveTheDateTables, getSaveTheDateFotoSobreAbierto, getSaveTheDateTitulos } from "@/lib/save-the-date-table";
 import QuinceRosadoSaveTheDate from "@/components/save-the-date/QuinceRosadoSaveTheDate";
+import CoquettePinkSaveTheDate from "@/components/save-the-date/CoquettePinkSaveTheDate";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -54,9 +55,64 @@ export const DEMO_SAVE_THE_DATE = {
   preguntaRsvpEn: "Will You Join Us?",
 };
 
+export const DEMO_COQUETTE_PINK = {
+  slug: "coquette-pink",
+  titulo: "Melissa Cardenas",
+  subtitulo: "Mis Quince Años",
+  subtituloEn: "My Sweet Fifteen",
+  mensaje:
+    "Guarda esta fecha especial en tu calendario. Muy pronto compartiremos todos los detalles y la invitación formal.",
+  fechaEvento: new Date("2027-09-18T20:00:00Z"),
+  fechaTextoPersonalizada: "Viernes 18 de Septiembre, 2026",
+  fechaTextoPersonalizadaEn: "Friday, September 18, 2026",
+  ciudad: "Los Ángeles, California",
+  estiloPlantilla: "COQUETTE_PINK",
+  colorSobre: "#FFE8EE",
+  colorSello: "#D4AF37",
+  tipoLetra: "SERIF_ELEGANTE",
+  fotoPortadaUrl: "/assets/save-the-date/coquette-pink/principal2.jpeg",
+  fotoSobreAbiertoUrl: "/assets/save-the-date/coquette-pink/main.jpg",
+  galeriaFotosUrls: [
+    "/assets/save-the-date/coquette-pink/save1.jpg",
+    "/assets/save-the-date/coquette-pink/save2.jpg",
+    "/assets/save-the-date/coquette-pink/save3.jpg",
+    "/assets/save-the-date/coquette-pink/images2.jpeg",
+    "/assets/save-the-date/coquette-pink/images3.jpeg",
+  ],
+  musicaUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+  musicaTitulo: "A Thousand Years (Instrumental)",
+  mostrarSobre: true,
+  mostrarGaleria: true,
+  mostrarContador: true,
+  mostrarCalendario: true,
+  mostrarPreRsvp: true,
+  textoPreRsvp: "¿Podrás Acompañarnos?",
+  telefonoWhatsapp: "18181234567",
+  tituloCalendarioEs: "RESERVA LA FECHA",
+  tituloCalendarioEn: "SAVE THE DATE",
+  tituloContadorEs: "Solo Faltan...",
+  tituloContadorEn: "Countdown...",
+  tituloRsvpEs: "Confirmación Anticipada",
+  tituloRsvpEn: "Early RSVP",
+  preguntaRsvpEs: "¿Podrás Acompañarnos?",
+  preguntaRsvpEn: "Will You Join Us?",
+};
+
 async function getSaveTheDateData(rawSlug: string) {
   const cleanSlug = decodeURIComponent(rawSlug || "").trim().toLowerCase();
   if (!cleanSlug) return null;
+
+  if (
+    cleanSlug === "coquette-pink" ||
+    cleanSlug === "demo-coquette-pink" ||
+    cleanSlug === "save-the-date-coquette-pink"
+  ) {
+    return DEMO_COQUETTE_PINK;
+  }
+
+  if (cleanSlug === "demo" || cleanSlug === "demo-quinceanera") {
+    return DEMO_SAVE_THE_DATE;
+  }
 
   try {
     await ensureSaveTheDateTables();
@@ -254,6 +310,13 @@ export default async function SaveTheDatePage({
 
   const skipIntro = resolvedSearchParams?.preview === "true";
 
-  // Dispatcher por si agregamos más plantillas (de momento usa QuinceRosadoSaveTheDate)
+  // Dispatcher según estilo o slug
+  if (
+    data.estiloPlantilla === "COQUETTE_PINK" ||
+    resolvedParams.slug.toLowerCase().includes("coquette")
+  ) {
+    return <CoquettePinkSaveTheDate data={data} skipIntro={skipIntro} />;
+  }
+
   return <QuinceRosadoSaveTheDate data={data} skipIntro={skipIntro} />;
 }
