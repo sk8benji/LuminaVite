@@ -304,15 +304,15 @@ export default function Miss15Template({
 
   const defaultMiss15Itinerary = isEn
     ? [
-        { hora: "3:00 PM", titulo: "Mass", tipoIcono: "mass", descripcion: "St. Mary's Church, San Antonio, TX" },
-        { hora: "4:30 PM", titulo: "Entrance", tipoIcono: "entrance", descripcion: "Grand Ballroom, San Antonio" },
+        { hora: "3:00 PM", titulo: "Mass", tipoIcono: "mass" },
+        { hora: "4:30 PM", titulo: "Entrance", tipoIcono: "entrance" },
         { hora: "5:00 PM", titulo: "Waltz", tipoIcono: "waltz" },
         { hora: "6:00 PM", titulo: "Dinner", tipoIcono: "dinner" },
         { hora: "8:00 PM", titulo: "Party", tipoIcono: "party" },
       ]
     : [
-        { hora: "3:00 PM", titulo: "Misa", tipoIcono: "mass", descripcion: "St. Mary's Church, San Antonio, TX" },
-        { hora: "4:30 PM", titulo: "Entrada", tipoIcono: "entrance", descripcion: "Grand Ballroom, San Antonio" },
+        { hora: "3:00 PM", titulo: "Misa", tipoIcono: "mass" },
+        { hora: "4:30 PM", titulo: "Entrada", tipoIcono: "entrance" },
         { hora: "5:00 PM", titulo: "Vals", tipoIcono: "waltz" },
         { hora: "6:00 PM", titulo: "Cena", tipoIcono: "dinner" },
         { hora: "8:00 PM", titulo: "Fiesta", tipoIcono: "party" },

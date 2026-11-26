@@ -965,9 +965,11 @@ export default function QuinceRosadoTemplate({
                   <h4 className="font-['Cinzel',serif] text-xs tracking-widest uppercase text-[#7A002A] font-bold">
                     {isEn ? "RELIGIOUS CEREMONY" : "CEREMONIA RELIGIOSA"}
                   </h4>
-                  <p className="text-xs text-[#7A002A] font-semibold mt-1">
-                    {data.ceremoniaNombre || "St. Mary’s Church"}
-                  </p>
+                  {data.ceremoniaNombre && (
+                    <p className="text-xs text-[#7A002A] font-semibold mt-1">
+                      {data.ceremoniaNombre}
+                    </p>
+                  )}
                   {data.ceremoniaDireccion && (
                     <p className="text-[11px] text-[#A55B64] mt-0.5">
                       {data.ceremoniaDireccion}
@@ -991,9 +993,11 @@ export default function QuinceRosadoTemplate({
                   <h4 className="font-['Cinzel',serif] text-xs tracking-widest uppercase text-[#7A002A] font-bold">
                     {isEn ? "RECEPTION & PARTY" : "RECEPCIÓN & FIESTA"}
                   </h4>
-                  <p className="text-xs text-[#7A002A] font-semibold mt-1">
-                    {data.recepcionNombre || "Grand Ballroom Palace"}
-                  </p>
+                  {data.recepcionNombre && (
+                    <p className="text-xs text-[#7A002A] font-semibold mt-1">
+                      {data.recepcionNombre}
+                    </p>
+                  )}
                   {data.recepcionDireccion && (
                     <p className="text-[11px] text-[#A55B64] mt-0.5">
                       {data.recepcionDireccion}

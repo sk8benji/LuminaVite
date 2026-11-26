@@ -257,12 +257,12 @@ export default function ElegantRoseTemplate({
 
   const churchMapUrl = getMapDirectionsUrl(
     data.ceremoniaMapUrl,
-    `${data.ceremoniaNombre || "St. Mary's Church"} ${data.ceremoniaDireccion || "Any City, Any Street, AZ 12345"}`.trim()
+    `${data.ceremoniaNombre || ""} ${data.ceremoniaDireccion || ""}`.trim()
   );
 
   const ballroomMapUrl = getMapDirectionsUrl(
     data.recepcionMapUrl,
-    `${data.recepcionNombre || "Grand Ballroom"} ${data.recepcionDireccion || "Any City, Any Street, AZ 12345"}`.trim()
+    `${data.recepcionNombre || ""} ${data.recepcionDireccion || ""}`.trim()
   );
 
 
@@ -836,9 +836,11 @@ export default function ElegantRoseTemplate({
                     <span className="font-['Bodoni_Moda',serif] text-base sm:text-lg font-bold tracking-[0.2em] uppercase text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
                       {isEn ? "MASS" : "MISA"}
                     </span>
-                    <span className="font-['Bodoni_Moda',serif] text-[11px] sm:text-xs uppercase text-white font-medium tracking-wide leading-tight drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)] mt-1 px-1">
-                      {data.ceremoniaNombre || (isEn ? "ST. MARY’S CHURCH, YOUR CITY, AZ" : "IGLESIA SANTA MARÍA, TU CIUDAD, AZ")}
-                    </span>
+                    {data.ceremoniaNombre && (
+                      <span className="font-['Bodoni_Moda',serif] text-[11px] sm:text-xs uppercase text-white font-medium tracking-wide leading-tight drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)] mt-1 px-1">
+                        {data.ceremoniaNombre}
+                      </span>
+                    )}
                   </div>
 
                   {/* Columna Derecha: Iglesia Line Art Blanca */}
@@ -903,9 +905,11 @@ export default function ElegantRoseTemplate({
                     <span className="font-['Bodoni_Moda',serif] text-base sm:text-lg font-bold tracking-[0.2em] uppercase text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
                       {isEn ? "ENTRANCE" : "RECEPCIÓN"}
                     </span>
-                    <span className="font-['Bodoni_Moda',serif] text-[11px] sm:text-xs uppercase text-white font-medium tracking-wide leading-tight drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)] mt-1 px-1">
-                      {data.recepcionNombre || (isEn ? "GRAND BALLROOM, YOUR CITY, AZ" : "SALÓN PRINCIPAL, TU CIUDAD, AZ")}
-                    </span>
+                    {data.recepcionNombre && (
+                      <span className="font-['Bodoni_Moda',serif] text-[11px] sm:text-xs uppercase text-white font-medium tracking-wide leading-tight drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)] mt-1 px-1">
+                        {data.recepcionNombre}
+                      </span>
+                    )}
                   </div>
                 </div>
 
