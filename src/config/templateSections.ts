@@ -232,7 +232,32 @@ export const SECCIONES_POR_PLANTILLA: Record<string, SeccionId[]> = {
   BLUE_BUTTERFLY: TODAS_MENOS_ZAPATOS_VIDEO,
   MISS_15: TODAS_MENOS_ZAPATOS_VIDEO,
   QUINCE_ERA_PINK: TODAS_MENOS_ZAPATOS_VIDEO,
-  BLUSH_PRINCESS: TODAS_MENOS_ZAPATOS_VIDEO,
+  // Blush Princess / Blush Envelope no tienen bloque de dedicatoria
+  // (frasePersonalizada no se lee en esos templates): la lista no la ofrece.
+  BLUSH_PRINCESS: [
+    'portada',
+    'medallonFecha',
+    'rsvp',
+    'ubicaciones',
+    'dressCode',
+    'mesaRegalos',
+    'itinerario',
+    'corteHonor',
+    'cuentaRegresiva',
+    'musica',
+  ],
+  BLUSH_ENVELOPE: [
+    'portada',
+    'medallonFecha',
+    'rsvp',
+    'ubicaciones',
+    'dressCode',
+    'mesaRegalos',
+    'itinerario',
+    'corteHonor',
+    'cuentaRegresiva',
+    'musica',
+  ],
   // Beauty Quince SÍ tiene Recomendación: su bloque "Important Details /
   // Kids Policy" es esa sección (se apaga con su interruptor y su texto
   // es celebrationGuideline).
