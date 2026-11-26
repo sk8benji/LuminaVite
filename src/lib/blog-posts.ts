@@ -448,6 +448,91 @@ export const BLOG_POSTS: BlogPost[] = [
       },
     ],
   },
+  {
+    slug: "como-mandar-invitaciones-por-whatsapp",
+    title:
+      "Cómo Mandar Invitaciones por WhatsApp sin Crear Grupos Molestos",
+    description:
+      "Manda invitaciones digitales para WhatsApp sin crear grupos molestos: lista de difusión o mensaje individual, qué escribir y cómo confirmar con RSVP en vivo.",
+    datePublished: "2026-12-04",
+    readMinutes: 5,
+    lang: "es",
+    landing: {
+      href: "/whatsapp-invitations",
+      label: "Invitaciones por WhatsApp",
+    },
+    sections: [
+      {
+        heading: "La respuesta corta",
+        paragraphs: [
+          "No necesitas un grupo para invitar por WhatsApp. La forma correcta es mandar el enlace de la invitación digital por mensaje individual o por lista de difusión: cada invitado recibe su mensaje, confirma por su cuenta y nadie ve las respuestas de los demás. El grupo solo sirve para una cosa: que todos hablen entre ellos, y eso es justo lo que arruina una invitación. Si quieres ver cómo se ve lo que recibe el invitado, esta es la página de [invitaciones por WhatsApp](https://clickandlove.app/whatsapp-invitations).",
+          "Esta guía te muestra las tres formas de mandar invitaciones digitales para WhatsApp, cómo crear una lista de difusión paso a paso, qué escribir en el mensaje y cómo saber quién confirmó sin llamar a nadie.",
+        ],
+      },
+      {
+        heading: "Grupo, lista de difusión o mensaje individual",
+        paragraphs: [
+          "La pregunta no es si WhatsApp sirve para invitar. Sirve, y es donde está tu familia. La pregunta es cómo mandarlo: un grupo, una lista de difusión o un mensaje por invitado. Pasando los diez invitados, o cuando los invitados no se conocen entre ellos, la lista de difusión gana: un solo envío, un solo lugar para el conteo y cero caos de respuestas.",
+        ],
+        table: {
+          headers: ["", "Grupo", "Lista de difusión", "Mensaje individual"],
+          rows: [
+            ["Respuestas", "Todos ven todo", "Solo tú las ves", "Solo tú las ves"],
+            ["Confirmación", "Se pierde en el chat", "Enlace con RSVP en vivo", "Enlace con RSVP en vivo"],
+            ["Recordatorios", "A todo el grupo", "Solo a los que faltan", "Uno por uno"],
+            ["Privacidad", "Todos ven los números", "Nadie ve a los demás", "Nadie ve a los demás"],
+          ],
+        },
+      },
+      {
+        heading: "Cómo crear una lista de difusión paso a paso",
+        paragraphs: [
+          "La lista de difusión es la herramienta de WhatsApp hecha para esto: mandas un mensaje a muchos contactos a la vez y cada uno lo recibe como un mensaje individual. Nadie ve a los demás, nadie responde en grupo y nadie puede contestar a todos. Solo hay una condición: el contacto tiene que tener tu número guardado, si no, no le llega.",
+        ],
+        bullets: [
+          "Abre WhatsApp y toca Listas de difusión (en iPhone, arriba a la izquierda; en Android, en el menú de los tres puntos).",
+          "Toca Nueva lista y elige a los invitados.",
+          "Escribe el mensaje corto con el enlace de la invitación digital y mándalo.",
+          "Cuando alguien confirme desde el enlace, su respuesta llega solo a ti, no al grupo.",
+        ],
+      },
+      {
+        heading: "Qué escribir en el mensaje",
+        paragraphs: [
+          "Copia, pega, cambia lo que está entre corchetes y manda un solo mensaje. El enlace lleva los detalles; el mensaje solo tiene que lograr que lo abran. Mira cómo se abre la invitación desde un mensaje de WhatsApp en la [demo Vintage Quinceanera](https://clickandlove.app/demo/isabella-xv): el invitado toca el enlace, ve el sobre animado y confirma sin instalar nada.",
+          "Manda el mensaje entre las 10 de la mañana y las 8 de la noche, y no lo mandes dos veces: si alguien no abre el enlace, el recordatorio va solo para esa persona, no para todos.",
+        ],
+        bullets: [
+          "Quinceañera: “¡Hola [nombre]! Te invitamos a la quinceañera de [nombre] el [día, fecha] a las [hora] en [lugar]. Detalles y confirmación aquí: [enlace]”",
+          "Boda: “¡Hola [nombre]! [Nombre] y [Nombre] se casan el [fecha] a las [hora] en [lugar]. Nos encantaría que nos acompañes — detalles y confirmación: [enlace]”",
+          "Cumpleaños: “¡Hola [nombre]! Te invitamos al cumpleaños de [nombre] el [día, fecha] a las [hora] en [lugar]. Detalles y confirmación aquí: [enlace]”",
+        ],
+      },
+      {
+        heading: "Cuánto cuesta con Click & Love",
+        paragraphs: [
+          "Precios reales, sin costo por invitado: Express $99, Asistido $199 y VIP $279. El Save the Date cuesta $49 solo o viene incluido en el VIP. Todos incluyen la invitación digital con sobre, música, mapa y confirmación por SMS según el plan. Ve la tabla completa en [precios](https://clickandlove.app/es/precios) o escríbenos por WhatsApp al [(818) 299-4882](tel:+18182994882) y te decimos cuál plan cubre tu fiesta.",
+        ],
+      },
+      {
+        heading: "Antes de enviar, revisa esto",
+        paragraphs: [
+          "Tres errores arruinan la invitación por WhatsApp: mandar el enlace en un grupo, mandar el mensaje sin el nombre del invitado y mandar el enlace solo, sin decir qué es. El mensaje tiene que decir quién invita, qué se celebra y cuándo, o el invitado no lo abre.",
+        ],
+        bullets: [
+          "Cada invitado recibe su propio mensaje, nunca un grupo.",
+          "El mensaje lleva nombre, fecha, hora y lugar, además del enlace.",
+          "El recordatorio va solo a los que no confirmaron.",
+        ],
+      },
+      {
+        heading: "Lo único que falta es la invitación",
+        paragraphs: [
+          "Si ya tienes la lista de invitados, lo único que falta es la invitación: mira las [invitaciones por WhatsApp](https://clickandlove.app/whatsapp-invitations) y manda el enlace hoy mismo.",
+        ],
+      },
+    ],
+  },
 ];
 
 export function getBlogPost(slug: string): BlogPost | undefined {
