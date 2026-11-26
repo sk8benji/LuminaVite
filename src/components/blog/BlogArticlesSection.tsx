@@ -153,13 +153,20 @@ export default function BlogArticlesSection({ posts }: { posts: BlogPost[] }) {
             </span>
           </Reveal>
           <Reveal delay={0.1}>
-            <h2 className="font-['Montserrat'] text-[#2B0A18] text-[36px] sm:text-[48px] lg:text-[56px] font-semibold leading-[130%] tracking-[-0.8px] max-w-[850px]">
-              Tips &amp;{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#7A002A] to-[#B08D3C]">
-                ideas
+            <h1 className="font-['Montserrat'] text-[#2B0A18] text-[36px] sm:text-[48px] lg:text-[56px] font-semibold leading-[130%] tracking-[-0.8px] max-w-[850px]">
+              Ideas,{" "}
+              <span className="text-[#F97316]">tips</span> &amp;{" "}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#EC4899] to-[#A855F7]">
+                inspiration
               </span>{" "}
-              for your celebration
-            </h2>
+              for weddings &amp; quinceañeras
+            </h1>
+          </Reveal>
+          <Reveal delay={0.2}>
+            <p className="text-[#5A3C46] text-[16px] sm:text-[18px] leading-[160%] max-w-[640px]">
+              Practical guides for invitations, wording, SMS confirmations and
+              guest photos. No fluff, just what works for real events.
+            </p>
           </Reveal>
         </div>
 
