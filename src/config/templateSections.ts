@@ -245,7 +245,22 @@ export const SECCIONES_POR_PLANTILLA: Record<string, SeccionId[]> = {
     'musica',
     'accommodation',
   ],
-  QUINCE_ERA_PINK: TODAS_MENOS_ZAPATOS_VIDEO,
+  // Quince Era Pink SI tiene dedicatoria (frase con foto en el hero)
+  // y un bloque de Transporte (transporteJson) en Details.
+  QUINCE_ERA_PINK: [
+    'portada',
+    'medallonFecha',
+    'dedicatoria',
+    'rsvp',
+    'ubicaciones',
+    'dressCode',
+    'mesaRegalos',
+    'itinerario',
+    'corteHonor',
+    'cuentaRegresiva',
+    'musica',
+    'transporte',
+  ],
   // Blush Princess / Blush Envelope no tienen bloque de dedicatoria
   // (frasePersonalizada no se lee en esos templates): la lista no la ofrece.
   BLUSH_PRINCESS: [
