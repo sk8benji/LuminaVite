@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import BlogArticlesSection from "@/components/blog/BlogArticlesSection";
 import { BLOG_POSTS } from "@/lib/blog-posts";
 
 export const metadata: Metadata = {
@@ -38,32 +39,9 @@ export default function BlogIndexPage() {
           </p>
         </div>
       </header>
-      <main className="max-w-3xl mx-auto px-4 py-10">
-        <div className="grid gap-6">
-          {BLOG_POSTS.map((post) => (
-            <article
-              key={post.slug}
-              className="rounded-2xl border border-[#7A002A]/20 bg-white p-6"
-            >
-              <p className="text-sm text-[#8A6B76]">
-                {post.datePublished} · {post.readMinutes} min read
-              </p>
-              <h2 className="mt-2 text-2xl font-bold text-[#7A002A]">
-                <Link href={`/blog/${post.slug}`} className="hover:underline">
-                  {post.title}
-                </Link>
-              </h2>
-              <p className="mt-2 leading-relaxed">{post.description}</p>
-              <Link
-                href={`/blog/${post.slug}`}
-                className="mt-4 inline-block font-bold text-[#7A002A] underline"
-              >
-                Read the guide →
-              </Link>
-            </article>
-          ))}
-        </div>
-        <p className="mt-10 text-center">
+      <main>
+        <BlogArticlesSection posts={BLOG_POSTS} />
+        <p className="py-10 text-center bg-[#F7F7F6]">
           <Link href="/" className="text-[#7A002A] font-bold underline">
             digital invitations in Los Angeles
           </Link>
