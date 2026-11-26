@@ -521,6 +521,8 @@ export default function QuinceRosadoSaveTheDate({
             }}
           >
             {/* 1. REPRODUCTOR DE MÚSICA SUPERIOR (JUSTO ENCIMA DE LA CORONA) */}
+            {/* Sin musicaUrl no se muestra: antes el reproductor salía siempre aunque no hubiera audio. */}
+            {data.musicaUrl && (
             <div className="w-full max-w-md mx-auto px-4 pb-4 flex flex-col items-center">
               {/* Controles de música con filigranas doradas */}
               <div className="flex items-center justify-center gap-3 sm:gap-4 w-full">
@@ -628,6 +630,7 @@ export default function QuinceRosadoSaveTheDate({
                   : (idioma === "EN" ? 'PRESS "PLAY"' : 'PRESIONA "PLAY"')}
               </p>
             </div>
+            )}
 
             {/* 2. LA CORONA CENTRADA */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -641,7 +644,8 @@ export default function QuinceRosadoSaveTheDate({
             />
 
             {/* 3. GALERÍA: 2 FOTOS VISIBLES + DESLIZAMIENTO HORIZONTAL SI HAY MÁS */}
-            {(() => {
+            {/* El flag mostrarGaleria estaba en el modelo pero el componente no lo leía. */}
+            {data.mostrarGaleria && (() => {
               const fotos = (data.galeriaFotosUrls || []).filter(Boolean);
               const lista =
                 fotos.length > 0

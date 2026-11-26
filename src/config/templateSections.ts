@@ -292,6 +292,124 @@ export function seccionesSoportadas(estiloPlantilla?: string | null): SeccionId[
   return SECCIONES_POR_PLANTILLA[estiloPlantilla] ?? todas;
 }
 
+// =========================================================================
+// MÁSTER PROPIO DE SAVE THE DATE (separado del de invitaciones)
+// -------------------------------------------------------------------------
+// SAVE_THE_DATE_QUINCE_ROSADO NO pertenece al máster de invitaciones:
+// sus secciones son otras (las que renderiza QuinceRosadoSaveTheDate +
+// los flags del modelo SaveTheDate) y el editor de invitaciones nunca
+// debe ofrecerle las 15 secciones de invitaciones. Las futuras
+// plantillas de Save the Date se cuelgan de este máster, no del otro.
+// El orden de esta lista ES el orden por defecto del STD (fallback para
+// invitaciones viejas sin ordenSecciones): sobre → música → galería →
+// calendario → contador → pre-RSVP, igual que el JSX actual.
+// =========================================================================
+
+export type SeccionSaveTheDateId =
+  | 'sobre'
+  | 'musica'
+  | 'galeria'
+  | 'calendario'
+  | 'contador'
+  | 'preRsvp';
+
+export interface SeccionSaveTheDateMeta {
+  id: SeccionSaveTheDateId;
+  numero: number;
+  label: string;
+  descripcion: string;
+  icono: string;
+  defaultEnabled: boolean;
+  /** Campo del modelo SaveTheDate (o dato) que controla esta sección. */
+  campoModelo?: string;
+}
+
+export const SECCIONES_SAVE_THE_DATE: SeccionSaveTheDateMeta[] = [
+  {
+    id: 'sobre',
+    numero: 1,
+    label: 'Sobre y Portada',
+    descripcion: 'Hero con la foto de portada y el sobre interactivo (foto al abrirlo).',
+    icono: 'Sparkles',
+    defaultEnabled: true,
+    campoModelo: 'mostrarSobre',
+  },
+  {
+    id: 'musica',
+    numero: 2,
+    label: 'Música',
+    descripcion: 'Reproductor con la canción del Save the Date. Sin URL de música no se muestra.',
+    icono: 'Music',
+    defaultEnabled: true,
+    campoModelo: 'musicaUrl',
+  },
+  {
+    id: 'galeria',
+    numero: 3,
+    label: 'Galería de Fotos',
+    descripcion: 'Tira de fotos verticales, 2 a la vez y deslizable si hay más.',
+    icono: 'Image',
+    defaultEnabled: true,
+    campoModelo: 'mostrarGaleria',
+  },
+  {
+    id: 'calendario',
+    numero: 4,
+    label: 'Calendario',
+    descripcion: 'Calendario del mes con el día marcado y botón de agregar al calendario.',
+    icono: 'Calendar',
+    defaultEnabled: true,
+    campoModelo: 'mostrarCalendario',
+  },
+  {
+    id: 'contador',
+    numero: 5,
+    label: 'Cuenta Regresiva',
+    descripcion: 'Cronómetro en vivo hacia la fecha del evento.',
+    icono: 'Hourglass',
+    defaultEnabled: true,
+    campoModelo: 'mostrarContador',
+  },
+  {
+    id: 'preRsvp',
+    numero: 6,
+    label: 'Pre-Confirmación',
+    descripcion: 'Pregunta de pre-confirmación con respuesta por WhatsApp.',
+    icono: 'Users',
+    defaultEnabled: true,
+    campoModelo: 'mostrarPreRsvp',
+  },
+];
+
+/** Orden por defecto de las secciones STD (el de su JSX actual). */
+export const ORDEN_POR_DEFECTO_STD: SeccionSaveTheDateId[] =
+  SECCIONES_SAVE_THE_DATE.map((s) => s.id);
+
+/**
+ * Secciones que cada plantilla de Save the Date renderiza.
+ * QuinceRosadoSaveTheDate es la primera plantilla de este máster.
+ */
+export const SECCIONES_POR_PLANTILLA_STD: Record<string, SeccionSaveTheDateId[]> = {
+  SAVE_THE_DATE_QUINCE_ROSADO: [
+    'sobre',
+    'musica',
+    'galeria',
+    'calendario',
+    'contador',
+    'preRsvp',
+  ],
+};
+
+export function esEstiloSaveTheDate(estiloPlantilla?: string | null): boolean {
+  return estiloPlantilla === 'SAVE_THE_DATE_QUINCE_ROSADO';
+}
+
+export function seccionesSoportadasStd(estiloPlantilla?: string | null): SeccionSaveTheDateId[] {
+  const todas = SECCIONES_SAVE_THE_DATE.map((s) => s.id);
+  if (!estiloPlantilla) return todas;
+  return SECCIONES_POR_PLANTILLA_STD[estiloPlantilla] ?? todas;
+}
+
 /**
  * Obtener estado de habilitación de una sección dado el objeto de invitación
  */
