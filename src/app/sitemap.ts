@@ -32,6 +32,33 @@ export default function sitemap(): MetadataRoute.Sitemap {
         },
       },
     },
+    // About Us (EN + ES; estaban en vivo pero fuera del sitemap)
+    {
+      url: `${baseUrl}/about-us`,
+      lastModified,
+      changeFrequency: "weekly",
+      priority: 0.8,
+      alternates: {
+        languages: {
+          en: `${baseUrl}/about-us`,
+          es: `${baseUrl}/es/nosotros`,
+          "x-default": `${baseUrl}/about-us`,
+        },
+      },
+    },
+    {
+      url: `${baseUrl}/es/nosotros`,
+      lastModified,
+      changeFrequency: "weekly",
+      priority: 0.8,
+      alternates: {
+        languages: {
+          en: `${baseUrl}/about-us`,
+          es: `${baseUrl}/es/nosotros`,
+          "x-default": `${baseUrl}/about-us`,
+        },
+      },
+    },
     {
       url: `${baseUrl}/demo`,
       lastModified,
