@@ -7,6 +7,7 @@ import { InvitationData } from "../invitation/InvitationMobileView";
 import { getMapEmbedUrl, getMapDirectionsUrl } from "@/lib/maps";
 import { MISS15_ASSETS } from "@/lib/templates/miss15Assets";
 import { parseTemplateConfig, Miss15Config } from "@/types/templateConfigs";
+import { isSectionEnabledInEvent, SeccionId } from "@/config/templateSections";
 
 export default function Miss15Template({
   data,
@@ -16,6 +17,17 @@ export default function Miss15Template({
   skipIntro?: boolean;
 }) {
   const templateConfig = parseTemplateConfig<Miss15Config>(data.configPlantilla);
+  const isSectionActive = (sectionId: SeccionId): boolean =>
+    isSectionEnabledInEvent(sectionId, data.configPlantilla, {
+      mostrarFrasePersonalizada: data.mostrarFrasePersonalizada,
+      mostrarFechaPlacaHora: data.mostrarFechaPlacaHora,
+      mostrarDressCode: data.mostrarDressCode,
+      mostrarMesaRegalos: data.mostrarMesaRegalos,
+      permitirConfirmacionTelefono: data.permitirConfirmacionTelefono,
+    });
+  // La seccion Details solo existe si alguno de sus 3 bloques esta activo.
+  const mostrarDetalles =
+    isSectionActive("dressCode") || isSectionActive("mesaRegalos") || isSectionActive("accommodation");
   // Estado para la Intro 3D del Sobre
   const [isEnvelopeOpen, setIsEnvelopeOpen] = useState(false);
   const [isEnvelopeFading, setIsEnvelopeFading] = useState(false);
@@ -76,7 +88,7 @@ export default function Miss15Template({
     setIsEnvelopeOpen(true);
 
     // Reproducir música tras el gesto táctil del usuario si está habilitado
-    if (data.reproducirMusicaAlAbrir !== false && audioRef.current) {
+    if (isSectionActive("musica") && data.reproducirMusicaAlAbrir !== false && audioRef.current) {
       audioRef.current
         .play()
         .then(() => setIsPlaying(true))
@@ -347,7 +359,9 @@ export default function Miss15Template({
   return (
     <div className="relative min-h-screen font-sans-body text-[#2B2118] antialiased selection:bg-amber-200 selection:text-amber-900 overflow-x-hidden bg-gradient-to-b from-[#F9F2E4] via-[#F6EEE1] to-[#FCF7ED]">
       {/* Audio en bucle */}
-      <audio ref={audioRef} loop preload="none" src={defaultAudio} />
+      {isSectionActive("musica") && (
+        <audio ref={audioRef} loop preload="none" src={defaultAudio} />
+      )}
 
       {/* Selector de idioma flotante (solo si la invitación es bilingüe) */}
       {isBilingual && (
@@ -375,7 +389,8 @@ export default function Miss15Template({
         {/* ======================================================= */}
         {/* HERO: FOTO COLUMPIO + TARJETA + REPRODUCTOR             */}
         {/* ======================================================= */}
-        <section className="relative text-center">
+        {isSectionActive("portada") && (
+          <section className="relative text-center">
           <div className="relative h-[68vh] min-h-[440px] overflow-hidden">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={data.fotoPortadaUrl} alt={data.titulo} className="absolute inset-0 w-full h-full object-cover object-center" />
@@ -395,7 +410,8 @@ export default function Miss15Template({
                 {isEn ? "'s Quinceañera" : " — Mis Quince Años"}
               </h1>
 
-              <div className="mt-5">
+              {isSectionActive("medallonFecha") && (
+                <div className="mt-5">
                 <p className="font-serif-roman text-xs tracking-[0.5em] uppercase text-[#2B2118] font-bold">{eventMonth}</p>
                 <div className="flex items-center justify-center gap-3 mt-1.5">
                   <span className="font-serif-roman text-xs tracking-[0.25em] uppercase font-semibold">{eventWeekday}</span>
@@ -406,11 +422,15 @@ export default function Miss15Template({
                 </div>
                 <p className="font-serif-roman text-sm tracking-[0.4em] text-[#2B2118] mt-1.5">{eventYear}</p>
               </div>
+              )}
 
-              <p className="font-serif-roman text-[11px] tracking-[0.2em] uppercase text-[#2B2118]/70 mt-4">
+              {isSectionActive("ubicaciones") && (
+                <p className="font-serif-roman text-[11px] tracking-[0.2em] uppercase text-[#2B2118]/70 mt-4">
                 {data.recepcionNombre} · {data.recepcionDireccion}
               </p>
-              <a
+              )}
+              {isSectionActive("ubicaciones") && (
+                <a
                 href={getMapDirectionsUrl(data.recepcionMapUrl || undefined, data.recepcionNombre + ", " + data.recepcionDireccion)}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -418,9 +438,11 @@ export default function Miss15Template({
               >
                 <MapPin className="w-4 h-4" /> Google Maps
               </a>
+              )}
 
               {/* Reproductor de música */}
-              <div className="mt-6 flex items-center gap-2.5 bg-[#2B2118] rounded-full pl-1.5 pr-4 py-1.5 shadow-lg text-left">
+              {isSectionActive("musica") && (
+                <div className="mt-6 flex items-center gap-2.5 bg-[#2B2118] rounded-full pl-1.5 pr-4 py-1.5 shadow-lg text-left">
                 <button
                   type="button"
                   onClick={toggleMusic}
@@ -440,16 +462,18 @@ export default function Miss15Template({
                 <SkipBack className="w-4 h-4 text-[#F3E7CE]/50 shrink-0" />
                 <SkipForward className="w-4 h-4 text-[#F3E7CE]/50 shrink-0" />
               </div>
+              )}
             </div>
 
             <p className="font-serif-roman text-[6rem] sm:text-[8rem] leading-none font-bold text-[#B0703C]/15 select-none -mt-2">15</p>
           </div>
         </section>
+        )}
 
         {/* ======================================================= */}
         {/* CORTE DE HONOR                                          */}
         {/* ======================================================= */}
-        {corte && (
+        {corte && isSectionActive("corteHonor") && (
           <section className="px-6 py-10 text-center">
             <p className="font-script text-4xl text-[#8C5A2B] leading-none">{isEn ? "Our" : "Nuestra"}</p>
             <h3 className="font-script text-5xl sm:text-6xl text-[#2B2118] leading-tight">
@@ -512,7 +536,8 @@ export default function Miss15Template({
         {/* ======================================================= */}
         {/* CUENTA REGRESIVA                                        */}
         {/* ======================================================= */}
-        <section className="relative px-6 py-14 text-center overflow-hidden">
+        {isSectionActive("cuentaRegresiva") && (
+          <section className="relative px-6 py-14 text-center overflow-hidden">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={data.fotoActualUrl || MISS15_ASSETS.swingPhotoAlt} alt="" className="absolute inset-0 w-full h-full object-cover" />
           <div className="absolute inset-0 bg-[#F6EEE1]/55" />
@@ -538,11 +563,13 @@ export default function Miss15Template({
             </div>
           </div>
         </section>
+        )}
 
         {/* ======================================================= */}
         {/* PROGRAMA                                                */}
         {/* ======================================================= */}
-        <section className="px-6 py-12 text-center">
+        {isSectionActive("itinerario") && (
+          <section className="px-6 py-12 text-center">
           <h3 className="font-script text-5xl sm:text-6xl text-[#2B2118] leading-tight">Program</h3>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={MISS15_ASSETS.crown} alt="" className="w-14 h-auto mx-auto mt-1" />
@@ -591,11 +618,13 @@ export default function Miss15Template({
             </div>
           </div>
         </section>
+        )}
 
         {/* ======================================================= */}
         {/* DETALLES                                                */}
         {/* ======================================================= */}
-        <section className="px-6 py-10 text-center">
+        {mostrarDetalles && (
+          <section className="px-6 py-10 text-center">
           <h3 className="font-script text-5xl sm:text-6xl text-[#2B2118] leading-tight">Details</h3>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={MISS15_ASSETS.crown} alt="" className="w-14 h-auto mx-auto mt-1" />
@@ -603,7 +632,8 @@ export default function Miss15Template({
           <img src={MISS15_ASSETS.gownIllustration} alt="" className="w-40 sm:w-48 h-auto mx-auto mt-3" />
 
           <div className="max-w-md mx-auto mt-6 space-y-9">
-            <div>
+            {isSectionActive("dressCode") && (
+              <div>
               <h4 className="font-serif-roman text-sm tracking-[0.35em] uppercase text-[#B0703C] font-bold">
                 {isEn ? "Dress Code" : "Código de Vestimenta"}
               </h4>
@@ -617,8 +647,9 @@ export default function Miss15Template({
                 );
               })()}
             </div>
+            )}
 
-            {data.mostrarMesaRegalos !== false && (
+            {isSectionActive("mesaRegalos") && (
               <div>
                 <h4 className="font-serif-roman text-sm tracking-[0.35em] uppercase text-[#B0703C] font-bold">
                   {isEn ? "Gifts" : "Regalos"}
@@ -629,18 +660,20 @@ export default function Miss15Template({
                       ? "Your presence is the best gift of all! But if you'd like to bring something, feel free to check the wishlist below."
                       : "¡Tu presencia es el mejor regalo! Pero si quieres traer algo, revisa la lista de deseos.")}
                 </p>
-                <a
-                  href={data.wishlistUrl || "#"}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-4 inline-flex rounded-full border border-[#2B2118] px-7 py-2.5 font-serif-roman text-[11px] tracking-[0.3em] uppercase font-bold text-[#2B2118] hover:bg-[#2B2118] hover:text-[#F3E7CE] transition-colors"
-                >
-                  Wishlist
-                </a>
+                {data.wishlistUrl && (
+                  <a
+                    href={data.wishlistUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-4 inline-flex rounded-full border border-[#2B2118] px-7 py-2.5 font-serif-roman text-[11px] tracking-[0.3em] uppercase font-bold text-[#2B2118] hover:bg-[#2B2118] hover:text-[#F3E7CE] transition-colors"
+                  >
+                    Wishlist
+                  </a>
+                )}
               </div>
             )}
 
-            {hospedajeTexto && (
+            {hospedajeTexto && isSectionActive("accommodation") && (
               <div>
                 <h4 className="font-serif-roman text-sm tracking-[0.35em] uppercase text-[#B0703C] font-bold">
                   {isEn ? "Accommodation" : "Hospedaje"}
@@ -650,11 +683,13 @@ export default function Miss15Template({
             )}
           </div>
         </section>
+        )}
 
         {/* ======================================================= */}
         {/* RSVP                                                    */}
         {/* ======================================================= */}
-        <section className="px-6 pt-10 pb-2 text-center">
+        {isSectionActive("rsvp") && (
+          <section className="px-6 pt-10 pb-2 text-center">
           <p className="font-script text-4xl text-[#8C5A2B] leading-none">please</p>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={MISS15_ASSETS.crown} alt="" className="w-14 h-auto mx-auto mt-1.5" />
@@ -679,11 +714,13 @@ export default function Miss15Template({
               : "¡No te pierdas la aventura! Confirma y avísanos si puedes acompañarnos."}
           </p>
         </section>
+        )}
 
 {/* ======================================================= */}
         {/* SECCIÓN 10: CONFIRMACIÓN DE ASISTENCIA (RSVP)           */}
         {/* ======================================================= */}
-        <section id="rsvp" className="px-4 py-6 z-20">
+        {isSectionActive("rsvp") && (
+          <section id="rsvp" className="px-4 py-6 z-20">
           <div className="relative w-full max-w-[390px] mx-auto -mb-9 z-20 flex justify-center">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -880,6 +917,7 @@ export default function Miss15Template({
             )}
           </div>
         </section>
+        )}
 
         {/* ======================================================= */}
         {/* GRACIAS / SAVE THE DATE                                 */}

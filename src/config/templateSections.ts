@@ -230,7 +230,21 @@ export const SECCIONES_POR_PLANTILLA: Record<string, SeccionId[]> = {
     'musica',
   ],
   BLUE_BUTTERFLY: TODAS_MENOS_ZAPATOS_VIDEO,
-  MISS_15: TODAS_MENOS_ZAPATOS_VIDEO,
+  // Miss 15 no tiene bloque de dedicatoria (frasePersonalizada no se
+  // lee); su seccion Details tiene ademas un bloque de Hospedaje.
+  MISS_15: [
+    'portada',
+    'medallonFecha',
+    'rsvp',
+    'ubicaciones',
+    'dressCode',
+    'mesaRegalos',
+    'itinerario',
+    'corteHonor',
+    'cuentaRegresiva',
+    'musica',
+    'accommodation',
+  ],
   QUINCE_ERA_PINK: TODAS_MENOS_ZAPATOS_VIDEO,
   // Blush Princess / Blush Envelope no tienen bloque de dedicatoria
   // (frasePersonalizada no se lee en esos templates): la lista no la ofrece.
