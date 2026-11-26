@@ -116,7 +116,7 @@ export async function middleware(request: NextRequest) {
     if (host.includes("clickandlove.app")) {
       const targetPath = pathname === "/dashboard" ? "/" : pathname;
       const targetUrl = new URL(targetPath, "https://admin.clickandlove.app");
-      return NextResponse.redirect(targetUrl);
+      return NextResponse.redirect(targetUrl, 301);
     }
 
     // En desarrollo local (localhost:3000), proteger con contraseña sin forzar subdominio
