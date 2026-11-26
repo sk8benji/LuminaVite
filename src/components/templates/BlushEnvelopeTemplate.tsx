@@ -860,7 +860,7 @@ export default function BlushEnvelopeTemplate({
         <div className="relative w-full aspect-[4/5] overflow-hidden bg-[#FAF3F0] rounded-[1px]">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={BLUSH_ASSETS.polaroidGirl}
+            src={data.fotoPortadaUrl || BLUSH_ASSETS.polaroidGirl}
             alt={data.titulo}
             className="w-full h-full object-cover object-top block"
           />

@@ -771,7 +771,7 @@ export default function BlushPrincessTemplate({
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={BLUSH_ASSETS.bouquetC} alt="" className="absolute -top-4 -right-8 w-32 sm:w-44 opacity-80 pointer-events-none -scale-x-100" />
 
-          {/* Monograma y escudo superior (ST) centrado, fondo 100% transparente y tamaño optimizado */}
+          {/* Monograma calculado del nombre de la festejada (antes: imagen fija "ST" para todas) */}
           <div
             className="monogram-container relative mx-auto my-2 block"
             style={{
@@ -782,13 +782,9 @@ export default function BlushPrincessTemplate({
               boxShadow: "none",
             }}
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={BLUSH_ASSETS.monogramST || BLUSH_ASSETS.crownFrame}
-              alt="Monograma Quinceañera"
-              className="w-full h-auto drop-shadow-sm mx-auto block bg-transparent border-0"
-              style={{ background: "transparent", backgroundColor: "transparent" }}
-            />
+            <span className="font-serif-roman block text-center text-[44px] leading-none tracking-[0.18em] text-[#B08D3C] drop-shadow-sm">
+              {monograma}
+            </span>
           </div>
 
           {/* Polaroid principal con encuadre armónico y elementos decorativos */}
