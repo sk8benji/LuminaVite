@@ -577,7 +577,7 @@ export default function SaveTheDateManager() {
 
                     {/* Badge Plantilla */}
                     <span className="absolute top-3 left-3 px-2.5 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase bg-white/95 text-[#7A002A] backdrop-blur-md shadow-xs">
-                      💌 Save the Date
+                      💌 {item.estiloPlantilla === "COQUETTE_PINK" ? "Coquette Pink" : "Quince Rosado"}
                     </span>
 
                     {/* Vistas */}
