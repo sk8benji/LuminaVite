@@ -16,11 +16,12 @@ import {
   Compass,
 } from "lucide-react";
 import { QUINCE_ROSADO_ASSETS } from "@/lib/templates/quinceRosadoAssets";
+import { fraseFechaLimiteRsvp } from "@/lib/fecha-limite";
 import { getMapDirectionsUrl } from "@/lib/maps";
 import { InvitationData } from "../invitation/InvitationMobileView";
 import DynamicRsvpForm from "../invitation/DynamicRsvpForm";
 import { parseTemplateConfig, QuinceRosadoConfig } from "@/types/templateConfigs";
-import { isSectionEnabledInEvent, SeccionId } from "@/config/templateSections";
+import { isSectionEnabledInEvent, SeccionId, ordenGrupoQuinceRosado } from "@/config/templateSections";
 import { sanitizeUrl } from "@/lib/url-safety";
 
 interface QuinceRosadoTemplateProps {
@@ -618,7 +619,7 @@ export default function QuinceRosadoTemplate({
       {/* ══════════════════════════════════════════════════════════════
           CONTENEDOR PRINCIPAL MÓVIL (430px)
       ══════════════════════════════════════════════════════════════ */}
-      <main className="relative w-full max-w-[430px] mx-auto min-h-screen bg-white shadow-2xl overflow-x-hidden text-[#7A002A]">
+      <main className="relative w-full max-w-[430px] mx-auto min-h-screen bg-white shadow-2xl overflow-x-hidden text-[#7A002A] flex flex-col">
         {/* SELECTOR DE IDIOMA FLOTANTE (Solo si la invitación es Bilingüe) */}
         {isBilingual && (
           <aside
@@ -655,7 +656,8 @@ export default function QuinceRosadoTemplate({
           <button
             type="button"
             onClick={togglePlay}
-            aria-label="Reproducir o pausar música"
+            aria-label={data.musicaTitulo ? `Reproducir o pausar: ${data.musicaTitulo}` : "Reproducir o pausar música"}
+            title={data.musicaTitulo || (isEn ? "Music" : "Música")}
             className="fixed bottom-5 right-5 z-40 w-12 h-12 rounded-full bg-[#7A002A] text-white shadow-2xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all border-2 border-pink-200"
           >
             {isPlaying ? (
@@ -672,7 +674,8 @@ export default function QuinceRosadoTemplate({
         {/* ══════════════════════════════════════════════════════════════
             SECCIÓN 1: HERO PORTADA ARCO & CABALLO BLANCO (RÉPLICA CANVA)
         ══════════════════════════════════════════════════════════════ */}
-        <section className="relative w-full flex flex-col items-center pt-14 sm:pt-16 pb-10 px-4 overflow-hidden select-none">
+        {isSectionActive("portada") && (
+          <section style={{ order: ordenGrupoQuinceRosado(0, data.configPlantilla) }} className="relative w-full flex flex-col items-center pt-14 sm:pt-16 pb-10 px-4 overflow-hidden select-none">
           {/* Fondo de Nubes Rosadas (90043c428c5ec72c7adb26dce69dedd2.png) */}
           <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none select-none">
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -810,12 +813,13 @@ export default function QuinceRosadoTemplate({
             </div>
           )}
         </section>
+        )}
 
         {/* ══════════════════════════════════════════════════════════════
             SECCIÓN 2: DEDICATORIA & POLAROIDS ("DE NIÑA A SEÑORITA")
         ══════════════════════════════════════════════════════════════ */}
         {isSectionActive("dedicatoria") && (
-          <section data-preview-section="dedicatoria" className="relative w-full py-12 px-5 bg-white overflow-hidden text-center">
+          <section data-preview-section="dedicatoria" style={{ order: ordenGrupoQuinceRosado(1, data.configPlantilla) }} className="relative w-full py-12 px-5 bg-white overflow-hidden text-center">
             {/* Fondo de brillo suave */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -905,7 +909,7 @@ export default function QuinceRosadoTemplate({
         {/* ══════════════════════════════════════════════════════════════
             SECCIÓN 3: RSVP, UBICACIONES, DRESS CODE & REGALOS
         ══════════════════════════════════════════════════════════════ */}
-        <section className="relative w-full py-12 px-5 bg-gradient-to-b from-pink-50/50 to-white">
+        <section style={{ order: ordenGrupoQuinceRosado(2, data.configPlantilla) }} className="relative w-full py-12 px-5 bg-gradient-to-b from-pink-50/50 to-white">
           <div className="max-w-[360px] mx-auto">
             {/* Tarjeta de Confirmación de Asistencia Dinámica con Búsqueda de Invitados */}
             {isSectionActive("rsvp") && (
@@ -919,8 +923,8 @@ export default function QuinceRosadoTemplate({
                   telefonoWhatsapp={data.telefonoWhatsappRsvp}
                   primaryColor="#7A002A"
                   accentBgColor="bg-white/95"
-                  deadlineText={data.rsvpFechaLimite || "POR FAVOR, CONFIRMA TU ASISTENCIA ANTES DEL 20 DE OCTUBRE."}
-                  deadlineTextEn={data.rsvpFechaLimiteEn || "PLEASE CONFIRM YOUR ATTENDANCE BEFORE NOVEMBER 15."}
+                  deadlineText={fraseFechaLimiteRsvp(data, "es") ?? undefined}
+                  deadlineTextEn={fraseFechaLimiteRsvp(data, "en") ?? undefined}
                   rsvpTitulo={data.rsvpTitulo}
                   rsvpTituloEn={data.rsvpTituloEn}
                   rsvpSubtitulo={data.rsvpSubtitulo}
@@ -961,9 +965,11 @@ export default function QuinceRosadoTemplate({
                   <h4 className="font-['Cinzel',serif] text-xs tracking-widest uppercase text-[#7A002A] font-bold">
                     {isEn ? "RELIGIOUS CEREMONY" : "CEREMONIA RELIGIOSA"}
                   </h4>
-                  <p className="text-xs text-[#7A002A] font-semibold mt-1">
-                    {data.ceremoniaNombre || "St. Mary’s Church"}
-                  </p>
+                  {data.ceremoniaNombre && (
+                    <p className="text-xs text-[#7A002A] font-semibold mt-1">
+                      {data.ceremoniaNombre}
+                    </p>
+                  )}
                   {data.ceremoniaDireccion && (
                     <p className="text-[11px] text-[#A55B64] mt-0.5">
                       {data.ceremoniaDireccion}
@@ -987,9 +993,11 @@ export default function QuinceRosadoTemplate({
                   <h4 className="font-['Cinzel',serif] text-xs tracking-widest uppercase text-[#7A002A] font-bold">
                     {isEn ? "RECEPTION & PARTY" : "RECEPCIÓN & FIESTA"}
                   </h4>
-                  <p className="text-xs text-[#7A002A] font-semibold mt-1">
-                    {data.recepcionNombre || "Grand Ballroom Palace"}
-                  </p>
+                  {data.recepcionNombre && (
+                    <p className="text-xs text-[#7A002A] font-semibold mt-1">
+                      {data.recepcionNombre}
+                    </p>
+                  )}
                   {data.recepcionDireccion && (
                     <p className="text-[11px] text-[#A55B64] mt-0.5">
                       {data.recepcionDireccion}
@@ -1104,7 +1112,7 @@ export default function QuinceRosadoTemplate({
             SECCIÓN 4: EL PLAN DE LA FIESTA (TIMELINE ITINERARIO)
         ══════════════════════════════════════════════════════════════ */}
         {(isSectionActive("itinerario") || isSectionActive("fotoZapatos2")) && (
-          <section className="relative w-full py-12 px-5 bg-white text-center">
+          <section style={{ order: ordenGrupoQuinceRosado(3, data.configPlantilla) }} className="relative w-full py-12 px-5 bg-white text-center">
             <div className="max-w-[360px] mx-auto">
               {isSectionActive("itinerario") && (
                 <>
@@ -1265,7 +1273,7 @@ export default function QuinceRosadoTemplate({
           if (!isSectionActive("corteHonor")) return null;
 
           return (
-            <section data-preview-section="corteHonor" className="relative w-full py-12 px-5 bg-gradient-to-b from-white to-pink-50/60 text-center">
+            <section data-preview-section="corteHonor" style={{ order: ordenGrupoQuinceRosado(4, data.configPlantilla) }} className="relative w-full py-12 px-5 bg-gradient-to-b from-white to-pink-50/60 text-center">
               <div className="max-w-[360px] mx-auto">
                 {hasAnyCorteCards && (
                   <>
@@ -1433,7 +1441,7 @@ export default function QuinceRosadoTemplate({
             SECCIÓN 6: CUENTA REGRESIVA, CALENDARIO & CIERRE
         ══════════════════════════════════════════════════════════════ */}
         {(isSectionActive("cuentaRegresiva") || isSectionActive("videoDespedida")) && (
-          <section className="relative w-full py-12 px-5 bg-white text-center">
+          <section style={{ order: ordenGrupoQuinceRosado(5, data.configPlantilla) }} className="relative w-full py-12 px-5 bg-white text-center">
             <div className="max-w-[360px] mx-auto">
               {isSectionActive("cuentaRegresiva") && (
                 <>

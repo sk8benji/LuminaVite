@@ -9,6 +9,7 @@ import {
   Compass,
 } from "lucide-react";
 import { getTemplate, TemplateId } from "@/lib/templates";
+import { isSectionEnabledInEvent, SeccionId } from "@/config/templateSections";
 import { getMapEmbedUrl, getMapDirectionsUrl } from "@/lib/maps";
 import AudioPlayer from "./AudioPlayer";
 import CountdownTimer from "./CountdownTimer";
@@ -156,6 +157,14 @@ export default function InvitationMobileView({
   skipIntro?: boolean;
 }) {
   const template = getTemplate(data.estiloPlantilla);
+  const isSectionActive = (sectionId: SeccionId): boolean =>
+    isSectionEnabledInEvent(sectionId, data.configPlantilla, {
+      mostrarFrasePersonalizada: data.mostrarFrasePersonalizada,
+      mostrarFechaPlacaHora: data.mostrarFechaPlacaHora,
+      mostrarDressCode: data.mostrarDressCode,
+      mostrarMesaRegalos: data.mostrarMesaRegalos,
+      permitirConfirmacionTelefono: data.permitirConfirmacionTelefono,
+    });
   const eventDateObj = new Date(data.fechaEvento);
 
   // Idioma: solo los eventos en español puro nacen en español; en inglés o
@@ -196,7 +205,7 @@ export default function InvitationMobileView({
           lugarTexto={data.recepcionNombre || data.ceremoniaNombre || data.fechaPlacaLugar || undefined}
           tagline={data.subtitulo || undefined}
           template={template}
-          reproducirMusicaAlAbrir={data.reproducirMusicaAlAbrir}
+          reproducirMusicaAlAbrir={isSectionActive("musica") ? data.reproducirMusicaAlAbrir : false}
           idiomaDefault={data.idiomaDefault}
         />
       )}
@@ -210,7 +219,9 @@ export default function InvitationMobileView({
         }}
       >
         {/* Audio flotante */}
-        <AudioPlayer audioUrl={data.musicaUrl} template={template} />
+        {isSectionActive("musica") && (
+          <AudioPlayer audioUrl={data.musicaUrl} template={template} songTitle={data.musicaTitulo} />
+        )}
 
         {/* 1. Barra Superior Fija (Navbar) */}
         <nav
@@ -255,7 +266,8 @@ export default function InvitationMobileView({
         </nav>
 
         {/* 2. Portada (Sobre y Lazo con Glitter Oro Rosa) */}
-        <section id="inicio" className="px-6 pt-10 pb-6 text-center flex flex-col items-center relative">
+        {isSectionActive("portada") && (
+          <section id="inicio" className="px-6 pt-10 pb-6 text-center flex flex-col items-center relative">
           {/* Lluvia de brillos / glitter en la parte superior */}
           <div className="absolute top-2 left-0 right-0 flex justify-around pointer-events-none opacity-60">
             <Sparkles className="w-4 h-4 text-amber-300 animate-pulse" />
@@ -294,9 +306,11 @@ export default function InvitationMobileView({
             {data.subtitulo || "An Unforgettable Celebration Awaits"}
           </p>
         </section>
+        )}
 
         {/* 3. Retrato Principal y Nombre */}
-        <section className="px-6 py-6 text-center">
+        {isSectionActive("portada") && (
+          <section className="px-6 py-6 text-center">
           <p
             className="text-[11px] tracking-widest uppercase text-stone-500 mb-3 font-semibold"
             style={{ fontFamily: template.fontSubheading }}
@@ -341,7 +355,8 @@ export default function InvitationMobileView({
           </div>
 
           {/* Bloque de fecha entre separadores lineales delgados */}
-          <div className="flex items-center justify-center gap-4 mt-3">
+          {isSectionActive("medallonFecha") && (
+            <div className="flex items-center justify-center gap-4 mt-3">
             <div className="h-[1px] w-12 bg-pink-200" />
             <p
               className="text-xs tracking-widest font-semibold text-stone-600"
@@ -353,17 +368,21 @@ export default function InvitationMobileView({
             </p>
             <div className="h-[1px] w-12 bg-pink-200" />
           </div>
+          )}
         </section>
+        )}
 
         {/* 4. Cuenta Regresiva Digital (Countdown en Magenta/Vino #9E2A4B) */}
-        <CountdownTimer
+        {isSectionActive("cuentaRegresiva") && (
+          <CountdownTimer
           targetDate={data.fechaEvento}
           template={template}
           titulo="I CAN'T WAIT TO CELEBRATE WITH YOU!"
         />
+        )}
 
         {/* 5. Módulo Emocional "From Girl to Señorita" */}
-        {(data.fotoInfanciaUrl || data.fotoActualUrl || data.frasePersonalizada) && (
+        {(data.fotoInfanciaUrl || data.fotoActualUrl || data.frasePersonalizada) && isSectionActive("dedicatoria") && (
           <section className="px-6 py-8 text-center">
             <h3
               className="text-xs uppercase tracking-widest font-bold mb-4 text-[#5A3E44]"
@@ -426,7 +445,8 @@ export default function InvitationMobileView({
         )}
 
         {/* 6. Módulo de Confirmación (RSVP con WhatsApp) */}
-        <RsvpSection
+        {isSectionActive("rsvp") && (
+          <RsvpSection
           eventoId={data.id}
           eventoTitulo={data.titulo}
           telefonoWhatsapp={data.telefonoWhatsappRsvp}
@@ -442,9 +462,11 @@ export default function InvitationMobileView({
           permitirConfirmacionTelefono={data.permitirConfirmacionTelefono !== false}
           isEn={isEn}
         />
+        )}
 
         {/* 7. Mesa de Regalos / Lluvia de Sobres (The Registry) */}
-        <section className="px-6 py-6">
+        {isSectionActive("mesaRegalos") && (
+          <section className="px-6 py-6">
           <div
             className="p-6 rounded-3xl border border-pink-100 shadow-sm text-center bg-white"
           >
@@ -485,9 +507,11 @@ export default function InvitationMobileView({
             )}
           </div>
         </section>
+        )}
 
         {/* 8. Ubicación con Mapa (The Location) */}
-        <section className="px-6 py-6 space-y-4">
+        {isSectionActive("ubicaciones") && (
+          <section className="px-6 py-6 space-y-4">
           <div className="text-center mb-2">
             <span className="text-2xl">📍</span>
             <h3
@@ -596,12 +620,16 @@ export default function InvitationMobileView({
             </div>
           )}
         </section>
+        )}
 
         {/* 9. Línea de Tiempo del Evento (The Program) */}
-        <TimelineSection items={data.itinerarioJson} template={template} isEn={isEn} />
+        {isSectionActive("itinerario") && (
+          <TimelineSection items={data.itinerarioJson} template={template} isEn={isEn} />
+        )}
 
         {/* 10. Código de Vestimenta (Dress Code) */}
-        <section className="px-6 py-6">
+        {isSectionActive("dressCode") && (
+          <section className="px-6 py-6">
           <div
             className="p-6 rounded-3xl border border-pink-100 shadow-sm text-center bg-white/80"
           >
@@ -644,9 +672,11 @@ export default function InvitationMobileView({
             )}
           </div>
         </section>
+        )}
 
         {/* 11. Guía de la Celebración (Celebration Guideline) */}
-        <section className="px-6 py-4">
+        {isSectionActive("fotoZapatos2") && (
+          <section className="px-6 py-4">
           <div
             className="p-6 rounded-3xl border border-pink-100 shadow-sm text-center bg-white/70"
           >
@@ -665,9 +695,10 @@ export default function InvitationMobileView({
             </p>
           </div>
         </section>
+        )}
 
         {/* 12. Corte de Honor y Agradecimientos (The Court of Honor & Special Thank You) */}
-        {tieneCorte && (
+        {tieneCorte && isSectionActive("corteHonor") && (
         <section className="px-6 py-6">
           <div
             className="p-6 rounded-3xl border border-pink-100 shadow-sm text-center bg-white"

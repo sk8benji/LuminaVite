@@ -18,7 +18,7 @@ import { InvitationData } from "../invitation/InvitationMobileView";
 import DynamicRsvpForm from "../invitation/DynamicRsvpForm";
 import { sanitizeUrl } from "@/lib/url-safety";
 import { isSectionEnabledInEvent, type SeccionId } from "@/config/templateSections";
-import { formatFechaLimiteRsvp } from "@/lib/fecha-limite";
+import { formatFechaLimiteRsvp, fraseFechaLimiteRsvp } from "@/lib/fecha-limite";
 
 function WavyColumn({
   children,
@@ -205,6 +205,16 @@ export default function ElegantRoseTemplate({
     | string
     | undefined;
 
+  // Bloque ACCOMMODATION (Details). Sin texto no se muestra: antes era un
+  // texto fijo que afirmaba un bloque de habitaciones reservado.
+  const accommodationTexto = isEn
+    ? ((data.configPlantilla as any)?.accommodationTextoEn ??
+      (data.configPlantilla as any)?.accommodationTexto ??
+      "")
+    : ((data.configPlantilla as any)?.accommodationTexto ??
+      (data.configPlantilla as any)?.accommodationTextoEn ??
+      "");
+
   // Frase de cierre de "Growing Up" (editable en Historia). "" explícito = oculta.
   const cierreGrowingUp =
     isEn
@@ -247,12 +257,12 @@ export default function ElegantRoseTemplate({
 
   const churchMapUrl = getMapDirectionsUrl(
     data.ceremoniaMapUrl,
-    `${data.ceremoniaNombre || "St. Mary's Church"} ${data.ceremoniaDireccion || "Any City, Any Street, AZ 12345"}`.trim()
+    `${data.ceremoniaNombre || ""} ${data.ceremoniaDireccion || ""}`.trim()
   );
 
   const ballroomMapUrl = getMapDirectionsUrl(
     data.recepcionMapUrl,
-    `${data.recepcionNombre || "Grand Ballroom"} ${data.recepcionDireccion || "Any City, Any Street, AZ 12345"}`.trim()
+    `${data.recepcionNombre || ""} ${data.recepcionDireccion || ""}`.trim()
   );
 
 
@@ -409,7 +419,8 @@ export default function ElegantRoseTemplate({
             </h2>
 
             {/* 6. Bloque de Fecha Horizontal Elegante */}
-            <div className="w-full max-w-[300px] mx-auto mt-4 pt-2">
+            {isSectionActive("medallonFecha") && (
+              <div className="w-full max-w-[300px] mx-auto mt-4 pt-2">
               {/* Mes Arqueado */}
               <div className="w-full flex justify-center -mb-1">
                 <svg viewBox="0 0 180 38" className="w-32 h-7 overflow-visible">
@@ -448,17 +459,20 @@ export default function ElegantRoseTemplate({
               </div>
 
               {/* Dirección / Locación */}
-              <p className="font-['Cinzel'] text-xs sm:text-sm tracking-[0.22em] uppercase text-white font-bold mt-3 leading-relaxed drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
-                {data.recepcionNombre || data.ceremoniaNombre || "ANY CITY, ANY STREET, AZ 12345"}
-              </p>
-              {data.recepcionDireccion && (
+              {(data.recepcionNombre || data.ceremoniaNombre) && isSectionActive("ubicaciones") && (
+                <p className="font-['Cinzel'] text-xs sm:text-sm tracking-[0.22em] uppercase text-white font-bold mt-3 leading-relaxed drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
+                  {data.recepcionNombre || data.ceremoniaNombre}
+                </p>
+              )}
+              {data.recepcionDireccion && isSectionActive("ubicaciones") && (
                 <p className="font-['Cinzel'] text-xs sm:text-[13px] tracking-[0.18em] uppercase text-white font-semibold mt-1 leading-relaxed drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
                   {data.recepcionDireccion}
                 </p>
               )}
 
               {/* Botón Google Maps elegante y legible a juego con Canva */}
-              <a
+              {isSectionActive("ubicaciones") && (
+                <a
                 href={churchMapUrl}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -466,7 +480,9 @@ export default function ElegantRoseTemplate({
               >
                 GOOGLE MAPS
               </a>
+              )}
             </div>
+            )}
           </div>
         </section>
         )}
@@ -491,9 +507,11 @@ export default function ElegantRoseTemplate({
                 />
               </div>
 
-              <p className="font-['Cinzel'] text-xs sm:text-sm tracking-wider text-[#5A3E44] font-bold truncate">
-                {data.musicaTitulo || "Photograph - Ed Sheeran"}
-              </p>
+              {data.musicaTitulo && (
+                <p className="font-['Cinzel'] text-xs sm:text-sm tracking-wider text-[#5A3E44] font-bold truncate">
+                  {data.musicaTitulo}
+                </p>
+              )}
               <p className="text-xs text-stone-600 font-medium truncate">
                 {isEn ? "Official Quince Song" : "Canción Oficial"}
               </p>
@@ -818,9 +836,11 @@ export default function ElegantRoseTemplate({
                     <span className="font-['Bodoni_Moda',serif] text-base sm:text-lg font-bold tracking-[0.2em] uppercase text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
                       {isEn ? "MASS" : "MISA"}
                     </span>
-                    <span className="font-['Bodoni_Moda',serif] text-[11px] sm:text-xs uppercase text-white font-medium tracking-wide leading-tight drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)] mt-1 px-1">
-                      {data.ceremoniaNombre || (isEn ? "ST. MARY’S CHURCH, YOUR CITY, AZ" : "IGLESIA SANTA MARÍA, TU CIUDAD, AZ")}
-                    </span>
+                    {data.ceremoniaNombre && (
+                      <span className="font-['Bodoni_Moda',serif] text-[11px] sm:text-xs uppercase text-white font-medium tracking-wide leading-tight drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)] mt-1 px-1">
+                        {data.ceremoniaNombre}
+                      </span>
+                    )}
                   </div>
 
                   {/* Columna Derecha: Iglesia Line Art Blanca */}
@@ -885,9 +905,11 @@ export default function ElegantRoseTemplate({
                     <span className="font-['Bodoni_Moda',serif] text-base sm:text-lg font-bold tracking-[0.2em] uppercase text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
                       {isEn ? "ENTRANCE" : "RECEPCIÓN"}
                     </span>
-                    <span className="font-['Bodoni_Moda',serif] text-[11px] sm:text-xs uppercase text-white font-medium tracking-wide leading-tight drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)] mt-1 px-1">
-                      {data.recepcionNombre || (isEn ? "GRAND BALLROOM, YOUR CITY, AZ" : "SALÓN PRINCIPAL, TU CIUDAD, AZ")}
-                    </span>
+                    {data.recepcionNombre && (
+                      <span className="font-['Bodoni_Moda',serif] text-[11px] sm:text-xs uppercase text-white font-medium tracking-wide leading-tight drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)] mt-1 px-1">
+                        {data.recepcionNombre}
+                      </span>
+                    )}
                   </div>
                 </div>
 
@@ -1148,14 +1170,16 @@ export default function ElegantRoseTemplate({
             )}
 
             {/* Accommodation */}
+            {isSectionActive("accommodation") && accommodationTexto !== "" && (
             <div className="my-6">
               <p className="font-['Cinzel'] text-xs sm:text-sm font-bold tracking-[0.25em] uppercase text-rose-200 drop-shadow-sm">
                 ACCOMMODATION
               </p>
               <p className="text-xs sm:text-[13px] text-white font-medium max-w-[280px] mx-auto leading-relaxed mt-1.5 drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
-                A room block has been reserved for our guests. Please contact us for reservation details and booking information.
+                {accommodationTexto}
               </p>
             </div>
+            )}
 
             {/* Thank you */}
             <div className="mt-8 pt-4 border-t border-white/30 w-full">
@@ -1188,11 +1212,11 @@ export default function ElegantRoseTemplate({
               RSVP
             </h2>
 
-            <p className="font-['Cinzel'] text-xs sm:text-[13px] tracking-widest uppercase text-rose-100 mb-6 font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
-              {isEn
-                ? (data.rsvpFechaLimiteEn || formatFechaLimiteRsvp(data.fechaLimiteRsvp, "en") || "BY JUNE 20TH")
-                : (data.rsvpFechaLimite || formatFechaLimiteRsvp(data.fechaLimiteRsvp, "es") || "ANTES DEL 20 DE JUNIO")}
-            </p>
+            {fraseFechaLimiteRsvp(data, isEn ? "en" : "es") && (
+              <p className="font-['Cinzel'] text-xs sm:text-[13px] tracking-widest uppercase text-rose-100 mb-6 font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
+                {fraseFechaLimiteRsvp(data, isEn ? "en" : "es")}
+              </p>
+            )}
 
             <div className="w-full max-w-[320px]">
               <DynamicRsvpForm
@@ -1204,8 +1228,8 @@ export default function ElegantRoseTemplate({
                 telefonoWhatsapp={data.telefonoWhatsappRsvp}
                 primaryColor="#8B4513"
                 accentBgColor="bg-white/95"
-                deadlineText={data.rsvpFechaLimite || formatFechaLimiteRsvp(data.fechaLimiteRsvp, "es") || "ANTES DEL 20 DE JUNIO"}
-                deadlineTextEn={data.rsvpFechaLimiteEn || formatFechaLimiteRsvp(data.fechaLimiteRsvp, "en") || "BY JUNE 20TH"}
+                deadlineText={fraseFechaLimiteRsvp(data, "es") ?? undefined}
+                deadlineTextEn={fraseFechaLimiteRsvp(data, "en") ?? undefined}
                 rsvpTitulo={data.rsvpTitulo}
                 rsvpTituloEn={data.rsvpTituloEn}
                 rsvpSubtitulo={data.rsvpSubtitulo}

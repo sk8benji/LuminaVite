@@ -5,8 +5,10 @@ import { MapPin, CheckCircle2, Sparkles, MessageCircle, Music, Pause, CalendarPl
 import confetti from "canvas-confetti";
 import { InvitationData } from "../invitation/InvitationMobileView";
 import { getMapEmbedUrl, getMapDirectionsUrl } from "@/lib/maps";
+import { fraseFechaLimiteRsvp, formatFechaLimiteRsvp } from "@/lib/fecha-limite";
 import { BLUSH_ASSETS } from "@/lib/templates/blushPrincessAssets";
 import { parseTemplateConfig, BlushPrincessConfig } from "@/types/templateConfigs";
+import { isSectionEnabledInEvent, SeccionId } from "@/config/templateSections";
 
 export default function BlushPrincessTemplate({
   data,
@@ -16,6 +18,14 @@ export default function BlushPrincessTemplate({
   skipIntro?: boolean;
 }) {
   const templateConfig = parseTemplateConfig<BlushPrincessConfig>(data.configPlantilla);
+  const isSectionActive = (sectionId: SeccionId): boolean =>
+    isSectionEnabledInEvent(sectionId, data.configPlantilla, {
+      mostrarFrasePersonalizada: data.mostrarFrasePersonalizada,
+      mostrarFechaPlacaHora: data.mostrarFechaPlacaHora,
+      mostrarDressCode: data.mostrarDressCode,
+      mostrarMesaRegalos: data.mostrarMesaRegalos,
+      permitirConfirmacionTelefono: data.permitirConfirmacionTelefono,
+    });
   // Estado para la Intro 3D del Sobre
   const [isEnvelopeOpen, setIsEnvelopeOpen] = useState(false);
   const [isEnvelopeFading, setIsEnvelopeFading] = useState(false);
@@ -76,7 +86,7 @@ export default function BlushPrincessTemplate({
     setIsEnvelopeOpen(true);
 
     // Reproducir música tras el gesto táctil del usuario si está habilitado
-    if (data.reproducirMusicaAlAbrir !== false && audioRef.current) {
+    if (isSectionActive("musica") && data.reproducirMusicaAlAbrir !== false && audioRef.current) {
       audioRef.current
         .play()
         .then(() => setIsPlaying(true))
@@ -262,22 +272,11 @@ export default function BlushPrincessTemplate({
     ? `${eventWeekday}, ${eventMonth} ${eventDay}, ${eventYear}`
     : (data.fechaTextoPersonalizada || `${eventWeekday} ${eventDay} DE ${eventMonth}, ${eventYear}`);
 
-  // Cálculo dinámico de fecha límite RSVP bilingüe fija (días antes del evento)
-  const diasAntesRsvp =
-    typeof data.rsvpDiasAntes === "number" && data.rsvpDiasAntes > 0
-      ? data.rsvpDiasAntes
-      : 15;
-  const deadlineBaseTime = !isNaN(eventDate.getTime()) ? eventDate.getTime() : Date.now();
-  const deadlineDate = new Date(deadlineBaseTime - diasAntesRsvp * 24 * 60 * 60 * 1000);
-  const deadlineDay = deadlineDate.getDate();
-  const rawMonthEs = deadlineDate.toLocaleDateString("es-ES", { month: "long" });
-  const rawMonthEn = deadlineDate.toLocaleDateString("en-US", { month: "long" });
-  const deadlineMonthEs = rawMonthEs.charAt(0).toUpperCase() + rawMonthEs.slice(1);
-  const deadlineMonthEn = rawMonthEn.charAt(0).toUpperCase() + rawMonthEn.slice(1);
-
-  const rsvpDeadlinePhrase = isEn
-    ? `Please confirm before ${deadlineMonthEn} ${deadlineDay}`
-    : `Favor de confirmar antes del ${deadlineDay} de ${deadlineMonthEs}`;
+  // Fecha límite del RSVP: una sola fuente (rsvpFechaLimite/En, derivada
+  // en el editor de fechaLimiteRsvp) y un solo render (fraseFechaLimiteRsvp).
+  // La fecha corta es la misma fecha guardada, formateada (nunca el ISO crudo).
+  const rsvpDeadlinePhrase = fraseFechaLimiteRsvp(data, isEn ? "en" : "es");
+  const fechaLimiteCorta = formatFechaLimiteRsvp(data.fechaLimiteRsvp, isEn ? "en" : "es");
 
   // Itinerario dinámico con soporte de iconos ilustrados oficiales de Canva (93aa7fe30583ab72bdf167a2bce291e3)
   const getItineraryIcon = (item: any, idx: number) => {
@@ -432,7 +431,9 @@ export default function BlushPrincessTemplate({
       />
 
       {/* Audio en bucle */}
-      <audio ref={audioRef} loop preload="none" src={defaultAudio} />
+      {isSectionActive("musica") && (
+        <audio ref={audioRef} loop preload="none" src={defaultAudio} />
+      )}
 
       {/* ========================================================= */}
       {/* INTRO: PORTADA DE IDIOMA + SOBRE (réplica Canva pág. 1)  */}
@@ -746,7 +747,8 @@ export default function BlushPrincessTemplate({
         )}
 
         {/* Botón flotante de audio discreto (40px) */}
-        <button
+                {isSectionActive("musica") && (
+<button
           type="button"
           onClick={toggleMusic}
           aria-label={isPlaying ? (isEn ? "Pause music" : "Pausar música") : (isEn ? "Play music" : "Escuchar música")}
@@ -759,19 +761,21 @@ export default function BlushPrincessTemplate({
             <Music className="w-5 h-5" />
           )}
         </button>
+        )}
       </div>
 
       <main className="relative z-10">
         {/* ======================================================= */}
         {/* SECCIÓN 1: HERO — monograma ST, polaroid decorada, texto */}
         {/* ======================================================= */}
-        <section className="relative px-4 pt-10 sm:pt-14 pb-8 text-center overflow-hidden">
+        {isSectionActive("portada") && (
+          <section className="relative px-4 pt-10 sm:pt-14 pb-8 text-center overflow-hidden">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={BLUSH_ASSETS.bouquetB} alt="" className="absolute -top-4 -left-8 w-32 sm:w-44 opacity-80 pointer-events-none" />
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={BLUSH_ASSETS.bouquetC} alt="" className="absolute -top-4 -right-8 w-32 sm:w-44 opacity-80 pointer-events-none -scale-x-100" />
 
-          {/* Monograma y escudo superior (ST) centrado, fondo 100% transparente y tamaño optimizado */}
+          {/* Monograma calculado del nombre de la festejada (antes: imagen fija "ST" para todas) */}
           <div
             className="monogram-container relative mx-auto my-2 block"
             style={{
@@ -782,13 +786,9 @@ export default function BlushPrincessTemplate({
               boxShadow: "none",
             }}
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={BLUSH_ASSETS.monogramST || BLUSH_ASSETS.crownFrame}
-              alt="Monograma Quinceañera"
-              className="w-full h-auto drop-shadow-sm mx-auto block bg-transparent border-0"
-              style={{ background: "transparent", backgroundColor: "transparent" }}
-            />
+            <span className="font-serif-roman block text-center text-[44px] leading-none tracking-[0.18em] text-[#B08D3C] drop-shadow-sm">
+              {monograma}
+            </span>
           </div>
 
           {/* Polaroid principal con encuadre armónico y elementos decorativos */}
@@ -871,11 +871,13 @@ export default function BlushPrincessTemplate({
             <img src={BLUSH_ASSETS.divider} alt="" className="w-56 h-auto mx-auto pt-2 opacity-90" />
           </div>
         </section>
+        )}
 
         {/* ======================================================= */}
         {/* SECCIÓN 2: ESCENA DEL SOBRE + MIS XV                    */}
         {/* ======================================================= */}
-        <section className="px-6 py-8 text-center">
+        {isSectionActive("portada") && (
+          <section className="px-6 py-8 text-center">
           <div className="relative max-w-sm mx-auto">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={BLUSH_ASSETS.envelopeOpen} alt="Sobre" className="w-full h-auto drop-shadow-xl" />
@@ -895,11 +897,13 @@ export default function BlushPrincessTemplate({
             </div>
           </div>
         </section>
+        )}
 
         {/* ======================================================= */}
         {/* SECCIÓN 3: TARJETA DE FECHA + RSVP                      */}
         {/* ======================================================= */}
-        <section className="px-6 py-10 text-center">
+        {isSectionActive("medallonFecha") && (
+          <section className="px-6 py-10 text-center">
           <div className="relative max-w-sm mx-auto">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={BLUSH_ASSETS.bowCard} alt="" className="w-full h-auto drop-shadow-xl" />
@@ -918,17 +922,19 @@ export default function BlushPrincessTemplate({
               >
                 <span className="font-serif-roman text-xs tracking-[0.3em] uppercase font-bold leading-none">RSVP</span>
                 <span className="text-[9px] tracking-[0.15em] uppercase opacity-90 leading-tight mt-0.5">
-                  {isEn ? `Here · by ${deadlineMonthEn} ${deadlineDay}` : `Aquí · antes del ${deadlineDay} de ${deadlineMonthEs}`}
+                  {fechaLimiteCorta ? (isEn ? `Here · by ${fechaLimiteCorta}` : `Aquí · antes del ${fechaLimiteCorta}`) : ""}
                 </span>
               </a>
             </div>
           </div>
         </section>
+        )}
 
         {/* ======================================================= */}
         {/* SECCIÓN 4: CEREMONIA Y RECEPCIÓN + THEN / NOW           */}
         {/* ======================================================= */}
-        <section className="px-6 py-8">
+        {isSectionActive("ubicaciones") && (
+          <section className="px-6 py-8">
           <h3 className="font-script text-5xl text-center text-[#9D2C4A] mb-6">
             {isEn ? "The Details" : "Los Detalles"}
           </h3>
@@ -1001,11 +1007,12 @@ export default function BlushPrincessTemplate({
             </div>
           )}
         </section>
+        )}
 
         {/* ======================================================= */}
         {/* SECCIÓN 5: CORTE DE HONOR                               */}
         {/* ======================================================= */}
-        {corte && (
+        {corte && isSectionActive("corteHonor") && (
           <section className="px-6 py-10 text-center relative">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={BLUSH_ASSETS.girlBack} alt="" className="w-28 sm:w-36 h-auto mx-auto mb-2 opacity-95" />
@@ -1078,7 +1085,8 @@ export default function BlushPrincessTemplate({
         {/* ======================================================= */}
         {/* SECCIÓN 6: SAVE THE DATE + CUENTA REGRESIVA             */}
         {/* ======================================================= */}
-        <section className="relative py-10 px-6 text-center overflow-hidden">
+        {isSectionActive("cuentaRegresiva") && (
+          <section className="relative py-10 px-6 text-center overflow-hidden">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={BLUSH_ASSETS.silkB} alt="" className="absolute inset-0 w-full h-full object-cover -z-0 opacity-70" />
           <div className="relative">
@@ -1103,11 +1111,13 @@ export default function BlushPrincessTemplate({
             </div>
           </div>
         </section>
+        )}
 
         {/* ======================================================= */}
         {/* SECCIÓN 7: ITINERARIO                                   */}
         {/* ======================================================= */}
-        <section className="px-6 py-10">
+        {isSectionActive("itinerario") && (
+          <section className="px-6 py-10">
           <h3 className="font-script text-5xl text-center text-[#9D2C4A] mb-2">
             {isEn ? "Celebration Timeline" : "Itinerario"}
           </h3>
@@ -1131,11 +1141,12 @@ export default function BlushPrincessTemplate({
             </div>
           </div>
         </section>
+        )}
 
         {/* ======================================================= */}
         {/* SECCIÓN 8: CÓDIGO DE VESTIMENTA + PALETA                */}
         {/* ======================================================= */}
-        {(data.mostrarDressCode !== false) && (
+        {isSectionActive("dressCode") && (
           <section className="px-6 py-10 text-center">
             <h3 className="font-script text-5xl text-[#9D2C4A]">
               {isEn ? (data.dressCodeTituloEn || "Dress Code") : (data.dressCodeTitulo || "Código de Vestimenta")}
@@ -1164,7 +1175,8 @@ export default function BlushPrincessTemplate({
         {/* ======================================================= */}
         {/* SECCIÓN 9: MAPA, VIAJE Y HOSPEDAJE                      */}
         {/* ======================================================= */}
-        <section className="px-6 py-10">
+        {isSectionActive("ubicaciones") && (
+          <section className="px-6 py-10">
           <h3 className="font-script text-5xl text-center text-[#9D2C4A] mb-6">
             {isEn ? "The Location" : "Ubicación"}
           </h3>
@@ -1220,11 +1232,12 @@ export default function BlushPrincessTemplate({
             </div>
           )}
         </section>
+        )}
 
         {/* ======================================================= */}
         {/* SECCIÓN 10: MESA DE REGALOS                             */}
         {/* ======================================================= */}
-        {data.mostrarMesaRegalos !== false && (
+        {isSectionActive("mesaRegalos") && (
           <section className="px-6 py-10 text-center relative">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={BLUSH_ASSETS.bouquetA} alt="" className="w-32 sm:w-40 h-auto mx-auto mb-1" />
@@ -1265,7 +1278,8 @@ export default function BlushPrincessTemplate({
 {/* ======================================================= */}
         {/* SECCIÓN 10: CONFIRMACIÓN DE ASISTENCIA (RSVP)           */}
         {/* ======================================================= */}
-        <section id="rsvp" className="px-4 py-6 z-20">
+        {isSectionActive("rsvp") && (
+          <section id="rsvp" className="px-4 py-6 z-20">
           <div className="relative w-full max-w-[390px] mx-auto -mb-9 z-20 flex justify-center">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -1285,9 +1299,11 @@ export default function BlushPrincessTemplate({
                 </h3>
               );
             })()}
-            <p className="text-[11px] text-slate-500 mb-5 uppercase tracking-wider font-serif-roman font-semibold">
-              {rsvpDeadlinePhrase}
-            </p>
+            {rsvpDeadlinePhrase && (
+              <p className="text-[11px] text-slate-500 mb-5 uppercase tracking-wider font-serif-roman font-semibold">
+                {rsvpDeadlinePhrase}
+              </p>
+            )}
 
             {/* Alerta de confirmación previa / actualización de pases */}
             {rsvpFeedback && (
@@ -1462,6 +1478,7 @@ export default function BlushPrincessTemplate({
             )}
           </div>
         </section>
+        )}
 
         {/* ======================================================= */}
         {/* SECCIÓN 12: GRACIAS, PREGUNTAS Y CIERRE                 */}

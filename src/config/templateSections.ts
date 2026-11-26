@@ -20,7 +20,10 @@ export type SeccionId =
   | 'corteHonor'
   | 'cuentaRegresiva'
   | 'videoDespedida'
-  | 'historia';
+  | 'historia'
+  | 'hotel'
+  | 'transporte'
+  | 'accommodation';
 
 export interface SeccionMeta {
   id: SeccionId;
@@ -157,6 +160,30 @@ export const SECCIONES_QUINCE_ROSADO: SeccionMeta[] = [
     icono: 'BookOpen',
     defaultEnabled: true,
   },
+  {
+    id: 'hotel',
+    numero: 16,
+    label: 'Hotel / Hospedaje',
+    descripcion: 'Bloque de habitaciones reservado para los invitados (solo Fairytale).',
+    icono: 'Sparkles',
+    defaultEnabled: true,
+  },
+  {
+    id: 'transporte',
+    numero: 17,
+    label: 'Transporte',
+    descripcion: 'Shuttles y transporte de invitados (solo Fairytale).',
+    icono: 'Sparkles',
+    defaultEnabled: true,
+  },
+  {
+    id: 'accommodation',
+    numero: 18,
+    label: 'Hospedaje (Accommodation)',
+    descripcion: 'Bloque de habitaciones para invitados dentro de Details (solo Elegant Rose).',
+    icono: 'Sparkles',
+    defaultEnabled: true,
+  },
 ];
 
 /**
@@ -203,16 +230,40 @@ export const SECCIONES_POR_PLANTILLA: Record<string, SeccionId[]> = {
     'musica',
   ],
   BLUE_BUTTERFLY: TODAS_MENOS_ZAPATOS_VIDEO,
-  MISS_15: TODAS_MENOS_ZAPATOS_VIDEO,
-  QUINCE_ERA_PINK: TODAS_MENOS_ZAPATOS_VIDEO,
-  BLUSH_PRINCESS: TODAS_MENOS_ZAPATOS_VIDEO,
-  BEAUTY_QUINCE: TODAS_MENOS_ZAPATOS_VIDEO,
-  PRINCESA_ROSA: TODAS_MENOS_ZAPATOS_VIDEO,
-  CLASICA_IMPERIAL: TODAS_MENOS_ZAPATOS_VIDEO,
-  ESMERALDA_ROYAL: TODAS_MENOS_ZAPATOS_VIDEO,
-  JARDIN_BOTANICA: TODAS_MENOS_ZAPATOS_VIDEO,
-  MINIMALISTA_EDITORIAL: TODAS_MENOS_ZAPATOS_VIDEO,
-  BABY_BLUE: [
+  // Miss 15 no tiene bloque de dedicatoria (frasePersonalizada no se
+  // lee); su seccion Details tiene ademas un bloque de Hospedaje.
+  MISS_15: [
+    'portada',
+    'medallonFecha',
+    'rsvp',
+    'ubicaciones',
+    'dressCode',
+    'mesaRegalos',
+    'itinerario',
+    'corteHonor',
+    'cuentaRegresiva',
+    'musica',
+    'accommodation',
+  ],
+  // Quince Era Pink SI tiene dedicatoria (frase con foto en el hero)
+  // y un bloque de Transporte (transporteJson) en Details.
+  QUINCE_ERA_PINK: [
+    'portada',
+    'medallonFecha',
+    'dedicatoria',
+    'rsvp',
+    'ubicaciones',
+    'dressCode',
+    'mesaRegalos',
+    'itinerario',
+    'corteHonor',
+    'cuentaRegresiva',
+    'musica',
+    'transporte',
+  ],
+  // Blush Princess / Blush Envelope no tienen bloque de dedicatoria
+  // (frasePersonalizada no se lee en esos templates): la lista no la ofrece.
+  BLUSH_PRINCESS: [
     'portada',
     'medallonFecha',
     'rsvp',
@@ -224,6 +275,53 @@ export const SECCIONES_POR_PLANTILLA: Record<string, SeccionId[]> = {
     'cuentaRegresiva',
     'musica',
   ],
+  BLUSH_ENVELOPE: [
+    'portada',
+    'medallonFecha',
+    'rsvp',
+    'ubicaciones',
+    'dressCode',
+    'mesaRegalos',
+    'itinerario',
+    'corteHonor',
+    'cuentaRegresiva',
+    'musica',
+  ],
+  // Beauty Quince SÍ tiene Recomendación: su bloque "Important Details /
+  // Kids Policy" es esa sección (se apaga con su interruptor y su texto
+  // es celebrationGuideline).
+  BEAUTY_QUINCE: [
+    'portada',
+    'medallonFecha',
+    'dedicatoria',
+    'rsvp',
+    'ubicaciones',
+    'dressCode',
+    'mesaRegalos',
+    'itinerario',
+    'fotoZapatos2',
+    'corteHonor',
+    'cuentaRegresiva',
+    'musica',
+  ],
+  PRINCESA_ROSA: TODAS_MENOS_ZAPATOS_VIDEO,
+  CLASICA_IMPERIAL: TODAS_MENOS_ZAPATOS_VIDEO,
+  ESMERALDA_ROYAL: TODAS_MENOS_ZAPATOS_VIDEO,
+  JARDIN_BOTANICA: TODAS_MENOS_ZAPATOS_VIDEO,
+  MINIMALISTA_EDITORIAL: TODAS_MENOS_ZAPATOS_VIDEO,
+  // Baby Blue no renderiza corte de honor (corteHonorJson se calcula
+  // pero nunca se usa en el template): la lista no lo ofrece.
+  BABY_BLUE: [
+    'portada',
+    'medallonFecha',
+    'rsvp',
+    'ubicaciones',
+    'dressCode',
+    'mesaRegalos',
+    'itinerario',
+    'cuentaRegresiva',
+    'musica',
+  ],
   ELEGANT_ROSE: [
     'portada',
     'medallonFecha',
@@ -232,6 +330,7 @@ export const SECCIONES_POR_PLANTILLA: Record<string, SeccionId[]> = {
     'ubicaciones',
     'dressCode',
     'mesaRegalos',
+    'accommodation',
     'itinerario',
     'corteHonor',
     'cuentaRegresiva',
@@ -254,6 +353,8 @@ export const SECCIONES_POR_PLANTILLA: Record<string, SeccionId[]> = {
     'medallonFecha',
     'rsvp',
     'ubicaciones',
+    'hotel',
+    'transporte',
     'dressCode',
     'mesaRegalos',
     'itinerario',
@@ -292,6 +393,124 @@ export function seccionesSoportadas(estiloPlantilla?: string | null): SeccionId[
   return SECCIONES_POR_PLANTILLA[estiloPlantilla] ?? todas;
 }
 
+// =========================================================================
+// MÁSTER PROPIO DE SAVE THE DATE (separado del de invitaciones)
+// -------------------------------------------------------------------------
+// SAVE_THE_DATE_QUINCE_ROSADO NO pertenece al máster de invitaciones:
+// sus secciones son otras (las que renderiza QuinceRosadoSaveTheDate +
+// los flags del modelo SaveTheDate) y el editor de invitaciones nunca
+// debe ofrecerle las 15 secciones de invitaciones. Las futuras
+// plantillas de Save the Date se cuelgan de este máster, no del otro.
+// El orden de esta lista ES el orden por defecto del STD (fallback para
+// invitaciones viejas sin ordenSecciones): sobre → música → galería →
+// calendario → contador → pre-RSVP, igual que el JSX actual.
+// =========================================================================
+
+export type SeccionSaveTheDateId =
+  | 'sobre'
+  | 'musica'
+  | 'galeria'
+  | 'calendario'
+  | 'contador'
+  | 'preRsvp';
+
+export interface SeccionSaveTheDateMeta {
+  id: SeccionSaveTheDateId;
+  numero: number;
+  label: string;
+  descripcion: string;
+  icono: string;
+  defaultEnabled: boolean;
+  /** Campo del modelo SaveTheDate (o dato) que controla esta sección. */
+  campoModelo?: string;
+}
+
+export const SECCIONES_SAVE_THE_DATE: SeccionSaveTheDateMeta[] = [
+  {
+    id: 'sobre',
+    numero: 1,
+    label: 'Sobre y Portada',
+    descripcion: 'Hero con la foto de portada y el sobre interactivo (foto al abrirlo).',
+    icono: 'Sparkles',
+    defaultEnabled: true,
+    campoModelo: 'mostrarSobre',
+  },
+  {
+    id: 'musica',
+    numero: 2,
+    label: 'Música',
+    descripcion: 'Reproductor con la canción del Save the Date. Sin URL de música no se muestra.',
+    icono: 'Music',
+    defaultEnabled: true,
+    campoModelo: 'musicaUrl',
+  },
+  {
+    id: 'galeria',
+    numero: 3,
+    label: 'Galería de Fotos',
+    descripcion: 'Tira de fotos verticales, 2 a la vez y deslizable si hay más.',
+    icono: 'Image',
+    defaultEnabled: true,
+    campoModelo: 'mostrarGaleria',
+  },
+  {
+    id: 'calendario',
+    numero: 4,
+    label: 'Calendario',
+    descripcion: 'Calendario del mes con el día marcado y botón de agregar al calendario.',
+    icono: 'Calendar',
+    defaultEnabled: true,
+    campoModelo: 'mostrarCalendario',
+  },
+  {
+    id: 'contador',
+    numero: 5,
+    label: 'Cuenta Regresiva',
+    descripcion: 'Cronómetro en vivo hacia la fecha del evento.',
+    icono: 'Hourglass',
+    defaultEnabled: true,
+    campoModelo: 'mostrarContador',
+  },
+  {
+    id: 'preRsvp',
+    numero: 6,
+    label: 'Pre-Confirmación',
+    descripcion: 'Pregunta de pre-confirmación con respuesta por WhatsApp.',
+    icono: 'Users',
+    defaultEnabled: true,
+    campoModelo: 'mostrarPreRsvp',
+  },
+];
+
+/** Orden por defecto de las secciones STD (el de su JSX actual). */
+export const ORDEN_POR_DEFECTO_STD: SeccionSaveTheDateId[] =
+  SECCIONES_SAVE_THE_DATE.map((s) => s.id);
+
+/**
+ * Secciones que cada plantilla de Save the Date renderiza.
+ * QuinceRosadoSaveTheDate es la primera plantilla de este máster.
+ */
+export const SECCIONES_POR_PLANTILLA_STD: Record<string, SeccionSaveTheDateId[]> = {
+  SAVE_THE_DATE_QUINCE_ROSADO: [
+    'sobre',
+    'musica',
+    'galeria',
+    'calendario',
+    'contador',
+    'preRsvp',
+  ],
+};
+
+export function esEstiloSaveTheDate(estiloPlantilla?: string | null): boolean {
+  return estiloPlantilla === 'SAVE_THE_DATE_QUINCE_ROSADO';
+}
+
+export function seccionesSoportadasStd(estiloPlantilla?: string | null): SeccionSaveTheDateId[] {
+  const todas = SECCIONES_SAVE_THE_DATE.map((s) => s.id);
+  if (!estiloPlantilla) return todas;
+  return SECCIONES_POR_PLANTILLA_STD[estiloPlantilla] ?? todas;
+}
+
 /**
  * Obtener estado de habilitación de una sección dado el objeto de invitación
  */
@@ -326,4 +545,131 @@ export function isSectionEnabledInEvent(
   }
 
   return true;
+}
+
+// =========================================================================
+// ORDEN DE SECCIONES POR INVITACIÓN (configPlantilla.ordenSecciones)
+// -------------------------------------------------------------------------
+// La portada va fija arriba (no reordenable). Sin ordenSecciones guardado,
+// el orden es el del JSX del template (nada cambia visualmente al
+// desplegar). Al leer se valida: se quitan duplicados e ids desconocidos
+// y se completan las secciones que falten en el orden por defecto.
+// Solo QUINCE_ROSADO aplica el orden hoy (paso 6); los demás templates
+// lo ignoran hasta su refactor Fase 2.
+// =========================================================================
+
+/** Grupos visuales de Quince Rosado: las secciones de un grupo comparten
+ *  un mismo envoltorio <section> en el JSX y se mueven juntas. */
+export const GRUPOS_QUINCE_ROSADO: SeccionId[][] = [
+  ['portada', 'medallonFecha'],
+  ['dedicatoria'],
+  ['rsvp', 'fotoZapatos1', 'ubicaciones', 'dressCode', 'mesaRegalos'],
+  ['itinerario', 'fotoZapatos2'],
+  ['corteHonor'],
+  ['cuentaRegresiva', 'videoDespedida'],
+];
+
+/** Orden efectivo de secciones (ids) para un estilo: el guardado validado
+ *  o el orden por defecto del template. La portada siempre queda primera. */
+export function ordenEfectivo(estiloPlantilla: string | null | undefined, configPlantilla: any): SeccionId[] {
+  const porDefecto = seccionesSoportadas(estiloPlantilla);
+  const guardado = configPlantilla?.ordenSecciones;
+  if (!Array.isArray(guardado) || guardado.length === 0) return [...porDefecto];
+  const vistos = new Set<string>();
+  const orden: SeccionId[] = [];
+  for (const id of guardado) {
+    if (typeof id !== 'string') continue;
+    if (!porDefecto.includes(id as SeccionId)) continue;
+    if (vistos.has(id)) continue;
+    vistos.add(id);
+    orden.push(id as SeccionId);
+  }
+  for (const id of porDefecto) {
+    if (!vistos.has(id)) orden.push(id);
+  }
+  // Portada fija arriba.
+  const iPortada = orden.indexOf('portada');
+  if (iPortada > 0) {
+    orden.splice(iPortada, 1);
+    orden.unshift('portada');
+  }
+  return orden;
+}
+
+/** Orden visual: igual que ordenEfectivo, pero en Quince Rosado las
+ *  secciones de un mismo grupo quedan juntas (en orden de máster dentro
+ *  del grupo) y el grupo se ubica por su primera sección. Es la lista
+ *  que muestran el menú del editor y el template. */
+export function ordenSeccionesVisual(estiloPlantilla: string | null | undefined, configPlantilla: any): SeccionId[] {
+  const efectivo = ordenEfectivo(estiloPlantilla, configPlantilla);
+  if (estiloPlantilla !== 'QUINCE_ROSADO') return efectivo;
+  const porDefecto = seccionesSoportadas(estiloPlantilla);
+  const posEnEfectivo = new Map(efectivo.map((id, i) => [id, i]));
+  const gruposOrdenados = [...GRUPOS_QUINCE_ROSADO].sort((a, b) => {
+    const pa = Math.min(...a.map((id) => posEnEfectivo.get(id) ?? 999));
+    const pb = Math.min(...b.map((id) => posEnEfectivo.get(id) ?? 999));
+    return pa - pb;
+  });
+  const salida: SeccionId[] = [];
+  for (const grupo of gruposOrdenados) {
+    for (const id of porDefecto) {
+      if (grupo.includes(id)) salida.push(id);
+    }
+  }
+  // Secciones fuera de todo grupo (p. ej. 'musica', flotante) al final.
+  for (const id of efectivo) {
+    if (!salida.includes(id)) salida.push(id);
+  }
+  return salida;
+}
+
+/** Posición visual (0-based) del grupo N de Quince Rosado, para el
+ *  style={{ order }} de su <section>. -1 si el grupo no tiene secciones
+ *  en el orden efectivo. */
+export function ordenGrupoQuinceRosado(grupoIdx: number, configPlantilla: any): number {
+  const visual = ordenSeccionesVisual('QUINCE_ROSADO', configPlantilla);
+  const grupo = GRUPOS_QUINCE_ROSADO[grupoIdx] ?? [];
+  const pos = grupo.map((id) => visual.indexOf(id)).filter((i) => i >= 0);
+  return pos.length ? Math.min(...pos) : -1;
+}
+
+/** Mueve una sección (y, en Quince Rosado, todo su grupo) un paso arriba
+ *  o abajo dentro del orden visual. Devuelve el nuevo ordenSecciones
+ *  (lista de ids) o null si no hay movimiento posible. */
+export function moverSeccionEnOrden(
+  estiloPlantilla: string | null | undefined,
+  ordenActual: SeccionId[],
+  seccionId: SeccionId,
+  direccion: -1 | 1
+): SeccionId[] | null {
+  if (estiloPlantilla !== 'QUINCE_ROSADO') {
+    const i = ordenActual.indexOf(seccionId);
+    const j = i + direccion;
+    if (i < 0 || j < 0 || j >= ordenActual.length) return null;
+    if (ordenActual[i] === 'portada' || ordenActual[j] === 'portada') return null;
+    const next = [...ordenActual];
+    [next[i], next[j]] = [next[j], next[i]];
+    return next;
+  }
+  const visual = ordenSeccionesVisual(estiloPlantilla, { ordenSecciones: ordenActual });
+  const grupoIdx = GRUPOS_QUINCE_ROSADO.findIndex((g) => g.includes(seccionId));
+  if (grupoIdx < 0) return null;
+  if (grupoIdx === 0) return null; // portada/medallonFecha fijos arriba
+  const vecinoIdx = grupoIdx + direccion;
+  if (vecinoIdx <= 0 || vecinoIdx >= GRUPOS_QUINCE_ROSADO.length) return null;
+  // Nuevo orden: los grupos en su nuevo orden, cada grupo con sus
+  // secciones en orden de máster.
+  const grupos = [...GRUPOS_QUINCE_ROSADO];
+  [grupos[grupoIdx], grupos[vecinoIdx]] = [grupos[vecinoIdx], grupos[grupoIdx]];
+  const porDefecto = seccionesSoportadas(estiloPlantilla);
+  const next: SeccionId[] = [];
+  for (const grupo of grupos) {
+    for (const id of porDefecto) {
+      if (grupo.includes(id)) next.push(id);
+    }
+  }
+  for (const id of ordenActual) {
+    if (!next.includes(id)) next.push(id);
+  }
+  return next;
 }

@@ -5,8 +5,10 @@ import { MapPin, CheckCircle2, Sparkles, MessageCircle, Music, Pause, CalendarPl
 import confetti from "canvas-confetti";
 import { InvitationData } from "../invitation/InvitationMobileView";
 import { getMapEmbedUrl, getMapDirectionsUrl } from "@/lib/maps";
+import { fraseFechaLimiteRsvp, formatFechaLimiteRsvp } from "@/lib/fecha-limite";
 import { BABY_BLUE_ASSETS } from "@/lib/templates/babyBlueAssets";
 import { parseTemplateConfig, BabyBlueConfig } from "@/types/templateConfigs";
+import { isSectionEnabledInEvent, SeccionId } from "@/config/templateSections";
 
 export default function BabyBlueTemplate({
   data,
@@ -16,6 +18,14 @@ export default function BabyBlueTemplate({
   skipIntro?: boolean;
 }) {
   const templateConfig = parseTemplateConfig<BabyBlueConfig>(data.configPlantilla);
+  const isSectionActive = (sectionId: SeccionId): boolean =>
+    isSectionEnabledInEvent(sectionId, data.configPlantilla, {
+      mostrarFrasePersonalizada: data.mostrarFrasePersonalizada,
+      mostrarFechaPlacaHora: data.mostrarFechaPlacaHora,
+      mostrarDressCode: data.mostrarDressCode,
+      mostrarMesaRegalos: data.mostrarMesaRegalos,
+      permitirConfirmacionTelefono: data.permitirConfirmacionTelefono,
+    });
   // Estado para la Intro 3D del Sobre
   const [isEnvelopeOpen, setIsEnvelopeOpen] = useState(false);
   const [isEnvelopeFading, setIsEnvelopeFading] = useState(false);
@@ -76,7 +86,7 @@ export default function BabyBlueTemplate({
     setIsEnvelopeOpen(true);
 
     // Reproducir música tras el gesto táctil del usuario si está habilitado
-    if (data.reproducirMusicaAlAbrir !== false && audioRef.current) {
+    if (isSectionActive("musica") && data.reproducirMusicaAlAbrir !== false && audioRef.current) {
       audioRef.current
         .play()
         .then(() => setIsPlaying(true))
@@ -262,22 +272,11 @@ export default function BabyBlueTemplate({
     ? `${eventWeekday}, ${eventMonth} ${eventDay}, ${eventYear}`
     : (data.fechaTextoPersonalizada || `${eventWeekday} ${eventDay} DE ${eventMonth}, ${eventYear}`);
 
-  // Cálculo dinámico de fecha límite RSVP bilingüe fija (días antes del evento)
-  const diasAntesRsvp =
-    typeof data.rsvpDiasAntes === "number" && data.rsvpDiasAntes > 0
-      ? data.rsvpDiasAntes
-      : 15;
-  const deadlineBaseTime = !isNaN(eventDate.getTime()) ? eventDate.getTime() : Date.now();
-  const deadlineDate = new Date(deadlineBaseTime - diasAntesRsvp * 24 * 60 * 60 * 1000);
-  const deadlineDay = deadlineDate.getDate();
-  const rawMonthEs = deadlineDate.toLocaleDateString("es-ES", { month: "long" });
-  const rawMonthEn = deadlineDate.toLocaleDateString("en-US", { month: "long" });
-  const deadlineMonthEs = rawMonthEs.charAt(0).toUpperCase() + rawMonthEs.slice(1);
-  const deadlineMonthEn = rawMonthEn.charAt(0).toUpperCase() + rawMonthEn.slice(1);
-
-  const rsvpDeadlinePhrase = isEn
-    ? (data.rsvpFechaLimiteEn || `Please confirm before ${deadlineMonthEn} ${deadlineDay}`)
-    : (data.rsvpFechaLimite || `Favor de confirmar antes del ${deadlineDay} de ${deadlineMonthEs}`);
+  // Fecha límite del RSVP: una sola fuente (rsvpFechaLimite/En, derivada
+  // en el editor de fechaLimiteRsvp) y un solo render (fraseFechaLimiteRsvp).
+  // La fecha corta es la misma fecha guardada, formateada (nunca el ISO crudo).
+  const rsvpDeadlinePhrase = fraseFechaLimiteRsvp(data, isEn ? "en" : "es");
+  const fechaLimiteCorta = formatFechaLimiteRsvp(data.fechaLimiteRsvp, isEn ? "en" : "es");
 
   // Itinerario dinámico con los iconos ilustrados del set Era Pink
   const getItineraryIcon = (item: any, idx: number) => {
@@ -355,7 +354,9 @@ export default function BabyBlueTemplate({
   return (
     <div className="relative min-h-screen font-sans-body text-[#22344A] antialiased selection:bg-sky-200 selection:text-sky-900 overflow-x-hidden bg-[#FCFEFF]">
       {/* Audio en bucle (solo si el evento define música y el invitado la activa) */}
-      <audio ref={audioRef} loop preload="none" src={defaultAudio} />
+      {isSectionActive("musica") && (
+        <audio ref={audioRef} loop preload="none" src={defaultAudio} />
+      )}
 
       {/* ========================================================= */}
       {/* PORTADA: SOBRE (réplica Canva pág. 1)                     */}
@@ -501,7 +502,8 @@ export default function BabyBlueTemplate({
         {/* ======================================================= */}
         {/* HERO: MARCO ÓVALO DE PLATA CON FOTO                     */}
         {/* ======================================================= */}
-        <section className="relative px-6 pt-7 pb-1 text-center overflow-hidden">
+        {isSectionActive("portada") && (
+          <section className="relative px-6 pt-7 pb-1 text-center overflow-hidden">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={BABY_BLUE_ASSETS.blueBouquet} alt="" className="absolute top-0 -left-6 w-44 opacity-90 pointer-events-none" />
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -521,11 +523,13 @@ export default function BabyBlueTemplate({
             <img src={BABY_BLUE_ASSETS.stardust} alt="" className="absolute -right-8 bottom-10 w-16 opacity-80 pointer-events-none -scale-x-100" />
           </div>
         </section>
+        )}
 
         {/* ======================================================= */}
         {/* INVITACIÓN + CUENTA REGRESIVA                           */}
         {/* ======================================================= */}
-        <section className="relative px-6 pt-2 pb-7 text-center overflow-hidden">
+        {isSectionActive("medallonFecha") && (
+          <section className="relative px-6 pt-2 pb-7 text-center overflow-hidden">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={BABY_BLUE_ASSETS.stardust} alt="" className="absolute left-1 top-16 w-16 opacity-60 pointer-events-none" />
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -572,7 +576,8 @@ export default function BabyBlueTemplate({
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={BABY_BLUE_ASSETS.wave} alt="" className="w-44 h-auto mx-auto mt-3 opacity-80" />
 
-          <div className="flex items-stretch justify-center gap-2.5 sm:gap-3 mt-5">
+          {isSectionActive("cuentaRegresiva") && (
+            <div className="flex items-stretch justify-center gap-2.5 sm:gap-3 mt-5">
             {[
               { v: timeLeft.days, l: isEn ? "Days" : "Días" },
               { v: timeLeft.hours, l: isEn ? "Hours" : "Horas" },
@@ -585,14 +590,16 @@ export default function BabyBlueTemplate({
               </div>
             ))}
           </div>
+          )}
         </section>
+        )}
 
         </div>
 
         {/* ======================================================= */}
         {/* MASS VENUE: POSTAL                                      */}
         {/* ======================================================= */}
-        {data.mostrarCeremonia !== false && data.ceremoniaNombre && (
+        {data.mostrarCeremonia !== false && data.ceremoniaNombre && isSectionActive("ubicaciones") && (
           <section className="px-6 py-10 text-center">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={BABY_BLUE_ASSETS.envelopeOpen} alt="" className="w-64 sm:w-72 h-auto mx-auto" />
@@ -628,11 +635,33 @@ export default function BabyBlueTemplate({
             </div>
           </section>
         )}
+        {data.mostrarRecepcion !== false && data.recepcionNombre && isSectionActive("ubicaciones") && (
+          <section className="px-6 py-10 text-center">
+            <h3 className="font-script text-5xl sm:text-6xl text-[#5B8DB8] leading-tight mt-2">
+              {isEn ? "Reception Venue" : "Lugar de la Recepción"}
+            </h3>
+            <div className="relative max-w-sm mx-auto mt-5 bg-white p-3 pb-5 shadow-2xl rotate-2 rounded-md border border-[#E4EEF6]">
+              <p className="font-serif-roman text-sm sm:text-base tracking-[0.18em] uppercase font-bold text-[#22344A] mt-4">
+                {data.recepcionNombre}
+                {data.recepcionDireccion ? `, ${data.recepcionDireccion}` : ""}
+              </p>
+              <a
+                href={getMapDirectionsUrl(data.recepcionMapUrl || undefined, data.recepcionNombre + ", " + (data.recepcionDireccion || ""))}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block font-script text-3xl text-[#2E5A88] mt-1 hover:text-[#5B8DB8] transition-colors"
+              >
+                {isEn ? "Tap to get here" : "Toca para llegar"}
+              </a>
+            </div>
+          </section>
+        )}
 
         {/* ======================================================= */}
         {/* SCHEDULE OF EVENTS                                      */}
         {/* ======================================================= */}
-        <section className="px-6 py-10">
+        {isSectionActive("itinerario") && (
+          <section className="px-6 py-10">
           <h3 className="font-script text-5xl sm:text-6xl text-[#5B8DB8] leading-tight text-center">
             {isEn ? "Schedule of events" : "Programa del evento"}
           </h3>
@@ -679,11 +708,12 @@ export default function BabyBlueTemplate({
             </div>
           </div>
         </section>
+        )}
 
         {/* ======================================================= */}
         {/* REGALOS / WISH LIST                                     */}
         {/* ======================================================= */}
-        {data.mostrarMesaRegalos !== false && (
+        {isSectionActive("mesaRegalos") && (
           <section className="px-6 py-10">
             <div className="max-w-md mx-auto bg-white rounded-[2rem] shadow-xl border border-[#E4EEF6] px-7 py-8 text-center">
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -715,7 +745,8 @@ export default function BabyBlueTemplate({
         {/* ======================================================= */}
         {/* RSVP                                                    */}
         {/* ======================================================= */}
-        <section className="px-6 pt-10 pb-2 text-center">
+        {isSectionActive("rsvp") && (
+          <section className="px-6 pt-10 pb-2 text-center">
           <div className="flex items-end justify-center gap-3 sm:gap-4">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={BABY_BLUE_ASSETS.babyPhoto} alt="" className="w-24 sm:w-28 h-auto bg-white p-1.5 pb-4 shadow-xl -rotate-6 rounded-sm" />
@@ -726,17 +757,19 @@ export default function BabyBlueTemplate({
           </div>
           <p className="font-serif-roman text-xs tracking-[0.3em] uppercase text-[#22344A] font-semibold mt-7">
             {isEn ? "Please RSVP" : "Confirma"}
-            {data.fechaLimiteRsvp ? ` ${isEn ? "by" : "antes del"} ${data.fechaLimiteRsvp}` : ""}
+            {fechaLimiteCorta ? ` ${isEn ? "by" : "antes del"} ${fechaLimiteCorta}` : ""}
           </p>
           <p className="font-script text-6xl sm:text-7xl text-[#5B8DB8] leading-tight">RSVP</p>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={BABY_BLUE_ASSETS.blueButterflies} alt="" className="w-20 h-auto mx-auto mt-1" />
         </section>
+        )}
 
 {/* ======================================================= */}
         {/* SECCIÓN 10: CONFIRMACIÓN DE ASISTENCIA (RSVP)           */}
         {/* ======================================================= */}
-        <section id="rsvp" className="px-4 py-6 z-20">
+        {isSectionActive("rsvp") && (
+          <section id="rsvp" className="px-4 py-6 z-20">
           <div className="relative w-full max-w-[390px] mx-auto -mb-9 z-20 flex justify-center">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -756,9 +789,11 @@ export default function BabyBlueTemplate({
                 </h3>
               );
             })()}
-            <p className="text-[11px] text-slate-500 mb-5 uppercase tracking-wider font-serif-roman font-semibold">
-              {rsvpDeadlinePhrase}
-            </p>
+            {rsvpDeadlinePhrase && (
+              <p className="text-[11px] text-slate-500 mb-5 uppercase tracking-wider font-serif-roman font-semibold">
+                {rsvpDeadlinePhrase}
+              </p>
+            )}
 
             {/* Alerta de confirmación previa / actualización de pases */}
             {rsvpFeedback && (
@@ -933,6 +968,7 @@ export default function BabyBlueTemplate({
             )}
           </div>
         </section>
+        )}
 
         {/* ======================================================= */}
         {/* CARTA: A SPECIAL CHAPTER BEGINS                         */}
@@ -995,11 +1031,15 @@ export default function BabyBlueTemplate({
           </h3>
           <div className="max-w-md mx-auto mt-7 space-y-4">
             {[
-              {
-                n: "01",
-                q: isEn ? "What is the dress code?" : "¿Cuál es el código de vestimenta?",
-                a: (isEn ? data.dressCodeNotaEn : data.dressCodeNota) || null,
-              },
+              ...(isSectionActive("dressCode")
+                ? [
+                    {
+                      n: "01",
+                      q: isEn ? "What is the dress code?" : "¿Cuál es el código de vestimenta?",
+                      a: (isEn ? data.dressCodeNotaEn : data.dressCodeNota) || null,
+                    },
+                  ]
+                : []),
               {
                 n: "02",
                 q: isEn ? "Can I bring a guest?" : "¿Puedo llevar un acompañante?",

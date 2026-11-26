@@ -49,7 +49,26 @@ export async function GET(req: NextRequest) {
       const { configExtra, ...rest } = row;
       const dbFields = nonEmpty(rest);
       for (const k of EXCLUDE) delete dbFields[k];
-      merged = { ...initial, ...dbFields, ...nonEmpty(configExtra || {}) };
+      // configExtra va DENTRO de configPlantilla (los templates solo leen
+      // data.configPlantilla); aplanarlo arriba lo perdía al crear.
+      const initialExtra = (initial as any).configExtra || {};
+      merged = {
+        ...initial,
+        ...dbFields,
+        configPlantilla: {
+          ...nonEmpty(initialExtra),
+          ...nonEmpty(configExtra || {}),
+        },
+      };
+      delete (merged as any).configExtra;
+    } else {
+      // Sin fila: la configExtra de la entrada tpl también va anidada.
+      const initialExtra = (initial as any).configExtra || {};
+      merged = {
+        ...initial,
+        configPlantilla: { ...nonEmpty(initialExtra) },
+      };
+      delete (merged as any).configExtra;
     }
   } catch {
     // Sin DB: se devuelve INITIAL solo.

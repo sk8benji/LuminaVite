@@ -91,6 +91,12 @@ export const DEMO_ISABELLA: InvitationData = {
   dressCodeNota: "We invite our guests to dress in elegant formal attire as we celebrate together. Reserved color: Blush pink for the Quinceañera.",
   wishlistUrl: "https://www.amazon.com/baby-reg",
   idiomaDefault: "bilingual",
+  configPlantilla: {
+    accommodationTexto:
+      "A room block has been reserved for our guests. Please contact us for reservation details and booking information.",
+    accommodationTextoEn:
+      "A room block has been reserved for our guests. Please contact us for reservation details and booking information.",
+  },
   itinerarioJson: [
     { hora: "4:00 PM", titulo: "Mass - St. Mary's Church", tipoIcono: "church" },
     { hora: "5:00 PM", titulo: "Entrance - Grand Ballroom", tipoIcono: "car" },
@@ -157,6 +163,17 @@ export const DEMO_EMMA_LUCAS: InvitationData = {
   dressCodeTitulo: "Semi-Formal and Elegant",
   dressCodeNota: "Feel free to add a touch of pastel to match our theme.",
   wishlistUrl: "https://www.zola.com/registry",
+  configPlantilla: {
+    hospedaje: {
+      hotelNombre: "Oheka Castle",
+      suitesInfo:
+        "Accommodation for up to 42 guests\nElegant, luxury private suites\nBuffet breakfast, pool & garden access included\nSpecial wedding rates from $250 per night",
+    },
+    transporte: {
+      shuttlesInfo:
+        "Shuttles will be available to transport guests from the ceremony to the reception. Shuttles will depart right after the ceremony.",
+    },
+  },
 };
 
 // =========================================================================

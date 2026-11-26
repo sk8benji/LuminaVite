@@ -39,6 +39,7 @@ import TemplateConfigDispatcher from "@/components/events/forms/TemplateConfigDi
 import TemplateSectionBuilder from "@/components/admin/TemplateSectionBuilder";
 import EventSettingsConfig from "@/components/admin/EventSettingsConfig";
 import TemplatePickerGrid from "@/components/admin/TemplatePickerGrid";
+import { getDataTemplateBase, getDataTemplateTitles, splitTemplatePayload } from "@/lib/data-template";
 
 // Valores de ejemplo con los que arranca el formulario en modo crear (hallazgo 15)
 const DEMO_INITIAL_VALUES = {
@@ -47,6 +48,10 @@ const DEMO_INITIAL_VALUES = {
   telefonoWhatsappRsvp: "18181234567",
   recepcionNombre: "Gran Salón Diamante",
 };
+
+// Títulos de ejemplo de todos los data-templates: si el título actual es uno
+// de ellos, el usuario aún no personalizó el nombre (ver handleSelectTemplate).
+const DEMO_TITLES = getDataTemplateTitles();
 
 // Corte e itinerario de ejemplo con los que arranca el formulario (hallazgo 15).
 // Desde 2026-10-30 (orden Abraham) YA NO bloquean el guardado: solo el slug bloquea.
@@ -145,7 +150,8 @@ function NuevoEventoContent() {
   const [padrinosRaw, setPadrinosRaw] = useState<string | null>(null);
 
   // Estado del formulario
-  const [formData, setFormData] = useState<InvitationData>({
+  const [formData, setFormData] = useState<InvitationData>(() => {
+    const base: InvitationData = {
     slug: "mi-celebracion",
     tipoEvento: "QUINCEANERA",
     estiloPlantilla: "QUINCE_ROSADO",
@@ -218,395 +224,28 @@ function NuevoEventoContent() {
     mostrarMesaRegalos: true,
     regalosMensajeEn: "",
     idiomaDefault: "es",
+    };
+    // Sembrar desde el data-template según ?plantilla= (antes del primer
+    // render, para no parpadear datos de ejemplo de otra plantilla).
+    if (!isEditMode) {
+      const plantillaParam = searchParams.get("plantilla");
+      if (plantillaParam) {
+        const seed = getDataTemplateBase(plantillaParam);
+        if (seed) {
+          return {
+            ...base,
+            ...seed.topLevel,
+            estiloPlantilla: plantillaParam as TemplateId,
+            slug: base.slug,
+            fechaEvento: base.fechaEvento,
+            configPlantilla: { ...(base.configPlantilla || {}), ...seed.configPlantilla },
+          };
+        }
+      }
+    }
+    return base;
   });
 
-  // Presets con fotos reales y textos para la previsualización de cada plantilla
-  const TEMPLATE_PRESETS: Partial<Record<TemplateId, Partial<InvitationData>>> = {
-    QUINCE_ROSADO: {
-      estiloPlantilla: "QUINCE_ROSADO",
-      tipoEvento: "QUINCEANERA",
-      idiomaDefault: "es",
-      permitirConfirmacionTelefono: true,
-      mostrarMesaRegalos: true,
-      mostrarDressCode: true,
-      mostrarFrasePersonalizada: true,
-      titulo: "Magdalena",
-      subtitulo: "Mis Quince Años",
-      frasePersonalizada:
-        "Con la bendición de Dios y el amor de mi familia, tengo el honor de invitarte a celebrar este día tan esperado.",
-      frasePersonalizadaEn:
-        "Today I begin to write a new chapter as I leave childhood behind to become a young woman. On this special day, surrounded by the love of those I cherish most, it would be an honor to have your presence to celebrate a moment I will keep in my heart forever.",
-      fechaTextoPersonalizada: "SÁBADO 15 DE MAYO, 2027 • 4:00 PM",
-      fechaPlacaMes: "MAYO",
-      fechaPlacaHora: "A las 4:00 PM 2027",
-      fotoPortadaUrl: "/assets/template-quince-rosado/da616fa36a10f18a133b2dc0383a07d0.webp",
-      fotoInfanciaUrl: "/assets/template-quince-rosado/083dc0c793669d4a4d4a782851e93f65.webp",
-      fotoActualUrl: "/assets/template-quince-rosado/c0ec302539da1389b4c6b7d0b122ddd7.webp",
-      fotoCierreUrl: "/assets/template-quince-rosado/4046b1a7e943f6186c4bd79419897578.webp",
-      musicaUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
-      dressCodeTitulo: "Elegante y Formal",
-      dressCodeTituloEn: "Elegant & Formal",
-      dressCodeNota: "Se invita a los invitados a vestir elegantemente. Por favor, NO usar atuendos ROSADOS ni BLANCOS.",
-      dressCodeNotaEn: "Blush pink tones reserved exclusively for the quinceañera. Guests are encouraged to wear elegant formal attire.",
-      ceremoniaNombre: "St. Mary's Church",
-      ceremoniaDireccion: "Any City, Any Street, AZ 12345",
-      ceremoniaMapUrl: "https://maps.google.com/?q=St.+Mary's+Church",
-      recepcionNombre: "Grand Ballroom Palace",
-      recepcionDireccion: "Any City, Any Street, AZ 12345",
-      recepcionMapUrl: "https://maps.google.com/?q=Grand+Ballroom",
-      rsvpFechaLimite: "Por favor, confirma tu asistencia antes del 20 de Octubre de 2026",
-      itinerarioJson: [
-        { hora: "11:00 am", titulo: "Ceremonia de la iglesia", tipoIcono: "church" },
-        { hora: "12:00 am", titulo: "Llegada en carruaje", tipoIcono: "carriage" },
-        { hora: "1:00 pm", titulo: "Llegada al salón", tipoIcono: "hall" },
-        { hora: "3:00 pm", titulo: "Se servira la comida", tipoIcono: "dinner" },
-        { hora: "4:00 pm", titulo: "Vals, Baile Sorpresa", tipoIcono: "waltz" },
-        { hora: "5:00 pm", titulo: "Vals de padre e hija", tipoIcono: "father_dance" },
-        { hora: "6:00 pm", titulo: "Padrinos de honor", tipoIcono: "crown" },
-        { hora: "7:00 pm", titulo: "Hora de bailar", tipoIcono: "party" },
-      ],
-      corteHonorJson: {
-        quinceanera: "Magdalena",
-        showQuinceanera: true,
-        miniQuinceanera: "Elsy",
-        showMiniQuinceanera: true,
-        chambelan: "Jeremiah",
-        showChambelan: true,
-        miniChambelan: "Jose",
-        showMiniChambelan: true,
-        damas: ["Violeta", "Zoe", "Elsy Magdalena", "Tania", "Yani"],
-        showDamas: true,
-        damitasHojitas: ["Violet", "Zoe", "Green"],
-        showDamitasHojitas: true,
-        parents: "Magdalena & Adrian",
-        showParents: true,
-        padrinos: ["Tania", "Carl"],
-        showPadrinos: true,
-      },
-    },
-    BLUE_BUTTERFLY: {
-      estiloPlantilla: "BLUE_BUTTERFLY",
-      tipoEvento: "QUINCEANERA",
-      idiomaDefault: "bilingual",
-      permitirConfirmacionTelefono: true,
-      mostrarMesaRegalos: true,
-      mostrarDressCode: true,
-      titulo: "Valeria Sofía",
-      subtitulo: "My Quinceañera",
-      frasePersonalizada:
-        "Doy gracias a Dios por cada instante de mi vida y a mis padres por su amor incondicional en esta noche tan soñada.",
-      fechaTextoPersonalizada: "SÁBADO 24 DE OCTUBRE, 2026",
-      fotoPortadaUrl: "/assets/template-butterfly/foto-columpio-portada.webp",
-      fotoInfanciaUrl: "/assets/template-butterfly/foto-sesion-1.webp",
-      fotoActualUrl: "/assets/template-butterfly/foto-sesion-2.webp",
-      fotoCierreUrl: "/assets/template-butterfly/foto-gala-vestido.webp",
-      musicaUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
-      textoDisco: "Click to Play Music",
-      dressCodeTitulo: "Formal Elegante",
-      dressCodeTituloEn: "Elegant & Formal",
-      dressCodeNota: "Agradecemos reservar los tonos azul celeste y blanco para la quinceañera.",
-      dressCodeNotaEn: "Blue and white tones reserved exclusively for the quinceañera.",
-      dressCodeEtiqueta: "Formal & Rigurosa Etiqueta",
-      dressCodeColoresReservados: "Tonos azul celeste y blanco reservados exclusivamente para la quinceañera",
-      countdownEncabezado: "Faltan sólo...",
-      fechaPlacaMes: "OCTUBRE",
-      fechaPlacaHora: "A LAS 3:00 PM",
-      fechaPlacaLugar: "Hacienda Los Jardines Celestiales",
-      regalosMensaje: "Tu presencia es nuestro mayor regalo. Si deseas tener un detalle con la quinceañera, dispondremos de un cofre en la recepción.",
-      regalosZelle: "valeria.xv@example.com",
-      regalosCashApp: "$ValeriaXV",
-      rsvpFechaLimite: "Favor de confirmar antes del 20 de Octubre",
-      rsvpDiasAntes: 15,
-      ceremoniaNombre: "Catedral Nuestra Señora del Carmen",
-      ceremoniaDireccion: "Av. Las Rosas #450, Centro",
-      ceremoniaMapUrl: "https://maps.google.com/?q=Catedral+Nuestra+Señora+del+Carmen",
-      recepcionNombre: "Hacienda Los Jardines Celestiales",
-      recepcionDireccion: "Carr. Nacional Km 14.5, Jardín Real",
-      recepcionMapUrl: "https://maps.google.com/?q=Hacienda+Los+Jardines+Celestiales",
-      itinerarioJson: [
-        { hora: "3:00 PM", titulo: "Guest arrival", tipoIcono: "welcome" },
-        { hora: "4:30 PM", titulo: "Grand entrance", tipoIcono: "entrance" },
-        { hora: "4:00 - 6:00 PM", titulo: "Dinner", tipoIcono: "dinner" },
-        { hora: "6:00 - 7:00 PM", titulo: "Waltz", tipoIcono: "waltz" },
-        { hora: "7:00 - 12:00 AM", titulo: "Open Dance", tipoIcono: "disco" },
-        { hora: "10:00 PM", titulo: "Cake cutting", tipoIcono: "cake" },
-      ],
-      corteHonorJson: {
-        chambelan: "Jeremiah Smith",
-        damas: ["Magdalena", "Violeta", "Tania"],
-        parents: "Carlos Mendoza & Patricia Solís",
-      },
-    },
-    ELEGANT_ROSE: {
-      estiloPlantilla: "ELEGANT_ROSE",
-      tipoEvento: "QUINCEANERA",
-      idiomaDefault: "bilingual",
-      permitirConfirmacionTelefono: true,
-      mostrarMesaRegalos: true,
-      titulo: "Isabella",
-      subtitulo: "My Sweet Fifteen",
-      frasePersonalizada:
-        "Mr & Mrs Rodríguez warmly invite you to celebrate the Quinceañera of their daughter Isabella.",
-      fechaTextoPersonalizada: "SUNDAY, JULY 18, 2026 • 4:00 PM",
-      fotoPortadaUrl: "/assets/template-rose/51d8fb6fdca05936497b8c7f02e14280.webp",
-      fotoInfanciaUrl: "/assets/template-rose/722d78548334333072ad7200e4f8233e.webp",
-      fotoActualUrl: "/assets/template-rose/5f24871f73b9424764387ef47bb5723e.webp",
-      fotoCierreUrl: "/assets/template-rose/51d8fb6fdca05936497b8c7f02e14280.webp",
-      musicaUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
-      musicaTitulo: "Photograph - Ed Sheeran",
-      dressCodeTitulo: "Formal & Elegant Attire",
-      dressCodeNota: "We invite our guests to dress in elegant formal attire. Reserved color: Blush pink for the Quinceañera.",
-      ceremoniaNombre: "St. Mary's Church",
-      ceremoniaDireccion: "Any City, Any Street, AZ 12345",
-      ceremoniaMapUrl: "https://maps.google.com/?q=St.+Mary's+Church",
-      recepcionNombre: "Grand Ballroom",
-      recepcionDireccion: "Any City, Any Street, AZ 12345",
-      recepcionMapUrl: "https://maps.google.com/?q=Grand+Ballroom",
-      itinerarioJson: [
-        { hora: "4:00 PM", titulo: "Mass Ceremony", lugar: "St. Mary's Church", tipoIcono: "church" },
-        { hora: "5:00 PM", titulo: "Grand Entrance", lugar: "Grand Ballroom", tipoIcono: "entrance" },
-        { hora: "6:00 PM", titulo: "The Waltz", lugar: "With Parents & Court", tipoIcono: "waltz" },
-        { hora: "7:00 PM", titulo: "Dinner Banquet", lugar: "Formal toast & dining", tipoIcono: "dinner" },
-        { hora: "9:00 PM", titulo: "Party & Dance", lugar: "Open floor celebration", tipoIcono: "party" },
-      ],
-      corteHonorJson: {
-        padrinos: ["Miguel Herrera", "Daniela Herrera"],
-        chambelan: "Emilio Salazar",
-        damas: [
-          "Isabella Cordero",
-          "Valeria Morales",
-          "Sofia Villanueva",
-          "Emilia Rodriguez",
-          "Camila Aguilar",
-          "Maria Paz Leon",
-          "Alondra Jimenez",
-          "Regina Castro",
-          "Natalia Sanchez",
-        ],
-        chambelanes: [
-          "Diego Alvarez",
-          "Santiago Lopez",
-          "Francisco Ruiz",
-          "Mateo Ramírez",
-          "Alejandro Torres",
-        ],
-      },
-      historiaHitosJson: [
-        {
-          foto: "/assets/template-rose/722d78548334333072ad7200e4f8233e.webp",
-          fecha: "2011",
-          titulo: "First Steps",
-          texto: "Every story has a beginning, and mine started with the love of family, the comfort of home, and countless little moments that became treasured memories.",
-        },
-        {
-          foto: "/assets/template-rose/94a9fcddf0e62c3f0ffe60a5a769dd9c.webp",
-          fecha: "2016",
-          titulo: "New Adventures",
-          texto: "With each new adventure came exciting firsts, growing confidence, and friendships that would become an important part of my journey.",
-        },
-        {
-          foto: "/assets/template-rose/97da854ac288883d24133acda9d854ca.webp",
-          fecha: "2020",
-          titulo: "Treasured Memories",
-          texto: "From laughter-filled days to unforgettable memories, these special people helped shape the person I am today.",
-        },
-        {
-          foto: "/assets/template-rose/39e6d693ec9d82a484d96df04a0cffd3.webp",
-          fecha: "2024",
-          titulo: "Loyal Companion",
-          texto: "And through every chapter, there was one loyal companion by my side—sharing the cuddles, the adventures, and all of life's happiest moments.",
-        },
-      ],
-    },
-    FAIRYTALE_CHATEAU: {
-      estiloPlantilla: "FAIRYTALE_CHATEAU",
-      tipoEvento: "BODA",
-      titulo: "Emma & Lucas",
-      subtitulo: "Nuestra Boda de Ensueño",
-      frasePersonalizada:
-        "Dos almas con un solo pensamiento, dos corazones que laten como uno solo.",
-      fechaTextoPersonalizada: "SATURDAY, JULY 22 • 3:30 PM",
-      fotoPortadaUrl: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80",
-      fotoInfanciaUrl: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=400&q=80",
-      fotoActualUrl: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=400&q=80",
-      fotoCierreUrl: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=400&q=80",
-      musicaUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
-      dressCodeTitulo: "Black Tie / Formal",
-      dressCodeNota: "Rogamos vestir de gala. El blanco está reservado exclusivamente para la novia.",
-      ceremoniaNombre: "Château de Chambord Chapel",
-      ceremoniaDireccion: "Château Domain, Loire Valley",
-      recepcionNombre: "The Grand Ballroom at Château",
-      recepcionDireccion: "Palais Central, Suite Royale",
-    },
-    CORALINE_MYSTICAL: {
-      estiloPlantilla: "CORALINE_MYSTICAL",
-      tipoEvento: "QUINCEANERA",
-      titulo: "Coraline Jones",
-      subtitulo: "Welcome to The Other World",
-      frasePersonalizada:
-        "Ten cuidado con lo que deseas... estás cordialmente invitado a cruzar la puerta secreta.",
-      fechaTextoPersonalizada: "OCTOBER 31 • 6:00 PM",
-      fotoPortadaUrl: "https://images.unsplash.com/photo-1517841905240-472988bab304?auto=format&fit=crop&w=800&q=80",
-      fotoInfanciaUrl: "https://images.unsplash.com/photo-1517841905240-472988bab304?auto=format&fit=crop&w=400&q=80",
-      fotoActualUrl: "https://images.unsplash.com/photo-1517841905240-472988bab304?auto=format&fit=crop&w=400&q=80",
-      fotoCierreUrl: "https://images.unsplash.com/photo-1517841905240-472988bab304?auto=format&fit=crop&w=400&q=80",
-      musicaUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
-      dressCodeTitulo: "Gótico / Fantasía Mística",
-      dressCodeNota: "Trae tu mejor atuendo de otro mundo o detalle amarillo.",
-      recepcionNombre: "The Pink Palace Apartments",
-      recepcionDireccion: "Ashland, Oregon",
-    },
-    PRINCESA_ROSA: {
-      estiloPlantilla: "PRINCESA_ROSA",
-      tipoEvento: "QUINCEANERA",
-      titulo: "Sofía",
-      subtitulo: "An Unforgettable Celebration Awaits",
-      frasePersonalizada:
-        "Hoy doy el hermoso paso de niña a señorita, rodeada de las personas que más amo en el mundo.",
-      fechaTextoPersonalizada: "15 DE NOVIEMBRE, 2026",
-      fotoPortadaUrl: "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=800&q=80",
-      fotoInfanciaUrl: "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=400&q=80",
-      fotoActualUrl: "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=400&q=80",
-      fotoCierreUrl: "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=600&q=80",
-      musicaUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
-      dressCodeTitulo: "Elegante y Formal",
-      dressCodeNota: "Por favor reservamos tonos rosa pastel para la quinceañera.",
-      ceremoniaNombre: "Parroquia Nuestra Señora",
-      ceremoniaDireccion: "Av. Las Flores 123",
-      recepcionNombre: "Gran Salón Diamante",
-      recepcionDireccion: "Blvd. Principal 456, Suite A",
-    },
-    BLUSH_PRINCESS: {
-      estiloPlantilla: "BLUSH_PRINCESS",
-      tipoEvento: "QUINCEANERA",
-      titulo: "Isabella Sofia",
-      subtitulo: "My Quinceañera",
-      frasePersonalizada:
-        "Con la bendición de Dios y el amor de mi familia, celebro mis quince años rodeada de quienes más quiero.",
-      fotoPortadaUrl: "/assets/template-blush/foto-1.webp",
-      fotoInfanciaUrl: "/assets/template-blush/foto-nina.webp",
-      fotoActualUrl: "/assets/template-blush/foto-2.webp",
-      fotoCierreUrl: "/assets/template-blush/foto-3.webp",
-      musicaUrl: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
-      musicaTitulo: "Tiempo de Vals — Chayanne",
-      idiomaDefault: "bilingual",
-    },
-    BEAUTY_QUINCE: {
-      estiloPlantilla: "BEAUTY_QUINCE",
-      tipoEvento: "QUINCEANERA",
-      titulo: "Jasmine",
-      subtitulo: "My Quinceañera",
-      frasePersonalizada:
-        "Fifteen candles softly glow, marking how much love you know. A touch of a woman, a heart still so sweet, the past and the future now dance at your feet.",
-      fotoPortadaUrl: "/assets/template-beauty-quince/foto-carroza-atardecer.webp",
-      fotoInfanciaUrl: "/assets/template-beauty-quince/foto-vestido-maniqui.webp",
-      fotoActualUrl: "/assets/template-beauty-quince/foto-maquillaje.webp",
-      fotoCierreUrl: "/assets/template-beauty-quince/arco-rosas-castillo.webp",
-      musicaUrl: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
-      musicaTitulo: "Vals Romántico en Piano",
-      idiomaDefault: "bilingual",
-      ceremoniaNombre: "St. Joseph's Cathedral",
-      ceremoniaDireccion: "123 Forever Street, Quince City",
-      recepcionNombre: "Quince City Ballroom",
-      recepcionDireccion: "123 Forever Street, Quince City",
-    },
-    QUINCE_ERA_PINK: {
-      estiloPlantilla: "QUINCE_ERA_PINK",
-      tipoEvento: "QUINCEANERA",
-      titulo: "Issabella Gonzales",
-      subtitulo: "My Quinceañera",
-      frasePersonalizada:
-        "I'm excited to share this special day with you.",
-      fotoPortadaUrl: "/assets/template-era-pink/foto-sentada.webp",
-      fotoInfanciaUrl: "/assets/template-era-pink/foto-retrato.webp",
-      fotoActualUrl: "/assets/template-era-pink/foto-espalda.webp",
-      fotoCierreUrl: "/assets/template-era-pink/foto-sentada.webp",
-      musicaUrl: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
-      musicaTitulo: "Never Grow Up (Taylor's Version) — Taylor Swift",
-      idiomaDefault: "en",
-    },
-    MISS_15: {
-      estiloPlantilla: "MISS_15",
-      tipoEvento: "QUINCEANERA",
-      titulo: "Isabella Torres",
-      subtitulo: "Mis 15 Años",
-      frasePersonalizada:
-        "I can't wait to celebrate with you!",
-      fotoPortadaUrl: "/assets/template-miss15/foto-columpio.webp",
-      fotoInfanciaUrl: "/assets/template-miss15/foto-damas.webp",
-      fotoActualUrl: "/assets/template-miss15/foto-columpio-2.webp",
-      fotoCierreUrl: "/assets/template-miss15/foto-retrato.webp",
-      musicaUrl: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
-      musicaTitulo: "Slow Down, Little Heart — Linhy",
-      idiomaDefault: "en",
-    },
-    BABY_BLUE: {
-      estiloPlantilla: "BABY_BLUE",
-      tipoEvento: "QUINCEANERA",
-      titulo: "Elina Miguel",
-      subtitulo: "My Quinceañera",
-      frasePersonalizada:
-        "You're invited!",
-      fotoPortadaUrl: "/assets/template-baby-blue/foto-gazebo.webp",
-      fotoInfanciaUrl: "/assets/template-baby-blue/foto-bebe.webp",
-      fotoActualUrl: "/assets/template-baby-blue/foto-camara.webp",
-      fotoCierreUrl: "/assets/template-baby-blue/foto-espalda.webp",
-      musicaUrl: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
-      idiomaDefault: "en",
-    },
-    CLASICA_IMPERIAL: {
-      estiloPlantilla: "CLASICA_IMPERIAL",
-      tipoEvento: "BODA",
-      titulo: "Sofía & Alejandro",
-      subtitulo: "Nuestra Boda",
-      frasePersonalizada:
-        "Dos almas con un solo pensamiento, dos corazones que laten como uno solo.",
-      fotoPortadaUrl: "https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=800&q=80",
-      fotoInfanciaUrl: "https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=400&q=80",
-      fotoActualUrl: "https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=400&q=80",
-      fotoCierreUrl: "https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=400&q=80",
-      musicaUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
-    },
-    ESMERALDA_ROYAL: {
-      estiloPlantilla: "ESMERALDA_ROYAL",
-      tipoEvento: "QUINCEANERA",
-      titulo: "Renata Villarreal",
-      subtitulo: "Gala Esmeralda & Oro",
-      frasePersonalizada:
-        "Hoy doy el hermoso paso de niña a señorita, rodeada de las personas que más amo en el mundo.",
-      fotoPortadaUrl: "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=800&q=80",
-      fotoInfanciaUrl: "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=400&q=80",
-      fotoActualUrl: "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=400&q=80",
-      fotoCierreUrl: "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=400&q=80",
-      musicaUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
-    },
-    JARDIN_BOTANICA: {
-      estiloPlantilla: "JARDIN_BOTANICA",
-      tipoEvento: "BODA",
-      titulo: "Camila & Mateo",
-      subtitulo: "Amor en el Jardín",
-      frasePersonalizada:
-        "Entre flores y familia, celebramos el día en que dos corazones se vuelven uno.",
-      fotoPortadaUrl: "https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&w=800&q=80",
-      fotoInfanciaUrl: "https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&w=400&q=80",
-      fotoActualUrl: "https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&w=400&q=80",
-      fotoCierreUrl: "https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&w=400&q=80",
-      musicaUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
-    },
-    MINIMALISTA_EDITORIAL: {
-      estiloPlantilla: "MINIMALISTA_EDITORIAL",
-      tipoEvento: "BODA",
-      titulo: "Victoria & David",
-      subtitulo: "The Modern Wedding",
-      frasePersonalizada:
-        "Lo esencial es invisible a los ojos: hoy celebramos nuestro amor, simple y verdadero.",
-      fotoPortadaUrl: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=800&q=80",
-      fotoInfanciaUrl: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=400&q=80",
-      fotoActualUrl: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=400&q=80",
-      fotoCierreUrl: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=400&q=80",
-      musicaUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
-    },
-  };
 
   const updateField = (field: keyof InvitationData, value: any) => {
     // El título tecleado marca la invitación como personalizada (ver handleSelectTemplate)
@@ -873,7 +512,7 @@ function NuevoEventoContent() {
   useEffect(() => {
     if (isEditMode) return;
     const plantillaUrl = searchParams.get("plantilla") as TemplateId | null;
-    if (plantillaUrl && (plantillaUrl in TEMPLATES || (plantillaUrl in TEMPLATE_PRESETS))) {
+    if (plantillaUrl && plantillaUrl in TEMPLATES) {
       handleSelectTemplate(plantillaUrl);
     }
     const nombreUrl = searchParams.get("nombre");
@@ -904,9 +543,12 @@ function NuevoEventoContent() {
     setDamasRaw(null);
     setDamitasRaw(null);
     setPadrinosRaw(null);
-    // La plantilla editada en el admin (DB) gana sobre el preset local; si la DB
-    // no responde, se usa el preset local sin bloquear al usuario.
-    let preset: any = TEMPLATE_PRESETS[tempKey];
+    // La base es el data-template (templates-data + demo); la plantilla
+    // editada en el admin (DB) gana sobre él; si la DB no responde, se usa
+    // la base sin bloquear al usuario.
+    const base = getDataTemplateBase(tempKey);
+    let presetTop: any = { ...(base?.topLevel || {}) };
+    let presetConfig: any = { ...(base?.configPlantilla || {}) };
     try {
       const res = await fetch(`/api/templates?estilo=${encodeURIComponent(tempKey)}`);
       if (res.ok) {
@@ -918,11 +560,25 @@ function NuevoEventoContent() {
             dbPreset.tipoEvento = dbPreset.categoria;
             delete dbPreset.categoria;
           }
-          preset = { ...preset, ...dbPreset };
+          // Las claves de config van a configPlantilla, no a nivel superior:
+          // los templates solo leen data.configPlantilla.
+          const split = splitTemplatePayload(dbPreset);
+          presetTop = { ...presetTop, ...split.topLevel };
+          presetConfig = { ...presetConfig, ...split.configPlantilla };
+          if ((data.template as any).configPlantilla) {
+            presetConfig = { ...presetConfig, ...(data.template as any).configPlantilla };
+          }
+          // Por compatibilidad, si configExtra viniera aplanado, partirlo también.
+          if (configExtra) {
+            const splitExtra = splitTemplatePayload(configExtra);
+            presetTop = { ...presetTop, ...splitExtra.topLevel };
+            presetConfig = { ...presetConfig, ...splitExtra.configPlantilla };
+          }
         }
       }
     } catch {}
-    if (preset) {
+    const preset: any = { ...presetTop, configPlantilla: presetConfig };
+    if (base) {
       // El preset trae su frase de ejemplo: vuelve a ser automática.
       setRsvpFraseManual(false);
       setRsvpFraseManualEn(false);
@@ -930,22 +586,7 @@ function NuevoEventoContent() {
         const isCustomName =
           isEditMode ||
           tituloEditado ||
-          (prev.titulo &&
-            prev.titulo !== "Valeria Sofía" &&
-            prev.titulo !== "Isabella" &&
-            prev.titulo !== "Isabella Rose" &&
-            prev.titulo !== "Emma & Lucas" &&
-            prev.titulo !== "Coraline Jones" &&
-            prev.titulo !== "Sofía" &&
-            prev.titulo !== "Magdalena" &&
-            prev.titulo !== "Isabella Sofia" &&
-            prev.titulo !== "Issabella Gonzales" &&
-            prev.titulo !== "Isabella Torres" &&
-            prev.titulo !== "Elina Miguel" &&
-            prev.titulo !== "Sofía & Alejandro" &&
-            prev.titulo !== "Renata Villarreal" &&
-            prev.titulo !== "Camila & Mateo" &&
-            prev.titulo !== "Victoria & David");
+          (prev.titulo ? !DEMO_TITLES.has(prev.titulo) : false);
 
         const formatted = formatFormalDate(
           prev.fechaEvento,
@@ -1002,6 +643,9 @@ function NuevoEventoContent() {
           musicaTitulo: preset.musicaTitulo || prev.musicaTitulo,
           dressCodeTitulo: preset.dressCodeTitulo || prev.dressCodeTitulo,
           dressCodeNota: preset.dressCodeNota || prev.dressCodeNota,
+          // Al cambiar de plantilla manda la config de la plantilla nueva;
+          // las claves que el preset no define se conservan.
+          configPlantilla: { ...(prev.configPlantilla || {}), ...presetConfig },
         };
       });
     } else {
@@ -1539,6 +1183,7 @@ function NuevoEventoContent() {
           </div>
 
           {editorMode === "sections" ? (
+            <>
             <TemplateSectionBuilder
               formData={formData}
               updateField={updateField}
@@ -1554,6 +1199,16 @@ function NuevoEventoContent() {
               onDateChange={handleDateChange}
               onOpenTemplatePicker={openTemplateGrid}
             />
+            {/* Configuración exclusiva de la plantilla (campos en configPlantilla) */}
+            <div className="mt-4">
+              <TemplateConfigDispatcher
+                estiloPlantilla={formData.estiloPlantilla}
+                value={formData.configPlantilla || {}}
+                onChange={(c) => updateField("configPlantilla", c)}
+                slug={formData.slug}
+              />
+            </div>
+            </>
           ) : (
             <EventSettingsConfig
               formData={formData}

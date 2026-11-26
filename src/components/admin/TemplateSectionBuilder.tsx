@@ -24,13 +24,15 @@ import {
   PhoneCall,
   Eye,
   Image as ImageIcon,
+  ChevronUp,
+  ChevronDown,
   ExternalLink,
   Link2,
   Palette,
 } from "lucide-react";
 import { extractCleanMapUrl } from "@/lib/mapsUrlCleaner";
 import { InvitationData } from "@/components/invitation/InvitationMobileView";
-import { SECCIONES_QUINCE_ROSADO, SeccionId, isSectionEnabledInEvent, seccionesSoportadas } from "@/config/templateSections";
+import { SECCIONES_QUINCE_ROSADO, SeccionId, isSectionEnabledInEvent, seccionesSoportadas, SECCIONES_SAVE_THE_DATE, esEstiloSaveTheDate, seccionesSoportadasStd, ordenSeccionesVisual, moverSeccionEnOrden, GRUPOS_QUINCE_ROSADO } from "@/config/templateSections";
 import { TEMPLATES, TemplateId } from "@/lib/templates";
 import { ELEGANT_ROSE_HITOS_DEFAULTS } from "@/lib/templates/elegantRoseAssets";
 import MiniaturaConMeta from "@/components/admin/MiniaturaConMeta";
@@ -261,20 +263,50 @@ export default function TemplateSectionBuilder({
   const [internalSection, setInternalSection] = useState<string>(
     SECCIONES_QUINCE_ROSADO[0]?.id ?? "portada"
   );
-  const activeSection = activeSectionProp ?? internalSection;
+  // Máster de secciones según el tipo de plantilla: el Save the Date tiene
+  // su propio máster (6 secciones) y NUNCA se le ofrecen las 15 de
+  // invitaciones. La sección activa siempre pertenece al máster vigente.
+  const esStd = esEstiloSaveTheDate((formData as any).estiloPlantilla);
+  const seccionesMaster = esStd ? SECCIONES_SAVE_THE_DATE : SECCIONES_QUINCE_ROSADO;
+  const activeSectionRaw = activeSectionProp ?? internalSection;
+  const activeSection = esStd
+    ? SECCIONES_SAVE_THE_DATE.some((s) => s.id === activeSectionRaw)
+      ? activeSectionRaw
+      : "sobre"
+    : activeSectionRaw;
   const setActiveSection = onActiveSectionChange ?? setInternalSection;
   // Sincronización plantilla-secciones: la plantilla actual solo soporta
   // algunos bloques; el resto se muestra desactivado y no se puede editar,
   // porque la plantilla nunca los mostraría aunque se suba una foto.
-  const seccionesSoportadasIds = seccionesSoportadas((formData as any).estiloPlantilla);
+  const seccionesSoportadasIds = esStd
+    ? seccionesSoportadasStd((formData as any).estiloPlantilla)
+    : seccionesSoportadas((formData as any).estiloPlantilla);
   const esSeccionSoportada = (id: string) =>
     (seccionesSoportadasIds as string[]).includes(id);
+  // Orden de secciones (paso 6): solo Quince Rosado lo aplica hoy — los
+  // demás templates muestran el orden de máster y no ofrecen subir/bajar.
+  // La portada va fija arriba; las secciones que comparten envoltorio en
+  // el JSX se mueven juntas (su grupo).
+  const admiteReorden = !esStd && (formData as any).estiloPlantilla === "QUINCE_ROSADO";
+  const seccionesOrdenadas = admiteReorden
+    ? ordenSeccionesVisual((formData as any).estiloPlantilla, formData.configPlantilla)
+        .map((id) => seccionesMaster.find((s) => s.id === id))
+        .filter((s): s is (typeof seccionesMaster)[number] => Boolean(s))
+    : [...seccionesMaster];
+  const grupoDeSeccion = (id: string) =>
+    GRUPOS_QUINCE_ROSADO.findIndex((g) => g.includes(id as SeccionId));
+  const moverSeccion = (id: string, dir: -1 | 1) => {
+    const ordenActual = ordenSeccionesVisual((formData as any).estiloPlantilla, formData.configPlantilla);
+    const next = moverSeccionEnOrden((formData as any).estiloPlantilla, ordenActual, id as SeccionId, dir);
+    if (!next) return;
+    updateField("configPlantilla", { ...(formData.configPlantilla || {}), ordenSecciones: next });
+  };
   const activeSectionIndex = Math.max(
     0,
-    SECCIONES_QUINCE_ROSADO.findIndex((s) => s.id === activeSection)
+    seccionesOrdenadas.findIndex((s) => s.id === activeSection)
   );
   const activeSectionDef =
-    SECCIONES_QUINCE_ROSADO[activeSectionIndex] ?? SECCIONES_QUINCE_ROSADO[0];
+    seccionesOrdenadas[activeSectionIndex] ?? seccionesOrdenadas[0];
 
   // Historia / Growing Up (Elegant Rose): lista editable de hitos.
   // Sin hitos guardados se muestran los 5 por defecto del template; la
@@ -585,7 +617,7 @@ export default function TemplateSectionBuilder({
         {/* Indicador de paso (como el editor de templates) */}
         <div className="flex items-center gap-1 shrink-0">
           <span className="text-xs font-bold text-stone-700 bg-stone-100 border border-stone-200 px-3 py-1.5 rounded-lg">
-            Paso {activeSectionIndex + 1} de {SECCIONES_QUINCE_ROSADO.length}:{" "}
+            Paso {activeSectionIndex + 1} de {seccionesOrdenadas.length}:{" "}
             {activeSectionDef?.label}
           </span>
         </div>
@@ -600,17 +632,22 @@ export default function TemplateSectionBuilder({
           <span className="text-[10px] font-bold uppercase tracking-wider text-stone-400 px-3 py-1 block">
             Secciones de la Invitación
           </span>
-          {SECCIONES_QUINCE_ROSADO.map((sec) => {
-            const isEnabled = checkSectionEnabled(sec.id);
+          {seccionesOrdenadas.map((sec, idx) => {
+            // En STD no hay interruptor en este editor: las secciones se
+            // prenden/apagan en el tablero de Save the Date.
+            const isEnabled = esStd ? true : checkSectionEnabled(sec.id as SeccionId);
             const isActive = activeSection === sec.id;
             const isSupported = esSeccionSoportada(sec.id);
+            const grupoIdx = admiteReorden ? grupoDeSeccion(sec.id) : -1;
+            const puedeSubir = admiteReorden && grupoIdx > 0;
+            const puedeBajar = admiteReorden && grupoIdx >= 0 && grupoIdx < GRUPOS_QUINCE_ROSADO.length - 1;
             return (
+              <div key={sec.id} className="flex items-center gap-1">
               <button
-                key={sec.id}
                 type="button"
                 disabled={!isSupported}
                 onClick={() => { if (isSupported) setActiveSection(sec.id); }}
-                className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold transition text-left ${
+                className={`flex-1 min-w-0 flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold transition text-left ${
                   isSupported ? "cursor-pointer" : "cursor-not-allowed opacity-50"
                 } ${
                   isActive
@@ -629,7 +666,7 @@ export default function TemplateSectionBuilder({
                 </span>
                 <span className="min-w-0 flex-1">
                   <span className="block truncate">
-                    {sec.numero}. {sec.label}
+                    {idx + 1}. {sec.label}
                   </span>
                   {!isEnabled && (
                     <span className="block text-[10px] font-medium text-stone-400">
@@ -643,14 +680,81 @@ export default function TemplateSectionBuilder({
                   )}
                 </span>
               </button>
+              {admiteReorden && isSupported && (
+                <span className="flex flex-col shrink-0">
+                  <button
+                    type="button"
+                    title="Subir sección"
+                    aria-label={`Subir ${sec.label}`}
+                    disabled={!puedeSubir}
+                    onClick={(e) => { e.stopPropagation(); moverSeccion(sec.id, -1); }}
+                    className="p-0.5 rounded text-stone-500 hover:bg-white hover:text-stone-900 disabled:opacity-25 disabled:cursor-not-allowed"
+                  >
+                    <ChevronUp className="w-4 h-4" />
+                  </button>
+                  <button
+                    type="button"
+                    title="Bajar sección"
+                    aria-label={`Bajar ${sec.label}`}
+                    disabled={!puedeBajar}
+                    onClick={(e) => { e.stopPropagation(); moverSeccion(sec.id, 1); }}
+                    className="p-0.5 rounded text-stone-500 hover:bg-white hover:text-stone-900 disabled:opacity-25 disabled:cursor-not-allowed"
+                  >
+                    <ChevronDown className="w-4 h-4" />
+                  </button>
+                </span>
+              )}
+              </div>
             );
           })}
         </div>
 
         {/* Formulario de la sección activa (una a la vez, sin pared de acordeones) */}
         <div className="md:col-span-8 xl:col-span-9 space-y-4">
-        {SECCIONES_QUINCE_ROSADO.map((sec) => {
+        {seccionesOrdenadas.map((sec) => {
           if (sec.id !== activeSection) return null;
+          if (esStd) {
+            // Save the Date: este editor es de invitaciones, no de STDs.
+            // La sección se edita en el tablero → pestaña Save the Date.
+            const metaStd = sec as unknown as { campoModelo?: string };
+            return (
+              <div
+                key={sec.id}
+                id={`section-card-${sec.id}`}
+                className="rounded-2xl border border-stone-200 bg-white overflow-hidden"
+              >
+                <div className="p-4 sm:p-5 flex items-center gap-3.5">
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border bg-[#7A002A] text-white border-[#600021] shadow-xs">
+                    {renderIcon(sec.icono, "w-5 h-5")}
+                  </div>
+                  <div className="min-w-0">
+                    <span className="text-[11px] font-black uppercase tracking-wider text-stone-400">
+                      Sección {sec.numero} • Save the Date
+                    </span>
+                    <h3 className="text-base sm:text-lg font-bold text-gray-900 truncate">
+                      {sec.label}
+                    </h3>
+                    <p className="text-xs text-gray-500 hidden sm:block">
+                      {sec.descripcion}
+                    </p>
+                  </div>
+                </div>
+                <div className="p-4 sm:p-6 border-t border-stone-200 bg-white">
+                  <p className="text-sm text-gray-600 leading-relaxed">
+                    Esta sección pertenece a un Save the Date y se edita en el
+                    tablero, pestaña <strong>Save the Date</strong> (ahí están
+                    sus fotos, su música y sus interruptores), no en este
+                    editor de invitaciones.
+                  </p>
+                  {metaStd.campoModelo && (
+                    <p className="text-xs text-stone-500 mt-2">
+                      Se controla con el campo <code className="px-1 py-0.5 bg-stone-100 rounded font-mono">{metaStd.campoModelo}</code> del Save the Date.
+                    </p>
+                  )}
+                </div>
+              </div>
+            );
+          }
           if (!esSeccionSoportada(sec.id)) {
             return (
               <div
@@ -675,7 +779,8 @@ export default function TemplateSectionBuilder({
               </div>
             );
           }
-          const isEnabled = checkSectionEnabled(sec.id);
+          // (Las secciones STD ya retornaron arriba: aquí sec.id es de invitaciones.)
+          const isEnabled = checkSectionEnabled(sec.id as SeccionId);
           const isExpanded = true;
 
           return (
@@ -732,7 +837,7 @@ export default function TemplateSectionBuilder({
                       role="switch"
                       aria-checked={isEnabled}
                       aria-label={isEnabled ? "Sección visible" : "Sección oculta"}
-                      onClick={() => toggleSectionSwitch(sec.id)}
+                      onClick={() => toggleSectionSwitch(sec.id as SeccionId)}
                       className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors cursor-pointer focus:outline-none ${
                         isEnabled ? "bg-[#7A002A]" : "bg-stone-300"
                       }`}
@@ -2358,6 +2463,18 @@ export default function TemplateSectionBuilder({
                                 updateField("configPlantilla", cp);
                               }}
                               placeholder="Thank you for helping us keep these moments beautiful for everyone."
+                              className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
+                            />
+                          </div>
+                          <div className="md:col-span-2">
+                            <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+                              Guía de celebración (texto libre)
+                            </label>
+                            <textarea
+                              rows={3}
+                              value={formData.celebrationGuideline || ""}
+                              onChange={(e) => updateField("celebrationGuideline", e.target.value)}
+                              placeholder="Texto que reemplaza la política para niños fija (Beauty Quince y vista genérica). Vacío = texto original de la plantilla."
                               className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
                             />
                           </div>

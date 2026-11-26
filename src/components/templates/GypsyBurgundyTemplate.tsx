@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import confetti from "canvas-confetti";
 import { GYPSY_BURGUNDY_ASSETS } from "@/lib/templates/gypsyBurgundyAssets";
+import { fraseFechaLimiteRsvp } from "@/lib/fecha-limite";
 import { InvitationData } from "../invitation/InvitationMobileView";
 import { parseTemplateConfig, Gatsby20sConfig } from "@/types/templateConfigs";
 import { getMapDirectionsUrl } from "@/lib/maps";
@@ -175,7 +176,7 @@ export default function GypsyBurgundyTemplate({
 
   // Inicializar Audio
   useEffect(() => {
-    if (typeof window !== "undefined" && data.musicaUrl) {
+    if (typeof window !== "undefined" && isSectionActive("musica") && data.musicaUrl) {
       audioRef.current = new Audio(data.musicaUrl);
       audioRef.current.loop = true;
     }
@@ -225,7 +226,7 @@ export default function GypsyBurgundyTemplate({
 
     setAnimandoSobre(true);
 
-    if (audioRef.current && !reproduciendo) {
+    if (isSectionActive("musica") && audioRef.current && !reproduciendo) {
       audioRef.current
         .play()
         .then(() => setReproduciendo(true))
@@ -632,7 +633,8 @@ export default function GypsyBurgundyTemplate({
                 }}
               >
                 {/* Panel interior negro mate sólido (#2B0A12) */}
-                <div className="w-full h-full bg-[#2B0A12] rounded-xs flex flex-col items-center p-0 text-center border border-[#D4AF37]/35 shadow-inner">
+                {isSectionActive("portada") && (
+                  <div className="w-full h-full bg-[#2B0A12] rounded-xs flex flex-col items-center p-0 text-center border border-[#D4AF37]/35 shadow-inner">
                   {/* ARRIBA (Foto limpia rectangular y vertical sin marco barroco, con borde dorado de 2px) */}
                   <div
                     className="relative w-full overflow-hidden rounded-xs border-2 border-[#D4AF37]/70 shadow-md"
@@ -675,13 +677,15 @@ export default function GypsyBurgundyTemplate({
                     </div>
                   </div>
                 </div>
+                )}
               </div>
 
               {/* ===================================================================
                   CAPA 3 (Esquina inferior derecha): Disco de Vinilo + Ticket de Fecha
                  =================================================================== */}
               {/* 1. Disco de Vinilo (bb9dc50bdef6c4f4d2a669a595b16a0c.png): mitad derecha, superpuesto al borde */}
-              <div
+              {isSectionActive("musica") && (
+                <div
                 onClick={toggleMusica}
                 className="absolute right-[-10px] sm:right-[2%] w-[88px] sm:w-[96px] h-[88px] sm:h-[96px] cursor-pointer group animate-gatsby-rise"
                 style={{ top: "360px", zIndex: 3, animationDelay: "240ms" }}
@@ -722,9 +726,11 @@ export default function GypsyBurgundyTemplate({
                   </div>
                 </div>
               </div>
+              )}
 
               {/* 2. Ticket Negro Vintage (c9bb422442ef42c19f1835d77746abf0.png): ancho 175px, desplazado a la derecha */}
-              <div
+              {isSectionActive("medallonFecha") && (
+                <div
                 className="absolute right-[-25px] sm:right-[0px] w-[175px] aspect-[16/9] flex items-center justify-center animate-gatsby-rise"
                 style={{ top: "447px", zIndex: 4, animationDelay: "360ms" }}
               >
@@ -745,6 +751,7 @@ export default function GypsyBurgundyTemplate({
                   </span>
                 </div>
               </div>
+              )}
             </div>
           )}
         </section>
@@ -854,30 +861,30 @@ export default function GypsyBurgundyTemplate({
                     className="w-full flex flex-col"
                     style={{ gap: "5px" }}
                   >
-                    {/* Foto 1 (photobooth-1.jpg) */}
+                    {/* Foto 1: foto de portada de la clienta (stock solo si falta) */}
                     <div className="w-full aspect-square overflow-hidden bg-[#33101A] rounded-[1px]">
                       <img
-                        src={GYPSY_BURGUNDY_ASSETS.photobooth1}
+                        src={data.fotoPortadaUrl || GYPSY_BURGUNDY_ASSETS.photobooth1}
                         alt="Photobooth 1"
                         className="w-full h-full object-cover block"
                         style={{ filter: "grayscale(100%) contrast(1.15)" }}
                       />
                     </div>
 
-                    {/* Foto 2 (photobooth-2.jpg) */}
+                    {/* Foto 2: foto de infancia de la clienta (stock solo si falta) */}
                     <div className="w-full aspect-square overflow-hidden bg-[#33101A] rounded-[1px]">
                       <img
-                        src={GYPSY_BURGUNDY_ASSETS.photobooth2}
+                        src={data.fotoInfanciaUrl || GYPSY_BURGUNDY_ASSETS.photobooth2}
                         alt="Photobooth 2"
                         className="w-full h-full object-cover block"
                         style={{ filter: "grayscale(100%) contrast(1.15)" }}
                       />
                     </div>
 
-                    {/* Foto 3 (photobooth-3.jpg) */}
+                    {/* Foto 3: foto actual de la clienta (stock solo si falta) */}
                     <div className="w-full aspect-square overflow-hidden bg-[#33101A] rounded-[1px]">
                       <img
-                        src={GYPSY_BURGUNDY_ASSETS.photobooth3}
+                        src={data.fotoActualUrl || GYPSY_BURGUNDY_ASSETS.photobooth3}
                         alt="Photobooth 3"
                         className="w-full h-full object-cover block"
                         style={{ filter: "grayscale(100%) contrast(1.15)" }}
@@ -1195,7 +1202,8 @@ export default function GypsyBurgundyTemplate({
                ===================================================================== */}
             <section className="w-full flex flex-col items-center select-none">
               {/* Bloque 1: Cuenta Regresiva (Countdown) */}
-              <div className="w-full flex flex-col items-center text-center">
+              {isSectionActive("cuentaRegresiva") && (
+                <div className="w-full flex flex-col items-center text-center">
                 <h3
                   className="font-marcellus text-[11px] text-[#d4af37] tracking-[0.25em] uppercase"
                   style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}
@@ -1296,10 +1304,11 @@ export default function GypsyBurgundyTemplate({
                   </div>
                 </div>
               </div>
+              )}
 
               {/* Bloque 2: Cuándo y Dónde (Dos tarjetas separadas) */}
               {/* Tarjeta A (Ceremonia / Misa) */}
-              {data.mostrarCeremonia !== false && (
+              {data.mostrarCeremonia !== false && isSectionActive("ubicaciones") && (
                 <div
                   className="relative"
                   style={{
@@ -1378,7 +1387,7 @@ export default function GypsyBurgundyTemplate({
               )}
 
               {/* Tarjeta B (Recepción / Fiesta) */}
-              {data.mostrarRecepcion !== false && (
+              {data.mostrarRecepcion !== false && isSectionActive("ubicaciones") && (
                 <div
                   className="relative"
                   style={{
@@ -1457,7 +1466,8 @@ export default function GypsyBurgundyTemplate({
               )}
 
               {/* Bloque 3: Itinerario del Evento (Timeline) */}
-              <div
+              {isSectionActive("itinerario") && (
+                <div
                 className="flex flex-col items-center text-center"
                 style={{
                   width: "86%",
@@ -1540,9 +1550,10 @@ export default function GypsyBurgundyTemplate({
                   ))}
                 </div>
               </div>
+              )}
 
               {/* Bloque 4: Código de Vestimenta (Dress Code) */}
-              {data.mostrarDressCode !== false && (
+              {isSectionActive("dressCode") && (
                 <div
                   className="relative"
                   style={{
@@ -1628,7 +1639,8 @@ export default function GypsyBurgundyTemplate({
                ===================================================================== */}
             <section className="w-full flex flex-col items-center select-none">
               {/* Bloque 1: Mesa de Regalos / Lluvia de Sobres (GIFT REGISTRY / MESA DE REGALOS) */}
-              <div
+              {isSectionActive("mesaRegalos") && (
+                <div
                 className="flex flex-col items-center text-center"
                 style={{
                   width: "88%",
@@ -1744,6 +1756,7 @@ export default function GypsyBurgundyTemplate({
                   </span>
                 </a>
               </div>
+              )}
 
               {/* Bloque 2: RSVP - Formulario del sistema con marco dorado Gatsby (ba.png) */}
               {isSectionActive("rsvp") && (
@@ -1789,8 +1802,8 @@ export default function GypsyBurgundyTemplate({
                           telefonoWhatsapp={data.telefonoWhatsappRsvp}
                           primaryColor="#C5A059"
                           accentBgColor="bg-[#2B0A12]"
-                          deadlineText={data.rsvpFechaLimite || "POR FAVOR, CONFIRMA TU ASISTENCIA."}
-                          deadlineTextEn={data.rsvpFechaLimiteEn || "PLEASE CONFIRM YOUR ATTENDANCE."}
+                          deadlineText={fraseFechaLimiteRsvp(data, "es") ?? undefined}
+                          deadlineTextEn={fraseFechaLimiteRsvp(data, "en") ?? undefined}
                           rsvpTitulo=""
                           rsvpTituloEn=""
                           rsvpSubtitulo=""

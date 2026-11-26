@@ -5,8 +5,10 @@ import { MapPin, CheckCircle2, Sparkles, MessageCircle, Music, Pause, CalendarPl
 import confetti from "canvas-confetti";
 import { InvitationData } from "../invitation/InvitationMobileView";
 import { getMapEmbedUrl, getMapDirectionsUrl } from "@/lib/maps";
+import { fraseFechaLimiteRsvp, formatFechaLimiteRsvp } from "@/lib/fecha-limite";
 import { ERA_ASSETS } from "@/lib/templates/eraPinkAssets";
 import { parseTemplateConfig, QuinceEraPinkConfig } from "@/types/templateConfigs";
+import { isSectionEnabledInEvent, SeccionId } from "@/config/templateSections";
 
 export default function QuinceEraPinkTemplate({
   data,
@@ -16,6 +18,17 @@ export default function QuinceEraPinkTemplate({
   skipIntro?: boolean;
 }) {
   const templateConfig = parseTemplateConfig<QuinceEraPinkConfig>(data.configPlantilla);
+  const isSectionActive = (sectionId: SeccionId): boolean =>
+    isSectionEnabledInEvent(sectionId, data.configPlantilla, {
+      mostrarFrasePersonalizada: data.mostrarFrasePersonalizada,
+      mostrarFechaPlacaHora: data.mostrarFechaPlacaHora,
+      mostrarDressCode: data.mostrarDressCode,
+      mostrarMesaRegalos: data.mostrarMesaRegalos,
+      permitirConfirmacionTelefono: data.permitirConfirmacionTelefono,
+    });
+  // La seccion Details solo existe si alguno de sus 3 bloques esta activo.
+  const mostrarDetalles =
+    isSectionActive("dressCode") || isSectionActive("transporte") || isSectionActive("mesaRegalos");
   // Estado para la Intro 3D del Sobre
   const [isEnvelopeOpen, setIsEnvelopeOpen] = useState(false);
   const [isEnvelopeFading, setIsEnvelopeFading] = useState(false);
@@ -76,7 +89,7 @@ export default function QuinceEraPinkTemplate({
     setIsEnvelopeOpen(true);
 
     // Reproducir música tras el gesto táctil del usuario si está habilitado
-    if (data.reproducirMusicaAlAbrir !== false && audioRef.current) {
+    if (isSectionActive("musica") && data.reproducirMusicaAlAbrir !== false && audioRef.current) {
       audioRef.current
         .play()
         .then(() => setIsPlaying(true))
@@ -262,22 +275,11 @@ export default function QuinceEraPinkTemplate({
     ? `${eventWeekday}, ${eventMonth} ${eventDay}, ${eventYear}`
     : (data.fechaTextoPersonalizada || `${eventWeekday} ${eventDay} DE ${eventMonth}, ${eventYear}`);
 
-  // Cálculo dinámico de fecha límite RSVP bilingüe fija (días antes del evento)
-  const diasAntesRsvp =
-    typeof data.rsvpDiasAntes === "number" && data.rsvpDiasAntes > 0
-      ? data.rsvpDiasAntes
-      : 15;
-  const deadlineBaseTime = !isNaN(eventDate.getTime()) ? eventDate.getTime() : Date.now();
-  const deadlineDate = new Date(deadlineBaseTime - diasAntesRsvp * 24 * 60 * 60 * 1000);
-  const deadlineDay = deadlineDate.getDate();
-  const rawMonthEs = deadlineDate.toLocaleDateString("es-ES", { month: "long" });
-  const rawMonthEn = deadlineDate.toLocaleDateString("en-US", { month: "long" });
-  const deadlineMonthEs = rawMonthEs.charAt(0).toUpperCase() + rawMonthEs.slice(1);
-  const deadlineMonthEn = rawMonthEn.charAt(0).toUpperCase() + rawMonthEn.slice(1);
-
-  const rsvpDeadlinePhrase = isEn
-    ? (data.rsvpFechaLimiteEn || `Please confirm before ${deadlineMonthEn} ${deadlineDay}`)
-    : (data.rsvpFechaLimite || `Favor de confirmar antes del ${deadlineDay} de ${deadlineMonthEs}`);
+  // Fecha límite del RSVP: una sola fuente (rsvpFechaLimite/En, derivada
+  // en el editor de fechaLimiteRsvp) y un solo render (fraseFechaLimiteRsvp).
+  // La fecha corta es la misma fecha guardada, formateada (nunca el ISO crudo).
+  const rsvpDeadlinePhrase = fraseFechaLimiteRsvp(data, isEn ? "en" : "es");
+  const fechaLimiteCorta = formatFechaLimiteRsvp(data.fechaLimiteRsvp, isEn ? "en" : "es");
 
   // Itinerario dinámico con los iconos ilustrados del set Era Pink
   const getItineraryIcon = (item: any, idx: number) => {
@@ -404,7 +406,9 @@ export default function QuinceEraPinkTemplate({
   return (
     <div className="relative min-h-screen font-sans-body text-[#3E2A2E] antialiased selection:bg-rose-200 selection:text-rose-900 overflow-x-hidden bg-[#F9E7EA]">
       {/* Audio en bucle */}
-      <audio ref={audioRef} loop preload="none" src={defaultAudio} />
+      {isSectionActive("musica") && (
+        <audio ref={audioRef} loop preload="none" src={defaultAudio} />
+      )}
 
       {/* ========================================================= */}
       {/* INTRO: PORTADA SIMPLE (réplica Canva pág. 1)              */}
@@ -578,7 +582,8 @@ export default function QuinceEraPinkTemplate({
         {/* ======================================================= */}
         {/* SECCIÓN 1: HERO A FOTO COMPLETA                         */}
         {/* ======================================================= */}
-        <section className="relative text-center">
+        {isSectionActive("portada") && (
+          <section className="relative text-center">
           <div className="relative h-[62vh] min-h-[430px] overflow-hidden">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={data.fotoPortadaUrl} alt={data.titulo} className="absolute inset-0 w-full h-full object-cover object-top" />
@@ -603,7 +608,8 @@ export default function QuinceEraPinkTemplate({
             </p>
             <p className="font-script text-6xl sm:text-7xl text-[#3E2A2E] leading-tight mt-1">{data.titulo}</p>
 
-            <div className="mt-4">
+            {isSectionActive("medallonFecha") && (
+              <div className="mt-4">
               <p className="font-serif-roman text-xs tracking-[0.5em] uppercase text-[#3E2A2E] font-bold">{eventMonth}</p>
               <div className="flex items-center justify-center gap-3 sm:gap-4 mt-1">
                 <span className="font-serif-roman text-xs sm:text-sm tracking-[0.25em] uppercase text-[#3E2A2E] font-semibold">{eventWeekday}</span>
@@ -615,6 +621,7 @@ export default function QuinceEraPinkTemplate({
                 </span>
               </div>
             </div>
+            )}
 
             <button
               type="button"
@@ -630,7 +637,8 @@ export default function QuinceEraPinkTemplate({
           </div>
 
           {/* Frase con foto */}
-          <div className="px-6 py-10">
+          {isSectionActive("dedicatoria") && (
+            <div className="px-6 py-10">
             {data.fotoInfanciaUrl && (
               <div className="max-w-xs mx-auto rounded-t-[10rem] rounded-b-3xl overflow-hidden border-4 border-white shadow-xl rotate-1">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -646,12 +654,15 @@ export default function QuinceEraPinkTemplate({
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={ERA_ASSETS.divider} alt="" className="w-56 h-auto mx-auto mt-7 opacity-70" />
           </div>
+          )}
         </section>
+        )}
 
         {/* ======================================================= */}
         {/* SECCIÓN 2: THE COUNTDOWN                                */}
         {/* ======================================================= */}
-        <section className="relative px-6 py-12 text-center overflow-hidden">
+        {isSectionActive("cuentaRegresiva") && (
+          <section className="relative px-6 py-12 text-center overflow-hidden">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={ERA_ASSETS.flowers} alt="" className="absolute inset-0 w-full h-full object-cover opacity-25 pointer-events-none" />
           <div className="relative">
@@ -676,11 +687,13 @@ export default function QuinceEraPinkTemplate({
             </div>
           </div>
         </section>
+        )}
 
         {/* ======================================================= */}
         {/* SECCIÓN 3: THE VENUE                                    */}
         {/* ======================================================= */}
-        <section className="px-6 py-10">
+        {isSectionActive("ubicaciones") && (
+          <section className="px-6 py-10">
           <div className="flex items-center justify-center gap-3">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={ERA_ASSETS.letterV} alt="V" className="w-12 sm:w-14 h-auto" />
@@ -730,11 +743,13 @@ export default function QuinceEraPinkTemplate({
             )}
           </div>
         </section>
+        )}
 
         {/* ======================================================= */}
         {/* SECCIÓN 4: THE PROGRAM                                  */}
         {/* ======================================================= */}
-        <section className="px-6 py-10">
+        {isSectionActive("itinerario") && (
+          <section className="px-6 py-10">
           <div className="flex items-center justify-center gap-3">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={ERA_ASSETS.letterP} alt="P" className="w-12 sm:w-14 h-auto" />
@@ -764,11 +779,13 @@ export default function QuinceEraPinkTemplate({
             </div>
           </div>
         </section>
+        )}
 
         {/* ======================================================= */}
         {/* SECCIÓN 5: THE DETAILS                                  */}
         {/* ======================================================= */}
-        <section className="px-6 py-10 text-center">
+        {mostrarDetalles && (
+          <section className="px-6 py-10 text-center">
           {data.fotoCierreUrl && (
             <div className="max-w-xs mx-auto mb-8 rounded-t-[10rem] rounded-b-3xl overflow-hidden border-4 border-white shadow-xl -rotate-1">
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -781,7 +798,8 @@ export default function QuinceEraPinkTemplate({
           </div>
 
           <div className="max-w-md mx-auto mt-8 space-y-9">
-            <div>
+            {isSectionActive("dressCode") && (
+              <div>
               <h4 className="font-serif-roman text-sm tracking-[0.35em] uppercase text-[#C4667D] font-bold">
                 {isEn ? "Dress Code" : "Código de Vestimenta"}
               </h4>
@@ -800,8 +818,9 @@ export default function QuinceEraPinkTemplate({
                 ))}
               </div>
             </div>
+            )}
 
-            {transporteTexto && (
+            {transporteTexto && isSectionActive("transporte") && (
               <div>
                 <h4 className="font-serif-roman text-sm tracking-[0.35em] uppercase text-[#C4667D] font-bold">
                   {isEn ? "Transportation" : "Transporte"}
@@ -810,7 +829,7 @@ export default function QuinceEraPinkTemplate({
               </div>
             )}
 
-            {data.mostrarMesaRegalos !== false && (
+            {isSectionActive("mesaRegalos") && (
               <div>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={ERA_ASSETS.gifts} alt="" className="w-36 h-auto mx-auto mb-3" />
@@ -820,23 +839,26 @@ export default function QuinceEraPinkTemplate({
                       ? "We're simply grateful to celebrate with you. Gifts aren't required, but you may visit our Amazon Registry if you wish."
                       : "Estamos muy agradecidos de celebrar contigo. Los regalos no son necesarios, pero puedes visitar nuestro registro de Amazon si lo deseas.")}
                 </p>
-                <a
-                  href={data.wishlistUrl || "#"}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-5 inline-flex rounded-full border-2 border-dashed border-[#C4667D] bg-white/70 px-8 py-3 font-serif-roman text-xs tracking-[0.3em] uppercase font-bold text-[#A63D57] hover:bg-[#C4667D] hover:text-white transition-colors"
-                >
-                  {isEn ? "Gift Registry" : "Mesa de Regalos"}
-                </a>
+                {data.wishlistUrl && (
+                  <a
+                    href={data.wishlistUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-5 inline-flex rounded-full border-2 border-dashed border-[#C4667D] bg-white/70 px-8 py-3 font-serif-roman text-xs tracking-[0.3em] uppercase font-bold text-[#A63D57] hover:bg-[#C4667D] hover:text-white transition-colors"
+                  >
+                    {isEn ? "Gift Registry" : "Mesa de Regalos"}
+                  </a>
+                )}
               </div>
             )}
           </div>
         </section>
+        )}
 
         {/* ======================================================= */}
         {/* SECCIÓN 6: CORTE DE HONOR (si el evento la define)      */}
         {/* ======================================================= */}
-        {corte && (
+        {corte && isSectionActive("corteHonor") && (
           <section className="px-6 py-10 text-center">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={ERA_ASSETS.bowGirl} alt="" className="w-32 sm:w-40 h-auto mx-auto mb-2" />
@@ -882,7 +904,8 @@ export default function QuinceEraPinkTemplate({
         {/* ======================================================= */}
         {/* SECCIÓN 7: THE RSVP                                     */}
         {/* ======================================================= */}
-        <section className="px-6 pt-10 pb-2 text-center">
+        {isSectionActive("rsvp") && (
+          <section className="px-6 pt-10 pb-2 text-center">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={ERA_ASSETS.ladyIllustration} alt="" className="w-24 sm:w-28 h-auto mx-auto mb-2" />
           <div className="flex items-center justify-center gap-3">
@@ -893,9 +916,9 @@ export default function QuinceEraPinkTemplate({
               <h3 className="font-serif-roman text-3xl sm:text-4xl tracking-[0.12em] uppercase text-[#3E2A2E] font-bold leading-none">RSVP</h3>
             </div>
           </div>
-          {data.fechaLimiteRsvp && (
+          {fechaLimiteCorta && (
             <p className="font-serif-roman text-xs tracking-[0.4em] uppercase text-[#3E2A2E] font-bold mt-3">
-              {isEn ? "By" : "Antes del"} {data.fechaLimiteRsvp}
+              {isEn ? "By" : "Antes del"} {fechaLimiteCorta}
             </p>
           )}
           <p className="font-serif-roman italic text-sm text-[#3E2A2E]/80 mt-3">
@@ -904,11 +927,13 @@ export default function QuinceEraPinkTemplate({
               : "¿Lista para celebrar con nosotros? Toca abajo para confirmar tu asistencia."}
           </p>
         </section>
+        )}
 
 {/* ======================================================= */}
         {/* SECCIÓN 10: CONFIRMACIÓN DE ASISTENCIA (RSVP)           */}
         {/* ======================================================= */}
-        <section id="rsvp" className="px-4 py-6 z-20">
+        {isSectionActive("rsvp") && (
+          <section id="rsvp" className="px-4 py-6 z-20">
           <div className="relative w-full max-w-[390px] mx-auto -mb-9 z-20 flex justify-center">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -928,9 +953,11 @@ export default function QuinceEraPinkTemplate({
                 </h3>
               );
             })()}
-            <p className="text-[11px] text-slate-500 mb-5 uppercase tracking-wider font-serif-roman font-semibold">
-              {rsvpDeadlinePhrase}
-            </p>
+            {rsvpDeadlinePhrase && (
+              <p className="text-[11px] text-slate-500 mb-5 uppercase tracking-wider font-serif-roman font-semibold">
+                {rsvpDeadlinePhrase}
+              </p>
+            )}
 
             {/* Alerta de confirmación previa / actualización de pases */}
             {rsvpFeedback && (
@@ -1105,6 +1132,7 @@ export default function QuinceEraPinkTemplate({
             )}
           </div>
         </section>
+        )}
 
         {/* ======================================================= */}
         {/* SECCIÓN 8: SAVE THE DATE + CIERRE                       */}
