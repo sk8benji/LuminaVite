@@ -18,6 +18,7 @@ export type BlogPost = {
   description: string;
   datePublished: string;
   readMinutes: number;
+  lang?: "es" | "en";
   landing: { href: string; label: string };
   sections: BlogSection[];
 };
@@ -154,7 +155,7 @@ export const BLOG_POSTS: BlogPost[] = [
       {
         heading: "English, Spanish, or both?",
         paragraphs: [
-          "In Los Angeles, most quinceañera families have guests in both languages. An invitation that shows both versions avoids the awkward case where half the family guesses the details. If you can only pick one, pick the language your grandparents read, and put the RSVP link somewhere nobody can miss it. See the Spanish version on the [Spanish quinceañera invitations page](https://clickandlove.app/es/invitaciones-de-quinceanera).",
+          "Most quinceañera families have guests in both languages. An invitation that shows both versions avoids the awkward case where half the family guesses the details. If you can only pick one, pick the language your grandparents read, and put the RSVP link somewhere nobody can miss it. See the Spanish version on the [Spanish quinceañera invitations page](https://clickandlove.app/es/invitaciones-de-quinceanera).",
         ],
       },
     ],
@@ -380,6 +381,69 @@ export const BLOG_POSTS: BlogPost[] = [
         heading: "How much it costs with Click & Love",
         paragraphs: [
           "Real prices, no cost per guest: Express $99, Assisted $199 and VIP $279. All include the digital invitation with envelope, music, map and SMS confirmation per plan. See the full table at [pricing](https://clickandlove.app/pricing) or call [(818) 918-2519](tel:+18189182519) and we will tell you which plan covers your event.",
+        ],
+      },
+    ],
+  },
+  {
+    slug: "invitaciones-de-quinceanera-digitales-vs-impresas",
+    title:
+      "Invitaciones de Quinceañera Digitales vs. Impresas: ¿Cuál Conviene?",
+    description:
+      "Compara invitaciones de quinceañera digitales e impresas: costo real, velocidad de entrega, confirmación por SMS y cambios de última hora.",
+    datePublished: "2026-11-25",
+    readMinutes: 5,
+    lang: "es",
+    landing: {
+      href: "/es/invitaciones-de-quinceanera",
+      label: "Invitaciones de Quinceañera en Los Ángeles",
+    },
+    sections: [
+      {
+        heading: "La respuesta corta",
+        paragraphs: [
+          "Para la mayoría de las familias, la digital conviene más: cuesta menos, llega el mismo día y te dice quién viene sin que llames a nadie. La impresa solo gana en una cosa: es un recuerdo físico para guardar. Si tu familia vive en WhatsApp y SMS, la respuesta es la [invitación de quinceañera digital](https://clickandlove.app/es/invitaciones-de-quinceanera). Si tus abuelos o padrinos quieren algo en papel para el recuerdo, la jugada es híbrida: digital para todos y unas pocas impresas de recuerdo.",
+          "Esta guía compara las dos con números reales: lo que cuesta cada una, cuánto tarda en llegar, cómo se confirma y qué pasa cuando algo cambia a última hora.",
+        ],
+      },
+      {
+        heading: "Cuánto cuesta cada una",
+        paragraphs: [
+          "Una invitación impresa cobra por pieza: diseño, impresión, sobre, sello y envío, y cada invitado suma. Si cambia la fecha, el salón o la hora, lo impreso ya no sirve y hay que reimprimir. Una invitación digital cobra por paquete, no por invitado: el mismo precio para 50 o para 200 invitados, y si algo cambia se edita el enlace sin reimprimir nada.",
+        ],
+        table: {
+          headers: ["", "Impresa", "Digital"],
+          rows: [
+            ["Costo", "Por invitado: impresión + sobre + envío", "Precio fijo por paquete"],
+            ["Entrega", "Días por correo", "El mismo día por SMS o WhatsApp"],
+            ["Confirmación", "Llamadas y libreta", "SMS con panel en vivo"],
+            ["Cambios", "Reimprimir todo", "Editar el enlace"],
+            ["Fotos de la fiesta", "No", "Galería con QR (plan VIP)"],
+          ],
+        },
+      },
+      {
+        heading: "Velocidad: semanas contra minutos",
+        paragraphs: [
+          "La impresa necesita diseño, imprenta y correo: entre una y tres semanas desde que la pides hasta que llega a la última casa, y eso si nadie se muda. La digital se envía el mismo día: un enlace por SMS o WhatsApp y cada invitado la abre en su teléfono. Para una quinceañera, donde la familia suele estar repartida entre varias ciudades y hasta en México, esa diferencia decide si todos se enteran a tiempo. Mira cómo se ve una invitación real abierta en el teléfono en la [demo Vintage Quinceanera](https://clickandlove.app/demo/isabella-xv).",
+        ],
+      },
+      {
+        heading: "La confirmación es donde se gana o se pierde la fiesta",
+        paragraphs: [
+          "El costo real de la impresa no es el papel, es el seguimiento: llamar invitado por invitado, anotar en una libreta y volver a llamar a los que no contestaron. Con la digital, el invitado confirma desde el mismo enlace y tú ves la lista en vivo, con los pases por familia. Sabes el mismo día cuántos platos pedir, y el recordatorio va solo a los que faltan, no a todo el grupo.",
+        ],
+      },
+      {
+        heading: "Cuánto cuesta con Click & Love",
+        paragraphs: [
+          "Precios reales, sin costo por invitado: Express $99, Asistido $199 y VIP $279. El Save the Date cuesta $49 solo o viene incluido en el VIP. Todos incluyen la invitación digital con sobre, música, mapa y confirmación por SMS según el plan. Ve la tabla completa en [precios](https://clickandlove.app/es/precios) o llama al [(818) 918-2519](tel:+18189182519) y te decimos cuál plan cubre tu fiesta.",
+        ],
+      },
+      {
+        heading: "Cuándo sí conviene la impresa",
+        paragraphs: [
+          "Hay un caso donde la impresa gana: cuando la familia quiere un recuerdo físico. Los abuelos y los padrinos guardan la invitación impresa como guardan las fotos. Para ellos, imprime unas pocas de recuerdo y manda la digital a todos los demás. No necesitas elegir una sola: la digital hace el trabajo y la impresa queda de recuerdo.",
         ],
       },
     ],

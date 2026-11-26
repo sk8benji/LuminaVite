@@ -34,6 +34,10 @@ const POST_META: Record<string, { image: string; category: string }> = {
     image: "/blog/text-message-invitations.jpg",
     category: "SMS",
   },
+  "invitaciones-de-quinceanera-digitales-vs-impresas": {
+    image: "/blog/quinceanera-digital-vs-impresa.jpg",
+    category: "Quinceañera",
+  },
 };
 
 function Reveal({
