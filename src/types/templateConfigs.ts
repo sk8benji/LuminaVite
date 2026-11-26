@@ -131,6 +131,8 @@ export interface CoralineMysticalConfig {
 }
 
 export interface Gatsby20sConfig {
+  /** Nombre de la quinceañera en el ticket y la tarjeta (por defecto, el titulo de la invitacion). */
+  nombreQuinceanera?: string;
   subtitulo?: string;
   subtituloEn?: string;
   fraseApertura?: string;

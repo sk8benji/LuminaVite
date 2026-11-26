@@ -1183,6 +1183,7 @@ function NuevoEventoContent() {
           </div>
 
           {editorMode === "sections" ? (
+            <>
             <TemplateSectionBuilder
               formData={formData}
               updateField={updateField}
@@ -1198,6 +1199,16 @@ function NuevoEventoContent() {
               onDateChange={handleDateChange}
               onOpenTemplatePicker={openTemplateGrid}
             />
+            {/* Configuración exclusiva de la plantilla (campos en configPlantilla) */}
+            <div className="mt-4">
+              <TemplateConfigDispatcher
+                estiloPlantilla={formData.estiloPlantilla}
+                value={formData.configPlantilla || {}}
+                onChange={(c) => updateField("configPlantilla", c)}
+                slug={formData.slug}
+              />
+            </div>
+            </>
           ) : (
             <EventSettingsConfig
               formData={formData}
