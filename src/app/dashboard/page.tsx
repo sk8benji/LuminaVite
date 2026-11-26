@@ -15,7 +15,7 @@ import {
   ChevronDown,
   MessageCircle,
   Edit3,
-  LogOut,
+  Menu,
   ShoppingBag,
   ShoppingCart,
   DollarSign,
@@ -28,16 +28,14 @@ import {
   AlertCircle,
   RefreshCw,
   Search,
-  Palette,
-  QrCode,
   Link2,
-  CalendarHeart,
 } from "lucide-react";
 import { OrderData } from "@/lib/order-store";
 import { DATOS_SECCIONES, calcularProgresoDatos, campoVisible } from "@/lib/datos-questions";
 import TemplatesManager from "@/components/dashboard/TemplatesManager";
 import QrManager from "@/components/dashboard/QrManager";
 import SaveTheDateManager from "@/components/dashboard/SaveTheDateManager";
+import AdminSidebar, { type AdminTabId } from "@/components/dashboard/AdminSidebar";
 import MigrateAssetsCard from "@/components/dashboard/MigrateAssetsCard";
 
 interface EventoItem {
@@ -61,6 +59,19 @@ interface EventoItem {
 
 export default function DashboardPage() {
   const [activeTab, setActiveTab] = useState<"eventos" | "ordenes" | "templates" | "qr" | "abandonados" | "savedate">("ordenes");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const handleSelectTab = (tab: AdminTabId) => {
+    setActiveTab(tab);
+    setSidebarOpen(false);
+  };
+  const SECTION_TITLES: Record<AdminTabId, string> = {
+    ordenes: "Órdenes & Compradores",
+    eventos: "Invitaciones",
+    templates: "Templates",
+    qr: "Códigos QR",
+    abandonados: "Carrito abandonado",
+    savedate: "Save the Date",
+  };
   // La pestana vive en la URL (?tab=...): al recargar o compartir el enlace sigues en el mismo paso
   useEffect(() => {
     try {
@@ -393,130 +404,36 @@ export default function DashboardPage() {
   });
 
   return (
-    <div className="min-h-screen bg-stone-50 text-stone-800">
-      {/* Barra superior de navegación */}
-      <nav className="bg-white border-b border-stone-200 px-6 py-4 flex items-center justify-between sticky top-0 z-30 shadow-xs">
-        <div className="flex items-center gap-3">
-          <span className="text-2xl">🎀</span>
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="text-base font-bold tracking-tight text-stone-900 font-serif">
-                Click and love
-              </span>
-              <span className="text-[10px] uppercase tracking-wider font-semibold bg-pink-100 text-[#7A002A] px-2 py-0.5 rounded-full">
-                Admin
-              </span>
-            </div>
-            <p className="text-[10px] text-stone-400 hidden sm:block">Panel de Ventas & Eventos</p>
-          </div>
-        </div>
-
-        {/* Pestañas de Navegación */}
-        <div className="flex items-center bg-stone-100 p-1 rounded-xl border border-stone-200 text-xs font-semibold">
-          <button
-            onClick={() => setActiveTab("ordenes")}
-            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg transition ${
-              activeTab === "ordenes"
-                ? "bg-white text-[#7A002A] shadow-xs font-bold"
-                : "text-stone-600 hover:text-stone-900"
-            }`}
-          >
-            <ShoppingBag className="w-3.5 h-3.5" />
-            <span>Compradores & Ventas</span>
-            {ordenesPagadas.length > 0 && (
-              <span className="ml-0.5 px-1.5 py-0.2 rounded-full bg-[#7A002A] text-white text-[10px]">
-                {ordenesPagadas.length}
-              </span>
-            )}
-          </button>
-
-          <button
-            onClick={() => setActiveTab("abandonados")}
-            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg transition cursor-pointer ${
-              activeTab === "abandonados"
-                ? "bg-white text-[#7A002A] shadow-xs font-bold"
-                : "text-stone-600 hover:text-stone-900"
-            }`}
-          >
-            <ShoppingCart className="w-3.5 h-3.5" />
-            <span>Carrito abandonado</span>
-            {ordenesAbandonadas.length > 0 && (
-              <span className="ml-0.5 px-1.5 py-0.2 rounded-full bg-stone-500 text-white text-[10px]">
-                {ordenesAbandonadas.length}
-              </span>
-            )}
-          </button>
-
-          <button
-            onClick={() => setActiveTab("eventos")}
-            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg transition cursor-pointer ${
-              activeTab === "eventos"
-                ? "bg-white text-stone-900 shadow-xs font-bold"
-                : "text-stone-600 hover:text-stone-900"
-            }`}
-          >
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Invitaciones ({eventos.length})</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab("templates")}
-            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg transition cursor-pointer ${
-              activeTab === "templates"
-                ? "bg-white text-amber-900 shadow-xs font-bold"
-                : "text-stone-600 hover:text-stone-900"
-            }`}
-          >
-            <Palette className="w-3.5 h-3.5 text-[#C5A059]" />
-            <span>🎨 Templates</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab("qr")}
-            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg transition cursor-pointer ${
-              activeTab === "qr"
-                ? "bg-white text-[#7A002A] shadow-xs font-bold"
-                : "text-stone-600 hover:text-stone-900"
-            }`}
-          >
-            <QrCode className="w-3.5 h-3.5" />
-            <span>Códigos QR</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab("savedate")}
-            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg transition cursor-pointer ${
-              activeTab === "savedate"
-                ? "bg-white text-[#7A002A] shadow-xs font-bold"
-                : "text-stone-600 hover:text-stone-900"
-            }`}
-          >
-            <CalendarHeart className="w-3.5 h-3.5 text-pink-600" />
-            <span>Save the Date</span>
-          </button>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <Link
-            href="/eventos/nuevo"
-            className="flex items-center gap-1.5 px-3.5 py-2 bg-[#7A002A] hover:bg-[#5e0020] text-white rounded-xl text-xs font-semibold shadow transition"
-          >
-            <Plus className="w-4 h-4" />
-            <span className="hidden sm:inline">Nueva Invitación</span>
-          </Link>
+    <div className="min-h-screen bg-stone-50 text-stone-800 lg:flex">
+      <AdminSidebar
+        activeTab={activeTab}
+        counts={{ ordenesPagadas: ordenesPagadas.length, eventos: eventos.length, abandonados: ordenesAbandonadas.length }}
+        mobileOpen={sidebarOpen}
+        onSelect={handleSelectTab}
+        onLogout={handleLogout}
+        onCloseMobile={() => setSidebarOpen(false)}
+      />
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black/50 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+      <div className="flex min-w-0 flex-1 flex-col">
+        {/* Encabezado fino con el título de la sección actual */}
+        <header className="sticky top-0 z-30 flex items-center gap-3 border-b border-stone-200 bg-white px-4 py-3 sm:px-6">
           <button
             type="button"
-            onClick={handleLogout}
-            title="Cerrar sesión"
-            className="flex items-center gap-1.5 px-3 py-2 bg-stone-100 hover:bg-stone-200 text-stone-700 rounded-xl text-xs font-semibold transition cursor-pointer"
+            onClick={() => setSidebarOpen(true)}
+            aria-label="Abrir menú"
+            className="rounded-lg p-2 text-stone-600 hover:bg-stone-100 lg:hidden cursor-pointer"
           >
-            <LogOut className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Salir</span>
+            <Menu className="h-5 w-5" />
           </button>
-        </div>
-      </nav>
+          <h1 className="text-base font-bold text-stone-900">{SECTION_TITLES[activeTab]}</h1>
+        </header>
 
-      <main className="max-w-7xl mx-auto px-6 py-8 space-y-8">
+      <main className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 sm:py-8 space-y-8">
         {/* ============================================================== */}
         {/* VISTA 1: COMPRADORES & VENTAS (STRIPE CHECKOUT) */}
         {/* ============================================================== */}
@@ -1028,9 +945,9 @@ export default function DashboardPage() {
                 <h2 className="text-base font-bold text-stone-900">Tus Invitaciones Activas</h2>
                 <Link
                   href="/eventos/nuevo"
-                  className="text-xs font-semibold text-[#7A002A] hover:underline flex items-center gap-1"
+                  className="flex items-center gap-1.5 px-3.5 py-2 bg-[#7A002A] hover:bg-[#5e0020] text-white rounded-xl text-xs font-semibold shadow transition"
                 >
-                  <Plus className="w-3.5 h-3.5" />
+                  <Plus className="w-4 h-4" />
                   Crear otra invitación
                 </Link>
               </div>
@@ -1318,6 +1235,7 @@ export default function DashboardPage() {
           </div>
         )}
       </main>
+      </div>
     </div>
   );
 }

@@ -473,9 +473,6 @@ export default function SaveTheDateManager() {
     );
   });
 
-  const totalPreRsvps = items.reduce((acc, curr) => acc + (curr._count?.preRsvps || curr.preRsvps?.length || 0), 0);
-  const totalVistas = items.reduce((acc, curr) => acc + (curr.vistasContador || 0), 0);
-
   return (
     <div className="space-y-6">
       {/* ── ENCABEZADO Y MÉTRICAS ── */}
@@ -510,45 +507,6 @@ export default function SaveTheDateManager() {
             <Plus className="w-4 h-4" />
             <span>Nuevo Save the Date</span>
           </button>
-        </div>
-      </div>
-
-      {/* ── TARJETAS DE MÉTRICAS ── */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="bg-white p-5 rounded-2xl border border-stone-200 shadow-2xs flex items-center justify-between">
-          <div>
-            <p className="text-[11px] font-semibold text-stone-500 uppercase tracking-wider">
-              Save the Dates Activos
-            </p>
-            <p className="text-2xl font-bold text-stone-900 mt-1">{items.length}</p>
-          </div>
-          <div className="p-3 bg-pink-50 text-[#7A002A] rounded-xl">
-            <CalendarHeart className="w-5 h-5" />
-          </div>
-        </div>
-
-        <div className="bg-white p-5 rounded-2xl border border-stone-200 shadow-2xs flex items-center justify-between">
-          <div>
-            <p className="text-[11px] font-semibold text-stone-500 uppercase tracking-wider">
-              Pre-Confirmaciones Recibidas
-            </p>
-            <p className="text-2xl font-bold text-stone-900 mt-1">{totalPreRsvps}</p>
-          </div>
-          <div className="p-3 bg-emerald-50 text-emerald-600 rounded-xl">
-            <Users className="w-5 h-5" />
-          </div>
-        </div>
-
-        <div className="bg-white p-5 rounded-2xl border border-stone-200 shadow-2xs flex items-center justify-between">
-          <div>
-            <p className="text-[11px] font-semibold text-stone-500 uppercase tracking-wider">
-              Total de Vistas
-            </p>
-            <p className="text-2xl font-bold text-stone-900 mt-1">{totalVistas}</p>
-          </div>
-          <div className="p-3 bg-amber-50 text-amber-600 rounded-xl">
-            <Eye className="w-5 h-5" />
-          </div>
         </div>
       </div>
 
@@ -722,7 +680,7 @@ export default function SaveTheDateManager() {
 
                 {/* Acciones de pie */}
                 <div className="p-4 pt-0 space-y-2">
-                  <div className="grid grid-cols-2 gap-2">
+                  <div>
                     <a
                       href={`/save-the-date/${item.slug}`}
                       target="_blank"
@@ -731,18 +689,6 @@ export default function SaveTheDateManager() {
                     >
                       <Eye className="w-3.5 h-3.5" />
                       <span>Ver en Vivo</span>
-                    </a>
-
-                    <a
-                      href={`https://api.whatsapp.com/send?text=${encodeURIComponent(
-                        `¡Hola! Reserva la fecha para ${item.titulo} 💌 Abre el Save the Date aquí: ${publicUrl}`
-                      )}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="py-2 px-3 rounded-xl bg-[#25D366] hover:bg-[#20ba5a] text-white text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-2xs"
-                    >
-                      <Share2 className="w-3.5 h-3.5" />
-                      <span>WhatsApp</span>
                     </a>
                   </div>
 
