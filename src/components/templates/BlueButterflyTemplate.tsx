@@ -6,6 +6,7 @@ import confetti from "canvas-confetti";
 import { InvitationData } from "../invitation/InvitationMobileView";
 import { getMapEmbedUrl, getMapDirectionsUrl } from "@/lib/maps";
 import { parseTemplateConfig, BlueButterflyConfig } from "@/types/templateConfigs";
+import { isSectionEnabledInEvent, SeccionId } from "@/config/templateSections";
 
 export default function BlueButterflyTemplate({
   data,
@@ -15,6 +16,14 @@ export default function BlueButterflyTemplate({
   skipIntro?: boolean;
 }) {
   const templateConfig = parseTemplateConfig<BlueButterflyConfig>(data.configPlantilla);
+  const isSectionActive = (sectionId: SeccionId): boolean =>
+    isSectionEnabledInEvent(sectionId, data.configPlantilla, {
+      mostrarFrasePersonalizada: data.mostrarFrasePersonalizada,
+      mostrarFechaPlacaHora: data.mostrarFechaPlacaHora,
+      mostrarDressCode: data.mostrarDressCode,
+      mostrarMesaRegalos: data.mostrarMesaRegalos,
+      permitirConfirmacionTelefono: data.permitirConfirmacionTelefono,
+    });
   // Estado para la Intro 3D del Sobre
   const [isEnvelopeOpen, setIsEnvelopeOpen] = useState(false);
   const [isEnvelopeFading, setIsEnvelopeFading] = useState(false);
@@ -75,7 +84,7 @@ export default function BlueButterflyTemplate({
     setIsEnvelopeOpen(true);
 
     // Reproducir música tras el gesto táctil del usuario si está habilitado
-    if (data.reproducirMusicaAlAbrir !== false && audioRef.current) {
+    if (isSectionActive("musica") && data.reproducirMusicaAlAbrir !== false && audioRef.current) {
       audioRef.current
         .play()
         .then(() => setIsPlaying(true))
@@ -397,7 +406,9 @@ export default function BlueButterflyTemplate({
       />
 
       {/* Audio en bucle */}
-      <audio ref={audioRef} loop preload="none" src={defaultAudio} />
+      {isSectionActive("musica") && (
+        <audio ref={audioRef} loop preload="none" src={defaultAudio} />
+      )}
 
       {/* ========================================================= */}
       {/* INTRO 3D REAL: SOBRE CON SELLO DE CERA Y MARIPOSA CON ALETEO 3D */}
@@ -758,7 +769,8 @@ export default function BlueButterflyTemplate({
         {/* ======================================================= */}
         {/* SECCIÓN 1: Portada con Hero y Título                    */}
         {/* ======================================================= */}
-        <section id="welcome" className="pt-8 text-center relative flex flex-col items-center z-20">
+        {isSectionActive("portada") && (
+          <section id="welcome" className="pt-8 text-center relative flex flex-col items-center z-20">
           <div className="flex items-center gap-2 mb-2">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -830,6 +842,7 @@ export default function BlueButterflyTemplate({
             </div>
           </div>
         </section>
+        )}
 
         {/* ======================================================== */}
         {/* SECCIÓN 2: MÓDULO MUSICAL (DÍPTICO & DISCO DE VINILO)    */}
@@ -837,7 +850,8 @@ export default function BlueButterflyTemplate({
         <section className="relative w-full py-10 px-4 flex justify-center items-center overflow-visible select-none z-20">
           <div className="relative w-full max-w-[390px] h-[340px] flex items-center justify-center">
             {/* 1. TEXTO EN ARCO Y NOTAS MUSICALES */}
-            <div className="absolute -top-3 left-2 z-20 pointer-events-none">
+            {isSectionActive("musica") && (
+              <div className="absolute -top-3 left-2 z-20 pointer-events-none">
               <span className="block font-serif-roman text-[10px] tracking-[0.25em] text-slate-500 uppercase -rotate-12 translate-x-3 translate-y-2 font-semibold">
                 {data.textoDisco || (isEn ? "Click to Play Music" : "Toca para Escuchar Música")}
               </span>
@@ -845,9 +859,11 @@ export default function BlueButterflyTemplate({
                 𝄞 𝅘𝅥𝅯 𝅘𝅥𝅮
               </span>
             </div>
+            )}
 
             {/* 2. DISCO DE VINILO */}
-            <div
+            {isSectionActive("musica") && (
+              <div
               id="vinylRecord"
               onClick={toggleMusic}
               className={`absolute -top-1 left-2 w-36 h-36 rounded-full bg-[#111] border-[3px] border-slate-700 shadow-2xl flex items-center justify-center z-10 cursor-pointer transition-transform duration-500 hover:scale-105 ${
@@ -864,6 +880,7 @@ export default function BlueButterflyTemplate({
                 </div>
               </div>
             </div>
+            )}
 
             {/* 3. DÍPTICO FOTOGRÁFICO */}
             <div className="relative z-20 w-[290px] h-[200px] bg-white p-2 rounded-sm shadow-[0_12px_30px_rgba(0,0,0,0.18)] border border-slate-200/80 flex gap-1 transform rotate-[-1deg] translate-x-4 translate-y-3">
@@ -923,7 +940,8 @@ export default function BlueButterflyTemplate({
         {/* ======================================================= */}
         {/* SECCIÓN 3: MENSAJE EMOTIVO / BENDICIÓN                  */}
         {/* ======================================================= */}
-        <section className="px-8 py-4 text-center z-20">
+        {isSectionActive("dedicatoria") && (
+          <section className="px-8 py-4 text-center z-20">
           <p className="font-cormorant italic text-base leading-relaxed text-slate-700">
             {templateConfig.fraseBiblica ||
               (isEn && data.frasePersonalizadaEn ? data.frasePersonalizadaEn : data.frasePersonalizada) ||
@@ -947,13 +965,15 @@ export default function BlueButterflyTemplate({
             />
           </div>
         </section>
+        )}
 
         {/* ======================================================== */}
         {/* SECCIÓN 4: TARJETA DE FECHA Y LUGAR + RETRATO CON RASGADO */}
         {/* ======================================================== */}
         <section className="relative w-full py-6 px-4 flex flex-col items-center overflow-visible select-none z-20">
           {/* 1. PLACA DE FECHA Y LUGAR */}
-          <div className="relative w-full max-w-[340px] mb-8">
+          {isSectionActive("medallonFecha") && (
+            <div className="relative w-full max-w-[340px] mb-8">
             {/* Marco de fondo de pergamino con flores */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img 
@@ -1012,6 +1032,7 @@ export default function BlueButterflyTemplate({
               />
             </div>
           </div>
+          )}
 
           {/* 2. RETRATO DE GALA CON RECORTE OFICIAL DE CANVA */}
           <div className="relative w-full max-w-[390px] h-[480px] sm:h-[520px] mx-auto overflow-hidden bg-slate-100 shadow-xl my-4">
@@ -1030,7 +1051,8 @@ export default function BlueButterflyTemplate({
         {/* ======================================================= */}
         {/* SECCIÓN 5: CONTADOR REGRESIVO (COUNTDOWN)               */}
         {/* ======================================================= */}
-        <section className="px-4 py-6 z-20">
+        {isSectionActive("cuentaRegresiva") && (
+          <section className="px-4 py-6 z-20">
           <div className="relative w-full aspect-[1536/1024] max-w-[390px] mx-auto flex items-center justify-center">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -1073,11 +1095,13 @@ export default function BlueButterflyTemplate({
             </div>
           </div>
         </section>
+        )}
 
         {/* ======================================================== */}
         {/* SECCIÓN 6: ITINERARIO (RÉPLICA EXACTA DE CANVA)          */}
         {/* ======================================================== */}
-        <section className="relative w-full py-10 px-2 select-none z-20">
+        {isSectionActive("itinerario") && (
+          <section className="relative w-full py-10 px-2 select-none z-20">
           {/* Título con mancha de acuarela */}
           <div className="text-center mb-8 relative">
             <span className="inline-block bg-[#D3E3F0]/60 text-[#2F5A84] font-serif-roman text-xs tracking-[0.3em] uppercase py-1.5 px-6 rounded-full border border-blue-100 shadow-xs">
@@ -1159,11 +1183,13 @@ export default function BlueButterflyTemplate({
             );
           })()}
         </section>
+        )}
 
         {/* ======================================================= */}
         {/* SECCIÓN 7: CÓDIGO DE VESTIMENTA (DRESS CODE)            */}
         {/* ======================================================= */}
-        <section className="px-4 sm:px-6 py-6 text-center z-20">
+        {isSectionActive("dressCode") && (
+          <section className="px-4 sm:px-6 py-6 text-center z-20">
           <h3 className="font-serif-roman text-xs tracking-[0.2em] text-[#2F5A84] uppercase mb-2 font-bold">
             {isEn ? "Dress Code" : "Código de Vestimenta"}
           </h3>
@@ -1249,11 +1275,13 @@ export default function BlueButterflyTemplate({
             />
           </div>
         </section>
+        )}
 
         {/* ======================================================= */}
         {/* SECCIÓN 8: MAPA Y NAVEGACIÓN (THE LOCATION)             */}
         {/* ======================================================= */}
-        <section className="px-6 py-6 text-center z-20">
+        {isSectionActive("ubicaciones") && (
+          <section className="px-6 py-6 text-center z-20">
           {data.mostrarRecepcion !== false && (<>
           <h3 className="font-serif-roman text-xs tracking-[0.25em] text-[#2F5A84] uppercase mb-2 font-bold">
             {isEn ? "Reception & Location" : "Recepción & Ubicación"}
@@ -1337,11 +1365,13 @@ export default function BlueButterflyTemplate({
             </div>
           )}
         </section>
+        )}
 
         {/* ======================================================= */}
         {/* SECCIÓN 9: MESA DE REGALOS / LLUVIA DE SOBRES           */}
         {/* ======================================================= */}
-        <section className="px-6 py-6 text-center z-20">
+        {isSectionActive("mesaRegalos") && (
+          <section className="px-6 py-6 text-center z-20">
           <div className="w-44 h-44 mx-auto mb-2">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -1376,11 +1406,13 @@ export default function BlueButterflyTemplate({
             </div>
           )}
         </section>
+        )}
 
         {/* ======================================================= */}
         {/* SECCIÓN 10: CONFIRMACIÓN DE ASISTENCIA (RSVP)           */}
         {/* ======================================================= */}
-        <section id="rsvp" className="px-4 py-6 z-20">
+        {isSectionActive("rsvp") && (
+          <section id="rsvp" className="px-4 py-6 z-20">
           <div className="relative w-full max-w-[390px] mx-auto -mb-6 z-20">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -1577,11 +1609,13 @@ export default function BlueButterflyTemplate({
             )}
           </div>
         </section>
+        )}
 
         {/* ======================================================= */}
         {/* SECCIÓN 11: CORTE DE HONOR, PADRINOS Y CARTA DE CIERRE */}
         {/* ======================================================= */}
-        <section className="px-6 py-6 text-center z-20">
+        {isSectionActive("corteHonor") && (
+          <section className="px-6 py-6 text-center z-20">
           {corte && (
             <div className="bg-white/80 backdrop-blur-sm p-6 rounded-2xl border border-blue-100 mb-6 shadow-sm">
               <h4 className="font-serif-roman text-xs uppercase tracking-[0.2em] text-[#C5A059] font-bold mb-4">
@@ -1666,6 +1700,7 @@ export default function BlueButterflyTemplate({
             </a>
           </div>
         </section>
+        )}
 
         {/* FOOTER */}
         <footer className="px-6 pt-2 pb-6 text-center z-20">
