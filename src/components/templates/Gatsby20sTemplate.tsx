@@ -878,30 +878,30 @@ export default function Gatsby20sTemplate({
                     className="w-full flex flex-col"
                     style={{ gap: "5px" }}
                   >
-                    {/* Foto 1 (photobooth-1.jpg) */}
+                    {/* Foto 1: foto de portada de la clienta (stock solo si falta) */}
                     <div className="w-full aspect-square overflow-hidden bg-[#181818] rounded-[1px]">
                       <img
-                        src={GATSBY_20S_ASSETS.photobooth1}
+                        src={data.fotoPortadaUrl || GATSBY_20S_ASSETS.photobooth1}
                         alt="Photobooth 1"
                         className="w-full h-full object-cover block"
                         style={{ filter: "grayscale(100%) contrast(1.15)" }}
                       />
                     </div>
 
-                    {/* Foto 2 (photobooth-2.jpg) */}
+                    {/* Foto 2: foto de infancia de la clienta (stock solo si falta) */}
                     <div className="w-full aspect-square overflow-hidden bg-[#181818] rounded-[1px]">
                       <img
-                        src={GATSBY_20S_ASSETS.photobooth2}
+                        src={data.fotoInfanciaUrl || GATSBY_20S_ASSETS.photobooth2}
                         alt="Photobooth 2"
                         className="w-full h-full object-cover block"
                         style={{ filter: "grayscale(100%) contrast(1.15)" }}
                       />
                     </div>
 
-                    {/* Foto 3 (photobooth-3.jpg) */}
+                    {/* Foto 3: foto actual de la clienta (stock solo si falta) */}
                     <div className="w-full aspect-square overflow-hidden bg-[#181818] rounded-[1px]">
                       <img
-                        src={GATSBY_20S_ASSETS.photobooth3}
+                        src={data.fotoActualUrl || GATSBY_20S_ASSETS.photobooth3}
                         alt="Photobooth 3"
                         className="w-full h-full object-cover block"
                         style={{ filter: "grayscale(100%) contrast(1.15)" }}
