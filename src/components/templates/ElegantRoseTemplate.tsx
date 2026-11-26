@@ -419,7 +419,8 @@ export default function ElegantRoseTemplate({
             </h2>
 
             {/* 6. Bloque de Fecha Horizontal Elegante */}
-            <div className="w-full max-w-[300px] mx-auto mt-4 pt-2">
+            {isSectionActive("medallonFecha") && (
+              <div className="w-full max-w-[300px] mx-auto mt-4 pt-2">
               {/* Mes Arqueado */}
               <div className="w-full flex justify-center -mb-1">
                 <svg viewBox="0 0 180 38" className="w-32 h-7 overflow-visible">
@@ -458,17 +459,20 @@ export default function ElegantRoseTemplate({
               </div>
 
               {/* Dirección / Locación */}
-              <p className="font-['Cinzel'] text-xs sm:text-sm tracking-[0.22em] uppercase text-white font-bold mt-3 leading-relaxed drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
-                {data.recepcionNombre || data.ceremoniaNombre || "ANY CITY, ANY STREET, AZ 12345"}
-              </p>
-              {data.recepcionDireccion && (
+              {(data.recepcionNombre || data.ceremoniaNombre) && isSectionActive("ubicaciones") && (
+                <p className="font-['Cinzel'] text-xs sm:text-sm tracking-[0.22em] uppercase text-white font-bold mt-3 leading-relaxed drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
+                  {data.recepcionNombre || data.ceremoniaNombre}
+                </p>
+              )}
+              {data.recepcionDireccion && isSectionActive("ubicaciones") && (
                 <p className="font-['Cinzel'] text-xs sm:text-[13px] tracking-[0.18em] uppercase text-white font-semibold mt-1 leading-relaxed drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
                   {data.recepcionDireccion}
                 </p>
               )}
 
               {/* Botón Google Maps elegante y legible a juego con Canva */}
-              <a
+              {isSectionActive("ubicaciones") && (
+                <a
                 href={churchMapUrl}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -476,7 +480,9 @@ export default function ElegantRoseTemplate({
               >
                 GOOGLE MAPS
               </a>
+              )}
             </div>
+            )}
           </div>
         </section>
         )}

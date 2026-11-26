@@ -672,7 +672,8 @@ export default function QuinceRosadoTemplate({
         {/* ══════════════════════════════════════════════════════════════
             SECCIÓN 1: HERO PORTADA ARCO & CABALLO BLANCO (RÉPLICA CANVA)
         ══════════════════════════════════════════════════════════════ */}
-        <section className="relative w-full flex flex-col items-center pt-14 sm:pt-16 pb-10 px-4 overflow-hidden select-none">
+        {isSectionActive("portada") && (
+          <section className="relative w-full flex flex-col items-center pt-14 sm:pt-16 pb-10 px-4 overflow-hidden select-none">
           {/* Fondo de Nubes Rosadas (90043c428c5ec72c7adb26dce69dedd2.png) */}
           <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none select-none">
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -810,6 +811,7 @@ export default function QuinceRosadoTemplate({
             </div>
           )}
         </section>
+        )}
 
         {/* ══════════════════════════════════════════════════════════════
             SECCIÓN 2: DEDICATORIA & POLAROIDS ("DE NIÑA A SEÑORITA")

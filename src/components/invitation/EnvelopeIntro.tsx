@@ -339,9 +339,11 @@ export default function EnvelopeIntro({
           </div>
 
           {/* Recinto / Salón / Ubicación (100% dinámico) */}
-          <p className="text-[8px] sm:text-[8.5px] tracking-[0.2em] uppercase text-[#A88448] mt-3 font-semibold select-none opacity-80">
-            {lugarTexto || (tipoEvento === "BODA" ? "Château de l'Amour • Los Angeles" : "Celebración Exclusiva")}
-          </p>
+          {lugarTexto && (
+            <p className="text-[8px] sm:text-[8.5px] tracking-[0.2em] uppercase text-[#A88448] mt-3 font-semibold select-none opacity-80">
+              {lugarTexto}
+            </p>
+          )}
         </div>
 
         {/* Capa 3: Bolsillo Frontal continuo en V con bordes florales dorados estáticos */}

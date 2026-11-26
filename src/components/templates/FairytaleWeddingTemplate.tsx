@@ -72,7 +72,7 @@ export default function FairytaleWeddingTemplate({
           titulo={data.titulo}
           tipoEvento="BODA"
           fechaTexto={data.fechaTextoPersonalizada || "SATURDAY, JULY 22 • 3:30 PM"}
-          lugarTexto={data.ceremoniaNombre || data.recepcionNombre || data.fechaPlacaLugar || "Château de l'Amour • Los Angeles"}
+          lugarTexto={data.ceremoniaNombre || data.recepcionNombre || data.fechaPlacaLugar || undefined}
           tagline={data.subtitulo || "Save the Date"}
           template={template}
           reproducirMusicaAlAbrir={data.reproducirMusicaAlAbrir}
@@ -112,17 +112,21 @@ export default function FairytaleWeddingTemplate({
             />
           </div>
 
-          <div className="flex items-center justify-center gap-4 mt-6">
-            <span className="h-[1px] w-12 bg-[#AF936A]" />
-            <p className="text-xs font-serif tracking-widest font-bold text-[#AF936A]">
-              {data.fechaTextoPersonalizada || "SATURDAY, JULY 22, 2030 AT 3:30 PM"}
-            </p>
-            <span className="h-[1px] w-12 bg-[#AF936A]" />
-          </div>
+          {data.fechaTextoPersonalizada && isSectionActive("medallonFecha") && (
+            <div className="flex items-center justify-center gap-4 mt-6">
+              <span className="h-[1px] w-12 bg-[#AF936A]" />
+              <p className="text-xs font-serif tracking-widest font-bold text-[#AF936A]">
+                {data.fechaTextoPersonalizada}
+              </p>
+              <span className="h-[1px] w-12 bg-[#AF936A]" />
+            </div>
+          )}
 
-          <p className="text-xs text-stone-500 mt-2 font-serif">
-            {data.recepcionDireccion || "8221 Sunset Blvd, West Hollywood"}
-          </p>
+          {data.recepcionDireccion && isSectionActive("ubicaciones") && (
+            <p className="text-xs text-stone-500 mt-2 font-serif">
+              {data.recepcionDireccion}
+            </p>
+          )}
         </section>
         )}
 

@@ -52,7 +52,7 @@ export default function CoralineThemedTemplate({
           titulo={data.titulo}
           tipoEvento="CUMPLEANOS"
           fechaTexto={data.fechaTextoPersonalizada || "OCTOBER 31 • 6:00 PM"}
-          lugarTexto={data.recepcionNombre || data.ceremoniaNombre || "The Secret Garden"}
+          lugarTexto={data.recepcionNombre || data.ceremoniaNombre || undefined}
           tagline={data.subtitulo || "Secret Door Invitation"}
           template={template}
           reproducirMusicaAlAbrir={data.reproducirMusicaAlAbrir}
@@ -108,13 +108,15 @@ export default function CoralineThemedTemplate({
             </div>
           </div>
 
-          <div className="flex items-center justify-center gap-3 mt-6">
-            <span className="h-[1px] w-12 bg-yellow-400/60" />
-            <p className="text-xs tracking-widest font-bold text-[#FFD700] font-serif uppercase">
-              {data.fechaTextoPersonalizada || "OCTOBER 31, 2026 • 6:00 PM"}
-            </p>
-            <span className="h-[1px] w-12 bg-yellow-400/60" />
-          </div>
+          {data.fechaTextoPersonalizada && isSectionActive("medallonFecha") && (
+            <div className="flex items-center justify-center gap-3 mt-6">
+              <span className="h-[1px] w-12 bg-yellow-400/60" />
+              <p className="text-xs tracking-widest font-bold text-[#FFD700] font-serif uppercase">
+                {data.fechaTextoPersonalizada}
+              </p>
+              <span className="h-[1px] w-12 bg-yellow-400/60" />
+            </div>
+          )}
         </section>
         )}
 
