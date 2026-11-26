@@ -546,3 +546,130 @@ export function isSectionEnabledInEvent(
 
   return true;
 }
+
+// =========================================================================
+// ORDEN DE SECCIONES POR INVITACIÓN (configPlantilla.ordenSecciones)
+// -------------------------------------------------------------------------
+// La portada va fija arriba (no reordenable). Sin ordenSecciones guardado,
+// el orden es el del JSX del template (nada cambia visualmente al
+// desplegar). Al leer se valida: se quitan duplicados e ids desconocidos
+// y se completan las secciones que falten en el orden por defecto.
+// Solo QUINCE_ROSADO aplica el orden hoy (paso 6); los demás templates
+// lo ignoran hasta su refactor Fase 2.
+// =========================================================================
+
+/** Grupos visuales de Quince Rosado: las secciones de un grupo comparten
+ *  un mismo envoltorio <section> en el JSX y se mueven juntas. */
+export const GRUPOS_QUINCE_ROSADO: SeccionId[][] = [
+  ['portada', 'medallonFecha'],
+  ['dedicatoria'],
+  ['rsvp', 'fotoZapatos1', 'ubicaciones', 'dressCode', 'mesaRegalos'],
+  ['itinerario', 'fotoZapatos2'],
+  ['corteHonor'],
+  ['cuentaRegresiva', 'videoDespedida'],
+];
+
+/** Orden efectivo de secciones (ids) para un estilo: el guardado validado
+ *  o el orden por defecto del template. La portada siempre queda primera. */
+export function ordenEfectivo(estiloPlantilla: string | null | undefined, configPlantilla: any): SeccionId[] {
+  const porDefecto = seccionesSoportadas(estiloPlantilla);
+  const guardado = configPlantilla?.ordenSecciones;
+  if (!Array.isArray(guardado) || guardado.length === 0) return [...porDefecto];
+  const vistos = new Set<string>();
+  const orden: SeccionId[] = [];
+  for (const id of guardado) {
+    if (typeof id !== 'string') continue;
+    if (!porDefecto.includes(id as SeccionId)) continue;
+    if (vistos.has(id)) continue;
+    vistos.add(id);
+    orden.push(id as SeccionId);
+  }
+  for (const id of porDefecto) {
+    if (!vistos.has(id)) orden.push(id);
+  }
+  // Portada fija arriba.
+  const iPortada = orden.indexOf('portada');
+  if (iPortada > 0) {
+    orden.splice(iPortada, 1);
+    orden.unshift('portada');
+  }
+  return orden;
+}
+
+/** Orden visual: igual que ordenEfectivo, pero en Quince Rosado las
+ *  secciones de un mismo grupo quedan juntas (en orden de máster dentro
+ *  del grupo) y el grupo se ubica por su primera sección. Es la lista
+ *  que muestran el menú del editor y el template. */
+export function ordenSeccionesVisual(estiloPlantilla: string | null | undefined, configPlantilla: any): SeccionId[] {
+  const efectivo = ordenEfectivo(estiloPlantilla, configPlantilla);
+  if (estiloPlantilla !== 'QUINCE_ROSADO') return efectivo;
+  const porDefecto = seccionesSoportadas(estiloPlantilla);
+  const posEnEfectivo = new Map(efectivo.map((id, i) => [id, i]));
+  const gruposOrdenados = [...GRUPOS_QUINCE_ROSADO].sort((a, b) => {
+    const pa = Math.min(...a.map((id) => posEnEfectivo.get(id) ?? 999));
+    const pb = Math.min(...b.map((id) => posEnEfectivo.get(id) ?? 999));
+    return pa - pb;
+  });
+  const salida: SeccionId[] = [];
+  for (const grupo of gruposOrdenados) {
+    for (const id of porDefecto) {
+      if (grupo.includes(id)) salida.push(id);
+    }
+  }
+  // Secciones fuera de todo grupo (p. ej. 'musica', flotante) al final.
+  for (const id of efectivo) {
+    if (!salida.includes(id)) salida.push(id);
+  }
+  return salida;
+}
+
+/** Posición visual (0-based) del grupo N de Quince Rosado, para el
+ *  style={{ order }} de su <section>. -1 si el grupo no tiene secciones
+ *  en el orden efectivo. */
+export function ordenGrupoQuinceRosado(grupoIdx: number, configPlantilla: any): number {
+  const visual = ordenSeccionesVisual('QUINCE_ROSADO', configPlantilla);
+  const grupo = GRUPOS_QUINCE_ROSADO[grupoIdx] ?? [];
+  const pos = grupo.map((id) => visual.indexOf(id)).filter((i) => i >= 0);
+  return pos.length ? Math.min(...pos) : -1;
+}
+
+/** Mueve una sección (y, en Quince Rosado, todo su grupo) un paso arriba
+ *  o abajo dentro del orden visual. Devuelve el nuevo ordenSecciones
+ *  (lista de ids) o null si no hay movimiento posible. */
+export function moverSeccionEnOrden(
+  estiloPlantilla: string | null | undefined,
+  ordenActual: SeccionId[],
+  seccionId: SeccionId,
+  direccion: -1 | 1
+): SeccionId[] | null {
+  if (estiloPlantilla !== 'QUINCE_ROSADO') {
+    const i = ordenActual.indexOf(seccionId);
+    const j = i + direccion;
+    if (i < 0 || j < 0 || j >= ordenActual.length) return null;
+    if (ordenActual[i] === 'portada' || ordenActual[j] === 'portada') return null;
+    const next = [...ordenActual];
+    [next[i], next[j]] = [next[j], next[i]];
+    return next;
+  }
+  const visual = ordenSeccionesVisual(estiloPlantilla, { ordenSecciones: ordenActual });
+  const grupoIdx = GRUPOS_QUINCE_ROSADO.findIndex((g) => g.includes(seccionId));
+  if (grupoIdx < 0) return null;
+  if (grupoIdx === 0) return null; // portada/medallonFecha fijos arriba
+  const vecinoIdx = grupoIdx + direccion;
+  if (vecinoIdx <= 0 || vecinoIdx >= GRUPOS_QUINCE_ROSADO.length) return null;
+  // Nuevo orden: los grupos en su nuevo orden, cada grupo con sus
+  // secciones en orden de máster.
+  const grupos = [...GRUPOS_QUINCE_ROSADO];
+  [grupos[grupoIdx], grupos[vecinoIdx]] = [grupos[vecinoIdx], grupos[grupoIdx]];
+  const porDefecto = seccionesSoportadas(estiloPlantilla);
+  const next: SeccionId[] = [];
+  for (const grupo of grupos) {
+    for (const id of porDefecto) {
+      if (grupo.includes(id)) next.push(id);
+    }
+  }
+  for (const id of ordenActual) {
+    if (!next.includes(id)) next.push(id);
+  }
+  return next;
+}

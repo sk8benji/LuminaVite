@@ -24,13 +24,15 @@ import {
   PhoneCall,
   Eye,
   Image as ImageIcon,
+  ChevronUp,
+  ChevronDown,
   ExternalLink,
   Link2,
   Palette,
 } from "lucide-react";
 import { extractCleanMapUrl } from "@/lib/mapsUrlCleaner";
 import { InvitationData } from "@/components/invitation/InvitationMobileView";
-import { SECCIONES_QUINCE_ROSADO, SeccionId, isSectionEnabledInEvent, seccionesSoportadas, SECCIONES_SAVE_THE_DATE, esEstiloSaveTheDate, seccionesSoportadasStd } from "@/config/templateSections";
+import { SECCIONES_QUINCE_ROSADO, SeccionId, isSectionEnabledInEvent, seccionesSoportadas, SECCIONES_SAVE_THE_DATE, esEstiloSaveTheDate, seccionesSoportadasStd, ordenSeccionesVisual, moverSeccionEnOrden, GRUPOS_QUINCE_ROSADO } from "@/config/templateSections";
 import { TEMPLATES, TemplateId } from "@/lib/templates";
 import { ELEGANT_ROSE_HITOS_DEFAULTS } from "@/lib/templates/elegantRoseAssets";
 import MiniaturaConMeta from "@/components/admin/MiniaturaConMeta";
@@ -281,12 +283,30 @@ export default function TemplateSectionBuilder({
     : seccionesSoportadas((formData as any).estiloPlantilla);
   const esSeccionSoportada = (id: string) =>
     (seccionesSoportadasIds as string[]).includes(id);
+  // Orden de secciones (paso 6): solo Quince Rosado lo aplica hoy — los
+  // demás templates muestran el orden de máster y no ofrecen subir/bajar.
+  // La portada va fija arriba; las secciones que comparten envoltorio en
+  // el JSX se mueven juntas (su grupo).
+  const admiteReorden = !esStd && (formData as any).estiloPlantilla === "QUINCE_ROSADO";
+  const seccionesOrdenadas = admiteReorden
+    ? ordenSeccionesVisual((formData as any).estiloPlantilla, formData.configPlantilla)
+        .map((id) => seccionesMaster.find((s) => s.id === id))
+        .filter((s): s is (typeof seccionesMaster)[number] => Boolean(s))
+    : [...seccionesMaster];
+  const grupoDeSeccion = (id: string) =>
+    GRUPOS_QUINCE_ROSADO.findIndex((g) => g.includes(id as SeccionId));
+  const moverSeccion = (id: string, dir: -1 | 1) => {
+    const ordenActual = ordenSeccionesVisual((formData as any).estiloPlantilla, formData.configPlantilla);
+    const next = moverSeccionEnOrden((formData as any).estiloPlantilla, ordenActual, id as SeccionId, dir);
+    if (!next) return;
+    updateField("configPlantilla", { ...(formData.configPlantilla || {}), ordenSecciones: next });
+  };
   const activeSectionIndex = Math.max(
     0,
-    seccionesMaster.findIndex((s) => s.id === activeSection)
+    seccionesOrdenadas.findIndex((s) => s.id === activeSection)
   );
   const activeSectionDef =
-    seccionesMaster[activeSectionIndex] ?? seccionesMaster[0];
+    seccionesOrdenadas[activeSectionIndex] ?? seccionesOrdenadas[0];
 
   // Historia / Growing Up (Elegant Rose): lista editable de hitos.
   // Sin hitos guardados se muestran los 5 por defecto del template; la
@@ -597,7 +617,7 @@ export default function TemplateSectionBuilder({
         {/* Indicador de paso (como el editor de templates) */}
         <div className="flex items-center gap-1 shrink-0">
           <span className="text-xs font-bold text-stone-700 bg-stone-100 border border-stone-200 px-3 py-1.5 rounded-lg">
-            Paso {activeSectionIndex + 1} de {seccionesMaster.length}:{" "}
+            Paso {activeSectionIndex + 1} de {seccionesOrdenadas.length}:{" "}
             {activeSectionDef?.label}
           </span>
         </div>
@@ -612,19 +632,22 @@ export default function TemplateSectionBuilder({
           <span className="text-[10px] font-bold uppercase tracking-wider text-stone-400 px-3 py-1 block">
             Secciones de la Invitación
           </span>
-          {seccionesMaster.map((sec) => {
+          {seccionesOrdenadas.map((sec, idx) => {
             // En STD no hay interruptor en este editor: las secciones se
             // prenden/apagan en el tablero de Save the Date.
             const isEnabled = esStd ? true : checkSectionEnabled(sec.id as SeccionId);
             const isActive = activeSection === sec.id;
             const isSupported = esSeccionSoportada(sec.id);
+            const grupoIdx = admiteReorden ? grupoDeSeccion(sec.id) : -1;
+            const puedeSubir = admiteReorden && grupoIdx > 0;
+            const puedeBajar = admiteReorden && grupoIdx >= 0 && grupoIdx < GRUPOS_QUINCE_ROSADO.length - 1;
             return (
+              <div key={sec.id} className="flex items-center gap-1">
               <button
-                key={sec.id}
                 type="button"
                 disabled={!isSupported}
                 onClick={() => { if (isSupported) setActiveSection(sec.id); }}
-                className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold transition text-left ${
+                className={`flex-1 min-w-0 flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold transition text-left ${
                   isSupported ? "cursor-pointer" : "cursor-not-allowed opacity-50"
                 } ${
                   isActive
@@ -643,7 +666,7 @@ export default function TemplateSectionBuilder({
                 </span>
                 <span className="min-w-0 flex-1">
                   <span className="block truncate">
-                    {sec.numero}. {sec.label}
+                    {idx + 1}. {sec.label}
                   </span>
                   {!isEnabled && (
                     <span className="block text-[10px] font-medium text-stone-400">
@@ -657,13 +680,38 @@ export default function TemplateSectionBuilder({
                   )}
                 </span>
               </button>
+              {admiteReorden && isSupported && (
+                <span className="flex flex-col shrink-0">
+                  <button
+                    type="button"
+                    title="Subir sección"
+                    aria-label={`Subir ${sec.label}`}
+                    disabled={!puedeSubir}
+                    onClick={(e) => { e.stopPropagation(); moverSeccion(sec.id, -1); }}
+                    className="p-0.5 rounded text-stone-500 hover:bg-white hover:text-stone-900 disabled:opacity-25 disabled:cursor-not-allowed"
+                  >
+                    <ChevronUp className="w-4 h-4" />
+                  </button>
+                  <button
+                    type="button"
+                    title="Bajar sección"
+                    aria-label={`Bajar ${sec.label}`}
+                    disabled={!puedeBajar}
+                    onClick={(e) => { e.stopPropagation(); moverSeccion(sec.id, 1); }}
+                    className="p-0.5 rounded text-stone-500 hover:bg-white hover:text-stone-900 disabled:opacity-25 disabled:cursor-not-allowed"
+                  >
+                    <ChevronDown className="w-4 h-4" />
+                  </button>
+                </span>
+              )}
+              </div>
             );
           })}
         </div>
 
         {/* Formulario de la sección activa (una a la vez, sin pared de acordeones) */}
         <div className="md:col-span-8 xl:col-span-9 space-y-4">
-        {seccionesMaster.map((sec) => {
+        {seccionesOrdenadas.map((sec) => {
           if (sec.id !== activeSection) return null;
           if (esStd) {
             // Save the Date: este editor es de invitaciones, no de STDs.
