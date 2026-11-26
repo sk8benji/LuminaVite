@@ -269,6 +269,14 @@ export default function SiteFooter({ lang = "en" }: SiteFooterProps) {
             <ul className="space-y-2.5 text-xs text-white/70 font-light">
               <li>
                 <Link
+                  href={isEs ? "/es/nosotros" : "/about-us/"}
+                  className="hover:text-white transition-colors"
+                >
+                  {isEs ? "Nosotros" : "About Us"}
+                </Link>
+              </li>
+              <li>
+                <Link
                   href={isEs ? "/es#como-funciona" : "/#como-funciona"}
                   className="hover:text-white transition-colors"
                 >

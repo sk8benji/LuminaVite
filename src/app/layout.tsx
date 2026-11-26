@@ -104,7 +104,9 @@ export default async function RootLayout({
 }
 
 // Rutas de marketing que llevan el header/footer compartidos (ver comentario
-// en RootLayout). /about va aquí cuando se cree (rama rumi/about-us).
+// en RootLayout). /about-us/ va aquí (rama rumi/about-us, decisión 25 nov 2026:
+// la URL es /about-us/, sin trailingSlash en Next el pathname normalizado es
+// "/about-us", por eso el set lleva la forma sin slash final).
 const MARKETING_PAGES = new Set([
   "/quince-invitations",
   "/wedding-invitations-los-angeles",
@@ -114,7 +116,7 @@ const MARKETING_PAGES = new Set([
   "/rsvp-tracking",
   "/save-the-date",
   "/pricing",
-  "/about",
+  "/about-us",
   "/privacy",
   "/terms",
   "/gracias",
