@@ -4,7 +4,6 @@ import React, { useState, useEffect, useRef, useMemo } from "react";
 import {
   Calendar,
   Clock,
-  Heart,
   Sparkles,
   MapPin,
   CheckCircle2,
@@ -279,6 +278,14 @@ export default function CoquettePinkSaveTheDate({
       }
 
       setRsvpCompletado(true);
+      try {
+        confetti({
+          particleCount: 80,
+          spread: 70,
+          origin: { y: 0.6 },
+          colors: ["#C5A059", "#B87C82", "#FDF9F4", "#E8C8CB"],
+        });
+      } catch {}
     } catch (err: any) {
       setRsvpError(err.message || "Error al procesar la confirmación");
     } finally {
@@ -1001,7 +1008,7 @@ export default function CoquettePinkSaveTheDate({
                   className="text-[10.5px] uppercase font-bold tracking-[0.25em] block"
                   style={{ color: "#E8B4C4" }}
                 >
-                  {idioma === "EN" ? (data.tituloRsvpEn || "EARLY RSVP") : "CONFIRMA ANTICIPADA"}
+                  {tituloRsvp}
                 </span>
                 <h3
                   className="text-[2.5rem] sm:text-[2.8rem] leading-tight block"
@@ -1010,7 +1017,7 @@ export default function CoquettePinkSaveTheDate({
                     color: "#1A1216",
                   }}
                 >
-                  {idioma === "EN" ? (data.preguntaRsvpEn || "Will You Join Us?") : "¿Nos Acompañas?"}
+                  {preguntaRsvp}
                 </h3>
                 <p className="text-xs px-1 leading-relaxed" style={{ color: "#6B5B60" }}>
                   {mensajeRsvp}
@@ -1018,26 +1025,17 @@ export default function CoquettePinkSaveTheDate({
               </div>
 
               {rsvpCompletado ? (
-                <div className="py-5 px-3 text-center space-y-2.5">
-                  <div className="flex items-center justify-center mx-auto">
-                    <Heart
-                      className="w-6 h-6"
-                      style={{ color: "#E8B4C4", fill: "rgba(232, 180, 196, 0.2)" }}
-                    />
+                <div className="rounded-2xl bg-white/70 border border-[#D9C7A7] p-5 text-center space-y-2 animate-in zoom-in-95">
+                  <div className="w-12 h-12 bg-[#D98A9E]/15 text-[#D98A9E] rounded-full flex items-center justify-center mx-auto shadow-xs">
+                    <CheckCircle2 className="w-7 h-7" />
                   </div>
-                  <h4
-                    className="text-4xl font-normal leading-none"
-                    style={{
-                      fontFamily: "'Pinyon Script', 'Alex Brush', cursive",
-                      color: "#1A1216",
-                    }}
-                  >
-                    {idioma === "EN" ? "Thank You!" : "¡Gracias!"}
+                  <h4 className="font-serif text-lg font-bold" style={{ color: "#1A1216" }}>
+                    {idioma === "EN" ? "Thank you for responding!" : "¡Gracias por responder!"}
                   </h4>
                   <p className="text-xs leading-relaxed" style={{ color: "#6B5B60" }}>
                     {idioma === "EN"
-                      ? "Your spot is reserved. We will share official details soon."
-                      : "Tu lugar está reservado. Muy pronto te compartiremos los detalles oficiales."}
+                      ? "We recorded your response. Very soon you will receive official invitation details."
+                      : "Registramos tu respuesta. Muy pronto recibirás todos los detalles oficiales de la invitación."}
                   </p>
                 </div>
               ) : (
@@ -1200,7 +1198,7 @@ export default function CoquettePinkSaveTheDate({
                         rows={2}
                         value={notas}
                         onChange={(e) => setNotas(e.target.value)}
-                        placeholder={idioma === "EN" ? "Congratulations, we love you!" : "Felicidades, te queremos mucho"}
+                        placeholder={idioma === "EN" ? "Congratulations, we love you!" : "¡Felicidades, te queremos mucho!"}
                         className="w-full px-3.5 py-2 rounded-[12px] border border-[#D9C7A7] text-xs bg-white text-[#1A1216] placeholder:text-[#A89A9E] focus:border-[1.5px] focus:border-[#C5A059] focus:outline-none focus:ring-0 transition-colors"
                       />
                     </div>
@@ -1219,12 +1217,12 @@ export default function CoquettePinkSaveTheDate({
                     {enviandoRsvp ? (
                       <>
                         <Loader2 className="w-4 h-4 animate-spin" />
-                        <span>{idioma === "EN" ? "SENDING RSVP..." : "ENVIANDO RESPUESTA..."}</span>
+                        <span>{idioma === "EN" ? "Sending RSVP..." : "Enviando respuesta..."}</span>
                       </>
                     ) : (
                       <>
                         <Send className="w-4 h-4" />
-                        <span>{idioma === "EN" ? "CONFIRM EARLY RSVP" : "CONFIRMAR PRE-REGISTRO"}</span>
+                        <span>{idioma === "EN" ? "Confirm Early RSVP" : "Confirmar Pre-Registro"}</span>
                       </>
                     )}
                   </button>
