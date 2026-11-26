@@ -32,6 +32,7 @@ import {
   QrCode,
   Link2,
   CalendarHeart,
+  Wrench,
 } from "lucide-react";
 import { OrderData } from "@/lib/order-store";
 import { DATOS_SECCIONES, calcularProgresoDatos, campoVisible } from "@/lib/datos-questions";
@@ -61,6 +62,7 @@ interface EventoItem {
 
 export default function DashboardPage() {
   const [activeTab, setActiveTab] = useState<"eventos" | "ordenes" | "templates" | "qr" | "abandonados" | "savedate">("ordenes");
+  const [herramientasOpen, setHerramientasOpen] = useState(false);
   // La pestana vive en la URL (?tab=...): al recargar o compartir el enlace sigues en el mismo paso
   useEffect(() => {
     try {
@@ -428,23 +430,6 @@ export default function DashboardPage() {
           </button>
 
           <button
-            onClick={() => setActiveTab("abandonados")}
-            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg transition cursor-pointer ${
-              activeTab === "abandonados"
-                ? "bg-white text-[#7A002A] shadow-xs font-bold"
-                : "text-stone-600 hover:text-stone-900"
-            }`}
-          >
-            <ShoppingCart className="w-3.5 h-3.5" />
-            <span>Carrito abandonado</span>
-            {ordenesAbandonadas.length > 0 && (
-              <span className="ml-0.5 px-1.5 py-0.2 rounded-full bg-stone-500 text-white text-[10px]">
-                {ordenesAbandonadas.length}
-              </span>
-            )}
-          </button>
-
-          <button
             onClick={() => setActiveTab("eventos")}
             className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg transition cursor-pointer ${
               activeTab === "eventos"
@@ -469,18 +454,6 @@ export default function DashboardPage() {
           </button>
 
           <button
-            onClick={() => setActiveTab("qr")}
-            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg transition cursor-pointer ${
-              activeTab === "qr"
-                ? "bg-white text-[#7A002A] shadow-xs font-bold"
-                : "text-stone-600 hover:text-stone-900"
-            }`}
-          >
-            <QrCode className="w-3.5 h-3.5" />
-            <span>Códigos QR</span>
-          </button>
-
-          <button
             onClick={() => setActiveTab("savedate")}
             className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg transition cursor-pointer ${
               activeTab === "savedate"
@@ -494,6 +467,59 @@ export default function DashboardPage() {
         </div>
 
         <div className="flex items-center gap-2">
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => setHerramientasOpen((o) => !o)}
+              className={`flex items-center gap-2 px-3.5 py-2 rounded-xl border text-xs font-semibold transition cursor-pointer ${
+                activeTab === "abandonados" || activeTab === "qr"
+                  ? "bg-[#7A002A] text-white border-[#7A002A] shadow"
+                  : "bg-white text-stone-700 border-stone-200 hover:bg-stone-50"
+              }`}
+            >
+              <Wrench className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Herramientas</span>
+              <ChevronDown className={`w-3.5 h-3.5 transition ${herramientasOpen ? "rotate-180" : ""}`} />
+            </button>
+            {herramientasOpen && (
+              <>
+                <div className="fixed inset-0 z-40" onClick={() => setHerramientasOpen(false)} />
+                <div className="absolute right-0 mt-2 w-56 bg-white border border-stone-200 rounded-xl shadow-lg z-50 py-1">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setActiveTab("abandonados");
+                      setHerramientasOpen(false);
+                    }}
+                    className={`w-full flex items-center gap-2 px-3.5 py-2.5 text-xs font-semibold text-left transition cursor-pointer ${
+                      activeTab === "abandonados" ? "text-[#7A002A] bg-pink-50" : "text-stone-700 hover:bg-stone-50"
+                    }`}
+                  >
+                    <ShoppingCart className="w-3.5 h-3.5" />
+                    <span>Carrito abandonado</span>
+                    {ordenesAbandonadas.length > 0 && (
+                      <span className="ml-auto px-1.5 py-0.5 rounded-full bg-stone-500 text-white text-[10px]">
+                        {ordenesAbandonadas.length}
+                      </span>
+                    )}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setActiveTab("qr");
+                      setHerramientasOpen(false);
+                    }}
+                    className={`w-full flex items-center gap-2 px-3.5 py-2.5 text-xs font-semibold text-left transition cursor-pointer ${
+                      activeTab === "qr" ? "text-[#7A002A] bg-pink-50" : "text-stone-700 hover:bg-stone-50"
+                    }`}
+                  >
+                    <QrCode className="w-3.5 h-3.5" />
+                    <span>Códigos QR</span>
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
           <button
             type="button"
             onClick={handleLogout}
