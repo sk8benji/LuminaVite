@@ -910,6 +910,27 @@ export default function SaveTheDateManager() {
                 </div>
               )}
 
+              {/* 0. Plantilla Visual — primero: define el diseño del Save the Date */}
+              <div className="p-4 rounded-2xl bg-amber-50/60 border border-amber-200/80 space-y-2">
+                <label className="block text-xs font-bold text-[#7A002A] uppercase tracking-wider">
+                  Plantilla Visual *
+                </label>
+                <p className="text-[11px] text-stone-600">
+                  Elige primero el diseño: cambia toda la apariencia del Save the Date (hero, galería, calendario y RSVP).
+                </p>
+                <select
+                  value={formData.estiloPlantilla}
+                  onChange={(e) => setFormData({ ...formData, estiloPlantilla: e.target.value })}
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-stone-200 bg-white text-xs font-semibold text-stone-800 focus:outline-none focus:border-[#7A002A]"
+                >
+                  <option value="QUINCE_ROSADO">Quince Rosado (Lujo y Rosa)</option>
+                  <option value="COQUETTE_PINK">Coquette Pink (Negro & Blush)</option>
+                  <option value="BLUE_BUTTERFLY">Blue Butterfly (Mariposas)</option>
+                  <option value="ELEGANT_ROSE">Elegant Rose (Isabella)</option>
+                  <option value="FAIRYTALE_CHATEAU">Fairytale Château (Boda)</option>
+                </select>
+              </div>
+
               {/* 1. Vincular a Invitación Existente */}
               <div className="p-4 rounded-2xl bg-pink-50/50 border border-pink-200/80 space-y-2">
                 <label className="block text-xs font-bold text-[#7A002A] uppercase tracking-wider">
@@ -1413,25 +1434,8 @@ export default function SaveTheDateManager() {
                 </div>
               </div>
 
-              {/* 7. Estilo y Sobre */}
+              {/* 7. Color del Sobre y Fuente */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div>
-                  <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-1.5">
-                    Plantilla Visual
-                  </label>
-                  <select
-                    value={formData.estiloPlantilla}
-                    onChange={(e) => setFormData({ ...formData, estiloPlantilla: e.target.value })}
-                    className="w-full px-3 py-2.5 rounded-xl border border-stone-200 bg-white text-xs font-semibold text-stone-800"
-                  >
-                    <option value="QUINCE_ROSADO">Quince Rosado (Lujo y Rosa)</option>
-                    <option value="COQUETTE_PINK">Coquette Pink (Negro & Blush)</option>
-                    <option value="BLUE_BUTTERFLY">Blue Butterfly (Mariposas)</option>
-                    <option value="ELEGANT_ROSE">Elegant Rose (Isabella)</option>
-                    <option value="FAIRYTALE_CHATEAU">Fairytale Château (Boda)</option>
-                  </select>
-                </div>
-
                 <div>
                   <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-1.5">
                     Color del Sobre
