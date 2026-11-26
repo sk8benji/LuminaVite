@@ -1,5 +1,4 @@
 "use client";
-import SiteFooter from "@/components/layout/SiteFooter";
 
 import React, { useState } from "react";
 import Link from "next/link";
@@ -11,7 +10,6 @@ import {
   CheckCircle2,
   ChevronDown,
   Clock,
-  ExternalLink,
   Flame,
   Globe,
   Heart,
@@ -19,7 +17,6 @@ import {
   Lock,
   Mail,
   MapPin,
-  MessageCircle,
   MessageSquare,
   Music,
   Navigation,
@@ -33,7 +30,6 @@ import {
   Star,
   Users,
   Volume2,
-  X,
   Zap,
 } from "lucide-react";
 
@@ -88,69 +84,6 @@ export default function SmsLandingPage() {
       {/* ==================================================================== */}
       {/* 1. STICKY TOP NAVBAR */}
       {/* ==================================================================== */}
-      <header className="sticky top-0 z-50 bg-[#FDFBF8]/90 backdrop-blur-md border-b border-[#2B0A18]/10 transition-all duration-300">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-          <Link
-            href="/"
-            className="flex items-center gap-3 group focus:outline-none focus-visible:ring-2 focus-visible:ring-[#7A002A]"
-          >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <Image
-              src="/logo.png"
-              alt="Click & Love"
-              width={1600}
-              height={1600}
-              className="h-10 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
-            />
-            <div className="flex flex-col">
-              <span className="font-['Playfair_Display',serif] text-xl font-bold tracking-tight text-[#2B0A18]">
-                Click &amp; Love
-              </span>
-              <span className="text-[10px] uppercase tracking-widest text-[#B08D3C] font-semibold">
-                Instant SMS Invitations
-              </span>
-            </div>
-          </Link>
-
-          <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-[#2B0A18]/80">
-            <a href="#features" className="hover:text-[#7A002A] transition-colors py-1">
-              Why SMS?
-            </a>
-            <a href="#comparison" className="hover:text-[#7A002A] transition-colors py-1">
-              SMS vs Paper
-            </a>
-            <a href="#how-it-works" className="hover:text-[#7A002A] transition-colors py-1">
-              How It Works
-            </a>
-            <a href="#pricing" className="hover:text-[#7A002A] transition-colors py-1">
-              Pricing
-            </a>
-            <a href="#faq" className="hover:text-[#7A002A] transition-colors py-1">
-              FAQ
-            </a>
-          </nav>
-
-          <div className="flex items-center gap-3">
-            <a
-              href={PHONE_TEL} onClick={() => track("click_llamar", { origen: "landing", pagina: "text-message-invitations" })}
-              className="hidden lg:flex items-center gap-2 text-xs font-semibold px-3 py-2 rounded-full border border-[#2B0A18]/15 text-[#2B0A18] hover:border-[#7A002A] hover:text-[#7A002A] transition-colors"
-            >
-              <Phone className="w-3.5 h-3.5 text-[#B08D3C]" />
-              <span>{PHONE_DISPLAY}</span>
-            </a>
-            <a
-              href={WHATSAPP_URL} onClick={() => track("click_whatsapp", { origen: "landing", pagina: "text-message-invitations" })}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#7A002A] text-white text-xs sm:text-sm font-semibold shadow-md shadow-[#7A002A]/20 hover:bg-[#5C0020] active:scale-95 transition-all"
-            >
-              <MessageSquare className="w-4 h-4 fill-white" />
-              <span>Send Demo to My Phone</span>
-            </a>
-          </div>
-        </div>
-      </header>
-
       {/* ==================================================================== */}
       {/* 2. HERO SECTION */}
       {/* ==================================================================== */}
@@ -846,7 +779,6 @@ export default function SmsLandingPage() {
         </div>
       </section>
 
-      <SiteFooter lang="en" />
     </div>
   );
 }

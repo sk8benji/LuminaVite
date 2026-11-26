@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 import "./globals.css";
+import SiteHeader from "@/components/layout/SiteHeader";
+import SiteFooter from "@/components/layout/SiteFooter";
 
 export const metadata: Metadata = {
   title: "Click & Love • Papelería Digital de Alta Costura",
@@ -26,7 +28,25 @@ export default async function RootLayout({
   // lang por ruta (SEO home, nov 2026): el middleware pone x-locale ("es" en
   // /es/*, "en" en el resto). Default "en" si el header no viene (p. ej. el
   // rewrite interno del admin a /dashboard).
-  const locale = (await headers()).get("x-locale") === "es" ? "es" : "en";
+  const h = await headers();
+  const locale = h.get("x-locale") === "es" ? "es" : "en";
+  // Header/footer COMPARTIDOS estilo WordPress (25 nov 2026): el layout los
+  // renderiza en TODAS las páginas de marketing, en vez de que cada página
+  // ponga su propia copia. EXCEPCIONES (sin chrome): subdominio admin
+  // (host admin.*) y las rutas de la app/invitaciones — ahí el pathname
+  // viene del middleware en x-pathname. La lista es una ALLOWLIST de rutas
+  // de marketing: cualquier ruta nueva que no esté aquí (p. ej. una
+  // invitación /[slug], /save-the-date/[slug], /datos/[token], /m/*, /q/*)
+  // NO lleva header/footer. Si se crea una página de marketing nueva, hay
+  // que agregarla a MARKETING_PAGES (o a la regla /es/* o /blog/*).
+  const host = (h.get("host") || "").toLowerCase();
+  const pathname = h.get("x-pathname") || "";
+  // Sin chrome en los subdominios de app: admin.* (SaaS) e invitaciones.*
+  // (arquitectura Abraham 25 nov 2026: invitaciones en
+  // invitaciones.clickandlove.app; la migración está CONGELADA por la
+  // clienta Yesenia Mancilla Tinoco, pero el subdominio ya existe en DNS).
+  const isBareHost = host.startsWith("admin.") || host.startsWith("invitaciones.");
+  const showChrome = !isBareHost && isMarketingRoute(pathname);
   return (
     <html lang={locale} className="scroll-smooth">
       <head>
@@ -75,8 +95,35 @@ export default async function RootLayout({
             style={{ display: "none", visibility: "hidden" }}
           />
         </noscript>
+        {showChrome && <SiteHeader lang={locale} />}
         {children}
+        {showChrome && <SiteFooter lang={locale} />}
       </body>
     </html>
   );
+}
+
+// Rutas de marketing que llevan el header/footer compartidos (ver comentario
+// en RootLayout). /about va aquí cuando se cree (rama rumi/about-us).
+const MARKETING_PAGES = new Set([
+  "/quince-invitations",
+  "/wedding-invitations-los-angeles",
+  "/wedding-invitations-las-vegas",
+  "/text-message-invitations",
+  "/whatsapp-invitations",
+  "/rsvp-tracking",
+  "/save-the-date",
+  "/pricing",
+  "/about",
+  "/privacy",
+  "/terms",
+  "/gracias",
+]);
+
+function isMarketingRoute(pathname: string): boolean {
+  if (pathname === "/" || pathname === "/es") return true;
+  // /es/* es marketing salvo /es/demo (demo).
+  if (pathname.startsWith("/es/")) return pathname !== "/es/demo";
+  if (pathname === "/blog" || pathname.startsWith("/blog/")) return true;
+  return MARKETING_PAGES.has(pathname);
 }

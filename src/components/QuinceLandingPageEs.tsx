@@ -1,5 +1,4 @@
 "use client";
-import SiteFooter from "@/components/layout/SiteFooter";
 
 import React, { useState } from "react";
 import Link from "next/link";
@@ -29,7 +28,6 @@ import {
   Star,
   Users,
   Volume2,
-  X,
   Zap,
 } from "lucide-react";
 
@@ -163,69 +161,6 @@ export default function QuinceLandingPageEs() {
       {/* ==================================================================== */}
       {/* 1. BARRA DE NAVEGACIÓN SUPERIOR (Sticky / Minimalista) */}
       {/* ==================================================================== */}
-      <header className="sticky top-0 z-50 bg-[#FDFBF8]/90 backdrop-blur-md border-b border-[#2B0A18]/10 transition-all duration-300">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-          <Link
-            href="/es"
-            className="flex items-center gap-3 group focus:outline-none focus-visible:ring-2 focus-visible:ring-[#7A002A]"
-          >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <Image
-              src="/logo.png"
-              alt="Click & Love"
-              width={1600}
-              height={1600}
-              className="h-10 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
-            />
-            <div className="flex flex-col">
-              <span className="font-['Playfair_Display',serif] text-xl font-bold tracking-tight text-[#2B0A18]">
-                Click &amp; Love
-              </span>
-              <span className="text-[10px] uppercase tracking-widest text-[#B08D3C] font-semibold">
-                Quinceañeras • Los Ángeles
-              </span>
-            </div>
-          </Link>
-
-          <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-[#2B0A18]/80">
-            <a href="#caracteristicas" className="hover:text-[#7A002A] transition-colors py-1">
-              Características
-            </a>
-            <a href="#como-funciona" className="hover:text-[#7A002A] transition-colors py-1">
-              Cómo Funciona
-            </a>
-            <a href="#plantillas" className="hover:text-[#7A002A] transition-colors py-1">
-              Plantillas
-            </a>
-            <a href="#precios" className="hover:text-[#7A002A] transition-colors py-1">
-              Precios
-            </a>
-            <a href="#preguntas" className="hover:text-[#7A002A] transition-colors py-1">
-              Preguntas
-            </a>
-          </nav>
-
-          <div className="flex items-center gap-3">
-            <a
-              href={PHONE_TEL} onClick={() => track("click_llamar", { origen: "landing", pagina: "es-invitaciones-de-quinceanera" })}
-              className="hidden lg:flex items-center gap-2 text-xs font-semibold px-3 py-2 rounded-full border border-[#2B0A18]/15 text-[#2B0A18] hover:border-[#7A002A] hover:text-[#7A002A] transition-colors"
-            >
-              <Phone className="w-3.5 h-3.5 text-[#B08D3C]" />
-              <span>{PHONE_DISPLAY}</span>
-            </a>
-            <a
-              href={WHATSAPP_URL} onClick={() => track("click_whatsapp", { origen: "landing", pagina: "es-invitaciones-de-quinceanera" })}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#7A002A] text-white text-xs sm:text-sm font-semibold shadow-md shadow-[#7A002A]/20 hover:bg-[#5C0020] active:scale-95 transition-all"
-            >
-              <MessageCircle className="w-4 h-4 fill-white" />
-              <span>Contactar por WhatsApp</span>
-            </a>
-          </div>
-        </div>
-      </header>
-
       {/* ==================================================================== */}
       {/* 2. SECCIÓN HERO (2 Columnas en Escritorio) */}
       {/* ==================================================================== */}
@@ -1053,7 +988,6 @@ export default function QuinceLandingPageEs() {
         </div>
       </section>
 
-      <SiteFooter lang="es" />
     </div>
   );
 }

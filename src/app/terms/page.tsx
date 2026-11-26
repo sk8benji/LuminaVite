@@ -1,6 +1,4 @@
 import React from "react";
-import Link from "next/link";
-import SiteFooter from "@/components/layout/SiteFooter";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -11,22 +9,6 @@ export const metadata: Metadata = {
 export default function TermsOfServicePage() {
   return (
     <div className="min-h-screen bg-[#FAF8F5] text-neutral-900 font-['Montserrat',sans-serif]">
-      <header className="border-b border-neutral-200 bg-white/80 backdrop-blur-md sticky top-0 z-40">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <span className="font-['Playfair_Display',serif] text-xl font-bold text-neutral-900">
-              Click &amp; Love
-            </span>
-          </Link>
-          <Link
-            href="/"
-            className="text-xs font-semibold text-[#720e26] hover:underline"
-          >
-            ← Back to Home
-          </Link>
-        </div>
-      </header>
-
       <main className="max-w-3xl mx-auto px-4 sm:px-6 py-16">
         <h1 className="font-['Playfair_Display',serif] text-3xl sm:text-4xl font-bold tracking-tight text-neutral-900 mb-4">
           Terms of Service
@@ -83,7 +65,6 @@ export default function TermsOfServicePage() {
         </div>
       </main>
 
-      <SiteFooter lang="en" />
     </div>
   );
 }
