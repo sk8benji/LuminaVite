@@ -38,7 +38,6 @@ export const TEMPLATE_CONFIG_KEYS: ReadonlySet<string> = new Set([
   "mensaje",
   "colorVestidoReservado",
   "cancionVals",
-  "fraseEmocional",
   "avisoNinos",
   "ninosTitulo",
   "ninosTituloEn",

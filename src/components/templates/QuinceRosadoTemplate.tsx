@@ -16,6 +16,7 @@ import {
   Compass,
 } from "lucide-react";
 import { QUINCE_ROSADO_ASSETS } from "@/lib/templates/quinceRosadoAssets";
+import { fraseFechaLimiteRsvp } from "@/lib/fecha-limite";
 import { getMapDirectionsUrl } from "@/lib/maps";
 import { InvitationData } from "../invitation/InvitationMobileView";
 import DynamicRsvpForm from "../invitation/DynamicRsvpForm";
@@ -655,7 +656,8 @@ export default function QuinceRosadoTemplate({
           <button
             type="button"
             onClick={togglePlay}
-            aria-label="Reproducir o pausar música"
+            aria-label={data.musicaTitulo ? `Reproducir o pausar: ${data.musicaTitulo}` : "Reproducir o pausar música"}
+            title={data.musicaTitulo || (isEn ? "Music" : "Música")}
             className="fixed bottom-5 right-5 z-40 w-12 h-12 rounded-full bg-[#7A002A] text-white shadow-2xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all border-2 border-pink-200"
           >
             {isPlaying ? (
@@ -921,8 +923,8 @@ export default function QuinceRosadoTemplate({
                   telefonoWhatsapp={data.telefonoWhatsappRsvp}
                   primaryColor="#7A002A"
                   accentBgColor="bg-white/95"
-                  deadlineText={data.rsvpFechaLimite || "POR FAVOR, CONFIRMA TU ASISTENCIA ANTES DEL 20 DE OCTUBRE."}
-                  deadlineTextEn={data.rsvpFechaLimiteEn || "PLEASE CONFIRM YOUR ATTENDANCE BEFORE NOVEMBER 15."}
+                  deadlineText={fraseFechaLimiteRsvp(data, "es") ?? undefined}
+                  deadlineTextEn={fraseFechaLimiteRsvp(data, "en") ?? undefined}
                   rsvpTitulo={data.rsvpTitulo}
                   rsvpTituloEn={data.rsvpTituloEn}
                   rsvpSubtitulo={data.rsvpSubtitulo}

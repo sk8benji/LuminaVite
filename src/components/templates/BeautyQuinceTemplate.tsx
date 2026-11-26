@@ -742,7 +742,7 @@ export default function BeautyQuinceTemplate({
           rsvpTelefonoTitulo={data.rsvpTelefonoTitulo}
           rsvpTelefonoTituloEn={data.rsvpTelefonoTituloEn}
           maxPases={data.maxPasesPorInvitado ?? 4}
-          fechaLimite={data.fechaLimiteRsvp || data.rsvpFechaLimite}
+          fechaLimite={data.fechaLimiteRsvp}
           template={template}
           permitirConfirmacionTelefono={data.permitirConfirmacionTelefono}
           isEn={isEn}

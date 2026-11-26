@@ -7,9 +7,10 @@ import { TemplateConfig } from "@/lib/templates";
 interface AudioPlayerProps {
   audioUrl?: string | null;
   template: TemplateConfig;
+  songTitle?: string | null;
 }
 
-export default function AudioPlayer({ audioUrl, template }: AudioPlayerProps) {
+export default function AudioPlayer({ audioUrl, template, songTitle }: AudioPlayerProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -69,7 +70,8 @@ export default function AudioPlayer({ audioUrl, template }: AudioPlayerProps) {
       <audio ref={audioRef} src={audioUrl} loop preload="none" />
       <button
         onClick={togglePlay}
-        aria-label={isPlaying ? "Pausar música" : "Reproducir música"}
+        aria-label={songTitle ? `${isPlaying ? "Pausar" : "Reproducir"}: ${songTitle}` : (isPlaying ? "Pausar música" : "Reproducir música")}
+        title={songTitle || "Música"}
         className={`relative flex items-center justify-center w-11 h-11 rounded-full shadow-lg backdrop-blur-md transition-all duration-300 transform active:scale-90 ${
           isPlaying
             ? "border-2"

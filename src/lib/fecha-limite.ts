@@ -48,3 +48,27 @@ export function formatFechaLimiteRsvp(
     return null;
   }
 }
+
+export interface DatosFechaLimite {
+  rsvpFechaLimite?: string | null;
+  rsvpFechaLimiteEn?: string | null;
+  fechaLimiteRsvp?: string | Date | null;
+}
+
+/**
+ * LA frase de fecha límite del RSVP (un solo campo, un solo render).
+ * Fuente única: `rsvpFechaLimite` / `rsvpFechaLimiteEn`, que el editor
+ * deriva de `fechaLimiteRsvp` (fecha real guardada) salvo edición manual
+ * de la frase. Sin frase y con fecha guardada, se construye la frase
+ * desde esa fecha. Sin ninguna de las dos, null (nunca una fecha falsa).
+ */
+export function fraseFechaLimiteRsvp(
+  data: DatosFechaLimite,
+  lang: "es" | "en" = "es"
+): string | null {
+  const frase = lang === "en" ? data.rsvpFechaLimiteEn : data.rsvpFechaLimite;
+  if (frase && frase.trim()) return frase.trim();
+  const fecha = formatFechaLimiteRsvp(data.fechaLimiteRsvp, lang);
+  if (!fecha) return null;
+  return lang === "en" ? `Please confirm before ${fecha}` : `Favor de confirmar antes del ${fecha}`;
+}

@@ -5,6 +5,7 @@ import { MapPin, CheckCircle2, Sparkles, MessageCircle } from "lucide-react";
 import confetti from "canvas-confetti";
 import { InvitationData } from "../invitation/InvitationMobileView";
 import { getMapEmbedUrl, getMapDirectionsUrl } from "@/lib/maps";
+import { fraseFechaLimiteRsvp, formatFechaLimiteRsvp } from "@/lib/fecha-limite";
 import { parseTemplateConfig, BlueButterflyConfig } from "@/types/templateConfigs";
 import { isSectionEnabledInEvent, SeccionId } from "@/config/templateSections";
 
@@ -270,22 +271,11 @@ export default function BlueButterflyTemplate({
     ? `${eventWeekday}, ${eventMonth} ${eventDay}, ${eventYear}`
     : (data.fechaTextoPersonalizada || `${eventWeekday} ${eventDay} DE ${eventMonth}, ${eventYear}`);
 
-  // Cálculo dinámico de fecha límite RSVP bilingüe fija (días antes del evento)
-  const diasAntesRsvp =
-    typeof data.rsvpDiasAntes === "number" && data.rsvpDiasAntes > 0
-      ? data.rsvpDiasAntes
-      : 15;
-  const deadlineBaseTime = !isNaN(eventDate.getTime()) ? eventDate.getTime() : Date.now();
-  const deadlineDate = new Date(deadlineBaseTime - diasAntesRsvp * 24 * 60 * 60 * 1000);
-  const deadlineDay = deadlineDate.getDate();
-  const rawMonthEs = deadlineDate.toLocaleDateString("es-ES", { month: "long" });
-  const rawMonthEn = deadlineDate.toLocaleDateString("en-US", { month: "long" });
-  const deadlineMonthEs = rawMonthEs.charAt(0).toUpperCase() + rawMonthEs.slice(1);
-  const deadlineMonthEn = rawMonthEn.charAt(0).toUpperCase() + rawMonthEn.slice(1);
-
-  const rsvpDeadlinePhrase = isEn
-    ? `Please confirm before ${deadlineMonthEn} ${deadlineDay}`
-    : `Favor de confirmar antes del ${deadlineDay} de ${deadlineMonthEs}`;
+  // Fecha límite del RSVP: una sola fuente (rsvpFechaLimite/En, derivada
+  // en el editor de fechaLimiteRsvp) y un solo render (fraseFechaLimiteRsvp).
+  // La fecha corta es la misma fecha guardada, formateada (nunca el ISO crudo).
+  const rsvpDeadlinePhrase = fraseFechaLimiteRsvp(data, isEn ? "en" : "es");
+  const fechaLimiteCorta = formatFechaLimiteRsvp(data.fechaLimiteRsvp, isEn ? "en" : "es");
 
   // Itinerario dinámico con soporte de iconos ilustrados oficiales de Canva (93aa7fe30583ab72bdf167a2bce291e3)
   const getItineraryIcon = (item: any, idx: number) => {
@@ -1432,9 +1422,11 @@ export default function BlueButterflyTemplate({
                 </h3>
               );
             })()}
-            <p className="text-[11px] text-slate-500 mb-5 uppercase tracking-wider font-serif-roman font-semibold">
-              {rsvpDeadlinePhrase}
-            </p>
+            {rsvpDeadlinePhrase && (
+              <p className="text-[11px] text-slate-500 mb-5 uppercase tracking-wider font-serif-roman font-semibold">
+                {rsvpDeadlinePhrase}
+              </p>
+            )}
 
             {/* Alerta de confirmación previa / actualización de pases */}
             {rsvpFeedback && (

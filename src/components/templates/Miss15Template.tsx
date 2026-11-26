@@ -5,6 +5,7 @@ import { MapPin, CheckCircle2, Sparkles, MessageCircle, Music, Play, Pause, Skip
 import confetti from "canvas-confetti";
 import { InvitationData } from "../invitation/InvitationMobileView";
 import { getMapEmbedUrl, getMapDirectionsUrl } from "@/lib/maps";
+import { fraseFechaLimiteRsvp, formatFechaLimiteRsvp } from "@/lib/fecha-limite";
 import { MISS15_ASSETS } from "@/lib/templates/miss15Assets";
 import { parseTemplateConfig, Miss15Config } from "@/types/templateConfigs";
 import { isSectionEnabledInEvent, SeccionId } from "@/config/templateSections";
@@ -274,22 +275,11 @@ export default function Miss15Template({
     ? `${eventWeekday}, ${eventMonth} ${eventDay}, ${eventYear}`
     : (data.fechaTextoPersonalizada || `${eventWeekday} ${eventDay} DE ${eventMonth}, ${eventYear}`);
 
-  // Cálculo dinámico de fecha límite RSVP bilingüe fija (días antes del evento)
-  const diasAntesRsvp =
-    typeof data.rsvpDiasAntes === "number" && data.rsvpDiasAntes > 0
-      ? data.rsvpDiasAntes
-      : 15;
-  const deadlineBaseTime = !isNaN(eventDate.getTime()) ? eventDate.getTime() : Date.now();
-  const deadlineDate = new Date(deadlineBaseTime - diasAntesRsvp * 24 * 60 * 60 * 1000);
-  const deadlineDay = deadlineDate.getDate();
-  const rawMonthEs = deadlineDate.toLocaleDateString("es-ES", { month: "long" });
-  const rawMonthEn = deadlineDate.toLocaleDateString("en-US", { month: "long" });
-  const deadlineMonthEs = rawMonthEs.charAt(0).toUpperCase() + rawMonthEs.slice(1);
-  const deadlineMonthEn = rawMonthEn.charAt(0).toUpperCase() + rawMonthEn.slice(1);
-
-  const rsvpDeadlinePhrase = isEn
-    ? (data.rsvpFechaLimiteEn || `Please confirm before ${deadlineMonthEn} ${deadlineDay}`)
-    : (data.rsvpFechaLimite || `Favor de confirmar antes del ${deadlineDay} de ${deadlineMonthEs}`);
+  // Fecha límite del RSVP: una sola fuente (rsvpFechaLimite/En, derivada
+  // en el editor de fechaLimiteRsvp) y un solo render (fraseFechaLimiteRsvp).
+  // La fecha corta es la misma fecha guardada, formateada (nunca el ISO crudo).
+  const rsvpDeadlinePhrase = fraseFechaLimiteRsvp(data, isEn ? "en" : "es");
+  const fechaLimiteCorta = formatFechaLimiteRsvp(data.fechaLimiteRsvp, isEn ? "en" : "es");
 
   // Itinerario dinámico con los iconos ilustrados del set Era Pink
   const getItineraryIcon = (item: any, idx: number) => {
@@ -703,9 +693,9 @@ export default function Miss15Template({
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={MISS15_ASSETS.bow} alt="" className="absolute -right-7 sm:-right-9 top-1 w-12 sm:w-16 h-auto rotate-12" />
           </div>
-          {data.fechaLimiteRsvp && (
+          {fechaLimiteCorta && (
             <p className="font-serif-roman text-lg sm:text-xl tracking-[0.3em] uppercase text-[#B0703C] font-bold mt-3">
-              {isEn ? "By" : "Antes del"} {data.fechaLimiteRsvp}
+              {isEn ? "By" : "Antes del"} {fechaLimiteCorta}
             </p>
           )}
           <p className="font-serif-roman text-xs sm:text-sm tracking-[0.15em] uppercase text-[#2B2118]/75 mt-3 max-w-sm mx-auto leading-relaxed">
@@ -740,9 +730,11 @@ export default function Miss15Template({
                 </h3>
               );
             })()}
-            <p className="text-[11px] text-slate-500 mb-5 uppercase tracking-wider font-serif-roman font-semibold">
-              {rsvpDeadlinePhrase}
-            </p>
+            {rsvpDeadlinePhrase && (
+              <p className="text-[11px] text-slate-500 mb-5 uppercase tracking-wider font-serif-roman font-semibold">
+                {rsvpDeadlinePhrase}
+              </p>
+            )}
 
             {/* Alerta de confirmación previa / actualización de pases */}
             {rsvpFeedback && (

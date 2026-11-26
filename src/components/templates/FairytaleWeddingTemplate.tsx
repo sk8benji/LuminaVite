@@ -358,7 +358,7 @@ export default function FairytaleWeddingTemplate({
           rsvpTelefonoTitulo={data.rsvpTelefonoTitulo}
           rsvpTelefonoTituloEn={data.rsvpTelefonoTituloEn}
           maxPases={data.maxPasesPorInvitado ?? 2}
-          fechaLimite={data.fechaLimiteRsvp || "July 15"}
+          fechaLimite={data.fechaLimiteRsvp}
           template={template}
           permitirConfirmacionTelefono={data.permitirConfirmacionTelefono !== false}
         />

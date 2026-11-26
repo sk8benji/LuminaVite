@@ -5,6 +5,7 @@ import { MapPin, CheckCircle2, Sparkles, MessageCircle, Music, Pause, CalendarPl
 import confetti from "canvas-confetti";
 import { InvitationData } from "../invitation/InvitationMobileView";
 import { getMapEmbedUrl, getMapDirectionsUrl } from "@/lib/maps";
+import { fraseFechaLimiteRsvp, formatFechaLimiteRsvp } from "@/lib/fecha-limite";
 import { ERA_ASSETS } from "@/lib/templates/eraPinkAssets";
 import { parseTemplateConfig, QuinceEraPinkConfig } from "@/types/templateConfigs";
 import { isSectionEnabledInEvent, SeccionId } from "@/config/templateSections";
@@ -274,22 +275,11 @@ export default function QuinceEraPinkTemplate({
     ? `${eventWeekday}, ${eventMonth} ${eventDay}, ${eventYear}`
     : (data.fechaTextoPersonalizada || `${eventWeekday} ${eventDay} DE ${eventMonth}, ${eventYear}`);
 
-  // Cálculo dinámico de fecha límite RSVP bilingüe fija (días antes del evento)
-  const diasAntesRsvp =
-    typeof data.rsvpDiasAntes === "number" && data.rsvpDiasAntes > 0
-      ? data.rsvpDiasAntes
-      : 15;
-  const deadlineBaseTime = !isNaN(eventDate.getTime()) ? eventDate.getTime() : Date.now();
-  const deadlineDate = new Date(deadlineBaseTime - diasAntesRsvp * 24 * 60 * 60 * 1000);
-  const deadlineDay = deadlineDate.getDate();
-  const rawMonthEs = deadlineDate.toLocaleDateString("es-ES", { month: "long" });
-  const rawMonthEn = deadlineDate.toLocaleDateString("en-US", { month: "long" });
-  const deadlineMonthEs = rawMonthEs.charAt(0).toUpperCase() + rawMonthEs.slice(1);
-  const deadlineMonthEn = rawMonthEn.charAt(0).toUpperCase() + rawMonthEn.slice(1);
-
-  const rsvpDeadlinePhrase = isEn
-    ? (data.rsvpFechaLimiteEn || `Please confirm before ${deadlineMonthEn} ${deadlineDay}`)
-    : (data.rsvpFechaLimite || `Favor de confirmar antes del ${deadlineDay} de ${deadlineMonthEs}`);
+  // Fecha límite del RSVP: una sola fuente (rsvpFechaLimite/En, derivada
+  // en el editor de fechaLimiteRsvp) y un solo render (fraseFechaLimiteRsvp).
+  // La fecha corta es la misma fecha guardada, formateada (nunca el ISO crudo).
+  const rsvpDeadlinePhrase = fraseFechaLimiteRsvp(data, isEn ? "en" : "es");
+  const fechaLimiteCorta = formatFechaLimiteRsvp(data.fechaLimiteRsvp, isEn ? "en" : "es");
 
   // Itinerario dinámico con los iconos ilustrados del set Era Pink
   const getItineraryIcon = (item: any, idx: number) => {
@@ -926,9 +916,9 @@ export default function QuinceEraPinkTemplate({
               <h3 className="font-serif-roman text-3xl sm:text-4xl tracking-[0.12em] uppercase text-[#3E2A2E] font-bold leading-none">RSVP</h3>
             </div>
           </div>
-          {data.fechaLimiteRsvp && (
+          {fechaLimiteCorta && (
             <p className="font-serif-roman text-xs tracking-[0.4em] uppercase text-[#3E2A2E] font-bold mt-3">
-              {isEn ? "By" : "Antes del"} {data.fechaLimiteRsvp}
+              {isEn ? "By" : "Antes del"} {fechaLimiteCorta}
             </p>
           )}
           <p className="font-serif-roman italic text-sm text-[#3E2A2E]/80 mt-3">
@@ -963,9 +953,11 @@ export default function QuinceEraPinkTemplate({
                 </h3>
               );
             })()}
-            <p className="text-[11px] text-slate-500 mb-5 uppercase tracking-wider font-serif-roman font-semibold">
-              {rsvpDeadlinePhrase}
-            </p>
+            {rsvpDeadlinePhrase && (
+              <p className="text-[11px] text-slate-500 mb-5 uppercase tracking-wider font-serif-roman font-semibold">
+                {rsvpDeadlinePhrase}
+              </p>
+            )}
 
             {/* Alerta de confirmación previa / actualización de pases */}
             {rsvpFeedback && (

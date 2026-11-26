@@ -220,7 +220,7 @@ export default function InvitationMobileView({
       >
         {/* Audio flotante */}
         {isSectionActive("musica") && (
-          <AudioPlayer audioUrl={data.musicaUrl} template={template} />
+          <AudioPlayer audioUrl={data.musicaUrl} template={template} songTitle={data.musicaTitulo} />
         )}
 
         {/* 1. Barra Superior Fija (Navbar) */}

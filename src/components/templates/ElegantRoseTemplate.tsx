@@ -18,7 +18,7 @@ import { InvitationData } from "../invitation/InvitationMobileView";
 import DynamicRsvpForm from "../invitation/DynamicRsvpForm";
 import { sanitizeUrl } from "@/lib/url-safety";
 import { isSectionEnabledInEvent, type SeccionId } from "@/config/templateSections";
-import { formatFechaLimiteRsvp } from "@/lib/fecha-limite";
+import { formatFechaLimiteRsvp, fraseFechaLimiteRsvp } from "@/lib/fecha-limite";
 
 function WavyColumn({
   children,
@@ -507,9 +507,11 @@ export default function ElegantRoseTemplate({
                 />
               </div>
 
-              <p className="font-['Cinzel'] text-xs sm:text-sm tracking-wider text-[#5A3E44] font-bold truncate">
-                {data.musicaTitulo || "Photograph - Ed Sheeran"}
-              </p>
+              {data.musicaTitulo && (
+                <p className="font-['Cinzel'] text-xs sm:text-sm tracking-wider text-[#5A3E44] font-bold truncate">
+                  {data.musicaTitulo}
+                </p>
+              )}
               <p className="text-xs text-stone-600 font-medium truncate">
                 {isEn ? "Official Quince Song" : "Canción Oficial"}
               </p>
@@ -1206,11 +1208,11 @@ export default function ElegantRoseTemplate({
               RSVP
             </h2>
 
-            <p className="font-['Cinzel'] text-xs sm:text-[13px] tracking-widest uppercase text-rose-100 mb-6 font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
-              {isEn
-                ? (data.rsvpFechaLimiteEn || formatFechaLimiteRsvp(data.fechaLimiteRsvp, "en") || "BY JUNE 20TH")
-                : (data.rsvpFechaLimite || formatFechaLimiteRsvp(data.fechaLimiteRsvp, "es") || "ANTES DEL 20 DE JUNIO")}
-            </p>
+            {fraseFechaLimiteRsvp(data, isEn ? "en" : "es") && (
+              <p className="font-['Cinzel'] text-xs sm:text-[13px] tracking-widest uppercase text-rose-100 mb-6 font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
+                {fraseFechaLimiteRsvp(data, isEn ? "en" : "es")}
+              </p>
+            )}
 
             <div className="w-full max-w-[320px]">
               <DynamicRsvpForm
@@ -1222,8 +1224,8 @@ export default function ElegantRoseTemplate({
                 telefonoWhatsapp={data.telefonoWhatsappRsvp}
                 primaryColor="#8B4513"
                 accentBgColor="bg-white/95"
-                deadlineText={data.rsvpFechaLimite || formatFechaLimiteRsvp(data.fechaLimiteRsvp, "es") || "ANTES DEL 20 DE JUNIO"}
-                deadlineTextEn={data.rsvpFechaLimiteEn || formatFechaLimiteRsvp(data.fechaLimiteRsvp, "en") || "BY JUNE 20TH"}
+                deadlineText={fraseFechaLimiteRsvp(data, "es") ?? undefined}
+                deadlineTextEn={fraseFechaLimiteRsvp(data, "en") ?? undefined}
                 rsvpTitulo={data.rsvpTitulo}
                 rsvpTituloEn={data.rsvpTituloEn}
                 rsvpSubtitulo={data.rsvpSubtitulo}

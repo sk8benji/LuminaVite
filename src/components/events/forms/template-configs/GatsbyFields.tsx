@@ -131,18 +131,6 @@ export const GatsbyFields: React.FC<Props> = ({ value, onChange }) => {
             <input className={inputCls} value={config.cocktailsTexto || ""} onChange={set("cocktailsTexto")} placeholder="Signature mocktails, sparkling champagne towers & craft drinks all night." />
           </div>
         </div>
-        <div>
-          <label className={labelCls}>Color de acento (hex)</label>
-          <div className="flex items-center gap-2">
-            <input
-              type="color"
-              value={config.colorAcentoHex || "#C5A059"}
-              onChange={(e) => updateConfig((prev) => ({ ...prev, colorAcentoHex: e.target.value }))}
-              className="w-9 h-9 p-0.5 rounded-lg border border-stone-200 cursor-pointer bg-white"
-            />
-            <input className={inputCls} value={config.colorAcentoHex || ""} onChange={set("colorAcentoHex")} placeholder="#C5A059" />
-          </div>
-        </div>
       </div>
 
       {/* Agradecimiento */}

@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import confetti from "canvas-confetti";
 import { GATSBY_20S_ASSETS } from "@/lib/templates/gatsby20sAssets";
+import { fraseFechaLimiteRsvp } from "@/lib/fecha-limite";
 import { InvitationData } from "../invitation/InvitationMobileView";
 import { parseTemplateConfig, Gatsby20sConfig } from "@/types/templateConfigs";
 import { getMapDirectionsUrl } from "@/lib/maps";
@@ -1818,8 +1819,8 @@ export default function Gatsby20sTemplate({
                           telefonoWhatsapp={data.telefonoWhatsappRsvp}
                           primaryColor="#C5A059"
                           accentBgColor="bg-[#0e0e0e]"
-                          deadlineText={data.rsvpFechaLimite || "POR FAVOR, CONFIRMA TU ASISTENCIA."}
-                          deadlineTextEn={data.rsvpFechaLimiteEn || "PLEASE CONFIRM YOUR ATTENDANCE."}
+                          deadlineText={fraseFechaLimiteRsvp(data, "es") ?? undefined}
+                          deadlineTextEn={fraseFechaLimiteRsvp(data, "en") ?? undefined}
                           rsvpTitulo=""
                           rsvpTituloEn=""
                           rsvpSubtitulo=""

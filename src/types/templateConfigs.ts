@@ -49,8 +49,6 @@ export interface BlueButterflyConfig {
 export interface BlushPrincessConfig {
   familiaAnfitriona?: string;
   familiaAnfitrionaEn?: string;
-  fraseEmocional?: string;
-  colorAcentoHex?: string;
 }
 
 export interface QuinceEraPinkConfig {
@@ -58,15 +56,14 @@ export interface QuinceEraPinkConfig {
   familiaAnfitrionaEn?: string;
   ceremoniaHora?: string;
   recepcionHora?: string;
-  fraseEmocional?: string;
-  colorAcentoHex?: string;
 }
 
+// Miss 15 no lee ninguna clave de config: su template solo usa
+// configPlantilla.secciones (toggles) y los campos de nivel superior.
+// (Antes declaraba ceremoniaHora/recepcionHora/fraseEmocional/
+// colorAcentoHex; ninguna se leía.)
 export interface Miss15Config {
-  ceremoniaHora?: string;
-  recepcionHora?: string;
-  fraseEmocional?: string;
-  colorAcentoHex?: string;
+  // Sin claves propias.
 }
 
 export interface BabyBlueConfig {
@@ -76,8 +73,6 @@ export interface BabyBlueConfig {
   contactoNombre?: string;
   cartaTexto?: string;
   cartaTextoEn?: string;
-  fraseEmocional?: string;
-  colorAcentoHex?: string;
 }
 
 export interface ElegantRoseConfig {
