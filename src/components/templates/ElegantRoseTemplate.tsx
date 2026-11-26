@@ -205,6 +205,16 @@ export default function ElegantRoseTemplate({
     | string
     | undefined;
 
+  // Bloque ACCOMMODATION (Details). Sin texto no se muestra: antes era un
+  // texto fijo que afirmaba un bloque de habitaciones reservado.
+  const accommodationTexto = isEn
+    ? ((data.configPlantilla as any)?.accommodationTextoEn ??
+      (data.configPlantilla as any)?.accommodationTexto ??
+      "")
+    : ((data.configPlantilla as any)?.accommodationTexto ??
+      (data.configPlantilla as any)?.accommodationTextoEn ??
+      "");
+
   // Frase de cierre de "Growing Up" (editable en Historia). "" explícito = oculta.
   const cierreGrowingUp =
     isEn
@@ -1148,14 +1158,16 @@ export default function ElegantRoseTemplate({
             )}
 
             {/* Accommodation */}
+            {isSectionActive("accommodation") && accommodationTexto !== "" && (
             <div className="my-6">
               <p className="font-['Cinzel'] text-xs sm:text-sm font-bold tracking-[0.25em] uppercase text-rose-200 drop-shadow-sm">
                 ACCOMMODATION
               </p>
               <p className="text-xs sm:text-[13px] text-white font-medium max-w-[280px] mx-auto leading-relaxed mt-1.5 drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
-                A room block has been reserved for our guests. Please contact us for reservation details and booking information.
+                {accommodationTexto}
               </p>
             </div>
+            )}
 
             {/* Thank you */}
             <div className="mt-8 pt-4 border-t border-white/30 w-full">

@@ -20,7 +20,10 @@ export type SeccionId =
   | 'corteHonor'
   | 'cuentaRegresiva'
   | 'videoDespedida'
-  | 'historia';
+  | 'historia'
+  | 'hotel'
+  | 'transporte'
+  | 'accommodation';
 
 export interface SeccionMeta {
   id: SeccionId;
@@ -157,6 +160,30 @@ export const SECCIONES_QUINCE_ROSADO: SeccionMeta[] = [
     icono: 'BookOpen',
     defaultEnabled: true,
   },
+  {
+    id: 'hotel',
+    numero: 16,
+    label: 'Hotel / Hospedaje',
+    descripcion: 'Bloque de habitaciones reservado para los invitados (solo Fairytale).',
+    icono: 'Sparkles',
+    defaultEnabled: true,
+  },
+  {
+    id: 'transporte',
+    numero: 17,
+    label: 'Transporte',
+    descripcion: 'Shuttles y transporte de invitados (solo Fairytale).',
+    icono: 'Sparkles',
+    defaultEnabled: true,
+  },
+  {
+    id: 'accommodation',
+    numero: 18,
+    label: 'Hospedaje (Accommodation)',
+    descripcion: 'Bloque de habitaciones para invitados dentro de Details (solo Elegant Rose).',
+    icono: 'Sparkles',
+    defaultEnabled: true,
+  },
 ];
 
 /**
@@ -206,7 +233,23 @@ export const SECCIONES_POR_PLANTILLA: Record<string, SeccionId[]> = {
   MISS_15: TODAS_MENOS_ZAPATOS_VIDEO,
   QUINCE_ERA_PINK: TODAS_MENOS_ZAPATOS_VIDEO,
   BLUSH_PRINCESS: TODAS_MENOS_ZAPATOS_VIDEO,
-  BEAUTY_QUINCE: TODAS_MENOS_ZAPATOS_VIDEO,
+  // Beauty Quince SÍ tiene Recomendación: su bloque "Important Details /
+  // Kids Policy" es esa sección (se apaga con su interruptor y su texto
+  // es celebrationGuideline).
+  BEAUTY_QUINCE: [
+    'portada',
+    'medallonFecha',
+    'dedicatoria',
+    'rsvp',
+    'ubicaciones',
+    'dressCode',
+    'mesaRegalos',
+    'itinerario',
+    'fotoZapatos2',
+    'corteHonor',
+    'cuentaRegresiva',
+    'musica',
+  ],
   PRINCESA_ROSA: TODAS_MENOS_ZAPATOS_VIDEO,
   CLASICA_IMPERIAL: TODAS_MENOS_ZAPATOS_VIDEO,
   ESMERALDA_ROYAL: TODAS_MENOS_ZAPATOS_VIDEO,
@@ -232,6 +275,7 @@ export const SECCIONES_POR_PLANTILLA: Record<string, SeccionId[]> = {
     'ubicaciones',
     'dressCode',
     'mesaRegalos',
+    'accommodation',
     'itinerario',
     'corteHonor',
     'cuentaRegresiva',
@@ -254,6 +298,8 @@ export const SECCIONES_POR_PLANTILLA: Record<string, SeccionId[]> = {
     'medallonFecha',
     'rsvp',
     'ubicaciones',
+    'hotel',
+    'transporte',
     'dressCode',
     'mesaRegalos',
     'itinerario',

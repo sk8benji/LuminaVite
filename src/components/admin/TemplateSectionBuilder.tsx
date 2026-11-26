@@ -2418,6 +2418,18 @@ export default function TemplateSectionBuilder({
                               className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
                             />
                           </div>
+                          <div className="md:col-span-2">
+                            <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+                              Guía de celebración (texto libre)
+                            </label>
+                            <textarea
+                              rows={3}
+                              value={formData.celebrationGuideline || ""}
+                              onChange={(e) => updateField("celebrationGuideline", e.target.value)}
+                              placeholder="Texto que reemplaza la política para niños fija (Beauty Quince y vista genérica). Vacío = texto original de la plantilla."
+                              className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
+                            />
+                          </div>
                         </div>
                       </div>
                     </div>

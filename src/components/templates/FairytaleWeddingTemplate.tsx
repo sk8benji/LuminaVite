@@ -26,6 +26,7 @@ import EnvelopeIntro from "../invitation/EnvelopeIntro";
 import { InvitationData } from "../invitation/InvitationMobileView";
 import { sanitizeUrl } from "@/lib/url-safety";
 import { isSectionEnabledInEvent, type SeccionId } from "@/config/templateSections";
+import { parseTemplateConfig, type FairytaleChateauConfig } from "@/types/templateConfigs";
 
 export default function FairytaleWeddingTemplate({
   data,
@@ -46,6 +47,14 @@ export default function FairytaleWeddingTemplate({
       mostrarMesaRegalos: data.mostrarMesaRegalos,
       permitirConfirmacionTelefono: data.permitirConfirmacionTelefono,
     });
+
+  // Hospedaje y transporte: solo se muestran si el admin los configuro
+  // (configPlantilla.hospedaje / transporte). Sin hotel no hay bloque.
+  const cfg = parseTemplateConfig<FairytaleChateauConfig>(data.configPlantilla);
+  const hotelBullets = (cfg.hospedaje?.suitesInfo || "")
+    .split("\n")
+    .map((l) => l.trim())
+    .filter(Boolean);
 
   const weddingItinerary = [
     { time: "3:30 PM", title: "Wedding Ceremony", icon: "church" },
@@ -177,42 +186,57 @@ export default function FairytaleWeddingTemplate({
         )}
 
         {/* 4. Hotel Accommodation Card (Canva Template 2 feature) */}
+        {/* Sin hotel configurado no se muestra: antes afirmaba un bloque de
+            habitaciones con datos fijos para todas las bodas. */}
+        {isSectionActive("hotel") && cfg.hospedaje?.hotelNombre && (
         <section className="px-6 py-4">
           <div className="bg-white p-6 rounded-3xl border border-[#EFD2A6] shadow-sm">
             <div className="flex items-center gap-2 text-xs font-serif font-bold text-[#AF936A] uppercase tracking-wider mb-2">
               <Hotel className="w-4 h-4" />
-              <span>STAY AT OHEKA CASTLE</span>
+              <span>STAY AT {(cfg.hospedaje?.hotelNombre || "").toUpperCase()}</span>
             </div>
             <p className="text-xs text-stone-600 leading-relaxed font-light mb-4">
               We have arranged special accommodation options for our guests to enjoy this special weekend together.
             </p>
 
-            <div className="space-y-2 text-xs text-stone-700 bg-[#FBF5EB] p-4 rounded-2xl border border-stone-200">
-              <div className="flex items-center gap-2">
-                <Check className="w-3.5 h-3.5 text-[#AF936A]" />
-                <span>Accommodation for up to 42 guests</span>
+            {hotelBullets.length > 0 && (
+              <div className="space-y-2 text-xs text-stone-700 bg-[#FBF5EB] p-4 rounded-2xl border border-stone-200">
+                {hotelBullets.map((b) => (
+                  <div key={b} className="flex items-center gap-2">
+                    <Check className="w-3.5 h-3.5 text-[#AF936A] shrink-0" />
+                    <span>{b}</span>
+                  </div>
+                ))}
               </div>
-              <div className="flex items-center gap-2">
-                <Check className="w-3.5 h-3.5 text-[#AF936A]" />
-                <span>Elegant, luxury private suites</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Check className="w-3.5 h-3.5 text-[#AF936A]" />
-                <span>Buffet breakfast, pool & garden access included</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Check className="w-3.5 h-3.5 text-[#AF936A]" />
-                <span>Special wedding rates from $250 per night</span>
-              </div>
-            </div>
+            )}
+
+            {cfg.hospedaje?.tarifas && (
+              <p className="text-xs text-stone-700 mt-3">
+                {cfg.hospedaje.tarifas}
+              </p>
+            )}
 
             <p className="text-[11px] text-stone-500 italic mt-3">
               Limited availability – please RSVP and contact us early to secure your spot.
             </p>
+
+            {cfg.hospedaje?.link && (
+              <a
+                href={cfg.hospedaje.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-3 inline-block px-5 py-2.5 rounded-xl text-xs font-semibold uppercase tracking-wider bg-[#19223D] text-white hover:bg-[#2b3a67] transition"
+              >
+                Book Your Stay
+              </a>
+            )}
           </div>
         </section>
+        )}
 
         {/* 5. Transporte & Shuttles */}
+        {/* Sin info de shuttles no se muestra: antes afirmaba shuttles fijos para todas las bodas. */}
+        {isSectionActive("transporte") && cfg.transporte?.shuttlesInfo && (
         <section className="px-6 py-4">
           <div className="bg-white p-6 rounded-3xl border border-[#EFD2A6] shadow-sm text-center">
             <Bus className="w-6 h-6 mx-auto text-[#AF936A]" />
@@ -220,10 +244,11 @@ export default function FairytaleWeddingTemplate({
               TRANSPORTATION
             </h3>
             <p className="text-xs text-stone-600 mt-1.5 leading-relaxed font-light">
-              Shuttles will be available to transport guests from the ceremony to the reception. Shuttles will depart right after the ceremony.
+              {cfg.transporte.shuttlesInfo}
             </p>
           </div>
         </section>
+        )}
 
         {/* 6. Itinerario de Boda */}
         {isSectionActive("itinerario") && (

@@ -139,6 +139,24 @@ export const FairytaleChateauFields: React.FC<Props> = ({ value, onChange }) => 
             className="w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs focus:outline-none focus:border-amber-500"
           />
         </div>
+
+        <div>
+          <label className="block text-[11px] font-semibold text-stone-700 mb-1">
+            Servicios incluidos (una línea por viñeta)
+          </label>
+          <textarea
+            rows={3}
+            value={config.hospedaje?.suitesInfo || ""}
+            onChange={(e) =>
+              updateConfig((prev) => ({
+                ...prev,
+                hospedaje: { ...prev.hospedaje, suitesInfo: e.target.value },
+              }))
+            }
+            placeholder={"Ej:\nHabitaciones para 42 huéspedes\nSuites privadas de lujo\nDesayuno buffet incluido"}
+            className="w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs focus:outline-none focus:border-amber-500"
+          />
+        </div>
       </div>
 
       {/* Transporte y Shuttles */}

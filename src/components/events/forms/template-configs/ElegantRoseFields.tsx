@@ -95,6 +95,34 @@ export const ElegantRoseFields: React.FC<Props> = ({ value, onChange }) => {
           Se distribuirán en las columnas de la tarjeta de corte de gala.
         </p>
       </div>
+
+      <div className="p-3 bg-white/90 border border-rose-100 rounded-xl space-y-1.5">
+        <label className="flex items-center gap-1.5 text-[11px] font-semibold text-stone-700">
+          <Sparkles className="w-3.5 h-3.5 text-rose-600" />
+          <span>Hospedaje (bloque Accommodation en Details)</span>
+        </label>
+        <textarea
+          rows={2}
+          value={config.accommodationTexto || ""}
+          onChange={(e) =>
+            updateConfig((prev) => ({ ...prev, accommodationTexto: e.target.value }))
+          }
+          placeholder="Ej: Tenemos un bloque de habitaciones en el Hotel X, código QUINCE2026..."
+          className="w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs focus:outline-none focus:border-rose-500"
+        />
+        <textarea
+          rows={2}
+          value={config.accommodationTextoEn || ""}
+          onChange={(e) =>
+            updateConfig((prev) => ({ ...prev, accommodationTextoEn: e.target.value }))
+          }
+          placeholder="English version (vacío = usa el texto en español)"
+          className="w-full px-3 py-2 bg-white border border-stone-200 rounded-xl text-xs focus:outline-none focus:border-rose-500"
+        />
+        <p className="text-[10px] text-stone-400">
+          Vacío = el bloque no se muestra en la invitación.
+        </p>
+      </div>
     </div>
   );
 };

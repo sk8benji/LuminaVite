@@ -97,6 +97,10 @@ export interface ElegantRoseConfig {
   }>;
   /** Foto de fondo del sobre cerrado. Vacío = la foto principal de portada. */
   fotoFondoSobre?: string;
+  /** Texto del bloque ACCOMMODATION (Details). Vacío = el bloque no se muestra
+      (antes era un texto fijo que afirmaba un bloque de habitaciones). */
+  accommodationTexto?: string;
+  accommodationTextoEn?: string;
   /** Frase de cierre de "Growing Up". Vacío = texto por defecto del template. */
   growingUpCierre?: string;
   growingUpCierreEn?: string;

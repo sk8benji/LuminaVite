@@ -11,6 +11,7 @@ import {
   type BeautyQuinceArtOverrides,
 } from "@/lib/templates/beautyQuinceAssets";
 import AudioPlayer from "../invitation/AudioPlayer";
+import { isSectionEnabledInEvent, SeccionId } from "@/config/templateSections";
 import RsvpSection from "../invitation/RsvpSection";
 
 /**
@@ -35,6 +36,14 @@ export default function BeautyQuinceTemplate({
     null;
   const A = resolveBeautyQuinceAssets(overrides);
   const template = getTemplate("BEAUTY_QUINCE");
+  const isSectionActive = (sectionId: SeccionId): boolean =>
+    isSectionEnabledInEvent(sectionId, data.configPlantilla, {
+      mostrarFrasePersonalizada: data.mostrarFrasePersonalizada,
+      mostrarFechaPlacaHora: data.mostrarFechaPlacaHora,
+      mostrarDressCode: data.mostrarDressCode,
+      mostrarMesaRegalos: data.mostrarMesaRegalos,
+      permitirConfirmacionTelefono: data.permitirConfirmacionTelefono,
+    });
 
   const [opened, setOpened] = useState(skipIntro);
   // Estado del reproductor, sincronizado con AudioPlayer (botón flotante)
@@ -149,6 +158,30 @@ export default function BeautyQuinceTemplate({
   const portada = data.fotoPortadaUrl || A.fotoCarrozaAtardecer;
   const fotoVestido = data.fotoActualUrl || A.fotoVestidoManiqui;
   const fotoArreglo = data.fotoInfanciaUrl || A.fotoMaquillaje;
+
+  // Party Plan: si el evento trae itinerarioJson se usan sus horas y
+  // momentos; si no, los 8 momentos del Canva. Los iconos se ciclan por
+  // indice porque el itinerario generico no trae icono propio.
+  const partyPlanIconos = [A.castillo, A.carroza, A.rosaCampana, A.copaBrindis, A.vestidoBella, A.trajePrincipe, A.corona, A.abanico];
+  const partyPlan: Array<{ side: string; time: string; name: string; icon: string; alt: string }> =
+    data.itinerarioJson && data.itinerarioJson.length > 0
+      ? data.itinerarioJson.map((item: any, idx: number) => ({
+          side: idx % 2 === 0 ? "right" : "left",
+          time: item.hora || item.time || "",
+          name: ((isEn ? item.tituloEn || item.titulo || item.title : item.titulo || item.title || "") as string).toUpperCase(),
+          icon: partyPlanIconos[idx % partyPlanIconos.length],
+          alt: item.titulo || item.title || "Momento",
+        }))
+      : [
+                { side: "right", time: "11:00 AM", name: "CHURCH CEREMONY", icon: A.castillo, alt: "Ceremonia" },
+                { side: "left", time: "12:00 PM", name: "LIMO ARRIVAL", icon: A.carroza, alt: "Llegada" },
+                { side: "right", time: "1:00 PM", name: "ARRIVAL TO SALON", icon: A.rosaCampana, alt: "Recepción" },
+                { side: "left", time: "3:00 PM", name: "FOOD SERVED", icon: A.copaBrindis, alt: "Banquete" },
+                { side: "right", time: "4:00 PM", name: "VALS, BAILE SORPRESA", icon: A.vestidoBella, alt: "Vals" },
+                { side: "left", time: "5:00 PM", name: "FATHER & DAUGHTER DANCE", icon: A.trajePrincipe, alt: "Baile papá" },
+                { side: "right", time: "6:00 PM", name: "PADRINOS DE HONOR", icon: A.corona, alt: "Padrinos" },
+                { side: "left", time: "7:00 PM", name: "BAILE STARTS", icon: A.abanico, alt: "Fiesta" },
+      ];
 
   const poemaEn =
     "Fifteen candles softly glow,\nMarking how much love you know.\nA touch of a woman, a heart still so sweet,\nThe past and the future now dance at your feet.";
@@ -314,7 +347,7 @@ export default function BeautyQuinceTemplate({
           </div>
           {/* Nivel 2: foto central, entre los dos cortes rasgados */}
           <div className="relative w-full -mt-[25px] z-[2]">
-            <img src={A.fotoVestidoManiqui} alt="Quinceañera y vestido" className="w-full h-auto block bg-transparent" />
+            <img src={fotoVestido} alt="Quinceañera y vestido" className="w-full h-auto block bg-transparent" />
           </div>
           {/* Nivel 3: castillo con textos del evento */}
           <div className="relative w-full min-h-[480px] -mt-[35px] z-[3]">
@@ -380,7 +413,7 @@ export default function BeautyQuinceTemplate({
             </div>
           </div>
           <div className="relative z-[2] w-[90%] mx-auto overflow-hidden" style={{ borderRadius: "12px", boxShadow: "0 8px 24px rgba(0,0,0,0.4)", background: "transparent" }}>
-            <img src={A.fotoMaquillajeRasgado} alt="Preparación Quinceañera" className="w-full h-auto block bg-transparent" style={{ background: "transparent" }} />
+            <img src={fotoArreglo} alt="Preparación Quinceañera" className="w-full h-auto block bg-transparent" style={{ background: "transparent" }} />
           </div>
         </section>
 
@@ -454,16 +487,7 @@ export default function BeautyQuinceTemplate({
           <div className="relative z-[2] w-full flex flex-col items-center" style={{ padding: "30px 24px" }}>
             <div className="relative w-full" style={{ padding: "10px 0 20px" }}>
               <div className="absolute top-0 bottom-0" style={{ left: "50%", width: "2px", background: "linear-gradient(180deg, #d4af37 0%, #a88338 100%)", transform: "translateX(-50%)", zIndex: 1 }} />
-              {[
-                { side: "right", time: "11:00 AM", name: "CHURCH CEREMONY", icon: A.castillo, alt: "Ceremonia" },
-                { side: "left", time: "12:00 PM", name: "LIMO ARRIVAL", icon: A.carroza, alt: "Llegada" },
-                { side: "right", time: "1:00 PM", name: "ARRIVAL TO SALON", icon: A.rosaCampana, alt: "Recepción" },
-                { side: "left", time: "3:00 PM", name: "FOOD SERVED", icon: A.copaBrindis, alt: "Banquete" },
-                { side: "right", time: "4:00 PM", name: "VALS, BAILE SORPRESA", icon: A.vestidoBella, alt: "Vals" },
-                { side: "left", time: "5:00 PM", name: "FATHER & DAUGHTER DANCE", icon: A.trajePrincipe, alt: "Baile papá" },
-                { side: "right", time: "6:00 PM", name: "PADRINOS DE HONOR", icon: A.corona, alt: "Padrinos" },
-                { side: "left", time: "7:00 PM", name: "BAILE STARTS", icon: A.abanico, alt: "Fiesta" },
-              ].map((e) => (
+              {partyPlan.map((e) => (
                 <div
                   key={e.time}
                   className="flex items-center relative"
@@ -501,6 +525,7 @@ export default function BeautyQuinceTemplate({
             patrón de rieles dorados repetido en vertical (repeat-y) y
             tapa inferior con rosas: el marco crece con el texto sin
             cortar flores ni pisar letras. */}
+        {isSectionActive("fotoZapatos2") && (
         <section className="flex justify-center items-center w-full max-w-[430px] mx-auto" style={{ padding: "24px 16px", boxSizing: "border-box" }}>
           <div className="w-full" style={{ maxWidth: "390px", margin: "0 auto", display: "flex", flexDirection: "column", boxShadow: "0 12px 35px rgba(0,0,0,0.45)", borderRadius: "20px", overflow: "hidden", boxSizing: "border-box" }}>
             <div style={{ width: "100%", lineHeight: 0 }}>
@@ -511,6 +536,12 @@ export default function BeautyQuinceTemplate({
               <span className="font-script block" style={{ fontSize: "3.2rem", lineHeight: 0.9, color: "#d4af37", textShadow: "0 2px 6px rgba(0,0,0,0.8)", margin: "0 0 4px" }}>{isEn ? "Important" : "Importante"}</span>
               <h2 className="font-serif-roman font-bold" style={{ fontSize: "1rem", letterSpacing: "0.35em", color: "#ffffff", margin: "0 0 6px", textShadow: "0 2px 6px rgba(0,0,0,0.7)" }}>DETAILS</h2>
               <h3 className="font-serif-roman" style={{ fontSize: "0.82rem", letterSpacing: "0.15em", color: "#d4af37", margin: "0 0 16px", fontWeight: 500 }}>{isEn ? "Kids Policy" : "Política para Niños"}</h3>
+              {data.celebrationGuideline && data.celebrationGuideline.trim() !== "" ? (
+                <p style={{ fontSize: "0.78rem", lineHeight: 1.55, color: "#e2e8f0", marginBottom: "12px", textShadow: "0 1px 4px rgba(0,0,0,0.8)", whiteSpace: "pre-line" }}>
+                  {data.celebrationGuideline}
+                </p>
+              ) : (
+                <>
               <p style={{ fontSize: "0.78rem", lineHeight: 1.55, color: "#e2e8f0", marginBottom: "12px", textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
                 {isEn
                   ? "We absolutely love and welcome children to celebrate this special day with us."
@@ -550,6 +581,8 @@ export default function BeautyQuinceTemplate({
                   ? "Thank you for your understanding and cooperation in making this celebration beautiful for everyone."
                   : "Gracias por su comprensión y cooperación para que esta celebración sea hermosa para todos."}
               </p>
+                </>
+              )}
             </div>
             </div>
             <div style={{ width: "100%", lineHeight: 0 }}>
@@ -557,6 +590,7 @@ export default function BeautyQuinceTemplate({
             </div>
           </div>
         </section>
+        )}
 
         {/* Dress Code: rosa en cúpula focal arriba, vestido a la izquierda
             y casaca a la derecha flanqueando nota y paleta, como la
