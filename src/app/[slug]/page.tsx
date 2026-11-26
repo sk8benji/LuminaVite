@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { sanitizePublicBaseUrl } from "@/lib/url-safety";
+import { getInvitationBaseUrl } from "@/lib/url-safety";
 import { notFound } from "next/navigation";
 import { InvitationData } from "@/components/invitation/InvitationMobileView";
 import {
@@ -290,10 +290,7 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
       : `${tituloEvento} • ✨ ¡Estás cordialmente invitado a celebrar con nosotros!`);
 
   // Asegurar que la imagen sea URL absoluta con https para Facebook y WhatsApp
-  const baseUrl =
-    sanitizePublicBaseUrl(process.env.NEXT_PUBLIC_APP_URL) ||
-    (process.env.RAILWAY_PUBLIC_DOMAIN ? `https://${process.env.RAILWAY_PUBLIC_DOMAIN}` : null) ||
-    "https://clickandlove.app";
+  const baseUrl = getInvitationBaseUrl();
 
   let coverImage = data.fotoPortadaUrl || "/assets/template-butterfly/foto-columpio-portada.webp";
   if (coverImage.startsWith("/")) {

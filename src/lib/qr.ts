@@ -1,5 +1,6 @@
 import prisma from "@/lib/db";
 import crypto from "crypto";
+import { getInvitationBaseUrl } from "@/lib/url-safety";
 
 /**
  * Utilidades de campañas QR con tracking.
@@ -8,22 +9,12 @@ import crypto from "crypto";
  */
 
 /**
- * Base pública de la app, con la misma normalización que src/lib/shortener.ts:
- * NEXT_PUBLIC_APP_URL / NEXT_PUBLIC_SITE_URL o el dominio oficial, nunca localhost.
+ * Base pública de la app: la misma fuente de verdad que canonical/OG
+ * (getInvitationBaseUrl en src/lib/url-safety.ts) — nunca el dominio de
+ * Railway del admin ni localhost.
  */
 export function getQrPublicBaseUrl(): string {
-  let rawBase =
-    process.env.NEXT_PUBLIC_APP_URL ||
-    process.env.NEXT_PUBLIC_SITE_URL ||
-    "https://clickandlove.app";
-
-  if (!rawBase || rawBase.includes("localhost") || rawBase.includes("127.0.0.1")) {
-    rawBase = "https://clickandlove.app";
-  }
-
-  return rawBase.startsWith("http")
-    ? rawBase.replace(/\/$/, "")
-    : `https://${rawBase.replace(/\/$/, "")}`;
+  return getInvitationBaseUrl();
 }
 
 export function getQrPublicUrl(code: string): string {

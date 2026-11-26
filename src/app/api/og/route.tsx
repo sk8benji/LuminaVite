@@ -1,5 +1,5 @@
 import { ImageResponse } from "next/og";
-import { sanitizePublicBaseUrl } from "@/lib/url-safety";
+import { getInvitationBaseUrl } from "@/lib/url-safety";
 import { NextRequest } from "next/server";
 import { normalizeSlug, getEventBySlug } from "@/lib/events";
 
@@ -18,10 +18,7 @@ export async function GET(req: NextRequest) {
     // 1. Obtener datos del evento desde PostgreSQL vía getEventBySlug
     const evento = await getEventBySlug(slug);
 
-    const baseUrl =
-      sanitizePublicBaseUrl(process.env.NEXT_PUBLIC_APP_URL) ||
-      (process.env.RAILWAY_PUBLIC_DOMAIN ? `https://${process.env.RAILWAY_PUBLIC_DOMAIN}` : null) ||
-      "https://clickandlove.app";
+    const baseUrl = getInvitationBaseUrl();
 
     const isEn = evento?.idiomaDefault === "en";
 
