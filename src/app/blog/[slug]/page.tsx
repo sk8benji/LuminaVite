@@ -27,7 +27,7 @@ export async function generateMetadata({
       description: post.description,
       url: `https://clickandlove.app/blog/${post.slug}`,
       siteName: "Click & Love",
-      locale: "en_US",
+      locale: post.lang === "es" ? "es_ES" : "en_US",
       type: "article",
     },
   };
@@ -72,12 +72,14 @@ export default async function BlogPostPage({
   if (!post) notFound();
 
   const canonical = `https://clickandlove.app/blog/${post.slug}`;
+  const es = post.lang === "es";
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
     headline: post.title,
     description: post.description,
     datePublished: post.datePublished,
+    inLanguage: es ? "es" : "en",
     author: {
       "@type": "Organization",
       name: "Click & Love",
@@ -109,13 +111,16 @@ export default async function BlogPostPage({
             {post.description}
           </p>
           <p className="mt-4 text-sm text-white/80">
-            {post.datePublished} · {post.readMinutes} min read
+            {post.datePublished} · {post.readMinutes}{" "}
+            {es ? "min de lectura" : "min read"}
           </p>
         </div>
       </header>
       <main className="max-w-3xl mx-auto px-4 py-10 space-y-12">
         <nav className="rounded-2xl border border-[#7A002A]/20 bg-white p-5">
-          <p className="font-bold text-[#7A002A]">In this guide</p>
+          <p className="font-bold text-[#7A002A]">
+            {es ? "En esta guía" : "In this guide"}
+          </p>
           <ul className="mt-3 space-y-2 list-disc pl-5">
             {post.sections.map((s) => (
               <li key={s.heading}>
@@ -173,10 +178,13 @@ export default async function BlogPostPage({
           </section>
         ))}
         <section className="rounded-2xl bg-[#7A002A] text-white p-6 text-center">
-          <h2 className="text-2xl font-bold">Ready to send yours?</h2>
+          <h2 className="text-2xl font-bold">
+            {es ? "¿Lista para enviar la tuya?" : "Ready to send yours?"}
+          </h2>
           <p className="mt-3 text-white/90">
-            See live demos, pick your design and share the link. Assisted $199.
-            VIP $279.
+            {es
+              ? "Mira las demos en vivo, elige tu diseño y comparte el enlace. Asistido $199. VIP $279."
+              : "See live demos, pick your design and share the link. Assisted $199. VIP $279."}
           </p>
           <Link
             href={post.landing.href}
@@ -186,8 +194,13 @@ export default async function BlogPostPage({
           </Link>
         </section>
         <p className="text-center">
-          <Link href="/" className="text-[#7A002A] font-bold underline">
-            digital invitations in Los Angeles
+          <Link
+            href={es ? "/es/" : "/"}
+            className="text-[#7A002A] font-bold underline"
+          >
+            {es
+              ? "invitaciones digitales en Los Ángeles"
+              : "digital invitations in Los Angeles"}
           </Link>
         </p>
       </main>
