@@ -1,9 +1,12 @@
 import Link from "next/link";
+import { Clock, MapPin, MessagesSquare, Star } from "lucide-react";
 
-// Contenido compartido de About Us (EN) / Nosotros (ES). Las cifras son las
-// que ya publica el sitio (home): 1,200+ familias, 99% RSVP a tiempo,
-// entrega 48h, 5.0. La foto de Elena Samaniego está pendiente (Abraham la
-// pasará); el retrato es un PLACEHOLDER con su nombre, nunca foto de stock.
+// Contenido compartido de About Us (EN) / Nosotros (ES). Textos copiados
+// TAL CUAL de la vista previa aprobada (artefacto about-click-and-love).
+// Las cifras son las que ya publica el sitio (home): 1,200+ familias,
+// 99% RSVP a tiempo, entrega 48h, 5.0. La foto de Elena Samaniego está
+// pendiente (Abraham la pasará); el retrato es un PLACEHOLDER con su
+// nombre, nunca foto de stock.
 
 const PHONE_DISPLAY = "(818) 918-2519";
 const PHONE_TEL = "tel:+18189182519";
@@ -14,13 +17,15 @@ const WHATSAPP_ES =
 
 const COPY = {
   en: {
-    eyebrow: "About Click & Love",
-    title: "Beautiful invitations, made with love in Los Angeles",
+    eyebrow: "About Us",
+    title: "We are passionate about helping families celebrate life's biggest moments.",
     subtitle:
-      "Click & Love is a Los Angeles studio that designs interactive digital invitations for quinceañeras and weddings — 3D envelopes, music, SMS confirmations and live guest support, all handled by our team.",
-    rsvpLabel: "Live RSVP",
-    rsvpValue: "1,200+",
-    rsvpText: "families confirmed this month across Los Angeles & San Fernando Valley",
+      "Click & Love is a Los Angeles studio crafting bespoke digital invitations for weddings and quinceañeras — cinematic 3D envelopes, music, and RSVPs your guests confirm by text. No apps, no passwords, no chaos.",
+    founderName: "Elena Samaniego",
+    founderRole: "Founder",
+    founderPhotoSoon: "Photo coming soon",
+    rsvpLabel: "RSVP on time",
+    rsvpValue: "99%",
     ctaFounder: "Meet our founder",
     ctaStart: "Start my invitation",
     ctaStartHref: "/pricing",
@@ -31,19 +36,34 @@ const COPY = {
       { value: "5.0", label: "average guest rating" },
     ],
     founderEyebrow: "Our Founder",
-    founderRole: "Founder",
-    founderPhotoSoon: "Photo coming soon",
     founderBio1:
-      "Elena founded Click & Love in Los Angeles with one simple idea: an invitation should feel like the celebration itself — beautiful to open, easy to answer, and impossible to lose.",
+      "Elena founded Click & Love in Los Angeles with a simple conviction: a celebration should feel joyful from the very first message a guest receives — not stressful for the family hosting it.",
     founderBio2:
-      "Today our team designs every invitation by hand, adds the music, sets up SMS confirmations and family passes, and stays on call for your guests until the last dance — so you can enjoy your party instead of chasing replies.",
+      "That is why every Click & Love invitation is handcrafted by our team as a complete service, never an empty template: the design, the music, the RSVPs and the guest list are all handled for you, and there is always a real person to talk to — in English or Spanish.",
+    founderSignature: "Elena Samaniego",
+    founderSignatureRole: "Founder, Click & Love",
     glanceTitle: "At a glance",
     glance: [
-      { label: "Based in", value: "Los Angeles, California" },
-      { label: "Focus", value: "Quinceañeras & weddings" },
-      { label: "Serving", value: "Southern California" },
-      { label: "Support", value: "Mon–Sat, 9 AM–7 PM PST" },
-      { label: "Languages", value: "English & Spanish" },
+      {
+        icon: "pin",
+        title: "Based in Los Angeles",
+        text: "serving celebrations across the San Fernando Valley and nationwide.",
+      },
+      {
+        icon: "chat",
+        title: "Fully bilingual",
+        text: "every invitation, page and conversation in English & Spanish.",
+      },
+      {
+        icon: "clock",
+        title: "Real human support",
+        text: "Mon–Sat, 9AM–7PM PST, by phone, text or WhatsApp.",
+      },
+      {
+        icon: "star",
+        title: "One flat payment",
+        text: "$99–$279, no monthly fees and no per-guest charges.",
+      },
     ],
     whatEyebrow: "What we do",
     whatTitle: "Everything handled, so you enjoy the party",
@@ -68,13 +88,15 @@ const COPY = {
     whatsappHref: WHATSAPP_EN,
   },
   es: {
-    eyebrow: "Nosotros · Click & Love",
-    title: "Invitaciones hermosas, hechas con amor en Los Ángeles",
+    eyebrow: "Nosotros",
+    title: "Nos apasiona ayudar a las familias a celebrar los momentos más importantes de la vida.",
     subtitle:
-      "Click & Love es un estudio en Los Ángeles que diseña invitaciones digitales interactivas para quinceañeras y bodas — sobres 3D, música, confirmación por SMS y soporte en vivo, todo a cargo de nuestro equipo.",
-    rsvpLabel: "RSVP en vivo",
-    rsvpValue: "1,200+",
-    rsvpText: "familias confirmadas este mes en Los Ángeles y San Fernando Valley",
+      "Click & Love es un estudio de Los Ángeles que crea invitaciones digitales a medida para bodas y quinceañeras — sobres 3D cinematográficos, música y confirmaciones que tus invitados confirman por texto. Sin apps, sin contraseñas, sin caos.",
+    founderName: "Elena Samaniego",
+    founderRole: "Fundadora",
+    founderPhotoSoon: "Foto próximamente",
+    rsvpLabel: "RSVP a tiempo",
+    rsvpValue: "99%",
     ctaFounder: "Conoce a nuestra fundadora",
     ctaStart: "Crear mi invitación",
     ctaStartHref: "/es/precios",
@@ -85,19 +107,34 @@ const COPY = {
       { value: "5.0", label: "calificación promedio" },
     ],
     founderEyebrow: "Nuestra fundadora",
-    founderRole: "Fundadora",
-    founderPhotoSoon: "Foto próximamente",
     founderBio1:
-      "Elena fundó Click & Love en Los Ángeles con una idea simple: una invitación debe sentirse como la celebración misma — hermosa al abrirla, fácil de responder e imposible de perder.",
+      "Elena fundó Click & Love en Los Ángeles con una convicción simple: una celebración debe sentirse alegre desde el primer mensaje que recibe un invitado — no estresante para la familia que la organiza.",
     founderBio2:
-      "Hoy nuestro equipo diseña cada invitación a mano, le pone la música, configura la confirmación por SMS y los pases familiares, y atiende a tus invitados hasta el último baile — para que tú disfrutes tu fiesta en vez de andar persiguiendo respuestas.",
+      "Por eso cada invitación de Click & Love la hace nuestro equipo a mano, como un servicio completo, nunca una plantilla vacía: el diseño, la música, las confirmaciones y la lista de invitados quedan en nuestras manos, y siempre hay una persona real con quien hablar — en inglés o en español.",
+    founderSignature: "Elena Samaniego",
+    founderSignatureRole: "Fundadora, Click & Love",
     glanceTitle: "De un vistazo",
     glance: [
-      { label: "Sede", value: "Los Ángeles, California" },
-      { label: "Enfoque", value: "Quinceañeras y bodas" },
-      { label: "Cobertura", value: "Sur de California" },
-      { label: "Soporte", value: "Lun–Sáb, 9 AM–7 PM PST" },
-      { label: "Idiomas", value: "Inglés y español" },
+      {
+        icon: "pin",
+        title: "Con sede en Los Ángeles",
+        text: "servimos celebraciones en todo San Fernando Valley y en todo el país.",
+      },
+      {
+        icon: "chat",
+        title: "Totalmente bilingüe",
+        text: "cada invitación, página y conversación en inglés y español.",
+      },
+      {
+        icon: "clock",
+        title: "Soporte humano real",
+        text: "lun–sáb, 9 AM–7 PM PST, por teléfono, texto o WhatsApp.",
+      },
+      {
+        icon: "star",
+        title: "Un solo pago",
+        text: "$99–$279, sin mensualidades y sin cargos por invitado.",
+      },
     ],
     whatEyebrow: "Lo que hacemos",
     whatTitle: "Todo resuelto, para que tú disfrutes la fiesta",
@@ -123,26 +160,25 @@ const COPY = {
   },
 } as const;
 
+const GLANCE_ICONS = {
+  pin: MapPin,
+  chat: MessagesSquare,
+  clock: Clock,
+  star: Star,
+} as const;
+
 export default function AboutContent({ lang }: { lang: "en" | "es" }) {
   const t = COPY[lang];
   return (
     <main>
-      {/* Hero editorial */}
+      {/* Hero editorial — igual que la vista previa aprobada */}
       <section className="relative overflow-hidden bg-[#FAF8F5]">
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 opacity-[0.35]"
-          style={{
-            backgroundImage: "radial-gradient(#7A002A22 1px, transparent 1px)",
-            backgroundSize: "22px 22px",
-          }}
-        />
-        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-24 grid gap-10 lg:grid-cols-[1.2fr_0.8fr] lg:items-center">
+        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-24 grid gap-12 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
           <div>
-            <p className="text-xs sm:text-sm tracking-[0.25em] uppercase text-[#B08D3C] font-semibold">
+            <p className="text-xs sm:text-sm tracking-[0.25em] uppercase text-[#8A6B76] font-semibold">
               {t.eyebrow}
             </p>
-            <h1 className="mt-4 font-['Playfair_Display',serif] text-4xl sm:text-5xl lg:text-6xl font-bold leading-[1.1] text-[#2B0A18]">
+            <h1 className="mt-4 text-4xl sm:text-5xl lg:text-[60px] font-bold leading-[1.05] tracking-tight text-[#2B0A18]">
               {t.title}
             </h1>
             <p className="mt-6 text-lg leading-relaxed text-[#5A3C46] max-w-xl">
@@ -164,24 +200,35 @@ export default function AboutContent({ lang }: { lang: "en" | "es" }) {
             </div>
           </div>
 
-          {/* Tarjeta RSVP */}
-          <div className="rounded-3xl border border-[#7A002A]/10 bg-white/80 backdrop-blur p-6 sm:p-8 shadow-[0_20px_50px_rgba(43,10,24,0.08)]">
-            <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
-              <span className="text-xs font-semibold tracking-widest uppercase text-[#8A6B76]">
-                {t.rsvpLabel}
-              </span>
+          {/* Tarjeta crema de Elena + tarjeta flotante RSVP 99% */}
+          <div className="relative max-w-md w-full mx-auto lg:mx-0">
+            <div className="rounded-3xl bg-[#F5EDE8] px-8 pt-10 pb-20 text-center">
+              <p className="text-2xl font-bold text-[#2B0A18]">{t.founderName}</p>
+              <p className="mt-1 text-xs tracking-[0.25em] uppercase text-[#7A002A] font-semibold">
+                {t.founderRole}
+              </p>
+              <p className="mt-2 text-sm text-[#8A6B76]">{t.founderPhotoSoon}</p>
+              {/* Placeholder con su nombre — NUNCA foto de stock como si fuera ella */}
+              <div className="mt-8 mx-auto w-56 h-56 sm:w-64 sm:h-64 rounded-full bg-[#EADFD8] flex items-center justify-center">
+                <span className="text-6xl sm:text-7xl font-bold text-[#7A002A]">ES</span>
+              </div>
             </div>
-            <p className="mt-4 font-['Playfair_Display',serif] text-5xl font-bold text-[#7A002A]">
-              {t.rsvpValue}
-            </p>
-            <p className="mt-2 text-sm leading-relaxed text-[#5A3C46]">{t.rsvpText}</p>
-            <div className="mt-6 flex items-end gap-2 h-16" aria-hidden="true">
-              <span className="w-8 rounded-t bg-[#7A002A]/20 h-[35%]" />
-              <span className="w-8 rounded-t bg-[#7A002A]/40 h-[55%]" />
-              <span className="w-8 rounded-t bg-[#7A002A]/60 h-[75%]" />
-              <span className="w-8 rounded-t bg-[#7A002A] h-full" />
-              <span className="w-8 rounded-t bg-[#B08D3C] h-[65%]" />
+            <div className="relative z-10 -mt-12 ml-2 sm:ml-4 mr-10 sm:mr-16 rounded-2xl bg-white shadow-[0_20px_50px_rgba(43,10,24,0.15)] p-5">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-semibold tracking-widest uppercase text-[#8A6B76]">
+                  {t.rsvpLabel}
+                </span>
+                <span className="w-2 h-2 rounded-full bg-emerald-500" />
+              </div>
+              <p className="mt-2 text-4xl font-bold text-[#2B0A18]">{t.rsvpValue}</p>
+              <div className="mt-4 flex items-end gap-2 h-12" aria-hidden="true">
+                <span className="w-5 rounded-full bg-[#2B0A18] h-[30%]" />
+                <span className="w-5 rounded-full bg-[#2B0A18] h-[45%]" />
+                <span className="w-5 rounded-full bg-[#2B0A18] h-[65%]" />
+                <span className="w-5 rounded-full bg-[#2B0A18] h-[50%]" />
+                <span className="w-5 rounded-full bg-[#2B0A18] h-[85%]" />
+                <span className="w-5 rounded-full bg-[#2B0A18] h-[70%]" />
+              </div>
             </div>
           </div>
         </div>
@@ -201,46 +248,44 @@ export default function AboutContent({ lang }: { lang: "en" | "es" }) {
         </div>
       </section>
 
-      {/* Fundadora */}
-      <section id="founder" className="scroll-mt-24 bg-[#FAF8F5]">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-24 grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
-          {/* Placeholder de foto — NUNCA foto de stock como si fuera ella */}
-          <div className="rounded-3xl border border-[#7A002A]/15 bg-gradient-to-b from-[#7A002A]/5 to-[#B08D3C]/10 aspect-[4/5] max-w-md w-full mx-auto flex flex-col items-center justify-center text-center p-8">
-            <span className="font-['Playfair_Display',serif] text-7xl font-bold text-[#7A002A]/30">
-              ES
-            </span>
-            <p className="mt-6 font-['Playfair_Display',serif] text-2xl font-bold text-[#2B0A18]">
-              Elena Samaniego
-            </p>
-            <p className="mt-1 text-xs tracking-[0.25em] uppercase text-[#B08D3C] font-semibold">
-              {t.founderRole}
-            </p>
-            <p className="mt-4 text-sm text-[#8A6B76]">{t.founderPhotoSoon}</p>
-          </div>
-
+      {/* Fundadora + At a glance */}
+      <section id="founder" className="scroll-mt-24 bg-white">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-24 grid gap-12 lg:grid-cols-[1.15fr_0.85fr] lg:items-start">
           <div>
             <p className="text-xs sm:text-sm tracking-[0.25em] uppercase text-[#B08D3C] font-semibold">
               {t.founderEyebrow}
             </p>
-            <h2 className="mt-3 font-['Playfair_Display',serif] text-3xl sm:text-4xl font-bold text-[#2B0A18]">
+            <h2 className="mt-3 text-3xl sm:text-4xl font-bold tracking-tight text-[#2B0A18]">
               Elena Samaniego
             </h2>
             <p className="mt-6 text-lg leading-relaxed text-[#5A3C46]">{t.founderBio1}</p>
             <p className="mt-4 text-lg leading-relaxed text-[#5A3C46]">{t.founderBio2}</p>
+            <p className="mt-8 font-['Playfair_Display',serif] italic text-2xl font-bold text-[#7A002A]">
+              {t.founderSignature}
+            </p>
+            <p className="mt-1 text-xs tracking-[0.25em] uppercase text-[#8A6B76] font-semibold">
+              {t.founderSignatureRole}
+            </p>
+          </div>
 
-            <div className="mt-8 rounded-2xl border border-[#7A002A]/10 bg-white p-6">
-              <p className="font-['Playfair_Display',serif] text-lg font-bold text-[#2B0A18]">
-                {t.glanceTitle}
-              </p>
-              <dl className="mt-4 space-y-3">
-                {t.glance.map((row) => (
-                  <div key={row.label} className="flex gap-3 text-sm">
-                    <dt className="w-24 shrink-0 font-semibold text-[#7A002A]">{row.label}</dt>
-                    <dd className="text-[#5A3C46]">{row.value}</dd>
-                  </div>
-                ))}
-              </dl>
-            </div>
+          <div className="rounded-2xl border border-[#7A002A]/10 bg-[#FAF8F5] p-6 sm:p-8">
+            <p className="text-xs tracking-[0.25em] uppercase text-[#8A6B76] font-semibold">
+              {t.glanceTitle}
+            </p>
+            <ul className="mt-6 space-y-6">
+              {t.glance.map((item) => {
+                const Icon = GLANCE_ICONS[item.icon];
+                return (
+                  <li key={item.title} className="flex gap-3">
+                    <Icon className="w-5 h-5 shrink-0 mt-0.5 text-[#7A002A]" aria-hidden="true" />
+                    <p className="leading-relaxed text-[#5A3C46]">
+                      <span className="font-bold text-[#2B0A18]">{item.title}</span> —{" "}
+                      {item.text}
+                    </p>
+                  </li>
+                );
+              })}
+            </ul>
           </div>
         </div>
       </section>
