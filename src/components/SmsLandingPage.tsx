@@ -133,7 +133,7 @@ export default function SmsLandingPage() {
                   href="#pricing"
                   className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl border-2 border-[#2B0A18]/20 bg-white/70 text-[#2B0A18] text-base font-semibold hover:border-[#7A002A] hover:text-[#7A002A] hover:bg-white transition-all text-center"
                 >
-                  <span>View Pricing ($99 - $199)</span>
+                  <span>View Pricing ($99 - $279)</span>
                   <ArrowRight className="w-4 h-4" />
                 </a>
               </div>
@@ -548,7 +548,7 @@ export default function SmsLandingPage() {
                   </span>
                 </div>
                 <div className="flex items-baseline gap-2 mb-4">
-                  <span className="text-4xl sm:text-5xl font-bold text-[#2B0A18]">$99</span>
+                  <span className="text-4xl sm:text-5xl font-bold text-[#2B0A18]">$199</span>
                   <span className="text-xs text-[#2B0A18]/60 uppercase tracking-wider font-medium">
                     One-Time Payment
                   </span>
@@ -590,7 +590,7 @@ export default function SmsLandingPage() {
                   <Loader2 className="w-4 h-4 animate-spin" />
                 ) : (
                   <>
-                    <span>Select Plan Assisted ($99)</span>
+                    <span>Select Plan Assisted ($199)</span>
                     <ArrowRight className="w-4 h-4" />
                   </>
                 )}
@@ -613,7 +613,7 @@ export default function SmsLandingPage() {
                   </span>
                 </div>
                 <div className="flex items-baseline gap-2 mb-4">
-                  <span className="text-4xl sm:text-5xl font-bold text-white">$199</span>
+                  <span className="text-4xl sm:text-5xl font-bold text-white">$279</span>
                   <span className="text-xs text-white/60 uppercase tracking-wider font-medium">
                     One-Time Payment
                   </span>
@@ -660,7 +660,7 @@ export default function SmsLandingPage() {
                 ) : (
                   <>
                     <Sparkles className="w-4 h-4 fill-current" />
-                    <span>Get Plan VIP ($199)</span>
+                    <span>Get Plan VIP ($279)</span>
                   </>
                 )}
               </button>
