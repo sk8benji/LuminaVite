@@ -82,6 +82,25 @@ export function sanitizePublicBaseUrl(raw?: string | null): string | null {
 export function getSiteUrl(): string {
   return sanitizePublicBaseUrl(process.env.NEXT_PUBLIC_SITE_URL) ?? CANONICAL_SITE_URL;
 }
+
+/**
+ * ÚNICA fuente de verdad para las URLs de cara al invitado: canonical,
+ * og:url, og:image, QR de invitados y enlaces cortos /m/ y /q/.
+ * Es getSiteUrl() (NEXT_PUBLIC_SITE_URL saneada, fallback
+ * https://clickandlove.app — variable confirmada en Railway).
+ *
+ * NUNCA usar NEXT_PUBLIC_APP_URL ni RAILWAY_PUBLIC_DOMAIN aquí: el dominio
+ * público de Railway del servicio es el del admin (admin.clickandlove.app),
+ * y con esa base el canonical/OG de cada invitación anunciaba el admin al
+ * compartir por WhatsApp/Facebook. Tampoco usar host/origin del request
+ * (ver comentario en getSiteUrl: riesgo de phishing con panelTokens).
+ *
+ * Cuando se migre a invitaciones.clickandlove.app, ESTE es el único punto
+ * a cambiar (la base pasará a ese subdominio).
+ */
+export function getInvitationBaseUrl(): string {
+  return getSiteUrl();
+}
 export const EVENT_URL_FIELDS = [
   "fotoPortadaUrl",
   "fotoInfanciaUrl",

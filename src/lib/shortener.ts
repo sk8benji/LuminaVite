@@ -1,5 +1,6 @@
 import prisma from "@/lib/db";
 import crypto from "crypto";
+import { getInvitationBaseUrl } from "@/lib/url-safety";
 
 /**
  * Genera o recupera un enlace corto interno para redirección de mapas.
@@ -8,20 +9,11 @@ import crypto from "crypto";
 /**
  * Base URL pública oficial de la app (nunca localhost).
  * Los enlaces cortos en SMS y admin deben apuntar a https://clickandlove.app.
+ * Misma fuente de verdad que canonical/OG (getInvitationBaseUrl en
+ * src/lib/url-safety.ts) — nunca el dominio de Railway del admin.
  */
 export function getPublicBaseUrl(): string {
-  let rawBase =
-    process.env.NEXT_PUBLIC_APP_URL ||
-    process.env.NEXT_PUBLIC_SITE_URL ||
-    "https://clickandlove.app";
-
-  if (!rawBase || rawBase.includes("localhost") || rawBase.includes("127.0.0.1")) {
-    rawBase = "https://clickandlove.app";
-  }
-
-  return rawBase.startsWith("http")
-    ? rawBase.replace(/\/$/, "")
-    : `https://${rawBase.replace(/\/$/, "")}`;
+  return getInvitationBaseUrl();
 }
 
 export async function createShortMapLink(targetUrl: string): Promise<string> {
