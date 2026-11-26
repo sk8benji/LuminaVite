@@ -280,6 +280,8 @@ export const SECCIONES_POR_PLANTILLA: Record<string, SeccionId[]> = {
   ESMERALDA_ROYAL: TODAS_MENOS_ZAPATOS_VIDEO,
   JARDIN_BOTANICA: TODAS_MENOS_ZAPATOS_VIDEO,
   MINIMALISTA_EDITORIAL: TODAS_MENOS_ZAPATOS_VIDEO,
+  // Baby Blue no renderiza corte de honor (corteHonorJson se calcula
+  // pero nunca se usa en el template): la lista no lo ofrece.
   BABY_BLUE: [
     'portada',
     'medallonFecha',
@@ -288,7 +290,6 @@ export const SECCIONES_POR_PLANTILLA: Record<string, SeccionId[]> = {
     'dressCode',
     'mesaRegalos',
     'itinerario',
-    'corteHonor',
     'cuentaRegresiva',
     'musica',
   ],
