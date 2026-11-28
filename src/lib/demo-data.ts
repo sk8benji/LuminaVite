@@ -98,11 +98,11 @@ export const DEMO_ISABELLA: InvitationData = {
       "A room block has been reserved for our guests. Please contact us for reservation details and booking information.",
   },
   itinerarioJson: [
-    { hora: "4:00 PM", titulo: "Mass - St. Mary's Church", tipoIcono: "church" },
-    { hora: "5:00 PM", titulo: "Entrance - Grand Ballroom", tipoIcono: "car" },
-    { hora: "6:00 PM", titulo: "Waltz", tipoIcono: "crown" },
-    { hora: "7:00 PM", titulo: "Dinner", tipoIcono: "wine" },
-    { hora: "9:00 PM", titulo: "Party", tipoIcono: "party" },
+    { hora: "4:00 PM", titulo: "Misa", tituloEn: "Mass", tipoIcono: "church" },
+    { hora: "5:00 PM", titulo: "Entrada", tituloEn: "Entrance", tipoIcono: "car" },
+    { hora: "6:00 PM", titulo: "Vals", tituloEn: "Waltz", tipoIcono: "crown" },
+    { hora: "7:00 PM", titulo: "Cena", tituloEn: "Dinner", tipoIcono: "wine" },
+    { hora: "9:00 PM", titulo: "Fiesta", tituloEn: "Party", tipoIcono: "party" },
   ],
   corteHonorJson: {
     chambelan: "Emilio Salazar",

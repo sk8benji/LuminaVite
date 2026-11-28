@@ -2242,6 +2242,28 @@ export default function TemplateSectionBuilder({
                               />
                             </div>
 
+                            {/* Icono del hito: define qué dibujo y acomodo lleva en la invitación
+                                (Misa = iglesia + botón de mapa, Entrada = vestido + botón de
+                                mapa, Vals = pareja, Cena = plato, Fiesta = música). */}
+                            <div className="w-36 shrink-0">
+                              <select
+                                value={item.tipoIcono || "party"}
+                                onChange={(e) => {
+                                  const updated = [...((formData.itinerarioJson as any[]) || [])];
+                                  updated[idx] = { ...updated[idx], tipoIcono: e.target.value };
+                                  updateField("itinerarioJson", updated);
+                                }}
+                                className="w-full px-2 py-1.5 rounded-lg border border-gray-200 text-xs text-gray-700 bg-white"
+                                title="Icono del hito en la invitación"
+                              >
+                                <option value="church">Misa / Iglesia</option>
+                                <option value="car">Entrada / Salón</option>
+                                <option value="crown">Vals</option>
+                                <option value="wine">Cena</option>
+                                <option value="party">Fiesta</option>
+                              </select>
+                            </div>
+
                             <div className="flex-1 w-full grid grid-cols-1 sm:grid-cols-2 gap-2">
                               <input
                                 type="text"

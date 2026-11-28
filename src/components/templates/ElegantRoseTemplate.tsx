@@ -355,6 +355,163 @@ export default function ElegantRoseTemplate({
     `${data.recepcionNombre || ""} ${data.recepcionDireccion || ""}`.trim()
   );
 
+  // Plan de la Fiesta (Sección 9) dinámico: si el evento tiene itinerarioJson
+  // se renderiza esa lista (hora + título ES/EN + icono por tipo); si está
+  // vacío se muestran los 5 bloques fijos de siempre para no cambiar ninguna
+  // invitación existente.
+  const ITINERARIO_DEFAULT = [
+    { hora: "4:00 PM", titulo: "MISA", tituloEn: "MASS", tipoIcono: "church" },
+    { hora: "5:00 PM", titulo: "RECEPCIÓN", tituloEn: "ENTRANCE", tipoIcono: "car" },
+    { hora: "6:00 PM", titulo: "VALS", tituloEn: "WALTZ", tipoIcono: "crown" },
+    { hora: "7:00 PM", titulo: "CENA", tituloEn: "DINNER", tipoIcono: "wine" },
+    { hora: "9:00 PM", titulo: "FIESTA", tituloEn: "PARTY", tipoIcono: "party" },
+  ];
+  const itinerarioItems: Array<{ hora?: string; titulo?: string; tituloEn?: string; tipoIcono?: string }> =
+    Array.isArray(data.itinerarioJson) && data.itinerarioJson.length > 0
+      ? data.itinerarioJson
+      : ITINERARIO_DEFAULT;
+
+  // Un hito del itinerario: hora + divisor dorado + título (+ lugar y botón
+  // de mapa en Misa/Entrada). El icono y el acomodo dependen de tipoIcono.
+  const renderItinerarioItem = (
+    item: { hora?: string; titulo?: string; tituloEn?: string; tipoIcono?: string },
+    key: number
+  ) => {
+    const hora = item.hora || "";
+    const titulo = isEn ? item.tituloEn || item.titulo || "" : item.titulo || "";
+    const icono = item.tipoIcono || "party";
+    const tituloBloque = (venue?: string) => (
+      <>
+        <span className="font-['Bodoni_Moda',serif] text-2xl sm:text-3xl font-bold text-white tracking-wide drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
+          {hora}
+        </span>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={ELEGANT_ROSE_ASSETS.goldDividerLine}
+          onError={(e) => {
+            (e.target as HTMLImageElement).src = ELEGANT_ROSE_ASSETS.s3.goldDividerLine;
+          }}
+          alt=""
+          className="w-28 sm:w-32 h-auto my-1 object-contain"
+        />
+        <span className="font-['Bodoni_Moda',serif] text-base sm:text-lg font-bold tracking-[0.2em] uppercase text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
+          {titulo}
+        </span>
+        {venue && (
+          <span className="font-['Bodoni_Moda',serif] text-[11px] sm:text-xs uppercase text-white font-medium tracking-wide leading-tight drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)] mt-1 px-1">
+            {venue}
+          </span>
+        )}
+      </>
+    );
+    const botonMapa = (href: string) => (
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="mt-3.5 bg-[#BE8A87] hover:bg-[#b07b78] text-white font-['Cinzel'] text-[10px] sm:text-[11px] tracking-[0.2em] uppercase py-1.5 px-6 rounded-full font-bold shadow-md transition inline-block drop-shadow active:scale-95 cursor-pointer"
+      >
+        GOOGLE MAPS
+      </a>
+    );
+    if (icono === "church") {
+      if (data.mostrarCeremonia === false) return null;
+      return (
+        <div key={key} className="flex flex-col items-center w-full">
+          <div className="grid grid-cols-2 items-center gap-2 w-full text-center">
+            <div className="flex flex-col items-center justify-center">
+              {tituloBloque(data.ceremoniaNombre || undefined)}
+            </div>
+            <div className="flex items-center justify-center">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={ELEGANT_ROSE_ASSETS.churchLineArt}
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = ELEGANT_ROSE_ASSETS.s3.churchLineArt;
+                }}
+                alt="Church"
+                className="w-24 sm:w-28 h-auto object-contain mx-auto drop-shadow-xl"
+              />
+            </div>
+          </div>
+          {botonMapa(churchMapUrl)}
+        </div>
+      );
+    }
+    if (icono === "car") {
+      if (data.mostrarRecepcion === false) return null;
+      return (
+        <div key={key} className="flex flex-col items-center w-full">
+          <div className="grid grid-cols-2 items-center gap-2 w-full text-center">
+            <div className="flex items-center justify-center">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={ELEGANT_ROSE_ASSETS.dressIllustration}
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = ELEGANT_ROSE_ASSETS.s3.dressIllustration;
+                }}
+                alt="Quinceañera Dress"
+                className="w-28 sm:w-32 h-auto object-contain mx-auto drop-shadow-2xl"
+              />
+            </div>
+            <div className="flex flex-col items-center justify-center">
+              {tituloBloque(data.recepcionNombre || undefined)}
+            </div>
+          </div>
+          {botonMapa(ballroomMapUrl)}
+        </div>
+      );
+    }
+    if (icono === "crown") {
+      return (
+        <div key={key} className="flex items-center justify-between w-full">
+          <div className="flex-1 flex items-center justify-center">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={ELEGANT_ROSE_ASSETS.coupleIcon}
+              onError={(e) => {
+                (e.target as HTMLImageElement).src = ELEGANT_ROSE_ASSETS.s3.coupleIcon;
+              }}
+              alt="Waltz"
+              className="w-20 sm:w-24 h-auto object-contain mx-auto drop-shadow-xl"
+            />
+          </div>
+          <div className="flex flex-col items-center justify-center mx-2 h-20 select-none pointer-events-none">
+            <div className="w-[1.5px] h-8 bg-gradient-to-b from-transparent to-[#e8c872]" />
+            <div className="w-2.5 h-2.5 rotate-45 border border-[#f5db94] bg-[#cda052] shadow-sm my-0.5" />
+            <div className="w-[1.5px] h-8 bg-gradient-to-t from-transparent to-[#e8c872]" />
+          </div>
+          <div className="flex-1 flex flex-col items-center justify-center text-center">
+            {tituloBloque()}
+          </div>
+        </div>
+      );
+    }
+    // wine (cena), party (fiesta) y cualquier otro: icono a la izquierda, texto a la derecha.
+    const iconoSrc =
+      icono === "wine"
+        ? { src: ELEGANT_ROSE_ASSETS.ballroomIcon, s3: ELEGANT_ROSE_ASSETS.s3.ballroomIcon, alt: "Dinner", cls: "w-24 sm:w-28 h-auto object-contain mx-auto drop-shadow-xl" }
+        : { src: ELEGANT_ROSE_ASSETS.musicIcon, s3: ELEGANT_ROSE_ASSETS.s3.musicIcon, alt: "Party", cls: "w-20 sm:w-24 h-auto object-contain mx-auto drop-shadow-xl" };
+    return (
+      <div key={key} className="grid grid-cols-2 items-center gap-2 w-full text-center">
+        <div className="flex items-center justify-center">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={iconoSrc.src}
+            onError={(e) => {
+              (e.target as HTMLImageElement).src = iconoSrc.s3;
+            }}
+            alt={iconoSrc.alt}
+            className={iconoSrc.cls}
+          />
+        </div>
+        <div className="flex flex-col items-center justify-center">
+          {tituloBloque()}
+        </div>
+      </div>
+    );
+  };
+
 
 
   // Datos formateados de fecha para el bloque de la portada
@@ -905,237 +1062,9 @@ export default function ElegantRoseTemplate({
               </div>
             </div>
 
-            {/* Contenedor de Itinerario */}
-            <div className="w-full max-w-[310px] space-y-6 mt-2">
-              {/* ────────────────────────────────────────────────────────── */}
-              {data.mostrarCeremonia !== false && (<>
-              {/* 1. MASS (4:PM) - Izquierda: Texto | Derecha: Iglesia SVG  */}
-              {/* ────────────────────────────────────────────────────────── */}
-              <div className="flex flex-col items-center w-full">
-                <div className="grid grid-cols-2 items-center gap-2 w-full text-center">
-                  {/* Columna Izquierda: Hora + Divisor Oro + Título + Lugar */}
-                  <div className="flex flex-col items-center justify-center">
-                    <span className="font-['Bodoni_Moda',serif] text-2xl sm:text-3xl font-bold text-white tracking-wide drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
-                      4:PM
-                    </span>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={ELEGANT_ROSE_ASSETS.goldDividerLine}
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src = ELEGANT_ROSE_ASSETS.s3.goldDividerLine;
-                      }}
-                      alt=""
-                      className="w-28 sm:w-32 h-auto my-1 object-contain"
-                    />
-                    <span className="font-['Bodoni_Moda',serif] text-base sm:text-lg font-bold tracking-[0.2em] uppercase text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
-                      {isEn ? "MASS" : "MISA"}
-                    </span>
-                    {data.ceremoniaNombre && (
-                      <span className="font-['Bodoni_Moda',serif] text-[11px] sm:text-xs uppercase text-white font-medium tracking-wide leading-tight drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)] mt-1 px-1">
-                        {data.ceremoniaNombre}
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Columna Derecha: Iglesia Line Art Blanca */}
-                  <div className="flex items-center justify-center">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={ELEGANT_ROSE_ASSETS.churchLineArt}
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src = ELEGANT_ROSE_ASSETS.s3.churchLineArt;
-                      }}
-                      alt="Church"
-                      className="w-24 sm:w-28 h-auto object-contain mx-auto drop-shadow-xl"
-                    />
-                  </div>
-                </div>
-
-                {/* Botón Google Maps Centrado */}
-                <a
-                  href={churchMapUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-3.5 bg-[#BE8A87] hover:bg-[#b07b78] text-white font-['Cinzel'] text-[10px] sm:text-[11px] tracking-[0.2em] uppercase py-1.5 px-6 rounded-full font-bold shadow-md transition inline-block drop-shadow active:scale-95 cursor-pointer"
-                >
-                  GOOGLE MAPS
-                </a>
-              </div>
-
-              {/* ────────────────────────────────────────────────────────── */}
-              </>)}
-              {data.mostrarRecepcion !== false && (<>
-              {/* 2. ENTRANCE (5:PM) - Izquierda: Vestido | Derecha: Texto   */}
-              {/* ────────────────────────────────────────────────────────── */}
-              <div className="flex flex-col items-center w-full pt-2">
-                <div className="grid grid-cols-2 items-center gap-2 w-full text-center">
-                  {/* Columna Izquierda: Vestido Quinceañera Rosa Espalda */}
-                  <div className="flex items-center justify-center">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={ELEGANT_ROSE_ASSETS.dressIllustration}
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src = ELEGANT_ROSE_ASSETS.s3.dressIllustration;
-                      }}
-                      alt="Quinceañera Dress"
-                      className="w-28 sm:w-32 h-auto object-contain mx-auto drop-shadow-2xl"
-                    />
-                  </div>
-
-                  {/* Columna Derecha: Hora + Divisor Oro + Título + Lugar */}
-                  <div className="flex flex-col items-center justify-center">
-                    <span className="font-['Bodoni_Moda',serif] text-2xl sm:text-3xl font-bold text-white tracking-wide drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
-                      5:PM
-                    </span>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={ELEGANT_ROSE_ASSETS.goldDividerLine}
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src = ELEGANT_ROSE_ASSETS.s3.goldDividerLine;
-                      }}
-                      alt=""
-                      className="w-28 sm:w-32 h-auto my-1 object-contain"
-                    />
-                    <span className="font-['Bodoni_Moda',serif] text-base sm:text-lg font-bold tracking-[0.2em] uppercase text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
-                      {isEn ? "ENTRANCE" : "RECEPCIÓN"}
-                    </span>
-                    {data.recepcionNombre && (
-                      <span className="font-['Bodoni_Moda',serif] text-[11px] sm:text-xs uppercase text-white font-medium tracking-wide leading-tight drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)] mt-1 px-1">
-                        {data.recepcionNombre}
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                {/* Botón Google Maps Centrado */}
-                <a
-                  href={ballroomMapUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-3.5 bg-[#BE8A87] hover:bg-[#b07b78] text-white font-['Cinzel'] text-[10px] sm:text-[11px] tracking-[0.2em] uppercase py-1.5 px-6 rounded-full font-bold shadow-md transition inline-block drop-shadow active:scale-95 cursor-pointer"
-                >
-                  GOOGLE MAPS
-                </a>
-              </div>
-
-              {/* ────────────────────────────────────────────────────────── */}
-              </>)}
-              {/* 3. WALTZ (6:00 PM) - Pareja | Divisor Vertical Oro | Texto */}
-              {/* ────────────────────────────────────────────────────────── */}
-              <div className="flex items-center justify-between w-full pt-4">
-                {/* Pareja Bailando Vals Oro */}
-                <div className="flex-1 flex items-center justify-center">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={ELEGANT_ROSE_ASSETS.coupleIcon}
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src = ELEGANT_ROSE_ASSETS.s3.coupleIcon;
-                    }}
-                    alt="Waltz"
-                    className="w-20 sm:w-24 h-auto object-contain mx-auto drop-shadow-xl"
-                  />
-                </div>
-
-                {/* Divisor Vertical Dorado con Rombo Central */}
-                <div className="flex flex-col items-center justify-center mx-2 h-20 select-none pointer-events-none">
-                  <div className="w-[1.5px] h-8 bg-gradient-to-b from-transparent to-[#e8c872]" />
-                  <div className="w-2.5 h-2.5 rotate-45 border border-[#f5db94] bg-[#cda052] shadow-sm my-0.5" />
-                  <div className="w-[1.5px] h-8 bg-gradient-to-t from-transparent to-[#e8c872]" />
-                </div>
-
-                {/* Hora + Divisor Oro + Título */}
-                <div className="flex-1 flex flex-col items-center justify-center text-center">
-                  <span className="font-['Bodoni_Moda',serif] text-2xl sm:text-3xl font-bold text-white tracking-wide drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
-                    6:00 PM
-                  </span>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={ELEGANT_ROSE_ASSETS.goldDividerLine}
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src = ELEGANT_ROSE_ASSETS.s3.goldDividerLine;
-                    }}
-                    alt=""
-                    className="w-28 sm:w-32 h-auto my-1 object-contain"
-                  />
-                  <span className="font-['Bodoni_Moda',serif] text-base sm:text-lg font-bold tracking-[0.2em] uppercase text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
-                    {isEn ? "WALTZ" : "VALS"}
-                  </span>
-                </div>
-              </div>
-
-              {/* ────────────────────────────────────────────────────────── */}
-              {/* 4. DINNER (7:00 PM) - Plato Floral Oro | Divisor | Texto   */}
-              {/* ────────────────────────────────────────────────────────── */}
-              <div className="grid grid-cols-2 items-center gap-2 w-full text-center pt-3">
-                {/* Plato y Cubiertos con Flores en Oro */}
-                <div className="flex items-center justify-center">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={ELEGANT_ROSE_ASSETS.ballroomIcon}
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src = ELEGANT_ROSE_ASSETS.s3.ballroomIcon;
-                    }}
-                    alt="Dinner"
-                    className="w-24 sm:w-28 h-auto object-contain mx-auto drop-shadow-xl"
-                  />
-                </div>
-
-                {/* Hora + Divisor Oro + Título */}
-                <div className="flex flex-col items-center justify-center">
-                  <span className="font-['Bodoni_Moda',serif] text-2xl sm:text-3xl font-bold text-white tracking-wide drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
-                    7:00 PM
-                  </span>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={ELEGANT_ROSE_ASSETS.goldDividerLine}
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src = ELEGANT_ROSE_ASSETS.s3.goldDividerLine;
-                    }}
-                    alt=""
-                    className="w-28 sm:w-32 h-auto my-1 object-contain"
-                  />
-                  <span className="font-['Bodoni_Moda',serif] text-base sm:text-lg font-bold tracking-[0.2em] uppercase text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
-                    {isEn ? "DINNER" : "CENA"}
-                  </span>
-                </div>
-              </div>
-
-              {/* ────────────────────────────────────────────────────────── */}
-              {/* 5. PARTY (9:00 PM) - Bola Disco Oro | Divisor | Texto     */}
-              {/* ────────────────────────────────────────────────────────── */}
-              <div className="grid grid-cols-2 items-center gap-2 w-full text-center pt-3 pb-2">
-                {/* Bola Disco / Destellos en Oro */}
-                <div className="flex items-center justify-center">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={ELEGANT_ROSE_ASSETS.musicIcon}
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src = ELEGANT_ROSE_ASSETS.s3.musicIcon;
-                    }}
-                    alt="Party"
-                    className="w-20 sm:w-24 h-auto object-contain mx-auto drop-shadow-xl"
-                  />
-                </div>
-
-                {/* Hora + Divisor Oro + Título */}
-                <div className="flex flex-col items-center justify-center">
-                  <span className="font-['Bodoni_Moda',serif] text-2xl sm:text-3xl font-bold text-white tracking-wide drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
-                    9:00 PM
-                  </span>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={ELEGANT_ROSE_ASSETS.goldDividerLine}
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src = ELEGANT_ROSE_ASSETS.s3.goldDividerLine;
-                    }}
-                    alt=""
-                    className="w-28 sm:w-32 h-auto my-1 object-contain"
-                  />
-                  <span className="font-['Bodoni_Moda',serif] text-base sm:text-lg font-bold tracking-[0.2em] uppercase text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
-                    {isEn ? "PARTY" : "FIESTA"}
-                  </span>
-                </div>
-              </div>
+            {/* Contenedor de Itinerario (dinámico: lo que se edita en la Sección 9) */}
+            <div className="w-full max-w-[310px] space-y-6 mt-2 pb-2">
+              {itinerarioItems.map((item, i) => renderItinerarioItem(item, i))}
             </div>
           </WavyColumn>
         </section>
