@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Clock, MapPin, MessagesSquare, Star } from "lucide-react";
+import { Camera, Clock, Mail, MapPin, MessagesSquare, Star } from "lucide-react";
 
 // Contenido compartido de About Us (EN) / Nosotros (ES). Textos copiados
 // TAL CUAL de la vista previa aprobada (artefacto about-click-and-love).
@@ -66,19 +66,24 @@ const COPY = {
       },
     ],
     whatEyebrow: "What we do",
-    whatTitle: "Everything handled, so you enjoy the party",
+    whatTitle: "A complete service, not a template",
+    whatSubtitle:
+      "We handcraft your entire digital invitation experience — eliminating guest chaos, accelerating RSVPs, and protecting your reception budget.",
     what: [
       {
-        title: "3D envelopes",
-        text: "Every invitation opens like a real envelope — in 3D, with your music playing.",
+        icon: "mail",
+        title: "3D envelope invitations",
+        text: "A cinematic unboxing with your custom music and wax seal — for weddings, quinceañeras, Sweet 16 and galas.",
       },
       {
+        icon: "chat",
         title: "SMS RSVP & family passes",
-        text: "Guests confirm by text in one tap, and each family gets exactly its passes.",
+        text: "Guests confirm by text in one tap — no apps, no passwords. Each family confirms only the seats allotted to them, so there are no surprise plus-ones.",
       },
       {
+        icon: "camera",
         title: "Live photo wall & GPS",
-        text: "Guests share photos to a live wall with a QR code, and everyone gets one-tap directions to your venue.",
+        text: "Guests upload photos during the party to your live wall, and get one-tap directions straight to the church and the reception.",
       },
     ],
     ctaTitle: "Ready for yours?",
@@ -137,19 +142,24 @@ const COPY = {
       },
     ],
     whatEyebrow: "Lo que hacemos",
-    whatTitle: "Todo resuelto, para que tú disfrutes la fiesta",
+    whatTitle: "Un servicio completo, no una plantilla",
+    whatSubtitle:
+      "Creamos a mano toda tu experiencia de invitación digital — eliminando el caos con los invitados, acelerando las confirmaciones y protegiendo el presupuesto de tu recepción.",
     what: [
       {
-        title: "Sobres 3D",
-        text: "Cada invitación se abre como un sobre real — en 3D y con tu música sonando.",
+        icon: "mail",
+        title: "Invitaciones con sobre 3D",
+        text: "Una apertura cinematográfica con tu música y sello de cera — para bodas, quinceañeras, Sweet 16 y galas.",
       },
       {
+        icon: "chat",
         title: "RSVP por SMS y pases familiares",
-        text: "Tus invitados confirman por texto con un toque, y cada familia recibe exactamente sus pases.",
+        text: "Los invitados confirman por texto en un toque — sin apps ni contraseñas. Cada familia confirma solo los lugares asignados, sin acompañantes sorpresa.",
       },
       {
+        icon: "camera",
         title: "Muro de fotos en vivo y GPS",
-        text: "Tus invitados suben fotos al muro en vivo con un código QR, y todos llegan con un toque al GPS.",
+        text: "Los invitados suben fotos durante la fiesta a tu muro en vivo y llegan con un toque directo a la iglesia y a la recepción.",
       },
     ],
     ctaTitle: "¿Lista para la tuya?",
@@ -165,6 +175,12 @@ const GLANCE_ICONS = {
   chat: MessagesSquare,
   clock: Clock,
   star: Star,
+} as const;
+
+const WHAT_ICONS = {
+  mail: Mail,
+  chat: MessagesSquare,
+  camera: Camera,
 } as const;
 
 export default function AboutContent({ lang }: { lang: "en" | "es" }) {
@@ -299,18 +315,27 @@ export default function AboutContent({ lang }: { lang: "en" | "es" }) {
           <h2 className="mt-3 font-['Playfair_Display',serif] text-3xl sm:text-4xl font-bold text-[#2B0A18] text-center max-w-2xl mx-auto">
             {t.whatTitle}
           </h2>
+          <p className="mt-4 text-lg leading-relaxed text-[#5A3C46] text-center max-w-2xl mx-auto">
+            {t.whatSubtitle}
+          </p>
           <div className="mt-12 grid gap-6 md:grid-cols-3">
-            {t.what.map((item) => (
-              <div
-                key={item.title}
-                className="rounded-2xl border border-[#7A002A]/10 bg-[#FAF8F5] p-6 sm:p-8"
-              >
-                <h3 className="font-['Playfair_Display',serif] text-xl font-bold text-[#2B0A18]">
-                  {item.title}
-                </h3>
-                <p className="mt-3 leading-relaxed text-[#5A3C46]">{item.text}</p>
-              </div>
-            ))}
+            {t.what.map((item) => {
+              const Icon = WHAT_ICONS[item.icon];
+              return (
+                <div
+                  key={item.title}
+                  className="rounded-2xl border border-[#7A002A]/10 bg-[#FAF8F5] p-6 sm:p-8"
+                >
+                  <span className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-[#F9E8EC] text-[#7A002A]">
+                    <Icon className="w-6 h-6" aria-hidden="true" />
+                  </span>
+                  <h3 className="mt-5 font-['Playfair_Display',serif] text-xl font-bold text-[#2B0A18]">
+                    {item.title}
+                  </h3>
+                  <p className="mt-3 leading-relaxed text-[#5A3C46]">{item.text}</p>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
