@@ -5,6 +5,34 @@ import { normalizeSlug, getEventBySlug } from "@/lib/events";
 
 export const runtime = "nodejs";
 
+// La foto de portada para el OG: satori (next/og) solo acepta PNG/JPEG.
+// Las fotos webp (Maydelin y el fallback del template) hay que convertirlas
+// a JPEG con el optimizador de Next antes de incrustarlas. Si la descarga
+// falla (S3 a veces aborta la conexión), se devuelve null y la tarjeta se
+// renderiza sin foto en vez de dar 500.
+async function getOgPhotoSrc(photoUrl: string, baseUrl: string): Promise<string | null> {
+  try {
+    const res = await fetch(photoUrl, { signal: AbortSignal.timeout(8000) });
+    if (!res.ok) return null;
+    const type = (res.headers.get("content-type") || "").toLowerCase();
+    if (type.includes("image/jpeg") || type.includes("image/png")) {
+      return photoUrl; // satori lo carga directo
+    }
+    // webp u otro formato: convertir a JPEG vía el optimizador de Next
+    const toOptimize = photoUrl.startsWith(baseUrl) ? photoUrl.slice(baseUrl.length) : photoUrl;
+    const optUrl = `${baseUrl}/_next/image?url=${encodeURIComponent(toOptimize)}&w=828&q=75`;
+    const optRes = await fetch(optUrl, {
+      headers: { Accept: "image/jpeg" },
+      signal: AbortSignal.timeout(10000),
+    });
+    if (!optRes.ok) return null;
+    const buf = Buffer.from(await optRes.arrayBuffer());
+    return `data:image/jpeg;base64,${buf.toString("base64")}`;
+  } catch {
+    return null;
+  }
+}
+
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
@@ -54,6 +82,7 @@ export async function GET(req: NextRequest) {
     if (photoUrl.startsWith("/")) {
       photoUrl = `${baseUrl}${photoUrl}`;
     }
+    const photoSrc = await getOgPhotoSrc(photoUrl, baseUrl);
 
     return new ImageResponse(
       (
@@ -139,7 +168,7 @@ export async function GET(req: NextRequest) {
                 border: "2px solid #D8B772",
                 padding: "12px 24px",
                 borderRadius: "9999px",
-                width: "fit-content",
+                alignSelf: "flex-start",
               }}
             >
               ✨ ¡Tú estás invitado! • Toca para abrir
@@ -147,29 +176,48 @@ export async function GET(req: NextRequest) {
           </div>
 
           {/* Lado Derecho: Fotografía Principal de la Festejada */}
-          <div
-            style={{
-              display: "flex",
-              width: "420px",
-              height: "540px",
-              borderRadius: "28px",
-              overflow: "hidden",
-              border: "5px solid #D8B772",
-              boxShadow: "0 25px 50px rgba(0, 0, 0, 0.7)",
-              backgroundColor: "#1E293B",
-            }}
-          >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={photoUrl}
-              alt={nombre}
+          {photoSrc ? (
+            <div
               style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
+                display: "flex",
+                width: "420px",
+                height: "540px",
+                borderRadius: "28px",
+                overflow: "hidden",
+                border: "5px solid #D8B772",
+                boxShadow: "0 25px 50px rgba(0, 0, 0, 0.7)",
+                backgroundColor: "#1E293B",
               }}
-            />
-          </div>
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={photoSrc}
+                alt={nombre}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                }}
+              />
+            </div>
+          ) : (
+            <div
+              style={{
+                display: "flex",
+                width: "420px",
+                height: "540px",
+                borderRadius: "28px",
+                border: "5px solid #D8B772",
+                boxShadow: "0 25px 50px rgba(0, 0, 0, 0.7)",
+                backgroundColor: "#1E293B",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: "120px",
+              }}
+            >
+              👑
+            </div>
+          )}
         </div>
       ),
       {
