@@ -2242,6 +2242,28 @@ export default function TemplateSectionBuilder({
                               />
                             </div>
 
+                            {/* Icono del hito: define qué dibujo y acomodo lleva en la invitación
+                                (Misa = iglesia + botón de mapa, Entrada = vestido + botón de
+                                mapa, Vals = pareja, Cena = plato, Fiesta = música). */}
+                            <div className="w-36 shrink-0">
+                              <select
+                                value={item.tipoIcono || "party"}
+                                onChange={(e) => {
+                                  const updated = [...((formData.itinerarioJson as any[]) || [])];
+                                  updated[idx] = { ...updated[idx], tipoIcono: e.target.value };
+                                  updateField("itinerarioJson", updated);
+                                }}
+                                className="w-full px-2 py-1.5 rounded-lg border border-gray-200 text-xs text-gray-700 bg-white"
+                                title="Icono del hito en la invitación"
+                              >
+                                <option value="church">Misa / Iglesia</option>
+                                <option value="car">Entrada / Salón</option>
+                                <option value="crown">Vals</option>
+                                <option value="wine">Cena</option>
+                                <option value="party">Fiesta</option>
+                              </select>
+                            </div>
+
                             <div className="flex-1 w-full grid grid-cols-1 sm:grid-cols-2 gap-2">
                               <input
                                 type="text"
@@ -3409,6 +3431,54 @@ export default function TemplateSectionBuilder({
                             />
                           </div>
                         </div>
+                      </div>
+                    </div>
+                  )}
+                  {/* ──────────────────────────────────────────────────────────
+                      SECCIÓN 18: HOSPEDAJE (ACCOMMODATION) — SOLO ELEGANT ROSE
+                      Antes estos dos campos vivían en el panel "Configuración
+                      Exclusiva" al pie del editor y la sección 18 solo tenía
+                      el interruptor con el cuerpo vacío. Ahora el texto se
+                      edita aquí, en su sección. Escriben en configPlantilla
+                      (accommodationTexto / accommodationTextoEn), que es lo
+                      que lee el bloque Accommodation en Details.
+                  ────────────────────────────────────────────────────────── */}
+                  {sec.id === "accommodation" && (
+                    <div className="space-y-4">
+                      <p className="text-xs text-gray-500">
+                        Texto del bloque Accommodation dentro de Details. Vacío = el bloque no se muestra en la invitación.
+                      </p>
+                      <div>
+                        <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+                          Hospedaje (🇲🇽 ES)
+                        </label>
+                        <textarea
+                          rows={3}
+                          value={(formData.configPlantilla as any)?.accommodationTexto || ""}
+                          onChange={(e) => {
+                            const cp = { ...((formData as any).configPlantilla || {}) };
+                            cp.accommodationTexto = e.target.value;
+                            updateField("configPlantilla", cp);
+                          }}
+                          placeholder="Ej. Tenemos un bloque de habitaciones en el Hotel X, código QUINCE2026..."
+                          className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+                          Hospedaje (🇺🇸 EN)
+                        </label>
+                        <textarea
+                          rows={3}
+                          value={(formData.configPlantilla as any)?.accommodationTextoEn || ""}
+                          onChange={(e) => {
+                            const cp = { ...((formData as any).configPlantilla || {}) };
+                            cp.accommodationTextoEn = e.target.value;
+                            updateField("configPlantilla", cp);
+                          }}
+                          placeholder="English version (vacío = usa el texto en español)"
+                          className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
+                        />
                       </div>
                     </div>
                   )}

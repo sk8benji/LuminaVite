@@ -240,6 +240,23 @@ export default function ElegantRoseTemplate({
     : (data.regalosMensaje ??
       "Tu presencia es nuestro mayor regalo. Disponemos de un cofre en la recepción.");
 
+  // Bloque DRESS CODE (Details). Título, nota y línea de colores reservados
+  // editables en Sección 7; antes eran textos fijos que ningún campo podía
+  // cambiar (por eso el título y la nota del editor "no hacían nada").
+  // "" explícito en un campo = ese renglón no aparece.
+  const dressCodeTituloTexto = isEn
+    ? (data.dressCodeTituloEn ?? "Formal & Elegant Attire")
+    : (data.dressCodeTitulo ?? "Rigurosa Etiqueta & Elegante");
+  const dressCodeNotaTexto = isEn
+    ? (data.dressCodeNotaEn ?? "Blush pink tones reserved exclusively for the quinceañera")
+    : (data.dressCodeNota ?? "Tono rosa pastel reservado para la quinceañera");
+  // Línea debajo de la nota: mismo origen que el input del editor
+  // (configPlantilla, con respaldo a la columna dressCodeColoresReservados).
+  const coloresReservadosTexto = isEn
+    ? ((data.configPlantilla as any)?.coloresReservadosEn ?? "")
+    : ((data.configPlantilla as any)?.coloresReservados ??
+      (data as any).dressCodeColoresReservados ?? "");
+
   // Dedicatoria (editable en Sección 3): mismos campos que Quince Rosado.
   const dedicatoriaMensaje = isEn
     ? data.frasePersonalizadaEn || data.frasePersonalizada || ""
@@ -272,6 +289,62 @@ export default function ElegantRoseTemplate({
     ],
   };
 
+  // Las 9 selecciones de la Sección 11 (Corte de Honor). Antes el template
+  // no leía NINGUNA: mostraba a todos siempre, aunque la casilla estuviera
+  // apagada. Misma regla que Quince Rosado (isRoleShown): false explícito
+  // oculta; true muestra; sin tocar se muestra si hay dato guardado (así
+  // las invitaciones viejas y el demo no cambian).
+  const isRoleShown = (showFlag: any, val: any) => {
+    if (showFlag === false) return false;
+    if (showFlag === true) return true;
+    if (Array.isArray(val)) return val.length > 0;
+    return Boolean(val);
+  };
+  const toStrArr = (v: any): string[] =>
+    Array.isArray(v)
+      ? v
+      : typeof v === "string"
+        ? v.split(/[,•]+/).map((s: string) => s.trim()).filter(Boolean)
+        : [];
+  const quinceaneraName = corteHonor.quinceanera || data.titulo || "";
+  const showQuinceanera = corteHonor.showQuinceanera !== false;
+  const miniQuinceaneraName = corteHonor.miniQuinceanera || "";
+  const showMiniQuinceanera =
+    isRoleShown(corteHonor.showMiniQuinceanera, miniQuinceaneraName) &&
+    Boolean(miniQuinceaneraName);
+  const chambelanName = corteHonor.chambelan || "";
+  const showChambelan =
+    isRoleShown(corteHonor.showChambelan, chambelanName) &&
+    Boolean(chambelanName);
+  const miniChambelanName = corteHonor.miniChambelan || "";
+  const showMiniChambelan =
+    isRoleShown(corteHonor.showMiniChambelan, miniChambelanName) &&
+    Boolean(miniChambelanName);
+  const damasArr = toStrArr(corteHonor.damas);
+  const showDamas =
+    isRoleShown(corteHonor.showDamas, damasArr) && damasArr.length > 0;
+  const damitasArr = toStrArr(corteHonor.damitasHojitas);
+  const showDamitasHojitas =
+    isRoleShown(corteHonor.showDamitasHojitas, damitasArr) &&
+    damitasArr.length > 0;
+  const chambelanesArr = toStrArr(corteHonor.chambelanes);
+  const showChambelanes =
+    corteHonor.showChambelanes !== false && chambelanesArr.length > 0;
+  const parentsName = corteHonor.parents || "";
+  // Los padres solo aparecen en la curva del hero ("MR & MRS RODRÍGUEZ" es
+  // el valor por defecto): solo un false explícito oculta la curva.
+  const showParents = corteHonor.showParents !== false;
+  const padrinosArr = toStrArr(corteHonor.padrinos);
+  const showPadrinos =
+    isRoleShown(corteHonor.showPadrinos, padrinosArr) &&
+    padrinosArr.length > 0;
+  const agradecimientoTituloTexto = isEn
+    ? (corteHonor.agradecimientoTituloEn ??
+      corteHonor.agradecimientoTitulo ??
+      "A special thank you")
+    : (corteHonor.agradecimientoTitulo ?? "Un agradecimiento especial");
+  const agradecimientoMensaje = corteHonor.mensajeGratitud || "";
+
   const churchMapUrl = getMapDirectionsUrl(
     data.ceremoniaMapUrl,
     `${data.ceremoniaNombre || ""} ${data.ceremoniaDireccion || ""}`.trim()
@@ -281,6 +354,163 @@ export default function ElegantRoseTemplate({
     data.recepcionMapUrl,
     `${data.recepcionNombre || ""} ${data.recepcionDireccion || ""}`.trim()
   );
+
+  // Plan de la Fiesta (Sección 9) dinámico: si el evento tiene itinerarioJson
+  // se renderiza esa lista (hora + título ES/EN + icono por tipo); si está
+  // vacío se muestran los 5 bloques fijos de siempre para no cambiar ninguna
+  // invitación existente.
+  const ITINERARIO_DEFAULT = [
+    { hora: "4:00 PM", titulo: "MISA", tituloEn: "MASS", tipoIcono: "church" },
+    { hora: "5:00 PM", titulo: "RECEPCIÓN", tituloEn: "ENTRANCE", tipoIcono: "car" },
+    { hora: "6:00 PM", titulo: "VALS", tituloEn: "WALTZ", tipoIcono: "crown" },
+    { hora: "7:00 PM", titulo: "CENA", tituloEn: "DINNER", tipoIcono: "wine" },
+    { hora: "9:00 PM", titulo: "FIESTA", tituloEn: "PARTY", tipoIcono: "party" },
+  ];
+  const itinerarioItems: Array<{ hora?: string; titulo?: string; tituloEn?: string; tipoIcono?: string }> =
+    Array.isArray(data.itinerarioJson) && data.itinerarioJson.length > 0
+      ? data.itinerarioJson
+      : ITINERARIO_DEFAULT;
+
+  // Un hito del itinerario: hora + divisor dorado + título (+ lugar y botón
+  // de mapa en Misa/Entrada). El icono y el acomodo dependen de tipoIcono.
+  const renderItinerarioItem = (
+    item: { hora?: string; titulo?: string; tituloEn?: string; tipoIcono?: string },
+    key: number
+  ) => {
+    const hora = item.hora || "";
+    const titulo = isEn ? item.tituloEn || item.titulo || "" : item.titulo || "";
+    const icono = item.tipoIcono || "party";
+    const tituloBloque = (venue?: string) => (
+      <>
+        <span className="font-['Bodoni_Moda',serif] text-2xl sm:text-3xl font-bold text-white tracking-wide drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
+          {hora}
+        </span>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={ELEGANT_ROSE_ASSETS.goldDividerLine}
+          onError={(e) => {
+            (e.target as HTMLImageElement).src = ELEGANT_ROSE_ASSETS.s3.goldDividerLine;
+          }}
+          alt=""
+          className="w-28 sm:w-32 h-auto my-1 object-contain"
+        />
+        <span className="font-['Bodoni_Moda',serif] text-base sm:text-lg font-bold tracking-[0.2em] uppercase text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
+          {titulo}
+        </span>
+        {venue && (
+          <span className="font-['Bodoni_Moda',serif] text-[11px] sm:text-xs uppercase text-white font-medium tracking-wide leading-tight drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)] mt-1 px-1">
+            {venue}
+          </span>
+        )}
+      </>
+    );
+    const botonMapa = (href: string) => (
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="mt-3.5 bg-[#BE8A87] hover:bg-[#b07b78] text-white font-['Cinzel'] text-[10px] sm:text-[11px] tracking-[0.2em] uppercase py-1.5 px-6 rounded-full font-bold shadow-md transition inline-block drop-shadow active:scale-95 cursor-pointer"
+      >
+        GOOGLE MAPS
+      </a>
+    );
+    if (icono === "church") {
+      if (data.mostrarCeremonia === false) return null;
+      return (
+        <div key={key} className="flex flex-col items-center w-full">
+          <div className="grid grid-cols-2 items-center gap-2 w-full text-center">
+            <div className="flex flex-col items-center justify-center">
+              {tituloBloque(data.ceremoniaNombre || undefined)}
+            </div>
+            <div className="flex items-center justify-center">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={ELEGANT_ROSE_ASSETS.churchLineArt}
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = ELEGANT_ROSE_ASSETS.s3.churchLineArt;
+                }}
+                alt="Church"
+                className="w-24 sm:w-28 h-auto object-contain mx-auto drop-shadow-xl"
+              />
+            </div>
+          </div>
+          {botonMapa(churchMapUrl)}
+        </div>
+      );
+    }
+    if (icono === "car") {
+      if (data.mostrarRecepcion === false) return null;
+      return (
+        <div key={key} className="flex flex-col items-center w-full">
+          <div className="grid grid-cols-2 items-center gap-2 w-full text-center">
+            <div className="flex items-center justify-center">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={ELEGANT_ROSE_ASSETS.dressIllustration}
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = ELEGANT_ROSE_ASSETS.s3.dressIllustration;
+                }}
+                alt="Quinceañera Dress"
+                className="w-28 sm:w-32 h-auto object-contain mx-auto drop-shadow-2xl"
+              />
+            </div>
+            <div className="flex flex-col items-center justify-center">
+              {tituloBloque(data.recepcionNombre || undefined)}
+            </div>
+          </div>
+          {botonMapa(ballroomMapUrl)}
+        </div>
+      );
+    }
+    if (icono === "crown") {
+      return (
+        <div key={key} className="flex items-center justify-between w-full">
+          <div className="flex-1 flex items-center justify-center">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={ELEGANT_ROSE_ASSETS.coupleIcon}
+              onError={(e) => {
+                (e.target as HTMLImageElement).src = ELEGANT_ROSE_ASSETS.s3.coupleIcon;
+              }}
+              alt="Waltz"
+              className="w-20 sm:w-24 h-auto object-contain mx-auto drop-shadow-xl"
+            />
+          </div>
+          <div className="flex flex-col items-center justify-center mx-2 h-20 select-none pointer-events-none">
+            <div className="w-[1.5px] h-8 bg-gradient-to-b from-transparent to-[#e8c872]" />
+            <div className="w-2.5 h-2.5 rotate-45 border border-[#f5db94] bg-[#cda052] shadow-sm my-0.5" />
+            <div className="w-[1.5px] h-8 bg-gradient-to-t from-transparent to-[#e8c872]" />
+          </div>
+          <div className="flex-1 flex flex-col items-center justify-center text-center">
+            {tituloBloque()}
+          </div>
+        </div>
+      );
+    }
+    // wine (cena), party (fiesta) y cualquier otro: icono a la izquierda, texto a la derecha.
+    const iconoSrc =
+      icono === "wine"
+        ? { src: ELEGANT_ROSE_ASSETS.ballroomIcon, s3: ELEGANT_ROSE_ASSETS.s3.ballroomIcon, alt: "Dinner", cls: "w-24 sm:w-28 h-auto object-contain mx-auto drop-shadow-xl" }
+        : { src: ELEGANT_ROSE_ASSETS.musicIcon, s3: ELEGANT_ROSE_ASSETS.s3.musicIcon, alt: "Party", cls: "w-20 sm:w-24 h-auto object-contain mx-auto drop-shadow-xl" };
+    return (
+      <div key={key} className="grid grid-cols-2 items-center gap-2 w-full text-center">
+        <div className="flex items-center justify-center">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={iconoSrc.src}
+            onError={(e) => {
+              (e.target as HTMLImageElement).src = iconoSrc.s3;
+            }}
+            alt={iconoSrc.alt}
+            className={iconoSrc.cls}
+          />
+        </div>
+        <div className="flex flex-col items-center justify-center">
+          {tituloBloque()}
+        </div>
+      </div>
+    );
+  };
 
 
 
@@ -388,7 +618,10 @@ export default function ElegantRoseTemplate({
 
           {/* Contenido en Primer Plano */}
           <div className="relative z-10 w-full max-w-[340px] mx-auto py-4 px-2 flex flex-col items-center text-center select-none my-auto">
-            {/* 1. Texto en Arco Curvo Superior (SVG textPath) con espacio amplio */}
+            {/* 1. Texto en Arco Curvo Superior (SVG textPath) con espacio amplio.
+                Los padres solo aparecen aquí: la casilla "Mis Padres" de la
+                Sección 11 (showParents) oculta toda la curva. */}
+            {showParents && (
             <div className="w-full flex justify-center -mb-2">
               <svg viewBox="0 0 380 70" className="w-[310px] sm:w-[340px] h-[55px] overflow-visible">
                 <path id="curvePath" d="M 15,55 Q 190,12 365,55" fill="transparent" />
@@ -399,6 +632,7 @@ export default function ElegantRoseTemplate({
                 </text>
               </svg>
             </div>
+            )}
 
             {/* 2. Subtítulos Superiores */}
             <p className="font-['Cinzel'] text-xs sm:text-sm tracking-[0.28em] uppercase text-white font-bold mb-1 drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
@@ -828,237 +1062,9 @@ export default function ElegantRoseTemplate({
               </div>
             </div>
 
-            {/* Contenedor de Itinerario */}
-            <div className="w-full max-w-[310px] space-y-6 mt-2">
-              {/* ────────────────────────────────────────────────────────── */}
-              {data.mostrarCeremonia !== false && (<>
-              {/* 1. MASS (4:PM) - Izquierda: Texto | Derecha: Iglesia SVG  */}
-              {/* ────────────────────────────────────────────────────────── */}
-              <div className="flex flex-col items-center w-full">
-                <div className="grid grid-cols-2 items-center gap-2 w-full text-center">
-                  {/* Columna Izquierda: Hora + Divisor Oro + Título + Lugar */}
-                  <div className="flex flex-col items-center justify-center">
-                    <span className="font-['Bodoni_Moda',serif] text-2xl sm:text-3xl font-bold text-white tracking-wide drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
-                      4:PM
-                    </span>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={ELEGANT_ROSE_ASSETS.goldDividerLine}
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src = ELEGANT_ROSE_ASSETS.s3.goldDividerLine;
-                      }}
-                      alt=""
-                      className="w-28 sm:w-32 h-auto my-1 object-contain"
-                    />
-                    <span className="font-['Bodoni_Moda',serif] text-base sm:text-lg font-bold tracking-[0.2em] uppercase text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
-                      {isEn ? "MASS" : "MISA"}
-                    </span>
-                    {data.ceremoniaNombre && (
-                      <span className="font-['Bodoni_Moda',serif] text-[11px] sm:text-xs uppercase text-white font-medium tracking-wide leading-tight drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)] mt-1 px-1">
-                        {data.ceremoniaNombre}
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Columna Derecha: Iglesia Line Art Blanca */}
-                  <div className="flex items-center justify-center">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={ELEGANT_ROSE_ASSETS.churchLineArt}
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src = ELEGANT_ROSE_ASSETS.s3.churchLineArt;
-                      }}
-                      alt="Church"
-                      className="w-24 sm:w-28 h-auto object-contain mx-auto drop-shadow-xl"
-                    />
-                  </div>
-                </div>
-
-                {/* Botón Google Maps Centrado */}
-                <a
-                  href={churchMapUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-3.5 bg-[#BE8A87] hover:bg-[#b07b78] text-white font-['Cinzel'] text-[10px] sm:text-[11px] tracking-[0.2em] uppercase py-1.5 px-6 rounded-full font-bold shadow-md transition inline-block drop-shadow active:scale-95 cursor-pointer"
-                >
-                  GOOGLE MAPS
-                </a>
-              </div>
-
-              {/* ────────────────────────────────────────────────────────── */}
-              </>)}
-              {data.mostrarRecepcion !== false && (<>
-              {/* 2. ENTRANCE (5:PM) - Izquierda: Vestido | Derecha: Texto   */}
-              {/* ────────────────────────────────────────────────────────── */}
-              <div className="flex flex-col items-center w-full pt-2">
-                <div className="grid grid-cols-2 items-center gap-2 w-full text-center">
-                  {/* Columna Izquierda: Vestido Quinceañera Rosa Espalda */}
-                  <div className="flex items-center justify-center">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={ELEGANT_ROSE_ASSETS.dressIllustration}
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src = ELEGANT_ROSE_ASSETS.s3.dressIllustration;
-                      }}
-                      alt="Quinceañera Dress"
-                      className="w-28 sm:w-32 h-auto object-contain mx-auto drop-shadow-2xl"
-                    />
-                  </div>
-
-                  {/* Columna Derecha: Hora + Divisor Oro + Título + Lugar */}
-                  <div className="flex flex-col items-center justify-center">
-                    <span className="font-['Bodoni_Moda',serif] text-2xl sm:text-3xl font-bold text-white tracking-wide drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
-                      5:PM
-                    </span>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={ELEGANT_ROSE_ASSETS.goldDividerLine}
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src = ELEGANT_ROSE_ASSETS.s3.goldDividerLine;
-                      }}
-                      alt=""
-                      className="w-28 sm:w-32 h-auto my-1 object-contain"
-                    />
-                    <span className="font-['Bodoni_Moda',serif] text-base sm:text-lg font-bold tracking-[0.2em] uppercase text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
-                      {isEn ? "ENTRANCE" : "RECEPCIÓN"}
-                    </span>
-                    {data.recepcionNombre && (
-                      <span className="font-['Bodoni_Moda',serif] text-[11px] sm:text-xs uppercase text-white font-medium tracking-wide leading-tight drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)] mt-1 px-1">
-                        {data.recepcionNombre}
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                {/* Botón Google Maps Centrado */}
-                <a
-                  href={ballroomMapUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-3.5 bg-[#BE8A87] hover:bg-[#b07b78] text-white font-['Cinzel'] text-[10px] sm:text-[11px] tracking-[0.2em] uppercase py-1.5 px-6 rounded-full font-bold shadow-md transition inline-block drop-shadow active:scale-95 cursor-pointer"
-                >
-                  GOOGLE MAPS
-                </a>
-              </div>
-
-              {/* ────────────────────────────────────────────────────────── */}
-              </>)}
-              {/* 3. WALTZ (6:00 PM) - Pareja | Divisor Vertical Oro | Texto */}
-              {/* ────────────────────────────────────────────────────────── */}
-              <div className="flex items-center justify-between w-full pt-4">
-                {/* Pareja Bailando Vals Oro */}
-                <div className="flex-1 flex items-center justify-center">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={ELEGANT_ROSE_ASSETS.coupleIcon}
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src = ELEGANT_ROSE_ASSETS.s3.coupleIcon;
-                    }}
-                    alt="Waltz"
-                    className="w-20 sm:w-24 h-auto object-contain mx-auto drop-shadow-xl"
-                  />
-                </div>
-
-                {/* Divisor Vertical Dorado con Rombo Central */}
-                <div className="flex flex-col items-center justify-center mx-2 h-20 select-none pointer-events-none">
-                  <div className="w-[1.5px] h-8 bg-gradient-to-b from-transparent to-[#e8c872]" />
-                  <div className="w-2.5 h-2.5 rotate-45 border border-[#f5db94] bg-[#cda052] shadow-sm my-0.5" />
-                  <div className="w-[1.5px] h-8 bg-gradient-to-t from-transparent to-[#e8c872]" />
-                </div>
-
-                {/* Hora + Divisor Oro + Título */}
-                <div className="flex-1 flex flex-col items-center justify-center text-center">
-                  <span className="font-['Bodoni_Moda',serif] text-2xl sm:text-3xl font-bold text-white tracking-wide drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
-                    6:00 PM
-                  </span>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={ELEGANT_ROSE_ASSETS.goldDividerLine}
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src = ELEGANT_ROSE_ASSETS.s3.goldDividerLine;
-                    }}
-                    alt=""
-                    className="w-28 sm:w-32 h-auto my-1 object-contain"
-                  />
-                  <span className="font-['Bodoni_Moda',serif] text-base sm:text-lg font-bold tracking-[0.2em] uppercase text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
-                    {isEn ? "WALTZ" : "VALS"}
-                  </span>
-                </div>
-              </div>
-
-              {/* ────────────────────────────────────────────────────────── */}
-              {/* 4. DINNER (7:00 PM) - Plato Floral Oro | Divisor | Texto   */}
-              {/* ────────────────────────────────────────────────────────── */}
-              <div className="grid grid-cols-2 items-center gap-2 w-full text-center pt-3">
-                {/* Plato y Cubiertos con Flores en Oro */}
-                <div className="flex items-center justify-center">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={ELEGANT_ROSE_ASSETS.ballroomIcon}
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src = ELEGANT_ROSE_ASSETS.s3.ballroomIcon;
-                    }}
-                    alt="Dinner"
-                    className="w-24 sm:w-28 h-auto object-contain mx-auto drop-shadow-xl"
-                  />
-                </div>
-
-                {/* Hora + Divisor Oro + Título */}
-                <div className="flex flex-col items-center justify-center">
-                  <span className="font-['Bodoni_Moda',serif] text-2xl sm:text-3xl font-bold text-white tracking-wide drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
-                    7:00 PM
-                  </span>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={ELEGANT_ROSE_ASSETS.goldDividerLine}
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src = ELEGANT_ROSE_ASSETS.s3.goldDividerLine;
-                    }}
-                    alt=""
-                    className="w-28 sm:w-32 h-auto my-1 object-contain"
-                  />
-                  <span className="font-['Bodoni_Moda',serif] text-base sm:text-lg font-bold tracking-[0.2em] uppercase text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
-                    {isEn ? "DINNER" : "CENA"}
-                  </span>
-                </div>
-              </div>
-
-              {/* ────────────────────────────────────────────────────────── */}
-              {/* 5. PARTY (9:00 PM) - Bola Disco Oro | Divisor | Texto     */}
-              {/* ────────────────────────────────────────────────────────── */}
-              <div className="grid grid-cols-2 items-center gap-2 w-full text-center pt-3 pb-2">
-                {/* Bola Disco / Destellos en Oro */}
-                <div className="flex items-center justify-center">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={ELEGANT_ROSE_ASSETS.musicIcon}
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src = ELEGANT_ROSE_ASSETS.s3.musicIcon;
-                    }}
-                    alt="Party"
-                    className="w-20 sm:w-24 h-auto object-contain mx-auto drop-shadow-xl"
-                  />
-                </div>
-
-                {/* Hora + Divisor Oro + Título */}
-                <div className="flex flex-col items-center justify-center">
-                  <span className="font-['Bodoni_Moda',serif] text-2xl sm:text-3xl font-bold text-white tracking-wide drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
-                    9:00 PM
-                  </span>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={ELEGANT_ROSE_ASSETS.goldDividerLine}
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src = ELEGANT_ROSE_ASSETS.s3.goldDividerLine;
-                    }}
-                    alt=""
-                    className="w-28 sm:w-32 h-auto my-1 object-contain"
-                  />
-                  <span className="font-['Bodoni_Moda',serif] text-base sm:text-lg font-bold tracking-[0.2em] uppercase text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
-                    {isEn ? "PARTY" : "FIESTA"}
-                  </span>
-                </div>
-              </div>
+            {/* Contenedor de Itinerario (dinámico: lo que se edita en la Sección 9) */}
+            <div className="w-full max-w-[310px] space-y-6 mt-2 pb-2">
+              {itinerarioItems.map((item, i) => renderItinerarioItem(item, i))}
             </div>
           </WavyColumn>
         </section>
@@ -1073,48 +1079,128 @@ export default function ElegantRoseTemplate({
           style={{ backgroundImage: `url(${ELEGANT_ROSE_ASSETS.peachBg})` }}
         >
           <WavyColumn className="py-12">
+            {/* Quinceañera */}
+            {showQuinceanera && quinceaneraName !== "" && (
+              <>
+                <p className="font-['Cinzel'] text-xs sm:text-sm font-bold tracking-[0.25em] uppercase text-rose-200 drop-shadow-sm">
+                  QUINCEAÑERA
+                </p>
+                <p className="font-['Cinzel'] text-sm sm:text-base uppercase tracking-widest text-white font-bold mb-6 drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
+                  {quinceaneraName}
+                </p>
+              </>
+            )}
+
+            {/* Mini Quinceañera */}
+            {showMiniQuinceanera && (
+              <>
+                <p className="font-['Cinzel'] text-xs sm:text-sm font-bold tracking-[0.25em] uppercase text-rose-200 drop-shadow-sm">
+                  {isEn ? "JUNIOR QUINCEAÑERA" : "MINI QUINCEAÑERA"}
+                </p>
+                <p className="font-['Cinzel'] text-sm sm:text-base uppercase tracking-widest text-white font-bold mb-6 drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
+                  {miniQuinceaneraName}
+                </p>
+              </>
+            )}
+
             {/* Padrinos */}
-            <h3 className="font-['Alex_Brush'] text-5xl sm:text-6xl text-rose-100 select-none drop-shadow-md">
-              Padrinos
-            </h3>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={ELEGANT_ROSE_ASSETS.crown} alt="Crown" className="w-7 h-auto my-1.5 opacity-90 drop-shadow" />
-            <p className="font-['Cinzel'] text-sm sm:text-base uppercase tracking-widest text-white font-bold mb-8 drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
-              {corteHonor.padrinos?.join(" & ") || "Miguel & Daniela Herrera"}
-            </p>
+            {showPadrinos && (
+              <>
+                <h3 className="font-['Alex_Brush'] text-5xl sm:text-6xl text-rose-100 select-none drop-shadow-md">
+                  Padrinos
+                </h3>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={ELEGANT_ROSE_ASSETS.crown} alt="Crown" className="w-7 h-auto my-1.5 opacity-90 drop-shadow" />
+                <p className="font-['Cinzel'] text-sm sm:text-base uppercase tracking-widest text-white font-bold mb-8 drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
+                  {padrinosArr.join(" & ")}
+                </p>
+              </>
+            )}
 
             {/* Quince Court */}
-            <h3 className="font-['Alex_Brush'] text-5xl sm:text-6xl text-rose-100 select-none drop-shadow-md">
-              Quince Court
-            </h3>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={ELEGANT_ROSE_ASSETS.crown} alt="Crown" className="w-7 h-auto my-1.5 opacity-90 drop-shadow" />
-            <p className="font-['Cinzel'] text-sm sm:text-base uppercase tracking-widest text-white font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
-              {corteHonor.chambelan || "Emilio Salazar"}
-            </p>
-            <p className="font-['Cinzel'] text-xs sm:text-[13px] tracking-widest uppercase text-rose-200 mb-6 font-semibold drop-shadow-sm">
-              CHAMBERLAIN OF HONOR
-            </p>
+            {showChambelan && (
+              <>
+                <h3 className="font-['Alex_Brush'] text-5xl sm:text-6xl text-rose-100 select-none drop-shadow-md">
+                  Quince Court
+                </h3>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={ELEGANT_ROSE_ASSETS.crown} alt="Crown" className="w-7 h-auto my-1.5 opacity-90 drop-shadow" />
+                <p className="font-['Cinzel'] text-sm sm:text-base uppercase tracking-widest text-white font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
+                  {chambelanName}
+                </p>
+                <p className="font-['Cinzel'] text-xs sm:text-[13px] tracking-widest uppercase text-rose-200 mb-6 font-semibold drop-shadow-sm">
+                  CHAMBERLAIN OF HONOR
+                </p>
+              </>
+            )}
+
+            {/* Mini Chambelán */}
+            {showMiniChambelan && (
+              <>
+                <p className="font-['Cinzel'] text-xs sm:text-sm font-bold tracking-[0.25em] uppercase text-rose-200 drop-shadow-sm">
+                  {isEn ? "JUNIOR ESCORT" : "MINI CHAMBELÁN"}
+                </p>
+                <p className="font-['Cinzel'] text-sm sm:text-base uppercase tracking-widest text-white font-bold mb-6 drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
+                  {miniChambelanName}
+                </p>
+              </>
+            )}
 
             {/* Damas */}
-            <p className="font-['Cinzel'] text-xs sm:text-sm font-bold tracking-[0.25em] uppercase text-rose-200 mt-3 mb-2 drop-shadow-sm">
-              DAMAS
-            </p>
-            <div className="space-y-1 text-xs sm:text-sm font-['Cinzel'] tracking-wider text-white font-medium drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
-              {corteHonor.damas?.map((dama: string, i: number) => (
-                <p key={i}>{dama}</p>
-              ))}
-            </div>
+            {showDamas && (
+              <>
+                <p className="font-['Cinzel'] text-xs sm:text-sm font-bold tracking-[0.25em] uppercase text-rose-200 mt-3 mb-2 drop-shadow-sm">
+                  DAMAS
+                </p>
+                <div className="space-y-1 text-xs sm:text-sm font-['Cinzel'] tracking-wider text-white font-medium drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
+                  {damasArr.map((dama: string, i: number) => (
+                    <p key={i}>{dama}</p>
+                  ))}
+                </div>
+              </>
+            )}
+
+            {/* Damitas de Hojitas */}
+            {showDamitasHojitas && (
+              <>
+                <p className="font-['Cinzel'] text-xs sm:text-sm font-bold tracking-[0.25em] uppercase text-rose-200 mt-6 mb-2 drop-shadow-sm">
+                  {isEn ? "FLOWER GIRLS" : "DAMITAS DE HOJITAS"}
+                </p>
+                <div className="space-y-1 text-xs sm:text-sm font-['Cinzel'] tracking-wider text-white font-medium drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
+                  {damitasArr.map((damita: string, i: number) => (
+                    <p key={i}>{damita}</p>
+                  ))}
+                </div>
+              </>
+            )}
 
             {/* Chambelanes */}
-            <p className="font-['Cinzel'] text-xs sm:text-sm font-bold tracking-[0.25em] uppercase text-rose-200 mt-6 mb-2 drop-shadow-sm">
-              CHAMBELANES
-            </p>
-            <div className="space-y-1 text-xs sm:text-sm font-['Cinzel'] tracking-wider text-white font-medium drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
-              {corteHonor.chambelanes?.map((chambelan: string, i: number) => (
-                <p key={i}>{chambelan}</p>
-              ))}
-            </div>
+            {showChambelanes && (
+              <>
+                <p className="font-['Cinzel'] text-xs sm:text-sm font-bold tracking-[0.25em] uppercase text-rose-200 mt-6 mb-2 drop-shadow-sm">
+                  CHAMBELANES
+                </p>
+                <div className="space-y-1 text-xs sm:text-sm font-['Cinzel'] tracking-wider text-white font-medium drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
+                  {chambelanesArr.map((chambelan: string, i: number) => (
+                    <p key={i}>{chambelan}</p>
+                  ))}
+                </div>
+              </>
+            )}
+
+            {/* Agradecimiento especial */}
+            {agradecimientoMensaje !== "" && (
+              <div className="mt-8">
+                {agradecimientoTituloTexto !== "" && (
+                  <p className="font-['Cinzel'] text-xs sm:text-sm font-bold tracking-[0.25em] uppercase text-rose-200 mb-2 drop-shadow-sm">
+                    {agradecimientoTituloTexto}
+                  </p>
+                )}
+                <p className="text-xs sm:text-[13px] text-white font-medium max-w-[280px] mx-auto leading-relaxed drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
+                  {agradecimientoMensaje}
+                </p>
+              </div>
+            )}
           </WavyColumn>
         </section>
         )}
@@ -1147,12 +1233,21 @@ export default function ElegantRoseTemplate({
                   className="w-full h-full object-contain drop-shadow-xl"
                 />
               </div>
-              <p className="font-['Cinzel'] text-xs sm:text-sm tracking-wider uppercase text-white font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
-                FORMAL & ELEGANT ATTIRE
-              </p>
-              <p className="text-xs sm:text-[13px] text-white font-medium max-w-[280px] mx-auto leading-relaxed mt-1.5 drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
-                We invite our guests to dress in elegant formal attire as we celebrate this special occasion together.
-              </p>
+              {dressCodeTituloTexto !== "" && (
+                <p className="font-['Cinzel'] text-xs sm:text-sm tracking-wider uppercase text-white font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
+                  {dressCodeTituloTexto}
+                </p>
+              )}
+              {dressCodeNotaTexto !== "" && (
+                <p className="text-xs sm:text-[13px] text-white font-medium max-w-[280px] mx-auto leading-relaxed mt-1.5 drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
+                  {dressCodeNotaTexto}
+                </p>
+              )}
+              {coloresReservadosTexto !== "" && (
+                <p className="text-xs sm:text-[13px] italic text-amber-200/90 font-medium max-w-[280px] mx-auto leading-relaxed mt-1.5 drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
+                  {coloresReservadosTexto}
+                </p>
+              )}
             </div>
             )}
 
@@ -1178,6 +1273,23 @@ export default function ElegantRoseTemplate({
                 <p className="text-xs sm:text-[13px] text-white font-medium max-w-[280px] mx-auto leading-relaxed drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
                   {regalosMensajeTexto}
                 </p>
+              )}
+              {/* Cuentas de regalo: dinámico, como en Blue Butterfly / Blush.
+                  Cada opción aparece SOLO si tiene dato guardado en la Sec. 8;
+                  sin datos no se muestra nada. */}
+              {(data.regalosZelle || data.regalosCashApp) && (
+                <div className="mt-3.5 flex flex-wrap items-center justify-center gap-2">
+                  {data.regalosZelle && (
+                    <span className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-white/25 border border-white/60 text-white rounded-full text-[11px] sm:text-xs shadow-md backdrop-blur-sm drop-shadow">
+                      <span className="font-bold text-amber-200">Zelle:</span> {data.regalosZelle}
+                    </span>
+                  )}
+                  {data.regalosCashApp && (
+                    <span className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-white/25 border border-white/60 text-white rounded-full text-[11px] sm:text-xs shadow-md backdrop-blur-sm drop-shadow">
+                      <span className="font-bold text-amber-200">Cash App:</span> {data.regalosCashApp}
+                    </span>
+                  )}
+                </div>
               )}
               {sanitizeUrl(data.wishlistUrl) && (
                 <a

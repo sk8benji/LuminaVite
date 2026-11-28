@@ -3,7 +3,6 @@
 import React from "react";
 import { QuinceRosadoFields } from "./template-configs/QuinceRosadoFields";
 import { BlueButterflyFields } from "./template-configs/BlueButterflyFields";
-import { ElegantRoseFields } from "./template-configs/ElegantRoseFields";
 import { FairytaleChateauFields } from "./template-configs/FairytaleChateauFields";
 import { CoralineMysticalFields } from "./template-configs/CoralineMysticalFields";
 import { GatsbyFields } from "./template-configs/GatsbyFields";
@@ -31,8 +30,13 @@ export const TemplateConfigDispatcher: React.FC<Props> = ({
       return <QuinceRosadoFields value={value} onChange={onChange} slug={slug} />;
     case "BLUE_BUTTERFLY":
       return <BlueButterflyFields value={value} onChange={onChange} slug={slug} />;
+    // ELEGANT_ROSE sin panel exclusivo (2026-11-27): los 4 campos que tenía
+    // (Padres, Chambelán, Damas, Hospedaje) no se leían en ningún lado o
+    // duplicaban la Sección 11. Padres/Chambelán/Damas se quitaron (la
+    // Sección 11 es la única fuente de la corte) y Hospedaje vive en la
+    // Sección 18. Sin panel, no se muestra nada aquí.
     case "ELEGANT_ROSE":
-      return <ElegantRoseFields value={value} onChange={onChange} slug={slug} />;
+      return null;
     case "FAIRYTALE_CHATEAU":
       return <FairytaleChateauFields value={value} onChange={onChange} slug={slug} />;
     case "CORALINE_MYSTICAL":

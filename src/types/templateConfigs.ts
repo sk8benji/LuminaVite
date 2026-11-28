@@ -76,10 +76,6 @@ export interface BabyBlueConfig {
 }
 
 export interface ElegantRoseConfig {
-  padres?: string;
-  padrinos?: string[];
-  chambelan?: string;
-  damas?: string[];
   /** Hitos de "Growing Up" editados en el admin (Sección 15: Historia).
       Sin hitos guardados se usan los 5 por defecto del template. */
   hitosVida?: Array<{
