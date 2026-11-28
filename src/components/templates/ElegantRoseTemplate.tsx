@@ -1274,6 +1274,23 @@ export default function ElegantRoseTemplate({
                   {regalosMensajeTexto}
                 </p>
               )}
+              {/* Cuentas de regalo: dinámico, como en Blue Butterfly / Blush.
+                  Cada opción aparece SOLO si tiene dato guardado en la Sec. 8;
+                  sin datos no se muestra nada. */}
+              {(data.regalosZelle || data.regalosCashApp) && (
+                <div className="mt-3.5 flex flex-wrap items-center justify-center gap-2">
+                  {data.regalosZelle && (
+                    <span className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-white/25 border border-white/60 text-white rounded-full text-[11px] sm:text-xs shadow-md backdrop-blur-sm drop-shadow">
+                      <span className="font-bold text-amber-200">Zelle:</span> {data.regalosZelle}
+                    </span>
+                  )}
+                  {data.regalosCashApp && (
+                    <span className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-white/25 border border-white/60 text-white rounded-full text-[11px] sm:text-xs shadow-md backdrop-blur-sm drop-shadow">
+                      <span className="font-bold text-amber-200">Cash App:</span> {data.regalosCashApp}
+                    </span>
+                  )}
+                </div>
+              )}
               {sanitizeUrl(data.wishlistUrl) && (
                 <a
                   href={sanitizeUrl(data.wishlistUrl) as string}
