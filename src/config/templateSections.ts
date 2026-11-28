@@ -98,7 +98,7 @@ export const SECCIONES_QUINCE_ROSADO: SeccionMeta[] = [
   {
     id: 'mesaRegalos',
     numero: 8,
-    label: 'Mesa de Regalos',
+    label: 'Regalos',
     descripcion: 'Aviso de cofre en recepción, enlaces de wishlist y cuentas Zelle, Venmo, PayPal.',
     icono: 'Gift',
     defaultEnabled: true,

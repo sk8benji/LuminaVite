@@ -99,6 +99,10 @@ export interface ElegantRoseConfig {
   /** Frase de cierre de "Growing Up". Vacío = texto por defecto del template. */
   growingUpCierre?: string;
   growingUpCierreEn?: string;
+  /** Título del bloque de Regalos (Details). Sin tocar = "REGALOS" / "GIFTS".
+      "" explícito = oculta el título. Se edita en Sección 8. */
+  regalosTitulo?: string;
+  regalosTituloEn?: string;
 }
 
 export interface FairytaleChateauConfig {
