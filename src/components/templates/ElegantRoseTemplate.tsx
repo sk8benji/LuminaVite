@@ -240,6 +240,23 @@ export default function ElegantRoseTemplate({
     : (data.regalosMensaje ??
       "Tu presencia es nuestro mayor regalo. Disponemos de un cofre en la recepción.");
 
+  // Bloque DRESS CODE (Details). Título, nota y línea de colores reservados
+  // editables en Sección 7; antes eran textos fijos que ningún campo podía
+  // cambiar (por eso el título y la nota del editor "no hacían nada").
+  // "" explícito en un campo = ese renglón no aparece.
+  const dressCodeTituloTexto = isEn
+    ? (data.dressCodeTituloEn ?? "Formal & Elegant Attire")
+    : (data.dressCodeTitulo ?? "Rigurosa Etiqueta & Elegante");
+  const dressCodeNotaTexto = isEn
+    ? (data.dressCodeNotaEn ?? "Blush pink tones reserved exclusively for the quinceañera")
+    : (data.dressCodeNota ?? "Tono rosa pastel reservado para la quinceañera");
+  // Línea debajo de la nota: mismo origen que el input del editor
+  // (configPlantilla, con respaldo a la columna dressCodeColoresReservados).
+  const coloresReservadosTexto = isEn
+    ? ((data.configPlantilla as any)?.coloresReservadosEn ?? "")
+    : ((data.configPlantilla as any)?.coloresReservados ??
+      (data as any).dressCodeColoresReservados ?? "");
+
   // Dedicatoria (editable en Sección 3): mismos campos que Quince Rosado.
   const dedicatoriaMensaje = isEn
     ? data.frasePersonalizadaEn || data.frasePersonalizada || ""
@@ -271,6 +288,62 @@ export default function ElegantRoseTemplate({
       "Alejandro Torres",
     ],
   };
+
+  // Las 9 selecciones de la Sección 11 (Corte de Honor). Antes el template
+  // no leía NINGUNA: mostraba a todos siempre, aunque la casilla estuviera
+  // apagada. Misma regla que Quince Rosado (isRoleShown): false explícito
+  // oculta; true muestra; sin tocar se muestra si hay dato guardado (así
+  // las invitaciones viejas y el demo no cambian).
+  const isRoleShown = (showFlag: any, val: any) => {
+    if (showFlag === false) return false;
+    if (showFlag === true) return true;
+    if (Array.isArray(val)) return val.length > 0;
+    return Boolean(val);
+  };
+  const toStrArr = (v: any): string[] =>
+    Array.isArray(v)
+      ? v
+      : typeof v === "string"
+        ? v.split(/[,•]+/).map((s: string) => s.trim()).filter(Boolean)
+        : [];
+  const quinceaneraName = corteHonor.quinceanera || data.titulo || "";
+  const showQuinceanera = corteHonor.showQuinceanera !== false;
+  const miniQuinceaneraName = corteHonor.miniQuinceanera || "";
+  const showMiniQuinceanera =
+    isRoleShown(corteHonor.showMiniQuinceanera, miniQuinceaneraName) &&
+    Boolean(miniQuinceaneraName);
+  const chambelanName = corteHonor.chambelan || "";
+  const showChambelan =
+    isRoleShown(corteHonor.showChambelan, chambelanName) &&
+    Boolean(chambelanName);
+  const miniChambelanName = corteHonor.miniChambelan || "";
+  const showMiniChambelan =
+    isRoleShown(corteHonor.showMiniChambelan, miniChambelanName) &&
+    Boolean(miniChambelanName);
+  const damasArr = toStrArr(corteHonor.damas);
+  const showDamas =
+    isRoleShown(corteHonor.showDamas, damasArr) && damasArr.length > 0;
+  const damitasArr = toStrArr(corteHonor.damitasHojitas);
+  const showDamitasHojitas =
+    isRoleShown(corteHonor.showDamitasHojitas, damitasArr) &&
+    damitasArr.length > 0;
+  const chambelanesArr = toStrArr(corteHonor.chambelanes);
+  const showChambelanes =
+    corteHonor.showChambelanes !== false && chambelanesArr.length > 0;
+  const parentsName = corteHonor.parents || "";
+  // Los padres solo aparecen en la curva del hero ("MR & MRS RODRÍGUEZ" es
+  // el valor por defecto): solo un false explícito oculta la curva.
+  const showParents = corteHonor.showParents !== false;
+  const padrinosArr = toStrArr(corteHonor.padrinos);
+  const showPadrinos =
+    isRoleShown(corteHonor.showPadrinos, padrinosArr) &&
+    padrinosArr.length > 0;
+  const agradecimientoTituloTexto = isEn
+    ? (corteHonor.agradecimientoTituloEn ??
+      corteHonor.agradecimientoTitulo ??
+      "A special thank you")
+    : (corteHonor.agradecimientoTitulo ?? "Un agradecimiento especial");
+  const agradecimientoMensaje = corteHonor.mensajeGratitud || "";
 
   const churchMapUrl = getMapDirectionsUrl(
     data.ceremoniaMapUrl,
@@ -388,7 +461,10 @@ export default function ElegantRoseTemplate({
 
           {/* Contenido en Primer Plano */}
           <div className="relative z-10 w-full max-w-[340px] mx-auto py-4 px-2 flex flex-col items-center text-center select-none my-auto">
-            {/* 1. Texto en Arco Curvo Superior (SVG textPath) con espacio amplio */}
+            {/* 1. Texto en Arco Curvo Superior (SVG textPath) con espacio amplio.
+                Los padres solo aparecen aquí: la casilla "Mis Padres" de la
+                Sección 11 (showParents) oculta toda la curva. */}
+            {showParents && (
             <div className="w-full flex justify-center -mb-2">
               <svg viewBox="0 0 380 70" className="w-[310px] sm:w-[340px] h-[55px] overflow-visible">
                 <path id="curvePath" d="M 15,55 Q 190,12 365,55" fill="transparent" />
@@ -399,6 +475,7 @@ export default function ElegantRoseTemplate({
                 </text>
               </svg>
             </div>
+            )}
 
             {/* 2. Subtítulos Superiores */}
             <p className="font-['Cinzel'] text-xs sm:text-sm tracking-[0.28em] uppercase text-white font-bold mb-1 drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
@@ -1073,48 +1150,128 @@ export default function ElegantRoseTemplate({
           style={{ backgroundImage: `url(${ELEGANT_ROSE_ASSETS.peachBg})` }}
         >
           <WavyColumn className="py-12">
+            {/* Quinceañera */}
+            {showQuinceanera && quinceaneraName !== "" && (
+              <>
+                <p className="font-['Cinzel'] text-xs sm:text-sm font-bold tracking-[0.25em] uppercase text-rose-200 drop-shadow-sm">
+                  QUINCEAÑERA
+                </p>
+                <p className="font-['Cinzel'] text-sm sm:text-base uppercase tracking-widest text-white font-bold mb-6 drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
+                  {quinceaneraName}
+                </p>
+              </>
+            )}
+
+            {/* Mini Quinceañera */}
+            {showMiniQuinceanera && (
+              <>
+                <p className="font-['Cinzel'] text-xs sm:text-sm font-bold tracking-[0.25em] uppercase text-rose-200 drop-shadow-sm">
+                  {isEn ? "JUNIOR QUINCEAÑERA" : "MINI QUINCEAÑERA"}
+                </p>
+                <p className="font-['Cinzel'] text-sm sm:text-base uppercase tracking-widest text-white font-bold mb-6 drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
+                  {miniQuinceaneraName}
+                </p>
+              </>
+            )}
+
             {/* Padrinos */}
-            <h3 className="font-['Alex_Brush'] text-5xl sm:text-6xl text-rose-100 select-none drop-shadow-md">
-              Padrinos
-            </h3>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={ELEGANT_ROSE_ASSETS.crown} alt="Crown" className="w-7 h-auto my-1.5 opacity-90 drop-shadow" />
-            <p className="font-['Cinzel'] text-sm sm:text-base uppercase tracking-widest text-white font-bold mb-8 drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
-              {corteHonor.padrinos?.join(" & ") || "Miguel & Daniela Herrera"}
-            </p>
+            {showPadrinos && (
+              <>
+                <h3 className="font-['Alex_Brush'] text-5xl sm:text-6xl text-rose-100 select-none drop-shadow-md">
+                  Padrinos
+                </h3>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={ELEGANT_ROSE_ASSETS.crown} alt="Crown" className="w-7 h-auto my-1.5 opacity-90 drop-shadow" />
+                <p className="font-['Cinzel'] text-sm sm:text-base uppercase tracking-widest text-white font-bold mb-8 drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
+                  {padrinosArr.join(" & ")}
+                </p>
+              </>
+            )}
 
             {/* Quince Court */}
-            <h3 className="font-['Alex_Brush'] text-5xl sm:text-6xl text-rose-100 select-none drop-shadow-md">
-              Quince Court
-            </h3>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={ELEGANT_ROSE_ASSETS.crown} alt="Crown" className="w-7 h-auto my-1.5 opacity-90 drop-shadow" />
-            <p className="font-['Cinzel'] text-sm sm:text-base uppercase tracking-widest text-white font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
-              {corteHonor.chambelan || "Emilio Salazar"}
-            </p>
-            <p className="font-['Cinzel'] text-xs sm:text-[13px] tracking-widest uppercase text-rose-200 mb-6 font-semibold drop-shadow-sm">
-              CHAMBERLAIN OF HONOR
-            </p>
+            {showChambelan && (
+              <>
+                <h3 className="font-['Alex_Brush'] text-5xl sm:text-6xl text-rose-100 select-none drop-shadow-md">
+                  Quince Court
+                </h3>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={ELEGANT_ROSE_ASSETS.crown} alt="Crown" className="w-7 h-auto my-1.5 opacity-90 drop-shadow" />
+                <p className="font-['Cinzel'] text-sm sm:text-base uppercase tracking-widest text-white font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
+                  {chambelanName}
+                </p>
+                <p className="font-['Cinzel'] text-xs sm:text-[13px] tracking-widest uppercase text-rose-200 mb-6 font-semibold drop-shadow-sm">
+                  CHAMBERLAIN OF HONOR
+                </p>
+              </>
+            )}
+
+            {/* Mini Chambelán */}
+            {showMiniChambelan && (
+              <>
+                <p className="font-['Cinzel'] text-xs sm:text-sm font-bold tracking-[0.25em] uppercase text-rose-200 drop-shadow-sm">
+                  {isEn ? "JUNIOR ESCORT" : "MINI CHAMBELÁN"}
+                </p>
+                <p className="font-['Cinzel'] text-sm sm:text-base uppercase tracking-widest text-white font-bold mb-6 drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
+                  {miniChambelanName}
+                </p>
+              </>
+            )}
 
             {/* Damas */}
-            <p className="font-['Cinzel'] text-xs sm:text-sm font-bold tracking-[0.25em] uppercase text-rose-200 mt-3 mb-2 drop-shadow-sm">
-              DAMAS
-            </p>
-            <div className="space-y-1 text-xs sm:text-sm font-['Cinzel'] tracking-wider text-white font-medium drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
-              {corteHonor.damas?.map((dama: string, i: number) => (
-                <p key={i}>{dama}</p>
-              ))}
-            </div>
+            {showDamas && (
+              <>
+                <p className="font-['Cinzel'] text-xs sm:text-sm font-bold tracking-[0.25em] uppercase text-rose-200 mt-3 mb-2 drop-shadow-sm">
+                  DAMAS
+                </p>
+                <div className="space-y-1 text-xs sm:text-sm font-['Cinzel'] tracking-wider text-white font-medium drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
+                  {damasArr.map((dama: string, i: number) => (
+                    <p key={i}>{dama}</p>
+                  ))}
+                </div>
+              </>
+            )}
+
+            {/* Damitas de Hojitas */}
+            {showDamitasHojitas && (
+              <>
+                <p className="font-['Cinzel'] text-xs sm:text-sm font-bold tracking-[0.25em] uppercase text-rose-200 mt-6 mb-2 drop-shadow-sm">
+                  {isEn ? "FLOWER GIRLS" : "DAMITAS DE HOJITAS"}
+                </p>
+                <div className="space-y-1 text-xs sm:text-sm font-['Cinzel'] tracking-wider text-white font-medium drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
+                  {damitasArr.map((damita: string, i: number) => (
+                    <p key={i}>{damita}</p>
+                  ))}
+                </div>
+              </>
+            )}
 
             {/* Chambelanes */}
-            <p className="font-['Cinzel'] text-xs sm:text-sm font-bold tracking-[0.25em] uppercase text-rose-200 mt-6 mb-2 drop-shadow-sm">
-              CHAMBELANES
-            </p>
-            <div className="space-y-1 text-xs sm:text-sm font-['Cinzel'] tracking-wider text-white font-medium drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
-              {corteHonor.chambelanes?.map((chambelan: string, i: number) => (
-                <p key={i}>{chambelan}</p>
-              ))}
-            </div>
+            {showChambelanes && (
+              <>
+                <p className="font-['Cinzel'] text-xs sm:text-sm font-bold tracking-[0.25em] uppercase text-rose-200 mt-6 mb-2 drop-shadow-sm">
+                  CHAMBELANES
+                </p>
+                <div className="space-y-1 text-xs sm:text-sm font-['Cinzel'] tracking-wider text-white font-medium drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
+                  {chambelanesArr.map((chambelan: string, i: number) => (
+                    <p key={i}>{chambelan}</p>
+                  ))}
+                </div>
+              </>
+            )}
+
+            {/* Agradecimiento especial */}
+            {agradecimientoMensaje !== "" && (
+              <div className="mt-8">
+                {agradecimientoTituloTexto !== "" && (
+                  <p className="font-['Cinzel'] text-xs sm:text-sm font-bold tracking-[0.25em] uppercase text-rose-200 mb-2 drop-shadow-sm">
+                    {agradecimientoTituloTexto}
+                  </p>
+                )}
+                <p className="text-xs sm:text-[13px] text-white font-medium max-w-[280px] mx-auto leading-relaxed drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
+                  {agradecimientoMensaje}
+                </p>
+              </div>
+            )}
           </WavyColumn>
         </section>
         )}
@@ -1147,12 +1304,21 @@ export default function ElegantRoseTemplate({
                   className="w-full h-full object-contain drop-shadow-xl"
                 />
               </div>
-              <p className="font-['Cinzel'] text-xs sm:text-sm tracking-wider uppercase text-white font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
-                FORMAL & ELEGANT ATTIRE
-              </p>
-              <p className="text-xs sm:text-[13px] text-white font-medium max-w-[280px] mx-auto leading-relaxed mt-1.5 drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
-                We invite our guests to dress in elegant formal attire as we celebrate this special occasion together.
-              </p>
+              {dressCodeTituloTexto !== "" && (
+                <p className="font-['Cinzel'] text-xs sm:text-sm tracking-wider uppercase text-white font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
+                  {dressCodeTituloTexto}
+                </p>
+              )}
+              {dressCodeNotaTexto !== "" && (
+                <p className="text-xs sm:text-[13px] text-white font-medium max-w-[280px] mx-auto leading-relaxed mt-1.5 drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
+                  {dressCodeNotaTexto}
+                </p>
+              )}
+              {coloresReservadosTexto !== "" && (
+                <p className="text-xs sm:text-[13px] italic text-amber-200/90 font-medium max-w-[280px] mx-auto leading-relaxed mt-1.5 drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
+                  {coloresReservadosTexto}
+                </p>
+              )}
             </div>
             )}
 

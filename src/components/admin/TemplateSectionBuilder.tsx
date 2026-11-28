@@ -3412,6 +3412,54 @@ export default function TemplateSectionBuilder({
                       </div>
                     </div>
                   )}
+                  {/* ──────────────────────────────────────────────────────────
+                      SECCIÓN 18: HOSPEDAJE (ACCOMMODATION) — SOLO ELEGANT ROSE
+                      Antes estos dos campos vivían en el panel "Configuración
+                      Exclusiva" al pie del editor y la sección 18 solo tenía
+                      el interruptor con el cuerpo vacío. Ahora el texto se
+                      edita aquí, en su sección. Escriben en configPlantilla
+                      (accommodationTexto / accommodationTextoEn), que es lo
+                      que lee el bloque Accommodation en Details.
+                  ────────────────────────────────────────────────────────── */}
+                  {sec.id === "accommodation" && (
+                    <div className="space-y-4">
+                      <p className="text-xs text-gray-500">
+                        Texto del bloque Accommodation dentro de Details. Vacío = el bloque no se muestra en la invitación.
+                      </p>
+                      <div>
+                        <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+                          Hospedaje (🇲🇽 ES)
+                        </label>
+                        <textarea
+                          rows={3}
+                          value={(formData.configPlantilla as any)?.accommodationTexto || ""}
+                          onChange={(e) => {
+                            const cp = { ...((formData as any).configPlantilla || {}) };
+                            cp.accommodationTexto = e.target.value;
+                            updateField("configPlantilla", cp);
+                          }}
+                          placeholder="Ej. Tenemos un bloque de habitaciones en el Hotel X, código QUINCE2026..."
+                          className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+                          Hospedaje (🇺🇸 EN)
+                        </label>
+                        <textarea
+                          rows={3}
+                          value={(formData.configPlantilla as any)?.accommodationTextoEn || ""}
+                          onChange={(e) => {
+                            const cp = { ...((formData as any).configPlantilla || {}) };
+                            cp.accommodationTextoEn = e.target.value;
+                            updateField("configPlantilla", cp);
+                          }}
+                          placeholder="English version (vacío = usa el texto en español)"
+                          className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
+                        />
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
