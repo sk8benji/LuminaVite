@@ -223,6 +223,23 @@ export default function ElegantRoseTemplate({
       : ((data.configPlantilla as any)?.growingUpCierre ??
         "Celebrando Quince Años Inolvidables — Lo Mejor Está Por Venir.");
 
+  // Bloque REGALOS (Details). Título editable en Sección 8 (configPlantilla);
+  // sin tocar = "REGALOS" / "GIFTS", "" explícito = oculta el título.
+  // El párrafo es el "Mensaje del Cofre" del editor (regalosMensaje*): antes
+  // era un texto fijo en inglés que ningún campo podía cambiar.
+  const regalosTitulo = isEn
+    ? ((data.configPlantilla as any)?.regalosTituloEn ??
+      (data.configPlantilla as any)?.regalosTitulo ??
+      "GIFTS")
+    : ((data.configPlantilla as any)?.regalosTitulo ??
+      (data.configPlantilla as any)?.regalosTituloEn ??
+      "REGALOS");
+  const regalosMensajeTexto = isEn
+    ? (data.regalosMensajeEn ??
+      "Your presence is the greatest gift we could ask for. If you'd like to celebrate with a gift, we invite you to browse our wishlist below.")
+    : (data.regalosMensaje ??
+      "Tu presencia es nuestro mayor regalo. Disponemos de un cofre en la recepción.");
+
   // Dedicatoria (editable en Sección 3): mismos campos que Quince Rosado.
   const dedicatoriaMensaje = isEn
     ? data.frasePersonalizadaEn || data.frasePersonalizada || ""
@@ -1142,20 +1159,26 @@ export default function ElegantRoseTemplate({
             {/* Gifts */}
             {isSectionActive("mesaRegalos") && (
             <div className="my-6">
-              <p className="font-['Cinzel'] text-xs sm:text-sm font-bold tracking-[0.25em] uppercase text-rose-200 drop-shadow-sm">
-                GIFTS
-              </p>
-              <div className="w-40 h-auto mx-auto my-2.5">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={ELEGANT_ROSE_ASSETS.heartDivider}
-                  alt="Gifts"
-                  className="w-full h-full object-contain drop-shadow-md"
-                />
-              </div>
-              <p className="text-xs sm:text-[13px] text-white font-medium max-w-[280px] mx-auto leading-relaxed drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
-                Your presence is the greatest gift we could ask for. If you’d like to celebrate with a gift, we invite you to browse our wishlist below.
-              </p>
+              {regalosTitulo !== "" && (
+                <>
+                  <p className="font-['Cinzel'] text-xs sm:text-sm font-bold tracking-[0.25em] uppercase text-rose-200 drop-shadow-sm">
+                    {regalosTitulo}
+                  </p>
+                  <div className="w-40 h-auto mx-auto my-2.5">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={ELEGANT_ROSE_ASSETS.heartDivider}
+                      alt="Gifts"
+                      className="w-full h-full object-contain drop-shadow-md"
+                    />
+                  </div>
+                </>
+              )}
+              {regalosMensajeTexto !== "" && (
+                <p className="text-xs sm:text-[13px] text-white font-medium max-w-[280px] mx-auto leading-relaxed drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
+                  {regalosMensajeTexto}
+                </p>
+              )}
               {sanitizeUrl(data.wishlistUrl) && (
                 <a
                   href={sanitizeUrl(data.wishlistUrl) as string}

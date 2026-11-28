@@ -2057,10 +2057,52 @@ export default function TemplateSectionBuilder({
                   )}
 
                   {/* ──────────────────────────────────────────────────────────
-                      SECCIÓN 8: MESA DE REGALOS / LLUVIA DE SOBRES
+                      SECCIÓN 8: REGALOS
                   ────────────────────────────────────────────────────────── */}
                   {sec.id === "mesaRegalos" && (
                     <div className="space-y-4">
+                      {/* Título del bloque de Regalos — solo Elegant Rose */}
+                      {((formData as any).estiloPlantilla === "ELEGANT_ROSE") && (
+                        <div>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                              <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+                                Título de Regalos (🇲🇽 ES)
+                              </label>
+                              <input
+                                type="text"
+                                value={(formData.configPlantilla as any)?.regalosTitulo || ""}
+                                onChange={(e) => {
+                                  const cp = { ...((formData as any).configPlantilla || {}) };
+                                  cp.regalosTitulo = e.target.value;
+                                  updateField("configPlantilla", cp);
+                                }}
+                                placeholder="Ej. REGALOS"
+                                className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+                                Título de Regalos (🇺🇸 EN)
+                              </label>
+                              <input
+                                type="text"
+                                value={(formData.configPlantilla as any)?.regalosTituloEn || ""}
+                                onChange={(e) => {
+                                  const cp = { ...((formData as any).configPlantilla || {}) };
+                                  cp.regalosTituloEn = e.target.value;
+                                  updateField("configPlantilla", cp);
+                                }}
+                                placeholder="Ej. GIFTS"
+                                className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#7A002A]"
+                              />
+                            </div>
+                          </div>
+                          <p className="text-[11px] text-gray-500 mt-1">
+                            Sin tocar = REGALOS / GIFTS. Borrar el texto oculta el título en la invitación.
+                          </p>
+                        </div>
+                      )}
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                           <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
