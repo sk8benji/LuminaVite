@@ -17,6 +17,7 @@ import EnvelopeIntro from "../invitation/EnvelopeIntro";
 import { InvitationData } from "../invitation/InvitationMobileView";
 import DynamicRsvpForm from "../invitation/DynamicRsvpForm";
 import { sanitizeUrl } from "@/lib/url-safety";
+import { sanitizeRichText } from "@/lib/sanitize-html";
 import { isSectionEnabledInEvent, type SeccionId } from "@/config/templateSections";
 import { formatFechaLimiteRsvp, fraseFechaLimiteRsvp } from "@/lib/fecha-limite";
 
@@ -214,6 +215,15 @@ export default function ElegantRoseTemplate({
     : ((data.configPlantilla as any)?.accommodationTexto ??
       (data.configPlantilla as any)?.accommodationTextoEn ??
       "");
+
+  // Hospedaje con formato: el texto puede llevar HTML (negrita, <br>, <p>,
+  // alineación) desde la barra de formato de la Sec. 18; se limpia antes de
+  // mostrarlo. Si es texto plano, los saltos de línea se convierten en <br>.
+  const accommodationHtml = sanitizeRichText(
+    accommodationTexto.includes("<")
+      ? accommodationTexto
+      : accommodationTexto.replace(/\n/g, "<br>")
+  );
 
   // Frase de cierre de "Growing Up" (editable en Historia). "" explícito = oculta.
   const cierreGrowingUp =
@@ -1310,9 +1320,10 @@ export default function ElegantRoseTemplate({
               <p className="font-['Cinzel'] text-xs sm:text-sm font-bold tracking-[0.25em] uppercase text-rose-200 drop-shadow-sm">
                 ACCOMMODATION
               </p>
-              <p className="text-xs sm:text-[13px] text-white font-medium max-w-[280px] mx-auto leading-relaxed mt-1.5 drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
-                {accommodationTexto}
-              </p>
+              <div
+                className="text-xs sm:text-[13px] text-white font-medium max-w-[280px] mx-auto leading-relaxed mt-1.5 drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)] [&>p]:mb-3 [&>p:last-child]:mb-0"
+                dangerouslySetInnerHTML={{ __html: accommodationHtml }}
+              />
             </div>
             )}
 

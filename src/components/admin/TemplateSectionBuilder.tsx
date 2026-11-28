@@ -481,6 +481,53 @@ export default function TemplateSectionBuilder({
     }
   };
 
+  // Hospedaje (Sec. 18): inserta etiquetas HTML en el textarea (ES o EN),
+  // en la posición del cursor o envolviendo el texto seleccionado — como el
+  // editor de WordPress. El texto se guarda tal cual y la invitación lo
+  // muestra formateado (se limpia con DOMPurify al renderizar).
+  const insertarEtiquetaHospedaje = (
+    campo: "accommodationTexto" | "accommodationTextoEn",
+    apertura: string,
+    cierre: string
+  ) => {
+    const id = campo === "accommodationTexto" ? "hospedaje-es" : "hospedaje-en";
+    const valor = ((formData.configPlantilla as any)?.[campo] ?? "") as string;
+    const ta = document.getElementById(id) as HTMLTextAreaElement | null;
+    const ini = ta?.selectionStart ?? valor.length;
+    const fin = ta?.selectionEnd ?? valor.length;
+    const cp = { ...((formData as any).configPlantilla || {}) };
+    cp[campo] =
+      valor.slice(0, ini) + apertura + valor.slice(ini, fin) + cierre + valor.slice(fin);
+    updateField("configPlantilla", cp);
+    requestAnimationFrame(() => {
+      const t2 = document.getElementById(id) as HTMLTextAreaElement | null;
+      if (t2) {
+        t2.focus();
+        t2.setSelectionRange(ini + apertura.length, fin + apertura.length);
+      }
+    });
+  };
+
+  // Barra de formato (negrita, cursiva, salto, párrafo, alineación) para un
+  // campo de Hospedaje. Los botones insertan la etiqueta en el cursor.
+  const renderBarraFormatoHospedaje = (
+    campo: "accommodationTexto" | "accommodationTextoEn"
+  ) => {
+    const btn =
+      "px-2 py-1 text-xs rounded-md border border-gray-200 bg-white text-gray-700 hover:bg-gray-50";
+    return (
+      <div className="flex flex-wrap gap-1 mb-1.5">
+        <button type="button" title="Negrita (envuelve el texto seleccionado)" className={`${btn} font-bold`} onClick={() => insertarEtiquetaHospedaje(campo, "<b>", "</b>")}>B</button>
+        <button type="button" title="Cursiva (envuelve el texto seleccionado)" className={`${btn} italic`} onClick={() => insertarEtiquetaHospedaje(campo, "<i>", "</i>")}>I</button>
+        <button type="button" title="Salto de línea (espacio entre renglones)" className={btn} onClick={() => insertarEtiquetaHospedaje(campo, "<br>", "")}>Salto</button>
+        <button type="button" title="Párrafo (bloque con espacio debajo)" className={btn} onClick={() => insertarEtiquetaHospedaje(campo, "<p>", "</p>")}>Párrafo</button>
+        <button type="button" title="Alinear a la izquierda" className={btn} onClick={() => insertarEtiquetaHospedaje(campo, '<p style="text-align:left">', "</p>")}>Izq.</button>
+        <button type="button" title="Centrar" className={btn} onClick={() => insertarEtiquetaHospedaje(campo, '<p style="text-align:center">', "</p>")}>Centro</button>
+        <button type="button" title="Alinear a la derecha" className={btn} onClick={() => insertarEtiquetaHospedaje(campo, '<p style="text-align:right">', "</p>")}>Der.</button>
+      </div>
+    );
+  };
+
   // Helper para verificar si una sección está activa
   const checkSectionEnabled = (sectionId: SeccionId): boolean => {
     return isSectionEnabledInEvent(sectionId, formData.configPlantilla, {
@@ -3446,13 +3493,15 @@ export default function TemplateSectionBuilder({
                   {sec.id === "accommodation" && (
                     <div className="space-y-4">
                       <p className="text-xs text-gray-500">
-                        Texto del bloque Accommodation dentro de Details. Vacío = el bloque no se muestra en la invitación.
+                        Se muestra formateado en la invitación. Usa la barra de formato (negrita, cursiva, salto de línea, párrafo, alineación) o escribe HTML directamente. Vacío = el bloque no se muestra en la invitación.
                       </p>
                       <div>
                         <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
                           Hospedaje (🇲🇽 ES)
                         </label>
+                        {renderBarraFormatoHospedaje("accommodationTexto")}
                         <textarea
+                          id="hospedaje-es"
                           rows={3}
                           value={(formData.configPlantilla as any)?.accommodationTexto || ""}
                           onChange={(e) => {
@@ -3468,7 +3517,9 @@ export default function TemplateSectionBuilder({
                         <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
                           Hospedaje (🇺🇸 EN)
                         </label>
+                        {renderBarraFormatoHospedaje("accommodationTextoEn")}
                         <textarea
+                          id="hospedaje-en"
                           rows={3}
                           value={(formData.configPlantilla as any)?.accommodationTextoEn || ""}
                           onChange={(e) => {
