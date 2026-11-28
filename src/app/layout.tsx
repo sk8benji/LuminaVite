@@ -5,6 +5,7 @@ import SiteHeader from "@/components/layout/SiteHeader";
 import SiteFooter from "@/components/layout/SiteFooter";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://clickandlove.app"),
   title: "Click & Love • Papelería Digital de Alta Costura",
   description:
     "Invitaciones interactivas de lujo con sobre 3D, música envolvente, confirmación SMS vía Twilio y panel de control con Magic Link.",
